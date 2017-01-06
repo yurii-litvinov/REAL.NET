@@ -8,7 +8,7 @@
 
     <!-- VERTEX CONTROL -->
     <Style TargetType="{x:Type controls:VertexControl}">
-        <!--Setter Property="Background" Value="Transparent"/-->
+        <Setter Property="Background" Value="DarkGreen"/>
         <!--Setter Property="VertexShape" Value="Diamond"/-->
         <!--Setter Property= "ShowLabel" Value="True"/-->
 

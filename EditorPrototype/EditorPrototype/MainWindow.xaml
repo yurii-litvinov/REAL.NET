@@ -5,14 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         
         xmlns:wpf="clr-namespace:EditorPrototype"
-        xmlns:acc="clr-namespace:System.Windows.Controls;assembly=Accordion"
         xmlns:controls1="http://schemas.panthernet.ru/graphx/"
         Title="MainWindow"
         mc:Ignorable="d"
-        Height="492.143" Width="812.143">
+        Height="600" Width="800">
     <Grid>
-
-
         <Grid.Resources>
             <ResourceDictionary>
                 <ResourceDictionary.MergedDictionaries>
@@ -24,47 +21,34 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" MinWidth="100"/>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto" MinWidth="170"/>
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height=" Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <Border Grid.Row="1" Grid.Column="0" BorderThickness="1"  Margin="2" >
+        
+        <Border Grid.Row="0" Grid.Column="0" BorderThickness="1"  Margin="2" >
             <controls1:ZoomControl x:Name="g_zoomctrl" >
                 <wpf:GraphAreaExample x:Name="g_Area"/>
             </controls1:ZoomControl>
         </Border>
 
-
-
-        <DockPanel Grid.Column="2" Grid.Row="0" Grid.RowSpan="2">
-            <Grid>
+        <DockPanel Grid.Column="1" Grid.Row="0">
+            <Grid Name="rightPanel">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="Auto" MinHeight="100"/>
+                    <RowDefinition Height="Auto" MinHeight="70"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto" MinHeight="100"/>
                 </Grid.RowDefinitions>
-                <Button x:Name="entityAddBut" Content="Add new entity" HorizontalAlignment="Left" Margin="0,10,-0.4,0" Width="170" Click="entityAddBut_Click" Height="40" VerticalAlignment="Top"/>
-                <TextBlock x:Name="elementsTextBlock" HorizontalAlignment="Left" Margin="0,242.6,-0.4,-308.2" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Height="116" Width="170"/>
-                <ListBox x:Name="elementsListBox" HorizontalAlignment="Left" Height="100" Margin="0,70.6,-0.4,-120.2" Grid.Row="1" VerticalAlignment="Top" Width="170"/>
-                <Label x:Name="elementsListLabel" Content="Elements:" HorizontalAlignment="Left" Height="25" Margin="0,45.6,-0.4,-20.2" Grid.Row="1" VerticalAlignment="Top" Width="170"/>
-                <Separator Height="100" Margin="-229,130.6,-60.4,-180.2" Grid.Row="1" RenderTransformOrigin="0.5,0.5">
-                    <Separator.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform/>
-                            <SkewTransform/>
-                            <RotateTransform Angle="90"/>
-                            <TranslateTransform/>
-                        </TransformGroup>
-                    </Separator.RenderTransform>
-                </Separator>
-                <Label x:Name="selectedEntityLabel" Content="Selected entity:" HorizontalAlignment="Left" Height="30" Margin="0,212.6,-0.4,-192.2" Grid.Row="1" VerticalAlignment="Top" Width="170"/>
+
+                <Grid Name="paletteGrid" Grid.Row="1"/>
+
+                <ListBox x:Name="elementsListBox" HorizontalAlignment="Stretch" Grid.Row="2"/>
+                <Label x:Name="elementsListLabel" Content="Elements:" HorizontalAlignment="Stretch" Grid.Row="3"/>
+                <Label x:Name="selectedEntityLabel" Content="Selected entity:" HorizontalAlignment="Stretch" Grid.Row="4"/>
+                <TextBlock x:Name="elementsTextBlock" HorizontalAlignment="Stretch" Grid.Row="5" TextWrapping="Wrap"/>
             </Grid>
 
         </DockPanel>
-
-
 
     </Grid>
 </Window>

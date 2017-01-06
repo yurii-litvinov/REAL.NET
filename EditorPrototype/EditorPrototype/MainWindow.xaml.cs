@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using GraphX.PCL.Common.Enums;
 using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
 using GraphX.PCL.Logic.Models;
@@ -26,23 +19,19 @@ namespace EditorPrototype
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static DataVertex newVertex;
-        public static DataEdge newEdge;
+        public static VertexControl prevVer;
         public static VertexControl ctrlVer;
         public static EdgeControl ctrlEdg;
         public static GraphExample dataGraph;
-        public static VertexCreationWindow VertexWindow;
-        public static EdgeCreationWindow EdgeWindow;
         public static bool close;
+
+        private Repo.Repo repo = new Repo.Repo();
+
         public MainWindow()
         {
             InitializeComponent();
             close = false;
             dataGraph = new GraphExample();
-            VertexWindow = new VertexCreationWindow();
-            EdgeWindow = new EdgeCreationWindow();
-            VertexWindow.VertexAddButClicked += DrawNewVertex;
-            EdgeWindow.EdgeAddButClicked += DrawNewEdge;
             var logic = new GXLogicCore<DataVertex, DataEdge, BidirectionalGraph<DataVertex, DataEdge>>();
             g_Area.LogicCore = logic;
             logic.Graph = dataGraph;
@@ -52,6 +41,13 @@ namespace EditorPrototype
             elementsListBox.MouseDoubleClick += ElementInBoxSelectedAction;
 
             ZoomControl.SetViewFinderVisibility(g_zoomctrl, Visibility.Visible);
+            g_zoomctrl.Loaded += (sender, args) =>
+            {
+                (g_zoomctrl.ViewFinder.Parent as Grid).Children.Remove(g_zoomctrl.ViewFinder);
+                rightPanel.Children.Add(g_zoomctrl.ViewFinder);
+                Grid.SetRow(g_zoomctrl.ViewFinder, 0);
+            };
+
             logic.DefaultLayoutAlgorithmParams = 
                 logic.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.LinLog);
             logic.DefaultOverlapRemovalAlgorithm = OverlapRemovalAlgorithmTypeEnum.FSA;
@@ -63,6 +59,44 @@ namespace EditorPrototype
             logic.AsyncAlgorithmCompute = false;
 
             Closed += CloseChildrenWindows;
+
+            InitPalette();
+        }
+
+        private void InitPalette()
+        {
+            foreach (var type in repo.Entities)
+            {
+                var button = new Button() { Content = type };
+                RoutedEventHandler createNode = (sender, args) => CreateNode(type);
+                RoutedEventHandler createEdge = (sender, args) => CreateEdge(type);
+                button.Click += repo.IsEdge(type) ? createEdge : createNode;
+                paletteGrid.RowDefinitions.Add(new RowDefinition());
+                paletteGrid.Children.Add(button);
+                Grid.SetRow(button, paletteGrid.RowDefinitions.Count - 1);
+            }
+        }
+
+        private void CreateEdge(string type)
+        {
+            var prevVerVertex = prevVer?.Vertex as DataVertex;
+            var ctrlVerVertex = ctrlVer?.Vertex as DataVertex;
+            if (prevVerVertex == null || ctrlVerVertex == null)
+            {
+                return;
+            }
+
+            var newEdge = new DataEdge(prevVerVertex, ctrlVerVertex) { Text = type };
+            dataGraph.AddEdge(newEdge);
+            DrawNewEdge(prevVerVertex.Key, ctrlVerVertex.Key);
+        }
+
+        private void CreateNode(string type)
+        {
+            var vertex = new DataVertex(type);
+            vertex.Key = $"{type} istance";
+            dataGraph.AddVertex(vertex);
+            DrawNewVertex(vertex.Key);
         }
 
         private void ElementInBoxSelectedAction(object sender, EventArgs e)
@@ -115,37 +149,33 @@ namespace EditorPrototype
             }
         }
 
-        private void DrawNewVertex(object sender, EventArgs e)
+        private void DrawNewVertex(string vertexName)
         {
             ListBoxItem lbi = new ListBoxItem();
             StackPanel sp = new StackPanel() { Orientation = Orientation.Horizontal };
             Image img = new Image();
             img.Source = new BitmapImage(new Uri("pack://application:,,,/Pictures/Vertex.png"));
             TextBlock spaces = new TextBlock() { Text = "  " };
-            TextBlock tx = new TextBlock() { Text = newVertex.ToString() };
+            TextBlock tx = new TextBlock() { Text = vertexName };
             sp.Children.Add(img);
             sp.Children.Add(spaces);
             sp.Children.Add(tx);
             lbi.Content = sp;
             elementsListBox.Items.Add(lbi);
 
-            /*var vc1 = new VertexControl(newVertex);
-            g_Area.AddVertex(newVertex, vc1);
-            g_zoomctrl.ZoomToFill();*/
-            
-            DrawGraph(sender, e);
+            DrawGraph();
         }
 
-        private void DrawNewEdge(object sender, EventArgs e)
+        private void DrawNewEdge(string source, string target)
         {
             ListBoxItem lbi = new ListBoxItem();
             StackPanel sp = new StackPanel() { Orientation = Orientation.Horizontal };
             Image img = new Image();
             img.Source = new BitmapImage(new Uri("pack://application:,,,/Pictures/Edge.png"));
             TextBlock spaces = new TextBlock() { Text = "  " };
-            TextBlock tx0 = new TextBlock() { Text = newEdge.Source.ToString()};
+            TextBlock tx0 = new TextBlock() { Text = source };
             TextBlock tx1 = new TextBlock() { Text = " - " };
-            TextBlock tx2 = new TextBlock() { Text = newEdge.Target.ToString()};
+            TextBlock tx2 = new TextBlock() { Text = target };
             sp.Children.Add(img);
             sp.Children.Add(spaces);
             sp.Children.Add(tx0);
@@ -153,16 +183,25 @@ namespace EditorPrototype
             sp.Children.Add(tx2);
             lbi.Content = sp;
             elementsListBox.Items.Add(lbi);
-            
-            DrawGraph(sender, e);
+
+            DrawGraph();
         }
 
         private void VertexSelectedAction(object sender, VertexSelectedEventArgs args)
         {
+            prevVer = ctrlVer;
             ctrlVer = args.VertexControl;
             elementsTextBlock.Text = "Type: Vertex\n\rName: " + ctrlVer.GetDataVertex<DataVertex>().Name 
                 + "\n\rKey: " + ctrlVer.GetDataVertex<DataVertex>().Key;
-            
+
+            g_Area.GetAllVertexControls().ToList().ForEach(x => x.Opacity = 1);
+
+            ctrlVer.Opacity = 0.4;
+            if (prevVer != null)
+            {
+                prevVer.Opacity = 0.6;
+            }
+
             if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
             {
                 args.VertexControl.ContextMenu = new ContextMenu();
@@ -193,13 +232,13 @@ namespace EditorPrototype
         private void MenuItemClickVert(object sender, EventArgs e)
         {
             dataGraph.RemoveVertex(ctrlVer.GetDataVertex<DataVertex>());
-            DrawGraph(sender, e);
+            DrawGraph();
         }
 
         private void MenuItemClickEdge(object sender, EventArgs e)
         {
             dataGraph.RemoveEdge(ctrlEdg.GetDataEdge<DataEdge>());
-            DrawGraph(sender, e);
+            DrawGraph();
         }
 
         private void CloseChildrenWindows(object sender, EventArgs e)
@@ -209,17 +248,10 @@ namespace EditorPrototype
                 w.Close();
         }
 
-        private void DrawGraph(object sender, EventArgs e)
+        private void DrawGraph()
         {
             g_Area.GenerateGraph(dataGraph);
             g_zoomctrl.ZoomToFill();
-        }
-                
-        private void entityAddBut_Click(object sender, RoutedEventArgs e)
-        {
-            EntitySelectWindow SelectWindow = new EntitySelectWindow();
-            SelectWindow.Owner = this;
-            SelectWindow.ShowDialog();
         }
     }
 }
