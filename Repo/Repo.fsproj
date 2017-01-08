@@ -51,6 +51,8 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="GraphMetametamodel.fs" />
+    <Compile Include="RawMetametamodel.fs" />
     <Compile Include="Repo.fs" />
     <Content Include="packages.config" />
   </ItemGroup>

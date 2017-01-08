@@ -5,6 +5,8 @@ using GraphX.Measure;
 using GraphX.PCL.Common.Models;
 using EditorPrototype.FileSerialization;
 using YAXLib;
+using GraphX.Controls;
+using System.Windows.Media;
 
 namespace EditorPrototype
 {
@@ -34,12 +36,42 @@ namespace EditorPrototype
         /// Node main description (header)
         /// </summary>
         private string _text;
-        public string Text { get { return _text; } set { _text = value; OnPropertyChanged("Text"); } }
+        public string Text { get { return _text; } set { _text = value; OnPropertyChanged(nameof(Text)); } }
         public string ToolTipText { get; set; }
 
         public override string ToString()
         {
             return Text;
+        }
+
+        private EdgeDashStyle dashStyle = EdgeDashStyle.Solid;
+
+        public EdgeDashStyle DashStyle
+        {
+            get
+            {
+                return dashStyle;
+            }
+            set
+            {
+                dashStyle = value;
+                OnPropertyChanged(nameof(DashStyle));
+            }
+        }
+
+        private Brush pointerFillColor = new SolidColorBrush(Colors.White);
+
+        public Brush PointerFillColor
+        {
+            get
+            {
+                return pointerFillColor;
+            }
+            set
+            {
+                pointerFillColor = value;
+                OnPropertyChanged(nameof(PointerFillColor));
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

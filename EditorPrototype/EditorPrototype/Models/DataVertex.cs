@@ -37,6 +37,8 @@ namespace EditorPrototype
 
 using GraphX;
 using GraphX.PCL.Common.Models;
+using System.ComponentModel;
+using System.Windows.Media;
 
 namespace EditorPrototype
 {
@@ -48,13 +50,30 @@ namespace EditorPrototype
      *  
      */
 
-    public class DataVertex : VertexBase
+    public class DataVertex : VertexBase, INotifyPropertyChanged
     {
         /// <summary>
         /// Some string property for example purposes
         /// </summary>
         public string Name { get; set; }
+
         public string Key { get; set; }
+
+        private Brush color = new SolidColorBrush(Colors.Green);
+
+        public Brush Color
+        {
+            get {
+                return color;
+            }
+            set
+            {
+                color = value;
+                OnPropertyChanged(nameof(Color));
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         #region Calculated or static props
 
@@ -77,6 +96,14 @@ namespace EditorPrototype
         public DataVertex(string text = "")
         {
             Name = text;
+        }
+
+        public void OnPropertyChanged(string name)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(name));
+            }
         }
     }
 }

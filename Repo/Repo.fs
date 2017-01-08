@@ -1,36 +1,21 @@
 ﻿namespace Repo
 
-open QuickGraph
+module Repo = 
+    open GraphMetametamodel
 
-type RelationshipType =
-    | Generalization
-    | Association
-    | InstanceOf
+    type EdgeInfo = 
+        struct
+            val source : string
+            val target : string
+            val edgeType : int
 
-type RelationshipInfo = RelationshipInfo of string
+            new (s, t, et) = { source = s; target = t; edgeType = et }
+        end
 
-type ModelElement =
-    | Node of string
-    | Relationship of RelationshipInfo
-    | Attribute
+    let repoGraph = GraphMetametamodel.createM0Model ()
 
-type Repo() = 
-    let repoGraph = new BidirectionalGraph<ModelElement, TaggedEdge<ModelElement, RelationshipInfo>> true
+    let Nodes () = 
+        repoGraph.Vertices |> Seq.map (fun x -> x.name)
 
-    let createMetamodel () =
-        let node1 = Node "Node 1"
-        let node2 = Node "Node 2"
-        repoGraph.AddVertex node1 |> ignore
-        repoGraph.AddVertex node2 |> ignore
-
-        let edge = "Edge" |> RelationshipInfo |> Relationship
-        repoGraph.AddVertex edge |> ignore
-        ()
-    do
-        createMetamodel ()
-
-    member this.Entities = 
-        repoGraph.Vertices |> Seq.choose (function Node n -> Some n | Relationship (RelationshipInfo r) -> Some r | _ -> None)
-
-    member this.IsEdge name =
-        repoGraph.Vertices |> Seq.filter (function Relationship (RelationshipInfo r) -> r = name | _ -> false) |> Seq.length |> (=) 1
+    let Edges () = 
+        repoGraph.Edges |> Seq.map (fun e -> new EdgeInfo(e.Source.name, e.Target.name, match e.Tag with | Generalization -> 1 | Association (_, _, _) -> 2 ))
