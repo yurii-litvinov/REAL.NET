@@ -13,6 +13,12 @@ namespace EditorPrototype
     [Serializable]
     public class DataEdge : EdgeBase<DataVertex>, INotifyPropertyChanged
     {
+        public enum EdgeTypeEnum
+        {
+            Generalization,
+            Association
+        }
+
         [YAXCustomSerializer(typeof(YAXPointArraySerializer))]
         public override Point[] RoutingPoints { get; set; }
 
@@ -44,33 +50,18 @@ namespace EditorPrototype
             return Text;
         }
 
-        private EdgeDashStyle dashStyle = EdgeDashStyle.Solid;
+        private EdgeTypeEnum edgeType = EdgeTypeEnum.Association;
 
-        public EdgeDashStyle DashStyle
+        public EdgeTypeEnum EdgeType
         {
             get
             {
-                return dashStyle;
+                return edgeType;
             }
             set
             {
-                dashStyle = value;
-                OnPropertyChanged(nameof(DashStyle));
-            }
-        }
-
-        private Brush pointerFillColor = new SolidColorBrush(Colors.White);
-
-        public Brush PointerFillColor
-        {
-            get
-            {
-                return pointerFillColor;
-            }
-            set
-            {
-                pointerFillColor = value;
-                OnPropertyChanged(nameof(PointerFillColor));
+                edgeType = value;
+                OnPropertyChanged(nameof(EdgeType));
             }
         }
 

@@ -10,7 +10,7 @@ type Multiplicity =
 
 type ModelElement() =
     [<DefaultValue>]
-    val mutable Class : Node
+    val mutable Class : ModelElement
 
     [<DefaultValue>]
     val mutable Attributes : Attribute list
@@ -30,10 +30,10 @@ and Attribute() =
 type Relationship() =
     inherit ModelElement ()
     [<DefaultValue>]
-    val mutable Source : Node
+    val mutable Source : ModelElement
 
     [<DefaultValue>]
-    val mutable Target : Node
+    val mutable Target : ModelElement
 
 type Generalization() =
     inherit Relationship ()
@@ -45,4 +45,10 @@ type Association() =
     val mutable SourceMultiplicity : Multiplicity
 
     [<DefaultValue>]
+    val mutable SourceName : string
+
+    [<DefaultValue>]
     val mutable TargetMultiplicity : Multiplicity
+
+    [<DefaultValue>]
+    val mutable TargetName : string

@@ -59,7 +59,7 @@ namespace EditorPrototype
 
         public string Key { get; set; }
 
-        private Brush color = new SolidColorBrush(Colors.Green);
+        private Brush color = Brushes.Green;
 
         public Brush Color
         {

@@ -18,7 +18,7 @@ namespace EditorPrototype
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    internal partial class MainWindow : Window
     {
         private VertexControl prevVer;
         private VertexControl ctrlVer;
@@ -67,7 +67,7 @@ namespace EditorPrototype
         {
             prevVer = null;
             ctrlVer = null;
-            g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = new SolidColorBrush(Colors.Green));
+            g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
         }
 
         private void InitModel()
@@ -81,7 +81,7 @@ namespace EditorPrototype
             {
                 var source = dataGraph.Vertices.First(v => v.Name == edge.source);
                 var target = dataGraph.Vertices.First(v => v.Name == edge.target);
-                var newEdge = new DataEdge(source, target) { DashStyle = edge.edgeType == 1 ? EdgeDashStyle.Solid : EdgeDashStyle.Dash };
+                var newEdge = new DataEdge(source, target) { EdgeType = edge.edgeType == 1 ? DataEdge.EdgeTypeEnum.Association : DataEdge.EdgeTypeEnum.Generalization };
                 dataGraph.AddEdge(newEdge);
             }
 
@@ -118,8 +118,10 @@ namespace EditorPrototype
 
         private void CreateNode(string type)
         {
-            var vertex = new DataVertex(type);
-            vertex.Key = $"{type} istance";
+            var vertex = new DataVertex(type)
+            {
+                Key = $"{type} istance"
+            };
             dataGraph.AddVertex(vertex);
             DrawNewVertex(vertex.Key);
         }
@@ -219,12 +221,12 @@ namespace EditorPrototype
             elementsTextBlock.Text = "Type: Vertex\n\rName: " + ctrlVer.GetDataVertex<DataVertex>().Name 
                 + "\n\rKey: " + ctrlVer.GetDataVertex<DataVertex>().Key;
 
-            g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = new SolidColorBrush(Colors.Green));
+            g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
 
-            ctrlVer.GetDataVertex<DataVertex>().Color = new SolidColorBrush(Colors.LightBlue);
+            ctrlVer.GetDataVertex<DataVertex>().Color = Brushes.LightBlue;
             if (prevVer != null)
             {
-                prevVer.GetDataVertex<DataVertex>().Color = new SolidColorBrush(Colors.Yellow);
+                prevVer.GetDataVertex<DataVertex>().Color = Brushes.Yellow;
             }
 
             if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
@@ -242,6 +244,8 @@ namespace EditorPrototype
             ctrlEdg = args.EdgeControl;
 
             g_zoomctrl.MouseMove += OnEdgeMouseMove;
+
+            // Those crazy russians intercept MouseUp event, so we are forced to use PreviewMouseUp here.
             ctrlEdg.PreviewMouseUp += OnEdgeMouseUp;
 
             elementsTextBlock.Text = "Type: Edge\n\rText: " + ctrlEdg.GetDataEdge<DataEdge>().Text 

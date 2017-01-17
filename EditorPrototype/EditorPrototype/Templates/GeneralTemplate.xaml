@@ -22,22 +22,16 @@
 
     <controls:VisibilityToBoolConverter Inverted="True" Not="True" x:Key="BooleanToVisibility"/>
 
-    <!-- EDGE CONTROL -->
-    <Style TargetType="{x:Type controls:EdgeControl}">
-        <Setter Property="SelfLoopIndicatorOffset" Value="0,0"/>
-        <Setter Property="DashStyle" Value="{Binding DashStyle}"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type controls:EdgeControl}">
-                    <Grid>
-                        <Path Stroke="Black"
+    <ControlTemplate x:Key="generalizationEdge" TargetType="{x:Type controls:EdgeControl}">
+        <Grid>
+            <Path Stroke="Black"
                               StrokeThickness="2"
                               ToolTip="{TemplateBinding ToolTip}" 
                               x:Name="PART_edgePath"/>
-                        <controls:DefaultEdgePointer NeedRotation="true" x:Name="PART_EdgePointerForTarget" >
-                            <Path Data="M0,0.5 L1,1 1,0 0,0.5" Fill="{Binding PointerFillColor}" Stretch="Uniform" Width="15" Height="15" Stroke="Black" StrokeThickness="2"/>
-                        </controls:DefaultEdgePointer>
-                        <Path x:Name="PART_SelfLoopedEdge" 
+            <controls:DefaultEdgePointer NeedRotation="true" x:Name="PART_EdgePointerForTarget" >
+                <Path Data="M0,0.5 L1,1 1,0 0,0.5" Fill="White" Stretch="Uniform" Width="15" Height="15" Stroke="Black" StrokeThickness="2"/>
+            </controls:DefaultEdgePointer>
+            <Path x:Name="PART_SelfLoopedEdge" 
                               Width="10" 
                               Height="10" 
                               Stretch="Uniform" 
@@ -45,10 +39,42 @@
                               IsHitTestVisible="True"
                               ToolTip="This vertex has some self looped edges!"
                               Data="F1 M 17.4167,32.25L 32.9107,32.25L 38,18L 43.0893,32.25L 58.5833,32.25L 45.6798,41.4944L 51.4583,56L 38,48.0833L 26.125,56L 30.5979,41.7104L 17.4167,32.25 Z "/>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
+        </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="associationEdge" TargetType="{x:Type controls:EdgeControl}">
+        <Grid>
+            <Path Stroke="Red"
+                              StrokeThickness="2"
+                              ToolTip="{TemplateBinding ToolTip}" 
+                              x:Name="PART_edgePath"/>
+            <controls:DefaultEdgePointer NeedRotation="true" x:Name="PART_EdgePointerForTarget" >
+                <Path Data="M0,0.5 L1,1 M1,0 L0,0.5" Stretch="Uniform" Width="15" Height="15" Stroke="Black" StrokeThickness="2"/>
+            </controls:DefaultEdgePointer>
+            <Path x:Name="PART_SelfLoopedEdge" 
+                              Width="10" 
+                              Height="10" 
+                              Stretch="Uniform" 
+                              Fill="Black" 
+                              IsHitTestVisible="True"
+                              ToolTip="This vertex has some self looped edges!"
+                              Data="F1 M 17.4167,32.25L 32.9107,32.25L 38,18L 43.0893,32.25L 58.5833,32.25L 45.6798,41.4944L 51.4583,56L 38,48.0833L 26.125,56L 30.5979,41.7104L 17.4167,32.25 Z "/>
+        </Grid>
+    </ControlTemplate>
+
+    <!-- EDGE CONTROL -->
+    <Style TargetType="{x:Type controls:EdgeControl}">
+        <Setter Property="SelfLoopIndicatorOffset" Value="0,0"/>
+        <Setter Property="DashStyle" Value="{Binding DashStyle}"/>
+        <Setter Property="Template" Value="{StaticResource generalizationEdge}"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding EdgeType}" Value="1">
+                <Setter Property="Template" Value="{StaticResource associationEdge}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding EdgeType}" Value="0">
+                <Setter Property="Template" Value="{StaticResource generalizationEdge}"/>
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
 </ResourceDictionary>
