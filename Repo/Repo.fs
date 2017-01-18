@@ -18,4 +18,10 @@ module Repo =
         repoGraph.Vertices |> Seq.map (fun x -> x.name)
 
     let Edges () = 
-        repoGraph.Edges |> Seq.map (fun e -> new EdgeInfo(e.Source.name, e.Target.name, match e.Tag with | Generalization -> 1 | Association (_, _, _) -> 2 ))
+        let edgeType = function
+            | Generalization -> 1
+            | Association (_, _, _) -> 2
+            | Attribute -> 3
+            | Type -> 4
+
+        repoGraph.Edges |> Seq.map (fun e -> new EdgeInfo(e.Source.name, e.Target.name, edgeType e.Tag))

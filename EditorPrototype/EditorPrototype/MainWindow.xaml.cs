@@ -81,7 +81,25 @@ namespace EditorPrototype
             {
                 var source = dataGraph.Vertices.First(v => v.Name == edge.source);
                 var target = dataGraph.Vertices.First(v => v.Name == edge.target);
-                var newEdge = new DataEdge(source, target) { EdgeType = edge.edgeType == 1 ? DataEdge.EdgeTypeEnum.Association : DataEdge.EdgeTypeEnum.Generalization };
+
+                Func<int, DataEdge.EdgeTypeEnum> edgeType = e =>
+                {
+                    switch (e)
+                    {
+                        case 1:
+                            return DataEdge.EdgeTypeEnum.Generalization;
+                        case 2:
+                            return DataEdge.EdgeTypeEnum.Association;
+                        case 3:
+                            return DataEdge.EdgeTypeEnum.Attribute;
+                        case 4:
+                            return DataEdge.EdgeTypeEnum.Type;
+                    }
+
+                    return DataEdge.EdgeTypeEnum.Generalization;
+                };
+
+                var newEdge = new DataEdge(source, target) { EdgeType = edgeType(edge.edgeType) };
                 dataGraph.AddEdge(newEdge);
             }
 
@@ -179,11 +197,11 @@ namespace EditorPrototype
         private void DrawNewVertex(string vertexName)
         {
             ListBoxItem lbi = new ListBoxItem();
-            StackPanel sp = new StackPanel() { Orientation = Orientation.Horizontal };
+            StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
             Image img = new Image();
             img.Source = new BitmapImage(new Uri("pack://application:,,,/Pictures/Vertex.png"));
-            TextBlock spaces = new TextBlock() { Text = "  " };
-            TextBlock tx = new TextBlock() { Text = vertexName };
+            TextBlock spaces = new TextBlock { Text = "  " };
+            TextBlock tx = new TextBlock { Text = vertexName };
             sp.Children.Add(img);
             sp.Children.Add(spaces);
             sp.Children.Add(tx);
@@ -196,13 +214,13 @@ namespace EditorPrototype
         private void DrawNewEdge(string source, string target)
         {
             ListBoxItem lbi = new ListBoxItem();
-            StackPanel sp = new StackPanel() { Orientation = Orientation.Horizontal };
+            StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
             Image img = new Image();
             img.Source = new BitmapImage(new Uri("pack://application:,,,/Pictures/Edge.png"));
-            TextBlock spaces = new TextBlock() { Text = "  " };
-            TextBlock tx0 = new TextBlock() { Text = source };
-            TextBlock tx1 = new TextBlock() { Text = " - " };
-            TextBlock tx2 = new TextBlock() { Text = target };
+            TextBlock spaces = new TextBlock { Text = "  " };
+            TextBlock tx0 = new TextBlock { Text = source };
+            TextBlock tx1 = new TextBlock { Text = " - " };
+            TextBlock tx2 = new TextBlock { Text = target };
             sp.Children.Add(img);
             sp.Children.Add(spaces);
             sp.Children.Add(tx0);
@@ -232,7 +250,7 @@ namespace EditorPrototype
             if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
             {
                 args.VertexControl.ContextMenu = new ContextMenu();
-                var mi = new MenuItem() { Header = "Delete item", Tag = args.VertexControl };
+                var mi = new MenuItem { Header = "Delete item", Tag = args.VertexControl };
                 mi.Click += MenuItemClickVert;
                 args.VertexControl.ContextMenu.Items.Add(mi);
                 args.VertexControl.ContextMenu.IsOpen = true;
@@ -255,7 +273,7 @@ namespace EditorPrototype
             if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
             {
                 args.EdgeControl.ContextMenu = new ContextMenu();
-                var mi = new MenuItem() { Header = "Delete item", Tag = args.EdgeControl };
+                var mi = new MenuItem { Header = "Delete item", Tag = args.EdgeControl };
                 mi.Click += MenuItemClickEdge;
                 args.EdgeControl.ContextMenu.Items.Add(mi);
                 args.EdgeControl.ContextMenu.IsOpen = true;

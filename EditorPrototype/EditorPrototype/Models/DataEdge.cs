@@ -16,7 +16,9 @@ namespace EditorPrototype
         public enum EdgeTypeEnum
         {
             Generalization,
-            Association
+            Association,
+            Type,
+            Attribute
         }
 
         [YAXCustomSerializer(typeof(YAXPointArraySerializer))]

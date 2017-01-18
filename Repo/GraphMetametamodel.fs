@@ -4,29 +4,35 @@ module GraphMetametamodel =
 
     type VertexLabel = 
         { name : string;
-          instantiability : int;
+          potency : int;
           level : int }
 
     type EdgeLabel = 
         | Generalization
+        | Attribute
+        | Type
         | Association of string * int * int
 
     open QuickGraph
 
     let private repoGraph = new BidirectionalGraph<VertexLabel, TaggedEdge<VertexLabel, EdgeLabel>> true
 
+    let private createEdge label source target = 
+        let edge = new TaggedEdge<_, _>(source, target, label)
+        repoGraph.AddEdge edge |> ignore
+
     let private (~+) name = 
-        let vertex = { name = name; instantiability = -1; level = 0 }
+        let vertex = { name = name; potency = -1; level = 0 }
         repoGraph.AddVertex vertex |> ignore
         vertex
 
-    let private (---|>) source target = 
-        let edge = new TaggedEdge<_, _>(source, target, Generalization)
-        repoGraph.AddEdge edge |> ignore
+    let private (---|>) = createEdge Generalization
 
-    let private (--->) source target targetRole = 
-        let edge = new TaggedEdge<_, _>(source, target, Association targetRole)
-        repoGraph.AddEdge edge |> ignore
+    let private (--+-->) = createEdge Attribute
+
+    let private (--*-->) = createEdge Type
+
+    let private (--->) source target targetRole = createEdge (Association targetRole) source target
 
     let createM0Model () =
 
@@ -36,6 +42,19 @@ module GraphMetametamodel =
         let relationship = +"Relationship"
         let generalization = +"Generalization"
         let association = +"Association"
+        let stringType = +"String"
+        let intType = +"Int"
+
+        let name = +"Name"
+        let potency = +"Potency"
+        let level = +"Level"
+
+        let minTarget = +"MinTarget"
+        let maxTarget = +"MaxTarget"
+        let minSource = +"MinSource"
+        let maxSource = +"MaxSource"
+        let sourceName = +"SourceName"
+        let targetName = +"TargetName"
 
         node ---|> modelElement
         attribute ---|> modelElement
@@ -47,7 +66,29 @@ module GraphMetametamodel =
         (--->) modelElement attribute ("attributes", 0, -1)
         (--->) attribute node ("type", 1, 1)
         (--->) attribute node ("value", 0, 1)
-        (--->) relationship node ("source", 1, 1)
-        (--->) relationship node ("target", 1, 1)
+        (--->) relationship modelElement ("source", 1, 1)
+        (--->) relationship modelElement ("target", 1, 1)
+
+        modelElement --+--> name
+        modelElement --+--> potency
+        modelElement --+--> level
+
+        name --*--> stringType
+        potency --*--> intType
+        level --*--> intType
+
+        association --+--> minSource
+        association --+--> maxSource
+        association --+--> sourceName
+        association --+--> minTarget
+        association --+--> maxTarget
+        association --+--> targetName
+
+        minSource --*--> intType
+        maxSource --*--> intType
+        sourceName --*--> stringType
+        minTarget --*--> intType
+        maxTarget --*--> intType
+        targetName --*--> stringType
 
         repoGraph
