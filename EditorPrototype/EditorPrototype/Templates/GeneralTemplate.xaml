@@ -5,6 +5,8 @@
     xmlns:controls="http://schemas.panthernet.ru/graphx/">
 
     <local:ValueToImageConverter x:Key="ValueToImage"/>
+    
+    <ControlTemplate x:Key="NodeVertex"></ControlTemplate>
 
     <!-- VERTEX CONTROL -->
     <Style TargetType="{x:Type controls:VertexControl}">
@@ -16,6 +18,27 @@
         <!-- VERTEX DRAGGING CONTROL -->
         <Setter Property="controls:DragBehaviour.IsDragEnabled" Value="True" />
         <Setter Property="controls:DragBehaviour.UpdateEdgesOnMove" Value="True" />
+
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding VertexType}" Value="Attribute">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type controls:VertexControl}">
+                            <Border Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    CornerRadius="0,0,0,0"
+                                    Padding="{TemplateBinding Padding}">
+                                <Grid>
+                                    <ContentPresenter Content="{TemplateBinding Vertex}" />
+                                    <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Vertex, RelativeSource={RelativeSource TemplatedParent}}" />
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Background" Value="LightBlue" />
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     <controls:VisibilityToBoolConverter Inverted="True" Not="True" x:Key="BooleanToVisibility"/>

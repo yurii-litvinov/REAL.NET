@@ -14,17 +14,25 @@ module GraphMetametamodel =
         | Association of string * int * int
 
     open QuickGraph
+    open System.Collections.Generic
 
     let private repoGraph = new BidirectionalGraph<VertexLabel, TaggedEdge<VertexLabel, EdgeLabel>> true
+    let private classes = new Dictionary<VertexLabel, VertexLabel>()
 
     let private createEdge label source target = 
         let edge = new TaggedEdge<_, _>(source, target, label)
         repoGraph.AddEdge edge |> ignore
 
-    let private (~+) name = 
-        let vertex = { name = name; potency = -1; level = 0 }
+    let private createNode name potency = 
+        let vertex = { name = name; potency = potency; level = 0 }
         repoGraph.AddVertex vertex |> ignore
         vertex
+
+    let private (~+) name = 
+        createNode name -1
+
+    let private (~-) name = 
+        createNode name 0
 
     let private (---|>) = createEdge Generalization
 
@@ -34,27 +42,45 @@ module GraphMetametamodel =
 
     let private (--->) source target targetRole = createEdge (Association targetRole) source target
 
+    let private (--@-->) source target =
+        classes.Add(source, target)
+
     let createM0Model () =
 
-        let modelElement = +"ModelElement"
+        let modelElement = -"ModelElement"
         let node = +"Node"
         let attribute = +"Attribute"
-        let relationship = +"Relationship"
+        let relationship = -"Relationship"
         let generalization = +"Generalization"
         let association = +"Association"
-        let stringType = +"String"
-        let intType = +"Int"
 
-        let name = +"Name"
-        let potency = +"Potency"
-        let level = +"Level"
+        let stringType = -"String"
+        let intType = -"Int"
 
-        let minTarget = +"MinTarget"
-        let maxTarget = +"MaxTarget"
-        let minSource = +"MinSource"
-        let maxSource = +"MaxSource"
-        let sourceName = +"SourceName"
-        let targetName = +"TargetName"
+        let name = -"Name"
+        let potency = -"Potency"
+        let level = -"Level"
+
+        let minTarget = -"MinTarget"
+        let maxTarget = -"MaxTarget"
+        let minSource = -"MinSource"
+        let maxSource = -"MaxSource"
+        let sourceName = -"SourceName"
+        let targetName = -"TargetName"
+
+        minTarget --@--> attribute
+        maxTarget --@--> attribute
+        minSource --@--> attribute
+        maxSource --@--> attribute
+        sourceName --@--> attribute
+        targetName --@--> attribute
+
+        name --@--> attribute
+        potency --@--> attribute
+        level --@--> attribute
+
+        stringType --@--> node
+        intType --@--> node
 
         node ---|> modelElement
         attribute ---|> modelElement
@@ -91,4 +117,4 @@ module GraphMetametamodel =
         maxTarget --*--> intType
         targetName --*--> stringType
 
-        repoGraph
+        (repoGraph, classes)

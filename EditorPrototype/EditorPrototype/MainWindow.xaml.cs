@@ -72,27 +72,40 @@ namespace EditorPrototype
 
         private void InitModel()
         {
-            foreach (var node in Repo.Repo.Nodes())
+            foreach (var node in Repo.Repo.ModelNodes())
             {
-                CreateNode(node);
+                Func<Repo.Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
+                {
+                    switch (n)
+                    {
+                        case Repo.Repo.NodeType.Attribute:
+                            return DataVertex.VertexTypeEnum.Attribute;
+                        case Repo.Repo.NodeType.Node:
+                            return DataVertex.VertexTypeEnum.Node;
+                    }
+
+                    return DataVertex.VertexTypeEnum.Node;
+                };
+
+                CreateNode(node.name, nodeType(node.nodeType));
             }
 
-            foreach (var edge in Repo.Repo.Edges())
+            foreach (var edge in Repo.Repo.ModelEdges())
             {
                 var source = dataGraph.Vertices.First(v => v.Name == edge.source);
                 var target = dataGraph.Vertices.First(v => v.Name == edge.target);
 
-                Func<int, DataEdge.EdgeTypeEnum> edgeType = e =>
+                Func<Repo.Repo.EdgeType, DataEdge.EdgeTypeEnum> edgeType = e =>
                 {
                     switch (e)
                     {
-                        case 1:
+                        case Repo.Repo.EdgeType.Generalization:
                             return DataEdge.EdgeTypeEnum.Generalization;
-                        case 2:
+                        case Repo.Repo.EdgeType.Association:
                             return DataEdge.EdgeTypeEnum.Association;
-                        case 3:
+                        case Repo.Repo.EdgeType.Attribute:
                             return DataEdge.EdgeTypeEnum.Attribute;
-                        case 4:
+                        case Repo.Repo.EdgeType.Type:
                             return DataEdge.EdgeTypeEnum.Type;
                     }
 
@@ -108,16 +121,18 @@ namespace EditorPrototype
 
         private void InitPalette()
         {
-            //foreach (var type in repo.Entities)
-            //{
-            //    var button = new Button() { Content = type };
-            //    RoutedEventHandler createNode = (sender, args) => CreateNode(type);
-            //    RoutedEventHandler createEdge = (sender, args) => CreateEdge(type);
-            //    button.Click += repo.IsEdge(type) ? createEdge : createNode;
-            //    paletteGrid.RowDefinitions.Add(new RowDefinition());
-            //    paletteGrid.Children.Add(button);
-            //    Grid.SetRow(button, paletteGrid.RowDefinitions.Count - 1);
-            //}
+            foreach (var type in Repo.Repo.MetamodelNodes())
+            {
+                var button = new Button { Content = type };
+                //RoutedEventHandler createNode = (sender, args) => CreateNode(type);
+                //RoutedEventHandler createEdge = (sender, args) => CreateEdge(type);
+                //button.Click += Repo.Repo.IsEdge(type) ? createEdge : createNode;
+                
+                // TODO: Bind it to XAML, do not do GUI work in C#.
+                paletteGrid.RowDefinitions.Add(new RowDefinition());  
+                paletteGrid.Children.Add(button);
+                Grid.SetRow(button, paletteGrid.RowDefinitions.Count - 1);
+            }
         }
 
         private void CreateEdge(string type)
@@ -134,12 +149,14 @@ namespace EditorPrototype
             DrawNewEdge(prevVerVertex.Key, ctrlVerVertex.Key);
         }
 
-        private void CreateNode(string type)
+        private void CreateNode(string name, DataVertex.VertexTypeEnum type)
         {
-            var vertex = new DataVertex(type)
+            var vertex = new DataVertex(name)
             {
-                Key = $"{type} istance"
+                Key = $"{name}",
+                VertexType = type
             };
+
             dataGraph.AddVertex(vertex);
             DrawNewVertex(vertex.Key);
         }

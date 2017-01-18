@@ -35,7 +35,6 @@ namespace EditorPrototype
 }*/
 
 
-using GraphX;
 using GraphX.PCL.Common.Models;
 using System.ComponentModel;
 using System.Windows.Media;
@@ -52,6 +51,12 @@ namespace EditorPrototype
 
     public class DataVertex : VertexBase, INotifyPropertyChanged
     {
+        public enum VertexTypeEnum
+        {
+            Node,
+            Attribute
+        }
+
         /// <summary>
         /// Some string property for example purposes
         /// </summary>
@@ -60,16 +65,28 @@ namespace EditorPrototype
         public string Key { get; set; }
 
         private Brush color = Brushes.Green;
+        private VertexTypeEnum vertexType = VertexTypeEnum.Node;
 
         public Brush Color
         {
-            get {
+            get
+            {
                 return color;
             }
             set
             {
                 color = value;
                 OnPropertyChanged(nameof(Color));
+            }
+        }
+
+        public VertexTypeEnum VertexType
+        {
+            get { return this.vertexType; }
+            set
+            {
+                this.vertexType = value;
+                OnPropertyChanged(nameof(this.VertexType));
             }
         }
 

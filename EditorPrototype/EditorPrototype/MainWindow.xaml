@@ -42,7 +42,7 @@
 
                 <Grid Name="paletteGrid" Grid.Row="1"/>
 
-                <ListBox x:Name="elementsListBox" HorizontalAlignment="Stretch" Grid.Row="2"/>
+                <ListBox x:Name="elementsListBox" HorizontalAlignment="Stretch" Grid.Row="2" Margin="0,20,0,0"/>
                 <Label x:Name="elementsListLabel" Content="Elements:" HorizontalAlignment="Stretch" Grid.Row="3"/>
                 <Label x:Name="selectedEntityLabel" Content="Selected entity:" HorizontalAlignment="Stretch" Grid.Row="4"/>
                 <TextBlock x:Name="elementsTextBlock" HorizontalAlignment="Stretch" Grid.Row="5" TextWrapping="Wrap"/>
