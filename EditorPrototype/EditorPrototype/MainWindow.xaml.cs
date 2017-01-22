@@ -25,6 +25,8 @@ namespace EditorPrototype
         private EdgeControl ctrlEdg;
         private GraphExample dataGraph;
 
+        private Repo.Repo repo = Repo.RepoFactory.CreateRepo();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -72,15 +74,15 @@ namespace EditorPrototype
 
         private void InitModel()
         {
-            foreach (var node in Repo.Repo.ModelNodes())
+            foreach (var node in repo.ModelNodes())
             {
-                Func<Repo.Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
+                Func<Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
                 {
                     switch (n)
                     {
-                        case Repo.Repo.NodeType.Attribute:
+                        case Repo.NodeType.Attribute:
                             return DataVertex.VertexTypeEnum.Attribute;
-                        case Repo.Repo.NodeType.Node:
+                        case Repo.NodeType.Node:
                             return DataVertex.VertexTypeEnum.Node;
                     }
 
@@ -90,22 +92,22 @@ namespace EditorPrototype
                 CreateNode(node.name, nodeType(node.nodeType));
             }
 
-            foreach (var edge in Repo.Repo.ModelEdges())
+            foreach (var edge in repo.ModelEdges())
             {
                 var source = dataGraph.Vertices.First(v => v.Name == edge.source);
                 var target = dataGraph.Vertices.First(v => v.Name == edge.target);
 
-                Func<Repo.Repo.EdgeType, DataEdge.EdgeTypeEnum> edgeType = e =>
+                Func<Repo.EdgeType, DataEdge.EdgeTypeEnum> edgeType = e =>
                 {
                     switch (e)
                     {
-                        case Repo.Repo.EdgeType.Generalization:
+                        case Repo.EdgeType.Generalization:
                             return DataEdge.EdgeTypeEnum.Generalization;
-                        case Repo.Repo.EdgeType.Association:
+                        case Repo.EdgeType.Association:
                             return DataEdge.EdgeTypeEnum.Association;
-                        case Repo.Repo.EdgeType.Attribute:
+                        case Repo.EdgeType.Attribute:
                             return DataEdge.EdgeTypeEnum.Attribute;
-                        case Repo.Repo.EdgeType.Type:
+                        case Repo.EdgeType.Type:
                             return DataEdge.EdgeTypeEnum.Type;
                     }
 
@@ -121,7 +123,7 @@ namespace EditorPrototype
 
         private void InitPalette()
         {
-            foreach (var type in Repo.Repo.MetamodelNodes())
+            foreach (var type in repo.MetamodelNodes())
             {
                 var button = new Button { Content = type };
                 //RoutedEventHandler createNode = (sender, args) => CreateNode(type);

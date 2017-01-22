@@ -3,14 +3,22 @@
 open NUnit.Framework
 open FsUnit
 
+open Repo
+
+let mutable repo = RepoFactory.CreateRepo ()
+
+[<SetUp>]
+let setup () =
+    repo <- RepoFactory.CreateRepo ()
+
 [<Test>]
 let ``Repo should return some metamodel nodes`` () =
-    Repo.Repo.MetamodelNodes () |> should not' (be Empty)
+    repo.MetamodelNodes () |> should not' (be Empty)
 
 [<Test>]
 let ``Repo should return some model nodes`` () =
-    Repo.Repo.ModelNodes () |> should not' (be Empty)
+    repo.ModelNodes () |> should not' (be Empty)
 
 [<Test>]
 let ``Repo shall contain at least ModelElement`` () =
-    Repo.Repo.ModelNodes () |> should contain "ModelElement"
+    repo.ModelNodes () |> Seq.filter (fun x -> x.name = "ModelElement") |> should not' (be Empty)

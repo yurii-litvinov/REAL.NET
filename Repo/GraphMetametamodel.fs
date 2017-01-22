@@ -1,51 +1,52 @@
 ﻿namespace Repo
 
-module GraphMetametamodel =
+open QuickGraph
+open System.Collections.Generic
 
-    type VertexLabel = 
-        { name : string;
-          potency : int;
-          level : int }
+type internal VertexLabel = 
+    { name : string;
+        potency : int;
+        level : int }
 
-    type EdgeLabel = 
-        | Generalization
-        | Attribute
-        | Type
-        | Association of string * int * int
+type internal EdgeLabel = 
+    | Generalization
+    | Attribute
+    | Type
+    | Association of string * int * int
 
-    open QuickGraph
-    open System.Collections.Generic
+module internal GraphMetametamodel =
 
-    let private repoGraph = new BidirectionalGraph<VertexLabel, TaggedEdge<VertexLabel, EdgeLabel>> true
-    let private classes = new Dictionary<VertexLabel, VertexLabel>()
-
-    let private createEdge label source target = 
-        let edge = new TaggedEdge<_, _>(source, target, label)
-        repoGraph.AddEdge edge |> ignore
-
-    let private createNode name potency = 
-        let vertex = { name = name; potency = potency; level = 0 }
-        repoGraph.AddVertex vertex |> ignore
-        vertex
-
-    let private (~+) name = 
-        createNode name -1
-
-    let private (~-) name = 
-        createNode name 0
-
-    let private (---|>) = createEdge Generalization
-
-    let private (--+-->) = createEdge Attribute
-
-    let private (--*-->) = createEdge Type
-
-    let private (--->) source target targetRole = createEdge (Association targetRole) source target
-
-    let private (--@-->) source target =
-        classes.Add(source, target)
+    type Repo = BidirectionalGraph<VertexLabel, TaggedEdge<VertexLabel, EdgeLabel>> * Dictionary<VertexLabel, VertexLabel>
 
     let createM0Model () =
+        let repo = (new BidirectionalGraph<_, _> true, new Dictionary<_, _>())
+        let repoGraph, classes = repo
+
+        let createEdge label source target = 
+            let edge = new TaggedEdge<_, _>(source, target, label)
+            repoGraph.AddEdge edge |> ignore
+
+        let createNode name potency = 
+            let vertex = { name = name; potency = potency; level = 0 }
+            repoGraph.AddVertex vertex |> ignore
+            vertex
+
+        let (~+) name = 
+            createNode name -1
+
+        let (~-) name = 
+            createNode name 0
+
+        let (---|>) = createEdge Generalization
+
+        let (--+-->) = createEdge Attribute
+
+        let (--*-->) = createEdge Type
+
+        let (--->) source target targetRole = createEdge (Association targetRole) source target
+
+        let (--@-->) source target =
+            classes.Add(source, target)
 
         let modelElement = -"ModelElement"
         let node = +"Node"
