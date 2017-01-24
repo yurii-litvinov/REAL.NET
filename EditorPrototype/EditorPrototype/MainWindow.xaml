@@ -34,20 +34,26 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" MinHeight="100"/>
                     <RowDefinition Height="Auto" MinHeight="70"/>
-                    <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto" MinHeight="100"/>
                 </Grid.RowDefinitions>
 
-                <Grid Name="paletteGrid" Grid.Row="1"/>
+                <Grid x:Name="paletteGrid" Grid.Row="1"/>
 
-                <ListBox x:Name="elementsListBox" HorizontalAlignment="Stretch" Grid.Row="2" Margin="0,20,0,0"/>
-                <Label x:Name="elementsListLabel" Content="Elements:" HorizontalAlignment="Stretch" Grid.Row="3"/>
-                <Label x:Name="selectedEntityLabel" Content="Selected entity:" HorizontalAlignment="Stretch" Grid.Row="4"/>
-                <TextBlock x:Name="elementsTextBlock" HorizontalAlignment="Stretch" Grid.Row="5" TextWrapping="Wrap"/>
+                <Label x:Name="elementsListLabel" Grid.Row="2" Content="Elements:" HorizontalAlignment="Stretch"/>
+                <ListBox x:Name="elementsListBox" Grid.Row="3" HorizontalAlignment="Stretch" Margin="0,20,0,0"/>
+                <Label x:Name="selectedEntityLabel" Grid.Row="4" Content="Selected entity:" HorizontalAlignment="Stretch" />
+
+                <DataGrid x:Name="attributesView" Grid.Row="5" IsReadOnly="True" ItemsSource="{Binding Attributes}" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                        <DataGridTextColumn Header="Type" Binding="{Binding Type}"/>
+                        <DataGridTextColumn Header="Value" Binding="{Binding Value}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
             </Grid>
-
         </DockPanel>
 
     </Grid>

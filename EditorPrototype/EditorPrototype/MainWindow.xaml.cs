@@ -89,7 +89,7 @@ namespace EditorPrototype
                     return DataVertex.VertexTypeEnum.Node;
                 };
 
-                CreateNode(node.name, nodeType(node.nodeType));
+                CreateNode(node.name, nodeType(node.nodeType), node.attributes);
             }
 
             foreach (var edge in repo.ModelEdges())
@@ -125,7 +125,7 @@ namespace EditorPrototype
         {
             foreach (var type in repo.MetamodelNodes())
             {
-                var button = new Button { Content = type };
+                var button = new Button { Content = type.name };
                 //RoutedEventHandler createNode = (sender, args) => CreateNode(type);
                 //RoutedEventHandler createEdge = (sender, args) => CreateEdge(type);
                 //button.Click += Repo.Repo.IsEdge(type) ? createEdge : createNode;
@@ -151,13 +151,22 @@ namespace EditorPrototype
             DrawNewEdge(prevVerVertex.Key, ctrlVerVertex.Key);
         }
 
-        private void CreateNode(string name, DataVertex.VertexTypeEnum type)
+        private void CreateNode(string name, DataVertex.VertexTypeEnum type, IList<Repo.AttributeInfo> attributes)
         {
             var vertex = new DataVertex(name)
             {
                 Key = $"{name}",
                 VertexType = type
             };
+
+            var attributeInfos = attributes.Select(x => new DataVertex.Attribute()
+            {
+                Name = x.name,
+                Type = repo.Node(x.attributeType).name,
+                Value = x.value
+            });
+
+            attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
 
             dataGraph.AddVertex(vertex);
             DrawNewVertex(vertex.Key);
@@ -176,8 +185,6 @@ namespace EditorPrototype
                         dataGraph.Edges.ToList()[i].Target.Name == target)
                     {
                         var edge = dataGraph.Edges.ToList()[i];
-                        elementsTextBlock.Text = "Type: Edge\n\rText: " + edge.Text 
-                            + "\n\rSource: " + edge.Source.Name + "\n\rTarget: " + edge.Target.Name;
                         foreach (KeyValuePair<DataEdge, EdgeControl> ed in g_Area.EdgesList)
                         {
                             if (ed.Key == edge)
@@ -198,8 +205,6 @@ namespace EditorPrototype
                     if (dataGraph.Vertices.ToList()[i].Name == name)
                     {
                         var vertex = dataGraph.Vertices.ToList()[i];
-                        elementsTextBlock.Text = "Type: Vertex\n\rName: " + vertex.Name + "\n\rKey: " 
-                            + vertex.Key;
                         foreach (KeyValuePair<DataVertex, VertexControl> ed in g_Area.VertexList)
                         {
                             if (ed.Key == vertex)
@@ -255,8 +260,7 @@ namespace EditorPrototype
         {
             prevVer = ctrlVer;
             ctrlVer = args.VertexControl;
-            elementsTextBlock.Text = "Type: Vertex\n\rName: " + ctrlVer.GetDataVertex<DataVertex>().Name 
-                + "\n\rKey: " + ctrlVer.GetDataVertex<DataVertex>().Key;
+            attributesView.DataContext = ctrlVer.GetDataVertex<DataVertex>();
 
             g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
 
@@ -285,10 +289,6 @@ namespace EditorPrototype
             // Those crazy russians intercept MouseUp event, so we are forced to use PreviewMouseUp here.
             ctrlEdg.PreviewMouseUp += OnEdgeMouseUp;
 
-            elementsTextBlock.Text = "Type: Edge\n\rText: " + ctrlEdg.GetDataEdge<DataEdge>().Text 
-                + "\n\rSource: " + ctrlEdg.GetDataEdge<DataEdge>().Source.Name + "\n\rTarget: " 
-                + ctrlEdg.GetDataEdge<DataEdge>().Target.Name;
-            
             if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
             {
                 args.EdgeControl.ContextMenu = new ContextMenu();

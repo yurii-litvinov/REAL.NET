@@ -1,5 +1,7 @@
 ﻿namespace Repo
 
+open System.Collections.Generic
+
 type Id = string
 
 type EdgeType =
@@ -11,6 +13,15 @@ type EdgeType =
 type NodeType =
     | Node = 0
     | Attribute = 1
+
+type AttributeInfo =
+    struct
+        val name : string
+        val attributeType : Id
+        val value : string
+
+        new (name, attributeType, value) = { name = name; attributeType = attributeType; value = value }
+    end
 
 type EdgeInfo = 
     struct
@@ -27,13 +38,7 @@ type NodeInfo =
         val id : Id
         val name : string
         val nodeType : NodeType
+        val attributes : List<AttributeInfo>
 
-        new (id, name, nodeType) = { id = id; name = name; nodeType = nodeType }
+        new (id, name, nodeType, attributes) = { id = id; name = name; nodeType = nodeType; attributes = attributes }
     end
-
-type PropertyInfo =
-    struct
-        val propertyType : Id
-        val value : string
-    end
-

@@ -4,19 +4,41 @@ open QuickGraph
 open System.Collections.Generic
 
 type internal VertexLabel = 
-    { name : string;
+    { 
+        id : Id;
+        name : string;
         potency : int;
-        level : int }
+        level : int 
+    }
 
 type internal EdgeLabel = 
-    | Generalization
-    | Attribute
-    | Type
-    | Association of string * int * int
+    | Generalization of Id
+    | Attribute of Id
+    | Type of Id
+    | Association of Id * (Id * int * int)
+
+type internal ModelElement = 
+    | Vertex of VertexLabel
+    | Edge of EdgeLabel
+
+/// Attribute value is a reference to an instance of attribute type, which shall be present in a model.
+/// For pragmatic reasons instances of basic types (int and string) are not proper nodes in a model, but merely string and int values.
+type internal AttributeValue =
+    | None
+    | Ref of VertexLabel
+    | Int of int
+    | String of string
+
+type internal RepoRepresentation = BidirectionalGraph<VertexLabel, TaggedEdge<VertexLabel, EdgeLabel>> * Dictionary<Id, Id>
 
 module internal GraphMetametamodel =
 
-    type Repo = BidirectionalGraph<VertexLabel, TaggedEdge<VertexLabel, EdgeLabel>> * Dictionary<VertexLabel, VertexLabel>
+    let private newId () = System.Guid.NewGuid().ToString()
+
+    //let private instance (repo : Repo) (type' : Id) (attributeValues : Map<VertexLabel, AttributeValue>) =
+    //    let name = attributeValues |> Seq.find (fun x -> x.Key.name = "Name") |> fun x -> x.Value
+    //    let potency = attributeValues |> Seq.find (fun x -> x.Key.name = "Potency") |> fun x -> x.Value
+    //    let level = attributeValues |> Seq.find (fun x -> x.Key.name = "Level") |> fun x -> x.Value
 
     let createM0Model () =
         let repo = (new BidirectionalGraph<_, _> true, new Dictionary<_, _>())
@@ -27,7 +49,7 @@ module internal GraphMetametamodel =
             repoGraph.AddEdge edge |> ignore
 
         let createNode name potency = 
-            let vertex = { name = name; potency = potency; level = 0 }
+            let vertex = { id = newId (); name = name; potency = potency; level = 0 }
             repoGraph.AddVertex vertex |> ignore
             vertex
 
@@ -37,13 +59,13 @@ module internal GraphMetametamodel =
         let (~-) name = 
             createNode name 0
 
-        let (---|>) = createEdge Generalization
+        let (---|>) = createEdge (Generalization <| newId ())
 
-        let (--+-->) = createEdge Attribute
+        let (--+-->) = createEdge (Attribute <| newId ())
 
-        let (--*-->) = createEdge Type
+        let (--*-->) = createEdge (Type <| newId ())
 
-        let (--->) source target targetRole = createEdge (Association targetRole) source target
+        let (--->) source target targetRole = createEdge (Association ((newId ()), targetRole)) source target
 
         let (--@-->) source target =
             classes.Add(source, target)
