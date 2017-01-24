@@ -36,7 +36,7 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-                <Setter Property="Background" Value="LightBlue" />
+                <Setter Property="Background" Value="LightCoral" />
             </DataTrigger>
         </Style.Triggers>
     </Style>
