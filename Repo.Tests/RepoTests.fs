@@ -12,11 +12,11 @@ let setup () =
     repo <- RepoFactory.CreateRepo ()
 
 [<Test>]
-let ``Repo should return some metamodel nodes`` () =
+let ``Repo shall return some metamodel nodes`` () =
     repo.MetamodelNodes () |> should not' (be Empty)
 
 [<Test>]
-let ``Repo should return some model nodes`` () =
+let ``Repo shall return some model nodes`` () =
     repo.ModelNodes () |> should not' (be Empty)
 
 [<Test>]

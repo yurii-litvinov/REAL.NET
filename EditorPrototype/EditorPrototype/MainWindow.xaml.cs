@@ -222,8 +222,10 @@ namespace EditorPrototype
         {
             ListBoxItem lbi = new ListBoxItem();
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
-            Image img = new Image();
-            img.Source = new BitmapImage(new Uri("pack://application:,,,/Pictures/Vertex.png"));
+            Image img = new Image()
+            {
+                Source = new BitmapImage(new Uri("pack://application:,,,/Pictures/Vertex.png"))
+            };
             TextBlock spaces = new TextBlock { Text = "  " };
             TextBlock tx = new TextBlock { Text = vertexName };
             sp.Children.Add(img);
@@ -239,8 +241,10 @@ namespace EditorPrototype
         {
             ListBoxItem lbi = new ListBoxItem();
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
-            Image img = new Image();
-            img.Source = new BitmapImage(new Uri("pack://application:,,,/Pictures/Edge.png"));
+            Image img = new Image()
+            {
+                Source = new BitmapImage(new Uri("pack://application:,,,/Pictures/Edge.png"))
+            };
             TextBlock spaces = new TextBlock { Text = "  " };
             TextBlock tx0 = new TextBlock { Text = source };
             TextBlock tx1 = new TextBlock { Text = " - " };

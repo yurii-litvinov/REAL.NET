@@ -6,7 +6,7 @@
         
         xmlns:wpf="clr-namespace:EditorPrototype"
         xmlns:controls1="http://schemas.panthernet.ru/graphx/"
-        Title="MainWindow"
+        Title="funreal"
         mc:Ignorable="d"
         Height="600" Width="800">
     <Grid>

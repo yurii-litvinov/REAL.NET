@@ -56,8 +56,9 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="RepoTypes.fs" />
     <Compile Include="Repo.fs" />
-    <Compile Include="GraphMetametamodel.fs" />
+    <Compile Include="GraphMetametamodelTypes.fs" />
     <Compile Include="MetamodelOperations.fs" />
+    <Compile Include="GraphMetametamodel.fs" />
     <Compile Include="RepoImpl.fs" />
     <Compile Include="RepoFactory.fs" />
   </ItemGroup>

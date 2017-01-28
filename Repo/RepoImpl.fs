@@ -16,15 +16,15 @@ type private RepoImpl () =
             let metaclass x = if classes.ContainsKey(x) 
                               then 
                                   match classes.[x] with
-                                  | Vertex(info, _) when info.name = "Attribute" -> NodeType.Attribute
+                                  | Vertex(info, _) when info.Name = "Attribute" -> NodeType.Attribute
                                   | _ -> NodeType.Node
                               else NodeType.Node
                             
             repoGraph.Vertices 
             |> Seq.map (fun (info, kind) 
                             -> new NodeInfo(
-                                info.id, 
-                                info.name, 
+                                info.Id, 
+                                info.Name, 
                                 metaclass (Vertex (info, kind)), 
                                 toList <| effectiveAttributes (repoGraph, classes) (info, kind)
                             )
@@ -44,18 +44,18 @@ type private RepoImpl () =
 
             let name n =
                 let info, kind = n
-                info.name
+                info.Name
                 
             repoGraph.Edges |> Seq.map (fun e -> new EdgeInfo(System.Guid.NewGuid().ToString(), name e.Source, name e.Target, edgeType (kind e.Tag)))
 
         member this.MetamodelNodes () =
             let name n =
                 let info, kind = n
-                info.name
+                info.Name
 
             let potency n =
                 let info, kind = n
-                info.potency
+                info.Potency
 
             repoGraph.Vertices |> Seq.filter (fun x -> potency x > 0 || potency x = -1) |> Seq.map (fun x -> new NodeInfo(name x, name x, NodeType.Node, new List<_> ()))
 
