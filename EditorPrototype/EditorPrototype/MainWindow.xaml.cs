@@ -126,9 +126,9 @@ namespace EditorPrototype
             foreach (var type in repo.MetamodelNodes())
             {
                 var button = new Button { Content = type.name };
-                //RoutedEventHandler createNode = (sender, args) => CreateNode(type);
+                RoutedEventHandler createNode = (sender, args) => CreateNewNode(type.id);
                 //RoutedEventHandler createEdge = (sender, args) => CreateEdge(type);
-                //button.Click += Repo.Repo.IsEdge(type) ? createEdge : createNode;
+                button.Click += createNode;
                 
                 // TODO: Bind it to XAML, do not do GUI work in C#.
                 paletteGrid.RowDefinitions.Add(new RowDefinition());  
@@ -170,6 +170,25 @@ namespace EditorPrototype
 
             dataGraph.AddVertex(vertex);
             DrawNewVertex(vertex.Key);
+        }
+
+        private void CreateNewNode(string typeId)
+        {
+            var newNode = repo.AddNode(typeId);
+            Func<Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
+            {
+                switch (n)
+                {
+                    case Repo.NodeType.Attribute:
+                        return DataVertex.VertexTypeEnum.Attribute;
+                    case Repo.NodeType.Node:
+                        return DataVertex.VertexTypeEnum.Node;
+                }
+
+                return DataVertex.VertexTypeEnum.Node;
+            };
+
+            CreateNode(newNode.name, nodeType(newNode.nodeType), newNode.attributes);
         }
 
         private void ElementInBoxSelectedAction(object sender, EventArgs e)

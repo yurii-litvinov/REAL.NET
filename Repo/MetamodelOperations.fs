@@ -37,7 +37,7 @@ module internal MetamodelOperations =
         |> Seq.filter (fun e -> match e.Tag with | _, Attribute _ -> true | _ -> false)
         |> Seq.map (fun e -> e.Target)
 
-    let rec private effectiveAttributeNodes repo node =
+    let rec effectiveAttributeNodes repo node =
         outEdges repo node
         |> Seq.filter (fun e -> match e.Tag with | _, Generalization _ -> true | _ -> false)
         |> Seq.map (fun e -> e.Target)

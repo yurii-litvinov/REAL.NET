@@ -49,6 +49,10 @@ type private RepoImpl () =
             repoGraph.Edges |> Seq.map (fun e -> new EdgeInfo(System.Guid.NewGuid().ToString(), name e.Source, name e.Target, edgeType (kind e.Tag)))
 
         member this.MetamodelNodes () =
+            let id n =
+                let info, kind = n
+                info.Id
+
             let name n =
                 let info, kind = n
                 info.Name
@@ -57,7 +61,32 @@ type private RepoImpl () =
                 let info, kind = n
                 info.Potency
 
-            repoGraph.Vertices |> Seq.filter (fun x -> potency x > 0 || potency x = -1) |> Seq.map (fun x -> new NodeInfo(name x, name x, NodeType.Node, new List<_> ()))
+            repoGraph.Vertices |> Seq.filter (fun x -> potency x > 0 || potency x = -1) |> Seq.map (fun x -> new NodeInfo(id x, name x, NodeType.Node, new List<_> ()))
 
         member this.Node id =
             (this :> Repo).ModelNodes () |> Seq.filter (fun x -> x.id = id) |> Seq.exactlyOne
+
+        member this.AddNode typeId =
+            let class' = 
+                repoGraph.Vertices 
+                |> Seq.filter (fun (a, _) -> a.Id = typeId)
+                |> Seq.exactlyOne
+
+            let classAttributes = MetamodelOperations.effectiveAttributeNodes (repoGraph, classes) class'
+            
+            let defaultValue attr =
+                let attributes, _ = attr
+                if attributes.Name = "Name" then
+                    let info, _ = class'
+                    String (info.Name + " instance")
+                else
+                    String ""
+
+            let instanceDefaultAttributes = classAttributes |> Seq.map (fun attr -> (attr, defaultValue attr)) |> Map.ofSeq
+            
+            let instance = MetamodelOperations.instance (repoGraph, classes) (Vertex class') instanceDefaultAttributes
+            let instanceProps, _ = instance
+            (this :> Repo).Node instanceProps.Id
+
+        member this.AddEdge sourceId targetId typeId =
+            failwith "Not implemented"
