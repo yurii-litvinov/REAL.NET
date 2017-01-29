@@ -79,7 +79,8 @@ module internal GraphMetametamodel =
 
         let createAttribute node name type' value =
             let attributeAttributes = { Value = value }
-            let modelElementAttributes = { Id = newId(); Name = name; Potency = 0; Level = 0 }
+            let potency = if name = "Name" then -1 else 0
+            let modelElementAttributes = { Id = newId(); Name = name; Potency = potency; Level = 0 }
             let attributeLabel = modelElementAttributes, NodeKind.Attribute attributeAttributes
             repoGraph.AddVertex attributeLabel |> ignore
 

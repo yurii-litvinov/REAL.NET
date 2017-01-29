@@ -127,8 +127,8 @@ namespace EditorPrototype
             {
                 var button = new Button { Content = type.name };
                 RoutedEventHandler createNode = (sender, args) => CreateNewNode(type.id);
-                //RoutedEventHandler createEdge = (sender, args) => CreateEdge(type);
-                button.Click += createNode;
+                RoutedEventHandler createEdge = (sender, args) => { };
+                button.Click += repo.IsEdgeClass(type.id) ? createEdge : createNode;
                 
                 // TODO: Bind it to XAML, do not do GUI work in C#.
                 paletteGrid.RowDefinitions.Add(new RowDefinition());  

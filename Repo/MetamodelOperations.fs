@@ -6,13 +6,24 @@ module internal MetamodelOperations =
 
     let private outEdges (repo : RepoRepresentation) node = (fst repo).OutEdges node
 
-    let private followEdge repo edgePredicate node = 
+    let isGeneralization (e : TaggedEdge<_, _>) = match e.Tag with | _, Generalization _ -> true | _ -> false
+    let isType (e : TaggedEdge<_, _>) = match e.Tag with | _, Type _ -> true | _ -> false
+    let isAttribute (e : TaggedEdge<_, _>) = match e.Tag with | _, Attribute _ -> true | _ -> false
+    let isValue (e : TaggedEdge<_, _>) = match e.Tag with | _, Value _ -> true | _ -> false
+    let isAssociation (e : TaggedEdge<_, _>) = match e.Tag with | _, Association _ -> true | _ -> false
+
+    let followEdge repo edgePredicate node = 
         outEdges repo node
         |> Seq.filter edgePredicate
         |> Seq.exactlyOne
         |> fun e -> e.Target
+    
+    let followEdges repo edgePredicate node = 
+        outEdges repo node
+        |> Seq.filter edgePredicate
+        |> Seq.map (fun e -> e.Target)
 
-    let private attrType repo a = a |> followEdge repo (fun e -> match e.Tag with | _, Type _ -> true | _ -> false) |> fun n -> (fst n).Id
+    let private attrType repo a = a |> followEdge repo isType |> fun n -> (fst n).Id
 
     let private intrinsicAttributeValue attribute node = 
         match attribute.Name with
@@ -108,7 +119,7 @@ module internal MetamodelOperations =
             let edge = new TaggedEdge<_, _>(source, target, label)
             graph.AddEdge edge |> ignore
 
-        let type' node = followEdge repo (fun e -> match e.Tag with | _, Type _ -> true | _ -> false) node
+        let type' node = followEdge repo isType node
 
         let instanceAttributes = 
             classAttributes

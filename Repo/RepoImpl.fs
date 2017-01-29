@@ -63,6 +63,21 @@ type private RepoImpl () =
 
             repoGraph.Vertices |> Seq.filter (fun x -> potency x > 0 || potency x = -1) |> Seq.map (fun x -> new NodeInfo(id x, name x, NodeType.Node, new List<_> ()))
 
+        member this.IsEdgeClass typeId =
+            let class' = 
+                repoGraph.Vertices 
+                |> Seq.filter (fun (a, _) -> a.Id = typeId)
+                |> Seq.exactlyOne
+
+            let isEdge node =
+                let nodeModelElementAttributes, _ = node
+                nodeModelElementAttributes.Name = "Relationship"
+                
+            if isEdge class' then
+                true
+            else
+                followEdges (repoGraph, classes) isGeneralization class' |> Seq.map isEdge |> Seq.forall id
+
         member this.Node id =
             (this :> Repo).ModelNodes () |> Seq.filter (fun x -> x.id = id) |> Seq.exactlyOne
 
@@ -88,5 +103,5 @@ type private RepoImpl () =
             let instanceProps, _ = instance
             (this :> Repo).Node instanceProps.Id
 
-        member this.AddEdge sourceId targetId typeId =
+        member this.AddEdge typeId sourceId targetId =
             failwith "Not implemented"
