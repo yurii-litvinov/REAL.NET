@@ -1,42 +1,7 @@
-﻿/*using GraphX.PCL.Common.Models;
-
-namespace EditorPrototype
-{
-    public class DataVertex : VertexBase
-    {
-        public string Text { get; set; }
-        public string Name { get; set; }
-        public int ImageId { get; set; }
-
-        public bool IsBlue { get; set; }
-
-        #region Calculated or static props
-
-        public override string ToString()
-        {
-            return Text;
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Default constructor for this class
-        /// (required for serialization).
-        /// </summary>
-        public DataVertex() : this(string.Empty)
-        {
-        }
-
-        public DataVertex(string text = "")
-        {
-            Text = string.IsNullOrEmpty(text) ? "New Vertex" : text;
-        }
-    }
-}*/
-
-
-using GraphX;
-using GraphX.PCL.Common.Models;
+﻿using GraphX.PCL.Common.Models;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows.Media;
 
 namespace EditorPrototype
 {
@@ -48,13 +13,74 @@ namespace EditorPrototype
      *  
      */
 
-    public class DataVertex : VertexBase
+    public class DataVertex : VertexBase, INotifyPropertyChanged
     {
+        public enum VertexTypeEnum
+        {
+            Node,
+            Attribute
+        }
+
+        public class Attribute
+        {
+            public string Name { get; set; }
+
+            public string Type { get; set; }
+
+            public string Value { get; set; }
+        }
+
         /// <summary>
         /// Some string property for example purposes
         /// </summary>
         public string Name { get; set; }
+
         public string Key { get; set; }
+
+        private Brush color = Brushes.Green;
+        private VertexTypeEnum vertexType = VertexTypeEnum.Node;
+        private IList<Attribute> attributes = new List<Attribute>();
+
+        public Brush Color
+        {
+            get
+            {
+                return color;
+            }
+            set
+            {
+                color = value;
+                OnPropertyChanged(nameof(Color));
+            }
+        }
+
+        public VertexTypeEnum VertexType
+        {
+            get
+            {
+                return this.vertexType;
+            }
+            set
+            {
+                this.vertexType = value;
+                OnPropertyChanged(nameof(this.VertexType));
+            }
+        }
+
+        public IList<Attribute> Attributes
+        {
+            get
+            {
+                return attributes;
+            }
+            set
+            {
+                attributes = value;
+                OnPropertyChanged(nameof(Attributes));
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         #region Calculated or static props
 
@@ -77,6 +103,14 @@ namespace EditorPrototype
         public DataVertex(string text = "")
         {
             Name = text;
+        }
+
+        public void OnPropertyChanged(string name)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(name));
+            }
         }
     }
 }

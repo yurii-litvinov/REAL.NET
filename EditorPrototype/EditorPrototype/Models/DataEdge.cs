@@ -5,12 +5,22 @@ using GraphX.Measure;
 using GraphX.PCL.Common.Models;
 using EditorPrototype.FileSerialization;
 using YAXLib;
+using GraphX.Controls;
+using System.Windows.Media;
 
 namespace EditorPrototype
 {
     [Serializable]
     public class DataEdge : EdgeBase<DataVertex>, INotifyPropertyChanged
     {
+        public enum EdgeTypeEnum
+        {
+            Generalization,
+            Association,
+            Type,
+            Attribute
+        }
+
         [YAXCustomSerializer(typeof(YAXPointArraySerializer))]
         public override Point[] RoutingPoints { get; set; }
 
@@ -34,12 +44,27 @@ namespace EditorPrototype
         /// Node main description (header)
         /// </summary>
         private string _text;
-        public string Text { get { return _text; } set { _text = value; OnPropertyChanged("Text"); } }
+        public string Text { get { return _text; } set { _text = value; OnPropertyChanged(nameof(Text)); } }
         public string ToolTipText { get; set; }
 
         public override string ToString()
         {
             return Text;
+        }
+
+        private EdgeTypeEnum edgeType = EdgeTypeEnum.Association;
+
+        public EdgeTypeEnum EdgeType
+        {
+            get
+            {
+                return edgeType;
+            }
+            set
+            {
+                edgeType = value;
+                OnPropertyChanged(nameof(EdgeType));
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
