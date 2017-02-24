@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
-using Microsoft.Glee.Drawing;
+using Microsoft.Msagl.Drawing;
+using Microsoft.Msagl.GraphViewerGdi;
 using Repo;
+using Color = Microsoft.Msagl.Drawing.Color;
+using Graph = Microsoft.Msagl.Drawing.Graph;
+using Shape = Microsoft.Msagl.Drawing.Shape;
 
 namespace MsAglWinFormsEditor
 {
@@ -13,24 +18,22 @@ namespace MsAglWinFormsEditor
 
         private readonly Repo.Repo repo = RepoFactory.CreateRepo();
         private readonly Graph graph = new Graph("graph");
+        private readonly GViewer viewer = new GViewer();
 
         /// <summary>
         /// Create form with given graph
         /// </summary>
         public MainForm()
         {
+            viewer.MouseClick += ViewerMouseClicked;
             InitializeComponent();
-            
-            var viewer = new Microsoft.Glee.GraphViewerGdi.GViewer();
-
             AddEdges();
             AddNodes();
-            
             viewer.Graph = graph;
-            
+
             SuspendLayout();
             viewer.Dock = DockStyle.Fill;
-            Controls.Add(viewer);
+            tableLayoutPanel1.Controls.Add(viewer, 0, 0);
             ResumeLayout();
         }
 
@@ -39,8 +42,6 @@ namespace MsAglWinFormsEditor
             foreach (var edge in repo.ModelEdges())
             {
                 var newEdge = graph.AddEdge(edge.source, edge.edgeType.ToString(), edge.target);
-                newEdge.Attr.Fontsize = 5;
-
                 switch (edge.edgeType)
                 {
                     case EdgeType.Association:
@@ -66,14 +67,15 @@ namespace MsAglWinFormsEditor
             foreach (var node in repo.ModelNodes())
             {
                 var newNode = graph.FindNode(node.name);
+                newNode.UserData = node.attributes;
                 switch (node.nodeType)
                 {
                     case NodeType.Attribute:
-                        newNode.Attr.Fillcolor = Color.IndianRed;
+                        newNode.Attr.FillColor = Color.IndianRed;
                         newNode.Attr.Shape = Shape.Box;
                         break;
                     case NodeType.Node:
-                        newNode.Attr.Fillcolor = Color.ForestGreen;
+                        newNode.Attr.FillColor = Color.ForestGreen;
                         newNode.Attr.Shape = Shape.Octagon;
                         break;
                     default:
@@ -81,5 +83,24 @@ namespace MsAglWinFormsEditor
                 }
             }
         }
+
+        private void ViewerMouseClicked(object sender, MouseEventArgs e)
+        {
+            var selectedObject = viewer.SelectedObject;
+            var attributeInfos = (selectedObject as Node)?.UserData as List<AttributeInfo>;
+            if (attributeInfos != null)
+            {
+                AttributeTable.Visible = true;
+                AttributeTable.Rows.Clear();
+                foreach (var info in attributeInfos)
+                {
+                    object[] row = {info.name, repo.Node(info.attributeType).name, info.value};
+                    AttributeTable.Rows.Add(row);
+                }
+            }
+            else
+                AttributeTable.Visible = false;
+        }
+        
     }
 }
