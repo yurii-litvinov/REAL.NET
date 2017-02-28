@@ -33,7 +33,7 @@ namespace MsAglWinFormsEditor
 
             SuspendLayout();
             viewer.Dock = DockStyle.Fill;
-            tableLayoutPanel1.Controls.Add(viewer, 0, 0);
+            mainLayout.Controls.Add(viewer, 0, 0);
             ResumeLayout();
         }
 
@@ -90,16 +90,18 @@ namespace MsAglWinFormsEditor
             var attributeInfos = (selectedObject as Node)?.UserData as List<AttributeInfo>;
             if (attributeInfos != null)
             {
-                AttributeTable.Visible = true;
-                AttributeTable.Rows.Clear();
+                attributeTable.Visible = true;
+                attributeTable.Rows.Clear();
                 foreach (var info in attributeInfos)
                 {
-                    object[] row = {info.name, repo.Node(info.attributeType).name, info.value};
-                    AttributeTable.Rows.Add(row);
+                    object[] row = { info.name, repo.Node(info.attributeType).name, info.value };
+                    attributeTable.Rows.Add(row);
                 }
             }
             else
-                AttributeTable.Visible = false;
+            {
+                attributeTable.Visible = false;
+            }
         }
         
     }
