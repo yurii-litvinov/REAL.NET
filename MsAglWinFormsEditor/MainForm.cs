@@ -40,7 +40,7 @@ namespace MsAglWinFormsEditor
             InitPalette();
         }
 
-        private List<EdgeType> edgeTypes = new List<EdgeType>
+        private readonly List<EdgeType> edgeTypes = new List<EdgeType>
         {
             EdgeType.Generalization,
             EdgeType.Association,
@@ -62,6 +62,8 @@ namespace MsAglWinFormsEditor
                 associationButton.Click += (o, args) =>
                 {
                     FormatEdge(edgeType, edge);
+                    //TODO: uncomment it when addEdge will be imlemented 
+                    //repo.AddEdge(edgeType.ToString(), edge.Source, edge.Target);
                     form.Close();
                     viewer.Invalidate();
                 };
@@ -109,6 +111,7 @@ namespace MsAglWinFormsEditor
             {
                 var newNode = graph.FindNode(node.name);
                 newNode.UserData = node.attributes;
+                newNode.Attr.LabelMargin = Left;
                 switch (node.nodeType)
                 {
                     case NodeType.Attribute:
@@ -129,7 +132,7 @@ namespace MsAglWinFormsEditor
         {
             foreach (var type in repo.MetamodelNodes())
             {
-                var button = new Button { Text = type.name };
+                var button = new Button { Text = type.name, Dock = DockStyle.Bottom};
                 EventHandler createNode = (sender, args) => CreateNewNode(type.id);
                 button.Click += createNode;
 
