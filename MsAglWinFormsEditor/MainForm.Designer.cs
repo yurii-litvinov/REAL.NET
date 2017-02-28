@@ -35,10 +35,11 @@ namespace MsAglWinFormsEditor
             this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mainLayout = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.toolsLayout = new System.Windows.Forms.TableLayoutPanel();
+            this.paletteGrid = new System.Windows.Forms.TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.attributeTable)).BeginInit();
             this.mainLayout.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
+            this.toolsLayout.SuspendLayout();
             this.SuspendLayout();
             // 
             // attributeTable
@@ -84,7 +85,7 @@ namespace MsAglWinFormsEditor
             this.mainLayout.ColumnCount = 2;
             this.mainLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 73.79958F));
             this.mainLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.20042F));
-            this.mainLayout.Controls.Add(this.tableLayoutPanel2, 1, 0);
+            this.mainLayout.Controls.Add(this.toolsLayout, 1, 0);
             this.mainLayout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainLayout.Location = new System.Drawing.Point(0, 0);
             this.mainLayout.Name = "mainLayout";
@@ -93,19 +94,33 @@ namespace MsAglWinFormsEditor
             this.mainLayout.Size = new System.Drawing.Size(958, 533);
             this.mainLayout.TabIndex = 2;
             // 
-            // tableLayoutPanel2
+            // toolsLayout
             // 
-            this.tableLayoutPanel2.ColumnCount = 1;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Controls.Add(this.attributeTable, 0, 1);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(710, 3);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 2;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(245, 527);
-            this.tableLayoutPanel2.TabIndex = 2;
+            this.toolsLayout.ColumnCount = 1;
+            this.toolsLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.toolsLayout.Controls.Add(this.attributeTable, 0, 1);
+            this.toolsLayout.Controls.Add(this.paletteGrid, 0, 0);
+            this.toolsLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.toolsLayout.Location = new System.Drawing.Point(710, 3);
+            this.toolsLayout.Name = "toolsLayout";
+            this.toolsLayout.RowCount = 2;
+            this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.toolsLayout.Size = new System.Drawing.Size(245, 527);
+            this.toolsLayout.TabIndex = 2;
+            // 
+            // paletteGrid
+            // 
+            this.paletteGrid.AutoSize = true;
+            this.paletteGrid.ColumnCount = 1;
+            this.paletteGrid.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.paletteGrid.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.paletteGrid.Location = new System.Drawing.Point(3, 260);
+            this.paletteGrid.Name = "paletteGrid";
+            this.paletteGrid.RowCount = 1;
+            this.paletteGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.paletteGrid.Size = new System.Drawing.Size(239, 0);
+            this.paletteGrid.TabIndex = 2;
             // 
             // MainForm
             // 
@@ -117,7 +132,8 @@ namespace MsAglWinFormsEditor
             this.Text = "MainForm";
             ((System.ComponentModel.ISupportInitialize)(this.attributeTable)).EndInit();
             this.mainLayout.ResumeLayout(false);
-            this.tableLayoutPanel2.ResumeLayout(false);
+            this.toolsLayout.ResumeLayout(false);
+            this.toolsLayout.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -127,8 +143,9 @@ namespace MsAglWinFormsEditor
         private DataGridViewTextBoxColumn AttributeName;
         private DataGridViewTextBoxColumn Type;
         private DataGridViewTextBoxColumn Value;
-        private TableLayoutPanel tableLayoutPanel2;
+        private TableLayoutPanel toolsLayout;
         private DataGridView attributeTable;
+        private TableLayoutPanel paletteGrid;
     }
 }
 

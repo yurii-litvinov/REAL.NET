@@ -48,6 +48,7 @@
     <Reference Include="Microsoft.Office.Interop.Visio, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
@@ -99,6 +100,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EditorPrototype\EditorPrototype\EditorPrototype.csproj">
+      <Project>{1DCB1D77-AB11-404C-BCE4-8EB7BF8F549D}</Project>
+      <Name>EditorPrototype</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Repo\Repo.fsproj">
       <Project>{9e7065a4-ba5e-4752-84bf-54d5c00db60c}</Project>
       <Name>Repo</Name>
