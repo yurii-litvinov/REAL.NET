@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
+using System.Windows.Media;
+using Microsoft.Msagl.Core.Geometry.Curves;
+using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Repo;
 using Color = Microsoft.Msagl.Drawing.Color;
 using Edge = Microsoft.Msagl.Drawing.Edge;
 using Graph = Microsoft.Msagl.Drawing.Graph;
+using LineSegment = Microsoft.Msagl.Core.Geometry.Curves.LineSegment;
 using Node = Microsoft.Msagl.Drawing.Node;
 using Shape = Microsoft.Msagl.Drawing.Shape;
 
@@ -20,6 +25,8 @@ namespace MsAglWinFormsEditor
         private readonly Repo.Repo repo = RepoFactory.CreateRepo();
         private readonly Graph graph = new Graph("graph");
         private readonly GViewer viewer = new GViewer();
+
+        private Node selectedNode;
 
         /// <summary>
         /// Create form with given graph
@@ -132,7 +139,7 @@ namespace MsAglWinFormsEditor
         {
             foreach (var type in repo.MetamodelNodes())
             {
-                var button = new Button { Text = type.name, Dock = DockStyle.Bottom};
+                var button = new Button { Text = type.name, Dock = DockStyle.Bottom };
                 EventHandler createNode = (sender, args) => CreateNewNode(type.id);
                 button.Click += createNode;
 
@@ -168,22 +175,100 @@ namespace MsAglWinFormsEditor
         private void ViewerMouseClicked(object sender, MouseEventArgs e)
         {
             var selectedObject = viewer.SelectedObject;
-            var attributeInfos = (selectedObject as Node)?.UserData as List<AttributeInfo>;
-            if (attributeInfos != null)
+            selectedNode = selectedObject as Node;
+            if (selectedNode != null)
             {
-                attributeTable.Visible = true;
-                attributeTable.Rows.Clear();
-                foreach (var info in attributeInfos)
+                var attributeInfos = selectedNode.UserData as List<AttributeInfo>;
+                if (attributeInfos != null)
                 {
-                    object[] row = { info.name, repo.Node(info.attributeType).name, info.value };
-                    attributeTable.Rows.Add(row);
+                    attributeTable.Visible = true;
+                    loadImageButton.Visible = true;
+                    paintButton.Visible = true;
+                    attributeTable.Rows.Clear();
+                    foreach (var info in attributeInfos)
+                    {
+                        object[] row = { info.name, repo.Node(info.attributeType).name, info.value };
+                        attributeTable.Rows.Add(row);
+                    }
                 }
             }
             else
             {
                 attributeTable.Visible = false;
+                loadImageButton.Visible = false;
+                paintButton.Visible = false;
             }
         }
 
+        private void LoadImageButtonClick(object sender, EventArgs e)
+        {
+            var openImageDialog = new OpenFileDialog();
+            if (openImageDialog.ShowDialog() == DialogResult.OK)
+            {
+                var imagePath = openImageDialog.FileName;
+                selectedNode.Attr.Shape = Shape.DrawFromGeometry;
+                selectedNode.DrawNodeDelegate = new DelegateToOverrideNodeRendering(DrawNode);
+                imageNode = new Bitmap(imagePath);
+            }
+        }
+
+        private System.Drawing.Drawing2D.GraphicsPath FillTheGraphicsPath(ICurve iCurve)
+        {
+            var curve = iCurve as Curve;
+            if (curve == null)
+                curve = ((RoundedRect)iCurve).Curve;
+            var path = new System.Drawing.Drawing2D.GraphicsPath();
+            foreach (var seg in curve.Segments)
+                AddSegmentToPath(seg, ref path);
+            return path;
+        }
+
+        private void AddSegmentToPath(ICurve seg, ref System.Drawing.Drawing2D.GraphicsPath p)
+        {
+            var line = seg as LineSegment;
+            if (line != null)
+                p.AddLine(PointF(line.Start), PointF(line.End));
+        }
+
+        private PointF PointF(Microsoft.Msagl.Core.Geometry.Point p) 
+            => new PointF((float)p.X, (float)p.Y);
+
+        private Image imageNode;
+
+        private Image ImageOfNode(Node node)
+        {
+            return imageNode;
+        }
+
+        private bool DrawNode(Node node, object graphics)
+        {
+            var g = (Graphics)graphics;
+            var image = ImageOfNode(node);
+
+            //flip the image around its center
+            using (System.Drawing.Drawing2D.Matrix m = g.Transform)
+            {
+                using (System.Drawing.Drawing2D.Matrix saveM = m.Clone())
+                {
+                    g.SetClip(FillTheGraphicsPath(node.GeometryNode.BoundaryCurve));
+                    using (var m2 = new System.Drawing.Drawing2D.Matrix(1, 0, 0, -1, 0, 2 * (float)node.GeometryNode.Center.Y))
+                        m.Multiply(m2);
+                        
+                    g.Transform = m;
+                    g.DrawImage(image, new PointF((float)(node.GeometryNode.Center.X - node.GeometryNode.Width / 2),
+                        (float)(node.GeometryNode.Center.Y - node.GeometryNode.Height / 2)));
+                    g.Transform = saveM;
+                    g.ResetClip();
+                }
+            }
+
+            return true;//returning false would enable the default rendering
+        }
+
+        private void PaintButtonClick(object sender, EventArgs e)
+        {
+            var form = new DrawingForm();
+            form.Show();
+        }
     }
 }
