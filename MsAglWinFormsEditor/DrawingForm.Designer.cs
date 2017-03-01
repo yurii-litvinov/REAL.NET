@@ -78,7 +78,6 @@
             this.itemsListBox.Name = "itemsListBox";
             this.itemsListBox.Size = new System.Drawing.Size(120, 95);
             this.itemsListBox.TabIndex = 1;
-            this.itemsListBox.SelectedIndexChanged += new System.EventHandler(this.itemsListBox_SelectedIndexChanged);
             // 
             // shapesComboBox
             // 
@@ -123,7 +122,7 @@
             this.ClientSize = new System.Drawing.Size(455, 282);
             this.Controls.Add(this.mainLayout);
             this.Name = "DrawingForm";
-            this.Text = "DrawingForm";
+            this.Text = "ЛУЧШЕ ИСПОЛЬЗУЙТЕ PAINT!!!!!!!!!!!!!!!!!!!!!";
             this.mainLayout.ResumeLayout(false);
             this.toolLayot.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).EndInit();

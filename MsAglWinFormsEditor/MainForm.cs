@@ -1,10 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Windows.Media;
 using Microsoft.Msagl.Core.Geometry.Curves;
-using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Repo;
 using Color = Microsoft.Msagl.Drawing.Color;
@@ -26,6 +25,7 @@ namespace MsAglWinFormsEditor
         private readonly Graph graph = new Graph("graph");
         private readonly GViewer viewer = new GViewer();
 
+        private readonly Hashtable imagesHashtable = new Hashtable();
         private Node selectedNode;
 
         /// <summary>
@@ -207,16 +207,14 @@ namespace MsAglWinFormsEditor
             {
                 var imagePath = openImageDialog.FileName;
                 selectedNode.Attr.Shape = Shape.DrawFromGeometry;
-                selectedNode.DrawNodeDelegate = new DelegateToOverrideNodeRendering(DrawNode);
-                imageNode = new Bitmap(imagePath);
+                selectedNode.DrawNodeDelegate = DrawNode;
+                imagesHashtable.Add(selectedNode.Id, new Bitmap(imagePath));
             }
         }
 
         private System.Drawing.Drawing2D.GraphicsPath FillTheGraphicsPath(ICurve iCurve)
         {
-            var curve = iCurve as Curve;
-            if (curve == null)
-                curve = ((RoundedRect)iCurve).Curve;
+            var curve = iCurve as Curve ?? ((RoundedRect)iCurve).Curve;
             var path = new System.Drawing.Drawing2D.GraphicsPath();
             foreach (var seg in curve.Segments)
                 AddSegmentToPath(seg, ref path);
@@ -227,25 +225,18 @@ namespace MsAglWinFormsEditor
         {
             var line = seg as LineSegment;
             if (line != null)
+            {
                 p.AddLine(PointF(line.Start), PointF(line.End));
+            }
         }
 
         private PointF PointF(Microsoft.Msagl.Core.Geometry.Point p) 
             => new PointF((float)p.X, (float)p.Y);
 
-        private Image imageNode;
-
-        private Image ImageOfNode(Node node)
-        {
-            return imageNode;
-        }
-
         private bool DrawNode(Node node, object graphics)
         {
             var g = (Graphics)graphics;
-            var image = ImageOfNode(node);
 
-            //flip the image around its center
             using (System.Drawing.Drawing2D.Matrix m = g.Transform)
             {
                 using (System.Drawing.Drawing2D.Matrix saveM = m.Clone())
@@ -255,7 +246,7 @@ namespace MsAglWinFormsEditor
                         m.Multiply(m2);
                         
                     g.Transform = m;
-                    g.DrawImage(image, new PointF((float)(node.GeometryNode.Center.X - node.GeometryNode.Width / 2),
+                    g.DrawImage(imagesHashtable[node.Id] as Image, new PointF((float)(node.GeometryNode.Center.X - node.GeometryNode.Width / 2),
                         (float)(node.GeometryNode.Center.Y - node.GeometryNode.Height / 2)));
                     g.Transform = saveM;
                     g.ResetClip();

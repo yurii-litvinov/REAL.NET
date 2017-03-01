@@ -7,6 +7,9 @@ using Color = System.Drawing.Color;
 
 namespace MsAglWinFormsEditor
 {
+    /// <summary>
+    /// Form for drawing node shape
+    /// </summary>
     public partial class DrawingForm : Form
     {
         private readonly List<Tuple<object, Types, Point>> items = new List<Tuple<object, Types, Point>>();
@@ -18,6 +21,7 @@ namespace MsAglWinFormsEditor
             Ellipse,
             Image
         }
+
         public DrawingForm()
         {
             InitializeComponent();
@@ -43,10 +47,6 @@ namespace MsAglWinFormsEditor
                         throw new ArgumentOutOfRangeException();
                 }
             }
-        }
-
-        private void itemsListBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
         }
 
         private void canvas_Click(object sender, EventArgs e)
