@@ -50,11 +50,11 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
-    <Content Include="packages.config" />
     <None Include="App.config" />
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="RepoTests.fs" />
     <Compile Include="InstanceTest.fs" />
+    <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

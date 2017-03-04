@@ -35,23 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Accordion, Version=3.5.40128.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Accordion.1.0.0\lib\Accordion.dll</HintPath>
-    </Reference>
     <Reference Include="FSharp.Core, Version=4.4.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\FSharp.Core.4.1.0\lib\net40\FSharp.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Msagl, Version=3.0.0.0, Culture=neutral, PublicKeyToken=7f84f738e1fc245c, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Research.DryadLINQ.MSAGL.3.0.0.0\lib\Microsoft.Msagl.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Msagl.Drawing, Version=3.0.0.0, Culture=neutral, PublicKeyToken=8a3d7c21d5fa1306, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Research.DryadLINQ.MSAGL.3.0.0.0\lib\Microsoft.Msagl.Drawing.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Msagl.GraphViewerGdi, Version=3.0.0.0, Culture=neutral, PublicKeyToken=fffc27ea4058b3a1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Research.DryadLINQ.MSAGL.3.0.0.0\lib\Microsoft.Msagl.GraphViewerGdi.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -125,7 +110,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
+    <None Include="paket.references" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
