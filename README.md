@@ -1,7 +1,10 @@
 # REAL.NET
 
 [![Join the chat at https://gitter.im/REAL-NET/Lobby](https://badges.gitter.im/REAL-NET/Lobby.svg)](https://gitter.im/REAL-NET/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.org/yurii-litvinov/REAL.NET.svg?branch=master)](https://travis-ci.org/yurii-litvinov/REAL.NET)
+
+ Travis        | AppVeyor
+ ------------- | --------------
+[![Travis Build Status](https://travis-ci.org/yurii-litvinov/REAL.NET.svg?branch=master)](https://travis-ci.org/yurii-litvinov/REAL.NET) | [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/2midbuo5dlq6vt8d?svg=true)](https://ci.appveyor.com/project/yurii-litvinov/real-net)
 
 A set of .NET libraries for quick creation of visual languages and related tools (spriritual successor of QReal project)
 
