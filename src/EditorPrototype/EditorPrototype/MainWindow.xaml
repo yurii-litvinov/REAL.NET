@@ -1,0 +1,60 @@
+﻿<Window x:Class="EditorPrototype.MainWindow" x:ClassModifier="internal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        
+        xmlns:wpf="clr-namespace:EditorPrototype"
+        xmlns:controls1="http://schemas.panthernet.ru/graphx/"
+        Title="funreal"
+        mc:Ignorable="d"
+        Height="600" Width="800">
+    <Grid>
+        <Grid.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="/Templates/GeneralTemplate.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
+        </Grid.Resources>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="100"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        
+        <Border Grid.Row="0" Grid.Column="0" BorderThickness="1"  Margin="2" >
+            <controls1:ZoomControl x:Name="g_zoomctrl" >
+                <wpf:GraphAreaExample x:Name="g_Area" />
+            </controls1:ZoomControl>
+        </Border>
+
+        <DockPanel Grid.Column="1" Grid.Row="0">
+            <Grid x:Name="rightPanel">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" MinHeight="100"/>
+                    <RowDefinition Height="Auto" MinHeight="70"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto" MinHeight="100"/>
+                </Grid.RowDefinitions>
+
+                <Grid x:Name="paletteGrid" Grid.Row="1"/>
+
+                <Label x:Name="elementsListLabel" Grid.Row="2" Content="Elements:" HorizontalAlignment="Stretch"/>
+                <ListBox x:Name="elementsListBox" Grid.Row="3" HorizontalAlignment="Stretch" Margin="0,20,0,0"/>
+                <Label x:Name="selectedEntityLabel" Grid.Row="4" Content="Selected entity:" HorizontalAlignment="Stretch" />
+
+                <DataGrid x:Name="attributesView" Grid.Row="5" IsReadOnly="True" ItemsSource="{Binding Attributes}" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                        <DataGridTextColumn Header="Type" Binding="{Binding Type}"/>
+                        <DataGridTextColumn Header="Value" Binding="{Binding Value}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </DockPanel>
+
+    </Grid>
+</Window>
