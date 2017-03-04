@@ -242,8 +242,8 @@ Target "GenerateHelp" (fun _ ->
     Rename "docs/content/release-notes.md" "docs/content/RELEASE_NOTES.md"
 
     DeleteFile "docs/content/license.md"
-    CopyFile "docs/content/" "LICENSE.txt"
-    Rename "docs/content/license.md" "docs/content/LICENSE.txt"
+    CopyFile "docs/content/" "LICENSE"
+    Rename "docs/content/license.md" "docs/content/LICENSE"
 
     generateHelp true
 )
@@ -254,8 +254,8 @@ Target "GenerateHelpDebug" (fun _ ->
     Rename "docs/content/release-notes.md" "docs/content/RELEASE_NOTES.md"
 
     DeleteFile "docs/content/license.md"
-    CopyFile "docs/content/" "LICENSE.txt"
-    Rename "docs/content/license.md" "docs/content/LICENSE.txt"
+    CopyFile "docs/content/" "LICENSE"
+    Rename "docs/content/license.md" "docs/content/LICENSE"
 
     generateHelp' true true
 )
@@ -381,7 +381,7 @@ Target "All" DoNothing
   ==> "NuGet"
   ==> "BuildPackage"
   ==> "All"
-  =?> ("ReleaseDocs",isLocalBuild)
+//  =?> ("ReleaseDocs",isLocalBuild)
 
 "GenerateHelp"
   ==> "GenerateReferenceDocs"
@@ -394,7 +394,7 @@ Target "All" DoNothing
   ==> "Release"
 
 "BuildPackage"
-  ==> "PublishNuget"
+//  ==> "PublishNuget"
   ==> "Release"
 
 "ReleaseDocs"

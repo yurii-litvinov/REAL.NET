@@ -13,7 +13,7 @@ let referenceBinaries = []
 // Web site location for the generated documentation
 let website = "/FunReal"
 
-let githubLink = "https://github.com/yurii-litvinov/REAL.NET/https://github.com/yurii-litvinov/REAL.NET"
+let githubLink = "https://github.com/yurii-litvinov/REAL.NET"
 
 // Specify more information about your project
 let info =
