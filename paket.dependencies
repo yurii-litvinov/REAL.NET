@@ -1,6 +1,10 @@
 source https://nuget.org/api/v2
 
 nuget FSharp.Core redirects: force
+nuget YC.QuickGraph
+nuget GraphX
+nuget Microsoft.Research.DryadLINQ.MSAGL
+nuget YAXLib
 
 group Build
   source https://nuget.org/api/v2
@@ -14,5 +18,6 @@ group Build
 group Test
   source https://nuget.org/api/v2
   
-  nuget NUnit ~> 3.5.0
-  nuget NUnit.Runners ~> 3.5.0
+  nuget NUnit 
+  nuget NUnit.Runners
+  nuget FsUnit
