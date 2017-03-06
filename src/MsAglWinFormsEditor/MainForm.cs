@@ -212,7 +212,7 @@ namespace MsAglWinFormsEditor
             }
         }
 
-        private System.Drawing.Drawing2D.GraphicsPath FillTheGraphicsPath(ICurve iCurve)
+        private System.Drawing.Drawing2D.GraphicsPath FillTheGraphicsPath(Microsoft.Msagl.Splines.ICurve iCurve)
         {
             var curve = iCurve as Curve ?? ((RoundedRect)iCurve).Curve;
             var path = new System.Drawing.Drawing2D.GraphicsPath();
@@ -241,13 +241,13 @@ namespace MsAglWinFormsEditor
             {
                 using (System.Drawing.Drawing2D.Matrix saveM = m.Clone())
                 {
-                    g.SetClip(FillTheGraphicsPath(node.GeometryNode.BoundaryCurve));
-                    using (var m2 = new System.Drawing.Drawing2D.Matrix(1, 0, 0, -1, 0, 2 * (float)node.GeometryNode.Center.Y))
+                    g.SetClip(FillTheGraphicsPath(node.Attr.GeometryNode.BoundaryCurve));
+                    using (var m2 = new System.Drawing.Drawing2D.Matrix(1, 0, 0, -1, 0, 2 * (float)node.Attr.GeometryNode.Center.Y))
                         m.Multiply(m2);
                         
                     g.Transform = m;
-                    g.DrawImage(imagesHashtable[node.Id] as Image, new PointF((float)(node.GeometryNode.Center.X - node.GeometryNode.Width / 2),
-                        (float)(node.GeometryNode.Center.Y - node.GeometryNode.Height / 2)));
+                    g.DrawImage(imagesHashtable[node.Id] as Image, new PointF((float)(node.Attr.GeometryNode.Center.X - node.Attr.GeometryNode.Width / 2),
+                        (float)(node.Attr.GeometryNode.Center.Y - node.Attr.GeometryNode.Height / 2)));
                     g.Transform = saveM;
                     g.ResetClip();
                 }
