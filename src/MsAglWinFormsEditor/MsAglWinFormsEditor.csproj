@@ -49,10 +49,6 @@
       <HintPath>..\..\packages\Microsoft.CodeAnalysis.VisualBasic.1.3.2\lib\net45\Microsoft.CodeAnalysis.VisualBasic.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Msagl, Version=3.0.0.0, Culture=neutral, PublicKeyToken=640c57aa40e7ae7d, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Automatic.Graph.Layout.1.0.0\lib\net40\Microsoft.Msagl.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.Msagl.Drawing, Version=3.0.0.0, Culture=neutral, PublicKeyToken=8a3d7c21d5fa1306, processorArchitecture=MSIL">
       <HintPath>..\packages\LINQPad.CodeAnalysis.2.0.0\lib\net45\Microsoft.Msagl.Drawing.dll</HintPath>
       <Private>True</Private>
