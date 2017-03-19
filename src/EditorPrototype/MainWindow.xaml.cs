@@ -24,6 +24,7 @@ namespace EditorPrototype
         private VertexControl ctrlVer;
         private EdgeControl ctrlEdg;
         private GraphExample dataGraph;
+        private string currentId;
 
         private Repo.Repo repo = Repo.RepoFactory.CreateRepo();
 
@@ -35,6 +36,8 @@ namespace EditorPrototype
             g_Area.LogicCore = logic;
             logic.Graph = dataGraph;
             logic.DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.LinLog;
+            currentId = String.Empty;
+
             g_Area.VertexSelected += VertexSelectedAction;
             g_Area.EdgeSelected += EdgeSelectedAction;
             g_zoomctrl.Click += ClearSelection;
@@ -48,10 +51,10 @@ namespace EditorPrototype
                 Grid.SetRow(g_zoomctrl.ViewFinder, 0);
             };
 
-            logic.DefaultLayoutAlgorithmParams = 
+            logic.DefaultLayoutAlgorithmParams =
                 logic.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.LinLog);
             logic.DefaultOverlapRemovalAlgorithm = OverlapRemovalAlgorithmTypeEnum.FSA;
-            logic.DefaultOverlapRemovalAlgorithmParams = 
+            logic.DefaultOverlapRemovalAlgorithmParams =
                 logic.AlgorithmFactory.CreateOverlapRemovalParameters(OverlapRemovalAlgorithmTypeEnum.FSA);
             ((OverlapRemovalParameters)logic.DefaultOverlapRemovalAlgorithmParams).HorizontalGap = 50;
             ((OverlapRemovalParameters)logic.DefaultOverlapRemovalAlgorithmParams).VerticalGap = 50;
@@ -59,6 +62,7 @@ namespace EditorPrototype
             logic.AsyncAlgorithmCompute = false;
 
             Closed += CloseChildrenWindows;
+            g_zoomctrl.MouseDown += zoomCtrl_MouseDown;
 
             InitPalette();
 
@@ -126,15 +130,21 @@ namespace EditorPrototype
             foreach (var type in repo.MetamodelNodes())
             {
                 var button = new Button { Content = type.name };
-                RoutedEventHandler createNode = (sender, args) => CreateNewNode(type.id);
+                RoutedEventHandler createNode = (sender, args) => PaletteButton_Checked(type.id);
                 RoutedEventHandler createEdge = (sender, args) => { };
                 button.Click += repo.IsEdgeClass(type.id) ? createEdge : createNode;
-                
+
                 // TODO: Bind it to XAML, do not do GUI work in C#.
-                paletteGrid.RowDefinitions.Add(new RowDefinition());  
+                paletteGrid.RowDefinitions.Add(new RowDefinition());
                 paletteGrid.Children.Add(button);
                 Grid.SetRow(button, paletteGrid.RowDefinitions.Count - 1);
             }
+        }
+
+        void PaletteButton_Checked(string id)
+        {
+            currentId = id;
+            //Trace.WriteLine(id);
         }
 
         private void CreateEdge(string type)
@@ -147,8 +157,11 @@ namespace EditorPrototype
             }
 
             var newEdge = new DataEdge(prevVerVertex, ctrlVerVertex) { Text = type };
-            dataGraph.AddEdge(newEdge);
-            DrawNewEdge(prevVerVertex.Key, ctrlVerVertex.Key);
+            /*dataGraph.AddEdge(newEdge);
+            DrawNewEdge(prevVerVertex.Key, ctrlVerVertex.Key);*/
+
+            var ec = new EdgeControl(prevVer, ctrlVer, newEdge);
+            g_Area.InsertEdge(newEdge, ec);
         }
 
         private void CreateNode(string name, DataVertex.VertexTypeEnum type, IList<Repo.AttributeInfo> attributes)
@@ -194,7 +207,7 @@ namespace EditorPrototype
         private void ElementInBoxSelectedAction(object sender, EventArgs e)
         {
             StackPanel sp = (elementsListBox.SelectedItem as ListBoxItem).Content as StackPanel;
-            if(sp.Children.Count > 3)
+            if (sp.Children.Count > 3)
             {
                 var source = (sp.Children[2] as TextBlock).Text;
                 var target = (sp.Children[4] as TextBlock).Text;
@@ -283,6 +296,11 @@ namespace EditorPrototype
         {
             prevVer = ctrlVer;
             ctrlVer = args.VertexControl;
+            /*if (repo.IsEdgeClass(currentId))
+            {
+                CreateEdge("association");
+            }*/
+            CreateEdge("association");
             attributesView.DataContext = ctrlVer.GetDataVertex<DataVertex>();
 
             g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
@@ -336,6 +354,59 @@ namespace EditorPrototype
             dataEdge.RoutingPoints[2] = new GraphX.Measure.Point(100, 100);
 
             g_Area.UpdateAllEdges();
+        }
+
+        void zoomCtrl_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                var pos = g_zoomctrl.TranslatePoint(e.GetPosition(g_zoomctrl), g_Area);
+                if (!repo.IsEdgeClass(currentId) && currentId != String.Empty)
+                {
+                    CreateNewNode(currentId, pos);
+                }
+            }
+        }
+
+        private void CreateNewNode(string typeId, Point position)
+        {
+            var newNode = repo.AddNode(typeId);
+            Func<Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
+            {
+                switch (n)
+                {
+                    case Repo.NodeType.Attribute:
+                        return DataVertex.VertexTypeEnum.Attribute;
+                    case Repo.NodeType.Node:
+                        return DataVertex.VertexTypeEnum.Node;
+                }
+
+                return DataVertex.VertexTypeEnum.Node;
+            };
+
+            CreateNode(newNode.name, nodeType(newNode.nodeType), newNode.attributes, position);
+        }
+
+        private void CreateNode(string name, DataVertex.VertexTypeEnum type, IList<Repo.AttributeInfo> attributes, Point position)
+        {
+            var vertex = new DataVertex(name)
+            {
+                Key = $"{name}",
+                VertexType = type
+            };
+
+            var attributeInfos = attributes.Select(x => new DataVertex.Attribute()
+            {
+                Name = x.name,
+                Type = repo.Node(x.attributeType).name,
+                Value = x.value
+            });
+
+            attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
+
+            var vc = new VertexControl(vertex);
+            vc.SetPosition(position);
+            g_Area.AddVertex(vertex, vc);
         }
 
         private void OnEdgeMouseUp(object sender, MouseButtonEventArgs e)
