@@ -2,16 +2,20 @@
 
 open System.Collections.Generic
 
-open GraphMetametamodel
 open MetamodelOperations
+open QuickGraph
 
-type private RepoImpl () = 
-    let repoGraph, classes = GraphMetametamodel.createM0Model ()
+type private RepoImpl () as this = 
+    let repoGraph, classes = (new BidirectionalGraph<_, _> true, new Dictionary<_, _>())
 
     let toList attrSeq =
         attrSeq |> Seq.fold (fun (acc : List<AttributeInfo>) attr -> acc.Add(attr); acc) (new List<_>())
 
-    interface Repo.Repo with
+    do
+        let loader = GraphMetametamodel () :> IModelLoader
+        loader.LoadInto this
+
+    interface IRepo with
         member this.ModelNodes () = 
             let metaclass x = if classes.ContainsKey(x) 
                               then 
@@ -46,7 +50,8 @@ type private RepoImpl () =
                 let info, kind = n
                 info.Name
                 
-            repoGraph.Edges |> Seq.map (fun e -> new EdgeInfo(System.Guid.NewGuid().ToString(), name e.Source, name e.Target, edgeType (kind e.Tag)))
+            // TODO: wtf?
+            repoGraph.Edges |> Seq.map (fun (e : TaggedEdge<_, _>) -> new EdgeInfo(System.Guid.NewGuid().ToString(), name e.Source, name e.Target, edgeType (kind e.Tag)))
 
         member this.MetamodelNodes () =
             let id n =
@@ -79,7 +84,7 @@ type private RepoImpl () =
                 followEdges (repoGraph, classes) isGeneralization class' |> Seq.map isEdge |> Seq.forall id
 
         member this.Node id =
-            (this :> Repo).ModelNodes () |> Seq.filter (fun x -> x.id = id) |> Seq.exactlyOne
+            (this :> IRepo).ModelNodes () |> Seq.filter (fun x -> x.id = id) |> Seq.exactlyOne
 
         member this.AddNode typeId =
             let class' = 
@@ -101,7 +106,84 @@ type private RepoImpl () =
             
             let instance = MetamodelOperations.instance (repoGraph, classes) (Vertex class') instanceDefaultAttributes
             let instanceProps, _ = instance
-            (this :> Repo).Node instanceProps.Id
+            (this :> IRepo).Node instanceProps.Id
 
         member this.AddEdge typeId sourceId targetId =
             failwith "Not implemented"
+
+    interface IMutableRepo with
+        member this.AddNode name potency level =
+            let vertex = { Id = newId (); Name = name; Potency = potency; Level = level }
+            repoGraph.AddVertex (vertex, Node) |> ignore
+            (this :> IRepo).Node vertex.Id
+
+        member this.AddAttribute name potency level value =
+            let vertex = { Id = newId (); Name = name; Potency = potency; Level = level }
+            let attrValue = String value
+            repoGraph.AddVertex (vertex, NodeKind.Attribute { Value = attrValue }) |> ignore
+            (this :> IRepo).Node vertex.Id
+
+        member this.AddEdge edgeType sourceId targetId potency level sourceName sourceMin sourceMax targetName targetMin targetMax =
+            let node id =
+                repoGraph.Vertices 
+                |> Seq.filter (fun (a, _) -> a.Id = id)
+                |> Seq.exactlyOne
+                
+            let source = node sourceId
+            let target = node targetId
+
+            let label =
+                match edgeType with
+                | EdgeType.Generalization -> { Id = newId(); Name = "Generalization"; Potency = 0; Level = 0 }, EdgeKind.Generalization
+                | EdgeType.Association -> 
+                    let modelElementAttributes = { Id = newId(); Name = "Association"; Potency = -1; Level = 0 }
+                    let associationAttributes = { SourceName = "Source"; SourceMin = 1; SourceMax = 1; TargetName = targetName; TargetMin = targetMin; TargetMax = targetMax }
+                    (modelElementAttributes, EdgeKind.Association associationAttributes)
+                | EdgeType.Attribute -> { Id = newId(); Name = "Attribute"; Potency = 1; Level = 0 }, EdgeKind.Attribute
+                | EdgeType.Type -> { Id = newId(); Name = "Type"; Potency = 0; Level = 0 }, EdgeKind.Type
+                | _ -> failwith "Unknown enum value"
+
+            let edge = new TaggedEdge<_, _>(source, target, label)
+            repoGraph.AddEdge edge |> ignore
+
+            // TODO: Implement it much simpler when infrastructure metametamodel is settled.
+            let edgeType = function
+                | Generalization _ -> EdgeType.Generalization
+                | Association _ -> EdgeType.Association
+                | Attribute _ -> EdgeType.Attribute
+                | Type _ -> EdgeType.Type
+                | Value _ -> failwith "There shall be no ref values in metametamodel"
+
+            let kind e = 
+                let info, kind = e
+                kind
+
+            let name n =
+                let info, kind = n
+                info.Name
+                
+            edge |> fun e -> new EdgeInfo((fst e.Tag).Id, name e.Source, name e.Target, edgeType (kind e.Tag))
+
+        member this.AddInstantiation instanceId typeId =
+            let element id =
+                let nodeList = 
+                    repoGraph.Vertices 
+                    |> Seq.filter (fun (a, _) -> a.Id = id)
+                    |> Seq.toList
+                
+                match nodeList with 
+                | [] ->
+                    let edgeList = 
+                        repoGraph.Edges 
+                        |> Seq.filter (fun e -> (fst e.Tag).Id = id)
+                        |> Seq.toList
+                    match edgeList with
+                    | [] -> failwith "No element with given id found"
+                    | [e] -> ModelElementLabel.Edge e.Tag
+                    | h :: t -> failwith "Duplicate ids"
+                | [n] -> ModelElementLabel.Vertex n
+                | h :: t -> failwith "Duplicate ids"
+
+            let element' = element instanceId
+            let type' = element typeId
+            classes.Add(element instanceId, element typeId)

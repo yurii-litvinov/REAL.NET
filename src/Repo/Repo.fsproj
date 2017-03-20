@@ -62,8 +62,10 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="AssemblyInternalsVisibleTo.fs" />
     <Compile Include="RepoTypes.fs" />
-    <Compile Include="Repo.fs" />
+    <Compile Include="IRepo.fs" />
+    <Compile Include="IModelLoader.fs" />
     <Compile Include="GraphMetametamodelTypes.fs" />
+    <Compile Include="ModelBuildingHelper.fs" />
     <Compile Include="MetamodelOperations.fs" />
     <Compile Include="GraphMetametamodel.fs" />
     <Compile Include="RepoImpl.fs" />
