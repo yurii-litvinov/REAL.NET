@@ -381,7 +381,7 @@ Target "All" DoNothing
   ==> "NuGet"
   ==> "BuildPackage"
   ==> "All"
-//  =?> ("ReleaseDocs",isLocalBuild)
+  =?> ("ReleaseDocs",isLocalBuild)
 
 "GenerateHelp"
   ==> "GenerateReferenceDocs"
