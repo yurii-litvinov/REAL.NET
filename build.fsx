@@ -46,7 +46,7 @@ let solutionFile  = "FunReal.sln"
 
 // Default target configuration
 #if MONO
-let configuration = "Mono"
+let configuration = "MonoRelease"
 #else
 let configuration = "Release"
 #endif
