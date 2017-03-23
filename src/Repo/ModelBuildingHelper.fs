@@ -17,7 +17,7 @@ type internal ModelBuildingHelper (repo : IMutableRepo) =
         this.CreateNode name 0
 
     member this.AddGeneralization (source : NodeInfo) (target  : NodeInfo) = this.CreateEdge EdgeType.Generalization source.id target.id |> ignore
-    member this.AddInstantiation sourceId targetId = repo.AddInstantiation sourceId targetId
+    member this.AddInstantiation sourceId targetId = repo.AddInstantiationRelation sourceId targetId
     member this.AddAttribute (source : NodeInfo) (target  : NodeInfo) = this.CreateEdge EdgeType.Attribute source.id target.id |> ignore
     member this.AddType (source : NodeInfo) (target  : NodeInfo) = this.CreateEdge EdgeType.Type source.id target.id |> ignore
 

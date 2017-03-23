@@ -5,15 +5,17 @@ open System.Collections.Generic
 open MetamodelOperations
 open QuickGraph
 
-type private RepoImpl () as this = 
+type private RepoImpl (loader : IModelLoader) as this = 
     let repoGraph, classes = (new BidirectionalGraph<_, _> true, new Dictionary<_, _>())
 
     let toList attrSeq =
         attrSeq |> Seq.fold (fun (acc : List<AttributeInfo>) attr -> acc.Add(attr); acc) (new List<_>())
 
     do
-        let loader = GraphMetametamodel () :> IModelLoader
-        loader.LoadInto this
+        loader.LoadInto (this :> IMutableRepo)
+
+    new () =
+        RepoImpl(GraphMetametamodel ())
 
     interface IRepo with
         member this.ModelNodes () = 
@@ -164,7 +166,7 @@ type private RepoImpl () as this =
                 
             edge |> fun e -> new EdgeInfo((fst e.Tag).Id, name e.Source, name e.Target, edgeType (kind e.Tag))
 
-        member this.AddInstantiation instanceId typeId =
+        member this.AddInstantiationRelation instanceId typeId =
             let element id =
                 let nodeList = 
                     repoGraph.Vertices 

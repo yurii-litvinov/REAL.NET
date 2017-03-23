@@ -19,5 +19,5 @@ type IMutableRepo =
         abstract AddAttribute : name : string -> potency : int -> level : int -> value : string -> NodeInfo
         abstract AddEdge : edgeType : EdgeType -> sourceId : string -> targetId : string -> potency : int -> level : int -> 
             sourceName : string -> sourceMin : int -> sourceMax : int -> targetName : string -> targetMin : int -> targetMax : int -> EdgeInfo
-        abstract AddInstantiation : instanceId : string -> typeId : string -> unit
+        abstract AddInstantiationRelation : instanceId : string -> typeId : string -> unit
     end
