@@ -3,14 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Microsoft.Msagl.Core.Geometry.Curves;
 using Microsoft.Msagl.GraphViewerGdi;
+using Microsoft.Msagl.Splines;
 using Repo;
 using Color = Microsoft.Msagl.Drawing.Color;
 using Edge = Microsoft.Msagl.Drawing.Edge;
 using Graph = Microsoft.Msagl.Drawing.Graph;
-using LineSegment = Microsoft.Msagl.Core.Geometry.Curves.LineSegment;
+using LineSegment = Microsoft.Msagl.Splines.LineSegment;
 using Node = Microsoft.Msagl.Drawing.Node;
+using Point = Microsoft.Msagl.Point;
 using Shape = Microsoft.Msagl.Drawing.Shape;
 
 namespace MsAglWinFormsEditor
@@ -76,8 +77,8 @@ namespace MsAglWinFormsEditor
                 };
                 tableLayout.Controls.Add(associationButton, 0, tableLayout.RowCount - 1);
                 ++tableLayout.RowCount;
-            }
 
+            }
             form.ShowDialog(this);
         }
 
@@ -206,15 +207,16 @@ namespace MsAglWinFormsEditor
             if (openImageDialog.ShowDialog() == DialogResult.OK)
             {
                 var imagePath = openImageDialog.FileName;
-                selectedNode.Attr.Shape = Shape.DrawFromGeometry;
                 selectedNode.DrawNodeDelegate = DrawNode;
                 imagesHashtable.Add(selectedNode.Id, new Bitmap(imagePath));
+                viewer.Invalidate();
+                viewer.Graph = graph;
             }
         }
 
-        private System.Drawing.Drawing2D.GraphicsPath FillTheGraphicsPath(Microsoft.Msagl.Splines.ICurve iCurve)
+        private System.Drawing.Drawing2D.GraphicsPath FillTheGraphicsPath(ICurve iCurve)
         {
-            var curve = iCurve as Curve ?? ((RoundedRect)iCurve).Curve;
+            var curve = iCurve as Curve;
             var path = new System.Drawing.Drawing2D.GraphicsPath();
             foreach (var seg in curve.Segments)
                 AddSegmentToPath(seg, ref path);
@@ -230,13 +232,24 @@ namespace MsAglWinFormsEditor
             }
         }
 
-        private PointF PointF(Microsoft.Msagl.Core.Geometry.Point p) 
+        private ICurve GetNodeBoundary(Node node)
+        {
+            var image = imagesHashtable[node.Id] as Image;
+            double width = image.Width;
+            double height = image.Height;
+
+            return CurveFactory.CreateRectangle(width, height, new Point());
+        }
+
+        private PointF PointF(Point p) 
             => new PointF((float)p.X, (float)p.Y);
 
         private bool DrawNode(Node node, object graphics)
         {
             var g = (Graphics)graphics;
-
+            var image = imagesHashtable[node.Id] as Image;
+            node.Attr.Shape = Shape.DrawFromGeometry;
+            node.NodeBoundaryDelegate = GetNodeBoundary;
             using (System.Drawing.Drawing2D.Matrix m = g.Transform)
             {
                 using (System.Drawing.Drawing2D.Matrix saveM = m.Clone())
@@ -246,7 +259,7 @@ namespace MsAglWinFormsEditor
                         m.Multiply(m2);
                         
                     g.Transform = m;
-                    g.DrawImage(imagesHashtable[node.Id] as Image, new PointF((float)(node.Attr.GeometryNode.Center.X - node.Attr.GeometryNode.Width / 2),
+                    g.DrawImage(image, new PointF((float)(node.Attr.GeometryNode.Center.X - node.Attr.GeometryNode.Width / 2),
                         (float)(node.Attr.GeometryNode.Center.Y - node.Attr.GeometryNode.Height / 2)));
                     g.Transform = saveM;
                     g.ResetClip();
