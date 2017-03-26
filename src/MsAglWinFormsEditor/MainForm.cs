@@ -9,7 +9,6 @@ using Repo;
 using Color = Microsoft.Msagl.Drawing.Color;
 using Edge = Microsoft.Msagl.Drawing.Edge;
 using Graph = Microsoft.Msagl.Drawing.Graph;
-using LineSegment = Microsoft.Msagl.Splines.LineSegment;
 using Node = Microsoft.Msagl.Drawing.Node;
 using Point = Microsoft.Msagl.Point;
 using Shape = Microsoft.Msagl.Drawing.Shape;
@@ -22,7 +21,7 @@ namespace MsAglWinFormsEditor
     public partial class MainForm : Form
     {
 
-        private readonly Repo.IRepo repo = RepoFactory.CreateRepo();
+        private readonly IRepo repo = RepoFactory.CreateRepo();
         private readonly Graph graph = new Graph("graph");
         private readonly GViewer viewer = new GViewer();
 
