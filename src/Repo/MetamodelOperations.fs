@@ -59,8 +59,6 @@ module internal MetamodelOperations =
 
     let rec effectiveAttributes repo node =
         let effectiveAttrs = effectiveAttributeNodes repo node |> Seq.toList
-        if not effectiveAttrs.IsEmpty then
-            ()
         effectiveAttrs |> Seq.map (fun attr -> new AttributeInfo((fst attr).Name, attrType repo attr, attributeValue repo attr (fst node)))
 
     let instance (repo : RepoRepresentation) (class' : ModelElementLabel) (attributeValues : Map<VertexLabel, AttributeValue>) =
