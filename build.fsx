@@ -387,8 +387,11 @@ Target "All" DoNothing
 #endif
   ==> "NuGet"
   ==> "BuildPackage"
+#if MONO
+#else
+  =?> ("ReleaseDocs", isLocalBuild)
+#endif
   ==> "All"
-  =?> ("ReleaseDocs",isLocalBuild)
 
 "GenerateHelp"
   ==> "GenerateReferenceDocs"
