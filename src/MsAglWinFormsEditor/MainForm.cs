@@ -72,12 +72,13 @@ namespace MsAglWinFormsEditor
                     //TODO: uncomment it when addEdge will be imlemented 
                     //repo.AddEdge(edgeType.ToString(), edge.Source, edge.Target);
                     form.Close();
+                    UpdateGraph();
                 };
                 tableLayout.Controls.Add(associationButton, 0, tableLayout.RowCount - 1);
                 ++tableLayout.RowCount;
 
             }
-            form.ShowDialog(this);
+            form.Show();
         }
 
         private void FormatEdge(EdgeType edgeType, Edge edge)
@@ -167,7 +168,7 @@ namespace MsAglWinFormsEditor
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            viewer.Graph = graph;
+            UpdateGraph();
         }
 
         private void ViewerMouseClicked(object sender, MouseEventArgs e)
@@ -203,11 +204,20 @@ namespace MsAglWinFormsEditor
             var openImageDialog = new OpenFileDialog();
             if (openImageDialog.ShowDialog() == DialogResult.OK)
             {
-                var imagePath = openImageDialog.FileName;
+                imagesHashtable.Add(selectedNode.Id, new Bitmap(openImageDialog.FileName));
                 selectedNode.DrawNodeDelegate = DrawNode;
-                imagesHashtable.Add(selectedNode.Id, new Bitmap(imagePath));
-                viewer.Invalidate();
+
+                selectedNode.Attr.Shape = Shape.DrawFromGeometry;
+                selectedNode.DrawNodeDelegate = DrawNode;
+                selectedNode.NodeBoundaryDelegate = GetNodeBoundary;
+                UpdateGraph();
             }
+        }
+
+        private void UpdateGraph()
+        {
+            viewer.Graph = graph;
+            viewer.Invalidate();
         }
 
         private System.Drawing.Drawing2D.GraphicsPath FillTheGraphicsPath(ICurve iCurve)
@@ -247,8 +257,6 @@ namespace MsAglWinFormsEditor
         {
             var g = (Graphics)graphics;
             var image = imagesHashtable[node.Id] as Image;
-            node.Attr.Shape = Shape.DrawFromGeometry;
-            node.NodeBoundaryDelegate = GetNodeBoundary;
             using (System.Drawing.Drawing2D.Matrix m = g.Transform)
             {
                 using (System.Drawing.Drawing2D.Matrix saveM = m.Clone())
