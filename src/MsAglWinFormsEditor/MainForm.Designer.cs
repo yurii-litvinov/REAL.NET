@@ -40,6 +40,7 @@ namespace MsAglWinFormsEditor
             this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.loadImageButton = new System.Windows.Forms.Button();
             this.paintButton = new System.Windows.Forms.Button();
+            this.refreshButton = new System.Windows.Forms.Button();
             this.mainLayout.SuspendLayout();
             this.toolsLayout.SuspendLayout();
             this.nodeLayout.SuspendLayout();
@@ -63,15 +64,17 @@ namespace MsAglWinFormsEditor
             // toolsLayout
             // 
             this.toolsLayout.ColumnCount = 1;
-            this.toolsLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.toolsLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.toolsLayout.Controls.Add(this.paletteGrid, 0, 0);
             this.toolsLayout.Controls.Add(this.nodeLayout, 0, 1);
+            this.toolsLayout.Controls.Add(this.refreshButton, 0, 2);
             this.toolsLayout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolsLayout.Location = new System.Drawing.Point(710, 3);
             this.toolsLayout.Name = "toolsLayout";
-            this.toolsLayout.RowCount = 2;
-            this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.toolsLayout.RowCount = 3;
+            this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45.37206F));
+            this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45.37205F));
+            this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.255898F));
             this.toolsLayout.Size = new System.Drawing.Size(245, 527);
             this.toolsLayout.TabIndex = 2;
             // 
@@ -81,7 +84,7 @@ namespace MsAglWinFormsEditor
             this.paletteGrid.ColumnCount = 1;
             this.paletteGrid.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.paletteGrid.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.paletteGrid.Location = new System.Drawing.Point(3, 260);
+            this.paletteGrid.Location = new System.Drawing.Point(3, 236);
             this.paletteGrid.Name = "paletteGrid";
             this.paletteGrid.RowCount = 1;
             this.paletteGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -96,13 +99,13 @@ namespace MsAglWinFormsEditor
             this.nodeLayout.Controls.Add(this.loadImageButton, 0, 2);
             this.nodeLayout.Controls.Add(this.paintButton, 0, 1);
             this.nodeLayout.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.nodeLayout.Location = new System.Drawing.Point(3, 266);
+            this.nodeLayout.Location = new System.Drawing.Point(3, 242);
             this.nodeLayout.Name = "nodeLayout";
             this.nodeLayout.RowCount = 3;
             this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 53.34539F));
             this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 23.3273F));
             this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 23.3273F));
-            this.nodeLayout.Size = new System.Drawing.Size(239, 258);
+            this.nodeLayout.Size = new System.Drawing.Size(239, 233);
             this.nodeLayout.TabIndex = 0;
             // 
             // attributeTable
@@ -115,10 +118,10 @@ namespace MsAglWinFormsEditor
             this.Type,
             this.Value});
             this.attributeTable.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.attributeTable.Location = new System.Drawing.Point(3, 11);
+            this.attributeTable.Location = new System.Drawing.Point(3, 3);
             this.attributeTable.Name = "attributeTable";
             this.attributeTable.RowHeadersVisible = false;
-            this.attributeTable.Size = new System.Drawing.Size(233, 123);
+            this.attributeTable.Size = new System.Drawing.Size(233, 118);
             this.attributeTable.TabIndex = 2;
             this.attributeTable.Visible = false;
             // 
@@ -146,9 +149,9 @@ namespace MsAglWinFormsEditor
             // loadImageButton
             // 
             this.loadImageButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.loadImageButton.Location = new System.Drawing.Point(3, 200);
+            this.loadImageButton.Location = new System.Drawing.Point(3, 181);
             this.loadImageButton.Name = "loadImageButton";
-            this.loadImageButton.Size = new System.Drawing.Size(233, 55);
+            this.loadImageButton.Size = new System.Drawing.Size(233, 49);
             this.loadImageButton.TabIndex = 3;
             this.loadImageButton.Text = "Load Image";
             this.loadImageButton.UseVisualStyleBackColor = true;
@@ -158,14 +161,25 @@ namespace MsAglWinFormsEditor
             // paintButton
             // 
             this.paintButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.paintButton.Location = new System.Drawing.Point(3, 140);
+            this.paintButton.Location = new System.Drawing.Point(3, 127);
             this.paintButton.Name = "paintButton";
-            this.paintButton.Size = new System.Drawing.Size(233, 54);
+            this.paintButton.Size = new System.Drawing.Size(233, 48);
             this.paintButton.TabIndex = 4;
             this.paintButton.Text = "Open Node Paint";
             this.paintButton.UseVisualStyleBackColor = true;
             this.paintButton.Visible = false;
             this.paintButton.Click += new System.EventHandler(this.PaintButtonClick);
+            // 
+            // refreshButton
+            // 
+            this.refreshButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.refreshButton.Location = new System.Drawing.Point(3, 481);
+            this.refreshButton.Name = "refreshButton";
+            this.refreshButton.Size = new System.Drawing.Size(239, 43);
+            this.refreshButton.TabIndex = 3;
+            this.refreshButton.Text = "Update Graph";
+            this.refreshButton.UseVisualStyleBackColor = true;
+            this.refreshButton.Click += new System.EventHandler(this.RefreshButtonClick);
             // 
             // MainForm
             // 
@@ -195,6 +209,7 @@ namespace MsAglWinFormsEditor
         private DataGridViewTextBoxColumn Value;
         private Button loadImageButton;
         private Button paintButton;
+        private Button refreshButton;
     }
 }
 

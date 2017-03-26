@@ -73,7 +73,6 @@ namespace MsAglWinFormsEditor
                     //TODO: uncomment it when addEdge will be imlemented 
                     //repo.AddEdge(edgeType.ToString(), edge.Source, edge.Target);
                     form.Close();
-                    viewer.Invalidate();
                 };
                 tableLayout.Controls.Add(associationButton, 0, tableLayout.RowCount - 1);
                 ++tableLayout.RowCount;
@@ -141,8 +140,7 @@ namespace MsAglWinFormsEditor
             foreach (var type in repo.MetamodelNodes())
             {
                 var button = new Button { Text = type.name, Dock = DockStyle.Bottom };
-                EventHandler createNode = (sender, args) => CreateNewNode(type.id);
-                button.Click += createNode;
+                button.Click += (sender, args) => CreateNewNode(type.id);
 
                 // TODO: Bind it to Designer, do not do GUI work in C#.
                 paletteGrid.Controls.Add(button, 0, paletteGrid.RowCount - 1);
@@ -210,7 +208,6 @@ namespace MsAglWinFormsEditor
                 selectedNode.DrawNodeDelegate = DrawNode;
                 imagesHashtable.Add(selectedNode.Id, new Bitmap(imagePath));
                 viewer.Invalidate();
-                viewer.Graph = graph;
             }
         }
 
@@ -218,8 +215,11 @@ namespace MsAglWinFormsEditor
         {
             var curve = iCurve as Curve;
             var path = new System.Drawing.Drawing2D.GraphicsPath();
-            foreach (var seg in curve.Segments)
-                AddSegmentToPath(seg, ref path);
+            if (curve != null)
+            {
+                foreach (var seg in curve.Segments)
+                    AddSegmentToPath(seg, ref path);
+            }
             return path;
         }
 
@@ -241,7 +241,7 @@ namespace MsAglWinFormsEditor
             return CurveFactory.CreateRectangle(width, height, new Point());
         }
 
-        private PointF PointF(Point p) 
+        private PointF PointF(Point p)
             => new PointF((float)p.X, (float)p.Y);
 
         private bool DrawNode(Node node, object graphics)
@@ -257,7 +257,7 @@ namespace MsAglWinFormsEditor
                     g.SetClip(FillTheGraphicsPath(node.Attr.GeometryNode.BoundaryCurve));
                     using (var m2 = new System.Drawing.Drawing2D.Matrix(1, 0, 0, -1, 0, 2 * (float)node.Attr.GeometryNode.Center.Y))
                         m.Multiply(m2);
-                        
+
                     g.Transform = m;
                     g.DrawImage(image, new PointF((float)(node.Attr.GeometryNode.Center.X - node.Attr.GeometryNode.Width / 2),
                         (float)(node.Attr.GeometryNode.Center.Y - node.Attr.GeometryNode.Height / 2)));
@@ -265,7 +265,6 @@ namespace MsAglWinFormsEditor
                     g.ResetClip();
                 }
             }
-
             return true;//returning false would enable the default rendering
         }
 
@@ -274,5 +273,9 @@ namespace MsAglWinFormsEditor
             var form = new DrawingForm();
             form.Show();
         }
+
+        private void RefreshButtonClick(object sender, EventArgs e) 
+            => viewer.Graph = graph;
+        
     }
 }
