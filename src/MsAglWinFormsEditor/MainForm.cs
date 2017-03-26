@@ -22,7 +22,7 @@ namespace MsAglWinFormsEditor
     public partial class MainForm : Form
     {
 
-        private readonly Repo.Repo repo = RepoFactory.CreateRepo();
+        private readonly Repo.IRepo repo = RepoFactory.CreateRepo();
         private readonly Graph graph = new Graph("graph");
         private readonly GViewer viewer = new GViewer();
 

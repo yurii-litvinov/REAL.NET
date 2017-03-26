@@ -38,6 +38,15 @@
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'MonoRelease|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <Tailcalls>true</Tailcalls>
+    <DefineConstants>TRACE</DefineConstants>
+    <WarningLevel>3</WarningLevel>
+    <DocumentationFile>bin\$(Configuration)\$(AssemblyName).XML</DocumentationFile>
+    <OutputPath>bin\MonoRelease\</OutputPath>
+  </PropertyGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '11.0'">
       <PropertyGroup Condition="Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')">
@@ -62,8 +71,10 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="AssemblyInternalsVisibleTo.fs" />
     <Compile Include="RepoTypes.fs" />
-    <Compile Include="Repo.fs" />
+    <Compile Include="IRepo.fs" />
+    <Compile Include="IModelLoader.fs" />
     <Compile Include="GraphMetametamodelTypes.fs" />
+    <Compile Include="ModelBuildingHelper.fs" />
     <Compile Include="MetamodelOperations.fs" />
     <Compile Include="GraphMetametamodel.fs" />
     <Compile Include="RepoImpl.fs" />

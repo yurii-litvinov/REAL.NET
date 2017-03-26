@@ -45,7 +45,13 @@ let tags = "DSM visual-modeling visual-languages"
 let solutionFile  = "FunReal.sln"
 
 // Default target configuration
+#if MONO
+let configuration = "MonoRelease"
+let doNotCopyBinaries = ["EditorPrototype"]
+#else
 let configuration = "Release"
+let doNotCopyBinaries = []
+#endif
 
 // Pattern specifying assemblies to be tested using NUnit
 let testAssemblies = "tests/**/bin" </> configuration </> "*Tests*.dll"
@@ -108,6 +114,7 @@ Target "AssemblyInfo" (fun _ ->
 Target "CopyBinaries" (fun _ ->
     !! "src/**/*.??proj"
     -- "src/**/*.shproj"
+    |>  Seq.filter (fun f -> not (Seq.exists ((=) (System.IO.Path.GetFileNameWithoutExtension f)) doNotCopyBinaries))
     |>  Seq.map (fun f -> ((System.IO.Path.GetDirectoryName f) </> "bin" </> configuration, "bin" </> (System.IO.Path.GetFileNameWithoutExtension f)))
     |>  Seq.iter (fun (fromDir, toDir) -> CopyDir toDir fromDir (fun _ -> true))
 )
@@ -132,7 +139,7 @@ Target "Clean" (fun _ ->
 
 Target "Build" (fun _ ->
     !! solutionFile
-    |> MSBuildReleaseExt "" vsProjProps "Rebuild"
+    |> MSBuild "" "Rebuild" vsProjProps
     |> ignore
 )
 
@@ -380,8 +387,11 @@ Target "All" DoNothing
 #endif
   ==> "NuGet"
   ==> "BuildPackage"
+#if MONO
+#else
+  =?> ("ReleaseDocs", isLocalBuild)
+#endif
   ==> "All"
-//  =?> ("ReleaseDocs",isLocalBuild)
 
 "GenerateHelp"
   ==> "GenerateReferenceDocs"
