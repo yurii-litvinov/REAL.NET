@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Windows.Forms;
 using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Splines;
@@ -183,6 +185,17 @@ namespace MsAglWinFormsEditor
                     attributeTable.Visible = true;
                     loadImageButton.Visible = true;
                     paintButton.Visible = true;
+                    var image = imagesHashtable[selectedNode.Id] as Image;
+                    if (image != null)
+                    {
+                        imageLayoutPanel.Visible = true;
+                        widthEditor.Value = image.Width;
+                        heightEditor.Value = image.Height;
+                    }
+                    else
+                    {
+                        imageLayoutPanel.Visible = false;
+                    }
                     attributeTable.Rows.Clear();
                     foreach (var info in attributeInfos)
                     {
@@ -196,6 +209,7 @@ namespace MsAglWinFormsEditor
                 attributeTable.Visible = false;
                 loadImageButton.Visible = false;
                 paintButton.Visible = false;
+                imageLayoutPanel.Visible = false;
             }
         }
 
@@ -204,9 +218,7 @@ namespace MsAglWinFormsEditor
             var openImageDialog = new OpenFileDialog();
             if (openImageDialog.ShowDialog() == DialogResult.OK)
             {
-                imagesHashtable.Add(selectedNode.Id, new Bitmap(openImageDialog.FileName));
-                selectedNode.DrawNodeDelegate = DrawNode;
-
+                imagesHashtable[selectedNode.Id] = new Bitmap(openImageDialog.FileName);
                 selectedNode.Attr.Shape = Shape.DrawFromGeometry;
                 selectedNode.DrawNodeDelegate = DrawNode;
                 selectedNode.NodeBoundaryDelegate = GetNodeBoundary;
@@ -220,10 +232,10 @@ namespace MsAglWinFormsEditor
             viewer.Invalidate();
         }
 
-        private System.Drawing.Drawing2D.GraphicsPath FillTheGraphicsPath(ICurve iCurve)
+        private GraphicsPath FillTheGraphicsPath(ICurve iCurve)
         {
             var curve = iCurve as Curve;
-            var path = new System.Drawing.Drawing2D.GraphicsPath();
+            var path = new GraphicsPath();
             if (curve != null)
             {
                 foreach (var seg in curve.Segments)
@@ -232,7 +244,7 @@ namespace MsAglWinFormsEditor
             return path;
         }
 
-        private void AddSegmentToPath(ICurve seg, ref System.Drawing.Drawing2D.GraphicsPath p)
+        private void AddSegmentToPath(ICurve seg, ref GraphicsPath p)
         {
             var line = seg as LineSegment;
             if (line != null)
@@ -257,12 +269,12 @@ namespace MsAglWinFormsEditor
         {
             var g = (Graphics)graphics;
             var image = imagesHashtable[node.Id] as Image;
-            using (System.Drawing.Drawing2D.Matrix m = g.Transform)
+            using (Matrix m = g.Transform)
             {
-                using (System.Drawing.Drawing2D.Matrix saveM = m.Clone())
+                using (Matrix saveM = m.Clone())
                 {
                     g.SetClip(FillTheGraphicsPath(node.Attr.GeometryNode.BoundaryCurve));
-                    using (var m2 = new System.Drawing.Drawing2D.Matrix(1, 0, 0, -1, 0, 2 * (float)node.Attr.GeometryNode.Center.Y))
+                    using (var m2 = new Matrix(1, 0, 0, -1, 0, 2 * (float)node.Attr.GeometryNode.Center.Y))
                         m.Multiply(m2);
 
                     g.Transform = m;
@@ -283,6 +295,37 @@ namespace MsAglWinFormsEditor
 
         private void RefreshButtonClick(object sender, EventArgs e) 
             => viewer.Graph = graph;
-        
+
+        private void ImageSizeChanged(object sender, EventArgs e)
+        {
+            var image = imagesHashtable[selectedNode.Id] as Image;
+            imagesHashtable[selectedNode.Id] = ResizeImage(image, Convert.ToInt32(widthEditor.Value), Convert.ToInt32(heightEditor.Value));
+            UpdateGraph();
+        }
+
+        public static Image ResizeImage(Image image, int width, int height)
+        {
+            var destRect = new Rectangle(0, 0, width, height);
+            var destImage = new Bitmap(width, height);
+
+            destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+
+            using (var graphics = Graphics.FromImage(destImage))
+            {
+                graphics.CompositingMode = CompositingMode.SourceCopy;
+                graphics.CompositingQuality = CompositingQuality.HighQuality;
+                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                using (var wrapMode = new ImageAttributes())
+                {
+                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                    graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
+                }
+            }
+
+            return destImage;
+        }
     }
 }
