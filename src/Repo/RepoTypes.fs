@@ -9,6 +9,7 @@ type EdgeType =
     | Association = 1
     | Attribute = 2
     | Type = 3
+    | Value = 4
 
 type NodeType =
     | Node = 0

@@ -45,7 +45,11 @@ let tags = "DSM visual-modeling visual-languages"
 let solutionFile  = "FunReal.sln"
 
 // Default target configuration
+#if MONO
+let configuration = "MonoRelease"
+#else
 let configuration = "Release"
+#endif
 
 // Pattern specifying assemblies to be tested using NUnit
 let testAssemblies = "tests/**/bin" </> configuration </> "*Tests*.dll"
@@ -132,7 +136,7 @@ Target "Clean" (fun _ ->
 
 Target "Build" (fun _ ->
     !! solutionFile
-    |> MSBuildReleaseExt "" vsProjProps "Rebuild"
+    |> MSBuild "" "Rebuild" vsProjProps
     |> ignore
 )
 
@@ -381,7 +385,7 @@ Target "All" DoNothing
   ==> "NuGet"
   ==> "BuildPackage"
   ==> "All"
-//  =?> ("ReleaseDocs",isLocalBuild)
+  =?> ("ReleaseDocs",isLocalBuild)
 
 "GenerateHelp"
   ==> "GenerateReferenceDocs"

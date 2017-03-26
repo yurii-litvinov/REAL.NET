@@ -25,7 +25,7 @@ namespace EditorPrototype
         private EdgeControl ctrlEdg;
         private GraphExample dataGraph;
 
-        private Repo.Repo repo = Repo.RepoFactory.CreateRepo();
+        private Repo.IRepo repo = Repo.RepoFactory.CreateRepo();
 
         public MainWindow()
         {
