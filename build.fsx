@@ -389,7 +389,7 @@ Target "All" DoNothing
   ==> "BuildPackage"
 #if MONO
 #else
-  =?> ("ReleaseDocs", isLocalBuild)
+  =?> ("ReleaseDocs", not isLocalBuild)
 #endif
   ==> "All"
 
