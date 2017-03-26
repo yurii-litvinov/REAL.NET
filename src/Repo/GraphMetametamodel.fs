@@ -6,13 +6,7 @@ type internal GraphMetametamodel () =
             let helper = ModelBuildingHelper repo
             let (~-) = helper.createAbstractNode
             let (~+) = helper.createConcreteNode
-            let createNode = helper.CreateNode
-            let createEdge = helper.CreateEdge
-            let createAssociation = helper.CreateAssociation
             let (--@-->) x y = helper.AddInstantiation x y
-            let (--+-->) x y = helper.AddAttribute x y
-            let (--*-->) x y = helper.AddType x y
-            let (---|>) x y = helper.AddGeneralization x y
 
             let modelElement = -"ModelElement"
             let node = +"Node"
@@ -24,14 +18,39 @@ type internal GraphMetametamodel () =
             let stringType = -"String"
             let intType = -"Int"
 
+            modelElement.id --@--> node.id
+            node.id --@--> node.id
+            attribute.id --@--> node.id
+            relationship.id --@--> node.id
+            generalization.id --@--> node.id
+            association.id --@--> node.id
+
+            let createAssociation source target targetName targetPotency targetLabel =
+                let newAssociation = helper.CreateAssociation source target targetName targetPotency targetLabel
+                newAssociation.id --@--> association.id
+                newAssociation
+
+            let (---|>) x y = 
+                let generalizationLink = helper.AddGeneralization x y
+                generalizationLink.id --@--> generalization.id
+
+            // "Instantiation" relation is actually an instance of a "class" association, but we don't model 
+            // "Instantiation" as first-class relation, so it can not have type.
             createAssociation modelElement modelElement "class" 1 1 |> ignore
-            createAssociation modelElement attribute "attributes" 0 -1 |> ignore
-            createAssociation attribute node "type" 1 1 |> ignore
+            
+            let attributesAssociation = createAssociation modelElement attribute "attributes" 0 -1
+            let (--+-->) x y = 
+                let attributeLink = helper.AddAttribute x y
+                attributeLink.id --@--> attributesAssociation.id
+
+            let typesAssociation = createAssociation attribute node "type" 1 1
+            let (--*-->) x y = 
+                let typeLink = helper.AddType x y
+                typeLink.id --@--> typesAssociation.id
 
             let valueAssociation = createAssociation attribute node "value" 0 1
-            valueAssociation.id --@--> association.id
 
-            let createAttribute node name type' value = helper.CreateAttribute node name type' value attribute valueAssociation
+            let createAttribute node name type' value = helper.CreateAttribute node name type' value attribute valueAssociation attributesAssociation typesAssociation
 
             createAssociation relationship modelElement "source" 1 1 |> ignore
             createAssociation relationship modelElement "target" 1 1 |> ignore

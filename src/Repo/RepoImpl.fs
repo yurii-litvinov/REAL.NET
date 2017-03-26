@@ -5,7 +5,8 @@ open System.Collections.Generic
 open MetamodelOperations
 open QuickGraph
 
-type private RepoImpl (loader : IModelLoader) as this = 
+// TODO: Shall be private
+type internal RepoImpl (loader : IModelLoader) as this = 
     let repoGraph, classes = (new BidirectionalGraph<_, _> true, new Dictionary<_, _>())
 
     let toList attrSeq =
@@ -52,8 +53,7 @@ type private RepoImpl (loader : IModelLoader) as this =
                 let info, kind = n
                 info.Name
                 
-            // TODO: wtf?
-            repoGraph.Edges |> Seq.map (fun (e : TaggedEdge<_, _>) -> new EdgeInfo(System.Guid.NewGuid().ToString(), name e.Source, name e.Target, edgeType (kind e.Tag)))
+            repoGraph.Edges |> Seq.map (fun (e : TaggedEdge<_, _>) -> new EdgeInfo((fst e.Tag).Id, name e.Source, name e.Target, edgeType (kind e.Tag)))
 
         member this.MetamodelNodes () =
             let id n =
@@ -112,6 +112,43 @@ type private RepoImpl (loader : IModelLoader) as this =
 
         member this.AddEdge typeId sourceId targetId =
             failwith "Not implemented"
+
+        member this.NodeType id =
+            let labels =
+                repoGraph.Vertices 
+                |> Seq.filter (fun (a, _) -> a.Id = id)
+
+            if Seq.isEmpty labels then
+                failwith ("Node with id = " + id + " not found in repo")
+
+            let label = labels |> Seq.exactlyOne
+
+            if not (classes.ContainsKey (Vertex label)) then
+                failwith ("Node " + (fst label).Name + " does not have type")
+
+            let typeId = classes.[Vertex label]
+            match typeId with
+            | Vertex nodeId -> (this :> IRepo).Node (fst nodeId).Id
+            | _ -> failwith "Node type shall be node"
+            
+        member this.EdgeType id =
+            let labels =
+                repoGraph.Edges
+                |> Seq.map (fun e -> e.Tag)
+                |> Seq.filter (fun (a, _) -> a.Id = id)
+
+            if Seq.isEmpty labels then
+                failwith ("Edge with id = " + id + " not found in repo")
+
+            let label = labels |> Seq.exactlyOne
+
+            if not (classes.ContainsKey (ModelElementLabel.Edge label)) then
+                failwith ("Edge " + (fst label).Name + " does not have type")
+
+            let typeId = classes.[ModelElementLabel.Edge label]
+            match typeId with
+            | Vertex node -> (fst node).Id
+            | ModelElementLabel.Edge edge -> (fst edge).Id
 
     interface IMutableRepo with
         member this.AddNode name potency level =

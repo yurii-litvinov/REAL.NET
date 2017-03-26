@@ -11,6 +11,8 @@ type IRepo =
         abstract Node : id : string -> NodeInfo
         abstract AddNode : typeId : string -> NodeInfo
         abstract AddEdge : typeId : string -> sourceId : string -> targetId : string -> NodeInfo
+        abstract NodeType : id : string -> NodeInfo
+        abstract EdgeType : id : string -> string
     end
 
 type IMutableRepo =
