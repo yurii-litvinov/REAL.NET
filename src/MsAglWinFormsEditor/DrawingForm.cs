@@ -12,8 +12,16 @@ namespace MsAglWinFormsEditor
     /// </summary>
     public partial class DrawingForm : Form
     {
-        private readonly List<Tuple<object, Types, Point>> items = new List<Tuple<object, Types, Point>>();
+        private readonly List<Item> items = new List<Item>();
 
+        private class Item
+        {
+            public Types Type { get; set; }
+
+            public Point Position { get; set; }
+
+            public object Figure { get; set; }
+        }
 
         private enum Types
         {
@@ -27,21 +35,21 @@ namespace MsAglWinFormsEditor
             InitializeComponent();
         }
 
-        private void canvas_Paint(object sender, PaintEventArgs e)
+        private void OnCanvasPaint(object sender, PaintEventArgs e)
         {
             canvas.Invalidate();
             foreach (var item in items)
             {
-                switch (item.Item2)
+                switch (item.Type)
                 {
                     case Types.Rect:
-                        e.Graphics.DrawRectangle(new Pen(Color.Green, 10), (Rectangle)item.Item1);
+                        e.Graphics.DrawRectangle(new Pen(Color.Green, 10), (Rectangle)item.Figure);
                         break;
                     case Types.Ellipse:
-                        e.Graphics.DrawEllipse(new Pen(Color.Green, 10), (Rectangle)item.Item1);
+                        e.Graphics.DrawEllipse(new Pen(Color.Green, 10), (Rectangle)item.Figure);
                         break;
                     case Types.Image:
-                        e.Graphics.DrawImage((Image)item.Item1, item.Item3.X, item.Item3.Y);
+                        e.Graphics.DrawImage((Image)item.Figure, item.Position.X, item.Position.Y);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -49,7 +57,7 @@ namespace MsAglWinFormsEditor
             }
         }
 
-        private void canvas_Click(object sender, EventArgs e)
+        private void OnCanvasClick(object sender, EventArgs e)
         {
             if (itemsListBox.SelectedIndex < 0)
                 return;
@@ -57,16 +65,26 @@ namespace MsAglWinFormsEditor
             cursorPosition.X -= canvas.Left;
             cursorPosition.Y -= canvas.Top;
             var item = items[itemsListBox.SelectedIndex];
-            if (item.Item2 == Types.Image)
+            if (item.Type == Types.Image)
             {
-                items.Add(new Tuple<object, Types, Point>(items[itemsListBox.SelectedIndex].Item1, 
-                    items[itemsListBox.SelectedIndex].Item2, cursorPosition));
+                items.Add(new Item
+                {
+                    Figure = items[itemsListBox.SelectedIndex].Figure,
+                    Type = items[itemsListBox.SelectedIndex].Type,
+                    Position = cursorPosition
+                });
                 items.RemoveAt(itemsListBox.SelectedIndex);
                 return;
             }
-            var rect = (Rectangle) item.Item1;
+            var rect = (Rectangle)item.Figure;
             rect.Location = cursorPosition;
-            items.Add(new Tuple<object, Types, Point>(rect, items[itemsListBox.SelectedIndex].Item2, new Point()));
+            items.Add(new Item
+            {
+                Figure = rect,
+                Type = items[itemsListBox.SelectedIndex].Type,
+                Position = new Point()
+            }
+            );
             items.RemoveAt(itemsListBox.SelectedIndex);
             itemsListBox.Items.RemoveAt(itemsListBox.SelectedIndex);
             itemsListBox.Items.Add("new Rect");
@@ -77,11 +95,21 @@ namespace MsAglWinFormsEditor
             switch (shapesComboBox.SelectedIndex)
             {
                 case 0:
-                    items.Add(new Tuple<object, Types, Point>(new Rectangle(10, 10, 10, 10), Types.Rect, new Point()));
+                    items.Add(new Item
+                    {
+                        Figure = new Rectangle(10, 10, 10, 10),
+                        Type = Types.Rect,
+                        Position = new Point()
+                    });
                     itemsListBox.Items.Add("Rectangle");
                     break;
                 case 1:
-                    items.Add(new Tuple<object, Types, Point>(new Rectangle(10, 10, 10, 10), Types.Ellipse, new Point()));
+                    items.Add(new Item
+                    {
+                        Figure = new Rectangle(10, 10, 10, 10),
+                        Type = Types.Ellipse,
+                        Position = new Point()
+                    });
                     itemsListBox.Items.Add("Ellipse");
                     break;
                 default:
@@ -89,7 +117,12 @@ namespace MsAglWinFormsEditor
                     if (openImageDialog.ShowDialog() == DialogResult.OK)
                     {
                         var imagePath = openImageDialog.FileName;
-                        items.Add(new Tuple<object, Types, Point>(new Bitmap(imagePath), Types.Image, new Point(10, 10)));
+                        items.Add(new Item
+                        {
+                            Figure = new Bitmap(imagePath),
+                            Type = Types.Image,
+                            Position = new Point(10, 10)
+                        });
                         itemsListBox.Items.Add("Image");
                     }
                     break;

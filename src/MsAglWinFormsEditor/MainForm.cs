@@ -267,21 +267,21 @@ namespace MsAglWinFormsEditor
 
         private bool DrawNode(Node node, object graphics)
         {
-            var g = (Graphics)graphics;
+            var graphic = (Graphics)graphics;
             var image = imagesHashtable[node.Id] as Image;
-            using (Matrix m = g.Transform)
+            using (Matrix matrix = graphic.Transform)
             {
-                using (Matrix saveM = m.Clone())
+                using (Matrix matrixClone = matrix.Clone())
                 {
-                    g.SetClip(FillTheGraphicsPath(node.Attr.GeometryNode.BoundaryCurve));
-                    using (var m2 = new Matrix(1, 0, 0, -1, 0, 2 * (float)node.Attr.GeometryNode.Center.Y))
-                        m.Multiply(m2);
+                    graphic.SetClip(FillTheGraphicsPath(node.Attr.GeometryNode.BoundaryCurve));
+                    using (var matrixMult = new Matrix(1, 0, 0, -1, 0, 2 * (float)node.Attr.GeometryNode.Center.Y))
+                        matrix.Multiply(matrixMult);
 
-                    g.Transform = m;
-                    g.DrawImage(image, new PointF((float)(node.Attr.GeometryNode.Center.X - node.Attr.GeometryNode.Width / 2),
+                    graphic.Transform = matrix;
+                    graphic.DrawImage(image, new PointF((float)(node.Attr.GeometryNode.Center.X - node.Attr.GeometryNode.Width / 2),
                         (float)(node.Attr.GeometryNode.Center.Y - node.Attr.GeometryNode.Height / 2)));
-                    g.Transform = saveM;
-                    g.ResetClip();
+                    graphic.Transform = matrixClone;
+                    graphic.ResetClip();
                 }
             }
             return true;//returning false would enable the default rendering

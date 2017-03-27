@@ -112,8 +112,8 @@
             this.canvas.Size = new System.Drawing.Size(316, 276);
             this.canvas.TabIndex = 1;
             this.canvas.TabStop = false;
-            this.canvas.Click += new System.EventHandler(this.canvas_Click);
-            this.canvas.Paint += new System.Windows.Forms.PaintEventHandler(this.canvas_Paint);
+            this.canvas.Click += new System.EventHandler(this.OnCanvasClick);
+            this.canvas.Paint += new System.Windows.Forms.PaintEventHandler(this.OnCanvasPaint);
             // 
             // DrawingForm
             // 
