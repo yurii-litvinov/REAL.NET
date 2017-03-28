@@ -75,6 +75,7 @@
     </ApplicationDefinition>
     <Compile Include="Models\ImageLoader.cs" />
     <Compile Include="Models\ValueToImageConverter.cs" />
+    <Compile Include="Restrictions.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

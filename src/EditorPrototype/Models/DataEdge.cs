@@ -24,7 +24,7 @@ namespace EditorPrototype
         [YAXCustomSerializer(typeof(YAXPointArraySerializer))]
         public override Point[] RoutingPoints { get; set; }
 
-        public DataEdge(DataVertex source, DataVertex target, double weight = 1)
+        public DataEdge(DataVertex source, DataVertex target, bool isBreach, double weight = 1)
             : base(source, target, weight)
         {
             Angle = 90;
