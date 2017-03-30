@@ -30,16 +30,91 @@ namespace MsAglWinFormsEditor
         /// </summary>
         private void InitializeComponent()
         {
+            this.mainLayout = new System.Windows.Forms.TableLayoutPanel();
+            this.toolsLayout = new System.Windows.Forms.TableLayoutPanel();
+            this.paletteGrid = new System.Windows.Forms.TableLayoutPanel();
+            this.nodeLayout = new System.Windows.Forms.TableLayoutPanel();
             this.attributeTable = new System.Windows.Forms.DataGridView();
             this.AttributeName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.mainLayout = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            ((System.ComponentModel.ISupportInitialize)(this.attributeTable)).BeginInit();
+            this.loadImageButton = new System.Windows.Forms.Button();
+            this.paintButton = new System.Windows.Forms.Button();
+            this.imageLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.widthEditor = new System.Windows.Forms.NumericUpDown();
+            this.heightEditor = new System.Windows.Forms.NumericUpDown();
+            this.refreshButton = new System.Windows.Forms.Button();
             this.mainLayout.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
+            this.toolsLayout.SuspendLayout();
+            this.nodeLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.attributeTable)).BeginInit();
+            this.imageLayoutPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.widthEditor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.heightEditor)).BeginInit();
             this.SuspendLayout();
+            // 
+            // mainLayout
+            // 
+            this.mainLayout.ColumnCount = 2;
+            this.mainLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 73.79958F));
+            this.mainLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.20042F));
+            this.mainLayout.Controls.Add(this.toolsLayout, 1, 0);
+            this.mainLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mainLayout.Location = new System.Drawing.Point(0, 0);
+            this.mainLayout.Name = "mainLayout";
+            this.mainLayout.RowCount = 1;
+            this.mainLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.mainLayout.Size = new System.Drawing.Size(958, 533);
+            this.mainLayout.TabIndex = 2;
+            // 
+            // toolsLayout
+            // 
+            this.toolsLayout.ColumnCount = 1;
+            this.toolsLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.toolsLayout.Controls.Add(this.paletteGrid, 0, 0);
+            this.toolsLayout.Controls.Add(this.nodeLayout, 0, 1);
+            this.toolsLayout.Controls.Add(this.refreshButton, 0, 2);
+            this.toolsLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.toolsLayout.Location = new System.Drawing.Point(710, 3);
+            this.toolsLayout.Name = "toolsLayout";
+            this.toolsLayout.RowCount = 3;
+            this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45.37206F));
+            this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45.37205F));
+            this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.255898F));
+            this.toolsLayout.Size = new System.Drawing.Size(245, 527);
+            this.toolsLayout.TabIndex = 2;
+            // 
+            // paletteGrid
+            // 
+            this.paletteGrid.AutoSize = true;
+            this.paletteGrid.ColumnCount = 1;
+            this.paletteGrid.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.paletteGrid.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.paletteGrid.Location = new System.Drawing.Point(3, 236);
+            this.paletteGrid.Name = "paletteGrid";
+            this.paletteGrid.RowCount = 1;
+            this.paletteGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.paletteGrid.Size = new System.Drawing.Size(239, 0);
+            this.paletteGrid.TabIndex = 2;
+            // 
+            // nodeLayout
+            // 
+            this.nodeLayout.ColumnCount = 1;
+            this.nodeLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.nodeLayout.Controls.Add(this.attributeTable, 0, 0);
+            this.nodeLayout.Controls.Add(this.loadImageButton, 0, 2);
+            this.nodeLayout.Controls.Add(this.paintButton, 0, 1);
+            this.nodeLayout.Controls.Add(this.imageLayoutPanel, 0, 3);
+            this.nodeLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.nodeLayout.Location = new System.Drawing.Point(3, 242);
+            this.nodeLayout.Name = "nodeLayout";
+            this.nodeLayout.RowCount = 4;
+            this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 44.45449F));
+            this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 19.43942F));
+            this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 19.43942F));
+            this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.nodeLayout.Size = new System.Drawing.Size(239, 233);
+            this.nodeLayout.TabIndex = 0;
             // 
             // attributeTable
             // 
@@ -51,11 +126,11 @@ namespace MsAglWinFormsEditor
             this.Type,
             this.Value});
             this.attributeTable.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.attributeTable.Location = new System.Drawing.Point(3, 370);
+            this.attributeTable.Location = new System.Drawing.Point(3, 3);
             this.attributeTable.Name = "attributeTable";
             this.attributeTable.RowHeadersVisible = false;
-            this.attributeTable.Size = new System.Drawing.Size(239, 154);
-            this.attributeTable.TabIndex = 1;
+            this.attributeTable.Size = new System.Drawing.Size(233, 97);
+            this.attributeTable.TabIndex = 2;
             this.attributeTable.Visible = false;
             // 
             // AttributeName
@@ -79,33 +154,103 @@ namespace MsAglWinFormsEditor
             this.Value.ReadOnly = true;
             this.Value.Width = 70;
             // 
-            // mainLayout
+            // loadImageButton
             // 
-            this.mainLayout.ColumnCount = 2;
-            this.mainLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 73.79958F));
-            this.mainLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.20042F));
-            this.mainLayout.Controls.Add(this.tableLayoutPanel2, 1, 0);
-            this.mainLayout.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainLayout.Location = new System.Drawing.Point(0, 0);
-            this.mainLayout.Name = "mainLayout";
-            this.mainLayout.RowCount = 1;
-            this.mainLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.mainLayout.Size = new System.Drawing.Size(958, 533);
-            this.mainLayout.TabIndex = 2;
+            this.loadImageButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.loadImageButton.Location = new System.Drawing.Point(3, 151);
+            this.loadImageButton.Name = "loadImageButton";
+            this.loadImageButton.Size = new System.Drawing.Size(233, 39);
+            this.loadImageButton.TabIndex = 3;
+            this.loadImageButton.Text = "Load Image";
+            this.loadImageButton.UseVisualStyleBackColor = true;
+            this.loadImageButton.Visible = false;
+            this.loadImageButton.Click += new System.EventHandler(this.LoadImageButtonClick);
             // 
-            // tableLayoutPanel2
+            // paintButton
             // 
-            this.tableLayoutPanel2.ColumnCount = 1;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Controls.Add(this.attributeTable, 0, 1);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(710, 3);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 2;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(245, 527);
-            this.tableLayoutPanel2.TabIndex = 2;
+            this.paintButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.paintButton.Location = new System.Drawing.Point(3, 106);
+            this.paintButton.Name = "paintButton";
+            this.paintButton.Size = new System.Drawing.Size(233, 39);
+            this.paintButton.TabIndex = 4;
+            this.paintButton.Text = "Open Node Paint";
+            this.paintButton.UseVisualStyleBackColor = true;
+            this.paintButton.Visible = false;
+            this.paintButton.Click += new System.EventHandler(this.PaintButtonClick);
+            // 
+            // imageLayoutPanel
+            // 
+            this.imageLayoutPanel.ColumnCount = 2;
+            this.imageLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.66667F));
+            this.imageLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.66667F));
+            this.imageLayoutPanel.Controls.Add(this.widthEditor, 0, 0);
+            this.imageLayoutPanel.Controls.Add(this.heightEditor, 1, 0);
+            this.imageLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imageLayoutPanel.Location = new System.Drawing.Point(3, 196);
+            this.imageLayoutPanel.Name = "imageLayoutPanel";
+            this.imageLayoutPanel.RowCount = 1;
+            this.imageLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.imageLayoutPanel.Size = new System.Drawing.Size(233, 34);
+            this.imageLayoutPanel.TabIndex = 5;
+            this.imageLayoutPanel.Visible = false;
+            // 
+            // widthEditor
+            // 
+            this.widthEditor.Location = new System.Drawing.Point(3, 3);
+            this.widthEditor.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.widthEditor.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.widthEditor.Name = "widthEditor";
+            this.widthEditor.Size = new System.Drawing.Size(91, 20);
+            this.widthEditor.TabIndex = 1;
+            this.widthEditor.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.widthEditor.ValueChanged += new System.EventHandler(this.ImageSizeChanged);
+            // 
+            // heightEditor
+            // 
+            this.heightEditor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.heightEditor.Location = new System.Drawing.Point(119, 3);
+            this.heightEditor.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.heightEditor.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.heightEditor.Name = "heightEditor";
+            this.heightEditor.Size = new System.Drawing.Size(111, 20);
+            this.heightEditor.TabIndex = 2;
+            this.heightEditor.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.heightEditor.ValueChanged += new System.EventHandler(this.ImageSizeChanged);
+            // 
+            // refreshButton
+            // 
+            this.refreshButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.refreshButton.Location = new System.Drawing.Point(3, 481);
+            this.refreshButton.Name = "refreshButton";
+            this.refreshButton.Size = new System.Drawing.Size(239, 43);
+            this.refreshButton.TabIndex = 3;
+            this.refreshButton.Text = "Update Graph";
+            this.refreshButton.UseVisualStyleBackColor = true;
+            this.refreshButton.Click += new System.EventHandler(this.RefreshButtonClick);
             // 
             // MainForm
             // 
@@ -115,20 +260,33 @@ namespace MsAglWinFormsEditor
             this.Controls.Add(this.mainLayout);
             this.Name = "MainForm";
             this.Text = "MainForm";
-            ((System.ComponentModel.ISupportInitialize)(this.attributeTable)).EndInit();
             this.mainLayout.ResumeLayout(false);
-            this.tableLayoutPanel2.ResumeLayout(false);
+            this.toolsLayout.ResumeLayout(false);
+            this.toolsLayout.PerformLayout();
+            this.nodeLayout.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.attributeTable)).EndInit();
+            this.imageLayoutPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.widthEditor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.heightEditor)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
         private TableLayoutPanel mainLayout;
+        private TableLayoutPanel toolsLayout;
+        private TableLayoutPanel paletteGrid;
+        private TableLayoutPanel nodeLayout;
+        private DataGridView attributeTable;
         private DataGridViewTextBoxColumn AttributeName;
         private DataGridViewTextBoxColumn Type;
         private DataGridViewTextBoxColumn Value;
-        private TableLayoutPanel tableLayoutPanel2;
-        private DataGridView attributeTable;
+        private Button loadImageButton;
+        private Button paintButton;
+        private Button refreshButton;
+        private TableLayoutPanel imageLayoutPanel;
+        private NumericUpDown widthEditor;
+        private NumericUpDown heightEditor;
     }
 }
 
