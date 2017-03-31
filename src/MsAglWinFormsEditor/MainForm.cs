@@ -43,6 +43,10 @@ namespace MsAglWinFormsEditor
             viewer.Graph = graph;
 
             SuspendLayout();
+
+            viewer.PanButtonPressed = true;
+            viewer.ToolBarIsVisible = false;
+            viewer.MouseWheel += (sender, args) => viewer.ZoomF += args.Delta * SystemInformation.MouseWheelScrollLines / 4000f;
             viewer.Dock = DockStyle.Fill;
             mainLayout.Controls.Add(viewer, 0, 0);
             ResumeLayout();
@@ -157,6 +161,7 @@ namespace MsAglWinFormsEditor
 
             var newNode = graph.AddNode(graph.NodeCount.ToString());
             newNode.LabelText = "New " + newNodeInfo.nodeType.ToString();
+            newNode.UserData = new List<AttributeInfo>();
             switch (newNodeInfo.nodeType)
             {
                 case NodeType.Attribute:
@@ -184,7 +189,7 @@ namespace MsAglWinFormsEditor
                 {
                     attributeTable.Visible = true;
                     loadImageButton.Visible = true;
-                    paintButton.Visible = true;
+                    viewer.PanButtonPressed = false;
                     var image = imagesHashtable[selectedNode.Id] as Image;
                     if (image != null)
                     {
@@ -208,8 +213,8 @@ namespace MsAglWinFormsEditor
             {
                 attributeTable.Visible = false;
                 loadImageButton.Visible = false;
-                paintButton.Visible = false;
                 imageLayoutPanel.Visible = false;
+                viewer.PanButtonPressed = true;
             }
         }
 
@@ -286,13 +291,7 @@ namespace MsAglWinFormsEditor
             }
             return true;//returning false would enable the default rendering
         }
-
-        private void PaintButtonClick(object sender, EventArgs e)
-        {
-            var form = new DrawingForm();
-            form.Show();
-        }
-
+        
         private void RefreshButtonClick(object sender, EventArgs e) 
             => viewer.Graph = graph;
 
@@ -326,6 +325,11 @@ namespace MsAglWinFormsEditor
             }
 
             return destImage;
+        }
+
+        private void InsertingEdgeCheckedChanged(object sender, EventArgs e)
+        {
+            viewer.InsertingEdge = !viewer.InsertingEdge;
         }
     }
 }
