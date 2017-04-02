@@ -9,15 +9,15 @@ namespace EditorPrototype
     public class Constraints
     {
         /// <summary>
-        ///Checking if Edge is initialized with constraint violation 
-        ///For now (02.04) checks if generalization is a one-side edge
+        /// Checking if Edge is initialized with constraint violation 
+        /// For now (02.04) checks if generalization is a one-side edge
         /// </summary>
         public static bool CheckEdge(Repo.EdgeInfo edge, Repo.IRepo repo)
         {
             return repo.ModelEdges().Any(otherEdge => 
                     ((otherEdge.edgeType == Repo.EdgeType.Generalization) 
                     && (edge.edgeType == Repo.EdgeType.Generalization) 
-                    &&(otherEdge.source == edge.target) 
+                    && (otherEdge.source == edge.target) 
                     && (otherEdge.target == edge.source)));
         }
     }
