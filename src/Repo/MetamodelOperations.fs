@@ -58,7 +58,7 @@ module internal MetamodelOperations =
     let newId () = System.Guid.NewGuid().ToString()
 
     let rec effectiveAttributes repo node =
-        let effectiveAttrs = effectiveAttributeNodes repo node |> Seq.toList
+        let effectiveAttrs = [] //let effectiveAttrs = effectiveAttributeNodes repo node |> Seq.toList
         effectiveAttrs |> Seq.map (fun attr -> new AttributeInfo((fst attr).Name, attrType repo attr, attributeValue repo attr (fst node)))
 
     let instance (repo : RepoRepresentation) (class' : ModelElementLabel) (attributeValues : Map<VertexLabel, AttributeValue>) =
