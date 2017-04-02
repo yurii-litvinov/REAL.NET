@@ -73,6 +73,7 @@ type internal GraphMetametamodel () =
             attribute ---|> modelElement
             relationship ---|> modelElement
             generalization ---|> relationship
+            relationship ---|> generalization
             association ---|> relationship
 
             ()

@@ -94,9 +94,8 @@ namespace EditorPrototype
 
             foreach (var edge in repo.ModelEdges())
             {
-                var restrictions = new Restrictions();
-                var isBreach = false;
-                restrictions.CheckEdge(edge, repo, ref isBreach);
+                var constraints = new Constraints();
+                var isViolation = constraints.CheckEdge(edge, repo);
                 var source = dataGraph.Vertices.First(v => v.Name == edge.source);
                 var target = dataGraph.Vertices.First(v => v.Name == edge.target);
 
@@ -117,7 +116,7 @@ namespace EditorPrototype
                     return DataEdge.EdgeTypeEnum.Generalization;
                 };
 
-                var newEdge = new DataEdge(source, target, isBreach) { EdgeType = edgeType(edge.edgeType) };
+                var newEdge = new DataEdge(source, target, isViolation) { EdgeType = edgeType(edge.edgeType) };
                 dataGraph.AddEdge(newEdge);
             }
 
