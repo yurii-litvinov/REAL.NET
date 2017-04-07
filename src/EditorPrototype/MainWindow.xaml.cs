@@ -94,8 +94,7 @@ namespace EditorPrototype
 
             foreach (var edge in repo.ModelEdges())
             {
-                var constraints = new Constraints();
-                var isViolation = constraints.CheckEdge(edge, repo);
+                var isViolation = Constraints.CheckEdge(edge, repo);
                 var source = dataGraph.Vertices.First(v => v.Name == edge.source);
                 var target = dataGraph.Vertices.First(v => v.Name == edge.target);
 
