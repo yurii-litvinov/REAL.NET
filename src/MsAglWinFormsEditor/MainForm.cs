@@ -5,15 +5,12 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
+using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Splines;
 using Repo;
 using Color = Microsoft.Msagl.Drawing.Color;
-using Edge = Microsoft.Msagl.Drawing.Edge;
-using Graph = Microsoft.Msagl.Drawing.Graph;
-using Node = Microsoft.Msagl.Drawing.Node;
 using Point = Microsoft.Msagl.Point;
-using Shape = Microsoft.Msagl.Drawing.Shape;
 
 namespace MsAglWinFormsEditor
 {
