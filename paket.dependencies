@@ -5,6 +5,7 @@ nuget YC.QuickGraph
 nuget GraphX
 nuget Microsoft.Research.DryadLINQ.MSAGL
 nuget YAXLib
+nuget StyleCop.Analyzers
 
 group Build
   source https://nuget.org/api/v2
