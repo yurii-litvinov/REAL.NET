@@ -19,7 +19,6 @@ namespace MsAglWinFormsEditor
     /// </summary>
     public partial class MainForm : Form
     {
-
         private readonly IRepo repo = RepoFactory.CreateRepo();
         private readonly Graph graph = new Graph("graph");
         private readonly GViewer viewer = new GViewer();
