@@ -186,8 +186,7 @@ namespace MsAglWinFormsEditor
                     attributeTable.Visible = true;
                     loadImageButton.Visible = true;
                     viewer.PanButtonPressed = false;
-                    var image = imagesHashtable[selectedNode.Id] as Image;
-                    if (image != null)
+                    if (imagesHashtable[selectedNode.Id] is Image image)
                     {
                         imageLayoutPanel.Visible = true;
                         widthEditor.Value = image.Width;
@@ -247,8 +246,7 @@ namespace MsAglWinFormsEditor
 
         private void AddSegmentToPath(ICurve seg, ref GraphicsPath p)
         {
-            var line = seg as LineSegment;
-            if (line != null)
+            if (seg is LineSegment line)
             {
                 p.AddLine(PointF(line.Start), PointF(line.End));
             }
