@@ -69,12 +69,12 @@ type private RepoImpl () =
                 |> Seq.filter (fun (a, _) -> a.Id = typeId)
                 |> Seq.exactlyOne
 
-            let isEdge node =
+            let isEdge node : bool=
                 let nodeModelElementAttributes, _ = node
                 nodeModelElementAttributes.Name = "Relationship"
                 
             if isEdge class' then
-                true
+                true 
             else
                 followEdges (repoGraph, classes) isGeneralization class' |> Seq.map isEdge |> Seq.forall id
 

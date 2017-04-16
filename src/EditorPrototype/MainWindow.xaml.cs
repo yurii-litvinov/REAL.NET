@@ -12,6 +12,7 @@ using GraphX.Controls;
 using GraphX.Controls.Models;
 using QuickGraph;
 using System.Windows.Media;
+using System.Windows.Controls.Primitives;
 
 namespace EditorPrototype
 {
@@ -26,11 +27,14 @@ namespace EditorPrototype
         private GraphExample dataGraph;
         private string currentId;
 
+        private readonly EditorObjectManager _editorManager;
+
         private Repo.Repo repo = Repo.RepoFactory.CreateRepo();
 
         public MainWindow()
         {
             InitializeComponent();
+            _editorManager = new EditorObjectManager(g_Area, g_zoomctrl);
             dataGraph = new GraphExample();
             var logic = new GXLogicCore<DataVertex, DataEdge, BidirectionalGraph<DataVertex, DataEdge>>();
             g_Area.LogicCore = logic;
@@ -120,6 +124,7 @@ namespace EditorPrototype
 
                 var newEdge = new DataEdge(source, target) { EdgeType = edgeType(edge.edgeType) };
                 dataGraph.AddEdge(newEdge);
+                DrawNewEdge(source.Key, target.Key);
             }
 
             DrawGraph();
@@ -129,11 +134,18 @@ namespace EditorPrototype
         {
             foreach (var type in repo.MetamodelNodes())
             {
-                var button = new Button { Content = type.name };
+                var button = new ToggleButton { Content = type.name };
                 RoutedEventHandler createNode = (sender, args) => PaletteButton_Checked(type.id);
                 RoutedEventHandler createEdge = (sender, args) => { };
-                button.Click += repo.IsEdgeClass(type.id) ? createEdge : createNode;
-
+                button.Click += (sender, args) => currentId = type.id;
+                if (repo.IsEdgeClass(type.id))
+                {
+                    g_Area.VertexSelected += (sender, args) => button.IsChecked = false;
+                }
+                else
+                {
+                    g_zoomctrl.MouseDown += (sender, args) => button.IsChecked = false;
+                }
                 // TODO: Bind it to XAML, do not do GUI work in C#.
                 paletteGrid.RowDefinitions.Add(new RowDefinition());
                 paletteGrid.Children.Add(button);
@@ -144,8 +156,7 @@ namespace EditorPrototype
         void PaletteButton_Checked(string id)
         {
             currentId = id;
-            //Trace.WriteLine(id);
-        }
+        } 
 
         private void CreateEdge(string type)
         {
@@ -155,21 +166,18 @@ namespace EditorPrototype
             {
                 return;
             }
-
             var newEdge = new DataEdge(prevVerVertex, ctrlVerVertex) { Text = type };
-            /*dataGraph.AddEdge(newEdge);
-            DrawNewEdge(prevVerVertex.Key, ctrlVerVertex.Key);*/
-
+            DrawNewEdge(prevVerVertex.Key, ctrlVerVertex.Key);
             var ec = new EdgeControl(prevVer, ctrlVer, newEdge);
             g_Area.InsertEdge(newEdge, ec);
         }
 
         private void CreateNode(string name, DataVertex.VertexTypeEnum type, IList<Repo.AttributeInfo> attributes)
         {
-            var vertex = new DataVertex(name)
+            var vertex = new DataVertex(name) 
             {
                 Key = $"{name}",
-                VertexType = type
+                VertexType = type,
             };
 
             var attributeInfos = attributes.Select(x => new DataVertex.Attribute()
@@ -180,9 +188,10 @@ namespace EditorPrototype
             });
 
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
-
+            
             dataGraph.AddVertex(vertex);
             DrawNewVertex(vertex.Key);
+            DrawGraph();
         }
 
         private void CreateNewNode(string typeId)
@@ -265,8 +274,6 @@ namespace EditorPrototype
             sp.Children.Add(tx);
             lbi.Content = sp;
             elementsListBox.Items.Add(lbi);
-
-            DrawGraph();
         }
 
         private void DrawNewEdge(string source, string target)
@@ -288,19 +295,28 @@ namespace EditorPrototype
             sp.Children.Add(tx2);
             lbi.Content = sp;
             elementsListBox.Items.Add(lbi);
-
-            DrawGraph();
         }
+
+        
 
         private void VertexSelectedAction(object sender, VertexSelectedEventArgs args)
         {
-            prevVer = ctrlVer;
             ctrlVer = args.VertexControl;
-            /*if (repo.IsEdgeClass(currentId))
+            if (currentId != String.Empty && repo.IsEdgeClass(currentId))
             {
-                CreateEdge("association");
-            }*/
-            CreateEdge("association");
+                if (prevVer == null)
+                {
+                    _editorManager.CreateVirtualEdge(ctrlVer, ctrlVer.GetPosition());
+                    prevVer = ctrlVer;
+                }
+                else
+                {
+                    CreateEdge(currentId); 
+                    prevVer = null;
+                    _editorManager.DestroyVirtualEdge();
+                    currentId = String.Empty;
+                }
+            }
             attributesView.DataContext = ctrlVer.GetDataVertex<DataVertex>();
 
             g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
@@ -361,9 +377,19 @@ namespace EditorPrototype
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 var pos = g_zoomctrl.TranslatePoint(e.GetPosition(g_zoomctrl), g_Area);
-                if (!repo.IsEdgeClass(currentId) && currentId != String.Empty)
+                if (currentId != String.Empty && !repo.IsEdgeClass(currentId))
                 {
                     CreateNewNode(currentId, pos);
+                    currentId = String.Empty;
+                }
+                if (currentId != String.Empty && repo.IsEdgeClass(currentId))
+                {
+                    if (prevVer != null)
+                    {
+                        prevVer = null;
+                        _editorManager.DestroyVirtualEdge();
+                        currentId = String.Empty;
+                    }
                 }
             }
         }
@@ -407,6 +433,7 @@ namespace EditorPrototype
             var vc = new VertexControl(vertex);
             vc.SetPosition(position);
             g_Area.AddVertex(vertex, vc);
+            DrawNewVertex(vertex.Key);
         }
 
         private void OnEdgeMouseUp(object sender, MouseButtonEventArgs e)
