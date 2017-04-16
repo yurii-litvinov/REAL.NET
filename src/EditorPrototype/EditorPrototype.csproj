@@ -66,6 +66,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\EditorObjectManager.cs" />
     <Compile Include="Models\ImageLoader.cs" />
     <Compile Include="Models\ValueToImageConverter.cs" />
     <Page Include="MainWindow.xaml">
@@ -86,6 +87,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Templates\EditorTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Templates\GeneralTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -131,6 +136,12 @@
       <Project>{9e7065a4-ba5e-4752-84bf-54d5c00db60c}</Project>
       <Name>Repo</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\star1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\star2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
