@@ -370,5 +370,11 @@ namespace EditorPrototype
             g_Area.GenerateGraph(dataGraph);
             g_zoomctrl.ZoomToFill();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var constraintsForm = new Window1();
+            constraintsForm.ShowDialog();
+        }
     }
 }

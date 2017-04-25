@@ -38,6 +38,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto" MinHeight="100"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <Grid x:Name="paletteGrid" Grid.Row="1"/>
@@ -53,6 +54,9 @@
                         <DataGridTextColumn Header="Value" Binding="{Binding Value}"/>
                     </DataGrid.Columns>
                 </DataGrid>
+                <Button Grid.Row="6" Click="Button_Click">
+                    Ограничения
+                </Button>
             </Grid>
         </DockPanel>
 
