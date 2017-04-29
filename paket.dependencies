@@ -7,7 +7,7 @@ nuget Microsoft.Research.DryadLINQ.MSAGL
 nuget YAXLib
 nuget StyleCop.Analyzers
  
-nuget NUnit = 3.6.0
+nuget NUnit
 nuget NUnit.Runners
 nuget FsUnit
 

@@ -93,7 +93,7 @@ NUGET
       System.Threading.Timer (>= 4.3) - framework: >= net451, >= netstandard12
       System.Xml.ReaderWriter (>= 4.3) - framework: >= netstandard10
       System.Xml.XDocument (>= 4.3) - framework: >= netstandard10
-    NUnit (3.6)
+    NUnit (3.6.1)
       NETStandard.Library (>= 1.6) - framework: >= net463, >= netstandard16
       System.Runtime.Loader (>= 4.0) - framework: >= net463, >= netstandard16
     NUnit.ConsoleRunner (3.6.1)
@@ -617,7 +617,7 @@ NUGET
       DotParser (>= 1.0.6)
       FSharp.Core
 
-GROUP build
+GROUP Build
 NUGET
   remote: https://www.nuget.org/api/v2
     FAKE (4.60)
