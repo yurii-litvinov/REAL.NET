@@ -25,7 +25,7 @@ open SourceLink
 
 // The name of the project
 // (used by attributes in AssemblyInfo, name of a NuGet package and directory in 'src')
-let project = "FunReal"
+let project = "REAL.NET"
 
 // Short summary of the project
 // (used as description in AssemblyInfo and as a short summary for NuGet package)
@@ -42,7 +42,7 @@ let authors = [ "Yurii Litvinov"; "Elizaveta Kuzmina"; "Ivan Nebogatikov" ]
 let tags = "DSM visual-modeling visual-languages"
 
 // File system information
-let solutionFile  = "FunReal.sln"
+let solutionFile  = "REAL.NET.sln"
 
 // Default target configuration
 #if MONO

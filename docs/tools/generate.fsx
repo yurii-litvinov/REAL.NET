@@ -17,11 +17,11 @@ let githubLink = "https://github.com/yurii-litvinov/REAL.NET"
 
 // Specify more information about your project
 let info =
-  [ "project-name", "FunReal"
+  [ "project-name", "REAL.NET"
     "project-author", "Yurii Litvinov"
     "project-summary", "A set of .NET libraries for quick creation of visual languages and related tools (spriritual successor of QReal project)"
     "project-github", githubLink
-    "project-nuget", "http://nuget.org/packages/FunReal" ]
+    "project-nuget", "http://nuget.org/packages/REAL.NET" ]
 
 // --------------------------------------------------------------------------------------
 // For typical project, no changes are needed below
