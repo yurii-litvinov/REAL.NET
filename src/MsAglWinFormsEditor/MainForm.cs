@@ -26,6 +26,8 @@ namespace MsAglWinFormsEditor
         private readonly Hashtable imagesHashtable = new Hashtable();
         private Node selectedNode;
 
+        private const string modelName = "mainModel";
+
         /// <summary>
         /// Create form with given graph
         /// </summary>
@@ -107,7 +109,7 @@ namespace MsAglWinFormsEditor
 
         private void AddEdges()
         {
-            foreach (var edge in repo.ModelEdges())
+            foreach (var edge in repo.ModelEdges(modelName))
             {
                 var newEdge = graph.AddEdge(edge.source, edge.target);
                 FormatEdge(edge.edgeType, newEdge);
@@ -116,7 +118,7 @@ namespace MsAglWinFormsEditor
 
         private void AddNodes()
         {
-            foreach (var node in repo.ModelNodes())
+            foreach (var node in repo.ModelNodes(modelName))
             {
                 var newNode = graph.FindNode(node.name);
                 newNode.UserData = node.attributes;
@@ -139,7 +141,7 @@ namespace MsAglWinFormsEditor
 
         private void InitPalette()
         {
-            foreach (var type in repo.MetamodelNodes())
+            foreach (var type in repo.MetamodelNodes(modelName))
             {
                 var button = new Button { Text = type.name, Dock = DockStyle.Bottom };
                 button.Click += (sender, args) => CreateNewNode(type.id);
@@ -153,7 +155,7 @@ namespace MsAglWinFormsEditor
 
         private void CreateNewNode(string typeId)
         {
-            var newNodeInfo = repo.AddNode(typeId);
+            var newNodeInfo = repo.AddNode(typeId, modelName);
 
             var newNode = graph.AddNode(graph.NodeCount.ToString());
             newNode.LabelText = "New " + newNodeInfo.nodeType.ToString();
