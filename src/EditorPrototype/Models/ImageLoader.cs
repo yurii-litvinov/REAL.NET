@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Media.Imaging;
-
-namespace EditorPrototype.Models
+﻿namespace EditorPrototype.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Windows.Media.Imaging;
+
     public static class ImageLoader
     {
         private static readonly List<BitmapImage> Images = new List<BitmapImage>();

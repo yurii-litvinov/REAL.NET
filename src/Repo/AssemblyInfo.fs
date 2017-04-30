@@ -3,7 +3,7 @@ namespace System
 open System.Reflection
 
 [<assembly: AssemblyTitleAttribute("Repo")>]
-[<assembly: AssemblyProductAttribute("FunReal")>]
+[<assembly: AssemblyProductAttribute("REAL.NET")>]
 [<assembly: AssemblyDescriptionAttribute("Domain-specific modeling toolkit")>]
 [<assembly: AssemblyVersionAttribute("0.1")>]
 [<assembly: AssemblyFileVersionAttribute("0.1")>]
@@ -12,7 +12,7 @@ do ()
 
 module internal AssemblyVersionInformation =
     let [<Literal>] AssemblyTitle = "Repo"
-    let [<Literal>] AssemblyProduct = "FunReal"
+    let [<Literal>] AssemblyProduct = "REAL.NET"
     let [<Literal>] AssemblyDescription = "Domain-specific modeling toolkit"
     let [<Literal>] AssemblyVersion = "0.1"
     let [<Literal>] AssemblyFileVersion = "0.1"

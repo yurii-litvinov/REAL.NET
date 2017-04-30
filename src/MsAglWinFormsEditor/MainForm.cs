@@ -5,15 +5,12 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
+using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Splines;
 using Repo;
 using Color = Microsoft.Msagl.Drawing.Color;
-using Edge = Microsoft.Msagl.Drawing.Edge;
-using Graph = Microsoft.Msagl.Drawing.Graph;
-using Node = Microsoft.Msagl.Drawing.Node;
 using Point = Microsoft.Msagl.Point;
-using Shape = Microsoft.Msagl.Drawing.Shape;
 
 namespace MsAglWinFormsEditor
 {
@@ -22,7 +19,6 @@ namespace MsAglWinFormsEditor
     /// </summary>
     public partial class MainForm : Form
     {
-
         private readonly IRepo repo = RepoFactory.CreateRepo();
         private readonly Graph graph = new Graph("graph");
         private readonly GViewer viewer = new GViewer();
@@ -43,6 +39,10 @@ namespace MsAglWinFormsEditor
             viewer.Graph = graph;
 
             SuspendLayout();
+
+            viewer.PanButtonPressed = true;
+            viewer.ToolBarIsVisible = false;
+            viewer.MouseWheel += (sender, args) => viewer.ZoomF += args.Delta * SystemInformation.MouseWheelScrollLines / 4000f;
             viewer.Dock = DockStyle.Fill;
             mainLayout.Controls.Add(viewer, 0, 0);
             ResumeLayout();
@@ -157,6 +157,7 @@ namespace MsAglWinFormsEditor
 
             var newNode = graph.AddNode(graph.NodeCount.ToString());
             newNode.LabelText = "New " + newNodeInfo.nodeType.ToString();
+            newNode.UserData = new List<AttributeInfo>();
             switch (newNodeInfo.nodeType)
             {
                 case NodeType.Attribute:
@@ -184,7 +185,7 @@ namespace MsAglWinFormsEditor
                 {
                     attributeTable.Visible = true;
                     loadImageButton.Visible = true;
-                    paintButton.Visible = true;
+                    viewer.PanButtonPressed = false;
                     var image = imagesHashtable[selectedNode.Id] as Image;
                     if (image != null)
                     {
@@ -208,8 +209,8 @@ namespace MsAglWinFormsEditor
             {
                 attributeTable.Visible = false;
                 loadImageButton.Visible = false;
-                paintButton.Visible = false;
                 imageLayoutPanel.Visible = false;
+                viewer.PanButtonPressed = true;
             }
         }
 
@@ -286,13 +287,7 @@ namespace MsAglWinFormsEditor
             }
             return true;//returning false would enable the default rendering
         }
-
-        private void PaintButtonClick(object sender, EventArgs e)
-        {
-            var form = new DrawingForm();
-            form.Show();
-        }
-
+        
         private void RefreshButtonClick(object sender, EventArgs e) 
             => viewer.Graph = graph;
 
@@ -326,6 +321,11 @@ namespace MsAglWinFormsEditor
             }
 
             return destImage;
+        }
+
+        private void InsertingEdgeCheckedChanged(object sender, EventArgs e)
+        {
+            viewer.InsertingEdge = !viewer.InsertingEdge;
         }
     }
 }

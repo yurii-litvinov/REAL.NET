@@ -4,7 +4,7 @@
 #I "../../bin"
 
 (**
-FunReal
+REAL.NET
 ======================
 
 Contributing and copyright

@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using GraphX.PCL.Common.Models;
-using YAXLib;
-
-namespace EditorPrototype.FileSerialization
+﻿namespace EditorPrototype.FileSerialization
 {
+    using System.Collections.Generic;
+    using System.IO;
+    using GraphX.PCL.Common.Models;
+    using YAXLib;
+
     /// <summary>
     /// WPF implementation of file serialization and deserialization
     /// </summary>
@@ -27,7 +27,7 @@ namespace EditorPrototype.FileSerialization
         /// Deserializes data classes list from file
         /// </summary>
         /// <param name="filename">File name</param>
-		public static List<GraphSerializationData> DeserializeDataFromFile(string filename)
+        public static List<GraphSerializationData> DeserializeDataFromFile(string filename)
         {
             using (FileStream stream = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
@@ -40,7 +40,7 @@ namespace EditorPrototype.FileSerialization
         /// </summary>
         /// <param name="stream">The destination stream</param>
         /// <param name="modelsList">The graph data</param>
-		public static void SerializeDataToStream(Stream stream, List<GraphSerializationData> modelsList)
+        public static void SerializeDataToStream(Stream stream, List<GraphSerializationData> modelsList)
         {
             var serializer = new YAXSerializer(typeof(List<GraphSerializationData>));
             using (var textWriter = new StreamWriter(stream))
@@ -55,7 +55,7 @@ namespace EditorPrototype.FileSerialization
         /// </summary>
         /// <param name="stream">The stream</param>
         /// <returns>The graph data</returns>
-		public static List<GraphSerializationData> DeserializeDataFromStream(Stream stream)
+        public static List<GraphSerializationData> DeserializeDataFromStream(Stream stream)
         {
             var deserializer = new YAXSerializer(typeof(List<GraphSerializationData>));
             using (var textReader = new StreamReader(stream))
@@ -65,4 +65,3 @@ namespace EditorPrototype.FileSerialization
         }
     }
 }
-

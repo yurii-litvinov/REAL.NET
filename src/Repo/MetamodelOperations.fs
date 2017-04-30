@@ -58,6 +58,7 @@ module internal MetamodelOperations =
     let newId () = System.Guid.NewGuid().ToString()
 
     let rec effectiveAttributes repo node =
+        // TODO: Detect circular inheritance here, or else we get Stack Overflow on incorrect metamodels
         let effectiveAttrs = effectiveAttributeNodes repo node |> Seq.toList
         effectiveAttrs |> Seq.map (fun attr -> new AttributeInfo((fst attr).Name, attrType repo attr, attributeValue repo attr (fst node)))
 

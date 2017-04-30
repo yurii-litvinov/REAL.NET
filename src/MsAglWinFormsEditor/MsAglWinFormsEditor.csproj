@@ -79,9 +79,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DrawingForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="DrawingForm.cs" />
     <Compile Include="DrawingForm.Designer.cs">
       <DependentUpon>DrawingForm.cs</DependentUpon>
     </Compile>
