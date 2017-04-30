@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Controls.Primitives;
     using System.Windows.Input;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
@@ -20,21 +21,27 @@
     /// </summary>
     internal partial class MainWindow : Window
     {
+        private readonly EditorObjectManager editorManager;
+
         private VertexControl prevVer;
         private VertexControl ctrlVer;
         private EdgeControl ctrlEdg;
         private GraphExample dataGraph;
+        private string currentId;
 
         private Repo.IRepo repo = Repo.RepoFactory.CreateRepo();
 
         public MainWindow()
         {
             this.InitializeComponent();
+            this.editorManager = new EditorObjectManager(this.g_Area, this.g_zoomctrl);
             this.dataGraph = new GraphExample();
             var logic = new GXLogicCore<DataVertex, DataEdge, BidirectionalGraph<DataVertex, DataEdge>>();
             this.g_Area.LogicCore = logic;
             logic.Graph = this.dataGraph;
             logic.DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.LinLog;
+            this.currentId = string.Empty;
+
             this.g_Area.VertexSelected += this.VertexSelectedAction;
             this.g_Area.EdgeSelected += this.EdgeSelectedAction;
             this.g_zoomctrl.Click += this.ClearSelection;
@@ -59,6 +66,7 @@
             logic.AsyncAlgorithmCompute = false;
 
             this.Closed += this.CloseChildrenWindows;
+            this.g_zoomctrl.MouseDown += this.ZoomCtrl_MouseDown;
 
             this.InitPalette();
 
@@ -117,6 +125,7 @@
 
                 var newEdge = new DataEdge(source, target, isViolation) { EdgeType = edgeType(edge.edgeType) };
                 this.dataGraph.AddEdge(newEdge);
+                this.DrawNewEdge(source.Key, target.Key);
             }
 
             this.DrawGraph();
@@ -126,16 +135,29 @@
         {
             foreach (var type in this.repo.MetamodelNodes())
             {
-                var button = new Button { Content = type.name };
-                RoutedEventHandler createNode = (sender, args) => this.CreateNewNode(type.id);
+                var button = new ToggleButton { Content = type.name };
+                RoutedEventHandler createNode = (sender, args) => this.PaletteButton_Checked(type.id);
                 RoutedEventHandler createEdge = (sender, args) => { };
-                button.Click += this.repo.IsEdgeClass(type.id) ? createEdge : createNode;
+                button.Click += (sender, args) => this.currentId = type.id;
+                if (this.repo.IsEdgeClass(type.id))
+                {
+                    this.g_Area.VertexSelected += (sender, args) => button.IsChecked = false;
+                }
+                else
+                {
+                    this.g_zoomctrl.MouseDown += (sender, args) => button.IsChecked = false;
+                }
 
                 // TODO: Bind it to XAML, do not do GUI work in C#.
                 this.paletteGrid.RowDefinitions.Add(new RowDefinition());
                 this.paletteGrid.Children.Add(button);
                 Grid.SetRow(button, this.paletteGrid.RowDefinitions.Count - 1);
             }
+        }
+
+        private void PaletteButton_Checked(string id)
+        {
+            this.currentId = id;
         }
 
         private void CreateEdge(string type)
@@ -150,6 +172,8 @@
             var newEdge = new DataEdge(prevVerVertex, ctrlVerVertex, true) { Text = type };
             this.dataGraph.AddEdge(newEdge);
             this.DrawNewEdge(prevVerVertex.Key, ctrlVerVertex.Key);
+            var ec = new EdgeControl(this.prevVer, this.ctrlVer, newEdge);
+            this.g_Area.InsertEdge(newEdge, ec);
         }
 
         private void CreateNode(string name, DataVertex.VertexTypeEnum type, IList<Repo.AttributeInfo> attributes)
@@ -157,7 +181,7 @@
             var vertex = new DataVertex(name)
             {
                 Key = $"{name}",
-                VertexType = type
+                VertexType = type,
             };
 
             var attributeInfos = attributes.Select(x => new DataVertex.Attribute()
@@ -171,6 +195,7 @@
 
             this.dataGraph.AddVertex(vertex);
             this.DrawNewVertex(vertex.Key);
+            this.DrawGraph();
         }
 
         private void CreateNewNode(string typeId)
@@ -255,8 +280,6 @@
             sp.Children.Add(tx);
             lbi.Content = sp;
             this.elementsListBox.Items.Add(lbi);
-
-            this.DrawGraph();
         }
 
         private void DrawNewEdge(string source, string target)
@@ -278,14 +301,27 @@
             sp.Children.Add(tx2);
             lbi.Content = sp;
             this.elementsListBox.Items.Add(lbi);
-
-            this.DrawGraph();
         }
 
         private void VertexSelectedAction(object sender, VertexSelectedEventArgs args)
         {
-            this.prevVer = this.ctrlVer;
             this.ctrlVer = args.VertexControl;
+            if (this.currentId != string.Empty && this.repo.IsEdgeClass(this.currentId))
+            {
+                if (this.prevVer == null)
+                {
+                    this.editorManager.CreateVirtualEdge(this.ctrlVer, this.ctrlVer.GetPosition());
+                    this.prevVer = this.ctrlVer;
+                }
+                else
+                {
+                    this.CreateEdge(this.currentId);
+                    this.prevVer = null;
+                    this.editorManager.DestroyVirtualEdge();
+                    this.currentId = string.Empty;
+                }
+            }
+
             this.attributesView.DataContext = this.ctrlVer.GetDataVertex<DataVertex>();
 
             this.g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
@@ -339,6 +375,71 @@
             dataEdge.RoutingPoints[2] = new GraphX.Measure.Point(100, 100);
 
             this.g_Area.UpdateAllEdges();
+        }
+
+        private void ZoomCtrl_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                var pos = this.g_zoomctrl.TranslatePoint(e.GetPosition(this.g_zoomctrl), this.g_Area);
+                if (this.currentId != string.Empty && !this.repo.IsEdgeClass(this.currentId))
+                {
+                    this.CreateNewNode(this.currentId, pos);
+                    this.currentId = string.Empty;
+                }
+
+                if (this.currentId != string.Empty && this.repo.IsEdgeClass(this.currentId))
+                {
+                    if (this.prevVer != null)
+                    {
+                        this.prevVer = null;
+                        this.editorManager.DestroyVirtualEdge();
+                        this.currentId = string.Empty;
+                    }
+                }
+            }
+        }
+
+        private void CreateNewNode(string typeId, Point position)
+        {
+            var newNode = this.repo.AddNode(typeId);
+            Func<Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
+            {
+                switch (n)
+                {
+                    case Repo.NodeType.Attribute:
+                        return DataVertex.VertexTypeEnum.Attribute;
+                    case Repo.NodeType.Node:
+                        return DataVertex.VertexTypeEnum.Node;
+                }
+
+                return DataVertex.VertexTypeEnum.Node;
+            };
+
+            this.CreateNode(newNode.name, nodeType(newNode.nodeType), newNode.attributes, position);
+        }
+
+        private void CreateNode(string name, DataVertex.VertexTypeEnum type, IList<Repo.AttributeInfo> attributes, Point position)
+        {
+            var vertex = new DataVertex(name)
+            {
+                Key = $"{name}",
+                VertexType = type
+            };
+
+            var attributeInfos = attributes.Select(x => new DataVertex.Attribute()
+            {
+                Name = x.name,
+                Type = this.repo.Node(x.attributeType).name,
+                Value = x.value
+            });
+
+            attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
+
+            var vc = new VertexControl(vertex);
+            vc.SetPosition(position);
+            this.g_Area.AddVertex(vertex, vc);
+            this.DrawNewVertex(vertex.Key);
         }
 
         private void OnEdgeMouseUp(object sender, MouseButtonEventArgs e)
