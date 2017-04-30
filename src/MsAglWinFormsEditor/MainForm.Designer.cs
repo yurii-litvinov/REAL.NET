@@ -39,10 +39,10 @@ namespace MsAglWinFormsEditor
             this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.loadImageButton = new System.Windows.Forms.Button();
-            this.paintButton = new System.Windows.Forms.Button();
             this.imageLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.widthEditor = new System.Windows.Forms.NumericUpDown();
             this.heightEditor = new System.Windows.Forms.NumericUpDown();
+            this.insertingEdge = new System.Windows.Forms.CheckBox();
             this.refreshButton = new System.Windows.Forms.Button();
             this.mainLayout.SuspendLayout();
             this.toolsLayout.SuspendLayout();
@@ -77,10 +77,11 @@ namespace MsAglWinFormsEditor
             this.toolsLayout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolsLayout.Location = new System.Drawing.Point(710, 3);
             this.toolsLayout.Name = "toolsLayout";
-            this.toolsLayout.RowCount = 3;
-            this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45.37206F));
+            this.toolsLayout.RowCount = 4;
+            this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45.37205F));
             this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45.37205F));
             this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.255898F));
+            this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.toolsLayout.Size = new System.Drawing.Size(245, 527);
             this.toolsLayout.TabIndex = 2;
             // 
@@ -90,7 +91,7 @@ namespace MsAglWinFormsEditor
             this.paletteGrid.ColumnCount = 1;
             this.paletteGrid.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.paletteGrid.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.paletteGrid.Location = new System.Drawing.Point(3, 236);
+            this.paletteGrid.Location = new System.Drawing.Point(3, 227);
             this.paletteGrid.Name = "paletteGrid";
             this.paletteGrid.RowCount = 1;
             this.paletteGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -102,18 +103,19 @@ namespace MsAglWinFormsEditor
             this.nodeLayout.ColumnCount = 1;
             this.nodeLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.nodeLayout.Controls.Add(this.attributeTable, 0, 0);
-            this.nodeLayout.Controls.Add(this.loadImageButton, 0, 2);
-            this.nodeLayout.Controls.Add(this.paintButton, 0, 1);
-            this.nodeLayout.Controls.Add(this.imageLayoutPanel, 0, 3);
+            this.nodeLayout.Controls.Add(this.loadImageButton, 0, 1);
+            this.nodeLayout.Controls.Add(this.imageLayoutPanel, 0, 2);
+            this.nodeLayout.Controls.Add(this.insertingEdge, 0, 3);
             this.nodeLayout.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.nodeLayout.Location = new System.Drawing.Point(3, 242);
+            this.nodeLayout.Location = new System.Drawing.Point(3, 233);
             this.nodeLayout.Name = "nodeLayout";
             this.nodeLayout.RowCount = 4;
-            this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 44.45449F));
-            this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 19.43942F));
-            this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 19.43942F));
-            this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
-            this.nodeLayout.Size = new System.Drawing.Size(239, 233);
+            this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 55.18144F));
+            this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 24.13019F));
+            this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20.68837F));
+            this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 37F));
+            this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.nodeLayout.Size = new System.Drawing.Size(239, 224);
             this.nodeLayout.TabIndex = 0;
             // 
             // attributeTable
@@ -125,7 +127,7 @@ namespace MsAglWinFormsEditor
             this.AttributeName,
             this.Type,
             this.Value});
-            this.attributeTable.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.attributeTable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.attributeTable.Location = new System.Drawing.Point(3, 3);
             this.attributeTable.Name = "attributeTable";
             this.attributeTable.RowHeadersVisible = false;
@@ -157,7 +159,7 @@ namespace MsAglWinFormsEditor
             // loadImageButton
             // 
             this.loadImageButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.loadImageButton.Location = new System.Drawing.Point(3, 151);
+            this.loadImageButton.Location = new System.Drawing.Point(3, 106);
             this.loadImageButton.Name = "loadImageButton";
             this.loadImageButton.Size = new System.Drawing.Size(233, 39);
             this.loadImageButton.TabIndex = 3;
@@ -165,18 +167,6 @@ namespace MsAglWinFormsEditor
             this.loadImageButton.UseVisualStyleBackColor = true;
             this.loadImageButton.Visible = false;
             this.loadImageButton.Click += new System.EventHandler(this.LoadImageButtonClick);
-            // 
-            // paintButton
-            // 
-            this.paintButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.paintButton.Location = new System.Drawing.Point(3, 106);
-            this.paintButton.Name = "paintButton";
-            this.paintButton.Size = new System.Drawing.Size(233, 39);
-            this.paintButton.TabIndex = 4;
-            this.paintButton.Text = "Open Node Paint";
-            this.paintButton.UseVisualStyleBackColor = true;
-            this.paintButton.Visible = false;
-            this.paintButton.Click += new System.EventHandler(this.PaintButtonClick);
             // 
             // imageLayoutPanel
             // 
@@ -186,11 +176,11 @@ namespace MsAglWinFormsEditor
             this.imageLayoutPanel.Controls.Add(this.widthEditor, 0, 0);
             this.imageLayoutPanel.Controls.Add(this.heightEditor, 1, 0);
             this.imageLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.imageLayoutPanel.Location = new System.Drawing.Point(3, 196);
+            this.imageLayoutPanel.Location = new System.Drawing.Point(3, 151);
             this.imageLayoutPanel.Name = "imageLayoutPanel";
             this.imageLayoutPanel.RowCount = 1;
             this.imageLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.imageLayoutPanel.Size = new System.Drawing.Size(233, 34);
+            this.imageLayoutPanel.Size = new System.Drawing.Size(233, 32);
             this.imageLayoutPanel.TabIndex = 5;
             this.imageLayoutPanel.Visible = false;
             // 
@@ -241,12 +231,24 @@ namespace MsAglWinFormsEditor
             0});
             this.heightEditor.ValueChanged += new System.EventHandler(this.ImageSizeChanged);
             // 
+            // insertingEdge
+            // 
+            this.insertingEdge.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.insertingEdge.AutoSize = true;
+            this.insertingEdge.Location = new System.Drawing.Point(79, 196);
+            this.insertingEdge.Name = "insertingEdge";
+            this.insertingEdge.Size = new System.Drawing.Size(80, 17);
+            this.insertingEdge.TabIndex = 6;
+            this.insertingEdge.Text = "Insert Edge";
+            this.insertingEdge.UseVisualStyleBackColor = true;
+            this.insertingEdge.CheckedChanged += new System.EventHandler(this.InsertingEdgeCheckedChanged);
+            // 
             // refreshButton
             // 
             this.refreshButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.refreshButton.Location = new System.Drawing.Point(3, 481);
+            this.refreshButton.Location = new System.Drawing.Point(3, 463);
             this.refreshButton.Name = "refreshButton";
-            this.refreshButton.Size = new System.Drawing.Size(239, 43);
+            this.refreshButton.Size = new System.Drawing.Size(239, 40);
             this.refreshButton.TabIndex = 3;
             this.refreshButton.Text = "Update Graph";
             this.refreshButton.UseVisualStyleBackColor = true;
@@ -264,6 +266,7 @@ namespace MsAglWinFormsEditor
             this.toolsLayout.ResumeLayout(false);
             this.toolsLayout.PerformLayout();
             this.nodeLayout.ResumeLayout(false);
+            this.nodeLayout.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.attributeTable)).EndInit();
             this.imageLayoutPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.widthEditor)).EndInit();
@@ -276,17 +279,17 @@ namespace MsAglWinFormsEditor
         private TableLayoutPanel mainLayout;
         private TableLayoutPanel toolsLayout;
         private TableLayoutPanel paletteGrid;
+        private Button refreshButton;
         private TableLayoutPanel nodeLayout;
         private DataGridView attributeTable;
         private DataGridViewTextBoxColumn AttributeName;
         private DataGridViewTextBoxColumn Type;
         private DataGridViewTextBoxColumn Value;
         private Button loadImageButton;
-        private Button paintButton;
-        private Button refreshButton;
         private TableLayoutPanel imageLayoutPanel;
         private NumericUpDown widthEditor;
         private NumericUpDown heightEditor;
+        private CheckBox insertingEdge;
     }
 }
 
