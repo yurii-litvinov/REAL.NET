@@ -15,7 +15,7 @@ let setup () =
 [<Test>]
 let ``Repo shall be able to load a model`` () =
     let modelLoader = GraphMetametamodel () :> IModelLoader
-    modelLoader.LoadInto repo
+    modelLoader.LoadInto repo modelName
 
 [<Test>]
 let ``Repo shall return some metamodel nodes`` () =
