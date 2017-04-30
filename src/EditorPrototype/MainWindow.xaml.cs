@@ -66,11 +66,14 @@
             logic.AsyncAlgorithmCompute = false;
 
             this.Closed += this.CloseChildrenWindows;
-            this.g_zoomctrl.MouseDown += this.ZoomCtrl_MouseDown;
 
-            this.InitPalette();
+            var modelName = "mainModel";
 
-            this.InitModel();
+            this.g_zoomctrl.MouseDown += (object sender, MouseButtonEventArgs e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
+
+            this.InitPalette(modelName);
+
+            this.InitModel(modelName);
         }
 
         private void ClearSelection(object sender, RoutedEventArgs e)
@@ -80,9 +83,9 @@
             this.g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
         }
 
-        private void InitModel()
+        private void InitModel(string modelName)
         {
-            foreach (var node in this.repo.ModelNodes())
+            foreach (var node in this.repo.ModelNodes(modelName))
             {
                 Func<Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
                 {
@@ -100,9 +103,9 @@
                 this.CreateNode(node.name, nodeType(node.nodeType), node.attributes);
             }
 
-            foreach (var edge in this.repo.ModelEdges())
+            foreach (var edge in this.repo.ModelEdges(modelName))
             {
-                var isViolation = Constraints.CheckEdge(edge, this.repo);
+                var isViolation = Constraints.CheckEdge(edge, this.repo, modelName);
                 var source = this.dataGraph.Vertices.First(v => v.Name == edge.source);
                 var target = this.dataGraph.Vertices.First(v => v.Name == edge.target);
 
@@ -131,9 +134,9 @@
             this.DrawGraph();
         }
 
-        private void InitPalette()
+        private void InitPalette(string modelName)
         {
-            foreach (var type in this.repo.MetamodelNodes())
+            foreach (var type in this.repo.MetamodelNodes(modelName))
             {
                 var button = new ToggleButton { Content = type.name };
                 RoutedEventHandler createNode = (sender, args) => this.PaletteButton_Checked(type.id);
@@ -198,9 +201,9 @@
             this.DrawGraph();
         }
 
-        private void CreateNewNode(string typeId)
+        private void CreateNewNode(string typeId, string modelName)
         {
-            var newNode = this.repo.AddNode(typeId);
+            var newNode = this.repo.AddNode(typeId, modelName);
             Func<Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
             {
                 switch (n)
@@ -377,14 +380,14 @@
             this.g_Area.UpdateAllEdges();
         }
 
-        private void ZoomCtrl_MouseDown(object sender, MouseButtonEventArgs e)
+        private void ZoomCtrl_MouseDown(object sender, MouseButtonEventArgs e, string modelName)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 var pos = this.g_zoomctrl.TranslatePoint(e.GetPosition(this.g_zoomctrl), this.g_Area);
                 if (this.currentId != string.Empty && !this.repo.IsEdgeClass(this.currentId))
                 {
-                    this.CreateNewNode(this.currentId, pos);
+                    this.CreateNewNode(this.currentId, pos, modelName);
                     this.currentId = string.Empty;
                 }
 
@@ -400,9 +403,9 @@
             }
         }
 
-        private void CreateNewNode(string typeId, Point position)
+        private void CreateNewNode(string typeId, Point position, string modelName)
         {
-            var newNode = this.repo.AddNode(typeId);
+            var newNode = this.repo.AddNode(typeId, modelName);
             Func<Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
             {
                 switch (n)

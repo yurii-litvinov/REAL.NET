@@ -2,5 +2,5 @@
 
 type IModelLoader =
     interface
-        abstract LoadInto : repo : IMutableRepo -> unit
+        abstract LoadInto : repo : IMutableRepo -> modelName : string -> unit
     end

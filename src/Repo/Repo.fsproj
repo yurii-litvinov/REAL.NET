@@ -77,6 +77,7 @@
     <Compile Include="ModelBuildingHelper.fs" />
     <Compile Include="MetamodelOperations.fs" />
     <Compile Include="GraphMetametamodel.fs" />
+    <Compile Include="TestModelLoader.fs" />
     <Compile Include="RepoImpl.fs" />
     <Compile Include="RepoFactory.fs" />
     <None Include="paket.references" />
