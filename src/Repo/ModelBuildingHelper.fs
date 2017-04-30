@@ -1,14 +1,14 @@
 ﻿namespace Repo
 
-type internal ModelBuildingHelper (repo : IMutableRepo) =
+type internal ModelBuildingHelper (repo : IMutableRepo, modelName : string) =
     member this.CreateNode name potency = 
-        repo.AddNode name potency 0
+        repo.AddNode name potency 0 modelName
 
     member this.CreateEdge edgeType sourceId targetId = 
-        repo.AddEdge edgeType sourceId targetId -1 0 "a" 0 -1 "b" 0 -1
+        repo.AddEdge edgeType sourceId targetId -1 0 "a" 0 -1 "b" 0 -1 modelName
 
     member this.CreateAssociation (source : NodeInfo) (target : NodeInfo) targetName targetMin targetMax = 
-        repo.AddEdge EdgeType.Association source.id target.id -1 0 "a" 0 -1 targetName targetMin targetMax 
+        repo.AddEdge EdgeType.Association source.id target.id -1 0 "a" 0 -1 targetName targetMin targetMax modelName
 
     member this.createConcreteNode name = 
         this.CreateNode name -1
@@ -26,7 +26,7 @@ type internal ModelBuildingHelper (repo : IMutableRepo) =
 
         let attrValue = match value with String s -> s | _ -> ""
 
-        let attributeNode = repo.AddAttribute name potency 0 attrValue
+        let attributeNode = repo.AddAttribute name potency 0 attrValue modelName
 
         this.AddInstantiation attributeNode.id attribute.id
 

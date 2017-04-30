@@ -6,6 +6,7 @@ open FsUnit
 open Repo
 
 let mutable private repo = RepoFactory.CreateRepo () :?> RepoImpl
+let private modelName = "mainModel"
 
 [<SetUp>]
 let setup () =
@@ -18,13 +19,13 @@ let ``Repo shall be able to load a model`` () =
 
 [<Test>]
 let ``Repo shall return some metamodel nodes`` () =
-    (repo :> IRepo).MetamodelNodes () |> should not' (be Empty)
+    (repo :> IRepo).MetamodelNodes modelName |> should not' (be Empty)
 
 [<Test>]
 let ``Repo shall return some model nodes`` () =
-    (repo :> IRepo).ModelNodes () |> should not' (be Empty)
+    (repo :> IRepo).ModelNodes modelName |> should not' (be Empty)
 
 [<Test>]
 let ``Repo shall contain at least ModelElement`` () =
-    (repo :> IRepo).ModelNodes () |> Seq.filter (fun x -> x.name = "ModelElement") |> should not' (be Empty)
+    (repo :> IRepo).ModelNodes modelName |> Seq.filter (fun x -> x.name = "ModelElement") |> should not' (be Empty)
 

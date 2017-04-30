@@ -2,8 +2,8 @@
 
 type internal GraphMetametamodel () =
     interface IModelLoader with
-        member this.LoadInto repo =
-            let helper = ModelBuildingHelper repo
+        member this.LoadInto repo modelName =
+            let helper = ModelBuildingHelper(repo, modelName)
             let (~-) = helper.createAbstractNode
             let (~+) = helper.createConcreteNode
             let (--@-->) x y = helper.AddInstantiation x y

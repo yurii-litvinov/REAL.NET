@@ -60,9 +60,11 @@ namespace EditorPrototype
 
             Closed += CloseChildrenWindows;
 
-            InitPalette();
+            string modelName = "mainModel";
 
-            InitModel();
+            InitPalette(modelName);
+
+            InitModel(modelName);
         }
 
         private void ClearSelection(object sender, RoutedEventArgs e)
@@ -72,9 +74,9 @@ namespace EditorPrototype
             g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
         }
 
-        private void InitModel()
+        private void InitModel(string modelName)
         {
-            foreach (var node in repo.ModelNodes())
+            foreach (var node in repo.ModelNodes(modelName))
             {
                 Func<Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
                 {
@@ -92,7 +94,7 @@ namespace EditorPrototype
                 CreateNode(node.name, nodeType(node.nodeType), node.attributes);
             }
 
-            foreach (var edge in repo.ModelEdges())
+            foreach (var edge in repo.ModelEdges(modelName))
             {
                 var source = dataGraph.Vertices.First(v => v.Name == edge.source);
                 var target = dataGraph.Vertices.First(v => v.Name == edge.target);
@@ -121,12 +123,12 @@ namespace EditorPrototype
             DrawGraph();
         }
 
-        private void InitPalette()
+        private void InitPalette(string modelName)
         {
-            foreach (var type in repo.MetamodelNodes())
+            foreach (var type in repo.MetamodelNodes(modelName))
             {
                 var button = new Button { Content = type.name };
-                RoutedEventHandler createNode = (sender, args) => CreateNewNode(type.id);
+                RoutedEventHandler createNode = (sender, args) => CreateNewNode(type.id, modelName);
                 RoutedEventHandler createEdge = (sender, args) => { };
                 button.Click += repo.IsEdgeClass(type.id) ? createEdge : createNode;
                 
@@ -172,9 +174,9 @@ namespace EditorPrototype
             DrawNewVertex(vertex.Key);
         }
 
-        private void CreateNewNode(string typeId)
+        private void CreateNewNode(string typeId, string modelName)
         {
-            var newNode = repo.AddNode(typeId);
+            var newNode = repo.AddNode(typeId, modelName);
             Func<Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
             {
                 switch (n)
