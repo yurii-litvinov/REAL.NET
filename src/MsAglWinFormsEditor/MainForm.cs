@@ -45,11 +45,7 @@ namespace MsAglWinFormsEditor
         }
 
         private void ViewerOnMouseDown(object sender, MouseEventArgs mouseEventArgs)
-        {
-            var selectedObject = viewer.SelectedObject;
-            selectedNode = selectedObject as Node;
-            viewer.PanButtonPressed = selectedNode == null;
-        }
+           => viewer.PanButtonPressed = viewer.SelectedObject == null;
 
         private readonly List<EdgeType> edgeTypes = new List<EdgeType>
         {
@@ -92,7 +88,11 @@ namespace MsAglWinFormsEditor
             foreach (var type in graph.GetNodeTypes())
             {
                 var button = new Button { Text = type.name, Dock = DockStyle.Bottom };
-                button.Click += (sender, args) => { graph.CreateNewNode(type.id); UpdateGraph(); };
+                button.Click += (sender, args) =>
+                {
+                    graph.CreateNewNode(type.id);
+                    UpdateGraph();
+                };
                 paletteGrid.Controls.Add(button, 0, paletteGrid.RowCount - 1);
 
                 ++paletteGrid.RowCount;
@@ -135,13 +135,13 @@ namespace MsAglWinFormsEditor
                 attributeTable.Visible = false;
                 loadImageButton.Visible = false;
                 imageLayoutPanel.Visible = false;
-                viewer.PanButtonPressed = true;
+                viewer.PanButtonPressed = viewer.SelectedObject == null;
             }
         }
 
         private void LoadImageButtonClick(object sender, EventArgs e)
         {
-            var openImageDialog = new OpenFileDialog {Filter = @"Image files *.png | *.png"};
+            var openImageDialog = new OpenFileDialog { Filter = @"Image files *.png | *.png" };
             if (openImageDialog.ShowDialog() == DialogResult.OK)
             {
                 var newImage = new Bitmap(openImageDialog.FileName);
@@ -185,7 +185,7 @@ namespace MsAglWinFormsEditor
 
         private ICurve GetNodeBoundary(Node node)
         {
-            var image = (Image) imagesHashtable[node.Id];
+            var image = (Image)imagesHashtable[node.Id];
             double width = image.Width;
             double height = image.Height;
 
@@ -197,8 +197,8 @@ namespace MsAglWinFormsEditor
 
         private bool DrawNode(Node node, object graphics)
         {
-            var graphic = (Graphics) graphics;
-            var image = (Image) imagesHashtable[node.Id];
+            var graphic = (Graphics)graphics;
+            var image = (Image)imagesHashtable[node.Id];
             using (Matrix matrix = graphic.Transform)
             {
                 using (Matrix matrixClone = matrix.Clone())
@@ -216,8 +216,8 @@ namespace MsAglWinFormsEditor
             }
             return true; // Returning false would enable the default rendering
         }
-        
-        private void RefreshButtonClick(object sender, EventArgs e) 
+
+        private void RefreshButtonClick(object sender, EventArgs e)
             => viewer.Graph = graph.GetGraph();
 
         private void ImageSizeChanged(object sender, EventArgs e)
