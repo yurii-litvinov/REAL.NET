@@ -92,7 +92,7 @@ namespace MsAglWinFormsEditor
             foreach (var type in graph.GetNodeTypes())
             {
                 var button = new Button { Text = type.name, Dock = DockStyle.Bottom };
-                button.Click += (sender, args) => graph.CreateNewNode(type.id);
+                button.Click += (sender, args) => { graph.CreateNewNode(type.id); UpdateGraph(); };
                 paletteGrid.Controls.Add(button, 0, paletteGrid.RowCount - 1);
 
                 ++paletteGrid.RowCount;
@@ -144,10 +144,14 @@ namespace MsAglWinFormsEditor
             var openImageDialog = new OpenFileDialog {Filter = @"Image files *.png | *.png"};
             if (openImageDialog.ShowDialog() == DialogResult.OK)
             {
-                imagesHashtable[selectedNode.Id] = new Bitmap(openImageDialog.FileName);
+                var newImage = new Bitmap(openImageDialog.FileName);
+                imagesHashtable[selectedNode.Id] = newImage;
                 selectedNode.Attr.Shape = Shape.DrawFromGeometry;
                 selectedNode.DrawNodeDelegate = DrawNode;
                 selectedNode.NodeBoundaryDelegate = GetNodeBoundary;
+                widthEditor.Value = newImage.Width;
+                heightEditor.Value = newImage.Height;
+                imageLayoutPanel.Visible = true;
                 UpdateGraph();
             }
         }
