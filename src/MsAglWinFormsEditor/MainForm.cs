@@ -9,24 +9,19 @@ using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Splines;
 using Repo;
-using Color = Microsoft.Msagl.Drawing.Color;
 using Point = Microsoft.Msagl.Point;
 
 namespace MsAglWinFormsEditor
 {
     /// <summary>
-    /// Main project form
+    /// Main project form. Realisation for all user events
     /// </summary>
     public partial class MainForm : Form
     {
-        private readonly IRepo repo = RepoFactory.CreateRepo();
-        private readonly Graph graph = new Graph("graph");
         private readonly GViewer viewer = new GViewer();
-
+        private readonly MsAglGraphRepresentation graph = new MsAglGraphRepresentation();
         private readonly Hashtable imagesHashtable = new Hashtable();
         private Node selectedNode;
-
-        private const string modelName = "mainModel";
 
         /// <summary>
         /// Create form with given graph
@@ -35,13 +30,10 @@ namespace MsAglWinFormsEditor
         {
             viewer.MouseClick += ViewerMouseClicked;
             InitializeComponent();
-            AddEdges();
-            AddNodes();
             viewer.EdgeAdded += ViewerOnEdgeAdded;
-            viewer.Graph = graph;
-
             SuspendLayout();
 
+            viewer.Graph = graph.GetGraph();
             viewer.PanButtonPressed = true;
             viewer.ToolBarIsVisible = false;
             viewer.MouseWheel += (sender, args) => viewer.ZoomF += args.Delta * SystemInformation.MouseWheelScrollLines / 4000f;
@@ -56,7 +48,8 @@ namespace MsAglWinFormsEditor
             EdgeType.Generalization,
             EdgeType.Association,
             EdgeType.Attribute,
-            EdgeType.Type
+            EdgeType.Type,
+            EdgeType.Value
         };
 
         private void ViewerOnEdgeAdded(object sender, EventArgs eventArgs)
@@ -72,7 +65,7 @@ namespace MsAglWinFormsEditor
                 var associationButton = new Button { Text = edgeType.ToString(), Dock = DockStyle.Fill };
                 associationButton.Click += (o, args) =>
                 {
-                    FormatEdge(edgeType, edge);
+                    graph.FormatEdge(edgeType, edge);
                     //TODO: uncomment it when addEdge will be imlemented 
                     //repo.AddEdge(edgeType.ToString(), edge.Source, edge.Target);
                     form.Close();
@@ -85,95 +78,16 @@ namespace MsAglWinFormsEditor
             form.Show();
         }
 
-        private void FormatEdge(EdgeType edgeType, Edge edge)
-        {
-            edge.LabelText = edgeType.ToString();
-            switch (edgeType)
-            {
-                case EdgeType.Association:
-                    edge.Attr.Color = Color.Black;
-                    break;
-                case EdgeType.Attribute:
-                    edge.Attr.Color = Color.Green;
-                    break;
-                case EdgeType.Generalization:
-                    edge.Attr.Color = Color.Red;
-                    break;
-                case EdgeType.Type:
-                    edge.Attr.Color = Color.Blue;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        private void AddEdges()
-        {
-            foreach (var edge in repo.ModelEdges(modelName))
-            {
-                var newEdge = graph.AddEdge(edge.source, edge.target);
-                FormatEdge(edge.edgeType, newEdge);
-            }
-        }
-
-        private void AddNodes()
-        {
-            foreach (var node in repo.ModelNodes(modelName))
-            {
-                var newNode = graph.FindNode(node.name);
-                newNode.UserData = node.attributes;
-                newNode.Attr.LabelMargin = Left;
-                switch (node.nodeType)
-                {
-                    case NodeType.Attribute:
-                        newNode.Attr.FillColor = Color.IndianRed;
-                        newNode.Attr.Shape = Shape.Box;
-                        break;
-                    case NodeType.Node:
-                        newNode.Attr.FillColor = Color.ForestGreen;
-                        newNode.Attr.Shape = Shape.Octagon;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
-
         private void InitPalette()
         {
-            foreach (var type in repo.MetamodelNodes(modelName))
+            foreach (var type in graph.GetNodeTypes())
             {
                 var button = new Button { Text = type.name, Dock = DockStyle.Bottom };
-                button.Click += (sender, args) => CreateNewNode(type.id);
-
-                // TODO: Bind it to Designer, do not do GUI work in C#.
+                button.Click += (sender, args) => graph.CreateNewNode(type.id);
                 paletteGrid.Controls.Add(button, 0, paletteGrid.RowCount - 1);
 
                 ++paletteGrid.RowCount;
             }
-        }
-
-        private void CreateNewNode(string typeId)
-        {
-            var newNodeInfo = repo.AddNode(typeId, modelName);
-
-            var newNode = graph.AddNode(graph.NodeCount.ToString());
-            newNode.LabelText = "New " + newNodeInfo.nodeType.ToString();
-            newNode.UserData = new List<AttributeInfo>();
-            switch (newNodeInfo.nodeType)
-            {
-                case NodeType.Attribute:
-                    newNode.Attr.FillColor = Color.IndianRed;
-                    newNode.Attr.Shape = Shape.Box;
-                    break;
-                case NodeType.Node:
-                    newNode.Attr.FillColor = Color.ForestGreen;
-                    newNode.Attr.Shape = Shape.Octagon;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-            UpdateGraph();
         }
 
         private void ViewerMouseClicked(object sender, MouseEventArgs e)
@@ -202,7 +116,7 @@ namespace MsAglWinFormsEditor
                     attributeTable.Rows.Clear();
                     foreach (var info in attributeInfos)
                     {
-                        object[] row = { info.name, repo.Node(info.attributeType).name, info.value };
+                        object[] row = { info.name, graph.GetAttributeName(info.attributeType), info.value };
                         attributeTable.Rows.Add(row);
                     }
                 }
@@ -218,7 +132,7 @@ namespace MsAglWinFormsEditor
 
         private void LoadImageButtonClick(object sender, EventArgs e)
         {
-            var openImageDialog = new OpenFileDialog();
+            var openImageDialog = new OpenFileDialog {Filter = @"Image files *.png | *.png"};
             if (openImageDialog.ShowDialog() == DialogResult.OK)
             {
                 imagesHashtable[selectedNode.Id] = new Bitmap(openImageDialog.FileName);
@@ -231,7 +145,7 @@ namespace MsAglWinFormsEditor
 
         private void UpdateGraph()
         {
-            viewer.Graph = graph;
+            viewer.Graph = graph.GetGraph();
             viewer.Invalidate();
         }
 
@@ -258,7 +172,7 @@ namespace MsAglWinFormsEditor
 
         private ICurve GetNodeBoundary(Node node)
         {
-            var image = imagesHashtable[node.Id] as Image;
+            var image = (Image) imagesHashtable[node.Id];
             double width = image.Width;
             double height = image.Height;
 
@@ -270,8 +184,8 @@ namespace MsAglWinFormsEditor
 
         private bool DrawNode(Node node, object graphics)
         {
-            var graphic = (Graphics)graphics;
-            var image = imagesHashtable[node.Id] as Image;
+            var graphic = (Graphics) graphics;
+            var image = (Image) imagesHashtable[node.Id];
             using (Matrix matrix = graphic.Transform)
             {
                 using (Matrix matrixClone = matrix.Clone())
@@ -287,11 +201,11 @@ namespace MsAglWinFormsEditor
                     graphic.ResetClip();
                 }
             }
-            return true;//returning false would enable the default rendering
+            return true; // Returning false would enable the default rendering
         }
         
         private void RefreshButtonClick(object sender, EventArgs e) 
-            => viewer.Graph = graph;
+            => viewer.Graph = graph.GetGraph();
 
         private void ImageSizeChanged(object sender, EventArgs e)
         {
@@ -300,7 +214,7 @@ namespace MsAglWinFormsEditor
             UpdateGraph();
         }
 
-        public static Image ResizeImage(Image image, int width, int height)
+        private Image ResizeImage(Image image, int width, int height)
         {
             var destRect = new Rectangle(0, 0, width, height);
             var destImage = new Bitmap(width, height);
@@ -326,8 +240,6 @@ namespace MsAglWinFormsEditor
         }
 
         private void InsertingEdgeCheckedChanged(object sender, EventArgs e)
-        {
-            viewer.InsertingEdge = !viewer.InsertingEdge;
-        }
+            => viewer.InsertingEdge = !viewer.InsertingEdge;
     }
 }
