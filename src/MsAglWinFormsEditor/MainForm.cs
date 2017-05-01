@@ -5,15 +5,12 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
+using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Splines;
 using Repo;
 using Color = Microsoft.Msagl.Drawing.Color;
-using Edge = Microsoft.Msagl.Drawing.Edge;
-using Graph = Microsoft.Msagl.Drawing.Graph;
-using Node = Microsoft.Msagl.Drawing.Node;
 using Point = Microsoft.Msagl.Point;
-using Shape = Microsoft.Msagl.Drawing.Shape;
 
 namespace MsAglWinFormsEditor
 {
@@ -22,13 +19,14 @@ namespace MsAglWinFormsEditor
     /// </summary>
     public partial class MainForm : Form
     {
-
         private readonly IRepo repo = RepoFactory.CreateRepo();
         private readonly Graph graph = new Graph("graph");
         private readonly GViewer viewer = new GViewer();
 
         private readonly Hashtable imagesHashtable = new Hashtable();
         private Node selectedNode;
+
+        private const string modelName = "mainModel";
 
         /// <summary>
         /// Create form with given graph
@@ -43,6 +41,10 @@ namespace MsAglWinFormsEditor
             viewer.Graph = graph;
 
             SuspendLayout();
+
+            viewer.PanButtonPressed = true;
+            viewer.ToolBarIsVisible = false;
+            viewer.MouseWheel += (sender, args) => viewer.ZoomF += args.Delta * SystemInformation.MouseWheelScrollLines / 4000f;
             viewer.Dock = DockStyle.Fill;
             mainLayout.Controls.Add(viewer, 0, 0);
             ResumeLayout();
@@ -107,7 +109,7 @@ namespace MsAglWinFormsEditor
 
         private void AddEdges()
         {
-            foreach (var edge in repo.ModelEdges())
+            foreach (var edge in repo.ModelEdges(modelName))
             {
                 var newEdge = graph.AddEdge(edge.source, edge.target);
                 FormatEdge(edge.edgeType, newEdge);
@@ -116,7 +118,7 @@ namespace MsAglWinFormsEditor
 
         private void AddNodes()
         {
-            foreach (var node in repo.ModelNodes())
+            foreach (var node in repo.ModelNodes(modelName))
             {
                 var newNode = graph.FindNode(node.name);
                 newNode.UserData = node.attributes;
@@ -139,7 +141,7 @@ namespace MsAglWinFormsEditor
 
         private void InitPalette()
         {
-            foreach (var type in repo.MetamodelNodes())
+            foreach (var type in repo.MetamodelNodes(modelName))
             {
                 var button = new Button { Text = type.name, Dock = DockStyle.Bottom };
                 button.Click += (sender, args) => CreateNewNode(type.id);
@@ -153,10 +155,11 @@ namespace MsAglWinFormsEditor
 
         private void CreateNewNode(string typeId)
         {
-            var newNodeInfo = repo.AddNode(typeId);
+            var newNodeInfo = repo.AddNode(typeId, modelName);
 
             var newNode = graph.AddNode(graph.NodeCount.ToString());
             newNode.LabelText = "New " + newNodeInfo.nodeType.ToString();
+            newNode.UserData = new List<AttributeInfo>();
             switch (newNodeInfo.nodeType)
             {
                 case NodeType.Attribute:
@@ -184,7 +187,7 @@ namespace MsAglWinFormsEditor
                 {
                     attributeTable.Visible = true;
                     loadImageButton.Visible = true;
-                    paintButton.Visible = true;
+                    viewer.PanButtonPressed = false;
                     var image = imagesHashtable[selectedNode.Id] as Image;
                     if (image != null)
                     {
@@ -208,8 +211,8 @@ namespace MsAglWinFormsEditor
             {
                 attributeTable.Visible = false;
                 loadImageButton.Visible = false;
-                paintButton.Visible = false;
                 imageLayoutPanel.Visible = false;
+                viewer.PanButtonPressed = true;
             }
         }
 
@@ -286,13 +289,7 @@ namespace MsAglWinFormsEditor
             }
             return true;//returning false would enable the default rendering
         }
-
-        private void PaintButtonClick(object sender, EventArgs e)
-        {
-            var form = new DrawingForm();
-            form.Show();
-        }
-
+        
         private void RefreshButtonClick(object sender, EventArgs e) 
             => viewer.Graph = graph;
 
@@ -326,6 +323,11 @@ namespace MsAglWinFormsEditor
             }
 
             return destImage;
+        }
+
+        private void InsertingEdgeCheckedChanged(object sender, EventArgs e)
+        {
+            viewer.InsertingEdge = !viewer.InsertingEdge;
         }
     }
 }

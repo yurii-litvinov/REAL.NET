@@ -5,19 +5,17 @@ nuget YC.QuickGraph
 nuget GraphX
 nuget Microsoft.Research.DryadLINQ.MSAGL
 nuget YAXLib
+nuget StyleCop.Analyzers
+ 
+nuget NUnit
+nuget NUnit.Runners
+nuget FsUnit
 
 group Build
   source https://nuget.org/api/v2
-  
+
   nuget SourceLink.Fake
   nuget FAKE
   nuget FSharp.Formatting
 
   github fsharp/FAKE modules/Octokit/Octokit.fsx
-
-group Test
-  source https://nuget.org/api/v2
-  
-  nuget NUnit 
-  nuget NUnit.Runners
-  nuget FsUnit

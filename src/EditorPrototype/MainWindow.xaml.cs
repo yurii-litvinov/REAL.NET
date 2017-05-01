@@ -1,80 +1,91 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using GraphX.PCL.Common.Enums;
-using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
-using GraphX.PCL.Logic.Models;
-using GraphX.Controls;
-using GraphX.Controls.Models;
-using QuickGraph;
-using System.Windows.Media;
-
-namespace EditorPrototype
+﻿namespace EditorPrototype
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Controls.Primitives;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Imaging;
+    using GraphX.Controls;
+    using GraphX.Controls.Models;
+    using GraphX.PCL.Common.Enums;
+    using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
+    using GraphX.PCL.Logic.Models;
+    using QuickGraph;
+
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
     internal partial class MainWindow : Window
     {
+        private readonly EditorObjectManager editorManager;
+
         private VertexControl prevVer;
         private VertexControl ctrlVer;
         private EdgeControl ctrlEdg;
         private GraphExample dataGraph;
+        private string currentId;
 
         private Repo.IRepo repo = Repo.RepoFactory.CreateRepo();
 
         public MainWindow()
         {
-            InitializeComponent();
-            dataGraph = new GraphExample();
+            this.InitializeComponent();
+            this.editorManager = new EditorObjectManager(this.g_Area, this.g_zoomctrl);
+            this.dataGraph = new GraphExample();
             var logic = new GXLogicCore<DataVertex, DataEdge, BidirectionalGraph<DataVertex, DataEdge>>();
-            g_Area.LogicCore = logic;
-            logic.Graph = dataGraph;
+            this.g_Area.LogicCore = logic;
+            logic.Graph = this.dataGraph;
             logic.DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.LinLog;
-            g_Area.VertexSelected += VertexSelectedAction;
-            g_Area.EdgeSelected += EdgeSelectedAction;
-            g_zoomctrl.Click += ClearSelection;
-            elementsListBox.MouseDoubleClick += ElementInBoxSelectedAction;
+            this.currentId = string.Empty;
 
-            ZoomControl.SetViewFinderVisibility(g_zoomctrl, Visibility.Visible);
-            g_zoomctrl.Loaded += (sender, args) =>
+            this.g_Area.VertexSelected += this.VertexSelectedAction;
+            this.g_Area.EdgeSelected += this.EdgeSelectedAction;
+            this.g_zoomctrl.Click += this.ClearSelection;
+            this.elementsListBox.MouseDoubleClick += this.ElementInBoxSelectedAction;
+
+            ZoomControl.SetViewFinderVisibility(this.g_zoomctrl, Visibility.Visible);
+            this.g_zoomctrl.Loaded += (sender, args) =>
             {
-                (g_zoomctrl.ViewFinder.Parent as Grid).Children.Remove(g_zoomctrl.ViewFinder);
-                rightPanel.Children.Add(g_zoomctrl.ViewFinder);
-                Grid.SetRow(g_zoomctrl.ViewFinder, 0);
+                (this.g_zoomctrl.ViewFinder.Parent as Grid).Children.Remove(this.g_zoomctrl.ViewFinder);
+                this.rightPanel.Children.Add(this.g_zoomctrl.ViewFinder);
+                Grid.SetRow(this.g_zoomctrl.ViewFinder, 0);
             };
 
-            logic.DefaultLayoutAlgorithmParams = 
+            logic.DefaultLayoutAlgorithmParams =
                 logic.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.LinLog);
             logic.DefaultOverlapRemovalAlgorithm = OverlapRemovalAlgorithmTypeEnum.FSA;
-            logic.DefaultOverlapRemovalAlgorithmParams = 
+            logic.DefaultOverlapRemovalAlgorithmParams =
                 logic.AlgorithmFactory.CreateOverlapRemovalParameters(OverlapRemovalAlgorithmTypeEnum.FSA);
             ((OverlapRemovalParameters)logic.DefaultOverlapRemovalAlgorithmParams).HorizontalGap = 50;
             ((OverlapRemovalParameters)logic.DefaultOverlapRemovalAlgorithmParams).VerticalGap = 50;
             logic.DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.None;
             logic.AsyncAlgorithmCompute = false;
 
-            Closed += CloseChildrenWindows;
+            this.Closed += this.CloseChildrenWindows;
 
-            InitPalette();
+            var modelName = "mainModel";
 
-            InitModel();
+            this.g_zoomctrl.MouseDown += (object sender, MouseButtonEventArgs e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
+
+            this.InitPalette(modelName);
+
+            this.InitModel(modelName);
         }
 
         private void ClearSelection(object sender, RoutedEventArgs e)
         {
-            prevVer = null;
-            ctrlVer = null;
-            g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
+            this.prevVer = null;
+            this.ctrlVer = null;
+            this.g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
         }
 
-        private void InitModel()
+        private void InitModel(string modelName)
         {
-            foreach (var node in repo.ModelNodes())
+            foreach (var node in this.repo.ModelNodes(modelName))
             {
                 Func<Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
                 {
@@ -89,14 +100,14 @@ namespace EditorPrototype
                     return DataVertex.VertexTypeEnum.Node;
                 };
 
-                CreateNode(node.name, nodeType(node.nodeType), node.attributes);
+                this.CreateNode(node.name, nodeType(node.nodeType), node.attributes);
             }
 
-            foreach (var edge in repo.ModelEdges())
+            foreach (var edge in this.repo.ModelEdges(modelName))
             {
-                var isViolation = Constraints.CheckEdge(edge, repo);
-                var source = dataGraph.Vertices.First(v => v.Name == edge.source);
-                var target = dataGraph.Vertices.First(v => v.Name == edge.target);
+                var isViolation = Constraints.CheckEdge(edge, this.repo, modelName);
+                var source = this.dataGraph.Vertices.First(v => v.Name == edge.source);
+                var target = this.dataGraph.Vertices.First(v => v.Name == edge.target);
 
                 Func<Repo.EdgeType, DataEdge.EdgeTypeEnum> edgeType = e =>
                 {
@@ -116,40 +127,56 @@ namespace EditorPrototype
                 };
 
                 var newEdge = new DataEdge(source, target, isViolation) { EdgeType = edgeType(edge.edgeType) };
-                dataGraph.AddEdge(newEdge);
+                this.dataGraph.AddEdge(newEdge);
+                this.DrawNewEdge(source.Key, target.Key);
             }
 
-            DrawGraph();
+            this.DrawGraph();
         }
 
-        private void InitPalette()
+        private void InitPalette(string modelName)
         {
-            foreach (var type in repo.MetamodelNodes())
+            foreach (var type in this.repo.MetamodelNodes(modelName))
             {
-                var button = new Button { Content = type.name };
-                RoutedEventHandler createNode = (sender, args) => CreateNewNode(type.id);
+                var button = new ToggleButton { Content = type.name };
+                RoutedEventHandler createNode = (sender, args) => this.PaletteButton_Checked(type.id);
                 RoutedEventHandler createEdge = (sender, args) => { };
-                button.Click += repo.IsEdgeClass(type.id) ? createEdge : createNode;
-                
+                button.Click += (sender, args) => this.currentId = type.id;
+                if (this.repo.IsEdgeClass(type.id))
+                {
+                    this.g_Area.VertexSelected += (sender, args) => button.IsChecked = false;
+                }
+                else
+                {
+                    this.g_zoomctrl.MouseDown += (sender, args) => button.IsChecked = false;
+                }
+
                 // TODO: Bind it to XAML, do not do GUI work in C#.
-                paletteGrid.RowDefinitions.Add(new RowDefinition());  
-                paletteGrid.Children.Add(button);
-                Grid.SetRow(button, paletteGrid.RowDefinitions.Count - 1);
+                this.paletteGrid.RowDefinitions.Add(new RowDefinition());
+                this.paletteGrid.Children.Add(button);
+                Grid.SetRow(button, this.paletteGrid.RowDefinitions.Count - 1);
             }
+        }
+
+        private void PaletteButton_Checked(string id)
+        {
+            this.currentId = id;
         }
 
         private void CreateEdge(string type)
         {
-            var prevVerVertex = prevVer?.Vertex as DataVertex;
-            var ctrlVerVertex = ctrlVer?.Vertex as DataVertex;
+            var prevVerVertex = this.prevVer?.Vertex as DataVertex;
+            var ctrlVerVertex = this.ctrlVer?.Vertex as DataVertex;
             if (prevVerVertex == null || ctrlVerVertex == null)
             {
                 return;
             }
 
             var newEdge = new DataEdge(prevVerVertex, ctrlVerVertex, true) { Text = type };
-            dataGraph.AddEdge(newEdge);
-            DrawNewEdge(prevVerVertex.Key, ctrlVerVertex.Key);
+            this.dataGraph.AddEdge(newEdge);
+            this.DrawNewEdge(prevVerVertex.Key, ctrlVerVertex.Key);
+            var ec = new EdgeControl(this.prevVer, this.ctrlVer, newEdge);
+            this.g_Area.InsertEdge(newEdge, ec);
         }
 
         private void CreateNode(string name, DataVertex.VertexTypeEnum type, IList<Repo.AttributeInfo> attributes)
@@ -157,25 +184,26 @@ namespace EditorPrototype
             var vertex = new DataVertex(name)
             {
                 Key = $"{name}",
-                VertexType = type
+                VertexType = type,
             };
 
             var attributeInfos = attributes.Select(x => new DataVertex.Attribute()
             {
                 Name = x.name,
-                Type = repo.Node(x.attributeType).name,
+                Type = this.repo.Node(x.attributeType).name,
                 Value = x.value
             });
 
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
 
-            dataGraph.AddVertex(vertex);
-            DrawNewVertex(vertex.Key);
+            this.dataGraph.AddVertex(vertex);
+            this.DrawNewVertex(vertex.Key);
+            this.DrawGraph();
         }
 
-        private void CreateNewNode(string typeId)
+        private void CreateNewNode(string typeId, string modelName)
         {
-            var newNode = repo.AddNode(typeId);
+            var newNode = this.repo.AddNode(typeId, modelName);
             Func<Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
             {
                 switch (n)
@@ -189,23 +217,23 @@ namespace EditorPrototype
                 return DataVertex.VertexTypeEnum.Node;
             };
 
-            CreateNode(newNode.name, nodeType(newNode.nodeType), newNode.attributes);
+            this.CreateNode(newNode.name, nodeType(newNode.nodeType), newNode.attributes);
         }
 
         private void ElementInBoxSelectedAction(object sender, EventArgs e)
         {
-            StackPanel sp = (elementsListBox.SelectedItem as ListBoxItem).Content as StackPanel;
-            if(sp.Children.Count > 3)
+            StackPanel sp = (this.elementsListBox.SelectedItem as ListBoxItem).Content as StackPanel;
+            if (sp.Children.Count > 3)
             {
                 var source = (sp.Children[2] as TextBlock).Text;
                 var target = (sp.Children[4] as TextBlock).Text;
-                for (int i = 0; i < dataGraph.Edges.Count(); i++)
+                for (int i = 0; i < this.dataGraph.Edges.Count(); i++)
                 {
-                    if (dataGraph.Edges.ToList()[i].Source.Name == source &&
-                        dataGraph.Edges.ToList()[i].Target.Name == target)
+                    if (this.dataGraph.Edges.ToList()[i].Source.Name == source &&
+                        this.dataGraph.Edges.ToList()[i].Target.Name == target)
                     {
-                        var edge = dataGraph.Edges.ToList()[i];
-                        foreach (KeyValuePair<DataEdge, EdgeControl> ed in g_Area.EdgesList)
+                        var edge = this.dataGraph.Edges.ToList()[i];
+                        foreach (KeyValuePair<DataEdge, EdgeControl> ed in this.g_Area.EdgesList)
                         {
                             if (ed.Key == edge)
                             {
@@ -213,6 +241,7 @@ namespace EditorPrototype
                                 break;
                             }
                         }
+
                         break;
                     }
                 }
@@ -220,18 +249,19 @@ namespace EditorPrototype
             else
             {
                 var name = (sp.Children[2] as TextBlock).Text;
-                for (int i = 0; i < dataGraph.Vertices.Count(); i++)
+                for (int i = 0; i < this.dataGraph.Vertices.Count(); i++)
                 {
-                    if (dataGraph.Vertices.ToList()[i].Name == name)
+                    if (this.dataGraph.Vertices.ToList()[i].Name == name)
                     {
-                        var vertex = dataGraph.Vertices.ToList()[i];
-                        foreach (KeyValuePair<DataVertex, VertexControl> ed in g_Area.VertexList)
+                        var vertex = this.dataGraph.Vertices.ToList()[i];
+                        foreach (KeyValuePair<DataVertex, VertexControl> ed in this.g_Area.VertexList)
                         {
                             if (ed.Key == vertex)
                             {
                                 HighlightBehaviour.SetIsHighlightEnabled(ed.Value, true);
                             }
                         }
+
                         break;
                     }
                 }
@@ -252,9 +282,7 @@ namespace EditorPrototype
             sp.Children.Add(spaces);
             sp.Children.Add(tx);
             lbi.Content = sp;
-            elementsListBox.Items.Add(lbi);
-
-            DrawGraph();
+            this.elementsListBox.Items.Add(lbi);
         }
 
         private void DrawNewEdge(string source, string target)
@@ -275,30 +303,43 @@ namespace EditorPrototype
             sp.Children.Add(tx1);
             sp.Children.Add(tx2);
             lbi.Content = sp;
-            elementsListBox.Items.Add(lbi);
-
-            DrawGraph();
+            this.elementsListBox.Items.Add(lbi);
         }
 
         private void VertexSelectedAction(object sender, VertexSelectedEventArgs args)
         {
-            prevVer = ctrlVer;
-            ctrlVer = args.VertexControl;
-            attributesView.DataContext = ctrlVer.GetDataVertex<DataVertex>();
-
-            g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
-
-            ctrlVer.GetDataVertex<DataVertex>().Color = Brushes.LightBlue;
-            if (prevVer != null)
+            this.ctrlVer = args.VertexControl;
+            if (this.currentId != string.Empty && this.repo.IsEdgeClass(this.currentId))
             {
-                prevVer.GetDataVertex<DataVertex>().Color = Brushes.Yellow;
+                if (this.prevVer == null)
+                {
+                    this.editorManager.CreateVirtualEdge(this.ctrlVer, this.ctrlVer.GetPosition());
+                    this.prevVer = this.ctrlVer;
+                }
+                else
+                {
+                    this.CreateEdge(this.currentId);
+                    this.prevVer = null;
+                    this.editorManager.DestroyVirtualEdge();
+                    this.currentId = string.Empty;
+                }
+            }
+
+            this.attributesView.DataContext = this.ctrlVer.GetDataVertex<DataVertex>();
+
+            this.g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
+
+            this.ctrlVer.GetDataVertex<DataVertex>().Color = Brushes.LightBlue;
+            if (this.prevVer != null)
+            {
+                this.prevVer.GetDataVertex<DataVertex>().Color = Brushes.Yellow;
             }
 
             if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
             {
                 args.VertexControl.ContextMenu = new ContextMenu();
                 var mi = new MenuItem { Header = "Delete item", Tag = args.VertexControl };
-                mi.Click += MenuItemClickVert;
+                mi.Click += this.MenuItemClickVert;
                 args.VertexControl.ContextMenu.Items.Add(mi);
                 args.VertexControl.ContextMenu.IsOpen = true;
             }
@@ -306,18 +347,18 @@ namespace EditorPrototype
 
         private void EdgeSelectedAction(object sender, EdgeSelectedEventArgs args)
         {
-            ctrlEdg = args.EdgeControl;
+            this.ctrlEdg = args.EdgeControl;
 
-            g_zoomctrl.MouseMove += OnEdgeMouseMove;
+            this.g_zoomctrl.MouseMove += this.OnEdgeMouseMove;
 
             // Those crazy russians intercept MouseUp event, so we are forced to use PreviewMouseUp here.
-            ctrlEdg.PreviewMouseUp += OnEdgeMouseUp;
+            this.ctrlEdg.PreviewMouseUp += this.OnEdgeMouseUp;
 
             if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
             {
                 args.EdgeControl.ContextMenu = new ContextMenu();
                 var mi = new MenuItem { Header = "Delete item", Tag = args.EdgeControl };
-                mi.Click += MenuItemClickEdge;
+                mi.Click += this.MenuItemClickEdge;
                 args.EdgeControl.ContextMenu.Items.Add(mi);
                 args.EdgeControl.ContextMenu.IsOpen = true;
             }
@@ -325,36 +366,101 @@ namespace EditorPrototype
 
         private void OnEdgeMouseMove(object sender, MouseEventArgs e)
         {
-            var dataEdge = ctrlEdg.GetDataEdge<DataEdge>();
+            var dataEdge = this.ctrlEdg.GetDataEdge<DataEdge>();
             if (dataEdge.RoutingPoints == null)
             {
                 dataEdge.RoutingPoints = new GraphX.Measure.Point[3];
             }
 
             dataEdge.RoutingPoints[0] = new GraphX.Measure.Point(100, 100);
-            var mousePosition = Mouse.GetPosition(g_Area);
+            var mousePosition = Mouse.GetPosition(this.g_Area);
             dataEdge.RoutingPoints[1] = new GraphX.Measure.Point(mousePosition.X, mousePosition.Y);
             dataEdge.RoutingPoints[2] = new GraphX.Measure.Point(100, 100);
 
-            g_Area.UpdateAllEdges();
+            this.g_Area.UpdateAllEdges();
+        }
+
+        private void ZoomCtrl_MouseDown(object sender, MouseButtonEventArgs e, string modelName)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                var pos = this.g_zoomctrl.TranslatePoint(e.GetPosition(this.g_zoomctrl), this.g_Area);
+                if (this.currentId != string.Empty && !this.repo.IsEdgeClass(this.currentId))
+                {
+                    this.CreateNewNode(this.currentId, pos, modelName);
+                    this.currentId = string.Empty;
+                }
+
+                if (this.currentId != string.Empty && this.repo.IsEdgeClass(this.currentId))
+                {
+                    if (this.prevVer != null)
+                    {
+                        this.prevVer = null;
+                        this.editorManager.DestroyVirtualEdge();
+                        this.currentId = string.Empty;
+                    }
+                }
+            }
+        }
+
+        private void CreateNewNode(string typeId, Point position, string modelName)
+        {
+            var newNode = this.repo.AddNode(typeId, modelName);
+            Func<Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
+            {
+                switch (n)
+                {
+                    case Repo.NodeType.Attribute:
+                        return DataVertex.VertexTypeEnum.Attribute;
+                    case Repo.NodeType.Node:
+                        return DataVertex.VertexTypeEnum.Node;
+                }
+
+                return DataVertex.VertexTypeEnum.Node;
+            };
+
+            this.CreateNode(newNode.name, nodeType(newNode.nodeType), newNode.attributes, position);
+        }
+
+        private void CreateNode(string name, DataVertex.VertexTypeEnum type, IList<Repo.AttributeInfo> attributes, Point position)
+        {
+            var vertex = new DataVertex(name)
+            {
+                Key = $"{name}",
+                VertexType = type
+            };
+
+            var attributeInfos = attributes.Select(x => new DataVertex.Attribute()
+            {
+                Name = x.name,
+                Type = this.repo.Node(x.attributeType).name,
+                Value = x.value
+            });
+
+            attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
+
+            var vc = new VertexControl(vertex);
+            vc.SetPosition(position);
+            this.g_Area.AddVertex(vertex, vc);
+            this.DrawNewVertex(vertex.Key);
         }
 
         private void OnEdgeMouseUp(object sender, MouseButtonEventArgs e)
         {
-            g_zoomctrl.MouseMove -= OnEdgeMouseMove;
-            ctrlEdg.PreviewMouseUp -= OnEdgeMouseUp;
+            this.g_zoomctrl.MouseMove -= this.OnEdgeMouseMove;
+            this.ctrlEdg.PreviewMouseUp -= this.OnEdgeMouseUp;
         }
 
         private void MenuItemClickVert(object sender, EventArgs e)
         {
-            dataGraph.RemoveVertex(ctrlVer.GetDataVertex<DataVertex>());
-            DrawGraph();
+            this.dataGraph.RemoveVertex(this.ctrlVer.GetDataVertex<DataVertex>());
+            this.DrawGraph();
         }
 
         private void MenuItemClickEdge(object sender, EventArgs e)
         {
-            dataGraph.RemoveEdge(ctrlEdg.GetDataEdge<DataEdge>());
-            DrawGraph();
+            this.dataGraph.RemoveEdge(this.ctrlEdg.GetDataEdge<DataEdge>());
+            this.DrawGraph();
         }
 
         private void CloseChildrenWindows(object sender, EventArgs e)
@@ -367,8 +473,8 @@ namespace EditorPrototype
 
         private void DrawGraph()
         {
-            g_Area.GenerateGraph(dataGraph);
-            g_zoomctrl.ZoomToFill();
+            this.g_Area.GenerateGraph(this.dataGraph);
+            this.g_zoomctrl.ZoomToFill();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
