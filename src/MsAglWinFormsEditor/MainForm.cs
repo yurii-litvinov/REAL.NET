@@ -36,11 +36,19 @@ namespace MsAglWinFormsEditor
             viewer.Graph = graph.GetGraph();
             viewer.PanButtonPressed = true;
             viewer.ToolBarIsVisible = false;
+            viewer.MouseDown += ViewerOnMouseDown;
             viewer.MouseWheel += (sender, args) => viewer.ZoomF += args.Delta * SystemInformation.MouseWheelScrollLines / 4000f;
             viewer.Dock = DockStyle.Fill;
             mainLayout.Controls.Add(viewer, 0, 0);
             ResumeLayout();
             InitPalette();
+        }
+
+        private void ViewerOnMouseDown(object sender, MouseEventArgs mouseEventArgs)
+        {
+            var selectedObject = viewer.SelectedObject;
+            selectedNode = selectedObject as Node;
+            viewer.PanButtonPressed = selectedNode == null;
         }
 
         private readonly List<EdgeType> edgeTypes = new List<EdgeType>
@@ -58,6 +66,7 @@ namespace MsAglWinFormsEditor
             var form = new Form();
             var tableLayout = new TableLayoutPanel { Dock = DockStyle.Fill };
             form.Controls.Add(tableLayout);
+            form.ControlBox = false;
 
             foreach (var edgeType in edgeTypes)
             {
