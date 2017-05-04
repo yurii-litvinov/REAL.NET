@@ -22,13 +22,13 @@
     internal partial class MainWindow : Window
     {
         private readonly EditorObjectManager editorManager;
-
         private VertexControl prevVer;
         private VertexControl ctrlVer;
         private EdgeControl ctrlEdg;
         private GraphExample dataGraph;
         private string currentId;
 
+        private string currentModelName;
         private Repo.IRepo repo = Repo.RepoFactory.CreateRepo();
 
         public MainWindow()
@@ -85,6 +85,7 @@
 
         private void InitModel(string modelName)
         {
+            this.currentModelName = modelName;
             foreach (var node in this.repo.ModelNodes(modelName))
             {
                 Func<Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
@@ -479,8 +480,8 @@
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var constraintsForm = new Window1();
-            constraintsForm.ShowDialog();
+            var constraintsWindow = new ConstraintsWindow(this.repo, this.currentModelName);
+            constraintsWindow.ShowDialog();
         }
     }
 }
