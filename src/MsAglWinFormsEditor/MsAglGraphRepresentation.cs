@@ -43,7 +43,7 @@ namespace MsAglWinFormsEditor
         /// Getting name by Repo type
         /// </summary>
         /// <param name="type"> </param>
-        /// <returns> </returns>
+        /// <returns> Name of attribute </returns>
         public string GetAttributeName(string type)
             => repo.Node(type).name;
 
@@ -51,7 +51,8 @@ namespace MsAglWinFormsEditor
         /// Add new node to MSAGL and Repo graphs
         /// </summary>
         /// <param name="typeId"> Id of type in Repo </param>
-        public void CreateNewNode(string typeId)
+        /// <returns> MSAGL node for addig to view </returns>
+        public Node CreateNewNode(string typeId)
         {
             var newNodeInfo = repo.AddNode(typeId, modelName);
 
@@ -71,6 +72,7 @@ namespace MsAglWinFormsEditor
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            return newNode;
         }
 
         /// <summary>

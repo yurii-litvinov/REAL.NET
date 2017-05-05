@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.Windows.Forms;
+using Microsoft.Msagl.Core.Geometry.Curves;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
-using Microsoft.Msagl.Splines;
 using Repo;
-using Point = Microsoft.Msagl.Point;
+using Point = Microsoft.Msagl.Core.Geometry.Point;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace MsAglWinFormsEditor
 {
@@ -35,7 +37,19 @@ namespace MsAglWinFormsEditor
 
             viewer.Graph = graph.GetGraph();
             viewer.PanButtonPressed = true;
-            viewer.ToolBarIsVisible = false;
+            // TODO: Ниже быдлокод
+            var timer = new Timer();
+            viewer.MouseMove += (sender, args) =>
+            {
+                timer.Interval = 10;
+                timer.Start();
+                timer.Tick += (o, eventArgs) =>
+                {
+                    viewer.Invalidate();
+                    timer.Start();
+                };
+            };
+            //viewer.ToolBarIsVisible = false;
             viewer.MouseDown += ViewerOnMouseDown;
             viewer.MouseWheel += (sender, args) => viewer.ZoomF += args.Delta * SystemInformation.MouseWheelScrollLines / 4000f;
             viewer.Dock = DockStyle.Fill;
@@ -78,7 +92,6 @@ namespace MsAglWinFormsEditor
                 };
                 tableLayout.Controls.Add(associationButton, 0, tableLayout.RowCount - 1);
                 ++tableLayout.RowCount;
-
             }
             form.Show();
         }
@@ -90,8 +103,12 @@ namespace MsAglWinFormsEditor
                 var button = new Button { Text = type.name, Dock = DockStyle.Bottom };
                 button.Click += (sender, args) =>
                 {
-                    graph.CreateNewNode(type.id);
-                    UpdateGraph();
+                    var node = graph.CreateNewNode(type.id);
+                    node.GeometryNode = GeometryGraphCreator.CreateGeometryNode(viewer.Graph, viewer.Graph.GeometryGraph, node, ConnectionToGraph.Disconnected);
+                    var viewNode = viewer.CreateIViewerNode(node, viewer.Graph.Nodes.ToList()[0].Pos - new Point(150, 0), null);
+                    viewer.AddNode(viewNode, true);
+                    viewer.Graph.AddNode(node);
+                    viewer.Invalidate();
                 };
                 paletteGrid.Controls.Add(button, 0, paletteGrid.RowCount - 1);
 
@@ -148,12 +165,20 @@ namespace MsAglWinFormsEditor
                 imagesHashtable[selectedNode.Id] = newImage;
                 selectedNode.Attr.Shape = Shape.DrawFromGeometry;
                 selectedNode.DrawNodeDelegate = DrawNode;
-                selectedNode.NodeBoundaryDelegate = GetNodeBoundary;
+                selectedNode.NodeBoundaryDelegate = NodeBoundaryDelegate;
                 widthEditor.Value = newImage.Width;
                 heightEditor.Value = newImage.Height;
                 imageLayoutPanel.Visible = true;
-                UpdateGraph();
             }
+        }
+
+        private ICurve NodeBoundaryDelegate(Node node)
+        {
+            var image = (Image)imagesHashtable[node.Id];
+            double width = image.Width;
+            double height = image.Height;
+
+            return CurveFactory.CreateRectangle(width, height, new Point());
         }
 
         private void UpdateGraph()
@@ -183,15 +208,6 @@ namespace MsAglWinFormsEditor
             }
         }
 
-        private ICurve GetNodeBoundary(Node node)
-        {
-            var image = (Image)imagesHashtable[node.Id];
-            double width = image.Width;
-            double height = image.Height;
-
-            return CurveFactory.CreateRectangle(width, height, new Point());
-        }
-
         private PointF PointF(Point p)
             => new PointF((float)p.X, (float)p.Y);
 
@@ -203,13 +219,13 @@ namespace MsAglWinFormsEditor
             {
                 using (Matrix matrixClone = matrix.Clone())
                 {
-                    graphic.SetClip(FillTheGraphicsPath(node.Attr.GeometryNode.BoundaryCurve));
-                    using (var matrixMult = new Matrix(1, 0, 0, -1, 0, 2 * (float)node.Attr.GeometryNode.Center.Y))
+                    graphic.SetClip(FillTheGraphicsPath(node.GeometryNode.BoundaryCurve));
+                    using (var matrixMult = new Matrix(1, 0, 0, -1, 0, 2 * (float)node.GeometryNode.Center.Y))
                         matrix.Multiply(matrixMult);
 
                     graphic.Transform = matrix;
-                    graphic.DrawImage(image, new PointF((float)(node.Attr.GeometryNode.Center.X - node.Attr.GeometryNode.Width / 2),
-                        (float)(node.Attr.GeometryNode.Center.Y - node.Attr.GeometryNode.Height / 2)));
+                    graphic.DrawImage(image, new PointF((float)(node.GeometryNode.Center.X - node.GeometryNode.Width / 2),
+                        (float)(node.GeometryNode.Center.Y - node.GeometryNode.Height / 2)));
                     graphic.Transform = matrixClone;
                     graphic.ResetClip();
                 }
@@ -222,9 +238,15 @@ namespace MsAglWinFormsEditor
 
         private void ImageSizeChanged(object sender, EventArgs e)
         {
+            var center = selectedNode.GeometryNode.Center;
             var image = imagesHashtable[selectedNode.Id] as Image;
             imagesHashtable[selectedNode.Id] = ResizeImage(image, Convert.ToInt32(widthEditor.Value), Convert.ToInt32(heightEditor.Value));
-            UpdateGraph();
+
+            selectedNode.NodeBoundaryDelegate = NodeBoundaryDelegate;
+
+            viewer.AddNode(viewer.CreateIViewerNode(selectedNode), true);
+            viewer.CreateIViewerNode(selectedNode).Node.GeometryNode.Center = center;
+            viewer.Invalidate();
         }
 
         private Image ResizeImage(Image image, int width, int height)
