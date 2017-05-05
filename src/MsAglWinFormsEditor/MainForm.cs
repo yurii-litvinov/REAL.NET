@@ -241,11 +241,12 @@ namespace MsAglWinFormsEditor
             var center = selectedNode.GeometryNode.Center;
             var image = imagesHashtable[selectedNode.Id] as Image;
             imagesHashtable[selectedNode.Id] = ResizeImage(image, Convert.ToInt32(widthEditor.Value), Convert.ToInt32(heightEditor.Value));
-
             selectedNode.NodeBoundaryDelegate = NodeBoundaryDelegate;
 
             viewer.AddNode(viewer.CreateIViewerNode(selectedNode), true);
             viewer.CreateIViewerNode(selectedNode).Node.GeometryNode.Center = center;
+            viewer.Graph.GeometryGraph.UpdateBoundingBox();
+
             viewer.Invalidate();
         }
 
