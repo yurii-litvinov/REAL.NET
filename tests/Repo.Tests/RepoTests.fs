@@ -29,3 +29,6 @@ let ``Repo shall return some model nodes`` () =
 let ``Repo shall contain at least ModelElement`` () =
     (repo :> IRepo).ModelNodes modelName |> Seq.filter (fun x -> x.name = "ModelElement") |> should not' (be Empty)
 
+[<Test>]
+let ``Repo shall contain at least one model`` () =
+    (repo :> IRepo).Models () |> should not' (be Empty)

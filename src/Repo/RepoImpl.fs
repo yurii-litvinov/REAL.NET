@@ -31,6 +31,9 @@ type internal RepoImpl (loader : IModelLoader) as this =
         RepoImpl(GraphMetametamodel ())
 
     interface IRepo with
+        member this.Models () = 
+            repoGraph.Keys :> seq<string>
+
         member this.ModelNodes modelName = 
             let metaclass x = if classes.ContainsKey(x) 
                               then 

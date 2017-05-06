@@ -4,6 +4,7 @@
 /// the contents of the repository by adding new nodes or edges as instances of some already existing elements.
 type IRepo =
     interface
+        abstract Models : unit -> string seq
         abstract ModelNodes : modelName : string -> NodeInfo seq
         abstract ModelEdges : modelName : string -> EdgeInfo seq
         abstract MetamodelNodes : modelName : string -> NodeInfo seq
