@@ -3,8 +3,9 @@ source https://nuget.org/api/v2
 nuget FSharp.Core redirects: force
 nuget YC.QuickGraph
 nuget GraphX
-nuget Microsoft.Automatic.Graph.Drawing 2.0.1
-nuget Microsoft.Automatic.Graph.Layout 2.0.1
+nuget Microsoft.Msagl 1.0.2
+nuget Microsoft.Msagl.Drawing 1.0.2
+nuget Microsoft.Msagl.GraphViewerGDI 1.0.2
 nuget YAXLib
 nuget StyleCop.Analyzers
  

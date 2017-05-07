@@ -42,9 +42,11 @@ NUGET
       NUnit (>= 3.6)
     GraphX (2.3.6)
       QuickGraphPCL  - framework: >= net40, portable-net40+sl5+win8+wp8+wpa81, winv4.5.1
-    Microsoft.Automatic.Graph.Drawing (2.0.1)
-      Microsoft.Automatic.Graph.Layout (>= 2.0.1)
-    Microsoft.Automatic.Graph.Layout (2.0.1)
+    Microsoft.Msagl (1.0.2)
+    Microsoft.Msagl.Drawing (1.0.2)
+      Microsoft.Msagl (>= 1.0.2)
+    Microsoft.Msagl.GraphViewerGDI (1.0.2)
+      Microsoft.Msagl.Drawing (>= 1.0.2)
     Microsoft.NETCore.Platforms (1.1) - framework: >= net10, >= netstandard10, netstandard13
     Microsoft.NETCore.Targets (1.1) - redirects: force, framework: >= net10, >= netstandard10, netstandard13
     Microsoft.Win32.Primitives (4.3) - framework: >= net463, >= netstandard16
