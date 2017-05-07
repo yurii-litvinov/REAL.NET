@@ -42,7 +42,7 @@ namespace MsAglWinFormsEditor
         /// <summary>
         /// Getting name by Repo type
         /// </summary>
-        /// <param name="type"> </param>
+        /// <param name="type"> Type name </param>
         /// <returns> Name of attribute </returns>
         public string GetAttributeName(string type)
             => repo.Node(type).name;

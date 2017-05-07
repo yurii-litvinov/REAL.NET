@@ -7,10 +7,12 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Msagl.Core.Geometry.Curves;
+using Microsoft.Msagl.Core.Layout;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Repo;
 using Edge = Microsoft.Msagl.Drawing.Edge;
+using Node = Microsoft.Msagl.Drawing.Node;
 using Point = Microsoft.Msagl.Core.Geometry.Point;
 using Rectangle = System.Drawing.Rectangle;
 
@@ -241,7 +243,6 @@ namespace MsAglWinFormsEditor
             viewer.CreateIViewerNode(selectedNode).Node.GeometryNode.Center = center;
             viewer.Graph.GeometryGraph.UpdateBoundingBox();
 
-            viewer.CreateIViewerNode(selectedNode).Node.GeometryNode.AddSelfEdge(new Microsoft.Msagl.Core.Layout.Edge(selectedNode, selectedNode));// += new Point(1, 0);
             viewer.Invalidate();
         }
 
