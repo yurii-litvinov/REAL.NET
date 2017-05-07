@@ -7,7 +7,6 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Msagl.Core.Geometry.Curves;
-using Microsoft.Msagl.Core.Layout;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Repo;
