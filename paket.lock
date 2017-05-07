@@ -1,14 +1,4 @@
-FRAMEWORK: >= NET452
-NUGET
-  remote: https://api.nuget.org/v3/index.json
-    Microsoft.Automatic.Graph.Drawing (2.0.1)
-      Microsoft.Automatic.Graph.Layout (>= 2.0.1)
-    Microsoft.Automatic.Graph.Layout (2.0.1)
-    ObjectListView.Official (2.9.1)
-    System.Collections.Immutable (1.3.1)
-    System.Reflection.Metadata (1.4.2)
-      System.Collections.Immutable (>= 1.3.1)
-
+  
 NUGET
   remote: https://www.nuget.org/api/v2
     DotNet.Contracts (1.10.20606.1)
@@ -52,6 +42,9 @@ NUGET
       NUnit (>= 3.6)
     GraphX (2.3.6)
       QuickGraphPCL  - framework: >= net40, portable-net40+sl5+win8+wp8+wpa81, winv4.5.1
+    Microsoft.Automatic.Graph.Drawing (2.0.1)
+      Microsoft.Automatic.Graph.Layout (>= 2.0.1)
+    Microsoft.Automatic.Graph.Layout (2.0.1)
     Microsoft.NETCore.Platforms (1.1) - framework: >= net10, >= netstandard10, netstandard13
     Microsoft.NETCore.Targets (1.1) - redirects: force, framework: >= net10, >= netstandard10, netstandard13
     Microsoft.Win32.Primitives (4.3) - framework: >= net463, >= netstandard16
