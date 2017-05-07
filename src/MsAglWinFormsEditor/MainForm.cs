@@ -10,6 +10,7 @@ using Microsoft.Msagl.Core.Geometry.Curves;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Repo;
+using Edge = Microsoft.Msagl.Drawing.Edge;
 using Point = Microsoft.Msagl.Core.Geometry.Point;
 using Rectangle = System.Drawing.Rectangle;
 
@@ -37,17 +38,10 @@ namespace MsAglWinFormsEditor
 
             viewer.Graph = graph.GetGraph();
             viewer.PanButtonPressed = true;
-            // TODO: Ниже быдлокод
-            var timer = new Timer();
             viewer.MouseMove += (sender, args) =>
             {
-                timer.Interval = 10;
-                timer.Start();
-                timer.Tick += (o, eventArgs) =>
-                {
-                    viewer.Invalidate();
-                    timer.Start();
-                };
+                viewer.Graph.GeometryGraph.UpdateBoundingBox();
+                viewer.Invalidate();
             };
             //viewer.ToolBarIsVisible = false;
             viewer.MouseDown += ViewerOnMouseDown;
@@ -163,11 +157,9 @@ namespace MsAglWinFormsEditor
             {
                 var newImage = new Bitmap(openImageDialog.FileName);
                 imagesHashtable[selectedNode.Id] = newImage;
-                selectedNode.Attr.Shape = Shape.DrawFromGeometry;
-                selectedNode.DrawNodeDelegate = DrawNode;
-                selectedNode.NodeBoundaryDelegate = NodeBoundaryDelegate;
                 widthEditor.Value = newImage.Width;
                 heightEditor.Value = newImage.Height;
+                ImageSizeChanged(null, null);
                 imageLayoutPanel.Visible = true;
             }
         }
@@ -241,12 +233,15 @@ namespace MsAglWinFormsEditor
             var center = selectedNode.GeometryNode.Center;
             var image = imagesHashtable[selectedNode.Id] as Image;
             imagesHashtable[selectedNode.Id] = ResizeImage(image, Convert.ToInt32(widthEditor.Value), Convert.ToInt32(heightEditor.Value));
+       
+            selectedNode.Attr.Shape = Shape.DrawFromGeometry;
+            selectedNode.DrawNodeDelegate = DrawNode;
             selectedNode.NodeBoundaryDelegate = NodeBoundaryDelegate;
-
-            viewer.AddNode(viewer.CreateIViewerNode(selectedNode), true);
+            selectedNode.Edges.ToList()[0].GeometryObject.RaiseLayoutChangeEvent(0);
             viewer.CreateIViewerNode(selectedNode).Node.GeometryNode.Center = center;
             viewer.Graph.GeometryGraph.UpdateBoundingBox();
 
+            viewer.CreateIViewerNode(selectedNode).Node.GeometryNode.AddSelfEdge(new Microsoft.Msagl.Core.Layout.Edge(selectedNode, selectedNode));// += new Point(1, 0);
             viewer.Invalidate();
         }
 
