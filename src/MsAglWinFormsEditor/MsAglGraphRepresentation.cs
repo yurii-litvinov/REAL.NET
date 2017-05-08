@@ -76,11 +76,22 @@ namespace MsAglWinFormsEditor
         }
 
         /// <summary>
-        /// Formatting MSAGL edge
+        /// Add new node to MSAGL and Repo graphs
         /// </summary>
-        /// <param name="edgeType"> Edge type in Repo </param>
-        /// <param name="edge"> MSAGL edge </param>
-        public void FormatEdge(EdgeType edgeType, Edge edge)
+        /// <param name="edgeType"> Repo edge type </param>
+        /// <param name="edge"> Added edge </param>
+        /// <returns> MSAGL node for addig to view </returns>
+        public void CreateNewEdge(EdgeType edgeType, Edge edge)
+        {
+            //TODO: uncomment it when addEdge will be imlemented 
+            //repo.AddEdge(edgeType.ToString(), edge.Source, edge.Target);
+            
+            graph.AddPrecalculatedEdge(edge);
+            edge.LabelText = edgeType.ToString();
+            FormatEdge(edgeType, edge);
+        }
+        
+        private void FormatEdge(EdgeType edgeType, Edge edge)
         {
             edge.LabelText = edgeType.ToString();
             switch (edgeType)
@@ -129,7 +140,7 @@ namespace MsAglWinFormsEditor
                         break;
                     case NodeType.Node:
                         newNode.Attr.FillColor = Color.ForestGreen;
-                        newNode.Attr.Shape = Shape.Octagon;
+                        newNode.Attr.Shape = Shape.Ellipse;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

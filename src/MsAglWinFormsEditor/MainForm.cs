@@ -11,6 +11,7 @@ using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Repo;
 using Edge = Microsoft.Msagl.Drawing.Edge;
+using Label = Microsoft.Msagl.Drawing.Label;
 using Node = Microsoft.Msagl.Drawing.Node;
 using Point = Microsoft.Msagl.Core.Geometry.Point;
 using Rectangle = System.Drawing.Rectangle;
@@ -35,7 +36,6 @@ namespace MsAglWinFormsEditor
             viewer.MouseClick += ViewerMouseClicked;
             InitializeComponent();
             viewer.EdgeAdded += ViewerOnEdgeAdded;
-            SuspendLayout();
 
             viewer.Graph = graph.GetGraph();
             viewer.PanButtonPressed = true;
@@ -47,6 +47,7 @@ namespace MsAglWinFormsEditor
             //viewer.ToolBarIsVisible = false;
             viewer.MouseDown += ViewerOnMouseDown;
             viewer.MouseWheel += (sender, args) => viewer.ZoomF += args.Delta * SystemInformation.MouseWheelScrollLines / 4000f;
+            SuspendLayout();
             viewer.Dock = DockStyle.Fill;
             mainLayout.Controls.Add(viewer, 0, 0);
             ResumeLayout();
@@ -71,7 +72,6 @@ namespace MsAglWinFormsEditor
             var form = new Form();
             var tableLayout = new TableLayoutPanel { Dock = DockStyle.Fill };
             form.Controls.Add(tableLayout);
-            form.ControlBox = false;
 
             foreach (var edgeType in edgeTypes)
             {
@@ -79,16 +79,22 @@ namespace MsAglWinFormsEditor
                 var associationButton = new Button { Text = edgeType.ToString(), Dock = DockStyle.Fill };
                 associationButton.Click += (o, args) =>
                 {
-                    graph.FormatEdge(edgeType, edge);
-                    //TODO: uncomment it when addEdge will be imlemented 
-                    //repo.AddEdge(edgeType.ToString(), edge.Source, edge.Target);
-                    form.Close();
-                    UpdateGraph();
+                    graph.CreateNewEdge(edgeType, edge);
+                    form.DialogResult = DialogResult.OK;
+                   // edge.LabelText = edgeType.ToString();
+                    viewer.SetEdgeLabel(edge, new Label(edgeType.ToString()));
+                    viewer.Invalidate();
                 };
                 tableLayout.Controls.Add(associationButton, 0, tableLayout.RowCount - 1);
                 ++tableLayout.RowCount;
             }
-            form.Show();
+            var result = form.ShowDialog();
+            if (result == DialogResult.Cancel)
+            {
+                viewer.RemoveEdge(viewer.CreateEdgeWithGivenGeometry(edge), false);
+                viewer.Graph.RemoveEdge(edge);
+                viewer.Invalidate();
+            }
         }
 
         private void InitPalette()
@@ -234,7 +240,7 @@ namespace MsAglWinFormsEditor
             var center = selectedNode.GeometryNode.Center;
             var image = imagesHashtable[selectedNode.Id] as Image;
             imagesHashtable[selectedNode.Id] = ResizeImage(image, Convert.ToInt32(widthEditor.Value), Convert.ToInt32(heightEditor.Value));
-       
+
             selectedNode.Attr.Shape = Shape.DrawFromGeometry;
             selectedNode.DrawNodeDelegate = DrawNode;
             selectedNode.NodeBoundaryDelegate = NodeBoundaryDelegate;
