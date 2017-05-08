@@ -179,13 +179,7 @@ namespace MsAglWinFormsEditor
 
             return CurveFactory.CreateRectangle(width, height, new Point());
         }
-
-        private void UpdateGraph()
-        {
-            viewer.Graph = graph.GetGraph();
-            viewer.Invalidate();
-        }
-
+        
         private GraphicsPath FillTheGraphicsPath(ICurve iCurve)
         {
             var curve = iCurve as Curve;
