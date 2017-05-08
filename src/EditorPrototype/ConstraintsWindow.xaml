@@ -6,12 +6,25 @@
         xmlns:local="clr-namespace:EditorPrototype"
         mc:Ignorable="d"
         Title="ConstraintsWindow" Height="300" Width="300">
-        <Grid>
-        <ComboBox x:Name="nodeTypeCombobox"
+        <Window.Resources>
+        <DataTemplate x:Key="NewClass">
+            <TextBlock Text="{Binding Test}"/>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <ComboBox x:Name="ObjType"
             HorizontalAlignment="Left"
             Margin="10,10,0,0"
             VerticalAlignment="Top"
-            Width="120" ItemsSource="{Binding EdgesListEnum}">
+            Width="120" SelectionChanged="ObjType_SelectionChanged">
+            <ComboBoxItem Name="edge">Edge</ComboBoxItem>
+            <ComboBoxItem Name="node">Node</ComboBoxItem>
         </ComboBox>
+        <ComboBox x:Name="TypeCombobox"
+            HorizontalAlignment="Left"
+            Margin="10,37,0,0"
+            VerticalAlignment="Top"
+            Width="120"
+            ItemTemplate="{StaticResource NewClass}"/>
     </Grid>
 </Window>

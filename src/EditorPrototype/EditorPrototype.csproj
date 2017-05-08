@@ -103,6 +103,7 @@
     <Compile Include="ConstraintsWindow.xaml.cs">
       <DependentUpon>ConstraintsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ConstraintsValues.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -25,9 +25,25 @@
         {
             this.InitializeComponent();
             this.info = new RepoInfo(repo, modelName);
-            this.EdgesListEnum = new List<string>() { "Vasya", "Petya", "Evgenii Olegovich" };
         }
 
-        public List<string> EdgesListEnum { get; set; }
+        public void ObjType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var a = this.info.GetEdges().ToList();
+            var b = a[0].edgeType;
+            var c = b.ToString();
+            var d = this.info.GetEdges().Select(x => new ConstraintsValues { Nodes = x.edgeType.ToString() }).ToList();
+            var v = d[0];
+            Console.WriteLine(a);
+            switch (((ComboBoxItem)this.ObjType.SelectedItem).Content.ToString())
+            {
+                case "Node":
+                    this.TypeCombobox.ItemsSource = new List<ConstraintsValues>(this.info.GetEdges().Select(x => new ConstraintsValues { Nodes = x.edgeType.ToString() }).ToList());
+
+                    break;
+                case "Edge":
+                    break;
+            }
+        }
     }
 }
