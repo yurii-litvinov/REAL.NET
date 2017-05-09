@@ -7,11 +7,11 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Msagl.Core.Geometry.Curves;
+using Microsoft.Msagl.Core.Layout;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Repo;
 using Edge = Microsoft.Msagl.Drawing.Edge;
-using Label = Microsoft.Msagl.Drawing.Label;
 using Node = Microsoft.Msagl.Drawing.Node;
 using Point = Microsoft.Msagl.Core.Geometry.Point;
 using Rectangle = System.Drawing.Rectangle;
@@ -37,7 +37,7 @@ namespace MsAglWinFormsEditor
             InitializeComponent();
             viewer.EdgeAdded += ViewerOnEdgeAdded;
 
-            viewer.Graph = graph.GetGraph();
+            viewer.Graph = graph.Graph;
             viewer.PanButtonPressed = true;
             viewer.MouseMove += (sender, args) =>
             {
@@ -80,10 +80,12 @@ namespace MsAglWinFormsEditor
                 associationButton.Click += (o, args) =>
                 {
                     graph.CreateNewEdge(edgeType, edge);
-                    form.DialogResult = DialogResult.OK;
-                   // edge.LabelText = edgeType.ToString();
-                    viewer.SetEdgeLabel(edge, new Label(edgeType.ToString()));
+                    viewer.Graph.AddPrecalculatedEdge(edge);
+                    viewer.SetEdgeLabel(edge, edge.Label);
+                    var ep = new EdgeLabelPlacement(viewer.Graph.GeometryGraph);
+                    ep.Run();
                     viewer.Invalidate();
+                    form.DialogResult = DialogResult.OK;
                 };
                 tableLayout.Controls.Add(associationButton, 0, tableLayout.RowCount - 1);
                 ++tableLayout.RowCount;
@@ -91,8 +93,7 @@ namespace MsAglWinFormsEditor
             var result = form.ShowDialog();
             if (result == DialogResult.Cancel)
             {
-                viewer.RemoveEdge(viewer.CreateEdgeWithGivenGeometry(edge), false);
-                viewer.Graph.RemoveEdge(edge);
+                viewer.Undo();
                 viewer.Invalidate();
             }
         }
@@ -106,7 +107,7 @@ namespace MsAglWinFormsEditor
                 {
                     var node = graph.CreateNewNode(type.id);
                     node.GeometryNode = GeometryGraphCreator.CreateGeometryNode(viewer.Graph, viewer.Graph.GeometryGraph, node, ConnectionToGraph.Disconnected);
-                    var viewNode = viewer.CreateIViewerNode(node, viewer.Graph.Nodes.ToList()[0].Pos - new Point(150, 0), null);
+                    var viewNode = viewer.CreateIViewerNode(node, viewer.Graph.Nodes.ToList()[0].Pos - new Point(250, 0), null);
                     viewer.AddNode(viewNode, true);
                     viewer.Graph.AddNode(node);
                     viewer.Invalidate();
@@ -179,7 +180,7 @@ namespace MsAglWinFormsEditor
 
             return CurveFactory.CreateRectangle(width, height, new Point());
         }
-        
+
         private GraphicsPath FillTheGraphicsPath(ICurve iCurve)
         {
             var curve = iCurve as Curve;
@@ -227,7 +228,10 @@ namespace MsAglWinFormsEditor
         }
 
         private void RefreshButtonClick(object sender, EventArgs e)
-            => viewer.Graph = graph.GetGraph();
+        {
+            viewer.Graph = graph.Graph;
+            viewer.Invalidate();
+        }
 
         private void ImageSizeChanged(object sender, EventArgs e)
         {

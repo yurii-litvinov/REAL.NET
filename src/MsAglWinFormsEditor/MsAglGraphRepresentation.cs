@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using Microsoft.Msagl.Core.Geometry;
 using Microsoft.Msagl.Drawing;
 using Repo;
+using Label = Microsoft.Msagl.Drawing.Label;
 
 namespace MsAglWinFormsEditor
 {
@@ -12,7 +14,7 @@ namespace MsAglWinFormsEditor
     public class MsAglGraphRepresentation
     {
 
-        private readonly Graph graph = new Graph("graph");
+        public Graph Graph { get; }
         private readonly IRepo repo = RepoFactory.CreateRepo();
         private const string modelName = "mainModel";
 
@@ -21,6 +23,7 @@ namespace MsAglWinFormsEditor
         /// </summary>
         public MsAglGraphRepresentation()
         {
+            Graph = new Graph("graph");
             AddEdges();
             AddNodes();
         }
@@ -31,13 +34,6 @@ namespace MsAglWinFormsEditor
         /// <returns> Collection of node types </returns>
         public IEnumerable<NodeInfo> GetNodeTypes()
             => repo.MetamodelNodes(modelName);
-
-        /// <summary>
-        /// Getting graph method
-        /// </summary>
-        /// <returns> MSAGL graph representation </returns>
-        public Graph GetGraph()
-            => graph;
 
         /// <summary>
         /// Getting name by Repo type
@@ -56,22 +52,10 @@ namespace MsAglWinFormsEditor
         {
             var newNodeInfo = repo.AddNode(typeId, modelName);
 
-            var newNode = graph.AddNode(graph.NodeCount.ToString());
+            var newNode = Graph.AddNode(Graph.NodeCount.ToString());
             newNode.LabelText = "New " + newNodeInfo.nodeType.ToString();
             newNode.UserData = new List<AttributeInfo>();
-            switch (newNodeInfo.nodeType)
-            {
-                case NodeType.Attribute:
-                    newNode.Attr.FillColor = Color.IndianRed;
-                    newNode.Attr.Shape = Shape.Box;
-                    break;
-                case NodeType.Node:
-                    newNode.Attr.FillColor = Color.ForestGreen;
-                    newNode.Attr.Shape = Shape.Octagon;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            FormatNode(newNode, newNodeInfo.nodeType);
             return newNode;
         }
 
@@ -85,12 +69,10 @@ namespace MsAglWinFormsEditor
         {
             //TODO: uncomment it when addEdge will be imlemented 
             //repo.AddEdge(edgeType.ToString(), edge.Source, edge.Target);
-            
-            graph.AddPrecalculatedEdge(edge);
-            edge.LabelText = edgeType.ToString();
+            Graph.AddPrecalculatedEdge(edge);
             FormatEdge(edgeType, edge);
         }
-        
+
         private void FormatEdge(EdgeType edgeType, Edge edge)
         {
             edge.LabelText = edgeType.ToString();
@@ -109,19 +91,37 @@ namespace MsAglWinFormsEditor
                     edge.Attr.Color = Color.Blue;
                     break;
                 case EdgeType.Value:
-                    edge.Attr.Color = Color.LightCyan;
+                    edge.Attr.Color = Color.Chocolate;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            edge.Label.FontColor = edge.Attr.Color;
         }
 
         private void AddEdges()
         {
             foreach (var edge in repo.ModelEdges(modelName))
             {
-                var newEdge = graph.AddEdge(edge.source, edge.target);
+                var newEdge = Graph.AddEdge(edge.source, edge.target);
                 FormatEdge(edge.edgeType, newEdge);
+            }
+        }
+
+        private void FormatNode(Node newNode, NodeType nodeType)
+        {
+            switch (nodeType)
+            {
+                case NodeType.Attribute:
+                    newNode.Attr.FillColor = Color.IndianRed;
+                    newNode.Attr.Shape = Shape.Box;
+                    break;
+                case NodeType.Node:
+                    newNode.Attr.FillColor = Color.ForestGreen;
+                    newNode.Attr.Shape = Shape.Ellipse;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -129,22 +129,10 @@ namespace MsAglWinFormsEditor
         {
             foreach (var node in repo.ModelNodes(modelName))
             {
-                var newNode = graph.FindNode(node.name);
+                var newNode = Graph.FindNode(node.name);
                 newNode.UserData = node.attributes;
                 newNode.Attr.LabelMargin = Padding.Empty.Left;
-                switch (node.nodeType)
-                {
-                    case NodeType.Attribute:
-                        newNode.Attr.FillColor = Color.IndianRed;
-                        newNode.Attr.Shape = Shape.Box;
-                        break;
-                    case NodeType.Node:
-                        newNode.Attr.FillColor = Color.ForestGreen;
-                        newNode.Attr.Shape = Shape.Ellipse;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                FormatNode(newNode, node.nodeType);
             }
         }
     }
