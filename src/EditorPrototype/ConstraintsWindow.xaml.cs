@@ -37,7 +37,7 @@
 
         private void ElementType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            switch (this.ElementType.SelectedItem.ToString())
+            switch (((ConstraintsValues)this.ElementType.SelectedItem).ElementType)
             {
                 case "All":
                     this.ammountButton.Visibility = Visibility.Visible;
