@@ -166,59 +166,68 @@
 
         private void CreateEdge(string type)
         {
-            var prevVerVertex = this.prevVer?.Vertex as DataVertex;
-            var ctrlVerVertex = this.ctrlVer?.Vertex as DataVertex;
-            if (prevVerVertex == null || ctrlVerVertex == null)
+            if (Constraints.AllowCreateEdge(this.repo, this.currentModelName))
             {
-                return;
-            }
+                var prevVerVertex = this.prevVer?.Vertex as DataVertex;
+                var ctrlVerVertex = this.ctrlVer?.Vertex as DataVertex;
+                if (prevVerVertex == null || ctrlVerVertex == null)
+                {
+                    return;
+                }
 
-            var newEdge = new DataEdge(prevVerVertex, ctrlVerVertex, true) { Text = type };
-            this.dataGraph.AddEdge(newEdge);
-            this.DrawNewEdge(prevVerVertex.Key, ctrlVerVertex.Key);
-            var ec = new EdgeControl(this.prevVer, this.ctrlVer, newEdge);
-            this.g_Area.InsertEdge(newEdge, ec);
+                var newEdge = new DataEdge(prevVerVertex, ctrlVerVertex, true) { Text = type };
+                this.dataGraph.AddEdge(newEdge);
+                this.DrawNewEdge(prevVerVertex.Key, ctrlVerVertex.Key);
+                var ec = new EdgeControl(this.prevVer, this.ctrlVer, newEdge);
+                this.g_Area.InsertEdge(newEdge, ec);
+            }
         }
 
         private void CreateNode(string name, DataVertex.VertexTypeEnum type, IList<Repo.AttributeInfo> attributes)
         {
-            var vertex = new DataVertex(name)
+            if (Constraints.AllowCreateNode(this.repo, this.currentModelName))
             {
-                Key = $"{name}",
-                VertexType = type,
-            };
+                var vertex = new DataVertex(name)
+                {
+                    Key = $"{name}",
+                    VertexType = type,
+                };
 
-            var attributeInfos = attributes.Select(x => new DataVertex.Attribute()
-            {
-                Name = x.name,
-                Type = this.repo.Node(x.attributeType).name,
-                Value = x.value
-            });
+                var attributeInfos = attributes.Select(x => new DataVertex.Attribute()
+                {
+                    Name = x.name,
+                    Type = this.repo.Node(x.attributeType).name,
+                    Value = x.value
+                });
 
-            attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
+                attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
 
-            this.dataGraph.AddVertex(vertex);
-            this.DrawNewVertex(vertex.Key);
-            this.DrawGraph();
+                this.dataGraph.AddVertex(vertex);
+                this.DrawNewVertex(vertex.Key);
+                this.DrawGraph();
+            }
         }
 
         private void CreateNewNode(string typeId, string modelName)
         {
-            var newNode = this.repo.AddNode(typeId, modelName);
-            Func<Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
+            if (Constraints.AllowCreateNode(this.repo, modelName))
             {
-                switch (n)
+                var newNode = this.repo.AddNode(typeId, modelName);
+                Func<Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
                 {
-                    case Repo.NodeType.Attribute:
-                        return DataVertex.VertexTypeEnum.Attribute;
-                    case Repo.NodeType.Node:
-                        return DataVertex.VertexTypeEnum.Node;
-                }
+                    switch (n)
+                    {
+                        case Repo.NodeType.Attribute:
+                            return DataVertex.VertexTypeEnum.Attribute;
+                        case Repo.NodeType.Node:
+                            return DataVertex.VertexTypeEnum.Node;
+                    }
 
-                return DataVertex.VertexTypeEnum.Node;
-            };
+                    return DataVertex.VertexTypeEnum.Node;
+                };
 
-            this.CreateNode(newNode.name, nodeType(newNode.nodeType), newNode.attributes);
+                this.CreateNode(newNode.name, nodeType(newNode.nodeType), newNode.attributes);
+            }
         }
 
         private void ElementInBoxSelectedAction(object sender, EventArgs e)
@@ -406,44 +415,50 @@
 
         private void CreateNewNode(string typeId, Point position, string modelName)
         {
-            var newNode = this.repo.AddNode(typeId, modelName);
-            Func<Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
+            if (Constraints.AllowCreateNode(this.repo, modelName))
             {
-                switch (n)
+                var newNode = this.repo.AddNode(typeId, modelName);
+                Func<Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
                 {
-                    case Repo.NodeType.Attribute:
-                        return DataVertex.VertexTypeEnum.Attribute;
-                    case Repo.NodeType.Node:
-                        return DataVertex.VertexTypeEnum.Node;
-                }
+                    switch (n)
+                    {
+                        case Repo.NodeType.Attribute:
+                            return DataVertex.VertexTypeEnum.Attribute;
+                        case Repo.NodeType.Node:
+                            return DataVertex.VertexTypeEnum.Node;
+                    }
 
-                return DataVertex.VertexTypeEnum.Node;
-            };
+                    return DataVertex.VertexTypeEnum.Node;
+                };
 
-            this.CreateNode(newNode.name, nodeType(newNode.nodeType), newNode.attributes, position);
+                this.CreateNode(newNode.name, nodeType(newNode.nodeType), newNode.attributes, position);
+            }
         }
 
         private void CreateNode(string name, DataVertex.VertexTypeEnum type, IList<Repo.AttributeInfo> attributes, Point position)
         {
-            var vertex = new DataVertex(name)
+            if (Constraints.AllowCreateNode(this.repo, this.currentModelName))
             {
-                Key = $"{name}",
-                VertexType = type
-            };
+                var vertex = new DataVertex(name)
+                {
+                    Key = $"{name}",
+                    VertexType = type
+                };
 
-            var attributeInfos = attributes.Select(x => new DataVertex.Attribute()
-            {
-                Name = x.name,
-                Type = this.repo.Node(x.attributeType).name,
-                Value = x.value
-            });
+                var attributeInfos = attributes.Select(x => new DataVertex.Attribute()
+                {
+                    Name = x.name,
+                    Type = this.repo.Node(x.attributeType).name,
+                    Value = x.value
+                });
 
-            attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
+                attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
 
-            var vc = new VertexControl(vertex);
-            vc.SetPosition(position);
-            this.g_Area.AddVertex(vertex, vc);
-            this.DrawNewVertex(vertex.Key);
+                var vc = new VertexControl(vertex);
+                vc.SetPosition(position);
+                this.g_Area.AddVertex(vertex, vc);
+                this.DrawNewVertex(vertex.Key);
+            }
         }
 
         private void OnEdgeMouseUp(object sender, MouseButtonEventArgs e)

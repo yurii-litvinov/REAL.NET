@@ -5,26 +5,47 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EditorPrototype"
         mc:Ignorable="d"
-        Title="ConstraintsWindow" Height="300" Width="300">
-        <Window.Resources>
-        <DataTemplate x:Key="NewClass">
-            <TextBlock Text="{Binding Test}"/>
+        Title="Задание ограничений" Height="300" Width="300">
+    <Window.Resources>
+        <DataTemplate x:Key="TypeClass">
+            <TextBlock Text="{Binding ElementType}"/>
         </DataTemplate>
     </Window.Resources>
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="171*"/>
+            <ColumnDefinition Width="121*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Text="Класс элементов" Margin="10,7,0,0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Width="214"/>
         <ComboBox x:Name="ObjType"
             HorizontalAlignment="Left"
-            Margin="10,10,0,0"
+            Margin="10,26,0,0"
             VerticalAlignment="Top"
-            Width="120" SelectionChanged="ObjType_SelectionChanged">
+            Width="147" SelectionChanged="ObjType_SelectionChanged">
             <ComboBoxItem Name="edge">Edge</ComboBoxItem>
             <ComboBoxItem Name="node">Node</ComboBoxItem>
         </ComboBox>
-        <ComboBox x:Name="TypeCombobox"
+        <TextBlock Text="Тип элемента" Margin="10,53,0.812,97"/>
+        <ComboBox x:Name="ElementType"
+            SelectionChanged="ElementType_SelectionChanged"
             HorizontalAlignment="Left"
-            Margin="10,37,0,0"
+            Margin="10,68,0,0"
             VerticalAlignment="Top"
-            Width="120"
-            ItemTemplate="{StaticResource NewClass}"/>
+            Width="147"
+            ItemTemplate="{StaticResource TypeClass}"/>
+        <TextBlock x:Name="ammountButton" 
+            Text="Количество:" 
+            Margin="10,96,0.812,97" 
+            Visibility="Visible"/>
+        <TextBox x:Name="ammountBox" 
+                 FontSize="12"
+                 Margin="87,95,13.812,148" 
+                 RenderTransformOrigin="0.381,-0.327"/>
+        <Button x:Name="createConstraint"
+                Content="Создать"
+                Height="20" 
+                Margin="10,124,14.812,125"
+                Click="CreateConstraint_Click"
+                />
     </Grid>
 </Window>

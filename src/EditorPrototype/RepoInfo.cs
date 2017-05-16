@@ -2,9 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public class RepoInfo
     {
@@ -25,6 +22,38 @@
         public IEnumerable<Repo.NodeInfo> GetNodes()
         {
             return this.repo.ModelNodes(this.modelName);
+        }
+
+        public List<string> GetNodeTypes()
+        {
+            var types = new List<string>();
+            types.Add("All");
+            foreach (var node in this.repo.ModelNodes(this.modelName))
+            {
+                var typeName = Convert.ToString(node.nodeType);
+                if (!types.Contains(typeName))
+                {
+                    types.Add(typeName);
+                }
+            }
+
+            return types;
+        }
+
+        public List<string> GetEdgeTypes()
+        {
+            var types = new List<string>();
+            types.Add("All");
+            foreach (var edge in this.repo.ModelEdges(this.modelName))
+            {
+                var typeName = Convert.ToString(edge.edgeType);
+                if (!types.Contains(typeName))
+                {
+                    types.Add(typeName);
+                }
+            }
+
+            return types;
         }
     }
 }

@@ -3,16 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Documents;
-    using System.Windows.Input;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
-    using System.Windows.Shapes;
 
     /// <summary>
     /// Логика взаимодействия для ConstraintsWindow.xaml
@@ -20,6 +12,7 @@
     public partial class ConstraintsWindow : Window
     {
         private RepoInfo info;
+        private string objType;
 
         public ConstraintsWindow(Repo.IRepo repo, string modelName)
         {
@@ -29,20 +22,42 @@
 
         public void ObjType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var a = this.info.GetEdges().ToList();
-            var b = a[0].edgeType;
-            var c = b.ToString();
-            var d = this.info.GetEdges().Select(x => new ConstraintsValues { Nodes = x.edgeType.ToString() }).ToList();
-            var v = d[0];
-            Console.WriteLine(a);
             switch (((ComboBoxItem)this.ObjType.SelectedItem).Content.ToString())
             {
                 case "Node":
-                    this.TypeCombobox.ItemsSource = new List<ConstraintsValues>(this.info.GetEdges().Select(x => new ConstraintsValues { Nodes = x.edgeType.ToString() }).ToList());
-
+                    this.ElementType.ItemsSource = new List<ConstraintsValues>(this.info.GetNodeTypes().Select(x => new ConstraintsValues { ElementType = x }));
+                    this.objType = "Node";
                     break;
                 case "Edge":
+                    this.ElementType.ItemsSource = new List<ConstraintsValues>(this.info.GetEdgeTypes().Select(x => new ConstraintsValues { ElementType = x }));
+                    this.objType = "Edge";
                     break;
+            }
+        }
+
+        private void ElementType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (this.ElementType.SelectedItem.ToString())
+            {
+                case "All":
+                    this.ammountButton.Visibility = Visibility.Visible;
+                    this.ammountBox.Visibility = Visibility.Visible;
+                    break;
+            }
+        }
+
+        private void CreateConstraint_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(this.ammountBox.Text))
+            {
+                if (this.objType == "Node")
+                {
+                    Constraints.NodesAmmount = Convert.ToInt32(this.ammountBox.Text);
+                }
+                else
+                {
+                    Constraints.EdgesAmmount = Convert.ToInt32(this.ammountBox.Text);
+                }
             }
         }
     }
