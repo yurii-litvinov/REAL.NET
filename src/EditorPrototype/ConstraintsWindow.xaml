@@ -13,39 +13,40 @@
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="171*"/>
-            <ColumnDefinition Width="121*"/>
+            <ColumnDefinition Width="77*"/>
+            <ColumnDefinition Width="69*"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Text="Класс элементов" Margin="10,7,0,0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Width="214"/>
+        <TextBlock Text="Класс элементов" Margin="10,7,0,0" Grid.ColumnSpan="2"/>
         <ComboBox x:Name="ObjType"
             HorizontalAlignment="Left"
             Margin="10,26,0,0"
             VerticalAlignment="Top"
-            Width="147" SelectionChanged="ObjType_SelectionChanged">
+            Width="147" SelectionChanged="ObjType_SelectionChanged" Grid.ColumnSpan="2">
             <ComboBoxItem Name="edge">Edge</ComboBoxItem>
             <ComboBoxItem Name="node">Node</ComboBoxItem>
         </ComboBox>
-        <TextBlock Text="Тип элемента" Margin="10,53,0.812,97"/>
+        <TextBlock Text="Тип элемента" Margin="10,53,0,97" Grid.ColumnSpan="2"/>
         <ComboBox x:Name="ElementType"
             SelectionChanged="ElementType_SelectionChanged"
             HorizontalAlignment="Left"
             Margin="10,68,0,0"
             VerticalAlignment="Top"
             Width="147"
-            ItemTemplate="{StaticResource TypeClass}"/>
+            ItemTemplate="{StaticResource TypeClass}" Grid.ColumnSpan="2"/>
         <TextBlock x:Name="ammountButton" 
             Text="Количество:" 
-            Margin="10,96,0.812,97" 
-            Visibility="Visible"/>
+            Margin="10,98,72,94" 
+            Visibility="Hidden" Grid.ColumnSpan="2"/>
         <TextBox x:Name="ammountBox" 
                  FontSize="12"
-                 Margin="87,95,13.812,148" 
-                 RenderTransformOrigin="0.381,-0.327"/>
+                 Margin="87,95,135,148" 
+                 RenderTransformOrigin="0.381,-0.327" 
+                 Visibility="Hidden"
+                 Grid.ColumnSpan="2"/>
         <Button x:Name="createConstraint"
-                Content="Создать"
-                Height="20" 
-                Margin="10,124,14.812,125"
-                Click="CreateConstraint_Click"
+                Content="Создать" 
+                Margin="10,124,135,116"
+                Click="CreateConstraint_Click" Grid.ColumnSpan="2"
                 />
     </Grid>
 </Window>
