@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Microsoft.Msagl.Core.Geometry;
 using Microsoft.Msagl.Drawing;
 using Repo;
-using Label = Microsoft.Msagl.Drawing.Label;
 
 namespace MsAglWinFormsEditor
 {
