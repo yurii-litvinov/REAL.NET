@@ -28,7 +28,7 @@ type internal RepoImpl (loader : IModelLoader) as this =
         testLoader.LoadInto (this :> IMutableRepo) testModelName
 
     new () =
-        RepoImpl(GraphMetametamodel ())
+        RepoImpl(SimplifiedCoreMetametamodel ())
 
     interface IRepo with
         member this.Models () = 
