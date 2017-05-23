@@ -66,6 +66,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controller.cs" />
+    <Compile Include="Graph.cs" />
+    <Compile Include="Model.cs" />
+    <Compile Include="Models\EdgeBlueprint.cs" />
     <Compile Include="Models\EditorObjectManager.cs" />
     <Compile Include="Models\ImageLoader.cs" />
     <Compile Include="Models\ValueToImageConverter.cs" />
@@ -142,6 +146,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Pictures\star2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\sq.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\serc.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
