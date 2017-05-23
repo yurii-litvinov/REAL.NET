@@ -32,7 +32,7 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type controls:VertexControl}">
-                            <Image Source="pack://application:,,,/Pictures/star1.png" Margin="0" Width="80" Stretch="UniformToFill"/>
+                            <Image Source="pack://application:,,,/Pictures/sq.png" Margin="0" Width="80" Stretch="UniformToFill"/>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -47,7 +47,7 @@
                                     CornerRadius="0,0,0,0"
                                     Padding="{TemplateBinding Padding}">
                                 <Grid>
-                                    <Image Source="pack://application:,,,/Pictures/star2.png" Margin="0" Width="80" Stretch="UniformToFill"/>
+                                    <Image Source="pack://application:,,,/Pictures/serc.png" Margin="0" Width="80" Stretch="UniformToFill"/>
                                     <ContentPresenter Content="{TemplateBinding Vertex}" />
                                     <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Vertex, RelativeSource={RelativeSource TemplatedParent}}" />
                                 </Grid>

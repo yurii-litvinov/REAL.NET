@@ -44,7 +44,18 @@ namespace EditorPrototype
         /// Node main description (header)
         /// </summary>
         private string _text;
-        public string Text { get { return _text; } set { _text = value; OnPropertyChanged(nameof(Text)); } }
+        public string Text
+        {
+            get
+            {
+                return _text;
+            }
+            set
+            {
+                _text = value;
+                OnPropertyChanged(nameof(Text));
+            }
+        }
         public string ToolTipText { get; set; }
 
         public override string ToString()
