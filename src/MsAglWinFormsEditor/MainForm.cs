@@ -27,6 +27,7 @@ namespace MsAglWinFormsEditor
         private readonly MsAglGraphRepresentation graph = new MsAglGraphRepresentation();
         private readonly Hashtable imagesHashtable = new Hashtable();
         private Node selectedNode;
+        private const int fontSize = 11;
 
         /// <summary>
         /// Create form with given graph
@@ -44,7 +45,7 @@ namespace MsAglWinFormsEditor
                 viewer.Graph.GeometryGraph.UpdateBoundingBox();
                 viewer.Invalidate();
             };
-            //viewer.ToolBarIsVisible = false;
+            viewer.ToolBarIsVisible = false;
             viewer.MouseDown += ViewerOnMouseDown;
             viewer.MouseWheel += (sender, args) => viewer.ZoomF += args.Delta * SystemInformation.MouseWheelScrollLines / 4000f;
             SuspendLayout();
@@ -68,7 +69,7 @@ namespace MsAglWinFormsEditor
 
         private void ViewerOnEdgeAdded(object sender, EventArgs eventArgs)
         {
-            var edge = sender as Edge;
+            var edge = (Edge)sender;
             var form = new Form();
             var tableLayout = new TableLayoutPanel { Dock = DockStyle.Fill };
             form.Controls.Add(tableLayout);
@@ -87,6 +88,7 @@ namespace MsAglWinFormsEditor
                     viewer.Invalidate();
                     form.DialogResult = DialogResult.OK;
                 };
+                associationButton.Font = new Font(associationButton.Font.FontFamily, fontSize);
                 tableLayout.Controls.Add(associationButton, 0, tableLayout.RowCount - 1);
                 ++tableLayout.RowCount;
             }
@@ -112,6 +114,8 @@ namespace MsAglWinFormsEditor
                     viewer.Graph.AddNode(node);
                     viewer.Invalidate();
                 };
+                button.Font = new Font(button.Font.FontFamily, fontSize);
+                button.Size = new Size(button.Width, button.Height + 10);
                 paletteGrid.Controls.Add(button, 0, paletteGrid.RowCount - 1);
 
                 ++paletteGrid.RowCount;
@@ -120,8 +124,7 @@ namespace MsAglWinFormsEditor
 
         private void ViewerMouseClicked(object sender, MouseEventArgs e)
         {
-            var selectedObject = viewer.SelectedObject;
-            selectedNode = selectedObject as Node;
+            selectedNode = viewer.SelectedObject as Node;
             if (selectedNode != null)
             {
                 var attributeInfos = selectedNode.UserData as List<AttributeInfo>;
@@ -202,6 +205,11 @@ namespace MsAglWinFormsEditor
             }
         }
 
+        private readonly Font drawFont = new Font("Arial", 10);
+        private readonly SolidBrush drawBrush = new SolidBrush(System.Drawing.Color.Black);
+
+        private readonly StringFormat format = new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
+
         private PointF PointF(Point p)
             => new PointF((float)p.X, (float)p.Y);
 
@@ -220,6 +228,9 @@ namespace MsAglWinFormsEditor
                     graphic.Transform = matrix;
                     graphic.DrawImage(image, new PointF((float)(node.GeometryNode.Center.X - node.GeometryNode.Width / 2),
                         (float)(node.GeometryNode.Center.Y - node.GeometryNode.Height / 2)));
+                    var centerX = (float)node.GeometryNode.Center.X;
+                    var centerY = (float)node.GeometryNode.Center.Y;
+                    graphic.DrawString(node.LabelText, drawFont, drawBrush, new PointF(centerX, centerY), format);
                     graphic.Transform = matrixClone;
                     graphic.ResetClip();
                 }
