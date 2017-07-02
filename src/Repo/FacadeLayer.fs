@@ -1,4 +1,4 @@
-﻿namespace Repo
+﻿namespace RepoExperimental
 
 type IAttribute =
     interface
