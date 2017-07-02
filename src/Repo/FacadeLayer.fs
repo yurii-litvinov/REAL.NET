@@ -1,71 +1,149 @@
-﻿namespace RepoExperimental
+﻿(* Copyright 2017 Yurii Litvinov
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. *)
+
+namespace RepoExperimental
 
 /// Enumeration with all kinds of attributes supported by repository
-/// TODO: 
+/// TODO: It shall be explicitly listed in Infrastructure Metamodel, and all actual models shall use it as one of
+/// the parent metamodels.
 type AttributeKind = 
+    /// Attribute whose value is a string.
     | String = 0
-    | Int = 1
-    | Boolean = 2
-    | Enum = 3
-    | Reference = 4
 
+    /// Attribute whose value is an integer.
+    | Int = 1
+
+    /// Attribute whose value is a floating point number with double precision.
+    | Double = 2
+
+    /// Attribute whose value is a boolean.
+    | Boolean = 3
+    
+    /// Complex attribute kind, actual enumeration shall be in metamodel for given model, and attribute shall reference
+    /// enumeration type for editor to be able to show available enumeration values.
+    /// NOTE: Enums are not supported in v1, so AttributeKind value shall never be Enum.
+    | Enum = 4
+
+    /// Complex attribute kind, reference to another node in the same (or some other) model. Attribute shall reference
+    /// target node in tis case. Example of reference types usage is UML class diagram, where field of a class
+    /// can be an object of another class defined on the same diagram. Note that in UML reference attributes and 
+    /// associations are the same thing from the point of view of abstract syntax (and our Core Metametamodel does not
+    /// have a notion of attribute for that reason, they are modelled as associations). But concrete syntax (and, 
+    /// consequently, editors) shall distinquish these two cases.
+    /// NOTE: Reference types are not supported in v1, so AttributeKind value shall never be Reference.
+    | Reference = 5
+
+/// Attribute of an element (with given value). Provides a way to query and modify attribute value.
 type IAttribute =
     interface
+        /// Name of the attribute.
         abstract Name : string with get
+
+        /// Kind (or a metatype) of the attribute --- one of elementary types, erference type or enum type.
+        abstract Kind : AttributeKind with get
         
-        // TODO: actually attributes can be of elementary types or of more complex types which themselves are represented
-        // im metamodel or model itself. Needs more thinking on how to represent it properly.
-        abstract ``Type`` : string with get
+        /// Reference to a type of the attribute if it is complex attribute, null if this is elementary type attribute.
+        /// NOTE: Complex attribute types are not supported in v1, so it is always null.
+        /// Note that even in v1 Infrastructure Metamodel may contain elements for elementary types, in such case 
+        /// this property shall return corresponding element.
+        abstract Type : IElement with get
 
-        // TODO: attribute values are also not just strings, they are related to property editor capabilities.
-        abstract Value : string with get
+        /// String representation of a value of an attribute if it is an attribute of basic type.
+        // TODO: Actually we need a whole hierarchy of attribute classes.
+        abstract StringValue : string with get, set
+
+        /// Holds a reference to an element which is a value of this attribute if this attribute has complex type.
+        /// NOTE: Complex attribute values are not supported in v1, so it is always null.
+        abstract ReferenceValue : IElement with get, set
     end
 
-type IElement =
+/// Element is a general term for nodes or edges.
+/// TODO: there is a notion of "instantiability", ability of an element to be a type of other element.
+/// For now we may consider every element as a type, but this is not correct even for Core Metametamodel and shall
+/// be implemented in v1.
+and IElement =
     interface
+        /// A string containing information about how to draw this element. May be XML document or some other string 
+        // that provides required info. It can be editor-specific, like XAML document for WPF-based editor, that will 
+        /// not be useful in WinForms editor. Also it can have different formats and different meaning for nodes and 
+        /// edges.
+        /// TODO: shapes are actually more complex structures than strings, and some uniform format for shape 
+        /// representation is needed. Can be postponed after v1.
+        abstract Shape : string with get
+
+        /// A list of all logical attributes for that element.
+        abstract Attributes : IAttribute seq with get
     end
 
+/// Node --- well, a node in a model.
 type INode =
     interface
         inherit IElement
 
-        // TODO: actually, not needed. Nodes can have no name and names can be modelled as attributes.
+        /// Name of a node, to be displayed on a scene and in various menus.
+        /// TODO: actually, not needed. Nodes can have no name and names can be modelled as attributes.
         abstract Name : string with get, set
-
-        // TODO: shapes are actually more complex structures than strings.
-        abstract Shape : string with get
-
-        abstract Attributes : IAttribute seq with get
     end
 
+/// Edge --- an edge in a model. Note that here it can connect not only nodes, but edges too. It is needed to model 
+/// relations between edges (like "instance of" relation between association on a class diagram and link on object
+/// diagram).
 type IEdge = 
     interface
         inherit IElement
 
-        abstract Shape : string with get
+        /// Reference to an element connected to a beginning of an edge, null if no element is connected.
+        abstract From : IElement with get, set
 
-        abstract From : IElement with get
-        abstract To : IElement with get
+        /// Reference to an element connected to an end of an edge, null if no element is connected.
+        abstract To : IElement with get, set
     end
 
+/// Model is one "graph", represented by one diagram on a scene. Has name, consists of nodes and edges.
+/// NOTE: v1 does not support any notion of hierarchical decomposition, so models do not have notion of diagrams,
+/// subdiagrams and relations between diagrams. Model is a diagram and is drawn as a whole on one scene.
 type IModel =
     interface
-        abstract Name : string with get
+        /// Name of a model.
+        abstract Name : string with get, set
+
+        /// Reference to a metamodel for this model (may be reference to itself, for example, for Core Metametamodel).
+        /// Can not be changed after model is created.
         abstract Metamodel : IModel with get
 
+        /// A list of nodes in this model.
         abstract Nodes : INode seq with get
+
+        /// A list of edges in this model.
         abstract Edges : IEdge seq with get
 
-        abstract AddElement : ``type`` : IElement -> IElement
+        /// Instantiates element of a given type and returns result of an instantiation. Type shall be an element from
+        /// Metamodel for this model.
+        abstract CreateElement : ``type`` : IElement -> IElement
 
+        /// Deletes given element from a model.
         abstract DeleteElement : element : IElement -> unit
     end
 
+/// Repository is a collection of models.
 type IRepo =
     interface
+        /// A list of models in this repository. Shall always contain at least Core Metametamodel, because model 
+        /// semantics are defined through its elements and all other elements of all other models shall be the 
+        /// instances (possibly indirect) of some elements of Core Metametamodel.
         abstract Models : IModel seq with get
-    end
 
-[<AbstractClass; Sealed>]
-type RepoFactory =
-    static member CreateRepo () = ()
+        /// Creates a new model with given name based on a given metamodel.
+        abstract CreateModel : name : string -> metamodel : IModel -> IModel
+    end
