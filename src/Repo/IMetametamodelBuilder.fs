@@ -1,6 +1,6 @@
-﻿namespace Repo.Metametamodels
+﻿namespace RepoExperimental.Metametamodels
 
-open Repo.DataLayer
+open RepoExperimental.DataLayer
 
 type IMetametamodelBuilder =
     interface

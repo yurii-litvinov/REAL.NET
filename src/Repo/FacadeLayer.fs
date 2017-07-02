@@ -1,10 +1,19 @@
 ﻿namespace RepoExperimental
 
+/// Enumeration with all kinds of attributes supported by repository
+/// TODO: 
+type AttributeKind = 
+    | String = 0
+    | Int = 1
+    | Boolean = 2
+    | Enum = 3
+    | Reference = 4
+
 type IAttribute =
     interface
         abstract Name : string with get
         
-        // TODO: actually attributes can be of elementary types or of more complex types which are themselves are represented
+        // TODO: actually attributes can be of elementary types or of more complex types which themselves are represented
         // im metamodel or model itself. Needs more thinking on how to represent it properly.
         abstract ``Type`` : string with get
 

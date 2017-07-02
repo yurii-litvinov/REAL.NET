@@ -1,6 +1,6 @@
-﻿namespace Repo.SemanticLayer
+﻿namespace RepoExperimental.SemanticLayer
 
-open Repo.DataLayer
+open RepoExperimental.DataLayer
 
 type Semantics(repo : IRepo) =
     class
