@@ -138,4 +138,3 @@ module internal MetamodelOperations =
             failwith "Failed to add attribute edges to a graph"
 
         result
-

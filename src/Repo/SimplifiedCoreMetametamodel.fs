@@ -23,28 +23,27 @@ type internal SimplifiedCoreMetametamodel () =
             generalization.id --@--> node.id
             association.id --@--> node.id
 
-            let createAssociation source target targetName targetPotency targetLabel =
+            let (-->) source (target, targetName, targetPotency, targetLabel) = 
                 let newAssociation = helper.CreateAssociation source target targetName targetPotency targetLabel
                 newAssociation.id --@--> association.id
-                newAssociation
 
-            let (---|>) x y = 
+            let (--|>) x y = 
                 let generalizationLink = helper.AddGeneralization x y
                 generalizationLink.id --@--> generalization.id
 
             // "Instantiation" relation is actually an instance of a "class" association, but we don't model 
             // "Instantiation" as first-class relation, so it can not have type.
-            createAssociation modelElement modelElement "class" 1 1 |> ignore
+            modelElement --> (modelElement, "class", 1, 1)
             
-            createAssociation relationship modelElement "source" 1 1 |> ignore
-            createAssociation relationship modelElement "target" 1 1 |> ignore
+            relationship --> (modelElement, "source", 1, 1)
+            relationship --> (modelElement, "target", 1, 1)
 
             stringType.id --@--> node.id
             intType.id --@--> node.id
 
-            node ---|> modelElement
-            relationship ---|> modelElement
-            generalization ---|> relationship
-            association ---|> relationship
+            node --|> modelElement
+            relationship --|> modelElement
+            generalization --|> relationship
+            association --|> relationship
 
             ()

@@ -82,6 +82,10 @@
     <Compile Include="RepoImpl.fs" />
     <Compile Include="RepoFactory.fs" />
     <None Include="paket.references" />
+    <Compile Include="DataLayer.fs" />
+    <Compile Include="IMetametamodelBuilder.fs" />
+    <Compile Include="SemanticLayer.fs" />
+    <Compile Include="FacadeLayer.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
