@@ -93,7 +93,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Models\BoolToColorConverter.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Graph.cs" />
     <Compile Include="Model.cs" />
