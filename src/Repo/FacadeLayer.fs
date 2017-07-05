@@ -69,9 +69,6 @@ type IAttribute =
     end
 
 /// Element is a general term for nodes or edges.
-/// TODO: there is a notion of "instantiability", ability of an element to be a type of other element.
-/// For now we may consider every element as a type, but this is not correct even for Core Metametamodel and shall
-/// be implemented in v1.
 and IElement =
     interface
         /// A string containing information about how to draw this element. May be XML document or some other string 
@@ -84,6 +81,9 @@ and IElement =
 
         /// A list of all logical attributes for that element.
         abstract Attributes : IAttribute seq with get
+
+        /// True when this element can not be a type of other elements, so it shall not be shown in palette.
+        abstract IsAbstract : bool with get
     end
 
 /// Node --- well, a node in a model.
