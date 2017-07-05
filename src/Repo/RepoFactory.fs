@@ -2,4 +2,4 @@
 
 [<AbstractClass; Sealed>]
 type RepoFactory =
-    static member CreateRepo () = new RepoImpl () :> Repo
+    static member CreateRepo () = new RepoImpl () :> IRepo

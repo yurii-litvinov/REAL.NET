@@ -10,8 +10,8 @@ Introducing your project
 Say more
 
 *)
-#r "FunReal.dll"
-open FunReal
+#r "REAL.NET.dll"
+open REAL.NET
 
 Library.hello 0
 (**

@@ -1,10 +1,9 @@
-﻿using GraphX;
-using GraphX.Controls;
-using QuickGraph;
-
-namespace EditorPrototype
+﻿namespace EditorPrototype
 {
-    public class GraphAreaExample : GraphArea<DataVertex, DataEdge, BidirectionalGraph<DataVertex, DataEdge>> { }
+    using GraphX.Controls;
+    using QuickGraph;
+
+    public class GraphAreaExample : GraphArea<DataVertex, DataEdge, BidirectionalGraph<DataVertex, DataEdge>>
+    {
+    }
 }
-
-

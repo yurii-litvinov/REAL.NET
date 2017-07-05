@@ -25,7 +25,7 @@ open SourceLink
 
 // The name of the project
 // (used by attributes in AssemblyInfo, name of a NuGet package and directory in 'src')
-let project = "FunReal"
+let project = "REAL.NET"
 
 // Short summary of the project
 // (used as description in AssemblyInfo and as a short summary for NuGet package)
@@ -42,10 +42,16 @@ let authors = [ "Yurii Litvinov"; "Elizaveta Kuzmina"; "Ivan Nebogatikov" ]
 let tags = "DSM visual-modeling visual-languages"
 
 // File system information
-let solutionFile  = "FunReal.sln"
+let solutionFile  = "REAL.NET.sln"
 
 // Default target configuration
+#if MONO
+let configuration = "MonoRelease"
+let doNotCopyBinaries = ["EditorPrototype"]
+#else
 let configuration = "Release"
+let doNotCopyBinaries = []
+#endif
 
 // Pattern specifying assemblies to be tested using NUnit
 let testAssemblies = "tests/**/bin" </> configuration </> "*Tests*.dll"
@@ -53,7 +59,7 @@ let testAssemblies = "tests/**/bin" </> configuration </> "*Tests*.dll"
 // Git configuration (used for publishing documentation in gh-pages branch)
 // The profile where the project is posted
 let gitOwner = "yurii-litvinov"
-let gitHome = sprintf "%s/%s" "https://github.com/" gitOwner
+let gitHome = sprintf "%s/%s" "https://github.com" gitOwner
 
 // The name of the project on GitHub
 let gitName = "REAL.NET"
@@ -108,6 +114,7 @@ Target "AssemblyInfo" (fun _ ->
 Target "CopyBinaries" (fun _ ->
     !! "src/**/*.??proj"
     -- "src/**/*.shproj"
+    |>  Seq.filter (fun f -> not (Seq.exists ((=) (System.IO.Path.GetFileNameWithoutExtension f)) doNotCopyBinaries))
     |>  Seq.map (fun f -> ((System.IO.Path.GetDirectoryName f) </> "bin" </> configuration, "bin" </> (System.IO.Path.GetFileNameWithoutExtension f)))
     |>  Seq.iter (fun (fromDir, toDir) -> CopyDir toDir fromDir (fun _ -> true))
 )
@@ -132,7 +139,7 @@ Target "Clean" (fun _ ->
 
 Target "Build" (fun _ ->
     !! solutionFile
-    |> MSBuildReleaseExt "" vsProjProps "Rebuild"
+    |> MSBuild "" "Rebuild" vsProjProps
     |> ignore
 )
 
@@ -372,16 +379,16 @@ Target "All" DoNothing
   ==> "Build"
   ==> "CopyBinaries"
   ==> "RunTests"
-  ==> "GenerateReferenceDocs"
-  ==> "GenerateDocs"
+  =?> ("GenerateReferenceDocs", isLocalBuild)
+  =?> ("GenerateDocs", isLocalBuild)
 #if MONO
 #else
   =?> ("SourceLink", Pdbstr.tryFind().IsSome )
 #endif
-  ==> "NuGet"
-  ==> "BuildPackage"
+//  ==> "NuGet"
+//  ==> "BuildPackage"
   ==> "All"
-//  =?> ("ReleaseDocs",isLocalBuild)
+  =?> ("ReleaseDocs", isLocalBuild)
 
 "GenerateHelp"
   ==> "GenerateReferenceDocs"

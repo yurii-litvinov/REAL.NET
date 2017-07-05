@@ -84,7 +84,7 @@
 
     <ControlTemplate x:Key="AssociationEdge" TargetType="{x:Type controls:EdgeControl}">
         <Grid>
-            <Path Stroke="Red"
+            <Path Stroke="Blue"
                               StrokeThickness="2"
                               ToolTip="{TemplateBinding ToolTip}" 
                               x:Name="PART_edgePath"/>
@@ -95,7 +95,7 @@
                               Width="10" 
                               Height="10" 
                               Stretch="Uniform" 
-                              Fill="Red" 
+                              Fill="Blue" 
                               IsHitTestVisible="True"
                               ToolTip="This vertex has some self looped edges!"
                               Data="F1 M 17.4167,32.25L 32.9107,32.25L 38,18L 43.0893,32.25L 58.5833,32.25L 45.6798,41.4944L 51.4583,56L 38,48.0833L 26.125,56L 30.5979,41.7104L 17.4167,32.25 Z "/>

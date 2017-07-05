@@ -13,6 +13,8 @@ A set of .NET libraries for quick creation of visual languages and related tools
 As a project under heavy development it has no practical usages yet. Planned features are related to ability of quickly and declaratively specify a visual language and get an editor, code generator
 and other tools for it ready to use in any .NET program.
 
+See [API Reference](https://yurii-litvinov.github.io/REAL.NET/reference) page for documentation on what we have so far.
+
 ## Build
 
 * To build it from console, run `build.sh` or `build.cmd`
