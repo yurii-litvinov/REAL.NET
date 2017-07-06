@@ -1,15 +1,12 @@
-﻿using System.ComponentModel;
-using GraphX;
-using System;
-using GraphX.Measure;
-using GraphX.PCL.Common.Models;
-using EditorPrototype.FileSerialization;
-using YAXLib;
-using GraphX.Controls;
-using System.Windows.Media;
-
-namespace EditorPrototype
+﻿namespace EditorPrototype
 {
+    using System;
+    using System.ComponentModel;
+    using GraphX.Measure;
+    using GraphX.PCL.Common.Models;
+    using FileSerialization;
+    using YAXLib;
+
     [Serializable]
     public class DataEdge : EdgeBase<DataVertex>, INotifyPropertyChanged
     {
@@ -50,12 +47,15 @@ namespace EditorPrototype
             {
                 return _text;
             }
+
             set
             {
                 _text = value;
                 OnPropertyChanged(nameof(Text));
             }
+
         }
+
         public string ToolTipText { get; set; }
 
         public override string ToString()
@@ -71,11 +71,13 @@ namespace EditorPrototype
             {
                 return edgeType;
             }
+
             set
             {
                 edgeType = value;
                 OnPropertyChanged(nameof(EdgeType));
             }
+
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -85,5 +87,7 @@ namespace EditorPrototype
             if (PropertyChanged != null)
                 PropertyChanged.Invoke(this, new PropertyChangedEventArgs(name));
         }
+
     }
+
 }

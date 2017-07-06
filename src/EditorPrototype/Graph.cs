@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using GraphX.Controls;
-
-namespace EditorPrototype
+﻿namespace EditorPrototype
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     class Graph
     {
         private Model model;
@@ -15,14 +14,16 @@ namespace EditorPrototype
             {
                 return dataGraph;
             }
+
         }
         public Graph(Model repoModel)
         {
             model = repoModel;
             dataGraph = new GraphExample();
-            model.NewVertexInRepo += (sender, args) => CreateNodeWithPos(args.name, args.type, args.attributes);
+            model.NewVertexInRepo += (sender, args) => CreateNodeWithPos(args.Name, args.Type, args.Attributes);
             model.NewEdgeInRepo += (sender, args) => CreateEdge(args.type, args.prevVer, args.ctrlVer);
         }
+
         public event EventHandler DrawGraph;
         public event EventHandler<VertexNameArgs> DrawNewVertex;
         public event EventHandler<SourceTargetArgs> DrawNewEdge;
@@ -44,14 +45,15 @@ namespace EditorPrototype
 
                     return DataVertex.VertexTypeEnum.Node;
                 };
+
                 CreateNodeWithoutPos(node.name, nodeType(node.nodeType), node.attributes);
             }
 
             foreach (var edge in model.ModelRepo.ModelEdges(modelName))
             {
                 var isViolation = Constraints.CheckEdge(edge, model.ModelRepo, modelName);
-                var source = this.dataGraph.Vertices.First(v => v.Name == edge.source);
-                var target = this.dataGraph.Vertices.First(v => v.Name == edge.target);
+                var source = dataGraph.Vertices.First(v => v.Name == edge.source);
+                var target = dataGraph.Vertices.First(v => v.Name == edge.target);
 
                 Func<Repo.EdgeType, DataEdge.EdgeTypeEnum> edgeType = e =>
                 {
@@ -73,13 +75,14 @@ namespace EditorPrototype
                 var newEdge = new DataEdge(source, target, System.Convert.ToDouble(isViolation)) { EdgeType = edgeType(edge.edgeType) };
                 dataGraph.AddEdge(newEdge);
                 SourceTargetArgs args = new SourceTargetArgs();
-                args.source = source.Key;
-                args.target = target.Key;
+                args.Source = source.Key;
+                args.Target = target.Key;
                 DrawNewEdge?.Invoke(this, args);
             }
 
             DrawGraph?.Invoke(this, EventArgs.Empty);
         }
+
         private void CreateNodeWithoutPos(string name, DataVertex.VertexTypeEnum type, IList<Repo.AttributeInfo> attributes)
         {
             var vertex = new DataVertex(name)
@@ -99,7 +102,7 @@ namespace EditorPrototype
 
             dataGraph.AddVertex(vertex);
             VertexNameArgs args = new VertexNameArgs();
-            args.vertName = vertex.Key;
+            args.VertName = vertex.Key;
             DrawNewVertex?.Invoke(this, args);
         }
         
@@ -123,29 +126,84 @@ namespace EditorPrototype
             args.dataVert = vertex;
             AddNewVertexControl?.Invoke(this, args);
         }
+
         public void CreateEdge(string type, DataVertex prevVer, DataVertex ctrlVer)
         {
-            var newEdge = new DataEdge(prevVer, ctrlVer) { Text = type };
+            var newEdge = new DataEdge(prevVer, ctrlVer)
+            {
+                Text = type
+            };
+
             DataEdgeArgs args = new DataEdgeArgs();
             args.edge = newEdge;
             AddNewEdgeControl?.Invoke(this, args);
         }
+
         public class DataVertexArgs : EventArgs
         {
             public DataVertex dataVert;
         }
+
         public class DataEdgeArgs : EventArgs
         {
             public DataEdge edge;
         }
+
         public class SourceTargetArgs : EventArgs
         {
-            public string source;
-            public string target;
+            private string source;
+            private string target;
+
+            public string Source
+            {
+                get
+                {
+                    return source;
+                }
+
+                set
+                {
+                    source = value;
+                }
+
+            }
+
+            public string Target
+            {
+                get
+                {
+                    return target;
+                }
+
+                set
+                {
+                    target = value;
+                }
+
+            }
+
         }
+
         public class VertexNameArgs : EventArgs
         {
-            public string vertName;
+            private string vertName;
+
+            public string VertName
+            {
+                get
+                {
+                    return vertName;
+                }
+
+                set
+                {
+                    vertName = value;
+                }
+
+            }
+
         }
+
     }
+
 }

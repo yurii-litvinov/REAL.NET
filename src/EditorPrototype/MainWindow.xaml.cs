@@ -1,21 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using GraphX.PCL.Common.Enums;
-using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
-using GraphX.PCL.Logic.Models;
-using GraphX.Controls;
-using GraphX.Controls.Models;
-using QuickGraph;
-using System.Windows.Media;
-using System.Windows.Controls.Primitives;
-
 namespace EditorPrototype
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Input;
+    using System.Windows.Media.Imaging;
+    using GraphX.PCL.Common.Enums;
+    using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
+    using GraphX.PCL.Logic.Models;
+    using GraphX.Controls;
+    using GraphX.Controls.Models;
+    using QuickGraph;
+    using System.Windows.Media;
+    using System.Windows.Controls.Primitives;
+
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
@@ -27,7 +27,6 @@ namespace EditorPrototype
         private string currentId;
         private Point pos;
         
-
         private readonly EditorObjectManager _editorManager;
 
         private Model model;
@@ -42,8 +41,8 @@ namespace EditorPrototype
             controller = new Controller(model);
             graph = new Graph(model);
             graph.DrawGraph += (sender, args) => DrawGraph();
-            graph.DrawNewEdge += (sender, args) => DrawNewEdge(args.source, args.target);
-            graph.DrawNewVertex += (sender, args) => DrawNewVertex(args.vertName);
+            graph.DrawNewEdge += (sender, args) => DrawNewEdge(args.Source, args.Target);
+            graph.DrawNewVertex += (sender, args) => DrawNewVertex(args.VertName);
             graph.AddNewVertexControl += (sender, args) => AddNewVertexControl(args.dataVert);
             graph.AddNewEdgeControl += (sender, args) => AddNewEdgeControl(args.edge);
             _editorManager = new EditorObjectManager(g_Area, g_zoomctrl);
@@ -55,7 +54,6 @@ namespace EditorPrototype
             logic.DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.LinLog;
 
             g_Area.LogicCore = logic;
-
 
             g_Area.VertexSelected += VertexSelectedAction;
             g_Area.EdgeSelected += EdgeSelectedAction;
@@ -99,21 +97,23 @@ namespace EditorPrototype
             foreach (var type in model.ModelRepo.MetamodelNodes(modelName))
             {
                 var button = new ToggleButton { Content = type.name };
-                button.Click += (sender, args) => this.currentId = type.id;
+                button.Click += (sender, args) => currentId = type.id;
                 if (model.ModelRepo.IsEdgeClass(type.id))
                 {
-                    this.g_Area.VertexSelected += (sender, args) => button.IsChecked = false;
+                    g_Area.VertexSelected += (sender, args) => button.IsChecked = false;
                 }
+
                 else
                 {
-                    this.g_zoomctrl.MouseDown += (sender, args) => button.IsChecked = false;
+                    g_zoomctrl.MouseDown += (sender, args) => button.IsChecked = false;
                 }
 
                 // TODO: Bind it to XAML, do not do GUI work in C#.
-                this.paletteGrid.RowDefinitions.Add(new RowDefinition());
-                this.paletteGrid.Children.Add(button);
-                Grid.SetRow(button, this.paletteGrid.RowDefinitions.Count - 1);
+                paletteGrid.RowDefinitions.Add(new RowDefinition());
+                paletteGrid.Children.Add(button);
+                Grid.SetRow(button, paletteGrid.RowDefinitions.Count - 1);
             }
+
         }
 
         private void ElementInBoxSelectedAction(object sender, EventArgs e)
@@ -136,11 +136,16 @@ namespace EditorPrototype
                                 HighlightBehaviour.SetIsHighlightEnabled(ed.Value, true);
                                 break;
                             }
+
                         }
+
                         break;
                     }
+
                 }
+
             }
+
             else
             {
                 var name = (sp.Children[2] as TextBlock).Text;
@@ -155,11 +160,16 @@ namespace EditorPrototype
                             {
                                 HighlightBehaviour.SetIsHighlightEnabled(ed.Value, true);
                             }
+
                         }
+
                         break;
                     }
+
                 }
+
             }
+
         }
 
         private void VertexSelectedAction(object sender, VertexSelectedEventArgs args)
@@ -172,12 +182,15 @@ namespace EditorPrototype
                     _editorManager.CreateVirtualEdge(ctrlVer, ctrlVer.GetPosition());
                     prevVer = ctrlVer;
                 }
+
                 else
                 {
                     controller.NewEdge(currentId, prevVer, ctrlVer);
 
                 }
+
             }
+
             attributesView.DataContext = ctrlVer.GetDataVertex<DataVertex>();
 
             g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
@@ -196,6 +209,7 @@ namespace EditorPrototype
                 args.VertexControl.ContextMenu.Items.Add(mi);
                 args.VertexControl.ContextMenu.IsOpen = true;
             }
+
         }
 
         private void EdgeSelectedAction(object sender, EdgeSelectedEventArgs args)
@@ -215,6 +229,7 @@ namespace EditorPrototype
                 args.EdgeControl.ContextMenu.Items.Add(mi);
                 args.EdgeControl.ContextMenu.IsOpen = true;
             }
+
         }
 
         private void OnEdgeMouseMove(object sender, MouseEventArgs e)
@@ -233,27 +248,31 @@ namespace EditorPrototype
             g_Area.UpdateAllEdges();
         }
 
-        void zoomCtrl_MouseDown(object sender, MouseButtonEventArgs e)
+        private void zoomCtrl_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 var position = g_zoomctrl.TranslatePoint(e.GetPosition(g_zoomctrl), g_Area);
-                if (currentId != String.Empty && !model.ModelRepo.IsEdgeClass(currentId))
+                if (currentId != string.Empty && !model.ModelRepo.IsEdgeClass(currentId))
                 {
                     pos = position;
                     CreateNewNode(currentId);
-                    currentId = String.Empty;
+                    currentId = string.Empty;
                 }
-                if (currentId != String.Empty && model.ModelRepo.IsEdgeClass(currentId))
+
+                if (currentId != string.Empty && model.ModelRepo.IsEdgeClass(currentId))
                 {
                     if (prevVer != null)
                     {
                         prevVer = null;
                         _editorManager.DestroyVirtualEdge();
-                        currentId = String.Empty;
+                        currentId = string.Empty;
                     }
+
                 }
+
             }
+
         }
 
         private void CreateNewNode(string typeId)
@@ -276,7 +295,7 @@ namespace EditorPrototype
             g_Area.InsertEdge(edge, ec);
             prevVer = null;
             _editorManager.DestroyVirtualEdge();
-            currentId = String.Empty;
+            currentId = string.Empty;
         }
 
         private void MenuItemClickVert(object sender, EventArgs e)
@@ -303,6 +322,7 @@ namespace EditorPrototype
             {
                 w.Close();
             }
+
         }
 
         private void DrawNewVertex(string vertexName)
@@ -313,6 +333,7 @@ namespace EditorPrototype
             {
                 Source = new BitmapImage(new Uri("pack://application:,,,/Pictures/Vertex.png"))
             };
+
             TextBlock spaces = new TextBlock { Text = "  " };
             TextBlock tx = new TextBlock { Text = vertexName };
             sp.Children.Add(img);
@@ -330,6 +351,7 @@ namespace EditorPrototype
             {
                 Source = new BitmapImage(new Uri("pack://application:,,,/Pictures/Edge.png"))
             };
+
             TextBlock spaces = new TextBlock { Text = "  " };
             TextBlock tx0 = new TextBlock { Text = source };
             TextBlock tx1 = new TextBlock { Text = " - " };
@@ -348,5 +370,7 @@ namespace EditorPrototype
             g_Area.GenerateGraph(graph.DataGraph);
             g_zoomctrl.ZoomToFill();
         }
+
     }
+
 }
