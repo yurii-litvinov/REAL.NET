@@ -28,9 +28,9 @@ namespace EditorPrototype
         public event EventHandler<SourceTargetArgs> DrawNewEdge;
         public event EventHandler<DataVertexArgs> AddNewVertexControl;
         public event EventHandler<DataEdgeArgs> AddNewEdgeControl;
-        public void InitModel()
+        public void InitModel(string modelName)
         {
-            foreach (var node in model.ModelRepo.ModelNodes())
+            foreach (var node in model.ModelRepo.ModelNodes(modelName))
             {
                 Func<Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
                 {
@@ -44,14 +44,14 @@ namespace EditorPrototype
 
                     return DataVertex.VertexTypeEnum.Node;
                 };
-
                 CreateNodeWithoutPos(node.name, nodeType(node.nodeType), node.attributes);
             }
 
-            foreach (var edge in model.ModelRepo.ModelEdges())
+            foreach (var edge in model.ModelRepo.ModelEdges(modelName))
             {
-                var source = dataGraph.Vertices.First(v => v.Name == edge.source);
-                var target = dataGraph.Vertices.First(v => v.Name == edge.target);
+                var isViolation = Constraints.CheckEdge(edge, model.ModelRepo, modelName);
+                var source = this.dataGraph.Vertices.First(v => v.Name == edge.source);
+                var target = this.dataGraph.Vertices.First(v => v.Name == edge.target);
 
                 Func<Repo.EdgeType, DataEdge.EdgeTypeEnum> edgeType = e =>
                 {
@@ -70,13 +70,14 @@ namespace EditorPrototype
                     return DataEdge.EdgeTypeEnum.Generalization;
                 };
 
-                var newEdge = new DataEdge(source, target) { EdgeType = edgeType(edge.edgeType) };
+                var newEdge = new DataEdge(source, target, System.Convert.ToDouble(isViolation)) { EdgeType = edgeType(edge.edgeType) };
                 dataGraph.AddEdge(newEdge);
                 SourceTargetArgs args = new SourceTargetArgs();
                 args.source = source.Key;
                 args.target = target.Key;
                 DrawNewEdge?.Invoke(this, args);
             }
+
             DrawGraph?.Invoke(this, EventArgs.Empty);
         }
         private void CreateNodeWithoutPos(string name, DataVertex.VertexTypeEnum type, IList<Repo.AttributeInfo> attributes)

@@ -5,8 +5,16 @@ namespace EditorPrototype
 {
     class Model
     {
-        private Repo.Repo modelRepo;
-        public Repo.Repo ModelRepo
+        private string modelName;
+        public string ModelName
+        {
+            get
+            {
+                return modelName;
+            }
+        }
+        private Repo.IRepo modelRepo;
+        public Repo.IRepo ModelRepo
         {
             get
             {
@@ -16,6 +24,7 @@ namespace EditorPrototype
         public Model()
         {
             modelRepo = Repo.RepoFactory.CreateRepo();
+            modelName = "mainModel";
         }
         public event EventHandler<VertexEventArgs> NewVertexInRepo;
         public event EventHandler<EdgeEventArgs> NewEdgeInRepo;
@@ -42,7 +51,7 @@ namespace EditorPrototype
         }
         public void NewNode(string typeId)
         {
-            var node = modelRepo.AddNode(typeId);
+            var node = modelRepo.AddNode(typeId, modelName);
             RaiseNewVertexInRepo(node);
         }
         private void RaiseNewEdgeInRepo(string typeId, DataVertex prevVer, DataVertex ctrlVer)

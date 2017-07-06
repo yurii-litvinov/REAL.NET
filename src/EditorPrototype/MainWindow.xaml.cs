@@ -26,6 +26,7 @@ namespace EditorPrototype
         private EdgeControl ctrlEdg;
         private string currentId;
         private Point pos;
+        
 
         private readonly EditorObjectManager _editorManager;
 
@@ -81,9 +82,9 @@ namespace EditorPrototype
 
             Closed += CloseChildrenWindows;
             g_zoomctrl.MouseDown += zoomCtrl_MouseDown;
-
-            InitPalette();
-            graph.InitModel();
+            
+            InitPalette(model.ModelName);
+            graph.InitModel(model.ModelName);
         }
 
         private void ClearSelection(object sender, RoutedEventArgs e)
@@ -92,26 +93,26 @@ namespace EditorPrototype
             ctrlVer = null;
             g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
         }
-
-        private void InitPalette()
+        
+        private void InitPalette(string modelName)
         {
-            foreach (var type in model.ModelRepo.MetamodelNodes())
+            foreach (var type in model.ModelRepo.MetamodelNodes(modelName))
             {
-                var button = new ToggleButton { Content = type.name, FontSize = 14 };
-                button.Click += (sender, args) => currentId = type.id;
-
+                var button = new ToggleButton { Content = type.name };
+                button.Click += (sender, args) => this.currentId = type.id;
                 if (model.ModelRepo.IsEdgeClass(type.id))
                 {
-                    g_Area.VertexSelected += (sender, args) => button.IsChecked = false;
+                    this.g_Area.VertexSelected += (sender, args) => button.IsChecked = false;
                 }
                 else
                 {
-                    g_zoomctrl.MouseDown += (sender, args) => button.IsChecked = false;
+                    this.g_zoomctrl.MouseDown += (sender, args) => button.IsChecked = false;
                 }
+
                 // TODO: Bind it to XAML, do not do GUI work in C#.
-                paletteGrid.RowDefinitions.Add(new RowDefinition());
-                paletteGrid.Children.Add(button);
-                Grid.SetRow(button, paletteGrid.RowDefinitions.Count - 1);
+                this.paletteGrid.RowDefinitions.Add(new RowDefinition());
+                this.paletteGrid.Children.Add(button);
+                Grid.SetRow(button, this.paletteGrid.RowDefinitions.Count - 1);
             }
         }
 
