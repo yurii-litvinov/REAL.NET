@@ -6,60 +6,41 @@ namespace EditorPrototype
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
+    using System.Windows.Media;
     using System.Windows.Media.Imaging;
+    using System.Windows.Controls.Primitives;
     using GraphX.PCL.Common.Enums;
     using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
     using GraphX.PCL.Logic.Models;
     using GraphX.Controls;
     using GraphX.Controls.Models;
     using QuickGraph;
-    using System.Windows.Media;
-    using System.Windows.Controls.Primitives;
-
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
     internal partial class MainWindow : Window
     {
-        private VertexControl prevVer;
-        private VertexControl ctrlVer;
-        private EdgeControl ctrlEdg;
-        private string currentId;
-        private Point pos;
-        
-        private readonly EditorObjectManager _editorManager;
-
-        private Model model;
-        private Controller controller;
-        private Graph graph;
-
         public MainWindow()
         {
             InitializeComponent();
-
-            model = new Model();
-            controller = new Controller(model);
-            graph = new Graph(model);
-            graph.DrawGraph += (sender, args) => DrawGraph();
-            graph.DrawNewEdge += (sender, args) => DrawNewEdge(args.Source, args.Target);
-            graph.DrawNewVertex += (sender, args) => DrawNewVertex(args.VertName);
-            graph.AddNewVertexControl += (sender, args) => AddNewVertexControl(args.dataVert);
-            graph.AddNewEdgeControl += (sender, args) => AddNewEdgeControl(args.edge);
-            _editorManager = new EditorObjectManager(g_Area, g_zoomctrl);
-
-            currentId = String.Empty;
-
+            this.model = new Model();
+            controller = new Controller(this.model);
+            this.graph = new Graph(this.model);
+            this.graph.DrawGraph += (sender, args) => DrawGraph();
+            this.graph.DrawNewEdge += (sender, args) => DrawNewEdge(args.Source, args.Target);
+            this.graph.DrawNewVertex += (sender, args) => DrawNewVertex(args.VertName);
+            this.graph.AddNewVertexControl += (sender, args) => AddNewVertexControl(args.dataVert);
+            this.graph.AddNewEdgeControl += (sender, args) => AddNewEdgeControl(args.edge);
+            this.editorManager = new EditorObjectManager(g_Area, g_zoomctrl);
+            this.currentId = String.Empty;
             var logic = new GXLogicCore<DataVertex, DataEdge, BidirectionalGraph<DataVertex, DataEdge>>();
-            logic.Graph = graph.DataGraph;
+            logic.Graph = this.graph.DataGraph;
             logic.DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.LinLog;
-
             g_Area.LogicCore = logic;
-
             g_Area.VertexSelected += VertexSelectedAction;
             g_Area.EdgeSelected += EdgeSelectedAction;
             g_zoomctrl.Click += ClearSelection;
             elementsListBox.MouseDoubleClick += ElementInBoxSelectedAction;
-
             ZoomControl.SetViewFinderVisibility(g_zoomctrl, Visibility.Visible);
             g_zoomctrl.Loaded += (sender, args) =>
             {
@@ -67,7 +48,6 @@ namespace EditorPrototype
                 rightPanel.Children.Add(g_zoomctrl.ViewFinder);
                 Grid.SetRow(g_zoomctrl.ViewFinder, 0);
             };
-
             logic.DefaultLayoutAlgorithmParams =
                 logic.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.LinLog);
             logic.DefaultOverlapRemovalAlgorithm = OverlapRemovalAlgorithmTypeEnum.FSA;
@@ -77,43 +57,46 @@ namespace EditorPrototype
             ((OverlapRemovalParameters)logic.DefaultOverlapRemovalAlgorithmParams).VerticalGap = 50;
             logic.DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.None;
             logic.AsyncAlgorithmCompute = false;
-
             Closed += CloseChildrenWindows;
             g_zoomctrl.MouseDown += zoomCtrl_MouseDown;
-            
-            InitPalette(model.ModelName);
-            graph.InitModel(model.ModelName);
+            InitPalette(this.model.ModelName);
+            this.graph.InitModel(this.model.ModelName);
         }
-
+        private VertexControl prevVer;
+        private VertexControl ctrlVer;
+        private EdgeControl ctrlEdg;
+        private string currentId;
+        private Point pos;
+        private readonly EditorObjectManager editorManager;
+        private Model model;
+        private Controller controller;
+        private Graph graph;
         private void ClearSelection(object sender, RoutedEventArgs e)
         {
-            prevVer = null;
-            ctrlVer = null;
+            this.prevVer = null;
+            this.ctrlVer = null;
             g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
         }
         
         private void InitPalette(string modelName)
         {
-            foreach (var type in model.ModelRepo.MetamodelNodes(modelName))
+            foreach (var type in this.model.ModelRepo.MetamodelNodes(modelName))
             {
                 var button = new ToggleButton { Content = type.name };
-                button.Click += (sender, args) => currentId = type.id;
-                if (model.ModelRepo.IsEdgeClass(type.id))
+                button.Click += (sender, args) => this.currentId = type.id;
+                if (this.model.ModelRepo.IsEdgeClass(type.id))
                 {
                     g_Area.VertexSelected += (sender, args) => button.IsChecked = false;
                 }
-
                 else
                 {
                     g_zoomctrl.MouseDown += (sender, args) => button.IsChecked = false;
                 }
-
                 // TODO: Bind it to XAML, do not do GUI work in C#.
                 paletteGrid.RowDefinitions.Add(new RowDefinition());
                 paletteGrid.Children.Add(button);
                 Grid.SetRow(button, paletteGrid.RowDefinitions.Count - 1);
             }
-
         }
 
         private void ElementInBoxSelectedAction(object sender, EventArgs e)
@@ -123,12 +106,12 @@ namespace EditorPrototype
             {
                 var source = (sp.Children[2] as TextBlock).Text;
                 var target = (sp.Children[4] as TextBlock).Text;
-                for (int i = 0; i < graph.DataGraph.Edges.Count(); i++)
+                for (int i = 0; i < this.graph.DataGraph.Edges.Count(); i++)
                 {
-                    if (graph.DataGraph.Edges.ToList()[i].Source.Name == source &&
-                        graph.DataGraph.Edges.ToList()[i].Target.Name == target)
+                    if (this.graph.DataGraph.Edges.ToList()[i].Source.Name == source &&
+                        this.graph.DataGraph.Edges.ToList()[i].Target.Name == target)
                     {
-                        var edge = graph.DataGraph.Edges.ToList()[i];
+                        var edge = this.graph.DataGraph.Edges.ToList()[i];
                         foreach (KeyValuePair<DataEdge, EdgeControl> ed in g_Area.EdgesList)
                         {
                             if (ed.Key == edge)
@@ -136,71 +119,55 @@ namespace EditorPrototype
                                 HighlightBehaviour.SetIsHighlightEnabled(ed.Value, true);
                                 break;
                             }
-
                         }
-
                         break;
                     }
-
                 }
-
             }
-
             else
             {
                 var name = (sp.Children[2] as TextBlock).Text;
-                for (int i = 0; i < graph.DataGraph.Vertices.Count(); i++)
+                for (int i = 0; i < this.graph.DataGraph.Vertices.Count(); i++)
                 {
-                    if (graph.DataGraph.Vertices.ToList()[i].Name == name)
+                    if (this.graph.DataGraph.Vertices.ToList()[i].Name == name)
                     {
-                        var vertex = graph.DataGraph.Vertices.ToList()[i];
+                        var vertex = this.graph.DataGraph.Vertices.ToList()[i];
                         foreach (KeyValuePair<DataVertex, VertexControl> ed in g_Area.VertexList)
                         {
                             if (ed.Key == vertex)
                             {
                                 HighlightBehaviour.SetIsHighlightEnabled(ed.Value, true);
                             }
-
                         }
-
                         break;
                     }
-
                 }
-
             }
-
         }
 
         private void VertexSelectedAction(object sender, VertexSelectedEventArgs args)
         {
-            ctrlVer = args.VertexControl;
-            if (currentId != String.Empty && model.ModelRepo.IsEdgeClass(currentId))
+            this.ctrlVer = args.VertexControl;
+            if (this.currentId != String.Empty && this.model.ModelRepo.IsEdgeClass(this.currentId))
             {
-                if (prevVer == null)
+                if (this.prevVer == null)
                 {
-                    _editorManager.CreateVirtualEdge(ctrlVer, ctrlVer.GetPosition());
-                    prevVer = ctrlVer;
+                    this.editorManager.CreateVirtualEdge(this.ctrlVer, this.ctrlVer.GetPosition());
+                    this.prevVer = this.ctrlVer;
                 }
-
                 else
                 {
-                    controller.NewEdge(currentId, prevVer, ctrlVer);
-
+                    this.controller.NewEdge(this.currentId, this.prevVer, this.ctrlVer);
                 }
-
             }
-
-            attributesView.DataContext = ctrlVer.GetDataVertex<DataVertex>();
-
-            g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
-
-            ctrlVer.GetDataVertex<DataVertex>().Color = Brushes.LightBlue;
-            if (prevVer != null)
+            attributesView.DataContext = this.ctrlVer.GetDataVertex<DataVertex>();
+            g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().
+            Color = Brushes.Green);
+            this.ctrlVer.GetDataVertex<DataVertex>().Color = Brushes.LightBlue;
+            if (this.prevVer != null)
             {
-                prevVer.GetDataVertex<DataVertex>().Color = Brushes.Yellow;
+                this.prevVer.GetDataVertex<DataVertex>().Color = Brushes.Yellow;
             }
-
             if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
             {
                 args.VertexControl.ContextMenu = new ContextMenu();
@@ -209,18 +176,14 @@ namespace EditorPrototype
                 args.VertexControl.ContextMenu.Items.Add(mi);
                 args.VertexControl.ContextMenu.IsOpen = true;
             }
-
         }
 
         private void EdgeSelectedAction(object sender, EdgeSelectedEventArgs args)
         {
-            ctrlEdg = args.EdgeControl;
-
+            this.ctrlEdg = args.EdgeControl;
             // Those crazy russians intercept MouseUp event, so we are forced to use PreviewMouseUp here.
-            ctrlEdg.PreviewMouseUp += OnEdgeMouseUp;
-
+            this.ctrlEdg.PreviewMouseUp += OnEdgeMouseUp;
             g_zoomctrl.MouseMove += OnEdgeMouseMove;
-
             if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
             {
                 args.EdgeControl.ContextMenu = new ContextMenu();
@@ -229,22 +192,19 @@ namespace EditorPrototype
                 args.EdgeControl.ContextMenu.Items.Add(mi);
                 args.EdgeControl.ContextMenu.IsOpen = true;
             }
-
         }
 
         private void OnEdgeMouseMove(object sender, MouseEventArgs e)
         {
-            var dataEdge = ctrlEdg.GetDataEdge<DataEdge>();
+            var dataEdge = this.ctrlEdg.GetDataEdge<DataEdge>();
             if (dataEdge.RoutingPoints == null)
             {
                 dataEdge.RoutingPoints = new GraphX.Measure.Point[3];
             }
-
             dataEdge.RoutingPoints[0] = new GraphX.Measure.Point(100, 100);
             var mousePosition = Mouse.GetPosition(g_Area);
             dataEdge.RoutingPoints[1] = new GraphX.Measure.Point(mousePosition.X, mousePosition.Y);
             dataEdge.RoutingPoints[2] = new GraphX.Measure.Point(100, 100);
-
             g_Area.UpdateAllEdges();
         }
 
@@ -253,67 +213,63 @@ namespace EditorPrototype
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 var position = g_zoomctrl.TranslatePoint(e.GetPosition(g_zoomctrl), g_Area);
-                if (currentId != string.Empty && !model.ModelRepo.IsEdgeClass(currentId))
+                if (this.currentId != string.Empty && !this.model.ModelRepo.IsEdgeClass(this.currentId))
                 {
-                    pos = position;
-                    CreateNewNode(currentId);
-                    currentId = string.Empty;
+                    this.pos = position;
+                    CreateNewNode(this.currentId);
+                    this.currentId = string.Empty;
                 }
-
-                if (currentId != string.Empty && model.ModelRepo.IsEdgeClass(currentId))
+                if (this.currentId != string.Empty && this.model.ModelRepo.IsEdgeClass(this.currentId))
                 {
-                    if (prevVer != null)
+                    if (this.prevVer != null)
                     {
-                        prevVer = null;
-                        _editorManager.DestroyVirtualEdge();
-                        currentId = string.Empty;
+                        this.prevVer = null;
+                        this.editorManager.DestroyVirtualEdge();
+                        this.currentId = string.Empty;
                     }
-
                 }
-
             }
-
         }
 
         private void CreateNewNode(string typeId)
         {
-            controller.NewNode(typeId);
+            this.controller.NewNode(typeId);
         }
 
         private void AddNewVertexControl(DataVertex vertex)
         {
             DrawNewVertex(vertex.Name);
             var vc = new VertexControl(vertex);
-            vc.SetPosition(pos);
+            vc.SetPosition(this.pos);
             g_Area.AddVertex(vertex, vc);
         }
 
         private void AddNewEdgeControl(DataEdge edge)
         {
             DrawNewEdge(edge.Source.Name, edge.Target.Name);
-            var ec = new EdgeControl(prevVer, ctrlVer, edge);
+            var ec = new EdgeControl(this.prevVer, this.ctrlVer, edge);
             g_Area.InsertEdge(edge, ec);
-            prevVer = null;
-            _editorManager.DestroyVirtualEdge();
-            currentId = string.Empty;
+            this.prevVer = null;
+            this.editorManager.DestroyVirtualEdge();
+            this.currentId = string.Empty;
         }
 
         private void MenuItemClickVert(object sender, EventArgs e)
         {
-            graph.DataGraph.RemoveVertex(ctrlVer.GetDataVertex<DataVertex>());
+            this.graph.DataGraph.RemoveVertex(this.ctrlVer.GetDataVertex<DataVertex>());
             DrawGraph();
         }
 
         private void MenuItemClickEdge(object sender, EventArgs e)
         {
-            graph.DataGraph.RemoveEdge(ctrlEdg.GetDataEdge<DataEdge>());
+            this.graph.DataGraph.RemoveEdge(this.ctrlEdg.GetDataEdge<DataEdge>());
             DrawGraph();
         }
 
         private void OnEdgeMouseUp(object sender, MouseButtonEventArgs e)
         {
             g_zoomctrl.MouseMove -= OnEdgeMouseMove;
-            ctrlEdg.PreviewMouseUp -= OnEdgeMouseUp;
+            this.ctrlEdg.PreviewMouseUp -= OnEdgeMouseUp;
         }
 
         private void CloseChildrenWindows(object sender, EventArgs e)
@@ -322,7 +278,6 @@ namespace EditorPrototype
             {
                 w.Close();
             }
-
         }
 
         private void DrawNewVertex(string vertexName)
@@ -333,7 +288,6 @@ namespace EditorPrototype
             {
                 Source = new BitmapImage(new Uri("pack://application:,,,/Pictures/Vertex.png"))
             };
-
             TextBlock spaces = new TextBlock { Text = "  " };
             TextBlock tx = new TextBlock { Text = vertexName };
             sp.Children.Add(img);
@@ -351,7 +305,6 @@ namespace EditorPrototype
             {
                 Source = new BitmapImage(new Uri("pack://application:,,,/Pictures/Edge.png"))
             };
-
             TextBlock spaces = new TextBlock { Text = "  " };
             TextBlock tx0 = new TextBlock { Text = source };
             TextBlock tx1 = new TextBlock { Text = " - " };
@@ -367,10 +320,8 @@ namespace EditorPrototype
 
         private void DrawGraph()
         {
-            g_Area.GenerateGraph(graph.DataGraph);
+            g_Area.GenerateGraph(this.graph.DataGraph);
             g_zoomctrl.ZoomToFill();
         }
-
     }
-
 }

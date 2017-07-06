@@ -9,31 +9,29 @@
         {
             get
             {
-                return modelName;
+                return this.modelName;
             }
-
         }
 
         public Repo.IRepo ModelRepo
         {
             get
             {
-                return modelRepo;
+                return this.modelRepo;
             }
-
         }
 
         public Model()
         {
-            modelRepo = Repo.RepoFactory.CreateRepo();
-            modelName = "mainModel";
+            this.modelRepo = Repo.RepoFactory.CreateRepo();
+            this.modelName = "mainModel";
         }
 
         public event EventHandler<VertexEventArgs> NewVertexInRepo;
         public event EventHandler<EdgeEventArgs> NewEdgeInRepo;
         public void NewNode(string typeId)
         {
-            var node = modelRepo.AddNode(typeId, modelName);
+            var node = this.modelRepo.AddNode(typeId, this.modelName);
             RaiseNewVertexInRepo(node);
         }
 
@@ -53,12 +51,10 @@
                 {
                     return name;
                 }
-
                 set
                 {
                     name = value;
                 }
-
             }
 
             public DataVertex.VertexTypeEnum Type
@@ -67,12 +63,10 @@
                 {
                     return type;
                 }
-
                 set
                 {
                     type = value;
                 }
-
             }
 
             public IList<Repo.AttributeInfo> Attributes
@@ -81,21 +75,51 @@
                 {
                     return attributes;
                 }
-
                 set
                 {
                     attributes = value;
                 }
-
             }
-
         }
 
         public class EdgeEventArgs : EventArgs
         {
-            public string type;
-            public DataVertex prevVer;
-            public DataVertex ctrlVer;
+            public string Type
+            {
+                get
+                {
+                    return type;
+                }
+                set
+                {
+                    type  = value;
+                }
+            }
+            public DataVertex PrevVer
+            {
+                get
+                {
+                    return prevVer;
+                }
+                set
+                {
+                    prevVer = value;
+                }
+            }
+            public DataVertex CtrlVer
+            {
+                get
+                {
+                    return ctrlVer;
+                }
+                set
+                {
+                    ctrlVer = value;
+                }
+            }
+            private string type;
+            private DataVertex prevVer;
+            private DataVertex ctrlVer;
         }
 
         private Repo.IRepo modelRepo;
@@ -111,7 +135,6 @@
                     case Repo.NodeType.Node:
                         return DataVertex.VertexTypeEnum.Node;
                 }
-
                 return DataVertex.VertexTypeEnum.Node;
             };
 
@@ -125,12 +148,10 @@
         private void RaiseNewEdgeInRepo(string typeId, DataVertex prevVer, DataVertex ctrlVer)
         {
             EdgeEventArgs args = new EdgeEventArgs();
-            args.type = typeId;
-            args.prevVer = prevVer;
-            args.ctrlVer = ctrlVer;
+            args.Type = typeId;
+            args.PrevVer = prevVer;
+            args.CtrlVer = ctrlVer;
             NewEdgeInRepo?.Invoke(this, args);
         }
-
     }
-
 }

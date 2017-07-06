@@ -4,39 +4,36 @@
     using System.Windows;
     using System.Windows.Media;
     using GraphX.Controls;
-
     public class EditorObjectManager : IDisposable
     {
-        public EditorObjectManager(GraphAreaExample graphArea, ZoomControl zc)
+        public EditorObjectManager(GraphAreaExample graphAreaEx, ZoomControl zc)
         {
-            GraphArea = graphArea;
-            ZoomControl = zc;
-            Rd = new ResourceDictionary
+            this.graphArea = graphAreaEx;
+            this.zoomControl = zc;
+            this.rd = new ResourceDictionary
             {
                 Source = new Uri("pack://application:,,,/Templates/EditorTemplate.xaml",
                     UriKind.RelativeOrAbsolute)
             };
-
         }
 
         public void CreateVirtualEdge(VertexControl source, Point targetPos)
         {
-            ZoomControl.MouseMove += ZoomControl_MouseMove;
-            EdgeBp = new EdgeBlueprint(source, targetPos, (LinearGradientBrush)Rd["EdgeBrush"]);
-            GraphArea.InsertCustomChildControl(0, EdgeBp.EdgePath);
+            this.zoomControl.MouseMove += ZoomControl_MouseMove;
+            this.edgeBp = new EdgeBlueprint(source, targetPos, (LinearGradientBrush)this.rd["EdgeBrush"]);
+            this.graphArea.InsertCustomChildControl(0, this.edgeBp.EdgePath);
         }
 
         public void Dispose()
         {
             ClearEdgeBp();
-            GraphArea = null;
-            if (ZoomControl != null)
+            this.graphArea = null;
+            if (this.zoomControl != null)
             {
-                ZoomControl.MouseMove -= ZoomControl_MouseMove;
+                this.zoomControl.MouseMove -= ZoomControl_MouseMove;
             }
-
-            ZoomControl = null;
-            Rd = null;
+            this.zoomControl = null;
+            this.rd = null;
         }
 
         public void DestroyVirtualEdge()
@@ -44,31 +41,27 @@
             ClearEdgeBp();
         }
 
-        private GraphAreaExample GraphArea;
-        private ZoomControl ZoomControl;
-        private EdgeBlueprint EdgeBp;
-        private ResourceDictionary Rd;
-
+        private GraphAreaExample graphArea;
+        private ZoomControl zoomControl;
+        private EdgeBlueprint edgeBp;
+        private ResourceDictionary rd;
         private void ZoomControl_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (EdgeBp == null)
+            if (this.edgeBp == null)
             {
                 return;
             }
-
-            var pos = ZoomControl.TranslatePoint(e.GetPosition(ZoomControl), GraphArea);
+            var pos = zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.graphArea);
             pos.Offset(2, 2);
-            EdgeBp.UpdateTargetPosition(pos);
+            this.edgeBp.UpdateTargetPosition(pos);
         }
 
         private void ClearEdgeBp()
         {
-            if (EdgeBp == null) return;
-            GraphArea.RemoveCustomChildControl(EdgeBp.EdgePath);
-            EdgeBp.Dispose();
-            EdgeBp = null;
+            if (this.edgeBp == null) return;
+            this.graphArea.RemoveCustomChildControl(this.edgeBp.EdgePath);
+            this.edgeBp.Dispose();
+            this.edgeBp = null;
         }
-
     }
-
 }

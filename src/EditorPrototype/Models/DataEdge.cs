@@ -2,11 +2,10 @@
 {
     using System;
     using System.ComponentModel;
+    using FileSerialization;
     using GraphX.Measure;
     using GraphX.PCL.Common.Models;
-    using FileSerialization;
     using YAXLib;
-
     [Serializable]
     public class DataEdge : EdgeBase<DataVertex>, INotifyPropertyChanged
     {
@@ -40,20 +39,17 @@
         /// <summary>
         /// Node main description (header)
         /// </summary>
-        private string _text;
         public string Text
         {
             get
             {
-                return _text;
+                return this.text;
             }
-
             set
             {
-                _text = value;
+                this.text = value;
                 OnPropertyChanged(nameof(Text));
             }
-
         }
 
         public string ToolTipText { get; set; }
@@ -63,21 +59,17 @@
             return Text;
         }
 
-        private EdgeTypeEnum edgeType = EdgeTypeEnum.Association;
-
         public EdgeTypeEnum EdgeType
         {
             get
             {
-                return edgeType;
+                return this.edgeType;
             }
-
             set
             {
-                edgeType = value;
+                this.edgeType = value;
                 OnPropertyChanged(nameof(EdgeType));
             }
-
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -88,6 +80,8 @@
                 PropertyChanged.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-    }
+        private EdgeTypeEnum edgeType = EdgeTypeEnum.Association;
 
+        private string text;
+    }
 }

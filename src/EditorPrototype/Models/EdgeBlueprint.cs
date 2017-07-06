@@ -6,9 +6,17 @@
     using System.Windows.Shapes;
     using GraphX.Controls;
     using GraphX.Controls.Models;
-
     public class EdgeBlueprint : IDisposable
     {
+        public void Dispose()
+        {
+            if (this.Source != null)
+            {
+                this.Source.PositionChanged -= this.Source_PositionChanged;
+                this.Source = null;
+            }
+        }
+
         public VertexControl Source { get; set; }
 
         public Point TargetPos { get; set; }
@@ -17,42 +25,29 @@
 
         public EdgeBlueprint(VertexControl source, Point targetPos, Brush brush)
         {
-            EdgePath = new Path() { Stroke = brush, Data = new LineGeometry() };
-            Source = source;
-            Source.PositionChanged += Source_PositionChanged;
-        }
-
-        void Source_PositionChanged(object sender, VertexPositionEventArgs args)
-        {
-            UpdateGeometry(Source.GetCenterPosition(), TargetPos);
+            this.EdgePath = new Path() { Stroke = brush, Data = new LineGeometry() };
+            this.Source = source;
+            this.Source.PositionChanged += Source_PositionChanged;
         }
 
         internal void UpdateTargetPosition(Point point)
         {
             TargetPos = point;
-            if (Source != null)
+            if (this.Source != null)
             {
-                UpdateGeometry(Source.GetCenterPosition(), point);
+                UpdateGeometry(this.Source.GetCenterPosition(), point);
             }
+        }
 
+        private void Source_PositionChanged(object sender, VertexPositionEventArgs args)
+        {
+            UpdateGeometry(this.Source.GetCenterPosition(), this.TargetPos);
         }
 
         private void UpdateGeometry(Point start, Point end)
         {
-            EdgePath.Data = new LineGeometry(start, end);
-            (EdgePath.Data as LineGeometry).Freeze();
+            this.EdgePath.Data = new LineGeometry(start, end);
+            (this.EdgePath.Data as LineGeometry).Freeze();
         }
-
-        public void Dispose()
-        {
-            if (Source != null)
-            {
-                Source.PositionChanged -= Source_PositionChanged;
-                Source = null;
-            }
-
-        }
-
     }
-
 }
