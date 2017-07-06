@@ -2,7 +2,7 @@
 
 type IElement =
     interface
-        abstract Name : string with get
+        abstract Name : string with get, set
         abstract Class : IElement with get
     end
 
@@ -14,8 +14,8 @@ type INode =
 type IRelationship =
     interface
         inherit IElement
-        abstract Source : IElement with get
-        abstract Target : IElement with get
+        abstract Source : IElement option with get, set
+        abstract Target : IElement option with get, set
     end
 
 type IGeneralization =
@@ -26,12 +26,14 @@ type IGeneralization =
 type IAssociation =
     interface
         inherit IRelationship
-        abstract NameTarget : string with get
+        abstract NameTarget : string with get, set
     end
 
+[<AllowNullLiteral>]
 type IModel =
     interface
-        abstract Name : string with get
+        abstract Name : string with get, set
+        abstract Metamodel : IModel with get
 
         abstract CreateNode : name : string -> ``class`` : IElement -> INode
         abstract CreateGeneralization : name : string -> ``class`` : string -> source : IElement -> target : IElement -> unit
@@ -39,7 +41,7 @@ type IModel =
 
         abstract Elements : IElement list
         abstract GetElement : name : string -> IElement
-        abstract Nodes : INode list
+        abstract Nodes : INode seq
         abstract GetNode : name : string -> INode
 
         abstract DeleteElement : element : IElement -> unit
@@ -47,7 +49,7 @@ type IModel =
 
 type IRepo =
     interface
-        abstract Models : IModel list with get
+        abstract Models : IModel seq with get
         abstract CreateModel : name : string -> IModel
         abstract DeleteModel : model : IModel -> unit
     end

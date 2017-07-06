@@ -44,6 +44,16 @@ type AttributeKind =
     /// NOTE: Reference types are not supported in v1, so AttributeKind value shall never be Reference.
     | Reference = 5
 
+/// "Metatype" of the element, i.e. type of the type. For example, edge can have type "Generalization", which is an 
+/// instance of "Edge". This information can be obtained by looking up metamodel, but editors need it readily available
+/// to know what to do with the element.
+type Metatype =
+    /// Element is a node in model.
+    | Node = 0
+
+    /// Element is an edge.
+    | Edge = 1
+
 /// Attribute of an element (with given value). Provides a way to query and modify attribute value.
 type IAttribute =
     interface
@@ -69,7 +79,7 @@ type IAttribute =
     end
 
 /// Element is a general term for nodes or edges.
-and IElement =
+and [<AllowNullLiteral>] IElement =
     interface
         /// A string containing information about how to draw this element. May be XML document or some other string 
         // that provides required info. It can be editor-specific, like XAML document for WPF-based editor, that will 
@@ -84,6 +94,13 @@ and IElement =
 
         /// True when this element can not be a type of other elements, so it shall not be shown in palette.
         abstract IsAbstract : bool with get
+
+        /// Metatype of this element (is it node or edge).
+        abstract Metatype : Metatype with get
+
+        /// Metatype of the instances of this element, if it is not abstract. Edge can have only edges as instances,
+        /// but nodes may become edges (for example, node "Relation" becomes relation edges after instantiation).
+        abstract InstanceMetatype : Metatype with get
     end
 
 /// Node --- well, a node in a model.
@@ -146,4 +163,7 @@ type IRepo =
 
         /// Creates a new model with given name based on a given metamodel.
         abstract CreateModel : name : string -> metamodel : IModel -> IModel
+
+        /// Deletes given model. Throws if repo contains models dependent on this model.
+        abstract DeleteModel : model : IModel -> unit
     end

@@ -83,9 +83,23 @@
     <Compile Include="RepoFactory.fs" />
     <None Include="paket.references" />
     <Compile Include="DataLayer.fs" />
+    <Compile Include="DataElement.fs" />
+    <Compile Include="DataNode.fs" />
+    <Compile Include="DataRelationship.fs" />
+    <Compile Include="DataGeneralization.fs" />
+    <Compile Include="DataAssociation.fs" />
+    <Compile Include="DataModel.fs" />
+    <Compile Include="DataRepo.fs" />
     <Compile Include="IMetametamodelBuilder.fs" />
     <Compile Include="SemanticLayer.fs" />
     <Compile Include="FacadeLayer.fs" />
+    <Compile Include="Attribute.fs" />
+    <Compile Include="Element.fs" />
+    <Compile Include="Node.fs" />
+    <Compile Include="Edge.fs" />
+    <Compile Include="Model.fs" />
+    <Compile Include="Repo.fs" />
+    <Compile Include="ExperimentalRepoFactory.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

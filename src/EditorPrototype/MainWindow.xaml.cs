@@ -27,9 +27,9 @@
         private VertexControl ctrlVer;
         private EdgeControl ctrlEdg;
         private GraphExample dataGraph;
-        private string currentId;
+        /* private RepoExperimental.IElement currentElement = null; */
 
-        private Repo.IRepo repo = Repo.RepoFactory.CreateRepo();
+        private RepoExperimental.IRepo repo = RepoExperimental.RepoFactory.CreateRepo();
 
         public MainWindow()
         {
@@ -40,9 +40,8 @@
             this.g_Area.LogicCore = logic;
             logic.Graph = this.dataGraph;
             logic.DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.LinLog;
-            this.currentId = string.Empty;
 
-            this.g_Area.VertexSelected += this.VertexSelectedAction;
+            /* this.g_Area.VertexSelected += this.VertexSelectedAction; */
             this.g_Area.EdgeSelected += this.EdgeSelectedAction;
             this.g_zoomctrl.Click += this.ClearSelection;
             this.elementsListBox.MouseDoubleClick += this.ElementInBoxSelectedAction;
@@ -69,7 +68,7 @@
 
             var modelName = "mainModel";
 
-            this.g_zoomctrl.MouseDown += (object sender, MouseButtonEventArgs e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
+            /* this.g_zoomctrl.MouseDown += (object sender, MouseButtonEventArgs e) => this.ZoomCtrl_MouseDown(sender, e, modelName); */
 
             this.InitPalette(modelName);
 
@@ -85,48 +84,32 @@
 
         private void InitModel(string modelName)
         {
-            foreach (var node in this.repo.ModelNodes(modelName))
+            RepoExperimental.IModel model = this.repo.Models.Where(m => m.Name == modelName).FirstOrDefault();
+            if (model == null)
             {
-                Func<Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
-                {
-                    switch (n)
-                    {
-                        case Repo.NodeType.Attribute:
-                            return DataVertex.VertexTypeEnum.Attribute;
-                        case Repo.NodeType.Node:
-                            return DataVertex.VertexTypeEnum.Node;
-                    }
-
-                    return DataVertex.VertexTypeEnum.Node;
-                };
-
-                this.CreateNode(node.name, nodeType(node.nodeType), node.attributes);
+                return;
             }
 
-            foreach (var edge in this.repo.ModelEdges(modelName))
+            foreach (var node in model.Nodes)
             {
-                var isViolation = Constraints.CheckEdge(edge, this.repo, modelName);
-                var source = this.dataGraph.Vertices.First(v => v.Name == edge.source);
-                var target = this.dataGraph.Vertices.First(v => v.Name == edge.target);
+                this.CreateNode(node.Name, DataVertex.VertexTypeEnum.Node, node.Attributes);
+            }
 
-                Func<Repo.EdgeType, DataEdge.EdgeTypeEnum> edgeType = e =>
+            foreach (var edge in model.Edges)
+            {
+                /* var isViolation = Constraints.CheckEdge(edge, this.repo, modelName); */
+
+                var sourceNode = edge.From as RepoExperimental.INode;
+                var targetNode = edge.To as RepoExperimental.INode;
+                if (sourceNode == null || targetNode == null)
                 {
-                    switch (e)
-                    {
-                        case Repo.EdgeType.Generalization:
-                            return DataEdge.EdgeTypeEnum.Generalization;
-                        case Repo.EdgeType.Association:
-                            return DataEdge.EdgeTypeEnum.Association;
-                        case Repo.EdgeType.Attribute:
-                            return DataEdge.EdgeTypeEnum.Attribute;
-                        case Repo.EdgeType.Type:
-                            return DataEdge.EdgeTypeEnum.Type;
-                    }
+                    throw new Exception("Editor does not support edges linked to edges. Yet.");
+                }
 
-                    return DataEdge.EdgeTypeEnum.Generalization;
-                };
+                var source = this.dataGraph.Vertices.First(v => v.Name == sourceNode.Name);
+                var target = this.dataGraph.Vertices.First(v => v.Name == targetNode.Name);
 
-                var newEdge = new DataEdge(source, target, isViolation) { EdgeType = edgeType(edge.edgeType) };
+                var newEdge = new DataEdge(source, target, false) { EdgeType = DataEdge.EdgeTypeEnum.Association };
                 this.dataGraph.AddEdge(newEdge);
                 this.DrawNewEdge(source.Key, target.Key);
             }
@@ -136,11 +119,17 @@
 
         private void InitPalette(string modelName)
         {
-            foreach (var type in this.repo.MetamodelNodes(modelName))
+            RepoExperimental.IModel model = this.repo.Models.Where(m => m.Name == modelName).FirstOrDefault()?.Metamodel;
+            if (model == null)
             {
-                var button = new ToggleButton { Content = type.name };
-                RoutedEventHandler createNode = (sender, args) => this.PaletteButton_Checked(type.id);
-                RoutedEventHandler createEdge = (sender, args) => { };
+                return;
+            }
+
+            foreach (var type in model.Nodes)
+            {
+                var button = new ToggleButton { Content = type.Name };
+                /* RoutedEventHandler createNode = (sender, args) => this.PaletteButton_Checked(type.id); */
+                /* RoutedEventHandler createEdge = (sender, args) => { };
                 button.Click += (sender, args) => this.currentId = type.id;
                 if (this.repo.IsEdgeClass(type.id))
                 {
@@ -150,6 +139,7 @@
                 {
                     this.g_zoomctrl.MouseDown += (sender, args) => button.IsChecked = false;
                 }
+                */
 
                 // TODO: Bind it to XAML, do not do GUI work in C#.
                 this.paletteGrid.RowDefinitions.Add(new RowDefinition());
@@ -158,10 +148,12 @@
             }
         }
 
+        /*
         private void PaletteButton_Checked(string id)
         {
             this.currentId = id;
         }
+        */
 
         private void CreateEdge(string type)
         {
@@ -179,7 +171,7 @@
             this.g_Area.InsertEdge(newEdge, ec);
         }
 
-        private void CreateNode(string name, DataVertex.VertexTypeEnum type, IList<Repo.AttributeInfo> attributes)
+        private void CreateNode(string name, DataVertex.VertexTypeEnum type, IEnumerable<RepoExperimental.IAttribute> attributes)
         {
             var vertex = new DataVertex(name)
             {
@@ -187,6 +179,7 @@
                 VertexType = type,
             };
 
+            /*
             var attributeInfos = attributes.Select(x => new DataVertex.Attribute()
             {
                 Name = x.name,
@@ -195,12 +188,14 @@
             });
 
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
+            */
 
             this.dataGraph.AddVertex(vertex);
             this.DrawNewVertex(vertex.Key);
             this.DrawGraph();
         }
 
+        /*
         private void CreateNewNode(string typeId, string modelName)
         {
             var newNode = this.repo.AddNode(typeId, modelName);
@@ -219,6 +214,7 @@
 
             this.CreateNode(newNode.name, nodeType(newNode.nodeType), newNode.attributes);
         }
+        */
 
         private void ElementInBoxSelectedAction(object sender, EventArgs e)
         {
@@ -306,6 +302,7 @@
             this.elementsListBox.Items.Add(lbi);
         }
 
+        /*
         private void VertexSelectedAction(object sender, VertexSelectedEventArgs args)
         {
             this.ctrlVer = args.VertexControl;
@@ -344,6 +341,7 @@
                 args.VertexControl.ContextMenu.IsOpen = true;
             }
         }
+        */
 
         private void EdgeSelectedAction(object sender, EdgeSelectedEventArgs args)
         {
@@ -380,6 +378,7 @@
             this.g_Area.UpdateAllEdges();
         }
 
+        /*
         private void ZoomCtrl_MouseDown(object sender, MouseButtonEventArgs e, string modelName)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -402,7 +401,9 @@
                 }
             }
         }
+        */
 
+        /*
         private void CreateNewNode(string typeId, Point position, string modelName)
         {
             var newNode = this.repo.AddNode(typeId, modelName);
@@ -444,6 +445,7 @@
             this.g_Area.AddVertex(vertex, vc);
             this.DrawNewVertex(vertex.Key);
         }
+        */
 
         private void OnEdgeMouseUp(object sender, MouseButtonEventArgs e)
         {
