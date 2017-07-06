@@ -12,20 +12,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace RepoExperimental.DataLayer
+module DataElementTests
 
-[<AbstractClass>]
-/// Implementation of Element.
-type DataElement(name : string, ``class`` : IElement option) =
-    let mutable name = name
+open NUnit.Framework
+open FsUnit
 
-    interface IElement with
-        member this.Class: IElement = 
-            match ``class`` with
-            | Some v -> v
-            | None -> this :> IElement
-        
-        member this.Name 
-            with get() : string = name
-            and set v = name <- v
+open RepoExperimental.DataLayer
 
+[<Test>]
+let ``DataElement shall have class and name`` () =
+    let node = DataNode "node1" :> INode
+    node.Name |> should equal "node1"
+
+    node.Name <- "changedName"
+    node.Name |> should equal "changedName"
+
+    node.Class |> should equal node
+
+    let node2 = DataNode("node2", node) :> INode
+
+    node2.Class |> should equal node

@@ -67,6 +67,7 @@
     <None Include="paket.references" />
     <Compile Include="DataModelTests.fs" />
     <Compile Include="DataRepoTest.fs" />
+    <Compile Include="DataElementTests.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
