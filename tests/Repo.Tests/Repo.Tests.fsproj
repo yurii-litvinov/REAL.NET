@@ -66,6 +66,7 @@
     <Compile Include="MetametamodelTests.fs" />
     <None Include="paket.references" />
     <Compile Include="DataModelTests.fs" />
+    <Compile Include="DataRepoTest.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

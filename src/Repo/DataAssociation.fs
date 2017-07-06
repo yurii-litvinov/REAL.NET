@@ -1,7 +1,14 @@
 ﻿namespace RepoExperimental.DataLayer
 
-type DataAssociation (name : string, ``class``: IElement, nameTarget: string) =
-    inherit DataRelationship(name, Some ``class``)
+type DataAssociation
+    (
+        name: string
+        , ``class``: IElement
+        , source: IElement option
+        , target: IElement option
+        , nameTarget: string
+        ) =
+    inherit DataRelationship(name, Some ``class``, source, target)
 
     interface IAssociation with
-        member val NameTarget: string = nameTarget with get, set
+        member val TargetName: string = nameTarget with get, set

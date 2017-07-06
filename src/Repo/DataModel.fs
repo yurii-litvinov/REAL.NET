@@ -1,31 +1,74 @@
-﻿namespace RepoExperimental.DataLayer
+﻿(* Copyright 2017 Yurii Litvinov
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. *)
 
+namespace RepoExperimental.DataLayer
+
+/// Implementation of model interface in data layer. Contains nodes and edges in list, implements
+/// CRUD operations and keeps consistency.
 type DataModel private (name: string, metamodel: IModel option) =
+
+    let mutable nodes = []
+    let mutable edges = []
 
     new(name: string) = DataModel(name, None)
     new(name: string, metamodel: IModel) = DataModel(name, Some metamodel)
 
     interface IModel with
-        member this.CreateAssociation name ``class`` source target targetName = 
-            raise (System.NotImplementedException())
+        member this.CreateNode name = 
+            let node = DataNode(name) :> INode
+            nodes <- node :: nodes
+            node
 
-        member this.CreateGeneralization(name: string) (``class``: string) (source: IElement) (target: IElement): unit = 
-            raise (System.NotImplementedException())
+        member this.CreateNode(name, ``class``) = 
+            let node = DataNode(name, ``class``) :> INode
+            nodes <- node :: nodes
+            node
 
-        member this.CreateNode(name: string) (``class``: IElement): INode = 
-            raise (System.NotImplementedException())
+        member this.CreateAssociation(name, ``class``, source, target, targetName) = 
+            let edge = new DataAssociation(name, ``class``, source, target, targetName) :> IAssociation
+            edges <- (edge :> IRelationship) :: edges
+            edge
+
+        member this.CreateAssociation(name, ``class``, source, target, targetName) = 
+            let edge = new DataAssociation(name, ``class``, Some source, Some target, targetName) :> IAssociation
+            edges <- (edge :> IRelationship) :: edges
+            edge
+
+        member this.CreateGeneralization(``class``, source, target) = 
+            let edge = new DataGeneralization(``class``, source, target) :> IGeneralization
+            edges <- (edge :> IRelationship) :: edges
+            edge
+
+        member this.CreateGeneralization(``class``, source, target) = 
+            let edge = new DataGeneralization(``class``, Some source, Some target) :> IGeneralization
+            edges <- (edge :> IRelationship) :: edges
+            edge
 
         member this.DeleteElement(element: IElement): unit = 
-            raise (System.NotImplementedException())
+            match element with
+            | :? INode -> 
+                nodes <- nodes |> List.filter (fun n -> not ((n :> IElement).Equals element))
+            | _ -> edges <- edges |> List.filter (fun e -> not ((e :> IElement).Equals element))
+            edges |> List.iter (fun e -> 
+                if e.Source = Some element then e.Source <- None
+                if e.Target = Some element then e.Target <- None
+                )
 
-        member this.Elements: IElement list = 
-            raise (System.NotImplementedException())
-
-        member this.GetElement(name: string): IElement = 
-            raise (System.NotImplementedException())
-
-        member this.GetNode(name: string): INode = 
-            raise (System.NotImplementedException())
+        member this.Elements: IElement seq = 
+            let nodes = (nodes |> Seq.cast<IElement>) 
+            let edges = (edges |> Seq.cast<IElement>)
+            Seq.append nodes edges
 
         member this.Metamodel
             with get (): IModel = 
@@ -36,4 +79,7 @@ type DataModel private (name: string, metamodel: IModel option) =
         member val Name = name with get, set
 
         member this.Nodes: seq<INode> = 
-            raise (System.NotImplementedException()) 
+            nodes |> Seq.ofList
+
+        member this.Edges: seq<IRelationship> = 
+            edges |> Seq.ofList
