@@ -1,6 +1,7 @@
 ﻿namespace EditorPrototype
 {
     using GraphX.Controls;
+
     public class Controller
     {
         private Model model;

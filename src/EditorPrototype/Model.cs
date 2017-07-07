@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    class Model
+    public class Model
     {
         public string ModelName
         {
@@ -28,7 +28,9 @@
         }
 
         public event EventHandler<VertexEventArgs> NewVertexInRepo;
+
         public event EventHandler<EdgeEventArgs> NewEdgeInRepo;
+
         public void NewNode(string typeId)
         {
             var node = this.modelRepo.AddNode(typeId, this.modelName);
@@ -45,12 +47,14 @@
             private string name;
             private DataVertex.VertexTypeEnum type;
             private IList<Repo.AttributeInfo> attributes;
+
             public string Name
             {
                 get
                 {
                     return name;
                 }
+
                 set
                 {
                     name = value;
@@ -63,6 +67,7 @@
                 {
                     return type;
                 }
+
                 set
                 {
                     type = value;
@@ -75,6 +80,7 @@
                 {
                     return attributes;
                 }
+
                 set
                 {
                     attributes = value;
@@ -90,33 +96,39 @@
                 {
                     return type;
                 }
+
                 set
                 {
-                    type  = value;
+                    type = value;
                 }
             }
+
             public DataVertex PrevVer
             {
                 get
                 {
                     return prevVer;
                 }
+
                 set
                 {
                     prevVer = value;
                 }
             }
+
             public DataVertex CtrlVer
             {
                 get
                 {
                     return ctrlVer;
                 }
+
                 set
                 {
                     ctrlVer = value;
                 }
             }
+
             private string type;
             private DataVertex prevVer;
             private DataVertex ctrlVer;
@@ -124,6 +136,7 @@
 
         private Repo.IRepo modelRepo;
         private string modelName;
+
         private void RaiseNewVertexInRepo(Repo.NodeInfo node)
         {
             Func<Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
@@ -135,6 +148,7 @@
                     case Repo.NodeType.Node:
                         return DataVertex.VertexTypeEnum.Node;
                 }
+
                 return DataVertex.VertexTypeEnum.Node;
             };
 

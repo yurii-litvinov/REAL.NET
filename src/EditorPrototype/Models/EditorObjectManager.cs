@@ -4,18 +4,13 @@
     using System.Windows;
     using System.Windows.Media;
     using GraphX.Controls;
+
     public class EditorObjectManager : IDisposable
     {
-        public EditorObjectManager(GraphAreaExample graphAreaEx, ZoomControl zc)
-        {
-            this.graphArea = graphAreaEx;
-            this.zoomControl = zc;
-            this.rd = new ResourceDictionary
-            {
-                Source = new Uri("pack://application:,,,/Templates/EditorTemplate.xaml",
-                    UriKind.RelativeOrAbsolute)
-            };
-        }
+        private GraphAreaExample graphArea;
+        private ZoomControl zoomControl;
+        private EdgeBlueprint edgeBp;
+        private ResourceDictionary rd;
 
         public void CreateVirtualEdge(VertexControl source, Point targetPos)
         {
@@ -32,6 +27,7 @@
             {
                 this.zoomControl.MouseMove -= ZoomControl_MouseMove;
             }
+
             this.zoomControl = null;
             this.rd = null;
         }
@@ -40,17 +36,14 @@
         {
             ClearEdgeBp();
         }
-
-        private GraphAreaExample graphArea;
-        private ZoomControl zoomControl;
-        private EdgeBlueprint edgeBp;
-        private ResourceDictionary rd;
+        
         private void ZoomControl_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             if (this.edgeBp == null)
             {
                 return;
             }
+
             var pos = zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.graphArea);
             pos.Offset(2, 2);
             this.edgeBp.UpdateTargetPosition(pos);
@@ -62,6 +55,16 @@
             this.graphArea.RemoveCustomChildControl(this.edgeBp.EdgePath);
             this.edgeBp.Dispose();
             this.edgeBp = null;
+        }
+
+        public EditorObjectManager(GraphAreaExample graphAreaEx, ZoomControl zc)
+        {
+            this.graphArea = graphAreaEx;
+            this.zoomControl = zc;
+            this.rd = new ResourceDictionary
+            {
+                Source = new Uri("pack://application:,,,/Templates/EditorTemplate.xaml", UriKind.RelativeOrAbsolute)
+            };
         }
     }
 }

@@ -6,9 +6,21 @@
     using GraphX.Measure;
     using GraphX.PCL.Common.Models;
     using YAXLib;
+
     [Serializable]
     public class DataEdge : EdgeBase<DataVertex>, INotifyPropertyChanged
     {
+        private EdgeTypeEnum edgeType = EdgeTypeEnum.Association;
+
+        private string text;
+
+        public bool ArrowTarget { get; set; }
+
+        public double Angle { get; set; }
+
+        [YAXCustomSerializer(typeof(YAXPointArraySerializer))]
+        public override Point[] RoutingPoints { get; set; }
+
         public enum EdgeTypeEnum
         {
             Generalization,
@@ -17,38 +29,29 @@
             Attribute
         }
 
-        [YAXCustomSerializer(typeof(YAXPointArraySerializer))]
-        public override Point[] RoutingPoints { get; set; }
-
         public DataEdge(DataVertex source, DataVertex target, double weight = 1)
             : base(source, target, weight)
         {
-            Angle = 90;
+            this.Angle = 90;
         }
 
         public DataEdge()
             : base(null, null, 1)
         {
-            Angle = 90;
+            this.Angle = 90;
         }
-
-        public bool ArrowTarget { get; set; }
-
-        public double Angle { get; set; }
-
-        /// <summary>
-        /// Node main description (header)
-        /// </summary>
+                
         public string Text
         {
             get
             {
                 return this.text;
             }
+
             set
             {
                 this.text = value;
-                OnPropertyChanged(nameof(Text));
+                OnPropertyChanged(nameof(this.Text));
             }
         }
 
@@ -56,7 +59,7 @@
 
         public override string ToString()
         {
-            return Text;
+            return this.Text;
         }
 
         public EdgeTypeEnum EdgeType
@@ -65,23 +68,20 @@
             {
                 return this.edgeType;
             }
+
             set
             {
                 this.edgeType = value;
                 OnPropertyChanged(nameof(EdgeType));
             }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
+        
         public void OnPropertyChanged(string name)
         {
-            if (PropertyChanged != null)
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(name));
+            if (this.PropertyChanged != null)
+                this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        private EdgeTypeEnum edgeType = EdgeTypeEnum.Association;
-
-        private string text;
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }
