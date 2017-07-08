@@ -16,7 +16,7 @@ namespace RepoExperimental.DataLayer
 
 [<AbstractClass>]
 /// Implementation of Element.
-type DataElement(name : string, ``class`` : IElement option) =
+type DataElement(name: string, ``class``: IElement option) =
     let mutable name = name
 
     interface IElement with
@@ -26,6 +26,6 @@ type DataElement(name : string, ``class`` : IElement option) =
             | None -> this :> IElement
         
         member this.Name 
-            with get() : string = name
+            with get(): string = name
             and set v = name <- v
 

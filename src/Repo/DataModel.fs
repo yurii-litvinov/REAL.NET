@@ -71,7 +71,7 @@ type DataModel private (name: string, metamodel: IModel option) =
             Seq.append nodes edges
 
         member this.Metamodel
-            with get (): IModel = 
+            with get(): IModel = 
                 match metamodel with 
                 | Some v -> v
                 | None -> this :> IModel

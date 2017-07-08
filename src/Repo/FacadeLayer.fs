@@ -58,24 +58,24 @@ type Metatype =
 type IAttribute =
     interface
         /// Name of the attribute.
-        abstract Name : string with get
+        abstract Name: string with get
 
         /// Kind (or a metatype) of the attribute --- one of elementary types, erference type or enum type.
-        abstract Kind : AttributeKind with get
+        abstract Kind: AttributeKind with get
         
         /// Reference to a type of the attribute if it is complex attribute, null if this is elementary type attribute.
         /// NOTE: Complex attribute types are not supported in v1, so it is always null.
         /// Note that even in v1 Infrastructure Metamodel may contain elements for elementary types, in such case 
         /// this property shall return corresponding element.
-        abstract Type : IElement with get
+        abstract Type: IElement with get
 
         /// String representation of a value of an attribute if it is an attribute of basic type.
         // TODO: Actually we need a whole hierarchy of attribute classes.
-        abstract StringValue : string with get, set
+        abstract StringValue: string with get, set
 
         /// Holds a reference to an element which is a value of this attribute if this attribute has complex type.
         /// NOTE: Complex attribute values are not supported in v1, so it is always null.
-        abstract ReferenceValue : IElement with get, set
+        abstract ReferenceValue: IElement with get, set
     end
 
 /// Element is a general term for nodes or edges.
@@ -87,20 +87,20 @@ and [<AllowNullLiteral>] IElement =
         /// edges.
         /// TODO: shapes are actually more complex structures than strings, and some uniform format for shape 
         /// representation is needed. Can be postponed after v1.
-        abstract Shape : string with get
+        abstract Shape: string with get
 
         /// A list of all logical attributes for that element.
-        abstract Attributes : IAttribute seq with get
+        abstract Attributes: IAttribute seq with get
 
         /// True when this element can not be a type of other elements, so it shall not be shown in palette.
-        abstract IsAbstract : bool with get
+        abstract IsAbstract: bool with get
 
         /// Metatype of this element (is it node or edge).
-        abstract Metatype : Metatype with get
+        abstract Metatype: Metatype with get
 
         /// Metatype of the instances of this element, if it is not abstract. Edge can have only edges as instances,
         /// but nodes may become edges (for example, node "Relation" becomes relation edges after instantiation).
-        abstract InstanceMetatype : Metatype with get
+        abstract InstanceMetatype: Metatype with get
     end
 
 /// Node --- well, a node in a model.
@@ -110,7 +110,7 @@ type INode =
 
         /// Name of a node, to be displayed on a scene and in various menus.
         /// TODO: actually, not needed. Nodes can have no name and names can be modelled as attributes.
-        abstract Name : string with get, set
+        abstract Name: string with get, set
     end
 
 /// Edge --- an edge in a model. Note that here it can connect not only nodes, but edges too. It is needed to model 
@@ -121,10 +121,10 @@ type IEdge =
         inherit IElement
 
         /// Reference to an element connected to a beginning of an edge, null if no element is connected.
-        abstract From : IElement with get, set
+        abstract From: IElement with get, set
 
         /// Reference to an element connected to an end of an edge, null if no element is connected.
-        abstract To : IElement with get, set
+        abstract To: IElement with get, set
     end
 
 /// Model is one "graph", represented by one diagram on a scene. Has name, consists of nodes and edges.
@@ -133,24 +133,24 @@ type IEdge =
 type IModel =
     interface
         /// Name of a model.
-        abstract Name : string with get, set
+        abstract Name: string with get, set
 
         /// Reference to a metamodel for this model (may be reference to itself, for example, for Core Metametamodel).
         /// Can not be changed after model is created.
-        abstract Metamodel : IModel with get
+        abstract Metamodel: IModel with get
 
         /// A list of nodes in this model.
-        abstract Nodes : INode seq with get
+        abstract Nodes: INode seq with get
 
         /// A list of edges in this model.
-        abstract Edges : IEdge seq with get
+        abstract Edges: IEdge seq with get
 
         /// Instantiates element of a given type and returns result of an instantiation. Type shall be an element from
         /// Metamodel for this model.
-        abstract CreateElement : ``type`` : IElement -> IElement
+        abstract CreateElement: ``type``: IElement -> IElement
 
         /// Deletes given element from a model.
-        abstract DeleteElement : element : IElement -> unit
+        abstract DeleteElement: element: IElement -> unit
     end
 
 /// Repository is a collection of models.
@@ -159,11 +159,11 @@ type IRepo =
         /// A list of models in this repository. Shall always contain at least Core Metametamodel, because model 
         /// semantics are defined through its elements and all other elements of all other models shall be the 
         /// instances (possibly indirect) of some elements of Core Metametamodel.
-        abstract Models : IModel seq with get
+        abstract Models: IModel seq with get
 
         /// Creates a new model with given name based on a given metamodel.
-        abstract CreateModel : name : string -> metamodel : IModel -> IModel
+        abstract CreateModel: name: string -> metamodel: IModel -> IModel
 
         /// Deletes given model. Throws if repo contains models dependent on this model.
-        abstract DeleteModel : model : IModel -> unit
+        abstract DeleteModel: model: IModel -> unit
     end

@@ -16,7 +16,7 @@ namespace RepoExperimental.FacadeLayer
 
 open RepoExperimental
 
-type Repo(data : RepoExperimental.DataLayer.IRepo) =
+type Repo(data: RepoExperimental.DataLayer.IRepo) =
     let modelRepository = ModelRepository()
 
     interface RepoExperimental.IRepo with
