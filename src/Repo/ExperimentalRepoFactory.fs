@@ -18,4 +18,8 @@ namespace RepoExperimental
 [<AbstractClass; Sealed>]
 type RepoFactory =
     /// Method that returns initialized repository.
-    static member CreateRepo () = new FacadeLayer.Repo(new DataLayer.DataRepo()) :> IRepo
+    static member CreateRepo() = 
+        let data = new DataLayer.DataRepo() :> DataLayer.IRepo
+        let metametamodelBuilder = Metametamodels.CoreMetametamodelBuilder() :> Metametamodels.IModelBuilder
+        metametamodelBuilder.Build data
+        new FacadeLayer.Repo(data) :> IRepo

@@ -83,8 +83,7 @@ type IModel =
 
         /// Creates new Association relation with given source and target.
         abstract CreateAssociation: 
-                name: string 
-                * ``class``: IElement 
+                ``class``: IElement 
                 * source: IElement 
                 * target: IElement 
                 * targetName: string 
@@ -92,8 +91,7 @@ type IModel =
 
         /// Creates new possibly unconnected Association relation.
         abstract CreateAssociation: 
-                name: string 
-                * ``class``: IElement 
+                ``class``: IElement 
                 * source: IElement option 
                 * target: IElement option 
                 * targetName: string 

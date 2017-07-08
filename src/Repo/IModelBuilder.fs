@@ -12,17 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace RepoExperimental.DataLayer
+namespace RepoExperimental.Metametamodels
 
-/// Implementation of Association relation.
-type DataAssociation
-    (
-        ``class``: IElement
-        , source: IElement option
-        , target: IElement option
-        , nameTarget: string
-        ) =
-    inherit DataRelationship("Association", Some ``class``, source, target)
+open RepoExperimental.DataLayer
 
-    interface IAssociation with
-        member val TargetName: string = nameTarget with get, set
+/// Interface that can create a model in a given repo.
+type IModelBuilder =
+    interface
+        /// Builds a model inside given repository.
+        abstract Build : repo : IRepo -> unit
+    end

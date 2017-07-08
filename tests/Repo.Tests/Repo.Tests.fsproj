@@ -68,6 +68,7 @@
     <Compile Include="DataModelTests.fs" />
     <Compile Include="DataRepoTest.fs" />
     <Compile Include="DataElementTests.fs" />
+    <Compile Include="CoreMetametamodelBuilderTests.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

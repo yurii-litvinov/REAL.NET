@@ -66,7 +66,7 @@ let ``Data model shall allow creating edges`` () =
     let generalization = model.CreateGeneralization(generalizationClass, node1, node2)
     model.Edges |> should contain generalization
 
-    let association = model.CreateAssociation("association1", associationClass, node1, node2, "node2End")
+    let association = model.CreateAssociation(associationClass, node1, node2, "node2End")
     model.Edges |> should contain association
 
     Seq.length model.Edges |> should equal 2
@@ -81,10 +81,10 @@ let ``Data model shall allow creating unconnected associations`` () =
 
     let associationClass = model.CreateNode "association"
 
-    let association1 = model.CreateAssociation("association1", associationClass, Some node1, None, "association1end")
-    let association2 = model.CreateAssociation("association2", associationClass, None, Some node2, "association2end")
-    let association3 = model.CreateAssociation("association3", associationClass, Some node1, Some node2, "association3end")
-    let association4 = model.CreateAssociation("association4", associationClass, None, None, "association4end")
+    let association1 = model.CreateAssociation(associationClass, Some node1, None, "association1end")
+    let association2 = model.CreateAssociation(associationClass, None, Some node2, "association2end")
+    let association3 = model.CreateAssociation(associationClass, Some node1, Some node2, "association3end")
+    let association4 = model.CreateAssociation(associationClass, None, None, "association4end")
 
     model.Edges |> should contain association1
     model.Edges |> should contain association2

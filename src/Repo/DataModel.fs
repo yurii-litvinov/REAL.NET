@@ -35,13 +35,13 @@ type DataModel private (name: string, metamodel: IModel option) =
             nodes <- node :: nodes
             node
 
-        member this.CreateAssociation(name, ``class``, source, target, targetName) = 
-            let edge = new DataAssociation(name, ``class``, source, target, targetName) :> IAssociation
+        member this.CreateAssociation(``class``, source, target, targetName) = 
+            let edge = new DataAssociation(``class``, source, target, targetName) :> IAssociation
             edges <- (edge :> IRelationship) :: edges
             edge
 
-        member this.CreateAssociation(name, ``class``, source, target, targetName) = 
-            let edge = new DataAssociation(name, ``class``, Some source, Some target, targetName) :> IAssociation
+        member this.CreateAssociation(``class``, source, target, targetName) = 
+            let edge = new DataAssociation(``class``, Some source, Some target, targetName) :> IAssociation
             edges <- (edge :> IRelationship) :: edges
             edge
 

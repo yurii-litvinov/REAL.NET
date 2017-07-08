@@ -90,7 +90,8 @@
     <Compile Include="DataAssociation.fs" />
     <Compile Include="DataModel.fs" />
     <Compile Include="DataRepo.fs" />
-    <Compile Include="IMetametamodelBuilder.fs" />
+    <Compile Include="IModelBuilder.fs" />
+    <Compile Include="CoreMetametamodelBuilder.fs" />
     <Compile Include="SemanticLayer.fs" />
     <Compile Include="FacadeLayer.fs" />
     <Compile Include="Attribute.fs" />
