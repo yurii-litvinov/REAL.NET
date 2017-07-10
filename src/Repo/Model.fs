@@ -25,8 +25,14 @@ type ModelRepository() =
             let newModel = Model(data, this)
             models.Add (data, newModel)
             newModel
-        
+    
+    member this.DeleteModel (model: IModel) = 
+        let unwrappedModel = (model :?> Model).UnderlyingModel
+        models.Remove unwrappedModel |> ignore
+
 and Model(data: RepoExperimental.DataLayer.IModel, repository: ModelRepository) = 
+    member this.UnderlyingModel = data
+
     interface IModel with
         member this.CreateElement ``type`` = raise (System.NotImplementedException())
         member this.DeleteElement element = raise (System.NotImplementedException())

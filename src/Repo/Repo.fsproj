@@ -82,6 +82,7 @@
     <Compile Include="RepoImpl.fs" />
     <Compile Include="RepoFactory.fs" />
     <None Include="paket.references" />
+    <Compile Include="Exceptions.fs" />
     <Compile Include="DataLayer.fs" />
     <Compile Include="DataElement.fs" />
     <Compile Include="DataNode.fs" />

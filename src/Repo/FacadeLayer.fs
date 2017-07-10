@@ -162,8 +162,9 @@ type IRepo =
         abstract Models: IModel seq with get
 
         /// Creates a new model with given name based on a given metamodel.
-        abstract CreateModel: name: string -> metamodel: IModel -> IModel
+        abstract CreateModel: name: string * metamodel: IModel -> IModel
 
         /// Deletes given model. Throws if repo contains models dependent on this model.
+        /// Throws DeletingUsedModel if there are other models dependent on this.
         abstract DeleteModel: model: IModel -> unit
     end

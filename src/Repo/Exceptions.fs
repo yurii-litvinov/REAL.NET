@@ -12,13 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace RepoExperimental.Metametamodels
+namespace RepoExperimental
 
-open RepoExperimental.DataLayer
-
-/// Interface that can create a model in a given repo.
-type IModelBuilder =
-    interface
-        /// Builds a model inside given repository.
-        abstract Build: repo: IRepo -> unit
-    end
+/// Thrown if trying to delete a model that is a metamodel for some another model in repository.
+exception DeletingUsedModel of modelName: string

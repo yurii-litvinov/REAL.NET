@@ -14,9 +14,6 @@
 
 namespace RepoExperimental.DataLayer
 
-/// Thrown if trying to delete a model that is a metamodel for some another model in repository.
-exception DeletingUsedModel of modelName: string
-
 /// Element, most general thing that can be in a model.
 type IElement =
     interface
