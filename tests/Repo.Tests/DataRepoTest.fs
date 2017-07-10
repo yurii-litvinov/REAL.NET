@@ -45,4 +45,4 @@ let ``Repo shall throw if deleting model in use`` () =
 
     repo.Models |> should contain model
 
-    (fun () -> repo.DeleteModel metamodel) |> should throw typeof<DeletingUsedModel>
+    (fun () -> repo.DeleteModel metamodel) |> should throw typeof<RepoExperimental.DeletingUsedModel>

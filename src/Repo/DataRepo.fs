@@ -31,7 +31,7 @@ type DataRepo() =
         
         member this.DeleteModel(model: IModel): unit = 
             if models |> List.exists (fun m -> m.Metamodel = model &&  m <> model) then
-                raise (DeletingUsedModel(model.Name))
+                raise (RepoExperimental.DeletingUsedModel(model.Name))
             models <- models |> List.filter (fun m -> not (m.Equals(model)))
         
         member this.Models: seq<IModel> = 
