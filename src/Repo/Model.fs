@@ -37,8 +37,11 @@ and Model(data: RepoExperimental.DataLayer.IModel, repository: ModelRepository) 
         member this.CreateElement ``type`` = raise (System.NotImplementedException())
         member this.DeleteElement element = raise (System.NotImplementedException())
         
-        member this.Nodes = raise (System.NotImplementedException())
-        member this.Edges = raise (System.NotImplementedException())
+        member this.Nodes = 
+            raise (System.NotImplementedException())
+
+        member this.Edges = 
+            raise (System.NotImplementedException())
 
         member this.Metamodel = 
             repository.GetModel data.Metamodel :> IModel

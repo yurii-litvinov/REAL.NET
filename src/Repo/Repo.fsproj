@@ -93,6 +93,10 @@
     <Compile Include="DataRepo.fs" />
     <Compile Include="IModelBuilder.fs" />
     <Compile Include="CoreMetametamodelBuilder.fs" />
+    <Compile Include="LanguageMetamodelBuilder.fs" />
+    <Compile Include="InfrastructureMetamodelBuilder.fs" />
+    <Compile Include="RobotsMetamodelBuilder.fs" />
+    <Compile Include="RobotsTestModelBuilder.fs" />
     <Compile Include="SemanticLayer.fs" />
     <Compile Include="FacadeLayer.fs" />
     <Compile Include="Attribute.fs" />

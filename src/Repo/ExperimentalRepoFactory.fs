@@ -20,6 +20,13 @@ type RepoFactory =
     /// Method that returns initialized repository.
     static member CreateRepo() = 
         let data = new DataLayer.DataRepo() :> DataLayer.IRepo
-        let metametamodelBuilder = Metametamodels.CoreMetametamodelBuilder() :> Metametamodels.IModelBuilder
-        metametamodelBuilder.Build data
+        let build (builder: Metametamodels.IModelBuilder) =
+            builder.Build data
+
+        Metametamodels.CoreMetametamodelBuilder() |> build
+        Metametamodels.LanguageMetamodelBuilder() |> build
+        Metametamodels.InfrastructureMetamodelBuilder() |> build
+        Metametamodels.RobotsMetamodelBuilder() |> build
+        Metametamodels.RobotsTestModelBuilder() |> build
+
         new FacadeLayer.Repo(data) :> IRepo

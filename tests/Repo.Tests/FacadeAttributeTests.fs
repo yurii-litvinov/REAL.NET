@@ -11,17 +11,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
+ 
+module FacadeAttributeTests
 
-namespace RepoExperimental.FacadeLayer
+open NUnit.Framework
+open FsUnit
 
 open RepoExperimental
+open RepoExperimental.FacadeLayer
 
-/// Implementation of an element.
-type Element() = 
-    interface IElement with
-        member this.Attributes = raise (System.NotImplementedException())
-        member this.IsAbstract = raise (System.NotImplementedException())
-        member this.Shape = raise (System.NotImplementedException())
-        member this.Metatype = raise (System.NotImplementedException())
-        member this.InstanceMetatype = raise (System.NotImplementedException())
 

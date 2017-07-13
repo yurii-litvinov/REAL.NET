@@ -16,6 +16,22 @@ namespace RepoExperimental.FacadeLayer
 
 open RepoExperimental
 
+/// Repository for attribute wrappers. Contains already created wrappers and creates new wrappers if needed.
+(*
+type AttributeRepository() =
+    let attributes = System.Collections.Generic.Dictionary<>()
+    member this.GetAttribute () =
+        if attributes.ContainsKey data then
+            attributes.[data]
+        else
+            let newAttribute = Attribute(data, this)
+            attributes.Add (data, newModel)
+            newAttribute
+    
+    member this.DeleteAttribute () = 
+        ()
+*)
+
 /// Implements attribute functionality
 type Attribute() = 
     interface IAttribute with

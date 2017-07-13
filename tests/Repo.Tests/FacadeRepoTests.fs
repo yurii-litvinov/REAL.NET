@@ -19,39 +19,38 @@ open FsUnit
 
 open RepoExperimental
 
-/// TODO: Shall be unneeded.
-open RepoExperimental.DataLayer
-
 [<Test>]
 let ``Repository shall contain at least core metamodel`` () =
     let repo = RepoFactory.CreateRepo ()
 
     repo.Models |> should not' (be Empty)
 
-    let model = repo.Models |> Seq.head
-    model.Name |> should equal "CoreMetametamodel"
+    // SHould throw if not found.
+    repo.Models |> Seq.find (fun m -> m.Name = "CoreMetametamodel") |> ignore
 
 [<Test>]
 let ``Repository shall allow to add a model`` () =
     let repo = RepoFactory.CreateRepo ()
 
     repo.Models |> should not' (be Empty)
+    let length = repo.Models |> Seq.length
 
     let coreMetamodel = repo.Models |> Seq.head
     repo.CreateModel("TestModel", coreMetamodel) |> ignore
 
-    repo.Models |> Seq.length |> should equal 2
+    repo.Models |> Seq.length |> should equal (length + 1)
 
 [<Test>]
 let ``Repository shall allow to delete a model`` () =
     let repo = RepoFactory.CreateRepo ()
 
     repo.Models |> should not' (be Empty)
+    let length = repo.Models |> Seq.length
 
-    let coreMetamodel = repo.Models |> Seq.head
-    repo.DeleteModel coreMetamodel
+    let someMetamodel = repo.Models |> Seq.head
+    repo.DeleteModel someMetamodel
 
-    repo.Models |> should be Empty
+    repo.Models |> Seq.length |> should equal (length - 1)
 
 [<Test>]
 let ``Repository shall not allow to delete a model that is needed`` () =
