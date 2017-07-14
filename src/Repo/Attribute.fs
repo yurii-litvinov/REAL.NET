@@ -88,7 +88,7 @@ and Attribute(model: DataLayer.IModel, element: DataLayer.IElement, name: string
 
         match attributeAssociation.Target with
         | None -> failwith "Attribute association does not have attribute node on other end"
-        | Some e -> e
+        | Some e -> e :?> DataLayer.INode
 
     interface IAttribute with
         member this.Kind = 
@@ -97,7 +97,7 @@ and Attribute(model: DataLayer.IModel, element: DataLayer.IElement, name: string
                 failwith "Attribute does not have 'kind' link"
             if kindLink.Value.Target.IsNone then
                 failwith "'kind' link does not have a node on the other side"
-            let kindNode = kindLink.Value.Target.Value
+            let kindNode = kindLink.Value.Target.Value :?> DataLayer.INode
             match kindNode.Name with
             | "String" -> AttributeKind.String
             | "Int" -> AttributeKind.Int
@@ -108,7 +108,7 @@ and Attribute(model: DataLayer.IModel, element: DataLayer.IElement, name: string
         member this.Name =
             // TODO: HACK!
             match findAssociation attributeNode "stringValue" with
-            | None -> attributeNode.Class.Name
+            | None -> (attributeNode.Class :?> DataLayer.INode).Name
             | Some _ -> attributeNode.Name
 
         member this.ReferenceValue

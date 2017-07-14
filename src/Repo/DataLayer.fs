@@ -17,9 +17,6 @@ namespace RepoExperimental.DataLayer
 /// Element, most general thing that can be in a model.
 type IElement =
     interface
-        /// Name of an element, possibly not unique.
-        abstract Name : string with get, set
-
         /// Type of an element.
         abstract Class : IElement with get
     end
@@ -29,6 +26,9 @@ type IElement =
 type INode =
     interface
         inherit IElement
+
+        /// Name of a node, possibly not unique.
+        abstract Name : string with get, set
     end
 
 /// Relationship is a kind of element which can connect to everything, corresponds to edge of the model graph.

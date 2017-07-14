@@ -35,7 +35,7 @@ and Model(data: RepoExperimental.DataLayer.IModel, repository: ModelRepository) 
     let elementRepository = ElementRepository(data, attributeRepository) :> IElementRepository
 
     let rec isInstanceOf name (element: DataLayer.IElement) =
-        if element.Class.Name = name then
+        if element.Class :? DataLayer.INode && (element.Class :?> DataLayer.INode).Name = name then
             true
         elif element.Class = element then
             false

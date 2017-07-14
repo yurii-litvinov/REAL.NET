@@ -16,9 +16,14 @@ namespace RepoExperimental.DataLayer
 
 /// Implementation of a node in model.
 type DataNode private (name: string, ``class``: IElement option) =
-    inherit DataElement(name, ``class``)
+    inherit DataElement(``class``)
+
+    let mutable name = name
     
     new (name: string) = DataNode(name, None)
     new (name: string, ``class``: IElement) = DataNode(name, Some ``class``)
 
-    interface INode
+    interface INode with
+        member this.Name 
+            with get(): string = name
+            and set v = name <- v

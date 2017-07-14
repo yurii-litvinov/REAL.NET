@@ -29,7 +29,7 @@ type ElementRepository(model: DataLayer.IModel, attributeRepository: AttributeRe
                     match metatype with
                     // TODO: Implement more correctly.
                     | Metatype.Edge -> Edge(model, element :?> DataLayer.IRelationship, this :> IElementRepository, attributeRepository) :> IElement
-                    | Metatype.Node -> Node(model, element, this :> IElementRepository, attributeRepository) :> IElement
+                    | Metatype.Node -> Node(model, element :?> DataLayer.INode, this :> IElementRepository, attributeRepository) :> IElement
                     | _ -> failwith "Unknown metatype"
                 elements.Add(element, newElement)
                 newElement

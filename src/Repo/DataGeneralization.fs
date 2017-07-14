@@ -16,6 +16,6 @@ namespace RepoExperimental.DataLayer
 
 /// Implementation of Generalization relation.
 type DataGeneralization (``class``: IElement, source: IElement option, target: IElement option) =
-    inherit DataRelationship("Generalization", Some ``class``, source, target)
+    inherit DataRelationship(Some ``class``, source, target)
 
     interface IGeneralization

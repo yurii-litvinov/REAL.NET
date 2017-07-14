@@ -22,7 +22,7 @@ type DataAssociation
         , target: IElement option
         , nameTarget: string
         ) =
-    inherit DataRelationship("Association", Some ``class``, source, target)
+    inherit DataRelationship(Some ``class``, source, target)
 
     interface IAssociation with
         member val TargetName: string = nameTarget with get, set

@@ -17,7 +17,7 @@ namespace RepoExperimental.FacadeLayer
 open RepoExperimental
 
 /// Implementation of a node in model.
-type Node(model: DataLayer.IModel, element: DataLayer.IElement, elementRepository: IElementRepository, attributeRepository: AttributeRepository) = 
+type Node(model: DataLayer.IModel, element: DataLayer.INode, elementRepository: IElementRepository, attributeRepository: AttributeRepository) = 
     inherit Element(model, element, elementRepository, attributeRepository)
 
     interface INode with

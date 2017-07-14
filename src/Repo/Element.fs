@@ -40,6 +40,8 @@ and [<AbstractClass>] Element(model: DataLayer.IModel, element: DataLayer.IEleme
         |> Seq.filter (fun l -> l.Class :? DataLayer.IAssociation && (l.Class :?> DataLayer.IAssociation).TargetName = "attributes")
         |> Seq.map (fun l -> (l :?> DataLayer.IAssociation).Target)
         |> Seq.choose id
+        |> Seq.filter (fun e -> e :? DataLayer.INode)
+        |> Seq.cast<DataLayer.INode>
         |> Seq.map (fun e -> e.Name)
 
     let rec isInstanceOfAssociation targetName (link: DataLayer.IElement) =
@@ -55,7 +57,7 @@ and [<AbstractClass>] Element(model: DataLayer.IModel, element: DataLayer.IEleme
         let attributeLinks = links |> Seq.filter (isInstanceOfAssociation "attributes")
         let interestingAttributeLinks = attributeLinks |> Seq.filter (fun l -> l.Class :? DataLayer.IAssociation && (l.Class :?> DataLayer.IAssociation).TargetName = name)
         let targets = interestingAttributeLinks |> Seq.map (fun l -> (l :?> DataLayer.IAssociation).Target)
-        let existingTargets = targets |> Seq.choose id
+        let existingTargets = targets |> Seq.choose id |> Seq.filter (fun e -> e :? DataLayer.INode) |> Seq.cast<DataLayer.INode>
         let names = existingTargets |> Seq.map (fun e -> e.Name)
         // TODO: Implement it correctly.
         let head = names |> Seq.tryHead
@@ -66,7 +68,7 @@ and [<AbstractClass>] Element(model: DataLayer.IModel, element: DataLayer.IEleme
         let links = outgoingLinks element
         let attributeLinks = links |> Seq.filter (fun l -> l :? DataLayer.IAssociation && (l :?> DataLayer.IAssociation).TargetName = name)
         let targets = attributeLinks |> Seq.map (fun l -> (l :?> DataLayer.IAssociation).Target)
-        let existingTargets = targets |> Seq.choose id
+        let existingTargets = targets |> Seq.choose id |> Seq.filter (fun e -> e :? DataLayer.INode) |> Seq.cast<DataLayer.INode>
         let names = existingTargets |> Seq.map (fun e -> e.Name)
         // TODO: Implement it correctly.
         let head = names |> Seq.tryHead
@@ -74,7 +76,7 @@ and [<AbstractClass>] Element(model: DataLayer.IModel, element: DataLayer.IEleme
         
     let rec findMetatype (element : DataLayer.IElement) =
         // TODO: Implement it more correctly in Semantic Layer
-        if element.Name = "Association" || element.Name = "Generalization" then
+        if element :? DataLayer.INode && ((element :?> DataLayer.INode).Name = "Association" || (element :?> DataLayer.INode).Name = "Generalization") then
             Metatype.Edge
         elif element.Class = element then
             Metatype.Node
