@@ -58,5 +58,5 @@ let ``Model shall allow to list its nodes`` () =
 
     let model = repo.Models |> Seq.find (fun m -> m.Name = "RobotsTestModel")
 
-    model.Nodes |> Seq.length |> should equal 10
+    model.Nodes |> should not' (be Empty)
     model.Nodes |> Seq.filter (fun n -> n.Name = "anInitialNode") |> should not' (be Empty)
