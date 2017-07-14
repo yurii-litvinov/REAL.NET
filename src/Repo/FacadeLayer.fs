@@ -81,13 +81,8 @@ type IAttribute =
 /// Element is a general term for nodes or edges.
 and [<AllowNullLiteral>] IElement =
     interface
-        /// A string containing information about how to draw this element. May be XML document or some other string 
-        // that provides required info. It can be editor-specific, like XAML document for WPF-based editor, that will 
-        /// not be useful in WinForms editor. Also it can have different formats and different meaning for nodes and 
-        /// edges.
-        /// TODO: shapes are actually more complex structures than strings, and some uniform format for shape 
-        /// representation is needed. Can be postponed after v1.
-        abstract Shape: string with get
+        /// Returns type of the element.
+        abstract Class: IElement with get
 
         /// A list of all logical attributes for that element.
         abstract Attributes: IAttribute seq with get
@@ -101,6 +96,14 @@ and [<AllowNullLiteral>] IElement =
         /// Metatype of the instances of this element, if it is not abstract. Edge can have only edges as instances,
         /// but nodes may become edges (for example, node "Relation" becomes relation edges after instantiation).
         abstract InstanceMetatype: Metatype with get
+
+        /// A string containing information about how to draw this element. May be XML document or some other string 
+        // that provides required info. It can be editor-specific, like XAML document for WPF-based editor, that will 
+        /// not be useful in WinForms editor. Also it can have different formats and different meaning for nodes and 
+        /// edges.
+        /// TODO: shapes are actually more complex structures than strings, and some uniform format for shape 
+        /// representation is needed. Can be postponed after v1.
+        abstract Shape: string with get
     end
 
 /// Node --- well, a node in a model.

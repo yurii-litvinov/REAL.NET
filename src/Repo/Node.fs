@@ -16,23 +16,11 @@ namespace RepoExperimental.FacadeLayer
 
 open RepoExperimental
 
-type Node() = 
-    inherit Element()
+/// Implementation of a node in model.
+type Node(model: DataLayer.IModel, element: DataLayer.IElement, elementRepository: IElementRepository, attributeRepository: AttributeRepository) = 
+    inherit Element(model, element, elementRepository, attributeRepository)
 
     interface INode with
-        member this.InstanceMetatype: Metatype = 
-            raise (System.NotImplementedException())
-
-        member this.Metatype: Metatype = 
-            raise (System.NotImplementedException())
-
-        member this.Attributes = raise (System.NotImplementedException())
-        member this.IsAbstract = raise (System.NotImplementedException())
-
         member this.Name
-            with get (): string = 
-                raise (System.NotImplementedException())
-            and set (v: string): unit = 
-                raise (System.NotImplementedException())
-
-        member this.Shape = raise (System.NotImplementedException())
+            with get (): string = element.Name
+            and set (v: string): unit =  element.Name <- v

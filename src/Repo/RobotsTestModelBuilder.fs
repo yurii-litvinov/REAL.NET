@@ -52,24 +52,24 @@ type RobotsTestModelBuilder() =
 
             let model = repo.CreateModel("RobotsTestModel", metamodel)
 
-            let initialNode = model.CreateNode("", metamodelInitialNode)
+            let initialNode = model.CreateNode("anInitialNode", metamodelInitialNode)
             let finalNode = model.CreateNode("", metamodelFinalNode)
 
             let motorsForward = model.CreateNode("", metamodelMotorsForward)
             let timer = model.CreateNode("", metamodelTimer)
 
-            let addAttributeValue(node, attribute, associationType, value: string) =
+            let addAttributeValue node attribute associationType value =
                 let attributeValueNode = model.CreateNode(value, attribute)
-                model.CreateAssociation(associationType, node, attributeValueNode, value) |> ignore
+                model.CreateAssociation(associationType, node, attributeValueNode, "") |> ignore
 
-            addAttributeValue(motorsForward, metamodelMotorsForwardPortsAttribute, metamodelMotorsForwardPortsAssociation, "M3, M4")
-            addAttributeValue(motorsForward, metamodelMotorsForwardPowerAttribute, metamodelMotorsForwardPowerAssociation, "100")
+            addAttributeValue motorsForward metamodelMotorsForwardPortsAttribute metamodelMotorsForwardPortsAssociation "M3, M4"
+            addAttributeValue motorsForward metamodelMotorsForwardPowerAttribute metamodelMotorsForwardPowerAssociation "100"
 
-            addAttributeValue(timer, metamodelTimerDelayAttribute, metamodelTimerDelayAssociation, "3000")
+            addAttributeValue timer metamodelTimerDelayAttribute metamodelTimerDelayAssociation "3000"
 
             let (-->) (src: IElement) dst =
                 let link = model.CreateAssociation(link, src, dst, "")
-                addAttributeValue(link, linkGuardAttribute, linkGuardAssociation, "")
+                addAttributeValue link linkGuardAttribute linkGuardAssociation ""
                 dst
 
             initialNode --> motorsForward --> timer --> finalNode |> ignore

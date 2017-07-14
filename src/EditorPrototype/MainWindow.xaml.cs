@@ -66,13 +66,11 @@
 
             this.Closed += this.CloseChildrenWindows;
 
-            var modelName = "mainModel";
-
             /* this.g_zoomctrl.MouseDown += (object sender, MouseButtonEventArgs e) => this.ZoomCtrl_MouseDown(sender, e, modelName); */
 
-            this.InitPalette(modelName);
+            this.InitPalette("RobotsMetamodel");
 
-            this.InitModel(modelName);
+            this.InitModel("RobotsTestModel");
         }
 
         private void ClearSelection(object sender, RoutedEventArgs e)
@@ -103,23 +101,26 @@
                 var targetNode = edge.To as RepoExperimental.INode;
                 if (sourceNode == null || targetNode == null)
                 {
-                    throw new Exception("Editor does not support edges linked to edges. Yet.");
+                    // Editor does not support edges linked to edges. Yet.
+                    continue;
                 }
 
+                /*
                 var source = this.dataGraph.Vertices.First(v => v.Name == sourceNode.Name);
                 var target = this.dataGraph.Vertices.First(v => v.Name == targetNode.Name);
 
                 var newEdge = new DataEdge(source, target, false) { EdgeType = DataEdge.EdgeTypeEnum.Association };
                 this.dataGraph.AddEdge(newEdge);
                 this.DrawNewEdge(source.Key, target.Key);
+                */
             }
 
             this.DrawGraph();
         }
 
-        private void InitPalette(string modelName)
+        private void InitPalette(string metamodelName)
         {
-            RepoExperimental.IModel model = this.repo.Models.Where(m => m.Name == modelName).FirstOrDefault()?.Metamodel;
+            RepoExperimental.IModel model = this.repo.Models.Where(m => m.Name == metamodelName).FirstOrDefault()?.Metamodel;
             if (model == null)
             {
                 return;

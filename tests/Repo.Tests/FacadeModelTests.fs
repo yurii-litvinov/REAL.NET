@@ -53,15 +53,10 @@ let ``Model shall allow to create nodes`` () =
     node.Metatype |> should equal Metatype.Node
 
 [<Test>]
-[<Ignore("Nodes are not implemented yet.")>]
 let ``Model shall allow to list its nodes`` () =
-    let modelRepository = ModelRepository()
+    let repo = RepoFactory.CreateRepo ()
 
-    let underlyingModel = DataLayer.DataModel("Model") :> DataLayer.IModel
-    let model = modelRepository.GetModel(underlyingModel) :> IModel
+    let model = repo.Models |> Seq.find (fun m -> m.Name = "RobotsTestModel")
 
-    let typeNode = underlyingModel.CreateNode("Type")
-    underlyingModel.CreateNode("Instance", typeNode) |> ignore
-
-    model.Nodes |> should haveLength 2
-    model.Nodes |> Seq.tryFind (fun n -> n.Name = "Type") |> should not' (equal None)
+    model.Nodes |> Seq.length |> should equal 10
+    model.Nodes |> Seq.filter (fun n -> n.Name = "anInitialNode") |> should not' (be Empty)

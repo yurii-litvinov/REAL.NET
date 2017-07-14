@@ -16,22 +16,22 @@ namespace RepoExperimental.FacadeLayer
 
 open RepoExperimental
 
-type Edge() = 
+/// Implementation of edge wrapper.
+type Edge(model: DataLayer.IModel, element: DataLayer.IRelationship, elementRepository: IElementRepository, attributeRepository: AttributeRepository) = 
+    inherit Element(model, element, elementRepository, attributeRepository)
     interface IEdge with
-        member this.InstanceMetatype: Metatype = 
-            raise (System.NotImplementedException())
-        member this.Metatype: Metatype = 
-            raise (System.NotImplementedException())
-        member this.Attributes = raise (System.NotImplementedException())
         member this.From
             with get (): IElement = 
-                raise (System.NotImplementedException())
+                // TODO: Implement it more correctly.
+                elementRepository.GetElement element.Source.Value Metatype.Node
             and set (v: IElement): unit = 
-                raise (System.NotImplementedException())
-        member this.IsAbstract = raise (System.NotImplementedException())
-        member this.Shape = raise (System.NotImplementedException())
+                let dataElement = (v :?> Element).UnderlyingElement
+                element.Source <- Some dataElement
+
         member this.To
             with get (): IElement = 
-                raise (System.NotImplementedException())
+                // TODO: Implement it more correctly.
+                elementRepository.GetElement element.Target.Value Metatype.Node
             and set (v: IElement): unit = 
-                raise (System.NotImplementedException())
+                let dataElement = (v :?> Element).UnderlyingElement
+                element.Target <- Some dataElement

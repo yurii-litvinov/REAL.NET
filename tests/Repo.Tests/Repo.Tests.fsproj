@@ -72,6 +72,7 @@
     <Compile Include="FacadeRepoTests.fs" />
     <Compile Include="FacadeModelTests.fs" />
     <Compile Include="FacadeAttributeTests.fs" />
+    <Compile Include="FacadeNodeTests.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

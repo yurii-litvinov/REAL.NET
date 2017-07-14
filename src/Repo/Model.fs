@@ -31,6 +31,9 @@ type ModelRepository() =
         models.Remove unwrappedModel |> ignore
 
 and Model(data: RepoExperimental.DataLayer.IModel, repository: ModelRepository) = 
+    let attributeRepository = AttributeRepository()
+    let elementRepository = ElementRepository(data, attributeRepository) :> IElementRepository
+
     member this.UnderlyingModel = data
 
     interface IModel with
@@ -38,10 +41,10 @@ and Model(data: RepoExperimental.DataLayer.IModel, repository: ModelRepository) 
         member this.DeleteElement element = raise (System.NotImplementedException())
         
         member this.Nodes = 
-            raise (System.NotImplementedException())
+            data.Nodes |> Seq.map (fun n -> elementRepository.GetElement n Metatype.Node) |> Seq.cast<INode>
 
         member this.Edges = 
-            raise (System.NotImplementedException())
+            data.Edges |> Seq.map (fun n -> elementRepository.GetElement n Metatype.Edge) |> Seq.cast<IEdge> |> Seq.toList |> Seq.ofList
 
         member this.Metamodel = 
             repository.GetModel data.Metamodel :> IModel
