@@ -34,6 +34,14 @@ and Model(data: RepoExperimental.DataLayer.IModel, repository: ModelRepository) 
     let attributeRepository = AttributeRepository()
     let elementRepository = ElementRepository(data, attributeRepository) :> IElementRepository
 
+    let rec isInstanceOf name (element: DataLayer.IElement) =
+        if element.Class.Name = name then
+            true
+        elif element.Class = element then
+            false
+        else
+            isInstanceOf name element.Class
+
     member this.UnderlyingModel = data
 
     interface IModel with
@@ -41,7 +49,10 @@ and Model(data: RepoExperimental.DataLayer.IModel, repository: ModelRepository) 
         member this.DeleteElement element = raise (System.NotImplementedException())
         
         member this.Nodes = 
-            data.Nodes |> Seq.map (fun n -> elementRepository.GetElement n Metatype.Node) |> Seq.cast<INode>
+            data.Nodes 
+            |> Seq.filter (fun n -> not (isInstanceOf "Attribute" n))
+            |> Seq.map (fun n -> elementRepository.GetElement n Metatype.Node) 
+            |> Seq.cast<INode>
 
         member this.Edges = 
             data.Edges |> Seq.map (fun n -> elementRepository.GetElement n Metatype.Edge) |> Seq.cast<IEdge> |> Seq.toList |> Seq.ofList

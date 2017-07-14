@@ -37,6 +37,25 @@ let ``Node in a model shall have metatype`` () =
     let elementRepository = ElementRepository (dataLayerModel, attributeRepository) :> IElementRepository
 
     let motorsForwardInstanceNode = elementRepository.GetElement dataLayerElement Metatype.Node
-    let motorsForwardTypeNode = elementRepository.GetElement dataLayerClass Metatype.Node
 
     motorsForwardInstanceNode.Metatype |> should equal Metatype.Node
+
+[<Test>]
+let ``Timer block shall have a picture`` () =
+    let repo = RepoFactory.CreateRepo ()
+
+    let model = repo.Models |> Seq.find (fun m -> m.Name = "RobotsTestModel")
+    let dataLayerModel = (model :?> Model).UnderlyingModel
+
+    let metamodel = repo.Models |> Seq.find (fun m -> m.Name = "RobotsMetamodel")
+    let dataLayerMetamodel = (metamodel :?> Model).UnderlyingModel
+
+    let dataLayerClass = dataLayerMetamodel.Nodes |> Seq.find (fun n -> n.Name = "Timer") :> DataLayer.IElement
+    let dataLayerElement = dataLayerModel.Nodes |> Seq.find (fun n -> n.Class = dataLayerClass)
+
+    let attributeRepository = AttributeRepository ()
+    let elementRepository = ElementRepository (dataLayerModel, attributeRepository) :> IElementRepository
+
+    let timer = elementRepository.GetElement dataLayerElement Metatype.Node
+
+    timer.Class.Shape |> should equal "Pictures/timer.png"

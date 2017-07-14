@@ -88,11 +88,11 @@ type RobotsMetamodelBuilder() =
             let initialNode = +("InitialNode", "Pictures/initialBlock.png", false, "Node", "Node")
             let finalNode = +("FinalNode", "Pictures/finalBlock.png", false, "Node", "Node")
             let motorsForward = +("MotorsForward", "Pictures/enginesForwardBlock.png", false, "Node", "Node")
-            let timer = +("Timer", "Pictures/timer.png", false, "Node", "Node")
+            let timer = +("Timer", "Pictures/timerBlock.png", false, "Node", "Node")
 
             // TODO: Elementary types require speial handling on a palette, their values should not appear as nodes on a diagram
-            let stringNode = +("String", "", false, "Node", "Node")
-            let intNode = +("Int", "", false, "Node", "Node")
+            let stringNode = +("String", "", true, "Node", "Node")
+            let intNode = +("Int", "", true, "Node", "Node")
 
             let link = abstractNode ---> (abstractNode, "target")
             addAttribute link "guard" "String"

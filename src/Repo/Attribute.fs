@@ -105,7 +105,11 @@ and Attribute(model: DataLayer.IModel, element: DataLayer.IElement, name: string
             | "Boolean" -> AttributeKind.Boolean
             | _ -> failwith "unknown 'kind' value"
 
-        member this.Name = attributeNode.Name
+        member this.Name =
+            // TODO: HACK!
+            match findAssociation attributeNode "stringValue" with
+            | None -> attributeNode.Class.Name
+            | Some _ -> attributeNode.Name
 
         member this.ReferenceValue
             with get (): IElement = 

@@ -60,7 +60,7 @@ type IAttribute =
         /// Name of the attribute.
         abstract Name: string with get
 
-        /// Kind (or a metatype) of the attribute --- one of elementary types, erference type or enum type.
+        /// Kind (or a metatype) of the attribute --- one of elementary types, reference type or enum type.
         abstract Kind: AttributeKind with get
         
         /// Reference to a type of the attribute if it is complex attribute, null if this is elementary type attribute.

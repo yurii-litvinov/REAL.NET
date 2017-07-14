@@ -68,7 +68,7 @@
 
             /* this.g_zoomctrl.MouseDown += (object sender, MouseButtonEventArgs e) => this.ZoomCtrl_MouseDown(sender, e, modelName); */
 
-            this.InitPalette("RobotsMetamodel");
+            this.InitPalette("RobotsTestModel");
 
             this.InitModel("RobotsTestModel");
         }
@@ -90,7 +90,7 @@
 
             foreach (var node in model.Nodes)
             {
-                this.CreateNode(node.Name, DataVertex.VertexTypeEnum.Node, node.Attributes);
+                this.CreateNode(node);
             }
 
             foreach (var edge in model.Edges)
@@ -105,14 +105,19 @@
                     continue;
                 }
 
-                /*
-                var source = this.dataGraph.Vertices.First(v => v.Name == sourceNode.Name);
-                var target = this.dataGraph.Vertices.First(v => v.Name == targetNode.Name);
+                if (this.dataGraph.Vertices.Count(v => v.Node == sourceNode) == 0
+                    || this.dataGraph.Vertices.Count(v => v.Node == targetNode) == 0)
+                {
+                    // Link to an attribute node. TODO: It's ugly.
+                    continue;
+                }
+
+                var source = this.dataGraph.Vertices.First(v => v.Node == sourceNode);
+                var target = this.dataGraph.Vertices.First(v => v.Node == targetNode);
 
                 var newEdge = new DataEdge(source, target, false) { EdgeType = DataEdge.EdgeTypeEnum.Association };
                 this.dataGraph.AddEdge(newEdge);
-                this.DrawNewEdge(source.Key, target.Key);
-                */
+                this.DrawNewEdge(source.Node, target.Node);
             }
 
             this.DrawGraph();
@@ -128,7 +133,25 @@
 
             foreach (var type in model.Nodes)
             {
-                var button = new ToggleButton { Content = type.Name };
+                if (type.IsAbstract)
+                {
+                    continue;
+                }
+
+                StackPanel sp = new StackPanel() { Orientation = Orientation.Horizontal };
+                Label l = new Label() { Content = type.Name };
+                Image img = new Image()
+                {
+                    Source = type.Shape != string.Empty
+                    ? new BitmapImage(new Uri("pack://application:,,,/" + type.Shape))
+                    : new BitmapImage(new Uri("pack://application:,,,/Pictures/Vertex.png"))
+                };
+
+                sp.Children.Add(img);
+                sp.Children.Add(l);
+
+                var button = new ToggleButton { Content = sp };
+
                 /* RoutedEventHandler createNode = (sender, args) => this.PaletteButton_Checked(type.id); */
                 /* RoutedEventHandler createEdge = (sender, args) => { };
                 button.Click += (sender, args) => this.currentId = type.id;
@@ -167,32 +190,31 @@
 
             var newEdge = new DataEdge(prevVerVertex, ctrlVerVertex, true) { Text = type };
             this.dataGraph.AddEdge(newEdge);
-            this.DrawNewEdge(prevVerVertex.Key, ctrlVerVertex.Key);
+            this.DrawNewEdge(prevVerVertex.Node, ctrlVerVertex.Node);
             var ec = new EdgeControl(this.prevVer, this.ctrlVer, newEdge);
             this.g_Area.InsertEdge(newEdge, ec);
         }
 
-        private void CreateNode(string name, DataVertex.VertexTypeEnum type, IEnumerable<RepoExperimental.IAttribute> attributes)
+        private void CreateNode(RepoExperimental.INode node)
         {
-            var vertex = new DataVertex(name)
+            var vertex = new DataVertex(node.Name)
             {
-                Key = $"{name}",
-                VertexType = type,
+                Node = node,
+                VertexType = DataVertex.VertexTypeEnum.Node,
+                Picture = node.Class.Shape
             };
 
-            /*
-            var attributeInfos = attributes.Select(x => new DataVertex.Attribute()
+            var attributeInfos = node.Attributes.Select(x => new DataVertex.Attribute()
             {
-                Name = x.name,
-                Type = this.repo.Node(x.attributeType).name,
-                Value = x.value
+                Name = x.Name,
+                Type = x.Kind.ToString(),
+                Value = x.StringValue
             });
 
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
-            */
 
             this.dataGraph.AddVertex(vertex);
-            this.DrawNewVertex(vertex.Key);
+            this.DrawNewVertex(vertex);
             this.DrawGraph();
         }
 
@@ -219,7 +241,12 @@
 
         private void ElementInBoxSelectedAction(object sender, EventArgs e)
         {
-            StackPanel sp = (this.elementsListBox.SelectedItem as ListBoxItem).Content as StackPanel;
+            StackPanel sp = (this.elementsListBox.SelectedItem as ListBoxItem)?.Content as StackPanel;
+            if (sp == null)
+            {
+                return;
+            }
+
             if (sp.Children.Count > 3)
             {
                 var source = (sp.Children[2] as TextBlock).Text;
@@ -251,6 +278,7 @@
                     if (this.dataGraph.Vertices.ToList()[i].Name == name)
                     {
                         var vertex = this.dataGraph.Vertices.ToList()[i];
+                        this.attributesView.DataContext = vertex;
                         foreach (KeyValuePair<DataVertex, VertexControl> ed in this.g_Area.VertexList)
                         {
                             if (ed.Key == vertex)
@@ -265,16 +293,18 @@
             }
         }
 
-        private void DrawNewVertex(string vertexName)
+        private void DrawNewVertex(DataVertex vertex)
         {
             ListBoxItem lbi = new ListBoxItem();
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
             Image img = new Image()
             {
-                Source = new BitmapImage(new Uri("pack://application:,,,/Pictures/Vertex.png"))
+                Source = vertex.Picture != "pack://application:,,,/"
+                        ? new BitmapImage(new Uri(vertex.Picture))
+                        : new BitmapImage(new Uri("pack://application:,,,/Pictures/Vertex.png"))
             };
             TextBlock spaces = new TextBlock { Text = "  " };
-            TextBlock tx = new TextBlock { Text = vertexName };
+            TextBlock tx = new TextBlock { Text = vertex.Name };
             sp.Children.Add(img);
             sp.Children.Add(spaces);
             sp.Children.Add(tx);
@@ -282,7 +312,7 @@
             this.elementsListBox.Items.Add(lbi);
         }
 
-        private void DrawNewEdge(string source, string target)
+        private void DrawNewEdge(RepoExperimental.INode source, RepoExperimental.INode target)
         {
             ListBoxItem lbi = new ListBoxItem();
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
@@ -291,9 +321,9 @@
                 Source = new BitmapImage(new Uri("pack://application:,,,/Pictures/Edge.png"))
             };
             TextBlock spaces = new TextBlock { Text = "  " };
-            TextBlock tx0 = new TextBlock { Text = source };
+            TextBlock tx0 = new TextBlock { Text = source.Name };
             TextBlock tx1 = new TextBlock { Text = " - " };
-            TextBlock tx2 = new TextBlock { Text = target };
+            TextBlock tx2 = new TextBlock { Text = target.Name };
             sp.Children.Add(img);
             sp.Children.Add(spaces);
             sp.Children.Add(tx0);

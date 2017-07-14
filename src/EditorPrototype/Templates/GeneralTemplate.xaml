@@ -13,13 +13,13 @@
         <Setter Property="Background" Value="{Binding Color}"/>
         <Setter Property="VertexShape" Value="None"/>
         <Setter Property= "ShowLabel" Value="False"/>
-        <!-- <Setter Property="Template">
+        <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:VertexControl}">
-                    <Image Source="pack://application:,,,/Pictures/Vertex.png" Margin="0" Width="80" Stretch="UniformToFill"/>
+                    <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill"/>
                 </ControlTemplate>
             </Setter.Value>
-        </Setter> -->
+        </Setter>
 
         <!-- VERTEX DRAGGING CONTROL -->
         <Setter Property="controls:DragBehaviour.IsDragEnabled" Value="True" />

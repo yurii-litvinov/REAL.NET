@@ -53,10 +53,10 @@ type RobotsTestModelBuilder() =
             let model = repo.CreateModel("RobotsTestModel", metamodel)
 
             let initialNode = model.CreateNode("anInitialNode", metamodelInitialNode)
-            let finalNode = model.CreateNode("", metamodelFinalNode)
+            let finalNode = model.CreateNode("aFinalNode", metamodelFinalNode)
 
-            let motorsForward = model.CreateNode("", metamodelMotorsForward)
-            let timer = model.CreateNode("", metamodelTimer)
+            let motorsForward = model.CreateNode("aMotorsForward", metamodelMotorsForward)
+            let timer = model.CreateNode("aTimer", metamodelTimer)
 
             let addAttributeValue node attribute associationType value =
                 let attributeValueNode = model.CreateNode(value, attribute)

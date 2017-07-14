@@ -42,15 +42,35 @@ and [<AbstractClass>] Element(model: DataLayer.IModel, element: DataLayer.IEleme
         |> Seq.choose id
         |> Seq.map (fun e -> e.Name)
 
+    let rec isInstanceOfAssociation targetName (link: DataLayer.IElement) =
+        if link.Class :? DataLayer.IAssociation && (link.Class :?> DataLayer.IAssociation).TargetName = targetName then
+            true
+        else if not (link.Class :? DataLayer.IAssociation) || (link.Class = link) then
+            false
+        else
+            isInstanceOfAssociation targetName link.Class
+
     let attributeValue name =
-        outgoingLinks element
-        |> Seq.filter (fun l -> l.Class.Class :? DataLayer.IAssociation && (l.Class.Class :?> DataLayer.IAssociation).TargetName = "attributes")
-        |> Seq.filter (fun l -> l.Class :? DataLayer.IAssociation && (l.Class :?> DataLayer.IAssociation).TargetName = name)
-        |> Seq.map (fun l -> (l :?> DataLayer.IAssociation).Target)
-        |> Seq.choose id
-        |> Seq.map (fun e -> e.Name)
+        let links = outgoingLinks element
+        let attributeLinks = links |> Seq.filter (isInstanceOfAssociation "attributes")
+        let interestingAttributeLinks = attributeLinks |> Seq.filter (fun l -> l.Class :? DataLayer.IAssociation && (l.Class :?> DataLayer.IAssociation).TargetName = name)
+        let targets = interestingAttributeLinks |> Seq.map (fun l -> (l :?> DataLayer.IAssociation).Target)
+        let existingTargets = targets |> Seq.choose id
+        let names = existingTargets |> Seq.map (fun e -> e.Name)
         // TODO: Implement it correctly.
-        |> Seq.head
+        let head = names |> Seq.tryHead
+        head |> Option.defaultValue ""
+
+    // TODO: Unify it with attributes.
+    let metaAttributeValue name =
+        let links = outgoingLinks element
+        let attributeLinks = links |> Seq.filter (fun l -> l :? DataLayer.IAssociation && (l :?> DataLayer.IAssociation).TargetName = name)
+        let targets = attributeLinks |> Seq.map (fun l -> (l :?> DataLayer.IAssociation).Target)
+        let existingTargets = targets |> Seq.choose id
+        let names = existingTargets |> Seq.map (fun e -> e.Name)
+        // TODO: Implement it correctly.
+        let head = names |> Seq.tryHead
+        head |> Option.defaultValue ""
         
     let rec findMetatype (element : DataLayer.IElement) =
         // TODO: Implement it more correctly in Semantic Layer
@@ -72,18 +92,20 @@ and [<AbstractClass>] Element(model: DataLayer.IModel, element: DataLayer.IEleme
             repository.GetElement element.Class (findMetatype element.Class)
 
         member this.IsAbstract = 
-            match attributeValue "isAbstract" with
+            match metaAttributeValue "isAbstract" with
             | "true" -> true
             | "false" -> false
+            // TODO: Hack, non-nodes do not have this attribute at all.
+            | "" -> true
             | _ -> failwith "Incorrect isAbstract attribute value"
 
-        member this.Shape = attributeValue "shape"
+        member this.Shape = metaAttributeValue "shape"
 
         member this.Metatype = 
             findMetatype element
 
         member this.InstanceMetatype = 
-            match attributeValue "instanceMetatype" with
+            match metaAttributeValue "instanceMetatype" with
             | "Node" -> Metatype.Node
             | "Edge" -> Metatype.Edge
             | _ -> failwith "Incorrect instanceMetatype attribute value"

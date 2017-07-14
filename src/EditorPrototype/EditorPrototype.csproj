@@ -299,6 +299,12 @@
       <Paket>True</Paket>
     </Analyzer>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\enginesForwardBlock.png" />
+    <Resource Include="Pictures\finalBlock.png" />
+    <Resource Include="Pictures\initialBlock.png" />
+    <Resource Include="Pictures\timerBlock.png" />
+  </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETStandard' And ($(TargetFrameworkVersion) == 'v1.0' Or $(TargetFrameworkVersion) == 'v1.1' Or $(TargetFrameworkVersion) == 'v1.2')">
       <ItemGroup>
