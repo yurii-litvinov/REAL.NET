@@ -16,3 +16,7 @@ namespace RepoExperimental
 
 /// Thrown if trying to delete a model that is a metamodel for some another model in repository.
 exception DeletingUsedModel of modelName: string
+
+/// Thrown if we are trying to do something wrong with a model. Most probably means incorrect model or
+/// internal error in repository.
+exception InvalidSemanticOperationException

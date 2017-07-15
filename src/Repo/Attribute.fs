@@ -14,8 +14,10 @@
 
 namespace RepoExperimental.FacadeLayer
 
-open RepoExperimental
 open System.Collections.Generic
+
+open RepoExperimental
+open RepoExperimental.SemanticLayer
 
 /// Repository for attribute wrappers. Contains already created wrappers and creates new wrappers if needed.
 /// Holds references to attribute wrappers and elements.
@@ -39,16 +41,6 @@ type AttributeRepository() =
 
 /// Implements attribute functionality
 and Attribute(model: DataLayer.IModel, element: DataLayer.IElement, name: string, repository: AttributeRepository) =
-    let outgoingLinks node = 
-        let outgoingLink: DataLayer.IElement -> bool = 
-            function
-            | :? DataLayer.IAssociation as a -> a.Source = Some node 
-            | _ -> false
-
-        model.Edges
-        |> Seq.append model.Metamodel.Edges
-        |> Seq.filter outgoingLink 
-
     let findAssociation element name = 
         model.Edges 
         |> Seq.append model.Metamodel.Edges
@@ -57,9 +49,9 @@ and Attribute(model: DataLayer.IModel, element: DataLayer.IElement, name: string
                         | _ -> false
                        ) 
 
-    let findAssociationOrMetaassociation element name = 
+    let findAssociationOrMetaAssociation element name = 
         let result = 
-            outgoingLinks element 
+            Element.outgoingLinks model element 
             |> Seq.tryFind (function 
                            | :? DataLayer.IAssociation as a -> a.TargetName = name
                            | _ -> false
@@ -76,7 +68,7 @@ and Attribute(model: DataLayer.IModel, element: DataLayer.IElement, name: string
             | Some l -> l
             | None -> 
                 // Maybe it is attribute instance, so we need to search for an association that is an instance of required association.
-                outgoingLinks element 
+                Element.outgoingLinks model element 
                 |> Seq.filter (function
                                 // TODO: Check association class that it is indeed DataLayer.IAssociation
                                 | :? DataLayer.IAssociation as a -> (a.Class :?> DataLayer.IAssociation).TargetName = name
@@ -92,13 +84,13 @@ and Attribute(model: DataLayer.IModel, element: DataLayer.IElement, name: string
 
     interface IAttribute with
         member this.Kind = 
-            let kindLink = findAssociationOrMetaassociation attributeNode "kind"
+            let kindLink = findAssociationOrMetaAssociation attributeNode "kind"
             if kindLink.IsNone then
                 failwith "Attribute does not have 'kind' link"
             if kindLink.Value.Target.IsNone then
                 failwith "'kind' link does not have a node on the other side"
             let kindNode = kindLink.Value.Target.Value :?> DataLayer.INode
-            match kindNode.Name with
+            match Node.name kindNode with
             | "String" -> AttributeKind.String
             | "Int" -> AttributeKind.Int
             | "Double" -> AttributeKind.Double
@@ -108,8 +100,8 @@ and Attribute(model: DataLayer.IModel, element: DataLayer.IElement, name: string
         member this.Name =
             // TODO: HACK!
             match findAssociation attributeNode "stringValue" with
-            | None -> (attributeNode.Class :?> DataLayer.INode).Name
-            | Some _ -> attributeNode.Name
+            | None -> Node.name attributeNode.Class
+            | Some _ -> Node.name attributeNode
 
         member this.ReferenceValue
             with get (): IElement = 
@@ -120,7 +112,7 @@ and Attribute(model: DataLayer.IModel, element: DataLayer.IElement, name: string
         member this.StringValue
             with get (): string = 
                 match findAssociation attributeNode "stringValue" with
-                | None -> attributeNode.Name
+                | None -> Node.name attributeNode
                 | Some _ -> ""
             and set (v: string): unit = 
                 match findAssociation attributeNode "stringValue" with

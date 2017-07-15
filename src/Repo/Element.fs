@@ -15,6 +15,7 @@
 namespace RepoExperimental.FacadeLayer
 
 open RepoExperimental
+open RepoExperimental.SemanticLayer
 
 /// Repository with wrappers for elements (nodes or edges). Contains already created wrappers and creates new wrappers when needed.
 type IElementRepository =
@@ -23,19 +24,10 @@ type IElementRepository =
 
 /// Implementation of an element.
 and [<AbstractClass>] Element(model: DataLayer.IModel, element: DataLayer.IElement, repository: IElementRepository, attributeRepository: AttributeRepository) = 
-    let outgoingLinks node = 
-        let outgoingLink: DataLayer.IElement -> bool = 
-            function
-            | :? DataLayer.IAssociation as a -> a.Source = Some node 
-            | _ -> false
-
-        model.Edges
-        |> Seq.append model.Metamodel.Edges
-        |> Seq.filter outgoingLink 
 
     let attributes () =
         element.Class
-        |> outgoingLinks
+        |> Element.outgoingLinks model
         // TODO: Implement searching for attributes more correctly. Attributes may not be direct descendants of Infrastructure Metamodel attributes.
         |> Seq.filter (fun l -> l.Class :? DataLayer.IAssociation && (l.Class :?> DataLayer.IAssociation).TargetName = "attributes")
         |> Seq.map (fun l -> (l :?> DataLayer.IAssociation).Target)
@@ -53,7 +45,7 @@ and [<AbstractClass>] Element(model: DataLayer.IModel, element: DataLayer.IEleme
             isInstanceOfAssociation targetName link.Class
 
     let attributeValue name =
-        let links = outgoingLinks element
+        let links = Element.outgoingLinks model element
         let attributeLinks = links |> Seq.filter (isInstanceOfAssociation "attributes")
         let interestingAttributeLinks = attributeLinks |> Seq.filter (fun l -> l.Class :? DataLayer.IAssociation && (l.Class :?> DataLayer.IAssociation).TargetName = name)
         let targets = interestingAttributeLinks |> Seq.map (fun l -> (l :?> DataLayer.IAssociation).Target)
@@ -65,7 +57,7 @@ and [<AbstractClass>] Element(model: DataLayer.IModel, element: DataLayer.IEleme
 
     // TODO: Unify it with attributes.
     let metaAttributeValue name =
-        let links = outgoingLinks element
+        let links = Element.outgoingLinks model element
         let attributeLinks = links |> Seq.filter (fun l -> l :? DataLayer.IAssociation && (l :?> DataLayer.IAssociation).TargetName = name)
         let targets = attributeLinks |> Seq.map (fun l -> (l :?> DataLayer.IAssociation).Target)
         let existingTargets = targets |> Seq.choose id |> Seq.filter (fun e -> e :? DataLayer.INode) |> Seq.cast<DataLayer.INode>
@@ -76,7 +68,7 @@ and [<AbstractClass>] Element(model: DataLayer.IModel, element: DataLayer.IEleme
         
     let rec findMetatype (element : DataLayer.IElement) =
         // TODO: Implement it more correctly in Semantic Layer
-        if element :? DataLayer.INode && ((element :?> DataLayer.INode).Name = "Association" || (element :?> DataLayer.INode).Name = "Generalization") then
+        if element :? DataLayer.INode && (Node.name element = "Association" || Node.name element = "Generalization") then
             Metatype.Edge
         elif element.Class = element then
             Metatype.Node

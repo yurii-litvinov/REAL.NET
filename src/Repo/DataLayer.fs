@@ -18,7 +18,7 @@ namespace RepoExperimental.DataLayer
 type IElement =
     interface
         /// Type of an element.
-        abstract Class : IElement with get
+        abstract Class: IElement with get
     end
 
 /// Node is a kind of element which can connect only to relationships, corresponds to node of the model graph.
