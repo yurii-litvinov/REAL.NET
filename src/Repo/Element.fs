@@ -35,7 +35,6 @@ and [<AbstractClass>] Element(repo: DataLayer.IRepo, model: DataLayer.IModel, el
         |> Seq.choose id
         |> Seq.filter (fun e -> e :? DataLayer.INode)
         |> Seq.cast<DataLayer.INode>
-        |> Seq.map (fun e -> e.Name)
 
     let rec isInstanceOfAssociation targetName (link: DataLayer.IElement) =
         if link.Class :? DataLayer.IAssociation && (link.Class :?> DataLayer.IAssociation).TargetName = targetName then
@@ -80,8 +79,7 @@ and [<AbstractClass>] Element(repo: DataLayer.IRepo, model: DataLayer.IModel, el
 
     interface IElement with
         member this.Attributes = 
-            attributes ()
-            |> Seq.map (fun a -> attributeRepository.GetAttribute element a)
+            attributes () |> Seq.map (fun a -> attributeRepository.GetAttribute a)
 
         member this.Class = 
             repository.GetElement (findMetatype element.Class) element.Class 

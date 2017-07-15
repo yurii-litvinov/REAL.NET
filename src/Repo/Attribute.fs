@@ -22,38 +22,21 @@ open RepoExperimental.CoreSemanticLayer
 /// Repository for attribute wrappers. Contains already created wrappers and creates new wrappers if needed.
 /// Holds references to attribute wrappers and elements.
 type AttributeRepository(repo: DataLayer.IRepo) =
-    let attributes = Dictionary<_, Dictionary<_, _>>()
-    member this.GetAttribute 
-            (element: DataLayer.IElement) 
-            (name: string) =
-
-        if attributes.ContainsKey element && attributes.[element].ContainsKey name then
-            attributes.[element].[name] :> IAttribute
+    let attributes = Dictionary<_, _>()
+    member this.GetAttribute (attributeNide: DataLayer.INode) =
+        if attributes.ContainsKey attributeNide then
+            attributes.[attributeNide] :> IAttribute
         else
-            let newAttribute = Attribute(repo, element, name, this)
-            if not <| attributes.ContainsKey element then
-                attributes.Add(element, Dictionary<_, _>())
-            attributes.[element].Add(name, newAttribute)
+            let newAttribute = Attribute(repo, attributeNide, this)
+            attributes.Add(attributeNide, newAttribute)
             newAttribute :> IAttribute
     
-    member this.DeleteAttribute (element: DataLayer.IElement) (name: string) =
-        if attributes.ContainsKey element && attributes.[element].ContainsKey name then
-            attributes.[element].Remove(name) |> ignore
-        if attributes.ContainsKey element && attributes.[element].Count = 0 then
-            attributes.Remove(element) |> ignore
+    member this.DeleteAttribute (node: DataLayer.INode) =
+        if attributes.ContainsKey node then
+            attributes.Remove(node) |> ignore
 
-/// Implements attribute functionality
-and Attribute
-    (
-        repo: DataLayer.IRepo
-        , element: DataLayer.IElement
-        , name: string
-        , repository: AttributeRepository
-    ) =
-    
-    let attributeNode = 
-        Element.attribute repo element name :?> DataLayer.INode
-
+/// Implements attribute wrapper.
+and Attribute(repo: DataLayer.IRepo, attributeNode: DataLayer.INode, repository: AttributeRepository) =
     interface IAttribute with
         member this.Kind = 
             let kindNode = Element.attribute repo attributeNode "kind"

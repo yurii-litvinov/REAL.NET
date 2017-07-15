@@ -29,7 +29,10 @@ let getAttributeType nodeName name =
     let dataLayerModel = (model :?> Model).UnderlyingModel
     let dataLayerElement = dataLayerModel.Nodes |> Seq.find (fun n -> n.Name = nodeName) :> DataLayer.IElement
 
-    attributeRepository.GetAttribute dataLayerElement name
+    let dataLayerAttribute = 
+        CoreSemanticLayer.Element.attribute underlyingRepo dataLayerElement name :?> DataLayer.INode
+
+    attributeRepository.GetAttribute dataLayerAttribute
 
 let getAttributeInstance nodeName name =
     let repo = RepoFactory.CreateRepo ()
@@ -44,7 +47,10 @@ let getAttributeInstance nodeName name =
     let dataLayerClass = dataLayerMetamodel.Nodes |> Seq.find (fun n -> n.Name = nodeName) :> DataLayer.IElement
     let dataLayerElement = dataLayerModel.Nodes |> Seq.find (fun n -> n.Class = dataLayerClass) :> DataLayer.IElement
 
-    attributeRepository.GetAttribute dataLayerElement name
+    let dataLayerAttribute = 
+        CoreSemanticLayer.Element.attribute underlyingRepo dataLayerElement name :?> DataLayer.INode
+
+    attributeRepository.GetAttribute dataLayerAttribute
 
 [<Test>]
 let ``Attribute kind in metamodel for Motors Forward Ports is String`` () =
