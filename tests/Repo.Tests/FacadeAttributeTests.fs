@@ -30,7 +30,7 @@ let getAttributeType nodeName name =
     let dataLayerElement = dataLayerModel.Nodes |> Seq.find (fun n -> n.Name = nodeName) :> DataLayer.IElement
 
     let dataLayerAttribute = 
-        CoreSemanticLayer.Element.attribute underlyingRepo dataLayerElement name :?> DataLayer.INode
+        CoreSemanticLayer.Element.attribute underlyingRepo dataLayerElement name
 
     attributeRepository.GetAttribute dataLayerAttribute
 
@@ -48,7 +48,7 @@ let getAttributeInstance nodeName name =
     let dataLayerElement = dataLayerModel.Nodes |> Seq.find (fun n -> n.Class = dataLayerClass) :> DataLayer.IElement
 
     let dataLayerAttribute = 
-        CoreSemanticLayer.Element.attribute underlyingRepo dataLayerElement name :?> DataLayer.INode
+        CoreSemanticLayer.Element.attribute underlyingRepo dataLayerElement name
 
     attributeRepository.GetAttribute dataLayerAttribute
 

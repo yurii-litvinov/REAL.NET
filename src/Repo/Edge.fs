@@ -22,16 +22,20 @@ type Edge(repo: DataLayer.IRepo, model: DataLayer.IModel, element: DataLayer.IRe
     interface IEdge with
         member this.From
             with get (): IElement = 
-                // TODO: Implement it more correctly.
-                elementRepository.GetElement Metatype.Node element.Source.Value 
+                if element.Source.IsNone then
+                    null
+                else 
+                    elementRepository.GetElement element.Source.Value
             and set (v: IElement): unit = 
                 let dataElement = (v :?> Element).UnderlyingElement
                 element.Source <- Some dataElement
 
         member this.To
             with get (): IElement = 
-                // TODO: Implement it more correctly.
-                elementRepository.GetElement Metatype.Node element.Target.Value 
+                if element.Target.IsNone then
+                    null
+                else 
+                    elementRepository.GetElement element.Target.Value 
             and set (v: IElement): unit = 
                 let dataElement = (v :?> Element).UnderlyingElement
                 element.Target <- Some dataElement

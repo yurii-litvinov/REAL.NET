@@ -16,89 +16,57 @@ namespace RepoExperimental.FacadeLayer
 
 open RepoExperimental
 open RepoExperimental.CoreSemanticLayer
+open RepoExperimental.InfrastructureSemanticLayer
 
 /// Repository with wrappers for elements (nodes or edges). Contains already created wrappers and creates new wrappers 
 /// when needed.
 type IElementRepository =
-    abstract GetElement: metatype: Metatype -> element: DataLayer.IElement -> IElement
+    abstract GetElement: element: DataLayer.IElement -> IElement
     abstract DeleteElement: element: DataLayer.IElement -> unit
 
-/// Implementation of an element.
-and [<AbstractClass>] Element(repo: DataLayer.IRepo, model: DataLayer.IModel, element: DataLayer.IElement, repository: IElementRepository, attributeRepository: AttributeRepository) = 
+/// Implementation of an element wrapper.
+and [<AbstractClass>] Element
+    (
+        repo: DataLayer.IRepo
+        , model: DataLayer.IModel
+        , element: DataLayer.IElement
+        , repository: IElementRepository
+        , attributeRepository: AttributeRepository
+    ) = 
 
-    let attributes () =
-        element.Class
-        |> Element.outgoingAssociations repo
-        // TODO: Implement searching for attributes more correctly. Attributes may not be direct descendants of Infrastructure Metamodel attributes.
-        |> Seq.filter (fun l -> l.Class :? DataLayer.IAssociation && (l.Class :?> DataLayer.IAssociation).TargetName = "attributes")
-        |> Seq.map (fun l -> l.Target)
-        |> Seq.choose id
-        |> Seq.filter (fun e -> e :? DataLayer.INode)
-        |> Seq.cast<DataLayer.INode>
-
-    let rec isInstanceOfAssociation targetName (link: DataLayer.IElement) =
-        if link.Class :? DataLayer.IAssociation && (link.Class :?> DataLayer.IAssociation).TargetName = targetName then
-            true
-        else if not (link.Class :? DataLayer.IAssociation) || (link.Class = link) then
-            false
-        else
-            isInstanceOfAssociation targetName link.Class
-
-    let attributeValue name =
-        let links = Element.outgoingRelationships repo element
-        let attributeLinks = links |> Seq.filter (isInstanceOfAssociation "attributes")
-        let interestingAttributeLinks = attributeLinks |> Seq.filter (fun l -> l.Class :? DataLayer.IAssociation && (l.Class :?> DataLayer.IAssociation).TargetName = name)
-        let targets = interestingAttributeLinks |> Seq.map (fun l -> (l :?> DataLayer.IAssociation).Target)
-        let existingTargets = targets |> Seq.choose id |> Seq.filter (fun e -> e :? DataLayer.INode) |> Seq.cast<DataLayer.INode>
-        let names = existingTargets |> Seq.map (fun e -> e.Name)
-        // TODO: Implement it correctly.
-        let head = names |> Seq.tryHead
-        head |> Option.defaultValue ""
-
-    // TODO: Unify it with attributes.
-    let metaAttributeValue name =
-        let links = Element.outgoingRelationships repo element
-        let attributeLinks = links |> Seq.filter (fun l -> l :? DataLayer.IAssociation && (l :?> DataLayer.IAssociation).TargetName = name)
-        let targets = attributeLinks |> Seq.map (fun l -> (l :?> DataLayer.IAssociation).Target)
-        let existingTargets = targets |> Seq.choose id |> Seq.filter (fun e -> e :? DataLayer.INode) |> Seq.cast<DataLayer.INode>
-        let names = existingTargets |> Seq.map (fun e -> e.Name)
-        // TODO: Implement it correctly.
-        let head = names |> Seq.tryHead
-        head |> Option.defaultValue ""
-        
-    let rec findMetatype (element : DataLayer.IElement) =
-        // TODO: Implement it more correctly in Semantic Layer
-        if element :? DataLayer.INode && (Node.name element = "Association" || Node.name element = "Generalization") then
-            Metatype.Edge
-        elif element.Class = element then
+    let findMetatype (element : DataLayer.IElement) =
+        if InfrastructureMetamodel.isNode repo element then
             Metatype.Node
+        elif InfrastructureMetamodel.isRelationship repo element then
+            Metatype.Edge
         else
-            findMetatype element.Class
+            raise (InvalidSemanticOperationException 
+                "Trying to get a metatype of an element that is not instance of the Element. Model is malformed.")
        
     member this.UnderlyingElement = element
 
     interface IElement with
         member this.Attributes = 
-            attributes () |> Seq.map (fun a -> attributeRepository.GetAttribute a)
+            InfrastructureMetamodel.attributes repo element |> Seq.map attributeRepository.GetAttribute
 
         member this.Class = 
-            repository.GetElement (findMetatype element.Class) element.Class 
+            repository.GetElement element.Class 
 
-        member this.IsAbstract = 
-            match metaAttributeValue "isAbstract" with
-            | "true" -> true
-            | "false" -> false
-            // TODO: Hack, non-nodes do not have this attribute at all.
-            | "" -> true
-            | _ -> failwith "Incorrect isAbstract attribute value"
+        member this.IsAbstract =
+            if InfrastructureMetamodel.isElement repo element then
+                match Element.attributeValue repo element "isAbstract" with
+                | "true" -> true
+                | "false" -> false
+                | _ -> failwith "Incorrect isAbstract attribute value"
+            else 
+                true
 
-        member this.Shape = metaAttributeValue "shape"
+        member this.Shape = Element.attributeValue repo element "shape"
 
-        member this.Metatype = 
-            findMetatype element
+        member this.Metatype = findMetatype element
 
         member this.InstanceMetatype = 
-            match metaAttributeValue "instanceMetatype" with
+            match Element.attributeValue repo element "instanceMetatype" with
             | "Node" -> Metatype.Node
             | "Edge" -> Metatype.Edge
             | _ -> failwith "Incorrect instanceMetatype attribute value"

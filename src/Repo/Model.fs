@@ -46,13 +46,13 @@ and Model(repo: DataLayer.IRepo, data: DataLayer.IModel, repository: ModelReposi
         member this.Nodes = 
             data.Nodes 
             |> Seq.filter (InfrastructureSemanticLayer.InfrastructureMetamodel.isNode repo)
-            |> Seq.map (elementRepository.GetElement Metatype.Node) 
+            |> Seq.map elementRepository.GetElement
             |> Seq.cast<INode>
 
         member this.Edges = 
             data.Edges 
             |> Seq.filter (InfrastructureSemanticLayer.InfrastructureMetamodel.isEdge repo)
-            |> Seq.map (elementRepository.GetElement Metatype.Edge) 
+            |> Seq.map elementRepository.GetElement
             |> Seq.cast<IEdge>
 
         member this.Metamodel = 

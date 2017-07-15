@@ -59,6 +59,6 @@ and Attribute(repo: DataLayer.IRepo, attributeNode: DataLayer.INode, repository:
             with get (): string = 
                 Node.name <| Element.attribute repo attributeNode "stringValue"
             and set (v: string): unit = 
-                (Element.attribute repo attributeNode "stringValue" :?> DataLayer.INode).Name <- v
+                (Element.attribute repo attributeNode "stringValue").Name <- v
 
         member this.Type = null

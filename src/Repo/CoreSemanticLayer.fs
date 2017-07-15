@@ -42,9 +42,25 @@ module Model =
         if Seq.isEmpty nodes then
             raise (InvalidSemanticOperationException <| sprintf "Node %s not found in model %s" name model.Name)
         elif Seq.length nodes <> 1 then
-            raise (InvalidSemanticOperationException <| sprintf "Node %s %s" name model.Name)
+            raise (InvalidSemanticOperationException 
+                <| sprintf "Node %s appears more than once in model %s" name model.Name)
         else
             Seq.head nodes
+
+    /// Searches for a given association in a given model by target name. Assumes that it exists and there is only one 
+    /// association with that name. Throws InvalidSemanticOperationException if not.
+    let findAssociation (model: IModel) targetName = 
+        let associations = 
+            model.Edges 
+            |> Seq.filter (fun m -> m :? IAssociation && (m :?> IAssociation).TargetName = targetName)
+        
+        if Seq.isEmpty associations then
+            raise (InvalidSemanticOperationException <| sprintf "Edge %s not found in model %s" targetName model.Name)
+        elif Seq.length associations <> 1 then
+            raise (InvalidSemanticOperationException 
+                <| sprintf "Edge %s appears more than once in model %s" targetName model.Name)
+        else
+            Seq.head associations :?> IAssociation
 
 /// Helper functions for element semantics
 module Element =
@@ -92,7 +108,15 @@ module Element =
         elif Seq.length attributes <> 1 then
             raise (InvalidSemanticOperationException <| sprintf "Attribute %s has multiplicity more than 1" name)
         else
-            Seq.head attributes
+            let attribute = Seq.head attributes
+            match attribute with
+            | :? INode as result -> result
+            | _ -> raise (InvalidSemanticOperationException 
+                <| sprintf "Attribute %s is not a node (which is possible but not used and not supported in v1" name)
+
+    /// Returns string value of a given attribute.
+    let attributeValue (repo: IRepo) element name = 
+        (attribute repo element name).Name
 
     /// Returns true if an 'instance' is an (indirect) instance of a 'class'.
     let rec isInstanceOf (``class``: IElement) (instance: IElement) =

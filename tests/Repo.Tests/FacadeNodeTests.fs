@@ -37,7 +37,7 @@ let ``Node in a model shall have metatype`` () =
     let attributeRepository = AttributeRepository(underlyingRepo)
     let elementRepository = ElementRepository((repo :?> Repo).UnderlyingRepo, dataLayerModel, attributeRepository) :> IElementRepository
 
-    let motorsForwardInstanceNode = elementRepository.GetElement Metatype.Node dataLayerElement
+    let motorsForwardInstanceNode = elementRepository.GetElement dataLayerElement
 
     motorsForwardInstanceNode.Metatype |> should equal Metatype.Node
 
@@ -58,6 +58,6 @@ let ``Timer block shall have a picture`` () =
     let attributeRepository = AttributeRepository(underlyingRepo)
     let elementRepository = ElementRepository((repo :?> Repo).UnderlyingRepo, dataLayerModel, attributeRepository) :> IElementRepository
 
-    let timer = elementRepository.GetElement Metatype.Node dataLayerElement
+    let timer = elementRepository.GetElement dataLayerElement
 
     timer.Class.Shape |> should equal "Pictures/timerBlock.png"
