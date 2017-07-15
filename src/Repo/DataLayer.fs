@@ -22,7 +22,7 @@ type IElement =
     end
 
 /// Node is a kind of element which can connect only to relationships, corresponds to node of the model graph.
-/// TODO: Node is an unconnected relationship, so it is highly possible that it does not have to be a separate class.
+/// NOTE: Node is an unconnected relationship, so it is highly possible that it does not have to be a separate class.
 type INode =
     interface
         inherit IElement

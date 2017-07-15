@@ -15,8 +15,6 @@
 namespace RepoExperimental
 
 /// Enumeration with all kinds of attributes supported by repository
-/// TODO: It shall be explicitly listed in Infrastructure Metamodel, and all actual models shall use it as one of
-/// the parent metamodels.
 type AttributeKind = 
     /// Attribute whose value is a string.
     | String = 0

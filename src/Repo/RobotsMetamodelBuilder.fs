@@ -65,7 +65,6 @@ type RobotsMetamodelBuilder() =
                 let attribute = model.CreateNode(name, metamodelAttribute)
                 addAttributeValue attribute "kind" attributeKindAssociation metamodelAttributeKindNode kind
                 
-                // TODO: Differentiate between attributes and slots.
                 addAttributeValue attribute "stringValue" attributeStringValueAssociation metamodelStringNode ""
 
                 model.CreateAssociation(attributesAssociation, node, attribute, name) |> ignore
@@ -89,10 +88,6 @@ type RobotsMetamodelBuilder() =
             let finalNode = +("FinalNode", "Pictures/finalBlock.png", false, "Node", "Node")
             let motorsForward = +("MotorsForward", "Pictures/enginesForwardBlock.png", false, "Node", "Node")
             let timer = +("Timer", "Pictures/timerBlock.png", false, "Node", "Node")
-
-            // TODO: Elementary types require speial handling on a palette, their values should not appear as nodes on a diagram
-            let stringNode = +("String", "", true, "Node", "Node")
-            let intNode = +("Int", "", true, "Node", "Node")
 
             let link = abstractNode ---> (abstractNode, "target")
             addAttribute link "guard" "String"
