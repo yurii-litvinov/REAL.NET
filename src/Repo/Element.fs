@@ -15,22 +15,23 @@
 namespace RepoExperimental.FacadeLayer
 
 open RepoExperimental
-open RepoExperimental.SemanticLayer
+open RepoExperimental.CoreSemanticLayer
 
-/// Repository with wrappers for elements (nodes or edges). Contains already created wrappers and creates new wrappers when needed.
+/// Repository with wrappers for elements (nodes or edges). Contains already created wrappers and creates new wrappers 
+/// when needed.
 type IElementRepository =
-    abstract GetElement: element: DataLayer.IElement -> metatype: Metatype -> IElement
+    abstract GetElement: metatype: Metatype -> element: DataLayer.IElement -> IElement
     abstract DeleteElement: element: DataLayer.IElement -> unit
 
 /// Implementation of an element.
-and [<AbstractClass>] Element(model: DataLayer.IModel, element: DataLayer.IElement, repository: IElementRepository, attributeRepository: AttributeRepository) = 
+and [<AbstractClass>] Element(repo: DataLayer.IRepo, model: DataLayer.IModel, element: DataLayer.IElement, repository: IElementRepository, attributeRepository: AttributeRepository) = 
 
     let attributes () =
         element.Class
-        |> Element.outgoingLinks model
+        |> Element.outgoingAssociations repo
         // TODO: Implement searching for attributes more correctly. Attributes may not be direct descendants of Infrastructure Metamodel attributes.
         |> Seq.filter (fun l -> l.Class :? DataLayer.IAssociation && (l.Class :?> DataLayer.IAssociation).TargetName = "attributes")
-        |> Seq.map (fun l -> (l :?> DataLayer.IAssociation).Target)
+        |> Seq.map (fun l -> l.Target)
         |> Seq.choose id
         |> Seq.filter (fun e -> e :? DataLayer.INode)
         |> Seq.cast<DataLayer.INode>
@@ -45,7 +46,7 @@ and [<AbstractClass>] Element(model: DataLayer.IModel, element: DataLayer.IEleme
             isInstanceOfAssociation targetName link.Class
 
     let attributeValue name =
-        let links = Element.outgoingLinks model element
+        let links = Element.outgoingRelationships repo element
         let attributeLinks = links |> Seq.filter (isInstanceOfAssociation "attributes")
         let interestingAttributeLinks = attributeLinks |> Seq.filter (fun l -> l.Class :? DataLayer.IAssociation && (l.Class :?> DataLayer.IAssociation).TargetName = name)
         let targets = interestingAttributeLinks |> Seq.map (fun l -> (l :?> DataLayer.IAssociation).Target)
@@ -57,7 +58,7 @@ and [<AbstractClass>] Element(model: DataLayer.IModel, element: DataLayer.IEleme
 
     // TODO: Unify it with attributes.
     let metaAttributeValue name =
-        let links = Element.outgoingLinks model element
+        let links = Element.outgoingRelationships repo element
         let attributeLinks = links |> Seq.filter (fun l -> l :? DataLayer.IAssociation && (l :?> DataLayer.IAssociation).TargetName = name)
         let targets = attributeLinks |> Seq.map (fun l -> (l :?> DataLayer.IAssociation).Target)
         let existingTargets = targets |> Seq.choose id |> Seq.filter (fun e -> e :? DataLayer.INode) |> Seq.cast<DataLayer.INode>
@@ -80,10 +81,10 @@ and [<AbstractClass>] Element(model: DataLayer.IModel, element: DataLayer.IEleme
     interface IElement with
         member this.Attributes = 
             attributes ()
-            |> Seq.map (fun a -> attributeRepository.GetAttribute model element a)
+            |> Seq.map (fun a -> attributeRepository.GetAttribute element a)
 
         member this.Class = 
-            repository.GetElement element.Class (findMetatype element.Class)
+            repository.GetElement (findMetatype element.Class) element.Class 
 
         member this.IsAbstract = 
             match metaAttributeValue "isAbstract" with

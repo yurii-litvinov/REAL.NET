@@ -19,4 +19,14 @@ exception DeletingUsedModel of modelName: string
 
 /// Thrown if we are trying to do something wrong with a model. Most probably means incorrect model or
 /// internal error in repository.
-exception InvalidSemanticOperationException
+exception InvalidSemanticOperationException of errorMessage: string
+
+/// Thrown when some semantic operation can not be completed due to missing elements of Core Metamodel.
+/// Core Metamodel forms a core of a tool, so it always shall be present and all modifications inside it shall be
+/// reflected in the code (basically, it is a model of repository data layer itself).
+exception MalformedCoreMetamodelException of errorMessage: string
+
+/// Thrown when some semantic operation can not be completed due to missing or incorrect elements of 
+/// Infrastructure Metamodel. Infrastructure Metamodel provides a way for an editor and other tools to work
+/// with models, so if it is malformed, all high-level tools based on a repository will not work.
+exception MalformedInfrastructureMetamodelException of errorMessage: string

@@ -15,21 +15,22 @@
 namespace RepoExperimental.FacadeLayer
 
 open System.Collections.Generic
+
 open RepoExperimental
 
 /// Repository for element wrappers. Contains already created wrappers and creates new wrappers if needed.
-type ElementRepository(model: DataLayer.IModel, attributeRepository: AttributeRepository) =
+type ElementRepository(repo: DataLayer.IRepo, model: DataLayer.IModel, attributeRepository: AttributeRepository) =
     let elements = Dictionary<_, _>()
     interface IElementRepository with
-        member this.GetElement (element: DataLayer.IElement) (metatype: Metatype) =
+        member this.GetElement (metatype: Metatype) (element: DataLayer.IElement) =
             if elements.ContainsKey element then
                 elements.[element]
             else
                 let newElement = 
                     match metatype with
                     // TODO: Implement more correctly.
-                    | Metatype.Edge -> Edge(model, element :?> DataLayer.IRelationship, this :> IElementRepository, attributeRepository) :> IElement
-                    | Metatype.Node -> Node(model, element :?> DataLayer.INode, this :> IElementRepository, attributeRepository) :> IElement
+                    | Metatype.Edge -> Edge(repo, model, element :?> DataLayer.IRelationship, this :> IElementRepository, attributeRepository) :> IElement
+                    | Metatype.Node -> Node(repo, model, element :?> DataLayer.INode, this :> IElementRepository, attributeRepository) :> IElement
                     | _ -> failwith "Unknown metatype"
                 elements.Add(element, newElement)
                 newElement

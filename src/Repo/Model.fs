@@ -14,33 +14,28 @@
 
 namespace RepoExperimental.FacadeLayer
 
+open System.Collections.Generic
+
 open RepoExperimental
 
-type ModelRepository() =
-    let models = System.Collections.Generic.Dictionary<RepoExperimental.DataLayer.IModel, Model>()
-    member this.GetModel (data: RepoExperimental.DataLayer.IModel) =
+///Model repository. Holds all already created wrappers for data models, creates them as needed.
+type ModelRepository(repo: DataLayer.IRepo) =
+    let models = Dictionary<DataLayer.IModel, Model>()
+    member this.GetModel (data: DataLayer.IModel) =
         if models.ContainsKey data then
-            models.[data]
+            models.[data] :> IModel
         else
-            let newModel = Model(data, this)
+            let newModel = Model(repo, data, this)
             models.Add (data, newModel)
-            newModel
+            newModel :> IModel
     
     member this.DeleteModel (model: IModel) = 
         let unwrappedModel = (model :?> Model).UnderlyingModel
         models.Remove unwrappedModel |> ignore
 
-and Model(data: RepoExperimental.DataLayer.IModel, repository: ModelRepository) = 
-    let attributeRepository = AttributeRepository()
-    let elementRepository = ElementRepository(data, attributeRepository) :> IElementRepository
-
-    let rec isInstanceOf name (element: DataLayer.IElement) =
-        if element.Class :? DataLayer.INode && (element.Class :?> DataLayer.INode).Name = name then
-            true
-        elif element.Class = element then
-            false
-        else
-            isInstanceOf name element.Class
+and Model(repo: DataLayer.IRepo, data: DataLayer.IModel, repository: ModelRepository) = 
+    let attributeRepository = AttributeRepository(repo)
+    let elementRepository = ElementRepository(repo, data, attributeRepository) :> IElementRepository
 
     member this.UnderlyingModel = data
 
@@ -50,15 +45,18 @@ and Model(data: RepoExperimental.DataLayer.IModel, repository: ModelRepository) 
         
         member this.Nodes = 
             data.Nodes 
-            |> Seq.filter (fun n -> not (isInstanceOf "Attribute" n))
-            |> Seq.map (fun n -> elementRepository.GetElement n Metatype.Node) 
+            |> Seq.filter (InfrastructureSemanticLayer.InfrastructureMetamodel.isNode repo)
+            |> Seq.map (elementRepository.GetElement Metatype.Node) 
             |> Seq.cast<INode>
 
         member this.Edges = 
-            data.Edges |> Seq.map (fun n -> elementRepository.GetElement n Metatype.Edge) |> Seq.cast<IEdge> |> Seq.toList |> Seq.ofList
+            data.Edges 
+            |> Seq.filter (InfrastructureSemanticLayer.InfrastructureMetamodel.isEdge repo)
+            |> Seq.map (elementRepository.GetElement Metatype.Edge) 
+            |> Seq.cast<IEdge>
 
         member this.Metamodel = 
-            repository.GetModel data.Metamodel :> IModel
+            repository.GetModel data.Metamodel
 
         member this.Name
             with get () = data.Name

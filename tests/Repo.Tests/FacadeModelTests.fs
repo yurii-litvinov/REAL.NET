@@ -21,13 +21,14 @@ open RepoExperimental
 open RepoExperimental.FacadeLayer
 
 let init () =
-    let modelRepository = ModelRepository()
+    let repo = new DataLayer.DataRepo()
+    let modelRepository = ModelRepository(repo)
 
     let underlyingMetaModel = DataLayer.DataModel "Metamodel" :> DataLayer.IModel
     underlyingMetaModel.CreateNode "TypeNode" |> ignore
 
     let underlyingModel = DataLayer.DataModel("Model", underlyingMetaModel) :> DataLayer.IModel
-    let model = Model(underlyingModel, modelRepository)
+    let model = Model(repo, underlyingModel, modelRepository)
     model :> IModel
 
 [<Test>]

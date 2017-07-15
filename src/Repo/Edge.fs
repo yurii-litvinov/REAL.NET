@@ -17,13 +17,13 @@ namespace RepoExperimental.FacadeLayer
 open RepoExperimental
 
 /// Implementation of edge wrapper.
-type Edge(model: DataLayer.IModel, element: DataLayer.IRelationship, elementRepository: IElementRepository, attributeRepository: AttributeRepository) = 
-    inherit Element(model, element, elementRepository, attributeRepository)
+type Edge(repo: DataLayer.IRepo, model: DataLayer.IModel, element: DataLayer.IRelationship, elementRepository: IElementRepository, attributeRepository: AttributeRepository) = 
+    inherit Element(repo, model, element, elementRepository, attributeRepository)
     interface IEdge with
         member this.From
             with get (): IElement = 
                 // TODO: Implement it more correctly.
-                elementRepository.GetElement element.Source.Value Metatype.Node
+                elementRepository.GetElement Metatype.Node element.Source.Value 
             and set (v: IElement): unit = 
                 let dataElement = (v :?> Element).UnderlyingElement
                 element.Source <- Some dataElement
@@ -31,7 +31,7 @@ type Edge(model: DataLayer.IModel, element: DataLayer.IRelationship, elementRepo
         member this.To
             with get (): IElement = 
                 // TODO: Implement it more correctly.
-                elementRepository.GetElement element.Target.Value Metatype.Node
+                elementRepository.GetElement Metatype.Node element.Target.Value 
             and set (v: IElement): unit = 
                 let dataElement = (v :?> Element).UnderlyingElement
                 element.Target <- Some dataElement

@@ -17,17 +17,20 @@ namespace RepoExperimental.FacadeLayer
 open System.Collections.Generic
 
 open RepoExperimental
-open RepoExperimental.SemanticLayer
+open RepoExperimental.CoreSemanticLayer
 
 /// Repository for attribute wrappers. Contains already created wrappers and creates new wrappers if needed.
 /// Holds references to attribute wrappers and elements.
-type AttributeRepository() =
+type AttributeRepository(repo: DataLayer.IRepo) =
     let attributes = Dictionary<_, Dictionary<_, _>>()
-    member this.GetAttribute (model: DataLayer.IModel) (element: DataLayer.IElement) (name: string) =
+    member this.GetAttribute 
+            (element: DataLayer.IElement) 
+            (name: string) =
+
         if attributes.ContainsKey element && attributes.[element].ContainsKey name then
             attributes.[element].[name] :> IAttribute
         else
-            let newAttribute = Attribute(model, element, name, this)
+            let newAttribute = Attribute(repo, element, name, this)
             if not <| attributes.ContainsKey element then
                 attributes.Add(element, Dictionary<_, _>())
             attributes.[element].Add(name, newAttribute)
@@ -40,22 +43,22 @@ type AttributeRepository() =
             attributes.Remove(element) |> ignore
 
 /// Implements attribute functionality
-and Attribute(model: DataLayer.IModel, element: DataLayer.IElement, name: string, repository: AttributeRepository) =
+and Attribute
+    (
+        repo: DataLayer.IRepo
+        , element: DataLayer.IElement
+        , name: string
+        , repository: AttributeRepository
+    ) =
+    
     let findAssociation element name = 
-        model.Edges 
-        |> Seq.append model.Metamodel.Edges
-        |> Seq.tryFind (function 
-                        | :? DataLayer.IAssociation as a -> a.Source = Some element && a.TargetName = name
-                        | _ -> false
-                       ) 
+        Element.outgoingAssociations repo element
+        |> Seq.tryFind (fun a -> a.TargetName = name)
 
     let findAssociationOrMetaAssociation element name = 
         let result = 
-            Element.outgoingLinks model element 
-            |> Seq.tryFind (function 
-                           | :? DataLayer.IAssociation as a -> a.TargetName = name
-                           | _ -> false
-                           ) 
+            Element.outgoingAssociations repo element 
+            |> Seq.tryFind (fun a -> a.TargetName = name)
         
         match result with 
         | Some e -> result
@@ -67,16 +70,20 @@ and Attribute(model: DataLayer.IModel, element: DataLayer.IElement, name: string
             match attributeAssociation with
             | Some l -> l
             | None -> 
-                // Maybe it is attribute instance, so we need to search for an association that is an instance of required association.
-                Element.outgoingLinks model element 
-                |> Seq.filter (function
-                                // TODO: Check association class that it is indeed DataLayer.IAssociation
-                                | :? DataLayer.IAssociation as a -> (a.Class :?> DataLayer.IAssociation).TargetName = name
-                                | _ -> false
-                                )
-                // NOTE: Attributes with multiplicity different from 1 are not supported in v1.
-                |> Seq.tryHead
-                |> Option.defaultWith (fun () -> failwith "Attribute association not found")
+                // Maybe it is attribute instance, so we need to search for an association that is an instance 
+                // of required association.
+                let associationClass = findAssociation element.Class name
+                match associationClass with
+                | None -> raise (InvalidSemanticOperationException "Attribute association not found")
+                | Some l -> let associationInstances = 
+                                Element.outgoingAssociations repo element 
+                                |> Seq.filter (fun a -> a.Class = (l :> DataLayer.IElement))
+                            if Seq.isEmpty associationInstances then
+                                raise (InvalidSemanticOperationException <| sprintf "Attribute %s not present" name)
+                            elif Seq.length associationInstances <> 1 then
+                                raise (MalformedCoreMetamodelException <| sprintf "Attribute %s has multiplicity more than 1" name)
+                            else
+                                Seq.head associationInstances
 
         match attributeAssociation.Target with
         | None -> failwith "Attribute association does not have attribute node on other end"

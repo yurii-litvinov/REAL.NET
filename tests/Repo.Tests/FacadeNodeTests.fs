@@ -23,6 +23,7 @@ open RepoExperimental.FacadeLayer
 [<Test>]
 let ``Node in a model shall have metatype`` () =
     let repo = RepoFactory.CreateRepo ()
+    let underlyingRepo = (repo :?> Repo).UnderlyingRepo
 
     let model = repo.Models |> Seq.find (fun m -> m.Name = "RobotsTestModel")
     let dataLayerModel = (model :?> Model).UnderlyingModel
@@ -33,16 +34,17 @@ let ``Node in a model shall have metatype`` () =
     let dataLayerClass = dataLayerMetamodel.Nodes |> Seq.find (fun n -> n.Name = "MotorsForward") :> DataLayer.IElement
     let dataLayerElement = dataLayerModel.Nodes |> Seq.find (fun n -> n.Class = dataLayerClass)
 
-    let attributeRepository = AttributeRepository ()
-    let elementRepository = ElementRepository (dataLayerModel, attributeRepository) :> IElementRepository
+    let attributeRepository = AttributeRepository(underlyingRepo)
+    let elementRepository = ElementRepository((repo :?> Repo).UnderlyingRepo, dataLayerModel, attributeRepository) :> IElementRepository
 
-    let motorsForwardInstanceNode = elementRepository.GetElement dataLayerElement Metatype.Node
+    let motorsForwardInstanceNode = elementRepository.GetElement Metatype.Node dataLayerElement
 
     motorsForwardInstanceNode.Metatype |> should equal Metatype.Node
 
 [<Test>]
 let ``Timer block shall have a picture`` () =
     let repo = RepoFactory.CreateRepo ()
+    let underlyingRepo = (repo :?> Repo).UnderlyingRepo
 
     let model = repo.Models |> Seq.find (fun m -> m.Name = "RobotsTestModel")
     let dataLayerModel = (model :?> Model).UnderlyingModel
@@ -53,9 +55,9 @@ let ``Timer block shall have a picture`` () =
     let dataLayerClass = dataLayerMetamodel.Nodes |> Seq.find (fun n -> n.Name = "Timer") :> DataLayer.IElement
     let dataLayerElement = dataLayerModel.Nodes |> Seq.find (fun n -> n.Class = dataLayerClass)
 
-    let attributeRepository = AttributeRepository ()
-    let elementRepository = ElementRepository (dataLayerModel, attributeRepository) :> IElementRepository
+    let attributeRepository = AttributeRepository(underlyingRepo)
+    let elementRepository = ElementRepository((repo :?> Repo).UnderlyingRepo, dataLayerModel, attributeRepository) :> IElementRepository
 
-    let timer = elementRepository.GetElement dataLayerElement Metatype.Node
+    let timer = elementRepository.GetElement Metatype.Node dataLayerElement
 
     timer.Class.Shape |> should equal "Pictures/timerBlock.png"

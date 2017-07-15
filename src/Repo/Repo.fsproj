@@ -97,7 +97,8 @@
     <Compile Include="InfrastructureMetamodelBuilder.fs" />
     <Compile Include="RobotsMetamodelBuilder.fs" />
     <Compile Include="RobotsTestModelBuilder.fs" />
-    <Compile Include="SemanticLayer.fs" />
+    <Compile Include="CoreSemanticLayer.fs" />
+    <Compile Include="InfrastructureSemanticLayer.fs" />
     <Compile Include="FacadeLayer.fs" />
     <Compile Include="Attribute.fs" />
     <Compile Include="Element.fs" />

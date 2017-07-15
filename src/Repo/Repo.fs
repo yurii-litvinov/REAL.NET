@@ -17,20 +17,23 @@ namespace RepoExperimental.FacadeLayer
 open RepoExperimental
 
 /// Wrapper around repository from data layer. Maintains a repository of models and creates new models if needed.
-type Repo(data: RepoExperimental.DataLayer.IRepo) =
-    let modelRepository = ModelRepository()
+type Repo(repo: DataLayer.IRepo) =
+    let modelRepository = ModelRepository(repo)
 
     let unwrap (model: IModel) = (model :?> Model).UnderlyingModel
+
+    member this.UnderlyingRepo = repo
 
     interface RepoExperimental.IRepo with
         member this.Models
             with get () =
-                data.Models |> Seq.map modelRepository.GetModel |> Seq.map (fun m -> m :> IModel)
+                repo.Models |> Seq.map modelRepository.GetModel
 
         member this.CreateModel(name, metamodel) =
-            let underlyingModel = data.CreateModel(name, unwrap metamodel)
-            modelRepository.GetModel underlyingModel :> IModel
+            let underlyingModel = repo.CreateModel(name, unwrap metamodel)
+            modelRepository.GetModel underlyingModel
         
         member this.DeleteModel model =
-            data.DeleteModel (unwrap model)
+            repo.DeleteModel (unwrap model)
+            // TODO: Remove all elements from this model too.
             modelRepository.DeleteModel model

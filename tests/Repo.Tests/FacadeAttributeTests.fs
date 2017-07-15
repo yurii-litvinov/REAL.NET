@@ -22,19 +22,21 @@ open RepoExperimental.FacadeLayer
 
 let getAttributeType nodeName name =
     let repo = RepoFactory.CreateRepo ()
+    let underlyingRepo = (repo :?> Repo).UnderlyingRepo
     let model = repo.Models |> Seq.find (fun m -> m.Name = "RobotsMetamodel")
-    let attributeRepository = AttributeRepository ()
+    let attributeRepository = AttributeRepository(underlyingRepo)
 
     let dataLayerModel = (model :?> Model).UnderlyingModel
     let dataLayerElement = dataLayerModel.Nodes |> Seq.find (fun n -> n.Name = nodeName) :> DataLayer.IElement
 
-    attributeRepository.GetAttribute dataLayerModel dataLayerElement name
+    attributeRepository.GetAttribute dataLayerElement name
 
 let getAttributeInstance nodeName name =
     let repo = RepoFactory.CreateRepo ()
+    let underlyingRepo = (repo :?> Repo).UnderlyingRepo
     let model = repo.Models |> Seq.find (fun m -> m.Name = "RobotsTestModel")
     let metamodel = model.Metamodel
-    let attributeRepository = AttributeRepository ()
+    let attributeRepository = AttributeRepository(underlyingRepo)
 
     let dataLayerModel = (model :?> Model).UnderlyingModel
     let dataLayerMetamodel = (model.Metamodel :?> Model).UnderlyingModel
@@ -42,7 +44,7 @@ let getAttributeInstance nodeName name =
     let dataLayerClass = dataLayerMetamodel.Nodes |> Seq.find (fun n -> n.Name = nodeName) :> DataLayer.IElement
     let dataLayerElement = dataLayerModel.Nodes |> Seq.find (fun n -> n.Class = dataLayerClass) :> DataLayer.IElement
 
-    attributeRepository.GetAttribute dataLayerModel dataLayerElement name
+    attributeRepository.GetAttribute dataLayerElement name
 
 [<Test>]
 let ``Attribute kind in metamodel for Motors Forward Ports is String`` () =
