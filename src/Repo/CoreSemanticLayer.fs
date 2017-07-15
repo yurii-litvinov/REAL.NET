@@ -85,6 +85,7 @@ module Element =
             outgoingAssociations repo element 
             |> Seq.filter (fun a -> a.TargetName = name)
             |> Seq.map (fun a -> a.Target)
+            |> Seq.choose id
 
         if Seq.isEmpty attributes then
             raise (InvalidSemanticOperationException <| sprintf "Attribute %s not found for an element" name)

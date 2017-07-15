@@ -67,11 +67,6 @@ let ``Attribute value in model for an instance of Motors Forward Ports is 'M3, M
     attribute.StringValue |> should equal "M3, M4"
 
 [<Test>]
-let ``Shall not allow to modify attribute value in metamodel`` () =
-    let attribute = getAttributeType "MotorsForward" "ports"
-    (fun () -> attribute.StringValue <- "Test") |> should throw typeof<System.Exception>
-
-[<Test>]
 let ``Attribute value in model can be changed`` () =
     let attribute = getAttributeInstance "MotorsForward" "ports"
     attribute.StringValue <- "M1, M2"

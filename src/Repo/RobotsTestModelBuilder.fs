@@ -21,34 +21,43 @@ type RobotsTestModelBuilder() =
     interface IModelBuilder with
         member this.Build(repo: IRepo): unit = 
             let metamodel = repo.Models |> Seq.find (fun m -> m.Name = "RobotsMetamodel")
+            let infrastructureMetamodel = repo.Models |> Seq.find (fun m -> m.Name = "InfrastructureMetamodel")
 
-            let find name =
-                metamodel.Nodes |> Seq.find (fun n -> n.Name = name)
+            let find (model: IModel) name =
+                model.Nodes |> Seq.find (fun n -> n.Name = name)
 
-            let findAssociation node name = 
-                metamodel.Elements 
+            let findAssociation (model: IModel) node name = 
+                model.Edges 
                 |> Seq.find (function 
                              | :? IAssociation as a -> a.Source = Some node && a.TargetName = name
                              | _ -> false
                             )
 
-            let metamodelAbstractNode = find "AbstractNode"
-            let metamodelInitialNode = find "InitialNode"
-            let metamodelFinalNode = find "FinalNode"
-            let metamodelMotorsForward = find "MotorsForward"
-            let metamodelTimer = find "Timer"
+            let metamodelAbstractNode = find metamodel "AbstractNode"
+            let metamodelInitialNode = find metamodel "InitialNode"
+            let metamodelFinalNode = find metamodel "FinalNode"
+            let metamodelMotorsForward = find metamodel "MotorsForward"
+            let metamodelTimer = find metamodel "Timer"
 
-            let metamodelMotorsForwardPortsAttribute = find "ports"
-            let metamodelMotorsForwardPowerAttribute = find "power"
-            let metamodelTimerDelayAttribute = find "delay"
+            let metamodelMotorsForwardPortsAttribute = find metamodel "ports"
+            let metamodelMotorsForwardPowerAttribute = find metamodel "power"
+            let metamodelTimerDelayAttribute = find metamodel "delay"
 
-            let metamodelMotorsForwardPortsAssociation = findAssociation metamodelMotorsForward "ports"
-            let metamodelMotorsForwardPowerAssociation = findAssociation metamodelMotorsForward "power"
-            let metamodelTimerDelayAssociation = findAssociation metamodelTimer "delay"
+            let metamodelMotorsForwardPortsAssociation = findAssociation metamodel metamodelMotorsForward "ports"
+            let metamodelMotorsForwardPowerAssociation = findAssociation metamodel metamodelMotorsForward "power"
+            let metamodelTimerDelayAssociation = findAssociation metamodel metamodelTimer "delay"
 
-            let link = findAssociation metamodelAbstractNode "target"
-            let linkGuardAttribute = find "guard"
-            let linkGuardAssociation = findAssociation link "guard"
+            let link = findAssociation metamodel metamodelAbstractNode "target"
+            let linkGuardAttribute = find metamodel "guard"
+            let linkGuardAssociation = findAssociation metamodel link "guard"
+
+            let infrastructureAttribute = find infrastructureMetamodel "Attribute"
+            let infrastructureAttributeKind = find infrastructureMetamodel "AttributeKind"
+
+            let infrastructureString = find infrastructureMetamodel "String"
+
+            let infrastructureAttributeKindAssociation = findAssociation infrastructureMetamodel infrastructureAttribute "kind"
+            let infrastructureAttributeStringValueAssociation = findAssociation infrastructureMetamodel infrastructureAttribute "stringValue"
 
             let model = repo.CreateModel("RobotsTestModel", metamodel)
 
@@ -58,18 +67,29 @@ type RobotsTestModelBuilder() =
             let motorsForward = model.CreateNode("aMotorsForward", metamodelMotorsForward)
             let timer = model.CreateNode("aTimer", metamodelTimer)
 
-            let addAttributeValue node attribute associationType value =
-                let attributeValueNode = model.CreateNode(value, attribute)
-                model.CreateAssociation(associationType, node, attributeValueNode, "") |> ignore
+            let addAttributeValue node (attribute: INode) value =
+                let attributeAssociation = 
+                    metamodel.Edges |> Seq.filter (fun r -> r.Target = Some (attribute :> IElement)) |> Seq.head
 
-            addAttributeValue motorsForward metamodelMotorsForwardPortsAttribute metamodelMotorsForwardPortsAssociation "M3, M4"
-            addAttributeValue motorsForward metamodelMotorsForwardPowerAttribute metamodelMotorsForwardPowerAssociation "100"
+                let attributeNode = model.CreateNode(attribute.Name, attribute)
+                model.CreateAssociation(attributeAssociation, node, attributeNode, attribute.Name) |> ignore
 
-            addAttributeValue timer metamodelTimerDelayAttribute metamodelTimerDelayAssociation "3000"
+                let stringValueNode = model.CreateNode(value, infrastructureString)
+                model.CreateAssociation(infrastructureAttributeStringValueAssociation, attributeNode, stringValueNode, "stringValue") |> ignore
+
+                let attributeKind = ((findAssociation metamodel attribute "kind").Target.Value :?> INode).Name
+
+                let kindNode = model.CreateNode(attributeKind, infrastructureAttributeKind)
+                model.CreateAssociation(infrastructureAttributeKindAssociation, attributeNode, kindNode, "kind") |> ignore
+
+            addAttributeValue motorsForward metamodelMotorsForwardPortsAttribute "M3, M4"
+            addAttributeValue motorsForward metamodelMotorsForwardPowerAttribute "100"
+
+            addAttributeValue timer metamodelTimerDelayAttribute "3000"
 
             let (-->) (src: IElement) dst =
                 let link = model.CreateAssociation(link, src, dst, "")
-                addAttributeValue link linkGuardAttribute linkGuardAssociation ""
+                addAttributeValue link linkGuardAttribute ""
                 dst
 
             initialNode --> motorsForward --> timer --> finalNode |> ignore

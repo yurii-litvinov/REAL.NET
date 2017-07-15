@@ -51,52 +51,12 @@ and Attribute
         , repository: AttributeRepository
     ) =
     
-    let findAssociation element name = 
-        Element.outgoingAssociations repo element
-        |> Seq.tryFind (fun a -> a.TargetName = name)
-
-    let findAssociationOrMetaAssociation element name = 
-        let result = 
-            Element.outgoingAssociations repo element 
-            |> Seq.tryFind (fun a -> a.TargetName = name)
-        
-        match result with 
-        | Some e -> result
-        | None -> findAssociation element.Class name
-    
     let attributeNode = 
-        let attributeAssociation = findAssociation element name
-        let attributeAssociation = 
-            match attributeAssociation with
-            | Some l -> l
-            | None -> 
-                // Maybe it is attribute instance, so we need to search for an association that is an instance 
-                // of required association.
-                let associationClass = findAssociation element.Class name
-                match associationClass with
-                | None -> raise (InvalidSemanticOperationException "Attribute association not found")
-                | Some l -> let associationInstances = 
-                                Element.outgoingAssociations repo element 
-                                |> Seq.filter (fun a -> a.Class = (l :> DataLayer.IElement))
-                            if Seq.isEmpty associationInstances then
-                                raise (InvalidSemanticOperationException <| sprintf "Attribute %s not present" name)
-                            elif Seq.length associationInstances <> 1 then
-                                raise (MalformedCoreMetamodelException <| sprintf "Attribute %s has multiplicity more than 1" name)
-                            else
-                                Seq.head associationInstances
-
-        match attributeAssociation.Target with
-        | None -> failwith "Attribute association does not have attribute node on other end"
-        | Some e -> e :?> DataLayer.INode
+        Element.attribute repo element name :?> DataLayer.INode
 
     interface IAttribute with
         member this.Kind = 
-            let kindLink = findAssociationOrMetaAssociation attributeNode "kind"
-            if kindLink.IsNone then
-                failwith "Attribute does not have 'kind' link"
-            if kindLink.Value.Target.IsNone then
-                failwith "'kind' link does not have a node on the other side"
-            let kindNode = kindLink.Value.Target.Value :?> DataLayer.INode
+            let kindNode = Element.attribute repo attributeNode "kind"
             match Node.name kindNode with
             | "String" -> AttributeKind.String
             | "Int" -> AttributeKind.Int
@@ -104,11 +64,7 @@ and Attribute
             | "Boolean" -> AttributeKind.Boolean
             | _ -> failwith "unknown 'kind' value"
 
-        member this.Name =
-            // TODO: HACK!
-            match findAssociation attributeNode "stringValue" with
-            | None -> Node.name attributeNode.Class
-            | Some _ -> Node.name attributeNode
+        member this.Name = attributeNode.Name
 
         member this.ReferenceValue
             with get (): IElement = 
@@ -118,12 +74,8 @@ and Attribute
 
         member this.StringValue
             with get (): string = 
-                match findAssociation attributeNode "stringValue" with
-                | None -> Node.name attributeNode
-                | Some _ -> ""
+                Node.name <| Element.attribute repo attributeNode "stringValue"
             and set (v: string): unit = 
-                match findAssociation attributeNode "stringValue" with
-                | None -> attributeNode.Name <- v
-                | Some _ -> failwith "Can not set value for attribute definition"
+                (Element.attribute repo attributeNode "stringValue" :?> DataLayer.INode).Name <- v
 
         member this.Type = null
