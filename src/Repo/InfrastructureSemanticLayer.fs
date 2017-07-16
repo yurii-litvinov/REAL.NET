@@ -12,11 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace RepoExperimental.InfrastructureSemanticLayer
+namespace Repo.InfrastructureSemanticLayer
 
-open RepoExperimental
-open RepoExperimental.DataLayer
-open RepoExperimental.CoreSemanticLayer
+open Repo
+open Repo.DataLayer
+open Repo.CoreSemanticLayer
 
 /// Helper functions to work with Infrastructure Metamodel.
 module InfrastructureMetamodel =

@@ -12,11 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace RepoExperimental.FacadeLayer
+namespace Repo.FacadeLayer
 
-open RepoExperimental
-open RepoExperimental.CoreSemanticLayer
-open RepoExperimental.InfrastructureSemanticLayer
+open Repo
+open Repo.CoreSemanticLayer
+open Repo.InfrastructureSemanticLayer
 
 /// Repository with wrappers for elements (nodes or edges). Contains already created wrappers and creates new wrappers 
 /// when needed.

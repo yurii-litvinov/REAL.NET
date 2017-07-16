@@ -12,12 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace RepoExperimental.FacadeLayer
+namespace Repo.FacadeLayer
 
 open System.Collections.Generic
 
-open RepoExperimental
-open RepoExperimental.InfrastructureSemanticLayer
+open Repo
+open Repo.InfrastructureSemanticLayer
 
 /// Repository for element wrappers. Contains already created wrappers and creates new wrappers if needed.
 type ElementRepository(repo: DataLayer.IRepo, model: DataLayer.IModel, attributeRepository: AttributeRepository) =

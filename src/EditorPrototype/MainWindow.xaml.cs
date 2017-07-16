@@ -27,9 +27,9 @@
         private VertexControl ctrlVer;
         private EdgeControl ctrlEdg;
         private GraphExample dataGraph;
-        private RepoExperimental.IElement currentElement = null;
+        private Repo.IElement currentElement = null;
 
-        private RepoExperimental.IRepo repo = RepoExperimental.RepoFactory.CreateRepo();
+        private Repo.IRepo repo = Repo.RepoFactory.CreateRepo();
 
         public MainWindow()
         {
@@ -83,7 +83,7 @@
 
         private void InitModel(string modelName)
         {
-            RepoExperimental.IModel model = this.repo.Model(modelName);
+            Repo.IModel model = this.repo.Model(modelName);
             if (model == null)
             {
                 return;
@@ -98,8 +98,8 @@
             {
                 /* var isViolation = Constraints.CheckEdge(edge, this.repo, modelName); */
 
-                var sourceNode = edge.From as RepoExperimental.INode;
-                var targetNode = edge.To as RepoExperimental.INode;
+                var sourceNode = edge.From as Repo.INode;
+                var targetNode = edge.To as Repo.INode;
                 if (sourceNode == null || targetNode == null)
                 {
                     // Editor does not support edges linked to edges. Yet.
@@ -145,10 +145,10 @@
                 var name = string.Empty;
                 switch (type)
                 {
-                    case RepoExperimental.INode n:
+                    case Repo.INode n:
                         name = n.Name;
                         break;
-                    case RepoExperimental.IEdge e:
+                    case Repo.IEdge e:
                         name = "Link";  // TODO: Hmmm...
                         break;
                 }
@@ -175,7 +175,7 @@
                 RoutedEventHandler createNode = (sender, args) => this.PaletteButton_Checked(type);
                 RoutedEventHandler createEdge = (sender, args) => { };
                 button.Click += (sender, args) => this.currentElement = type;
-                if (type.InstanceMetatype == RepoExperimental.Metatype.Edge)
+                if (type.InstanceMetatype == Repo.Metatype.Edge)
                 {
                     this.g_Area.VertexSelected += (sender, args) => button.IsChecked = false;
                 }
@@ -191,12 +191,12 @@
             }
         }
 
-        private void PaletteButton_Checked(RepoExperimental.IElement element)
+        private void PaletteButton_Checked(Repo.IElement element)
         {
             this.currentElement = element;
         }
 
-        private void CreateEdge(RepoExperimental.IEdge edge)
+        private void CreateEdge(Repo.IEdge edge)
         {
             var prevVerVertex = this.prevVer?.Vertex as DataVertex;
             var ctrlVerVertex = this.ctrlVer?.Vertex as DataVertex;
@@ -213,7 +213,7 @@
         }
 
         // TODO: Copypaste is heresy.
-        private void CreateNode(RepoExperimental.INode node)
+        private void CreateNode(Repo.INode node)
         {
             var vertex = new DataVertex(node.Name)
             {
@@ -312,7 +312,7 @@
             this.elementsListBox.Items.Add(lbi);
         }
 
-        private void DrawNewEdge(RepoExperimental.INode source, RepoExperimental.INode target)
+        private void DrawNewEdge(Repo.INode source, Repo.INode target)
         {
             ListBoxItem lbi = new ListBoxItem();
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
@@ -336,7 +336,7 @@
         private void VertexSelectedAction(object sender, VertexSelectedEventArgs args)
         {
             this.ctrlVer = args.VertexControl;
-            if (this.currentElement != null && this.currentElement.InstanceMetatype == RepoExperimental.Metatype.Edge)
+            if (this.currentElement != null && this.currentElement.InstanceMetatype == Repo.Metatype.Edge)
             {
                 if (this.prevVer == null)
                 {
@@ -345,7 +345,7 @@
                 }
                 else
                 {
-                    this.CreateEdge(this.currentElement as RepoExperimental.IEdge);
+                    this.CreateEdge(this.currentElement as Repo.IEdge);
                     this.prevVer = null;
                     this.editorManager.DestroyVirtualEdge();
                     this.currentElement = null;
@@ -412,13 +412,13 @@
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 var pos = this.g_zoomctrl.TranslatePoint(e.GetPosition(this.g_zoomctrl), this.g_Area);
-                if (this.currentElement != null && this.currentElement.InstanceMetatype == RepoExperimental.Metatype.Node)
+                if (this.currentElement != null && this.currentElement.InstanceMetatype == Repo.Metatype.Node)
                 {
                     this.CreateNewNode(this.currentElement, pos, modelName);
                     this.currentElement = null;
                 }
 
-                if (this.currentElement != null && this.currentElement.InstanceMetatype == RepoExperimental.Metatype.Edge)
+                if (this.currentElement != null && this.currentElement.InstanceMetatype == Repo.Metatype.Edge)
                 {
                     if (this.prevVer != null)
                     {
@@ -430,14 +430,14 @@
             }
         }
 
-        private void CreateNewNode(RepoExperimental.IElement element, Point position, string modelName)
+        private void CreateNewNode(Repo.IElement element, Point position, string modelName)
         {
             var model = this.repo.Model(modelName);
-            var newNode = model.CreateElement(element) as RepoExperimental.INode;
+            var newNode = model.CreateElement(element) as Repo.INode;
             this.CreateNode(newNode, position);
         }
 
-        private void CreateNode(RepoExperimental.INode node, Point position)
+        private void CreateNode(Repo.INode node, Point position)
         {
             var vertex = new DataVertex(node.Name)
             {

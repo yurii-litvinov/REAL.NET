@@ -12,9 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace RepoExperimental.FacadeLayer
+namespace Repo.FacadeLayer
 
-open RepoExperimental
+open Repo
 
 /// Wrapper around repository from data layer. Maintains a repository of models and creates new models if needed.
 type Repo(repo: DataLayer.IRepo) =

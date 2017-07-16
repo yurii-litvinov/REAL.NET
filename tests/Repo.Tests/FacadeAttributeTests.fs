@@ -17,8 +17,8 @@ module FacadeAttributeTests
 open NUnit.Framework
 open FsUnit
 
-open RepoExperimental
-open RepoExperimental.FacadeLayer
+open Repo
+open Repo.FacadeLayer
 
 let getAttributeType nodeName name =
     let repo = RepoFactory.CreateRepo ()

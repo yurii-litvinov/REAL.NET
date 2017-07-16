@@ -12,11 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace RepoExperimental.FacadeLayer
+namespace Repo.FacadeLayer
 
 open System.Collections.Generic
 
-open RepoExperimental
+open Repo
 
 ///Model repository. Holds all already created wrappers for data models, creates them as needed.
 type ModelRepository(repo: DataLayer.IRepo) =

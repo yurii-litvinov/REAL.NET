@@ -61,9 +61,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="RepoTests.fs" />
-    <Compile Include="InstanceTests.fs" />
-    <Compile Include="MetametamodelTests.fs" />
     <None Include="paket.references" />
     <Compile Include="DataModelTests.fs" />
     <Compile Include="DataRepoTest.fs" />

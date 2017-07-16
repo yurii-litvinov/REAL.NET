@@ -46,7 +46,7 @@
         /// </summary>
         public string Name { get; set; }
 
-        public RepoExperimental.INode Node { get; set; }
+        public Repo.INode Node { get; set; }
 
         public Brush Color
         {

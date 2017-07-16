@@ -12,9 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace RepoExperimental.Metametamodels
+namespace Repo.Metametamodels
 
-open RepoExperimental.DataLayer
+open Repo.DataLayer
 
 /// Initializes repository with Language Metamodel, which is used as a language to define Infrastructure Metamodel, 
 // which in turn is used to define all other metamodels and closely coupled with editor capabilities.

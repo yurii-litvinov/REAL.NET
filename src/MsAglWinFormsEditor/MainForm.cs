@@ -18,7 +18,7 @@ namespace MsAglWinFormsEditor
     /// </summary>
     public partial class MainForm : Form
     {
-        private readonly RepoExperimental.IRepo repo = RepoExperimental.RepoFactory.CreateRepo();
+        private readonly Repo.IRepo repo = Repo.RepoFactory.CreateRepo();
         private readonly Graph graph = new Graph("graph");
         private readonly GViewer viewer = new GViewer();
 
@@ -26,9 +26,9 @@ namespace MsAglWinFormsEditor
         private Node selectedNode;
 
         private const string modelName = "RobotsTestModel";
-        private RepoExperimental.IModel currentModel = null;
-        private Dictionary<RepoExperimental.IElement, string> ids 
-                = new Dictionary<RepoExperimental.IElement, string>();
+        private Repo.IModel currentModel = null;
+        private Dictionary<Repo.IElement, string> ids 
+                = new Dictionary<Repo.IElement, string>();
         private int idCounter;
 
         /// <summary>
@@ -65,12 +65,12 @@ namespace MsAglWinFormsEditor
 
             foreach (var type in currentModel.Metamodel.Elements)
             {
-                if (type.InstanceMetatype != RepoExperimental.Metatype.Edge || type.IsAbstract)
+                if (type.InstanceMetatype != Repo.Metatype.Edge || type.IsAbstract)
                 {
                     continue;
                 }
 
-                var edgeType = type as RepoExperimental.IEdge;
+                var edgeType = type as Repo.IEdge;
 
                 tableLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25));
                 // TODO: We definitely need names for non-abstract edges. Maybe as attribute?
@@ -91,7 +91,7 @@ namespace MsAglWinFormsEditor
             form.Show();
         }
 
-        private void FormatEdge(RepoExperimental.IEdge edgeData, Edge edge)
+        private void FormatEdge(Repo.IEdge edgeData, Edge edge)
         {
             // TODO: Add some means to differentiate edges.
         }
@@ -128,9 +128,9 @@ namespace MsAglWinFormsEditor
                     continue;
                 }
 
-                if (type.InstanceMetatype == RepoExperimental.Metatype.Node)
+                if (type.InstanceMetatype == Repo.Metatype.Node)
                 {
-                    var node = type as RepoExperimental.INode;
+                    var node = type as Repo.INode;
                     var button = new Button { Text = node.Name, Dock = DockStyle.Bottom };
                     button.Click += (sender, args) => CreateNewNode(node);
 
@@ -142,13 +142,13 @@ namespace MsAglWinFormsEditor
             }
         }
 
-        private void CreateNewNode(RepoExperimental.INode type)
+        private void CreateNewNode(Repo.INode type)
         {
-            var newNodeInRepo = currentModel.CreateElement(type) as RepoExperimental.INode;
+            var newNodeInRepo = currentModel.CreateElement(type) as Repo.INode;
 
             var newNode = graph.AddNode(id(newNodeInRepo));
             newNode.LabelText = newNodeInRepo.Name;
-            newNode.UserData = new List<RepoExperimental.IAttribute>();
+            newNode.UserData = new List<Repo.IAttribute>();
 
             newNode.Attr.FillColor = Color.IndianRed;
             newNode.Attr.Shape = Shape.Box;
@@ -162,7 +162,7 @@ namespace MsAglWinFormsEditor
             selectedNode = selectedObject as Node;
             if (selectedNode != null)
             {
-                var attributes = selectedNode.UserData as List<RepoExperimental.IAttribute>;
+                var attributes = selectedNode.UserData as List<Repo.IAttribute>;
                 if (attributes != null)
                 {
                     attributeTable.Visible = true;
@@ -310,7 +310,7 @@ namespace MsAglWinFormsEditor
             viewer.InsertingEdge = !viewer.InsertingEdge;
         }
 
-        private string id(RepoExperimental.IElement element)
+        private string id(Repo.IElement element)
         {
             if (!ids.ContainsKey(element))
             {

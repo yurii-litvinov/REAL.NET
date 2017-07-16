@@ -17,7 +17,7 @@ module DataModelTests
 open NUnit.Framework
 open FsUnit
 
-open RepoExperimental.DataLayer
+open Repo.DataLayer
 
 [<Test>]
 let ``Data model shall have name and metamodel`` () =

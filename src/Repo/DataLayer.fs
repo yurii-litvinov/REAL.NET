@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace RepoExperimental.DataLayer
+namespace Repo.DataLayer
 
 /// Element, most general thing that can be in a model.
 type IElement =

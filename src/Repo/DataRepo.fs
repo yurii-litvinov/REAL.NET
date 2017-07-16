@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace RepoExperimental.DataLayer
+namespace Repo.DataLayer
 
 /// Implementation of repository that contains models in a list.
 type DataRepo() =
@@ -31,7 +31,7 @@ type DataRepo() =
         
         member this.DeleteModel(model: IModel): unit = 
             if models |> List.exists (fun m -> m.Metamodel = model &&  m <> model) then
-                raise (RepoExperimental.DeletingUsedModel(model.Name))
+                raise (Repo.DeletingUsedModel(model.Name))
             models <- models |> List.filter (fun m -> not (m.Equals(model)))
         
         member this.Models: seq<IModel> = 

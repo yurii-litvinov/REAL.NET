@@ -12,9 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace RepoExperimental.FacadeLayer
+namespace Repo.FacadeLayer
 
-open RepoExperimental
+open Repo
 
 /// Implementation of a node in model.
 type Node(repo: DataLayer.IRepo, model: DataLayer.IModel, element: DataLayer.INode, elementRepository: IElementRepository, attributeRepository: AttributeRepository) = 

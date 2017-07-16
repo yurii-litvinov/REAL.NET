@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace RepoExperimental.CoreSemanticLayer
+namespace Repo.CoreSemanticLayer
 
-open RepoExperimental
-open RepoExperimental.DataLayer
+open Repo
+open Repo.DataLayer
 
 /// Helper functions for working with Core Metamodel.
 module CoreMetamodel =

@@ -17,7 +17,7 @@ module FacadeRepoTests
 open NUnit.Framework
 open FsUnit
 
-open RepoExperimental
+open Repo
 
 [<Test>]
 let ``Repository shall contain at least core metamodel`` () =

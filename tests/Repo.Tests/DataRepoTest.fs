@@ -17,7 +17,7 @@ module DataRepoTest
 open NUnit.Framework
 open FsUnit
 
-open RepoExperimental.DataLayer
+open Repo.DataLayer
 
 [<Test>]
 let ``Repo shall be able to create a model`` () =
@@ -45,4 +45,4 @@ let ``Repo shall throw if deleting model in use`` () =
 
     repo.Models |> should contain model
 
-    (fun () -> repo.DeleteModel metamodel) |> should throw typeof<RepoExperimental.DeletingUsedModel>
+    (fun () -> repo.DeleteModel metamodel) |> should throw typeof<Repo.DeletingUsedModel>

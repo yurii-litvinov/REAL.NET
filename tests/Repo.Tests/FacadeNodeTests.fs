@@ -17,8 +17,8 @@ module FacadeNodeTest
 open NUnit.Framework
 open FsUnit
 
-open RepoExperimental
-open RepoExperimental.FacadeLayer
+open Repo
+open Repo.FacadeLayer
 
 [<Test>]
 let ``Node in a model shall have metatype`` () =

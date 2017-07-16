@@ -17,7 +17,7 @@ module DataElementTests
 open NUnit.Framework
 open FsUnit
 
-open RepoExperimental.DataLayer
+open Repo.DataLayer
 
 [<Test>]
 let ``DataElement shall have class and name`` () =

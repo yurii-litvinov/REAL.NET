@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace RepoExperimental
+namespace Repo
 
 /// Thrown if trying to delete a model that is a metamodel for some another model in repository.
 exception DeletingUsedModel of modelName: string

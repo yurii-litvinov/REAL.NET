@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace RepoExperimental.DataLayer
+namespace Repo.DataLayer
 
 /// Implementation of Relationship abstraction.
 [<AbstractClass>]

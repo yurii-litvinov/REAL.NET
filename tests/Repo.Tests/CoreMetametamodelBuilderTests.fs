@@ -17,8 +17,8 @@ module CoreMetametamodelBuilderTests
 open NUnit.Framework
 open FsUnit
 
-open RepoExperimental.Metametamodels
-open RepoExperimental.DataLayer
+open Repo.Metametamodels
+open Repo.DataLayer
 
 let init () =
     let repo = DataRepo() :> IRepo

@@ -17,8 +17,8 @@ module FacadeModelTests
 open NUnit.Framework
 open FsUnit
 
-open RepoExperimental
-open RepoExperimental.FacadeLayer
+open Repo
+open Repo.FacadeLayer
 
 let init () =
     let repo = new DataLayer.DataRepo()

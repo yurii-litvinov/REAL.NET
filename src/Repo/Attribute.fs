@@ -12,12 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace RepoExperimental.FacadeLayer
+namespace Repo.FacadeLayer
 
 open System.Collections.Generic
 
-open RepoExperimental
-open RepoExperimental.CoreSemanticLayer
+open Repo
+open Repo.CoreSemanticLayer
 
 /// Repository for attribute wrappers. Contains already created wrappers and creates new wrappers if needed.
 /// Holds references to attribute wrappers and elements.
