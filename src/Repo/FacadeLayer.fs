@@ -165,6 +165,9 @@ type IRepo =
         /// instances (possibly indirect) of some elements of Core Metametamodel.
         abstract Models: IModel seq with get
 
+        /// Returns a model by name or throws if no such model found in a repository.
+        abstract Model: name: string -> IModel
+
         /// Creates a new model with given name based on a given metamodel.
         abstract CreateModel: name: string * metamodel: IModel -> IModel
 

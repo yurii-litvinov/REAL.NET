@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Splines;
-using Repo;
 using Color = Microsoft.Msagl.Drawing.Color;
 using Point = Microsoft.Msagl.Point;
 
@@ -19,20 +18,26 @@ namespace MsAglWinFormsEditor
     /// </summary>
     public partial class MainForm : Form
     {
-        private readonly IRepo repo = RepoFactory.CreateRepo();
+        private readonly RepoExperimental.IRepo repo = RepoExperimental.RepoFactory.CreateRepo();
         private readonly Graph graph = new Graph("graph");
         private readonly GViewer viewer = new GViewer();
 
         private readonly Hashtable imagesHashtable = new Hashtable();
         private Node selectedNode;
 
-        private const string modelName = "mainModel";
+        private const string modelName = "RobotsTestModel";
+        private RepoExperimental.IModel currentModel = null;
+        private Dictionary<RepoExperimental.IElement, string> ids 
+                = new Dictionary<RepoExperimental.IElement, string>();
+        private int idCounter;
 
         /// <summary>
         /// Create form with given graph
         /// </summary>
         public MainForm()
         {
+            currentModel = repo.Model(modelName);
+
             viewer.MouseClick += ViewerMouseClicked;
             InitializeComponent();
             AddEdges();
@@ -51,14 +56,6 @@ namespace MsAglWinFormsEditor
             InitPalette();
         }
 
-        private readonly List<EdgeType> edgeTypes = new List<EdgeType>
-        {
-            EdgeType.Generalization,
-            EdgeType.Association,
-            EdgeType.Attribute,
-            EdgeType.Type
-        };
-
         private void ViewerOnEdgeAdded(object sender, EventArgs eventArgs)
         {
             var edge = sender as Edge;
@@ -66,10 +63,18 @@ namespace MsAglWinFormsEditor
             var tableLayout = new TableLayoutPanel { Dock = DockStyle.Fill };
             form.Controls.Add(tableLayout);
 
-            foreach (var edgeType in edgeTypes)
+            foreach (var type in currentModel.Metamodel.Elements)
             {
+                if (type.InstanceMetatype != RepoExperimental.Metatype.Edge || type.IsAbstract)
+                {
+                    continue;
+                }
+
+                var edgeType = type as RepoExperimental.IEdge;
+
                 tableLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25));
-                var associationButton = new Button { Text = edgeType.ToString(), Dock = DockStyle.Fill };
+                // TODO: We definitely need names for non-abstract edges. Maybe as attribute?
+                var associationButton = new Button { Text = "Link", Dock = DockStyle.Fill };
                 associationButton.Click += (o, args) =>
                 {
                     FormatEdge(edgeType, edge);
@@ -82,97 +87,72 @@ namespace MsAglWinFormsEditor
                 ++tableLayout.RowCount;
 
             }
+
             form.Show();
         }
 
-        private void FormatEdge(EdgeType edgeType, Edge edge)
+        private void FormatEdge(RepoExperimental.IEdge edgeData, Edge edge)
         {
-            edge.LabelText = edgeType.ToString();
-            switch (edgeType)
-            {
-                case EdgeType.Association:
-                    edge.Attr.Color = Color.Black;
-                    break;
-                case EdgeType.Attribute:
-                    edge.Attr.Color = Color.Green;
-                    break;
-                case EdgeType.Generalization:
-                    edge.Attr.Color = Color.Red;
-                    break;
-                case EdgeType.Type:
-                    edge.Attr.Color = Color.Blue;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            // TODO: Add some means to differentiate edges.
         }
 
         private void AddEdges()
         {
-            foreach (var edge in repo.ModelEdges(modelName))
+            foreach (var edge in currentModel.Edges)
             {
-                var newEdge = graph.AddEdge(edge.source, edge.target);
-                FormatEdge(edge.edgeType, newEdge);
+                var newEdge = graph.AddEdge(id(edge.From), id(edge.To));
+                FormatEdge(edge, newEdge);
             }
         }
 
         private void AddNodes()
         {
-            foreach (var node in repo.ModelNodes(modelName))
+            foreach (var node in currentModel.Nodes)
             {
-                var newNode = graph.FindNode(node.name);
-                newNode.UserData = node.attributes;
+                var newNode = graph.FindNode(id(node));
+                newNode.UserData = node.Attributes;
                 newNode.Attr.LabelMargin = Left;
-                switch (node.nodeType)
-                {
-                    case NodeType.Attribute:
-                        newNode.Attr.FillColor = Color.IndianRed;
-                        newNode.Attr.Shape = Shape.Box;
-                        break;
-                    case NodeType.Node:
-                        newNode.Attr.FillColor = Color.ForestGreen;
-                        newNode.Attr.Shape = Shape.Octagon;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                newNode.LabelText = node.Name;
+
+                newNode.Attr.FillColor = Color.IndianRed;
+                newNode.Attr.Shape = Shape.Box;
             }
         }
 
         private void InitPalette()
         {
-            foreach (var type in repo.MetamodelNodes(modelName))
+            foreach (var type in currentModel.Metamodel.Elements)
             {
-                var button = new Button { Text = type.name, Dock = DockStyle.Bottom };
-                button.Click += (sender, args) => CreateNewNode(type.id);
+                if (type.IsAbstract)
+                {
+                    continue;
+                }
 
-                // TODO: Bind it to Designer, do not do GUI work in C#.
-                paletteGrid.Controls.Add(button, 0, paletteGrid.RowCount - 1);
+                if (type.InstanceMetatype == RepoExperimental.Metatype.Node)
+                {
+                    var node = type as RepoExperimental.INode;
+                    var button = new Button { Text = node.Name, Dock = DockStyle.Bottom };
+                    button.Click += (sender, args) => CreateNewNode(node);
 
-                ++paletteGrid.RowCount;
+                    // TODO: Bind it to Designer, do not do GUI work in C#.
+                    paletteGrid.Controls.Add(button, 0, paletteGrid.RowCount - 1);
+
+                    ++paletteGrid.RowCount;
+                }
             }
         }
 
-        private void CreateNewNode(string typeId)
+        private void CreateNewNode(RepoExperimental.INode type)
         {
-            var newNodeInfo = repo.AddNode(typeId, modelName);
+            var newNodeInRepo = currentModel.CreateElement(type) as RepoExperimental.INode;
 
-            var newNode = graph.AddNode(graph.NodeCount.ToString());
-            newNode.LabelText = "New " + newNodeInfo.nodeType.ToString();
-            newNode.UserData = new List<AttributeInfo>();
-            switch (newNodeInfo.nodeType)
-            {
-                case NodeType.Attribute:
-                    newNode.Attr.FillColor = Color.IndianRed;
-                    newNode.Attr.Shape = Shape.Box;
-                    break;
-                case NodeType.Node:
-                    newNode.Attr.FillColor = Color.ForestGreen;
-                    newNode.Attr.Shape = Shape.Octagon;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            var newNode = graph.AddNode(id(newNodeInRepo));
+            newNode.LabelText = newNodeInRepo.Name;
+            newNode.UserData = new List<RepoExperimental.IAttribute>();
+
+            newNode.Attr.FillColor = Color.IndianRed;
+            newNode.Attr.Shape = Shape.Box;
+
             UpdateGraph();
         }
 
@@ -182,8 +162,8 @@ namespace MsAglWinFormsEditor
             selectedNode = selectedObject as Node;
             if (selectedNode != null)
             {
-                var attributeInfos = selectedNode.UserData as List<AttributeInfo>;
-                if (attributeInfos != null)
+                var attributes = selectedNode.UserData as List<RepoExperimental.IAttribute>;
+                if (attributes != null)
                 {
                     attributeTable.Visible = true;
                     loadImageButton.Visible = true;
@@ -200,9 +180,9 @@ namespace MsAglWinFormsEditor
                         imageLayoutPanel.Visible = false;
                     }
                     attributeTable.Rows.Clear();
-                    foreach (var info in attributeInfos)
+                    foreach (var attribute in attributes)
                     {
-                        object[] row = { info.name, repo.Node(info.attributeType).name, info.value };
+                        object[] row = { attribute.Name, attribute.Kind.ToString(), attribute.StringValue };
                         attributeTable.Rows.Add(row);
                     }
                 }
@@ -328,6 +308,16 @@ namespace MsAglWinFormsEditor
         private void InsertingEdgeCheckedChanged(object sender, EventArgs e)
         {
             viewer.InsertingEdge = !viewer.InsertingEdge;
+        }
+
+        private string id(RepoExperimental.IElement element)
+        {
+            if (!ids.ContainsKey(element))
+            {
+                ids.Add(element, (++idCounter).ToString());
+            }
+
+            return ids[element];
         }
     }
 }

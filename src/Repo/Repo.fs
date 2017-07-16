@@ -24,10 +24,19 @@ type Repo(repo: DataLayer.IRepo) =
 
     member this.UnderlyingRepo = repo
 
-    interface RepoExperimental.IRepo with
+    interface IRepo with
         member this.Models
             with get () =
                 repo.Models |> Seq.map modelRepository.GetModel
+
+        member this.Model name =
+            let models = (this :> IRepo).Models |> Seq.filter (fun m -> m.Name = name)
+            if Seq.isEmpty models then
+                raise (ModelNotFoundException name)
+            elif Seq.length models <> 1 then
+                raise (MultipleModelsWithGivenNameException name)
+            else
+                Seq.head models
 
         member this.CreateModel(name, metamodel) =
             let underlyingModel = repo.CreateModel(name, unwrap metamodel)

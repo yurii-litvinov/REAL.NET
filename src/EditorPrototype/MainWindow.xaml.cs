@@ -83,7 +83,7 @@
 
         private void InitModel(string modelName)
         {
-            RepoExperimental.IModel model = this.repo.Models.Where(m => m.Name == modelName).FirstOrDefault();
+            RepoExperimental.IModel model = this.repo.Model(modelName);
             if (model == null)
             {
                 return;
@@ -126,7 +126,7 @@
 
         private void InitPalette(string metamodelName)
         {
-            RepoExperimental.IModel model = this.repo.Models.Where(m => m.Name == metamodelName).FirstOrDefault()?.Metamodel;
+            var model = this.repo.Model(metamodelName).Metamodel;
             if (model == null)
             {
                 return;
@@ -140,6 +140,7 @@
                 }
 
                 StackPanel sp = new StackPanel() { Orientation = Orientation.Horizontal };
+                sp.HorizontalAlignment = HorizontalAlignment.Left;
 
                 var name = string.Empty;
                 switch (type)
@@ -160,10 +161,16 @@
                     : new BitmapImage(new Uri("pack://application:,,,/Pictures/Vertex.png"))
                 };
 
+                img.LayoutTransform = new ScaleTransform(0.3, 0.3);
+                img.HorizontalAlignment = HorizontalAlignment.Left;
+                l.VerticalAlignment = VerticalAlignment.Center;
+                l.HorizontalAlignment = HorizontalAlignment.Left;
+
                 sp.Children.Add(img);
                 sp.Children.Add(l);
 
                 var button = new ToggleButton { Content = sp };
+                button.HorizontalContentAlignment = HorizontalAlignment.Left;
 
                 RoutedEventHandler createNode = (sender, args) => this.PaletteButton_Checked(type);
                 RoutedEventHandler createEdge = (sender, args) => { };
@@ -293,8 +300,11 @@
                         ? new BitmapImage(new Uri(vertex.Picture))
                         : new BitmapImage(new Uri("pack://application:,,,/Pictures/Vertex.png"))
             };
+
+            img.LayoutTransform = new ScaleTransform(0.3, 0.3);
             TextBlock spaces = new TextBlock { Text = "  " };
             TextBlock tx = new TextBlock { Text = vertex.Name };
+            tx.VerticalAlignment = VerticalAlignment.Center;
             sp.Children.Add(img);
             sp.Children.Add(spaces);
             sp.Children.Add(tx);
@@ -422,7 +432,7 @@
 
         private void CreateNewNode(RepoExperimental.IElement element, Point position, string modelName)
         {
-            var model = this.repo.Models.Where(m => m.Name == modelName).First();
+            var model = this.repo.Model(modelName);
             var newNode = model.CreateElement(element) as RepoExperimental.INode;
             this.CreateNode(newNode, position);
         }
