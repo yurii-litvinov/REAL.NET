@@ -69,27 +69,36 @@ type RobotsMetamodelBuilder() =
 
                 model.CreateAssociation(attributesAssociation, node, attribute, name) |> ignore
 
-            let (~+) (name, shape, isAbstract, metatype, instanceMetatype) = 
+            let (~+) (name, shape, isAbstract) = 
                 let node = model.CreateNode(name, metamodelNode)
                 
                 // TODO: attributes of elementary types require special handling in data layer.
                 addAttributeValue node "shape" shapeAssociation metamodelStringNode shape
                 addAttributeValue node "isAbstract" isAbstractAssociation metamodelBooleanNode (if isAbstract then "true" else "false")
-                addAttributeValue node "metatype" metatypeAssociation metamodelMetatypeNode metatype
-                addAttributeValue node "instanceMetatype" instanceMetatypeAssociation metamodelMetatypeNode instanceMetatype
+                addAttributeValue node "metatype" metatypeAssociation metamodelMetatypeNode "Metatype.Node"
+                addAttributeValue node "instanceMetatype" instanceMetatypeAssociation metamodelMetatypeNode "Metatype.Node"
 
                 node
 
             let (--|>) (source: IElement) target = model.CreateGeneralization(metamodelGeneralization, source, target) |> ignore
-            let (--->) (source: IElement) (target, name) = model.CreateAssociation(metamodelEdge, source, target, name)
 
-            let abstractNode = +("AbstractNode", "", true, "Node", "Node")
-            let initialNode = +("InitialNode", "Pictures/initialBlock.png", false, "Metatype.Node", "Metatype.Node")
-            let finalNode = +("FinalNode", "Pictures/finalBlock.png", false, "Node", "Node")
-            let motorsForward = +("MotorsForward", "Pictures/enginesForwardBlock.png", false, "Metatype.Node", "Metatype.Node")
-            let timer = +("Timer", "Pictures/timerBlock.png", false, "Metatype.Node", "Metatype.Node")
+            let (--->) (source: IElement) (target, name, isAbstract) = 
+                let edge = model.CreateAssociation(metamodelEdge, source, target, name)
 
-            let link = abstractNode ---> (abstractNode, "target")
+                addAttributeValue edge "shape" shapeAssociation metamodelStringNode "Pictures/Edge.png"
+                addAttributeValue edge "isAbstract" isAbstractAssociation metamodelBooleanNode (if isAbstract then "true" else "false")
+                addAttributeValue edge "metatype" metatypeAssociation metamodelMetatypeNode "Metatype.Edge"
+                addAttributeValue edge "instanceMetatype" instanceMetatypeAssociation metamodelMetatypeNode "Metatype.Edge"
+
+                edge
+
+            let abstractNode = +("AbstractNode", "", true)
+            let initialNode = +("InitialNode", "Pictures/initialBlock.png", false)
+            let finalNode = +("FinalNode", "Pictures/finalBlock.png", false)
+            let motorsForward = +("MotorsForward", "Pictures/enginesForwardBlock.png", false)
+            let timer = +("Timer", "Pictures/timerBlock.png", false)
+
+            let link = abstractNode ---> (abstractNode, "target", false)
             addAttribute link "guard" "AttributeKind.String"
 
             addAttribute motorsForward "ports" "AttributeKind.String"

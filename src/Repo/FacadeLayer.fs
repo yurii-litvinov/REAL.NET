@@ -146,6 +146,9 @@ type IModel =
         /// A list of edges in this model.
         abstract Edges: IEdge seq with get
 
+        /// A list of elements in this model. Calculated as Nodes merged with Edges.
+        abstract Elements: IElement seq with get
+
         /// Instantiates element of a given type and returns result of an instantiation. Type shall be an element from
         /// Metamodel for this model.
         abstract CreateElement: ``type``: IElement -> IElement

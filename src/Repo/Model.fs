@@ -64,6 +64,9 @@ and Model(repo: DataLayer.IRepo, data: DataLayer.IModel, repository: ModelReposi
             |> Seq.map elementRepository.GetElement
             |> Seq.cast<IEdge>
 
+        member this.Elements = 
+            (this :> IModel).Nodes |> Seq.cast<IElement> |> Seq.append ((this :> IModel).Edges |> Seq.cast<IElement>)
+
         member this.Metamodel = 
             repository.GetModel data.Metamodel
 

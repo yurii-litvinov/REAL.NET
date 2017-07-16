@@ -111,14 +111,14 @@ module Operations =
     // not be done until orthogonal metamodelling will be fully supported (not in v1).
     let private attributesMap =
         Map.empty
-            .Add("Element", [("shape", "Pictures/Vertex.png"); ("isAbstract", "true"); ("metatype", "Node"); ("instanceMetatype", "Node"); ("name", "Element")] |> Map.ofList)
-            .Add("Node", [("shape", "Pictures/Vertex.png"); ("isAbstract", "false"); ("metatype", "Node"); ("instanceMetatype", "Node"); ("name", "Node")] |> Map.ofList)
-            .Add("Relationship", [("shape", "Pictures/Edge.png"); ("isAbstract", "true"); ("metatype", "Node"); ("instanceMetatype", "Edge"); ("name", "Relationship")] |> Map.ofList)
-            .Add("Generalization", [("shape", "Pictures/Edge.png"); ("isAbstract", "false"); ("metatype", "Node"); ("instanceMetatype", "Edge"); ("name", "Generalization")] |> Map.ofList)
-            .Add("Edge", [("shape", "Pictures/Edge.png"); ("isAbstract", "false"); ("metatype", "Node"); ("instanceMetatype", "Edge"); ("name", "Edge")] |> Map.ofList)
-            .Add("Attribute", [("shape", "Pictures/Vertex.png"); ("isAbstract", "true"); ("metatype", "Node"); ("instanceMetatype", "Node"); ("name", "Attribute")] |> Map.ofList)
-            .Add("Model", [("shape", "Pictures/Vertex.png"); ("isAbstract", "true"); ("metatype", "Node"); ("instanceMetatype", "Node"); ("name", "Model")] |> Map.ofList)
-            .Add("Repo", [("shape", "Pictures/Vertex.png"); ("isAbstract", "true"); ("metatype", "Node"); ("instanceMetatype", "Node"); ("name", "Repo")] |> Map.ofList)
+            .Add("Element", [("shape", "Pictures/Vertex.png"); ("isAbstract", "true"); ("metatype", "Metatype.Node"); ("instanceMetatype", "Metatype.Node"); ("name", "Element")] |> Map.ofList)
+            .Add("Node", [("shape", "Pictures/Vertex.png"); ("isAbstract", "false"); ("metatype", "Metatype.Node"); ("instanceMetatype", "Metatype.Node"); ("name", "Node")] |> Map.ofList)
+            .Add("Relationship", [("shape", "Pictures/Edge.png"); ("isAbstract", "true"); ("metatype", "Metatype.Node"); ("instanceMetatype", "Metatype.Edge"); ("name", "Relationship")] |> Map.ofList)
+            .Add("Generalization", [("shape", "Pictures/Edge.png"); ("isAbstract", "false"); ("metatype", "Metatype.Node"); ("instanceMetatype", "Metatype.Edge"); ("name", "Generalization")] |> Map.ofList)
+            .Add("Edge", [("shape", "Pictures/Edge.png"); ("isAbstract", "false"); ("metatype", "Metatype.Node"); ("instanceMetatype", "Metatype.Edge"); ("name", "Edge")] |> Map.ofList)
+            .Add("Attribute", [("shape", "Pictures/Vertex.png"); ("isAbstract", "true"); ("metatype", "Metatype.Node"); ("instanceMetatype", "Metatype.Node"); ("name", "Attribute")] |> Map.ofList)
+            .Add("Model", [("shape", "Pictures/Vertex.png"); ("isAbstract", "true"); ("metatype", "Metatype.Node"); ("instanceMetatype", "Metatype.Node"); ("name", "Model")] |> Map.ofList)
+            .Add("Repo", [("shape", "Pictures/Vertex.png"); ("isAbstract", "true"); ("metatype", "Metatype.Node"); ("instanceMetatype", "Metatype.Node"); ("name", "Repo")] |> Map.ofList)
 
     let private attributeTypesMap = [("shape", "String"); ("isAbstract", "Boolean"); ("instanceMetatype", "Metatype")] |> Map.ofList
 
@@ -140,13 +140,19 @@ module Operations =
             let defaultValue = attributesMap.[(``class`` :?> INode).Name].[name]
             Element.addAttribute repo element name kindNode attributeAssociation defaultValue
 
+    let private copySimpleAttribute repo element (``class``: IElement) name =
+        let attributeClassNode = Element.attribute repo ``class`` name
+        let attributeAssociation = InfrastructureMetamodel.findAssociation repo name
+        let defaultValue = Element.attributeValue repo ``class`` name
+        Element.addAttribute repo element name attributeClassNode attributeAssociation defaultValue
+
     let private addAttribute repo (model: IModel) (element: IElement) (attributeClass: INode) =
         let attributeLink = attributeLink repo element.Class attributeClass
         let attributeNode = model.CreateNode(attributeClass.Name, attributeClass)
         model.CreateAssociation(attributeLink, element, attributeNode, attributeClass.Name) |> ignore
 
-        copyAttribute repo attributeNode attributeClass "stringValue"
-        copyAttribute repo attributeNode attributeClass "kind"
+        copySimpleAttribute repo attributeNode attributeClass "stringValue"
+        copySimpleAttribute repo attributeNode attributeClass "kind"
 
     let private attributeValue repo (element: IElement) name =
         if InfrastructureMetamodel.isFromInfrastructureMetamodel repo element then
@@ -170,7 +176,7 @@ module Operations =
                     "Trying to instantiate something that should not be instantiated")
 
         let newElement = 
-            if attributeValue repo ``class`` "instanceMetatype" = "Node" then
+            if attributeValue repo ``class`` "instanceMetatype" = "Metatype.Node" then
                 model.CreateNode(name, ``class``) :> IElement
             else
                 model.CreateAssociation(``class``, None, None, name) :> IElement
@@ -178,7 +184,15 @@ module Operations =
         let attributes = Element.attributes repo ``class``
         attributes |> Seq.iter (addAttribute repo model newElement)
 
-        let copyAttribute = copyAttribute repo newElement ``class``
+        let copyAttribute = 
+            if InfrastructureMetamodel.isFromInfrastructureMetamodel repo ``class`` then
+                copyAttribute repo newElement ``class``
+            else
+                // For now metamodel does not contain linguistic attributes ("shape", "isAbstract" and so on) as
+                // proper attributes, since we have no way to tell them from "true" attributes that can be edited.
+                // Actually, attributes shall have potency and be copied as proper attributes if their potency allows.
+                copySimpleAttribute repo newElement ``class``
+
         copyAttribute "shape"
         copyAttribute "isAbstract"
         copyAttribute "instanceMetatype"
