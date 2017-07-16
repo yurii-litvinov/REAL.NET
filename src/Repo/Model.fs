@@ -40,8 +40,17 @@ and Model(repo: DataLayer.IRepo, data: DataLayer.IModel, repository: ModelReposi
     member this.UnderlyingModel = data
 
     interface IModel with
-        member this.CreateElement ``type`` = raise (System.NotImplementedException())
-        member this.DeleteElement element = raise (System.NotImplementedException())
+        member this.CreateElement ``type`` = 
+            let unwrappedType = (``type`` :?> Element).UnderlyingElement
+            let element = InfrastructureSemanticLayer.Operations.instantiate repo data unwrappedType
+            elementRepository.GetElement element
+            
+        member this.DeleteElement element = 
+            // TODO: Clean up the memory and check correctness (for example, check for "class" relations)
+            let unwrappedElement = (element :?> Element).UnderlyingElement
+            /// TODO: Delete all attributes.
+            data.DeleteElement unwrappedElement
+            elementRepository.DeleteElement unwrappedElement
         
         member this.Nodes = 
             data.Nodes 

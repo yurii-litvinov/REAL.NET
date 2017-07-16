@@ -63,8 +63,13 @@ type InfrastructureMetamodelBuilder() =
             let metatype = createEnum "Metatype"
             let attributeKind = createEnum "AttributeKind"
 
-            createEnumLiterals metatype ["NodeType"; "EdgeType"]
-            createEnumLiterals attributeKind ["String"; "Int"; "Double"; "Boolean"]
+            createEnumLiterals metatype ["Metatype.Node"; "Metatype.Edge"]
+            
+            createEnumLiterals attributeKind 
+                ["AttributeKind.String"
+                ; "AttributeKind.Int"
+                ; "AttributeKind.Double"
+                ; "AttributeKind.Boolean"]
 
             node --|> element
             relationship --|> element
@@ -80,7 +85,8 @@ type InfrastructureMetamodelBuilder() =
             repoNode ---> (modelNode, "models")
             modelNode ---> (element, "elements")
 
-            let createAttribute node (``type``: IElement) name = model.CreateAssociation(metamodelAssociation, node, ``type``, name) |> ignore
+            let createAttribute node (``type``: IElement) name = 
+                model.CreateAssociation(metamodelAssociation, node, ``type``, name) |> ignore
 
             createAttribute element stringNode "shape"
             createAttribute element booleanNode "isAbstract"

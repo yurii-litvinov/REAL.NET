@@ -41,10 +41,10 @@ and Attribute(repo: DataLayer.IRepo, attributeNode: DataLayer.INode, repository:
         member this.Kind = 
             let kindNode = Element.attribute repo attributeNode "kind"
             match Node.name kindNode with
-            | "String" -> AttributeKind.String
-            | "Int" -> AttributeKind.Int
-            | "Double" -> AttributeKind.Double
-            | "Boolean" -> AttributeKind.Boolean
+            | "AttributeKind.String" -> AttributeKind.String
+            | "AttributeKind.Int" -> AttributeKind.Int
+            | "AttributeKind.Double" -> AttributeKind.Double
+            | "AttributeKind.Boolean" -> AttributeKind.Boolean
             | _ -> failwith "unknown 'kind' value"
 
         member this.Name = attributeNode.Name

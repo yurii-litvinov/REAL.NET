@@ -67,7 +67,7 @@ module Element =
     /// Returns a model containing given element.
     /// Throws InvalidSemanticOperationException if there is no such model or there is more than one model which 
     /// contains given element.
-    let private getContainingModel (repo: IRepo) element =
+    let containingModel (repo: IRepo) element =
         let models = repo.Models |> Seq.filter (fun m -> Seq.contains element m.Elements)
 
         if Seq.isEmpty models then
@@ -84,7 +84,7 @@ module Element =
         | :? DataLayer.IRelationship as a -> a.Source = Some element 
         | _ -> false
 
-        (getContainingModel repo element).Edges |> Seq.filter isOutgoingRelationship
+        (containingModel repo element).Edges |> Seq.filter isOutgoingRelationship
 
     /// Returns all outgoing generalizations for an element.
     let outgoingGeneralizations (repo: IRepo) element = 
@@ -94,29 +94,55 @@ module Element =
     let outgoingAssociations (repo: IRepo) element = 
         outgoingRelationships repo element |> Seq.filter (fun r -> r :? IAssociation) |> Seq.cast<IAssociation>
 
-    /// Returns an attribute (target node of an outgoing association with given target name).
-    /// Throws InvalidSemanticOperationException if there is no such association or there is more than one.
-    let attribute (repo: IRepo) element name = 
-        let attributes = 
-            outgoingAssociations repo element 
-            |> Seq.filter (fun a -> a.TargetName = name)
+    /// Returns a sequence of attributes with given name in a given element, ignoring generalization hierarchy.
+    let private strictElementAttributes (repo: IRepo) element name =
+        outgoingAssociations repo element 
+        |> Seq.filter (fun a -> a.TargetName = name)
+        |> Seq.map (fun a -> a.Target)
+        |> Seq.choose id
+
+    /// Searches for attribute in generalization hierarchy.
+    let rec private lookupAttribute (repo: IRepo) name element = 
+        // Somewhat strange semantic of generalization --- we search generalization hierarchy for a first entry
+        // of an attribute. Actually attribute values can be overridden by descendants (which is fine), but attribute
+        // slots can not. But in Core Metamodel there is no difference between attribute type and attribute value
+        // (in deep metamodelling every attribute can be a type for other attribute).
+        let attributes = strictElementAttributes repo element name
+        if Seq.isEmpty attributes then
+            outgoingGeneralizations repo element 
             |> Seq.map (fun a -> a.Target)
             |> Seq.choose id
+            |> Seq.map (lookupAttribute repo name)
+            |> Seq.concat
+        else 
+            attributes
 
+    /// Returns an attribute (target node of an outgoing association with given target name).
+    /// Throws InvalidSemanticOperationException if there is no such association or there is more than one.
+    let rec attribute (repo: IRepo) element name = 
+        let attributes = lookupAttribute repo name element
+    
         if Seq.isEmpty attributes then
-            raise (InvalidSemanticOperationException <| sprintf "Attribute %s not found for an element" name)
+            raise (InvalidSemanticOperationException <| sprintf "Attribute %s not found" name)
         elif Seq.length attributes <> 1 then
-            raise (InvalidSemanticOperationException <| sprintf "Attribute %s has multiplicity more than 1" name)
+            raise (InvalidSemanticOperationException <| sprintf "Attribute %s has multiplicity more than 1 \
+                or appears more than once in generalization hierarchy" name)
         else
             let attribute = Seq.head attributes
             match attribute with
             | :? INode as result -> result
             | _ -> raise (InvalidSemanticOperationException 
-                <| sprintf "Attribute %s is not a node (which is possible but not used and not supported in v1" name)
+                <| sprintf "Attribute %s is not a node (which is possible but not used and not supported in v1)" name)
 
     /// Returns string value of a given attribute.
     let attributeValue (repo: IRepo) element name = 
         (attribute repo element name).Name
+
+    /// Adds a new attribute to an element.
+    let addAttribute (repo: IRepo) element name ``class`` attributeAssociationClass value =
+        let model = containingModel repo element
+        let attributeNode = model.CreateNode(value, ``class``)
+        model.CreateAssociation(attributeAssociationClass, element, attributeNode, name) |> ignore
 
     /// Returns true if an 'instance' is an (indirect) instance of a 'class'.
     let rec isInstanceOf (``class``: IElement) (instance: IElement) =

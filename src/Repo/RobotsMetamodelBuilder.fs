@@ -84,18 +84,18 @@ type RobotsMetamodelBuilder() =
             let (--->) (source: IElement) (target, name) = model.CreateAssociation(metamodelEdge, source, target, name)
 
             let abstractNode = +("AbstractNode", "", true, "Node", "Node")
-            let initialNode = +("InitialNode", "Pictures/initialBlock.png", false, "Node", "Node")
+            let initialNode = +("InitialNode", "Pictures/initialBlock.png", false, "Metatype.Node", "Metatype.Node")
             let finalNode = +("FinalNode", "Pictures/finalBlock.png", false, "Node", "Node")
-            let motorsForward = +("MotorsForward", "Pictures/enginesForwardBlock.png", false, "Node", "Node")
-            let timer = +("Timer", "Pictures/timerBlock.png", false, "Node", "Node")
+            let motorsForward = +("MotorsForward", "Pictures/enginesForwardBlock.png", false, "Metatype.Node", "Metatype.Node")
+            let timer = +("Timer", "Pictures/timerBlock.png", false, "Metatype.Node", "Metatype.Node")
 
             let link = abstractNode ---> (abstractNode, "target")
-            addAttribute link "guard" "String"
+            addAttribute link "guard" "AttributeKind.String"
 
-            addAttribute motorsForward "ports" "String"
-            addAttribute motorsForward "power" "Int"
+            addAttribute motorsForward "ports" "AttributeKind.String"
+            addAttribute motorsForward "power" "AttributeKind.Int"
 
-            addAttribute timer "delay" "Int"
+            addAttribute timer "delay" "AttributeKind.Int"
 
             initialNode --|> abstractNode
             finalNode --|> abstractNode

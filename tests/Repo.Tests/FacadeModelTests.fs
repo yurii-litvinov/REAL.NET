@@ -22,13 +22,21 @@ open RepoExperimental.FacadeLayer
 
 let init () =
     let repo = new DataLayer.DataRepo()
+
+    let build (builder: Metametamodels.IModelBuilder) =
+        builder.Build repo
+
+    Metametamodels.CoreMetametamodelBuilder() |> build
+    Metametamodels.LanguageMetamodelBuilder() |> build
+    Metametamodels.InfrastructureMetamodelBuilder() |> build
+
     let modelRepository = ModelRepository(repo)
 
-    let underlyingMetaModel = DataLayer.DataModel "Metamodel" :> DataLayer.IModel
-    underlyingMetaModel.CreateNode "TypeNode" |> ignore
+    let infrastructureMetamodel = InfrastructureSemanticLayer.InfrastructureMetamodel.infrastructureMetamodel repo
 
-    let underlyingModel = DataLayer.DataModel("Model", underlyingMetaModel) :> DataLayer.IModel
+    let underlyingModel = (repo :> DataLayer.IRepo).CreateModel("Model", infrastructureMetamodel)
     let model = Model(repo, underlyingModel, modelRepository)
+    
     model :> IModel
 
 [<Test>]
@@ -43,13 +51,12 @@ let ``Model shall allow to set a name`` () =
 let ``Model shall have metamodel`` () =
     let model = init ()
     let metamodel = model.Metamodel
-    metamodel.Name |> should equal "Metamodel"
+    metamodel.Name |> should equal "InfrastructureMetamodel"
 
 [<Test>]
-[<Ignore("Element instantiation is not implemented yet.")>]
 let ``Model shall allow to create nodes`` () =
     let model = init ()
-    let ``type`` = model.Metamodel.Nodes |> Seq.head
+    let ``type`` = model.Metamodel.Nodes |> Seq.find (fun n -> n.Name = "Node")
     let node = model.CreateElement ``type``
     node.Metatype |> should equal Metatype.Node
 

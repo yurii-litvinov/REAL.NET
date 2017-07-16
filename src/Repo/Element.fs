@@ -47,7 +47,7 @@ and [<AbstractClass>] Element
 
     interface IElement with
         member this.Attributes = 
-            InfrastructureMetamodel.attributes repo element |> Seq.map attributeRepository.GetAttribute
+            Element.attributes repo element |> Seq.map attributeRepository.GetAttribute
 
         member this.Class = 
             repository.GetElement element.Class 
@@ -67,7 +67,7 @@ and [<AbstractClass>] Element
 
         member this.InstanceMetatype = 
             match Element.attributeValue repo element "instanceMetatype" with
-            | "Node" -> Metatype.Node
-            | "Edge" -> Metatype.Edge
+            | "Metatype.Node" -> Metatype.Node
+            | "Metatype.Edge" -> Metatype.Edge
             | _ -> failwith "Incorrect instanceMetatype attribute value"
 
