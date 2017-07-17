@@ -3,13 +3,16 @@ source https://nuget.org/api/v2
 nuget FSharp.Core redirects: force
 nuget YC.QuickGraph
 nuget GraphX
-nuget Microsoft.Research.DryadLINQ.MSAGL
+nuget Microsoft.Msagl 1.0.2
+nuget Microsoft.Msagl.Drawing 1.0.2
+nuget Microsoft.Msagl.GraphViewerGDI 1.0.2
 nuget YAXLib
 nuget StyleCop.Analyzers
  
 nuget NUnit
 nuget NUnit.Runners
 nuget FsUnit
+
 
 group Build
   source https://nuget.org/api/v2

@@ -4,66 +4,68 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.Windows.Forms;
+using Microsoft.Msagl.Core.Geometry.Curves;
+using Microsoft.Msagl.Core.Layout;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
-using Microsoft.Msagl.Splines;
-using Color = Microsoft.Msagl.Drawing.Color;
-using Point = Microsoft.Msagl.Point;
+using Edge = Microsoft.Msagl.Drawing.Edge;
+using Node = Microsoft.Msagl.Drawing.Node;
+using Point = Microsoft.Msagl.Core.Geometry.Point;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace MsAglWinFormsEditor
 {
     /// <summary>
-    /// Main project form
+    /// Main project form. Realisation for all user events
     /// </summary>
     public partial class MainForm : Form
     {
-        private readonly Repo.IRepo repo = Repo.RepoFactory.CreateRepo();
-        private readonly Graph graph = new Graph("graph");
         private readonly GViewer viewer = new GViewer();
-
+        private readonly MsAglGraphRepresentation graph = new MsAglGraphRepresentation();
         private readonly Hashtable imagesHashtable = new Hashtable();
         private Node selectedNode;
-
-        private const string modelName = "RobotsTestModel";
-        private Repo.IModel currentModel = null;
-        private Dictionary<Repo.IElement, string> ids 
-                = new Dictionary<Repo.IElement, string>();
-        private int idCounter;
+        private const int fontSize = 11;
 
         /// <summary>
         /// Create form with given graph
         /// </summary>
         public MainForm()
         {
-            currentModel = repo.Model(modelName);
-
             viewer.MouseClick += ViewerMouseClicked;
             InitializeComponent();
-            AddEdges();
-            AddNodes();
             viewer.EdgeAdded += ViewerOnEdgeAdded;
-            viewer.Graph = graph;
 
-            SuspendLayout();
-
+            viewer.Graph = graph.Graph;
             viewer.PanButtonPressed = true;
+            viewer.MouseMove += (sender, args) =>
+            {
+                viewer.Graph.GeometryGraph.UpdateBoundingBox();
+                viewer.Invalidate();
+            };
             viewer.ToolBarIsVisible = false;
+            viewer.MouseDown += ViewerOnMouseDown;
             viewer.MouseWheel += (sender, args) => viewer.ZoomF += args.Delta * SystemInformation.MouseWheelScrollLines / 4000f;
+            SuspendLayout();
             viewer.Dock = DockStyle.Fill;
             mainLayout.Controls.Add(viewer, 0, 0);
             ResumeLayout();
             InitPalette();
         }
 
+        private void ViewerOnMouseDown(object sender, MouseEventArgs mouseEventArgs)
+           => viewer.PanButtonPressed = viewer.SelectedObject == null;
+
         private void ViewerOnEdgeAdded(object sender, EventArgs eventArgs)
         {
-            var edge = sender as Edge;
+            var edge = (Edge)sender;
             var form = new Form();
             var tableLayout = new TableLayoutPanel { Dock = DockStyle.Fill };
             form.Controls.Add(tableLayout);
 
-            foreach (var type in currentModel.Metamodel.Elements)
+            // TODO: GetEdgeTypes or something
+            foreach (var type in graph.GetNodeTypes())
             {
                 if (type.InstanceMetatype != Repo.Metatype.Edge || type.IsAbstract)
                 {
@@ -77,89 +79,51 @@ namespace MsAglWinFormsEditor
                 var associationButton = new Button { Text = "Link", Dock = DockStyle.Fill };
                 associationButton.Click += (o, args) =>
                 {
-                    FormatEdge(edgeType, edge);
-                    //TODO: uncomment it when addEdge will be imlemented 
-                    //repo.AddEdge(edgeType.ToString(), edge.Source, edge.Target);
-                    form.Close();
-                    UpdateGraph();
+                    graph.CreateNewEdge(edgeType, edge);
+                    viewer.Graph.AddPrecalculatedEdge(edge);
+                    viewer.SetEdgeLabel(edge, edge.Label);
+                    var ep = new EdgeLabelPlacement(viewer.Graph.GeometryGraph);
+                    ep.Run();
+                    viewer.Invalidate();
+                    form.DialogResult = DialogResult.OK;
                 };
+                associationButton.Font = new Font(associationButton.Font.FontFamily, fontSize);
                 tableLayout.Controls.Add(associationButton, 0, tableLayout.RowCount - 1);
                 ++tableLayout.RowCount;
-
             }
-
-            form.Show();
-        }
-
-        private void FormatEdge(Repo.IEdge edgeData, Edge edge)
-        {
-            // TODO: Add some means to differentiate edges.
-        }
-
-        private void AddEdges()
-        {
-            foreach (var edge in currentModel.Edges)
+            var result = form.ShowDialog();
+            if (result == DialogResult.Cancel)
             {
-                var newEdge = graph.AddEdge(id(edge.From), id(edge.To));
-                FormatEdge(edge, newEdge);
-            }
-        }
-
-        private void AddNodes()
-        {
-            foreach (var node in currentModel.Nodes)
-            {
-                var newNode = graph.FindNode(id(node));
-                newNode.UserData = node.Attributes;
-                newNode.Attr.LabelMargin = Left;
-                newNode.LabelText = node.Name;
-
-                newNode.Attr.FillColor = Color.IndianRed;
-                newNode.Attr.Shape = Shape.Box;
+                viewer.Undo();
+                viewer.Invalidate();
             }
         }
 
         private void InitPalette()
         {
-            foreach (var type in currentModel.Metamodel.Elements)
+            foreach (var type in graph.GetNodeTypes())
             {
-                if (type.IsAbstract)
+                var button = new Button { Text = type.Name, Dock = DockStyle.Bottom };
+                button.Click += (sender, args) =>
                 {
-                    continue;
-                }
+                    var node = graph.CreateNewNode(type);
+                    node.GeometryNode = GeometryGraphCreator.CreateGeometryNode(viewer.Graph, viewer.Graph.GeometryGraph, node, ConnectionToGraph.Disconnected);
+                    var viewNode = viewer.CreateIViewerNode(node, viewer.Graph.Nodes.ToList()[0].Pos - new Point(250, 0), null);
+                    viewer.AddNode(viewNode, true);
+                    viewer.Graph.AddNode(node);
+                    viewer.Invalidate();
+                };
+                button.Font = new Font(button.Font.FontFamily, fontSize);
+                button.Size = new Size(button.Width, button.Height + 10);
+                paletteGrid.Controls.Add(button, 0, paletteGrid.RowCount - 1);
 
-                if (type.InstanceMetatype == Repo.Metatype.Node)
-                {
-                    var node = type as Repo.INode;
-                    var button = new Button { Text = node.Name, Dock = DockStyle.Bottom };
-                    button.Click += (sender, args) => CreateNewNode(node);
-
-                    // TODO: Bind it to Designer, do not do GUI work in C#.
-                    paletteGrid.Controls.Add(button, 0, paletteGrid.RowCount - 1);
-
-                    ++paletteGrid.RowCount;
-                }
+                ++paletteGrid.RowCount;
             }
-        }
-
-        private void CreateNewNode(Repo.INode type)
-        {
-            var newNodeInRepo = currentModel.CreateElement(type) as Repo.INode;
-
-            var newNode = graph.AddNode(id(newNodeInRepo));
-            newNode.LabelText = newNodeInRepo.Name;
-            newNode.UserData = new List<Repo.IAttribute>();
-
-            newNode.Attr.FillColor = Color.IndianRed;
-            newNode.Attr.Shape = Shape.Box;
-
-            UpdateGraph();
         }
 
         private void ViewerMouseClicked(object sender, MouseEventArgs e)
         {
-            var selectedObject = viewer.SelectedObject;
-            selectedNode = selectedObject as Node;
+            selectedNode = viewer.SelectedObject as Node;
             if (selectedNode != null)
             {
                 var attributes = selectedNode.UserData as List<Repo.IAttribute>;
@@ -192,27 +156,31 @@ namespace MsAglWinFormsEditor
                 attributeTable.Visible = false;
                 loadImageButton.Visible = false;
                 imageLayoutPanel.Visible = false;
-                viewer.PanButtonPressed = true;
+                viewer.PanButtonPressed = viewer.SelectedObject == null;
             }
         }
 
         private void LoadImageButtonClick(object sender, EventArgs e)
         {
-            var openImageDialog = new OpenFileDialog();
+            var openImageDialog = new OpenFileDialog { Filter = @"Image files *.png | *.png" };
             if (openImageDialog.ShowDialog() == DialogResult.OK)
             {
-                imagesHashtable[selectedNode.Id] = new Bitmap(openImageDialog.FileName);
-                selectedNode.Attr.Shape = Shape.DrawFromGeometry;
-                selectedNode.DrawNodeDelegate = DrawNode;
-                selectedNode.NodeBoundaryDelegate = GetNodeBoundary;
-                UpdateGraph();
+                var newImage = new Bitmap(openImageDialog.FileName);
+                imagesHashtable[selectedNode.Id] = newImage;
+                widthEditor.Value = newImage.Width;
+                heightEditor.Value = newImage.Height;
+                ImageSizeChanged(null, null);
+                imageLayoutPanel.Visible = true;
             }
         }
 
-        private void UpdateGraph()
+        private ICurve NodeBoundaryDelegate(Node node)
         {
-            viewer.Graph = graph;
-            viewer.Invalidate();
+            var image = (Image)imagesHashtable[node.Id];
+            double width = image.Width;
+            double height = image.Height;
+
+            return CurveFactory.CreateRectangle(width, height, new Point());
         }
 
         private GraphicsPath FillTheGraphicsPath(ICurve iCurve)
@@ -236,14 +204,10 @@ namespace MsAglWinFormsEditor
             }
         }
 
-        private ICurve GetNodeBoundary(Node node)
-        {
-            var image = imagesHashtable[node.Id] as Image;
-            double width = image.Width;
-            double height = image.Height;
+        private readonly Font drawFont = new Font("Arial", 10);
+        private readonly SolidBrush drawBrush = new SolidBrush(System.Drawing.Color.Black);
 
-            return CurveFactory.CreateRectangle(width, height, new Point());
-        }
+        private readonly StringFormat format = new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
 
         private PointF PointF(Point p)
             => new PointF((float)p.X, (float)p.Y);
@@ -251,36 +215,51 @@ namespace MsAglWinFormsEditor
         private bool DrawNode(Node node, object graphics)
         {
             var graphic = (Graphics)graphics;
-            var image = imagesHashtable[node.Id] as Image;
+            var image = (Image)imagesHashtable[node.Id];
             using (Matrix matrix = graphic.Transform)
             {
                 using (Matrix matrixClone = matrix.Clone())
                 {
-                    graphic.SetClip(FillTheGraphicsPath(node.Attr.GeometryNode.BoundaryCurve));
-                    using (var matrixMult = new Matrix(1, 0, 0, -1, 0, 2 * (float)node.Attr.GeometryNode.Center.Y))
+                    graphic.SetClip(FillTheGraphicsPath(node.GeometryNode.BoundaryCurve));
+                    using (var matrixMult = new Matrix(1, 0, 0, -1, 0, 2 * (float)node.GeometryNode.Center.Y))
                         matrix.Multiply(matrixMult);
 
                     graphic.Transform = matrix;
-                    graphic.DrawImage(image, new PointF((float)(node.Attr.GeometryNode.Center.X - node.Attr.GeometryNode.Width / 2),
-                        (float)(node.Attr.GeometryNode.Center.Y - node.Attr.GeometryNode.Height / 2)));
+                    graphic.DrawImage(image, new PointF((float)(node.GeometryNode.Center.X - node.GeometryNode.Width / 2),
+                        (float)(node.GeometryNode.Center.Y - node.GeometryNode.Height / 2)));
+                    var centerX = (float)node.GeometryNode.Center.X;
+                    var centerY = (float)node.GeometryNode.Center.Y;
+                    graphic.DrawString(node.LabelText, drawFont, drawBrush, new PointF(centerX, centerY), format);
                     graphic.Transform = matrixClone;
                     graphic.ResetClip();
                 }
             }
-            return true;//returning false would enable the default rendering
+            return true; // Returning false would enable the default rendering
         }
-        
-        private void RefreshButtonClick(object sender, EventArgs e) 
-            => viewer.Graph = graph;
+
+        private void RefreshButtonClick(object sender, EventArgs e)
+        {
+            viewer.Graph = graph.Graph;
+            viewer.Invalidate();
+        }
 
         private void ImageSizeChanged(object sender, EventArgs e)
         {
+            var center = selectedNode.GeometryNode.Center;
             var image = imagesHashtable[selectedNode.Id] as Image;
             imagesHashtable[selectedNode.Id] = ResizeImage(image, Convert.ToInt32(widthEditor.Value), Convert.ToInt32(heightEditor.Value));
-            UpdateGraph();
+
+            selectedNode.Attr.Shape = Shape.DrawFromGeometry;
+            selectedNode.DrawNodeDelegate = DrawNode;
+            selectedNode.NodeBoundaryDelegate = NodeBoundaryDelegate;
+            selectedNode.Edges.ToList()[0].GeometryObject.RaiseLayoutChangeEvent(0);
+            viewer.CreateIViewerNode(selectedNode).Node.GeometryNode.Center = center;
+            viewer.Graph.GeometryGraph.UpdateBoundingBox();
+
+            viewer.Invalidate();
         }
 
-        public static Image ResizeImage(Image image, int width, int height)
+        private Image ResizeImage(Image image, int width, int height)
         {
             var destRect = new Rectangle(0, 0, width, height);
             var destImage = new Bitmap(width, height);
@@ -306,18 +285,6 @@ namespace MsAglWinFormsEditor
         }
 
         private void InsertingEdgeCheckedChanged(object sender, EventArgs e)
-        {
-            viewer.InsertingEdge = !viewer.InsertingEdge;
-        }
-
-        private string id(Repo.IElement element)
-        {
-            if (!ids.ContainsKey(element))
-            {
-                ids.Add(element, (++idCounter).ToString());
-            }
-
-            return ids[element];
-        }
+            => viewer.InsertingEdge = !viewer.InsertingEdge;
     }
 }

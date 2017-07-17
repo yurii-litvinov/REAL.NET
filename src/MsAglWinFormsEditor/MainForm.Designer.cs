@@ -42,8 +42,10 @@ namespace MsAglWinFormsEditor
             this.imageLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.widthEditor = new System.Windows.Forms.NumericUpDown();
             this.heightEditor = new System.Windows.Forms.NumericUpDown();
-            this.insertingEdge = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.widthLabel = new System.Windows.Forms.Label();
             this.refreshButton = new System.Windows.Forms.Button();
+            this.insertingEdge = new System.Windows.Forms.CheckBox();
             this.mainLayout.SuspendLayout();
             this.toolsLayout.SuspendLayout();
             this.nodeLayout.SuspendLayout();
@@ -74,17 +76,18 @@ namespace MsAglWinFormsEditor
             this.toolsLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.toolsLayout.Controls.Add(this.paletteGrid, 0, 0);
             this.toolsLayout.Controls.Add(this.nodeLayout, 0, 1);
-            this.toolsLayout.Controls.Add(this.refreshButton, 0, 2);
+            this.toolsLayout.Controls.Add(this.refreshButton, 0, 3);
+            this.toolsLayout.Controls.Add(this.insertingEdge, 0, 2);
             this.toolsLayout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolsLayout.Location = new System.Drawing.Point(1064, 5);
             this.toolsLayout.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.toolsLayout.Name = "toolsLayout";
             this.toolsLayout.RowCount = 4;
-            this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45.37205F));
-            this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45.37205F));
-            this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.255898F));
-            this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
-            this.toolsLayout.Size = new System.Drawing.Size(369, 810);
+            this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 41.62574F));
+            this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 41.62574F));
+            this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.49165F));
+            this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.256881F));
+            this.toolsLayout.Size = new System.Drawing.Size(245, 527);
             this.toolsLayout.TabIndex = 2;
             // 
             // paletteGrid
@@ -92,9 +95,8 @@ namespace MsAglWinFormsEditor
             this.paletteGrid.AutoSize = true;
             this.paletteGrid.ColumnCount = 1;
             this.paletteGrid.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.paletteGrid.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.paletteGrid.Location = new System.Drawing.Point(4, 348);
-            this.paletteGrid.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.paletteGrid.Dock = System.Windows.Forms.DockStyle.Top;
+            this.paletteGrid.Location = new System.Drawing.Point(3, 3);
             this.paletteGrid.Name = "paletteGrid";
             this.paletteGrid.RowCount = 1;
             this.paletteGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -108,18 +110,15 @@ namespace MsAglWinFormsEditor
             this.nodeLayout.Controls.Add(this.attributeTable, 0, 0);
             this.nodeLayout.Controls.Add(this.loadImageButton, 0, 1);
             this.nodeLayout.Controls.Add(this.imageLayoutPanel, 0, 2);
-            this.nodeLayout.Controls.Add(this.insertingEdge, 0, 3);
             this.nodeLayout.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.nodeLayout.Location = new System.Drawing.Point(4, 358);
-            this.nodeLayout.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.nodeLayout.Location = new System.Drawing.Point(3, 222);
             this.nodeLayout.Name = "nodeLayout";
             this.nodeLayout.RowCount = 4;
-            this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 55.18144F));
-            this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 24.13019F));
-            this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20.68837F));
-            this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 57F));
-            this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
-            this.nodeLayout.Size = new System.Drawing.Size(361, 343);
+            this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45.98453F));
+            this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20.65728F));
+            this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 23.00469F));
+            this.nodeLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10.32864F));
+            this.nodeLayout.Size = new System.Drawing.Size(239, 213);
             this.nodeLayout.TabIndex = 0;
             // 
             // attributeTable
@@ -136,7 +135,7 @@ namespace MsAglWinFormsEditor
             this.attributeTable.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.attributeTable.Name = "attributeTable";
             this.attributeTable.RowHeadersVisible = false;
-            this.attributeTable.Size = new System.Drawing.Size(353, 147);
+            this.attributeTable.Size = new System.Drawing.Size(233, 91);
             this.attributeTable.TabIndex = 2;
             this.attributeTable.Visible = false;
             // 
@@ -164,10 +163,10 @@ namespace MsAglWinFormsEditor
             // loadImageButton
             // 
             this.loadImageButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.loadImageButton.Location = new System.Drawing.Point(4, 162);
-            this.loadImageButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.loadImageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", fontSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.loadImageButton.Location = new System.Drawing.Point(3, 100);
             this.loadImageButton.Name = "loadImageButton";
-            this.loadImageButton.Size = new System.Drawing.Size(353, 59);
+            this.loadImageButton.Size = new System.Drawing.Size(233, 38);
             this.loadImageButton.TabIndex = 3;
             this.loadImageButton.Text = "Load Image";
             this.loadImageButton.UseVisualStyleBackColor = true;
@@ -179,22 +178,24 @@ namespace MsAglWinFormsEditor
             this.imageLayoutPanel.ColumnCount = 2;
             this.imageLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.66667F));
             this.imageLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.66667F));
-            this.imageLayoutPanel.Controls.Add(this.widthEditor, 0, 0);
-            this.imageLayoutPanel.Controls.Add(this.heightEditor, 1, 0);
+            this.imageLayoutPanel.Controls.Add(this.widthEditor, 0, 1);
+            this.imageLayoutPanel.Controls.Add(this.heightEditor, 1, 1);
+            this.imageLayoutPanel.Controls.Add(this.label1, 1, 0);
+            this.imageLayoutPanel.Controls.Add(this.widthLabel, 0, 0);
             this.imageLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.imageLayoutPanel.Location = new System.Drawing.Point(4, 231);
-            this.imageLayoutPanel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.imageLayoutPanel.Location = new System.Drawing.Point(3, 144);
             this.imageLayoutPanel.Name = "imageLayoutPanel";
-            this.imageLayoutPanel.RowCount = 1;
+            this.imageLayoutPanel.RowCount = 2;
             this.imageLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.imageLayoutPanel.Size = new System.Drawing.Size(353, 49);
+            this.imageLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.imageLayoutPanel.Size = new System.Drawing.Size(233, 43);
             this.imageLayoutPanel.TabIndex = 5;
             this.imageLayoutPanel.Visible = false;
             // 
             // widthEditor
             // 
-            this.widthEditor.Location = new System.Drawing.Point(4, 5);
-            this.widthEditor.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.widthEditor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.widthEditor.Location = new System.Drawing.Point(3, 26);
             this.widthEditor.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -206,7 +207,7 @@ namespace MsAglWinFormsEditor
             0,
             0});
             this.widthEditor.Name = "widthEditor";
-            this.widthEditor.Size = new System.Drawing.Size(136, 26);
+            this.widthEditor.Size = new System.Drawing.Size(110, 20);
             this.widthEditor.TabIndex = 1;
             this.widthEditor.Value = new decimal(new int[] {
             10,
@@ -218,8 +219,7 @@ namespace MsAglWinFormsEditor
             // heightEditor
             // 
             this.heightEditor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.heightEditor.Location = new System.Drawing.Point(180, 5);
-            this.heightEditor.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.heightEditor.Location = new System.Drawing.Point(119, 26);
             this.heightEditor.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -240,30 +240,55 @@ namespace MsAglWinFormsEditor
             0});
             this.heightEditor.ValueChanged += new System.EventHandler(this.ImageSizeChanged);
             // 
-            // insertingEdge
+            // label1
             // 
-            this.insertingEdge.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.insertingEdge.AutoSize = true;
-            this.insertingEdge.Location = new System.Drawing.Point(121, 302);
-            this.insertingEdge.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.insertingEdge.Name = "insertingEdge";
-            this.insertingEdge.Size = new System.Drawing.Size(118, 24);
-            this.insertingEdge.TabIndex = 6;
-            this.insertingEdge.Text = "Insert Edge";
-            this.insertingEdge.UseVisualStyleBackColor = true;
-            this.insertingEdge.CheckedChanged += new System.EventHandler(this.InsertingEdgeCheckedChanged);
+            this.label1.AutoSize = true;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", fontSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label1.Location = new System.Drawing.Point(119, 0);
+            this.label1.Name = "label1";
+            this.label1.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.label1.Size = new System.Drawing.Size(111, 23);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "height";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // widthLabel
+            // 
+            this.widthLabel.AutoSize = true;
+            this.widthLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.widthLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", fontSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.widthLabel.Location = new System.Drawing.Point(3, 0);
+            this.widthLabel.Name = "widthLabel";
+            this.widthLabel.Size = new System.Drawing.Size(110, 23);
+            this.widthLabel.TabIndex = 4;
+            this.widthLabel.Text = "width";
+            this.widthLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // refreshButton
             // 
             this.refreshButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.refreshButton.Location = new System.Drawing.Point(4, 711);
-            this.refreshButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.refreshButton.Font = new System.Drawing.Font("Microsoft Sans Serif", fontSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.refreshButton.Location = new System.Drawing.Point(3, 485);
             this.refreshButton.Name = "refreshButton";
-            this.refreshButton.Size = new System.Drawing.Size(361, 62);
+            this.refreshButton.Size = new System.Drawing.Size(239, 39);
             this.refreshButton.TabIndex = 3;
             this.refreshButton.Text = "Update Graph";
             this.refreshButton.UseVisualStyleBackColor = true;
             this.refreshButton.Click += new System.EventHandler(this.RefreshButtonClick);
+            // 
+            // insertingEdge
+            // 
+            this.insertingEdge.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.insertingEdge.AutoSize = true;
+            this.insertingEdge.Font = new System.Drawing.Font("Microsoft Sans Serif", fontSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.insertingEdge.Location = new System.Drawing.Point(72, 449);
+            this.insertingEdge.Name = "insertingEdge";
+            this.insertingEdge.Size = new System.Drawing.Size(101, 22);
+            this.insertingEdge.TabIndex = 6;
+            this.insertingEdge.Text = "Insert Edge";
+            this.insertingEdge.UseVisualStyleBackColor = true;
+            this.insertingEdge.CheckedChanged += new System.EventHandler(this.InsertingEdgeCheckedChanged);
             // 
             // MainForm
             // 
@@ -271,16 +296,16 @@ namespace MsAglWinFormsEditor
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1437, 820);
             this.Controls.Add(this.mainLayout);
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.MinimumSize = new System.Drawing.Size(900, 550);
             this.Name = "MainForm";
             this.Text = "MainForm";
             this.mainLayout.ResumeLayout(false);
             this.toolsLayout.ResumeLayout(false);
             this.toolsLayout.PerformLayout();
             this.nodeLayout.ResumeLayout(false);
-            this.nodeLayout.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.attributeTable)).EndInit();
             this.imageLayoutPanel.ResumeLayout(false);
+            this.imageLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.widthEditor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.heightEditor)).EndInit();
             this.ResumeLayout(false);
@@ -302,6 +327,8 @@ namespace MsAglWinFormsEditor
         private NumericUpDown widthEditor;
         private NumericUpDown heightEditor;
         private CheckBox insertingEdge;
+        private Label label1;
+        private Label widthLabel;
     }
 }
 
