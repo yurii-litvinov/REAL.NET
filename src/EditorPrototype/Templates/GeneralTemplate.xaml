@@ -4,7 +4,7 @@
     xmlns:local="clr-namespace:EditorPrototype"
     xmlns:controls="http://schemas.panthernet.ru/graphx/">
 
-    <local:ValueToImageConverter x:Key="ValueToImage"/>
+    
     
     <ControlTemplate x:Key="NodeVertex"></ControlTemplate>
 
