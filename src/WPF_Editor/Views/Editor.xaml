@@ -49,11 +49,15 @@
 
             <Border BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Bottom" Margin="5">
                 <TabControl Height="150" TabStripPlacement="Bottom">
-                    <TabItem Header="Message">
-                        
+                    <TabItem Header="Messages">
+                        <ScrollViewer>
+                            <TextBox TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True"></TextBox>
+                        </ScrollViewer>
                     </TabItem>
-                    <TabItem Header="Erorrs">
-                        
+                    <TabItem Header="Errors">
+                        <ScrollViewer>
+                            <TextBox TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True"></TextBox>
+                        </ScrollViewer>
                     </TabItem>
                 </TabControl>
             </Border>
@@ -86,7 +90,7 @@
                     </Border>
                     <Border Width="auto" Height="auto" BorderBrush="Black" BorderThickness="1">
                         <StackPanel>
-                            <TextBlock HorizontalAlignment="Center" FontSize="17">Properies</TextBlock>
+                            <TextBlock HorizontalAlignment="Center" FontSize="17">Properties</TextBlock>
                         </StackPanel>
                     </Border>
                 </StackPanel>
