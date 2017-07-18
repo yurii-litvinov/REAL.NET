@@ -20,7 +20,7 @@
                             <MenuItem Header="New" />
                             <MenuItem Header="Open" />
                             <MenuItem Header="Save" />
-                            <MenuItem Header="SaveAs..." />
+                            <MenuItem Header="Save As..." />
                             <Separator />
                             <MenuItem Header="Exit" />
                         </MenuItem>
@@ -63,7 +63,7 @@
             </Border>
             
             <Border BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Right">
-                <StackPanel Name="Palette" Background="Azure">
+                <StackPanel Name="Palette" Background="Azure" Margin="0,0.2,0,-0.2">
                     <Border BorderBrush="Black" BorderThickness="1">
                         <StackPanel Width="150" Height="auto" HorizontalAlignment="Center">
                             <TabControl Height="auto" VerticalAlignment="Top">

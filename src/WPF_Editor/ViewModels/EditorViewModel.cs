@@ -10,7 +10,9 @@
     class EditorViewModel
     {
         private IRepo repo;
+
         public ObservableCollection<NodeInfo> NodeCollection { get; }
+
         public ObservableCollection<EdgeInfo> EdgeCollection { get; }
 
         public EditorViewModel()

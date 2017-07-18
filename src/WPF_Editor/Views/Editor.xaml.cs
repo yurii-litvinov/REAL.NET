@@ -5,13 +5,12 @@ namespace REAL.NET
     using System.Windows;
     using REAL.NET.ViewModels;
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for Editor.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
-            System.Console.WriteLine("Initialization");
             InitializeComponent();
             DataContext = new EditorViewModel();
         }
