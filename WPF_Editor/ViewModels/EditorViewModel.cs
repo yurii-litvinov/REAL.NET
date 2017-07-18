@@ -10,17 +10,15 @@
     class EditorViewModel
     {
         private IRepo repo;
-        private ObservableCollection<NodeInfo> nodeCollection;
-        private ObservableCollection<EdgeInfo> edgeCollection;
-        
+        public ObservableCollection<NodeInfo> NodeCollection { get; }
+        public ObservableCollection<EdgeInfo> EdgeCollection { get; }
+
         public EditorViewModel()
         {
             repo = new FakeRepo();
-            nodeCollection = new ObservableCollection<NodeInfo>(repo.ModelNodes("FakeModel"));
-            edgeCollection = new ObservableCollection<EdgeInfo>(repo.ModelEdges("FakeModel"));
+            NodeCollection = new ObservableCollection<NodeInfo>(repo.ModelNodes("FakeModel"));
+            EdgeCollection = new ObservableCollection<EdgeInfo>(repo.ModelEdges("FakeModel"));
         }
 
-        public ObservableCollection<NodeInfo> NodeCollection { get => nodeCollection; set => nodeCollection = value; }
-        public ObservableCollection<EdgeInfo> EdgeCollection { get => edgeCollection; set => edgeCollection = value; }
     }
 }

@@ -76,12 +76,6 @@
                                     <ListBox
                                         Margin="5"
                                         ItemsSource="{Binding NodeCollection}"
-                                        SelectionMode="Single" />
-                                </TabItem>
-                                <TabItem Header="Edges">
-                                    <ListBox
-                                        Margin="5"
-                                        ItemsSource="{Binding EdgeCollection}"
                                         SelectionMode="Single">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
@@ -90,8 +84,20 @@
                                         </ListBox.ItemTemplate>
                                     </ListBox>
                                 </TabItem>
+                                <TabItem Header="Edges">
+                                    <ListBox
+                                        Margin="5"
+                                        ItemsSource="{Binding EdgeCollection}"
+                                        SelectionMode="Single">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding edgeType}" />
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </TabItem>
                             </TabControl>
-
+                            
                         </StackPanel>
                     </Border>
                     <Border
@@ -101,15 +107,12 @@
                         BorderThickness="1">
                         <StackPanel>
                             <TextBlock HorizontalAlignment="Center" FontSize="17">Properies</TextBlock>
-                            <DataGrid />
+                            <DataGrid IsEnabled="{Binding }"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>
             </Border>
-            <Grid Name="Scene" Background="White">
-                
-
-            </Grid>
+            <Grid Name="Scene" Background="White" />
         </DockPanel>
     </Grid>
 </Window>

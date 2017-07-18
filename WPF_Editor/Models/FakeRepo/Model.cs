@@ -24,16 +24,11 @@
             //TODO Change source-target arguments
             edgeCollection = new List<EdgeInfo>()
             {
-                new EdgeInfo("1", "1", "2", Repo.EdgeType.Association),
-                new EdgeInfo("2", "5", "3", Repo.EdgeType.Attribute),
-                new EdgeInfo("3", "2", "3", Repo.EdgeType.Generalization),
-                new EdgeInfo("4", "2", "3", Repo.EdgeType.Type),
-                new EdgeInfo("5", "2", "3", Repo.EdgeType.Value),
-                new EdgeInfo("6", "2", "3", Repo.EdgeType.Association),
-                new EdgeInfo("7", "2", "3", Repo.EdgeType.Attribute),
-                new EdgeInfo("8", "2", "3", Repo.EdgeType.Generalization),
-                new EdgeInfo("9", "2", "3", Repo.EdgeType.Type),
-                new EdgeInfo("10", "2", "3", Repo.EdgeType.Value),
+                new EdgeInfo("1", "1", "2", EdgeType.Association),
+                new EdgeInfo("2", "2", "3", EdgeType.Attribute),
+                new EdgeInfo("3", "3", "4", EdgeType.Generalization),
+                new EdgeInfo("4", "4", "5", EdgeType.Type),
+                new EdgeInfo("5", "5", "1", EdgeType.Value),
             };
             List<AttributeInfo> node1AttributeCollection = new List<AttributeInfo>()
             {
@@ -61,12 +56,21 @@
                 new AttributeInfo("Attribute name 13", "Attribute type 13", "Value 13"),
                 new AttributeInfo("Attribute name 14", "Attribute type 14", "Value 14"),
             };
+            List<AttributeInfo> node5AttributeCollection = new List<AttributeInfo>()
+            {
+                new AttributeInfo("Attribute name 15", "Attribute type 15", "Value 15"),
+                new AttributeInfo("Attribute name 16", "Attribute type 16", "Value 16"),
+                new AttributeInfo("Attribute name 17", "Attribute type 17", "Value 17"),
+                new AttributeInfo("Attribute name 18", "Attribute type 18", "Value 18"),
+                new AttributeInfo("Attribute name 19", "Attribute type 19", "Value 19"),
+            };
             nodeCollection = new List<NodeInfo>()
             {
                 new NodeInfo("11","Node_1", NodeType.Attribute,node1AttributeCollection),
-                new NodeInfo("12","Node_2", NodeType.Attribute,node2AttributeCollection),
+                new NodeInfo("12","Node_2", NodeType.Node,node2AttributeCollection),
                 new NodeInfo("13","Node_3", NodeType.Attribute,node3AttributeCollection),
-                new NodeInfo("14","Node_4", NodeType.Attribute,node4AttributeCollection),
+                new NodeInfo("14","Node_4", NodeType.Node,node4AttributeCollection),
+                new NodeInfo("15","Node_5", NodeType.Attribute,node5AttributeCollection),
 
             };
         }

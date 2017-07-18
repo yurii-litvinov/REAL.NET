@@ -80,7 +80,6 @@
     <Compile Include="Models\Console.cs" />
     <Compile Include="Models\FakeRepo\FakeRepo.cs" />
     <Compile Include="Models\FakeRepo\Model.cs" />
-    <Compile Include="Models\FakeRepo\NotifyingNode.cs" />
     <Compile Include="Models\Palette.cs" />
     <Compile Include="Models\Scene.cs" />
     <Compile Include="Models\Toolbar.cs" />
