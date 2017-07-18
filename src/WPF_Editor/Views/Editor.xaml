@@ -13,14 +13,8 @@
     mc:Ignorable="d">
     <Grid>
         <DockPanel>
-            <Grid
-                Name="Toolbar"
-                Height="30"
-                DockPanel.Dock="Top">
-                <ToolBar
-                    Background="White"
-                    BorderBrush="Black"
-                    BorderThickness="1">
+            <Grid Name="Toolbar" Height="30" DockPanel.Dock="Top">
+                <ToolBar Background="White" BorderBrush="Black" BorderThickness="1">
                     <Menu Background="White">
                         <MenuItem Header="File">
                             <MenuItem Header="New" />
@@ -52,31 +46,25 @@
                     </Menu>
                 </ToolBar>
             </Grid>
-            <Border
-                BorderBrush="Black"
-                BorderThickness="1"
-                DockPanel.Dock="Bottom">
-                <StackPanel
-                    Name="Console"
-                    Height="100"
-                    Background="DarkGray" />
+
+            <Border BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Bottom" Margin="5">
+                <TabControl Height="150" TabStripPlacement="Bottom">
+                    <TabItem Header="Message">
+                        
+                    </TabItem>
+                    <TabItem Header="Erorrs">
+                        
+                    </TabItem>
+                </TabControl>
             </Border>
-            <Border
-                BorderBrush="Black"
-                BorderThickness="1"
-                DockPanel.Dock="Right">
+            
+            <Border BorderBrush="Black" BorderThickness="1" DockPanel.Dock="Right">
                 <StackPanel Name="Palette" Background="Azure">
                     <Border BorderBrush="Black" BorderThickness="1">
-                        <StackPanel
-                            Width="150"
-                            Height="auto"
-                            HorizontalAlignment="Center">
+                        <StackPanel Width="150" Height="auto" HorizontalAlignment="Center">
                             <TabControl Height="auto" VerticalAlignment="Top">
                                 <TabItem Header="Nodes">
-                                    <ListBox
-                                        Margin="5"
-                                        ItemsSource="{Binding NodeCollection}"
-                                        SelectionMode="Single">
+                                    <ListBox Margin="5" ItemsSource="{Binding NodeCollection}" SelectionMode="Single">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
                                                 <TextBlock Text="{Binding name}" />
@@ -85,10 +73,7 @@
                                     </ListBox>
                                 </TabItem>
                                 <TabItem Header="Edges">
-                                    <ListBox
-                                        Margin="5"
-                                        ItemsSource="{Binding EdgeCollection}"
-                                        SelectionMode="Single">
+                                    <ListBox Margin="5" ItemsSource="{Binding EdgeCollection}" SelectionMode="Single">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
                                                 <TextBlock Text="{Binding edgeType}" />
@@ -99,14 +84,9 @@
                             </TabControl>
                         </StackPanel>
                     </Border>
-                    <Border
-                        Width="auto"
-                        Height="auto"
-                        BorderBrush="Black"
-                        BorderThickness="1">
+                    <Border Width="auto" Height="auto" BorderBrush="Black" BorderThickness="1">
                         <StackPanel>
                             <TextBlock HorizontalAlignment="Center" FontSize="17">Properies</TextBlock>
-
                         </StackPanel>
                     </Border>
                 </StackPanel>
