@@ -51,12 +51,12 @@
                 <TabControl Height="150" TabStripPlacement="Bottom">
                     <TabItem Header="Messages">
                         <ScrollViewer>
-                            <TextBox TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True"></TextBox>
+                            <TextBox TextWrapping="Wrap" IsReadOnly="True" Text="{Binding MessageConsole, Mode=OneWay}"></TextBox>
                         </ScrollViewer>
                     </TabItem>
                     <TabItem Header="Errors">
                         <ScrollViewer>
-                            <TextBox TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True"></TextBox>
+                            <TextBox TextWrapping="Wrap" IsReadOnly="True" Text="{Binding ErrorConsole, Mode=OneWay}"></TextBox>
                         </ScrollViewer>
                     </TabItem>
                 </TabControl>
