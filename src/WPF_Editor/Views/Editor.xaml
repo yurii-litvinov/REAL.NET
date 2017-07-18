@@ -86,7 +86,7 @@
                     </Border>
                     <Border Width="auto" Height="auto" BorderBrush="Black" BorderThickness="1">
                         <StackPanel>
-                            <TextBlock HorizontalAlignment="Center" FontSize="17">Properies</TextBlock>
+                            <TextBlock HorizontalAlignment="Center" FontSize="17">Properties</TextBlock>
                         </StackPanel>
                     </Border>
                 </StackPanel>
