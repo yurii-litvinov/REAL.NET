@@ -14,7 +14,11 @@ namespace MsAglWinFormsEditor
 
         public Graph Graph { get; }
         private readonly IRepo repo = RepoFactory.CreateRepo();
-        private const string modelName = "mainModel";
+
+        private const string modelName = "RobotsTestModel";
+        private IModel currentModel = null;
+        private Dictionary<IElement, string> ids = new Dictionary<IElement, string>();
+        private int idCounter;
 
         /// <summary>
         /// Class constructor
@@ -22,6 +26,7 @@ namespace MsAglWinFormsEditor
         public MsAglGraphRepresentation()
         {
             Graph = new Graph("graph");
+            currentModel = repo.Model(modelName);
             AddEdges();
             AddNodes();
         }
@@ -30,30 +35,29 @@ namespace MsAglWinFormsEditor
         /// Getting collection of node type in Repo
         /// </summary>
         /// <returns> Collection of node types </returns>
-        public IEnumerable<NodeInfo> GetNodeTypes()
-            => repo.MetamodelNodes(modelName);
+        public IEnumerable<INode> GetNodeTypes()
+            => currentModel.Metamodel.Nodes;
 
         /// <summary>
         /// Getting name by Repo type
         /// </summary>
         /// <param name="type"> Type name </param>
         /// <returns> Name of attribute </returns>
-        public string GetAttributeName(string type)
-            => repo.Node(type).name;
+        public string GetAttributeName(INode type)
+            => type.Name;
 
         /// <summary>
         /// Add new node to MSAGL and Repo graphs
         /// </summary>
-        /// <param name="typeId"> Id of type in Repo </param>
+        /// <param name="type"> Type of a node in Repo </param>
         /// <returns> MSAGL node for addig to view </returns>
-        public Node CreateNewNode(string typeId)
+        public Node CreateNewNode(INode type)
         {
-            var newNodeInfo = repo.AddNode(typeId, modelName);
-
+            var newNodeData = currentModel.CreateElement(type) as INode;
             var newNode = Graph.AddNode(Graph.NodeCount.ToString());
-            newNode.LabelText = "New " + newNodeInfo.nodeType.ToString();
-            newNode.UserData = new List<AttributeInfo>();
-            FormatNode(newNode, newNodeInfo.nodeType);
+            newNode.LabelText = newNodeData.Name;
+            newNode.UserData = new List<IAttribute>();
+            FormatNode(newNode, newNodeData);
             return newNode;
         }
 
@@ -63,75 +67,72 @@ namespace MsAglWinFormsEditor
         /// <param name="edgeType"> Repo edge type </param>
         /// <param name="edge"> Added edge </param>
         /// <returns> MSAGL node for addig to view </returns>
-        public void CreateNewEdge(EdgeType edgeType, Edge edge)
+        public void CreateNewEdge(IEdge edgeType, Edge edge)
         {
-            //TODO: uncomment it when addEdge will be imlemented 
+            //TODO: uncomment it when addEdge will be implemented 
             //repo.AddEdge(edgeType.ToString(), edge.Source, edge.Target);
             Graph.AddPrecalculatedEdge(edge);
             FormatEdge(edgeType, edge);
         }
 
-        private void FormatEdge(EdgeType edgeType, Edge edge)
+        private void FormatEdge(IEdge edgeData, Edge edge)
         {
-            edge.LabelText = edgeType.ToString();
-            switch (edgeType)
+            /*switch (edgeData.Shape)
             {
-                case EdgeType.Association:
+                case "":*/
                     edge.Attr.Color = Color.Black;
-                    break;
-                case EdgeType.Attribute:
-                    edge.Attr.Color = Color.Green;
-                    break;
-                case EdgeType.Generalization:
-                    edge.Attr.Color = Color.Red;
-                    break;
-                case EdgeType.Type:
-                    edge.Attr.Color = Color.Blue;
-                    break;
-                case EdgeType.Value:
+                    /*break;
+                default:
                     edge.Attr.Color = Color.Chocolate;
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
-            edge.Label.FontColor = edge.Attr.Color;
+            */
         }
 
         private void AddEdges()
         {
-            foreach (var edge in repo.ModelEdges(modelName))
+            foreach (var edge in currentModel.Edges)
             {
-                var newEdge = Graph.AddEdge(edge.source, edge.target);
-                FormatEdge(edge.edgeType, newEdge);
+                var newEdge = Graph.AddEdge(Id(edge.From), Id(edge.To));
+                FormatEdge(edge, newEdge);
             }
         }
 
-        private void FormatNode(Node newNode, NodeType nodeType)
+        private void FormatNode(Node newNode, INode nodeData)
         {
-            switch (nodeType)
+            /*switch (nodeData.Shape)
             {
-                case NodeType.Attribute:
+                case "":*/
                     newNode.Attr.FillColor = Color.IndianRed;
                     newNode.Attr.Shape = Shape.Box;
-                    break;
-                case NodeType.Node:
+                    /*break;
+                default:
                     newNode.Attr.FillColor = Color.ForestGreen;
                     newNode.Attr.Shape = Shape.Ellipse;
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            }*/
         }
 
         private void AddNodes()
         {
-            foreach (var node in repo.ModelNodes(modelName))
+            foreach (var node in currentModel.Nodes)
             {
-                var newNode = Graph.FindNode(node.name);
-                newNode.UserData = node.attributes;
+                var newNode = Graph.FindNode(Id(node));
+                newNode.UserData = node.Attributes;
                 newNode.Attr.LabelMargin = Padding.Empty.Left;
-                FormatNode(newNode, node.nodeType);
+                newNode.LabelText = node.Name;
+                FormatNode(newNode, node);
             }
+        }
+
+        private string Id(IElement element)
+        {
+            if (!ids.ContainsKey(element))
+            {
+                ids.Add(element, (++idCounter).ToString());
+            }
+
+            return ids[element];
         }
     }
 }
