@@ -22,9 +22,6 @@
 
         public ObservableCollection<EdgeInfo> EdgeCollection { get; }
 
-        public ObservableCollection<string> ErrorConsoleCollection { get; private set; }
-
-        public ObservableCollection<string> MessageConsoleCollection { get; private set; }
 
         public EditorViewModel()
         {
