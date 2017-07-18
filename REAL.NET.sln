@@ -39,7 +39,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsAglWinFormsEditor", "src\
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Repo", "src\Repo\Repo.fsproj", "{9E7065A4-BA5E-4752-84BF-54D5C00DB60C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF_Editor", "WPF_Editor\WPF_Editor.csproj", "{EE68E91E-374C-46AF-AD7C-2783EE099A71}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF_Editor", "src\WPF_Editor\WPF_Editor.csproj", "{EE68E91E-374C-46AF-AD7C-2783EE099A71}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
