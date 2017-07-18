@@ -13,45 +13,67 @@
     mc:Ignorable="d">
     <Grid>
         <DockPanel>
-            <Grid
-                Name="Toolbar"
-                Height="30"
+            <Border
+                BorderBrush="Black"
+                BorderThickness="1"
                 DockPanel.Dock="Top">
-                <ToolBar
-                    Background="White"
-                    BorderBrush="Black"
-                    BorderThickness="1">
-                    <Menu Background="White">
-                        <MenuItem Header="File">
-                            <MenuItem Header="New" />
-                            <MenuItem Header="Open" />
-                            <MenuItem Header="Save" />
-                            <MenuItem Header="SaveAs..." />
-                            <Separator />
-                            <MenuItem Header="Exit" />
-                        </MenuItem>
-                        <MenuItem Header="Edit">
-                            <MenuItem Header="Undo" />
-                            <MenuItem Header="Redo" />
-                            <Separator />
-                            <MenuItem Header="Cut" />
-                            <MenuItem Header="Copy" />
-                            <MenuItem Header="Paste" />
-                        </MenuItem>
-                        <MenuItem Header="Settings">
-                            <MenuItem Header="Some setting 1" />
-                            <MenuItem Header="Some setting 2" />
-                            <Separator />
-                            <MenuItem Header="Another setting 1" />
-                            <MenuItem Header="Another setting 2" />
-                        </MenuItem>
-                        <MenuItem Header="Help">
-                            <MenuItem Header="Developer's contacts" />
-                            <MenuItem Header="Tutorial" />
-                        </MenuItem>
-                    </Menu>
-                </ToolBar>
-            </Grid>
+                <StackPanel Name="TopPanel" Height="70">
+                    <ToolBar
+                        Name="ToolBar"
+                        Background="White"
+                        BorderBrush="Black"
+                        BorderThickness="1">
+
+                        <Menu Background="White">
+                            <MenuItem Header="File">
+                                <MenuItem Header="New" />
+                                <MenuItem Header="Open" />
+                                <MenuItem Header="Save" />
+                                <MenuItem Header="SaveAs..." />
+                                <Separator />
+                                <MenuItem Header="Exit" />
+                            </MenuItem>
+                            <MenuItem Header="Edit">
+                                <MenuItem Header="Undo" />
+                                <MenuItem Header="Redo" />
+                                <Separator />
+                                <MenuItem Header="Cut" />
+                                <MenuItem Header="Copy" />
+                                <MenuItem Header="Paste" />
+                            </MenuItem>
+                            <MenuItem Header="Settings">
+                                <MenuItem Header="Some setting 1" />
+                                <MenuItem Header="Some setting 2" />
+                                <Separator />
+                                <MenuItem Header="Another setting 1" />
+                                <MenuItem Header="Another setting 2" />
+                            </MenuItem>
+                            <MenuItem Header="Help">
+                                <MenuItem Header="Developer's contacts" />
+                                <MenuItem Header="Tutorial" />
+                            </MenuItem>
+                        </Menu>
+                    </ToolBar>
+                    <WrapPanel
+                        Name="PlaginBar"
+                        Height="auto"
+                        Orientation="Horizontal">
+                        <Rectangle Width="50" Fill="Green" />
+                        <Rectangle
+                            Width="50"
+                            Height="50"
+                            Fill="Red" />
+                        <Rectangle
+                            Width="50"
+                            Height="50"
+                            Fill="Blue" />
+                        <Rectangle
+                            Width="50"
+                            Height="50"
+                            Fill="Yellow" />
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
             <Border
                 BorderBrush="Black"
                 BorderThickness="1"
@@ -72,6 +94,7 @@
                             Height="auto"
                             HorizontalAlignment="Center">
                             <TabControl Height="auto" VerticalAlignment="Top">
+                                <TabItem Header="All" />
                                 <TabItem Header="Nodes">
                                     <ListBox
                                         Margin="5"
@@ -103,7 +126,9 @@
                         Width="auto"
                         Height="auto"
                         BorderBrush="Black"
-                        BorderThickness="1">
+                        BorderThickness="1"
+                        IsEnabled="False"
+                        Visibility="Hidden">
                         <StackPanel>
                             <TextBlock HorizontalAlignment="Center" FontSize="17">Properies</TextBlock>
 
