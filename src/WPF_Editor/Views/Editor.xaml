@@ -84,7 +84,7 @@
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
-                    <Button Grid.Row="0" Height="15" Width="23" HorizontalAlignment="Right" Content=""></Button>
+                    <Button Grid.Row="0" Height="15" Width="23" HorizontalAlignment="Right" Content="" VerticalAlignment="Top" Click="OnShowOrMinimizeConsoleButtonClick"></Button>
                     <TabControl Grid.Row="1" Height="150" TabStripPlacement="Bottom" Visibility="{Binding Path=ConsoleVisibility, Converter={StaticResource BoolToConsoleConvertor}}">
                         <TabItem Header="Messages">
                             <ScrollViewer>
