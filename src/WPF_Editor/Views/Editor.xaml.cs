@@ -9,12 +9,14 @@ namespace REAL.NET
     /// </summary>
     public partial class MainWindow : Window
     {
+        private EditorViewModel viewModel = new EditorViewModel();
+
         public MainWindow()
         {
-            System.Console.WriteLine("Initialization");
             InitializeComponent();
-            DataContext = new EditorViewModel();
+            DataContext = viewModel;
         }
 
+        private void OnShowOrMinimizeConsoleButtonClick(object sender, RoutedEventArgs e) => viewModel.ChangeConsoleVisibilityStatus();
     }
 }
