@@ -1,16 +1,18 @@
 ﻿namespace REAL.NET.ViewModels
 {
-    using System;
     using REAL.NET.Models;
     using REAL.NET.Models.FakeRepo;
     using Repo;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
 
     class EditorViewModel : INotifyPropertyChanged
     {
         private IRepo repo;
+
+        private AppConsole console = new AppConsole();
+
+        public bool ConsoleVisibility => console.VisibilityStatus;
 
         public ConsoleWindow ErrorConsole { get; private set; }
 
@@ -28,8 +30,12 @@
             repo = new FakeRepo();
             NodeCollection = new ObservableCollection<NodeInfo>(repo.ModelNodes("FakeModel"));
             EdgeCollection = new ObservableCollection<EdgeInfo>(repo.ModelEdges("FakeModel"));
-            this.MessageConsole = new ConsoleWindow();
-            this.ErrorConsole = new ConsoleWindow();
+            this.MessageConsole = console.GetConsoleWindowByName("MessageConsole");
+            this.ErrorConsole = console.GetConsoleWindowByName("ErrorConsole");
+            ErrorConsole.NewMessage("error");
+            MessageConsole.NewMessage("message");
+            console.ShowConsole();
+
         }
 
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
