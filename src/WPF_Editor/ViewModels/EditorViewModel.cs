@@ -26,6 +26,7 @@
 
         public EditorViewModel()
         {
+            
             mediator = Mediator.CreateMediator();
             repo = new FakeRepo();
             NodeCollection = new ObservableCollection<NodeInfo>(repo.ModelNodes("FakeModel"));
