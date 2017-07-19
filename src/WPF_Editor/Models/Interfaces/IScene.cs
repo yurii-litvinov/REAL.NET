@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Repo;
 namespace WPF_Editor.Models.Interfaces
 {
-    interface IScene
+    public interface IScene
     {
-        ISceneMediator Scene_mediator { get; }
+        ISceneMediator SceneMediator { get; }
         void HandleLeftSingleClick(object click_info);
     }
 }

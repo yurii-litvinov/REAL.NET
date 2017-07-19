@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WPF_Editor.Models
 {
-    struct Point
+    public struct Point
     {
         public int X { get; }
         public int Y { get; }

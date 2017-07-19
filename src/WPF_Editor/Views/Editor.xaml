@@ -33,7 +33,7 @@
                                 <MenuItem Header="New" />
                                 <MenuItem Header="Open" />
                                 <MenuItem Header="Save" />
-                                <MenuItem Header="SaveAs..." />
+                                <MenuItem Header="Save As..." />
                                 <Separator />
                                 <MenuItem Header="Exit" />
                             </MenuItem>
@@ -146,7 +146,7 @@
                         IsEnabled="False"
                         Visibility="Hidden">
                         <StackPanel>
-                            <TextBlock HorizontalAlignment="Center" FontSize="17">Properies</TextBlock>
+                            <TextBlock HorizontalAlignment="Center" FontSize="17">Properties</TextBlock>
 
                         </StackPanel>
                     </Border>

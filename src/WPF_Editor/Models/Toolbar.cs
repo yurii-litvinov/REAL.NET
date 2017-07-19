@@ -1,6 +1,6 @@
 ﻿namespace REAL.NET.Models
 {
-    class Toolbar
+    public class Toolbar
     {
     }
 }
