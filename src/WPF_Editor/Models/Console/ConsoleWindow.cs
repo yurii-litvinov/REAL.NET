@@ -4,7 +4,7 @@ namespace REAL.NET.Models
 {
     public class ConsoleWindow
     {
-        protected List<string> messages { get; private set; } 
+        protected List<string> messages;
 
         public ConsoleWindow()
         {
