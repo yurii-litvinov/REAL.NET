@@ -23,7 +23,7 @@
                         Background="White"
                         BorderBrush="Black"
                         BorderThickness="1">
-
+                        
                         <Menu Background="White">
                             <MenuItem Header="File">
                                 <MenuItem Header="New" />

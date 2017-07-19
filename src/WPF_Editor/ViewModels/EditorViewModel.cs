@@ -6,15 +6,17 @@
     using Repo;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-
+    
     class EditorViewModel
     {
         private IRepo repo;
         public ObservableCollection<NodeInfo> NodeCollection { get; }
         public ObservableCollection<EdgeInfo> EdgeCollection { get; }
+        public Mediator mediator;
 
         public EditorViewModel()
         {
+            mediator = Mediator.CreateMediator();
             repo = new FakeRepo();
             NodeCollection = new ObservableCollection<NodeInfo>(repo.ModelNodes("FakeModel"));
             EdgeCollection = new ObservableCollection<EdgeInfo>(repo.ModelEdges("FakeModel"));

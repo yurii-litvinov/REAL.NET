@@ -55,6 +55,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\Interfaces\IConsole.cs" />
+    <Compile Include="Models\Interfaces\IPalette.cs" />
+    <Compile Include="Models\Interfaces\IPaletteMediator.cs" />
+    <Compile Include="Models\Interfaces\IPlaginbar.cs" />
+    <Compile Include="Models\Interfaces\IScene.cs" />
+    <Compile Include="Models\Interfaces\ISceneMediator.cs" />
+    <Compile Include="Models\Interfaces\IToolbar.cs" />
+    <Compile Include="Models\Mediator.cs" />
+    <Compile Include="Models\Point.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
     <Compile Include="Views\Editor.xaml.cs">
       <DependentUpon>Editor.xaml</DependentUpon>
