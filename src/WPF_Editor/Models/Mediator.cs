@@ -23,6 +23,8 @@ namespace REAL.NET.Models
 
         public IPalette Palette { get; }
 
+        public IAppConsole AppConsole { get; }
+
         public static Mediator CreateMediator()
         {
             if (mediator is null)
@@ -38,6 +40,7 @@ namespace REAL.NET.Models
             Scene = Models.Scene.CreateScene(this);
             /* Property this.Palette and class' name are the same. So there's need in full path to class Palette.*/
             Palette = Models.Palette.CreatePalette(this);
+            AppConsole = new Models.AppConsole();
         }
         
     }
