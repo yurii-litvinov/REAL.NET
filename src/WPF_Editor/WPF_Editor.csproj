@@ -66,7 +66,7 @@
     <Compile Include="Models\Interfaces\IToolbar.cs" />
     <Compile Include="Models\Mediator.cs" />
     <Compile Include="Models\Console\ConsoleWindow.cs" />
-    <Compile Include="ViewModels\Convertors\BoolToConsoleVisibiltyConvertor.cs" />
+    <Compile Include="ViewModels\Converters\BoolToConsoleVisibiltyConverter.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
     <Compile Include="Views\Editor.xaml.cs">
       <DependentUpon>Editor.xaml</DependentUpon>
