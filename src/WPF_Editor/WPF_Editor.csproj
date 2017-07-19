@@ -64,6 +64,8 @@
     <Compile Include="Models\Interfaces\IToolbar.cs" />
     <Compile Include="Models\Mediator.cs" />
     <Compile Include="Models\Point.cs" />
+    <Compile Include="Models\Console\ConsoleWindow.cs" />
+    <Compile Include="ViewModels\Convertors\BoolToConsoleVisibiltyConvertor.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
     <Compile Include="Views\Editor.xaml.cs">
       <DependentUpon>Editor.xaml</DependentUpon>
@@ -86,7 +88,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Console.cs" />
+    <Compile Include="Models\Console\AppConsole.cs" />
     <Compile Include="Models\FakeRepo\FakeRepo.cs" />
     <Compile Include="Models\FakeRepo\Model.cs" />
     <Compile Include="Models\Palette.cs" />
@@ -122,6 +124,9 @@
       <Project>{9e7065a4-ba5e-4752-84bf-54d5c00db60c}</Project>
       <Name>Repo</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\Scene\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
