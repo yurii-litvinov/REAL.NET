@@ -91,10 +91,8 @@
                     <Button
                         Grid.Row="0"
                         Width="23"
-                        Height="15"
                         HorizontalAlignment="Right"
-                        VerticalAlignment="Top"
-                        Content="" />
+                        Content="" Margin="0,0,0.4,0.8" RenderTransformOrigin="0.526,0.5" Click="OnHideShowButtonClick" />
                     <TabControl
                         Grid.Row="1"
                         Height="150"
