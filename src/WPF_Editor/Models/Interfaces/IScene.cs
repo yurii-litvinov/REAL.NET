@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Repo;
+using System.Windows.Input;
 namespace WPF_Editor.Models.Interfaces
 {
-    public interface IScene
+    interface IScene
     {
-        ISceneMediator SceneMediator { get; }
-
-        void HandleLeftSingleClick(object clickInfo);
+        void HandleClick(object sender, MouseButtonEventArgs e);
     }
 }

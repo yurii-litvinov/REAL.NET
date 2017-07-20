@@ -6,10 +6,9 @@
     using System.Collections.ObjectModel;
     using System.ComponentModel;
 
-    public class EditorViewModel : INotifyPropertyChanged
+    class EditorViewModel : INotifyPropertyChanged
     {
         private IRepo repo;
-
         private AppConsole console = new AppConsole();
 
         public bool ConsoleVisibility => console.VisibilityStatus;
@@ -23,11 +22,12 @@
         public ObservableCollection<NodeInfo> NodeCollection { get; }
 
         public ObservableCollection<EdgeInfo> EdgeCollection { get; }
-
+        public Mediator Mediator { get; }
 
         public EditorViewModel()
         {
             repo = new FakeRepo();
+            Mediator = Mediator.CreateMediator();
             NodeCollection = new ObservableCollection<NodeInfo>(repo.ModelNodes("FakeModel"));
             EdgeCollection = new ObservableCollection<EdgeInfo>(repo.ModelEdges("FakeModel"));
             this.MessageConsole = console.GetConsoleWindowByName("MessageConsole");

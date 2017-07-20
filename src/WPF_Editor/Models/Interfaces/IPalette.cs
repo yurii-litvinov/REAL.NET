@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace WPF_Editor.Models.Interfaces
 {
-    public interface IPalette
+    interface IPalette
     {
-        IPaletteMediator PaletteMediator { get; }
-
-        /* Gets selected item from palette. If there's no such item it will return null.*/
+	  /* Gets selected item from palette. If there's no such item it will return null.*/
         object SelectedElement { get; }
     }
 }

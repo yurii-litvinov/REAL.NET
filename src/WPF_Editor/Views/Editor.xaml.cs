@@ -4,19 +4,27 @@ namespace REAL.NET
 {
     using System.Windows;
     using REAL.NET.ViewModels;
+    using WPF_Editor.Models.Interfaces;
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class Editor : Window
     {
-        private EditorViewModel viewModel = new EditorViewModel();
+        IScene scene { get; }
+        IPalette palette { get; }
 
-        public MainWindow()
+        public Editor()
         {
             InitializeComponent();
-            DataContext = viewModel;
+            DataContext = new EditorViewModel();
+            scene = ((EditorViewModel)DataContext).Mediator.Scene;
+            palette = ((EditorViewModel)DataContext).Mediator.Palette;
         }
 
-        private void OnShowOrMinimizeConsoleButtonClick(object sender, RoutedEventArgs e) => viewModel.ChangeConsoleVisibilityStatus();
+        private void Scene_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            scene.HandleClick(sender, e);
+        }
     }
 }
