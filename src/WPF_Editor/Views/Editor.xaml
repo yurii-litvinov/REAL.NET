@@ -91,8 +91,11 @@
                     <Button
                         Grid.Row="0"
                         Width="23"
+                        Margin="0,0,0.4,0.8"
                         HorizontalAlignment="Right"
-                        Content="" Margin="0,0,0.4,0.8" RenderTransformOrigin="0.526,0.5" Click="OnHideShowButtonClick" />
+                        Click="OnHideShowButtonClick"
+                        Content=""
+                        RenderTransformOrigin="0.526,0.5" />
                     <TabControl
                         Grid.Row="1"
                         Height="150"
@@ -132,11 +135,11 @@
                                 <TabItem Header="Nodes">
                                     <ListBox
                                         Margin="5"
-                                        ItemsSource="{Binding NodeCollection}"
+                                        ItemsSource="{Binding Nodes}"
                                         SelectionMode="Single">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
-                                                <TextBlock Text="{Binding name}" />
+                                                <TextBlock Text="{Binding Name}" />
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
                                     </ListBox>
@@ -144,13 +147,9 @@
                                 <TabItem Header="Edges">
                                     <ListBox
                                         Margin="5"
-                                        ItemsSource="{Binding EdgeCollection}"
+                                        ItemsSource="{Binding Edges}"
                                         SelectionMode="Single">
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding edgeType}" />
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
+                                        <TextBlock Text="{Binding From}" />
                                     </ListBox>
                                 </TabItem>
                             </TabControl>
