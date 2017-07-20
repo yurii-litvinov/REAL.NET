@@ -20,7 +20,5 @@ open Repo
 type Node(repo: DataLayer.IRepo, model: DataLayer.IModel, element: DataLayer.INode, elementRepository: IElementRepository, attributeRepository: AttributeRepository) = 
     inherit Element(repo, model, element, elementRepository, attributeRepository)
 
-    interface INode with
-        member this.Name
-            with get (): string = element.Name
-            and set (v: string): unit =  element.Name <- v
+    interface INode
+

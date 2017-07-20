@@ -79,6 +79,10 @@ type IAttribute =
 /// Element is a general term for nodes or edges.
 and [<AllowNullLiteral>] IElement =
     interface
+        /// Name of an element, to be displayed on a scene and in various menus.
+        /// TODO: actually, not needed. Nodes can have no name and names can be modelled as attributes.
+        abstract Name: string with get, set
+
         /// Returns type of the element.
         abstract Class: IElement with get
 
@@ -108,10 +112,6 @@ and [<AllowNullLiteral>] IElement =
 type INode =
     interface
         inherit IElement
-
-        /// Name of a node, to be displayed on a scene and in various menus.
-        /// TODO: actually, not needed. Nodes can have no name and names can be modelled as attributes.
-        abstract Name: string with get, set
     end
 
 /// Edge --- an edge in a model. Note that here it can connect not only nodes, but edges too. It is needed to model 

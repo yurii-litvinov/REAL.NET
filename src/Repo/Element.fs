@@ -44,6 +44,25 @@ and [<AbstractClass>] Element
     member this.UnderlyingElement = element
 
     interface IElement with
+        member this.Name
+            with get (): string = 
+                match element with
+                | :? DataLayer.INode as n-> n.Name
+                | _ -> 
+                    if InfrastructureSemanticLayer.Element.hasAttribute repo element "name" then
+                        InfrastructureSemanticLayer.Element.attributeValue repo element "name"
+                    else
+                        ""
+
+            and set (v: string): unit =  
+                match element with
+                | :? DataLayer.INode as n-> n.Name <- v
+                | _ -> 
+                    if InfrastructureSemanticLayer.Element.hasAttribute repo element "name" then
+                        InfrastructureSemanticLayer.Element.setAttributeValue repo element "name" v
+                    else
+                        raise (Repo.InvalidSemanticOperationException "Trying to set a name to an element which does not have one") 
+
         member this.Attributes = 
             InfrastructureSemanticLayer.Element.attributes repo element |> Seq.map attributeRepository.GetAttribute
 

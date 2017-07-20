@@ -27,10 +27,9 @@ module Repo =
             |> Seq.filter (fun m -> m.Name = name)
         
         if Seq.isEmpty models then
-            raise (InvalidSemanticOperationException <| sprintf "Model %s is not found in a repository" name)
+            raise (ModelNotFoundException name)
         elif Seq.length models <> 1 then
-            raise (InvalidSemanticOperationException 
-                <| sprintf "There is more than one model '%s' in a repository" name)
+            raise (MultipleModelsWithGivenNameException name)
         else
             Seq.head models
 
@@ -103,7 +102,7 @@ module Element =
             |> Seq.map (fun (attrName, attr) -> attr)
     
         if Seq.isEmpty attributes then
-            raise (InvalidSemanticOperationException <| sprintf "Attribute %s not found" name)
+            raise (AttributeNotFoundException name)
         else
             /// Here we use first found attribute, it is the deepest in inheritance hierarchy.
             /// NOTE: Multiple inheritance can lead to conflicting attributes, but multiple inheritance

@@ -62,15 +62,16 @@ type RobotsMetamodelBuilder() =
 
             let (--|>) (source: IElement) target = model.CreateGeneralization(metamodelGeneralization, source, target) |> ignore
 
-            let (--->) (source: IElement) (target, name) = 
+            let (--->) (source: IElement) (target, targetName, linkName) = 
                 let edge = Operations.instantiate repo model metamodelEdge :?> IAssociation
                 edge.Source <- Some source
                 edge.Target <- Some target
-                edge.TargetName <- name
+                edge.TargetName <- targetName
 
                 Element.setAttributeValue repo edge "shape" "Pictures/Edge.png"
                 Element.setAttributeValue repo edge "isAbstract" "false"
                 Element.setAttributeValue repo edge "instanceMetatype" "Metatype.Edge"
+                Element.setAttributeValue repo edge "name" linkName
 
                 edge
 
@@ -89,7 +90,7 @@ type RobotsMetamodelBuilder() =
             let motorsStop = +("MotorsStop", "Pictures/enginesStopBlock.png", false)
             let timer = +("Timer", "Pictures/timerBlock.png", false)
 
-            let link = abstractNode ---> (abstractNode, "target")
+            let link = abstractNode ---> (abstractNode, "target", "Link")
             Element.addAttribute repo link "guard" "AttributeKind.String"
 
             Element.addAttribute repo timer "delay" "AttributeKind.Int"

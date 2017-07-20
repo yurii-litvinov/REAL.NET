@@ -26,6 +26,7 @@ module InfrastructureMetamodel =
         else
             let target = association.Target.Value :?> INode
             association.TargetName = target.Name 
+            // TODO: ???
             || association.TargetName = "kind" 
             || association.TargetName = "stringValue"
             || association.TargetName = "enumElement"
@@ -93,6 +94,7 @@ module InfrastructureMetamodel =
 
 /// Helper module for working with elements in Infrastructure Metamodel terms.
 module Element =
+    /// Returns attributes of only this element, ignoring generalizations.
     let private thisElementAttributes repo element =
         let rec isAttributeAssociation (a: IAssociation) =
             let attributesAssociation = InfrastructureMetamodel.findAssociation repo "attributes"
@@ -144,7 +146,7 @@ module Element =
             |> Seq.map (fun attr -> CoreSemanticLayer.Element.attributeValue repo attr "stringValue")
 
         if Seq.isEmpty values then
-            raise (InvalidSemanticOperationException <| sprintf "Attribute %s not found" attributeName)
+            raise (AttributeNotFoundException attributeName)
         else
             // TODO: Check that it is actually last overriden attribute, not some attribute from one of the parents.
             // TODO: Also do something with correctness of attribute inheritance.
@@ -157,7 +159,7 @@ module Element =
             |> Seq.filter (fun attr -> attr.Name = attributeName)
      
         if Seq.isEmpty attributes then
-            raise (InvalidSemanticOperationException <| sprintf "Attribute %s not found" attributeName)
+            raise (AttributeNotFoundException attributeName)
         else
             // TODO: Check that it is actually last overriden attribute, not some attribute from one of the parents.
             // TODO: Also do something with correctness of attribute inheritance.

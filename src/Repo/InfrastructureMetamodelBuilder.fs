@@ -119,6 +119,7 @@ type InfrastructureMetamodelBuilder() =
             createAttribute relationship metatype "instanceMetatype" "Metatype.Edge"
 
             createAttribute edge booleanNode "isAbstract" "false"
+            createAttribute edge stringNode "name" ""
             createAttribute edge stringNode "targetName" ""
 
             createAttribute generalization booleanNode "isAbstract" "false"

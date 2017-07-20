@@ -46,11 +46,11 @@ let ``Repo is able to find any model`` () =
 [<Test>]
 let ``Repo shall throw if no model found`` () =
     let repo = init()
-    (fun () -> Repo.findModel repo "TestModel" |> ignore) |> should throw typeof<Repo.InvalidSemanticOperationException>
+    (fun () -> Repo.findModel repo "TestModel" |> ignore) |> should throw typeof<Repo.ModelNotFoundException>
 
 [<Test>]
 let ``Repo shall throw if searching two models with the same name`` () =
     let repo = init()
     let model1 = repo.CreateModel("TestModel")
     let model2 = repo.CreateModel("TestModel", model1)
-    (fun () -> Repo.findModel repo "TestModel" |> ignore) |> should throw typeof<Repo.InvalidSemanticOperationException>
+    (fun () -> Repo.findModel repo "TestModel" |> ignore) |> should throw typeof<Repo.MultipleModelsWithGivenNameException>
