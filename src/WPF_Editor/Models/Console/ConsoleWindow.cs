@@ -2,7 +2,7 @@
 
 namespace REAL.NET.Models
 {
-    public class ConsoleWindow
+    public class ConsoleWindow : IConsoleWindow
     {
         protected List<string> messages;
 

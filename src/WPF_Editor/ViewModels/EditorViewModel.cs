@@ -9,19 +9,21 @@
     class EditorViewModel : INotifyPropertyChanged
     {
         private IRepo repo;
-        private AppConsole console = new AppConsole();
 
-        public bool ConsoleVisibility => console.VisibilityStatus;
+        private IAppConsole console = new AppConsole();
 
-        public ConsoleWindow ErrorConsole { get; private set; }
+        public bool ConsoleVisibility => console.IsVisible;
 
-        public ConsoleWindow MessageConsole { get; private set; }
+        public IConsoleWindow ErrorConsole { get; private set; }
+
+        public IConsoleWindow MessageConsole { get; private set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ObservableCollection<NodeInfo> NodeCollection { get; }
 
         public ObservableCollection<EdgeInfo> EdgeCollection { get; }
+
         public Mediator Mediator { get; }
 
         public EditorViewModel()

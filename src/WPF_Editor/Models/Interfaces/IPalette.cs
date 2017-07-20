@@ -6,9 +6,14 @@ using System.Threading.Tasks;
 
 namespace WPF_Editor.Models.Interfaces
 {
+    /// <summary>
+    /// This interface is abstraction of Palette
+    /// </summary>
     interface IPalette
     {
-	  /* Gets selected item from palette. If there's no such item it will return null.*/
+        /// <summary>
+        /// Gets selected item from palette. If there's no such item it will return null.
+        /// </summary>
         object SelectedElement { get; }
     }
 }

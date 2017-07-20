@@ -7,7 +7,7 @@ namespace REAL.NET.Models
     {
         private Dictionary<string, ConsoleWindow> windows = new Dictionary<string, ConsoleWindow>();
 
-        public bool VisibilityStatus { get; private set; }
+        public bool IsVisible { get; private set; }
 
         public IAppConsoleMediator AppConsoleMediator { get; }
 
@@ -20,7 +20,7 @@ namespace REAL.NET.Models
         {
             windows.Add("MessageConsole", new ConsoleWindow());
             windows.Add("ErrorConsole", new ConsoleWindow());
-            VisibilityStatus = false;
+            IsVisible = false;
         }
 
         public ConsoleWindow GetConsoleWindowByName(string name)
@@ -35,17 +35,21 @@ namespace REAL.NET.Models
 
         public void ShowConsole()
         {
-            VisibilityStatus = true;
+            IsVisible = true;
         }
 
         public void HideConsole()
         {
-            VisibilityStatus = false;
+            IsVisible = false;
         }
 
         public void ClearConsoleWindowByName(string name)
         {
             windows[name].ClearConsoleWindow();
         }
+
+        IConsoleWindow IAppConsole.GetConsoleWindowByName(string name) => windows[name];
+
+        public void AddConsoleWindow(IConsoleWindow window, string name) => windows.Add(name, window);
     }
 }

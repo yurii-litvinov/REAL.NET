@@ -7,14 +7,16 @@ using WPF_Editor.Models.Interfaces;
 
 namespace REAL.NET.Models
 {
-    /* This class provides connection between components like palette, console, toolbar, etc.
-       Now there are only palette and scene.
-       if you add a new component, class has to implement IComponentNameMediator and a component has to implement IComponentName.
-       At least there's has to be one connection(interface reference) from one to another.
-       It has to be defined in IComponentName or IComponentNameMediator interface.
-       Each component like palette, for example, has to be defined once.
-       You can do it using private constructor and special static method CreateComponent. See Scene implementation.*/
-    
+    //if you add a new component, class has to implement IComponentNameMediator and a component has to implement IComponentName.
+    //At least there's has to be one connection(interface reference) from one to another.
+    //It has to be defined in IComponentName or IComponentNameMediator interface.
+    //Each component like palette, for example, has to be defined once.
+    //You can do it using private constructor and special static method CreateComponent. See Scene implementation.
+
+    /// <summary>
+    ///This class provides connection between components like palette, console, toolbar, etc.
+    ///Now there are only palette and scene.
+    /// </summary>
     class Mediator : ISceneMediator, IPaletteMediator
     {
         private static Mediator mediator;
