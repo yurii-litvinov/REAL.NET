@@ -23,12 +23,12 @@ open Repo.CoreSemanticLayer
 /// Holds references to attribute wrappers and elements.
 type AttributeRepository(repo: DataLayer.IRepo) =
     let attributes = Dictionary<_, _>()
-    member this.GetAttribute (attributeNide: DataLayer.INode) =
-        if attributes.ContainsKey attributeNide then
-            attributes.[attributeNide] :> IAttribute
+    member this.GetAttribute (attributeNode: DataLayer.INode) =
+        if attributes.ContainsKey attributeNode then
+            attributes.[attributeNode] :> IAttribute
         else
-            let newAttribute = Attribute(repo, attributeNide, this)
-            attributes.Add(attributeNide, newAttribute)
+            let newAttribute = Attribute(repo, attributeNode, this)
+            attributes.Add(attributeNode, newAttribute)
             newAttribute :> IAttribute
     
     member this.DeleteAttribute (node: DataLayer.INode) =

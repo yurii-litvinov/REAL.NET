@@ -18,7 +18,9 @@ open Repo
 
 /// Wrapper around repository from data layer. Maintains a repository of models and creates new models if needed.
 type Repo(repo: DataLayer.IRepo) =
-    let modelRepository = ModelRepository(repo)
+    let attributeRepository = AttributeRepository(repo)
+    let elementRepository = ElementRepository(repo, attributeRepository)
+    let modelRepository = ModelRepository(repo, elementRepository)
 
     let unwrap (model: IModel) = (model :?> Model).UnderlyingModel
 

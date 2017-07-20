@@ -19,8 +19,8 @@ open Repo
 /// Repository with wrappers for elements (nodes or edges). Contains already created wrappers and creates new wrappers 
 /// when needed.
 type IElementRepository =
-    abstract GetElement: element: DataLayer.IElement -> IElement
-    abstract DeleteElement: element: DataLayer.IElement -> unit
+    abstract GetElement: model: DataLayer.IModel -> element: DataLayer.IElement -> IElement
+    abstract DeleteElement: model: DataLayer.IModel -> element: DataLayer.IElement -> unit
 
 /// Implementation of an element wrapper.
 and [<AbstractClass>] Element
@@ -48,7 +48,7 @@ and [<AbstractClass>] Element
             InfrastructureSemanticLayer.Element.attributes repo element |> Seq.map attributeRepository.GetAttribute
 
         member this.Class = 
-            repository.GetElement element.Class 
+            repository.GetElement model element.Class
 
         member this.IsAbstract =
             if InfrastructureSemanticLayer.InfrastructureMetamodel.isElement repo element then

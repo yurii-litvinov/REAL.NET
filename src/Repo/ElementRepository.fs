@@ -20,7 +20,7 @@ open Repo
 open Repo.InfrastructureSemanticLayer
 
 /// Repository for element wrappers. Contains already created wrappers and creates new wrappers if needed.
-type ElementRepository(repo: DataLayer.IRepo, model: DataLayer.IModel, attributeRepository: AttributeRepository) =
+type ElementRepository(repo: DataLayer.IRepo, attributeRepository: AttributeRepository) =
     let elements = Dictionary<_, _>()
 
     let findMetatype (element : DataLayer.IElement) =
@@ -33,7 +33,7 @@ type ElementRepository(repo: DataLayer.IRepo, model: DataLayer.IModel, attribute
                 "Trying to get a metatype of an element that is not instance of the Element. Model is malformed.")
 
     interface IElementRepository with
-        member this.GetElement (element: DataLayer.IElement) =
+        member this.GetElement (model: DataLayer.IModel) (element: DataLayer.IElement) =
             if elements.ContainsKey element then
                 elements.[element]
             else
@@ -70,7 +70,7 @@ type ElementRepository(repo: DataLayer.IRepo, model: DataLayer.IModel, attribute
                 elements.Add(element, newElement)
                 newElement
     
-        member this.DeleteElement (element: DataLayer.IElement) =
+        member this.DeleteElement (model: DataLayer.IModel) (element: DataLayer.IElement) =
             if elements.ContainsKey element then
                 // TODO: Who will delete attributes?
                 elements.Remove(element) |> ignore

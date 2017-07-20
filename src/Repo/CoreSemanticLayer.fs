@@ -128,6 +128,10 @@ module Element =
         let attributeNode = model.CreateNode(value, ``class``)
         model.CreateAssociation(attributeAssociationClass, element, attributeNode, name) |> ignore
 
+    /// Returns true if an attribute with given name is present in given element.
+    let hasAttribute repo element name =
+        attributes repo element |> Seq.filter (fun (attrName, _) -> attrName = name) |> Seq.isEmpty |> not
+
     /// Returns true if an 'instance' is an (indirect) instance of a 'class'.
     let rec isInstanceOf (``class``: IElement) (instance: IElement) =
         if instance.Class = ``class`` then

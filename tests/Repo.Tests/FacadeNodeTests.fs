@@ -35,9 +35,9 @@ let ``Node in a model shall have metatype`` () =
     let dataLayerElement = dataLayerModel.Nodes |> Seq.find (fun n -> n.Class = dataLayerClass)
 
     let attributeRepository = AttributeRepository(underlyingRepo)
-    let elementRepository = ElementRepository((repo :?> Repo).UnderlyingRepo, dataLayerModel, attributeRepository) :> IElementRepository
+    let elementRepository = ElementRepository((repo :?> Repo).UnderlyingRepo, attributeRepository) :> IElementRepository
 
-    let motorsForwardInstanceNode = elementRepository.GetElement dataLayerElement
+    let motorsForwardInstanceNode = elementRepository.GetElement dataLayerModel dataLayerElement
 
     motorsForwardInstanceNode.Metatype |> should equal Metatype.Node
 
@@ -56,8 +56,8 @@ let ``Timer block shall have a picture`` () =
     let dataLayerElement = dataLayerModel.Nodes |> Seq.find (fun n -> n.Class = dataLayerClass)
 
     let attributeRepository = AttributeRepository(underlyingRepo)
-    let elementRepository = ElementRepository((repo :?> Repo).UnderlyingRepo, dataLayerModel, attributeRepository) :> IElementRepository
+    let elementRepository = ElementRepository((repo :?> Repo).UnderlyingRepo, attributeRepository) :> IElementRepository
 
-    let timer = elementRepository.GetElement dataLayerElement
+    let timer = elementRepository.GetElement dataLayerModel dataLayerElement
 
     timer.Class.Shape |> should equal "Pictures/timerBlock.png"

@@ -19,13 +19,13 @@ open System.Collections.Generic
 open Repo
 
 ///Model repository. Holds all already created wrappers for data models, creates them as needed.
-type ModelRepository(repo: DataLayer.IRepo) =
+type ModelRepository(repo: DataLayer.IRepo, elementRepository: IElementRepository) =
     let models = Dictionary<DataLayer.IModel, Model>()
     member this.GetModel (data: DataLayer.IModel) =
         if models.ContainsKey data then
             models.[data] :> IModel
         else
-            let newModel = Model(repo, data, this)
+            let newModel = Model(repo, data, elementRepository, this)
             models.Add (data, newModel)
             newModel :> IModel
     
@@ -33,35 +33,32 @@ type ModelRepository(repo: DataLayer.IRepo) =
         let unwrappedModel = (model :?> Model).UnderlyingModel
         models.Remove unwrappedModel |> ignore
 
-and Model(repo: DataLayer.IRepo, data: DataLayer.IModel, repository: ModelRepository) = 
-    let attributeRepository = AttributeRepository(repo)
-    let elementRepository = ElementRepository(repo, data, attributeRepository) :> IElementRepository
-
+and Model(repo: DataLayer.IRepo, data: DataLayer.IModel, elementRepository: IElementRepository, repository: ModelRepository) = 
     member this.UnderlyingModel = data
 
     interface IModel with
         member this.CreateElement ``type`` = 
             let unwrappedType = (``type`` :?> Element).UnderlyingElement
             let element = InfrastructureSemanticLayer.Operations.instantiate repo data unwrappedType
-            elementRepository.GetElement element
+            elementRepository.GetElement data element
             
         member this.DeleteElement element = 
             // TODO: Clean up the memory and check correctness (for example, check for "class" relations)
             let unwrappedElement = (element :?> Element).UnderlyingElement
             /// TODO: Delete all attributes.
             data.DeleteElement unwrappedElement
-            elementRepository.DeleteElement unwrappedElement
+            elementRepository.DeleteElement data unwrappedElement
         
         member this.Nodes = 
             data.Nodes 
             |> Seq.filter (InfrastructureSemanticLayer.InfrastructureMetamodel.isNode repo)
-            |> Seq.map elementRepository.GetElement
+            |> Seq.map (elementRepository.GetElement data)
             |> Seq.cast<INode>
 
         member this.Edges = 
             data.Edges 
             |> Seq.filter (InfrastructureSemanticLayer.InfrastructureMetamodel.isEdge repo)
-            |> Seq.map elementRepository.GetElement
+            |> Seq.map (elementRepository.GetElement data)
             |> Seq.cast<IEdge>
 
         member this.Elements = 

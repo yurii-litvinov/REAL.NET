@@ -30,12 +30,14 @@ let init () =
     Metametamodels.LanguageMetamodelBuilder() |> build
     Metametamodels.InfrastructureMetamodelBuilder() |> build
 
-    let modelRepository = ModelRepository(repo)
+    let attributeRepository = AttributeRepository(repo)
+    let elementRepository = ElementRepository(repo, attributeRepository)
+    let modelRepository = ModelRepository(repo, elementRepository)
 
     let infrastructureMetamodel = InfrastructureSemanticLayer.InfrastructureMetamodel.infrastructureMetamodel repo
 
     let underlyingModel = (repo :> DataLayer.IRepo).CreateModel("Model", infrastructureMetamodel)
-    let model = Model(repo, underlyingModel, modelRepository)
+    let model = Model(repo, underlyingModel, elementRepository, modelRepository)
     
     model :> IModel
 

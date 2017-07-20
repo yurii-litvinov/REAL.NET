@@ -37,12 +37,12 @@ type InfrastructureMetamodelBuilder() =
 
             let (~+) name = model.CreateNode(name, metamodelNode)
             let (--|>) (source: IElement) target = model.CreateGeneralization(metamodelGeneralization, source, target) |> ignore
-            let (--->) (source: IElement) (target, name) = model.CreateAssociation(metamodelAssociation, source, target, name) |> ignore
+
             let createEnum name = model.CreateNode(name, metamodelEnum)
             let createEnumLiterals enum literals = 
                 literals |> Seq.iter (fun l ->
                     let enumLiteral = model.CreateNode(l, metamodelString)
-                    model.CreateAssociation(metamodelEnumLiteralLink, enum, enumLiteral, "") |> ignore
+                    model.CreateAssociation(metamodelEnumLiteralLink, enum, enumLiteral, "enumElement") |> ignore
                 )
 
             let element = +"Element"
@@ -58,6 +58,36 @@ type InfrastructureMetamodelBuilder() =
             let metatype = createEnum "Metatype"
             let attributeKind = createEnum "AttributeKind"
 
+            let createAttribute node (``type``: IElement) name value =
+                let typeNodeToKind = function
+                | t when t = stringNode -> "AttributeKind.String"
+                | t when t = booleanNode -> "AttributeKind.Boolean"
+                
+                /// NOTE: It is actually an enum value, but enums are not supported in v1.
+                | t when t = attributeKind -> "AttributeKind.String"
+                | t when t = metatype -> "AttributeKind.String"
+                | _ -> failwith "unknown type node"
+
+                let attributeNode = +name
+                model.CreateAssociation(metamodelAssociation, node, attributeNode, name) |> ignore
+
+                let kindNode = Model.findNode model (typeNodeToKind (``type`` :?> INode))
+                model.CreateAssociation(metamodelAssociation, attributeNode, kindNode, "kind") |> ignore
+
+                let valueNode = Model.tryFindNode model value 
+                if valueNode.IsSome then
+                    /// All these attribute are immutable, so can be shared (at least it seems so).
+                    model.CreateAssociation(metamodelAssociation, attributeNode, valueNode.Value, "stringValue") |> ignore
+                else
+                    let stringValueNode = +value
+                    model.CreateAssociation(metamodelAssociation, attributeNode, stringValueNode, "stringValue") |> ignore
+
+            let (--->) (source: IElement) (target, name, isAbstract) = 
+                let association = model.CreateAssociation(metamodelAssociation, source, target, name)
+                createAttribute association stringNode "shape" "Pictures/Edge.png"
+                createAttribute association booleanNode "isAbstract" (if isAbstract then "true" else "false")
+                createAttribute association metatype "instanceMetatype" "Metatype.Edge"
+
             createEnumLiterals metatype ["Metatype.Node"; "Metatype.Edge"]
             
             createEnumLiterals attributeKind 
@@ -71,36 +101,13 @@ type InfrastructureMetamodelBuilder() =
             generalization --|> relationship
             edge --|> relationship
 
-            element ---> (element, "class")
-            element ---> (attribute, "attributes")
-            attribute ---> (element, "type")
-            relationship ---> (element, "from")
-            relationship ---> (element, "to")
-            repoNode ---> (modelNode, "models")
-            modelNode ---> (element, "elements")
-
-            let createAttribute node (``type``: IElement) name value =
-                let typeNodeToKind = function
-                | t when t = stringNode -> "AttributeKind.String"
-                | t when t = booleanNode -> "AttributeKind.Boolean"
-                
-                /// NOTE: It is actually an enum value, but enums are not supported in v1.
-                | t when t = attributeKind -> "AttributeKind.String"
-                | t when t = metatype -> "AttributeKind.String"
-                | _ -> failwith "unknown type node"
-
-                let attributeNode = +name
-                node ---> (attributeNode, name)
-
-                let kindNode = Model.findNode model (typeNodeToKind (``type`` :?> INode))
-                attributeNode ---> (kindNode, "kind")
-
-                let valueNode = Model.tryFindNode model value 
-                if valueNode.IsSome then
-                    attributeNode ---> (valueNode.Value, "stringValue")
-                else
-                    let stringValueNode = +value
-                    attributeNode ---> (stringValueNode, "stringValue")
+            element ---> (element, "class", true)
+            element ---> (attribute, "attributes", true)
+            attribute ---> (element, "type", true)
+            relationship ---> (element, "from", true)
+            relationship ---> (element, "to", true)
+            repoNode ---> (modelNode, "models", true)
+            modelNode ---> (element, "elements", true)
 
             createAttribute element stringNode "shape" "Pictures/Vertex.png"
             createAttribute element booleanNode "isAbstract" "true"
@@ -113,6 +120,9 @@ type InfrastructureMetamodelBuilder() =
 
             createAttribute edge booleanNode "isAbstract" "false"
             createAttribute edge stringNode "targetName" ""
+
+            createAttribute generalization booleanNode "isAbstract" "false"
+            createAttribute generalization stringNode "targetName" ""
 
             createAttribute attribute attributeKind "kind" "AttributeKind.String"
             createAttribute attribute stringNode "stringValue" ""

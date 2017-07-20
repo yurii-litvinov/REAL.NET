@@ -25,7 +25,7 @@ type Edge(repo: DataLayer.IRepo, model: DataLayer.IModel, element: DataLayer.IRe
                 if element.Source.IsNone then
                     null
                 else 
-                    elementRepository.GetElement element.Source.Value
+                    elementRepository.GetElement model element.Source.Value
             and set (v: IElement): unit = 
                 let dataElement = (v :?> Element).UnderlyingElement
                 element.Source <- Some dataElement
@@ -35,7 +35,7 @@ type Edge(repo: DataLayer.IRepo, model: DataLayer.IModel, element: DataLayer.IRe
                 if element.Target.IsNone then
                     null
                 else 
-                    elementRepository.GetElement element.Target.Value 
+                    elementRepository.GetElement model element.Target.Value 
             and set (v: IElement): unit = 
                 let dataElement = (v :?> Element).UnderlyingElement
                 element.Target <- Some dataElement

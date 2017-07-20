@@ -19,6 +19,17 @@ open Repo.DataLayer
 
 /// Helper functions to work with Infrastructure Metamodel.
 module InfrastructureMetamodel =
+    /// Returns true if given association is a part of an attribute definition.
+    let private isAttributeLink (association: IAssociation) =
+        if association.Target.IsNone || not (association.Target.Value :? INode) then
+            false
+        else
+            let target = association.Target.Value :?> INode
+            association.TargetName = target.Name 
+            || association.TargetName = "kind" 
+            || association.TargetName = "stringValue"
+            || association.TargetName = "enumElement"
+
     /// Searches for an Infrastructure Metamodel in current repository.
     let infrastructureMetamodel (repo: IRepo) =
         let models = 
@@ -57,15 +68,16 @@ module InfrastructureMetamodel =
     
     let isNode repo (element: IElement) =
         if isFromInfrastructureMetamodel repo element then
-            element :? INode
+            element :? INode && CoreSemanticLayer.Element.hasAttribute repo element "isAbstract"
         else
             CoreSemanticLayer.Element.isInstanceOf (node repo) element
 
     let isEdge repo (element: IElement) =
         if isFromInfrastructureMetamodel repo element then
-            element :? IAssociation
+            element :? IAssociation  && CoreSemanticLayer.Element.hasAttribute repo element "isAbstract"
         else
             CoreSemanticLayer.Element.isInstanceOf (edge repo) element
+            || CoreSemanticLayer.Element.isInstanceOf (generalization repo) element
 
     let isGeneralization repo (element: IElement) =
         if isFromInfrastructureMetamodel repo element then
@@ -188,14 +200,6 @@ module Operations =
             raise (InvalidSemanticOperationException "Attribute connected with multiple links to a node, model error.")
         else
             Seq.head attributeLinks
-
-    let private copyAttribute repo element (``class``: IElement) name =
-        let attributeClassNode = CoreSemanticLayer.Element.attribute repo ``class`` name
-        let kind = CoreSemanticLayer.Element.attributeValue repo attributeClassNode "kind"
-        let attributeAssociation = InfrastructureMetamodel.findAssociation repo name
-        let kindNode = InfrastructureMetamodel.findNode repo kind
-        let defaultValue = CoreSemanticLayer.Element.attributeValue repo ``class`` name
-        CoreSemanticLayer.Element.addAttribute repo element name kindNode attributeAssociation defaultValue
 
     let private copySimpleAttribute repo element (``class``: IElement) name =
         let attributeClassNode = CoreSemanticLayer.Element.attribute repo ``class`` name
