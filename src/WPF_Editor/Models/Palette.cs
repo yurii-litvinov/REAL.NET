@@ -8,7 +8,7 @@
         /* This property has to be set from EditorView.xaml */
         public object SelectedElement { get; }
 
-        public IPaletteMediator Palette_mediator { get; }
+        public IPaletteMediator PaletteMediator { get; }
 
         public static IPalette CreatePalette(IPaletteMediator palette_mediator)
         {
@@ -18,7 +18,7 @@
         }
         private Palette(IPaletteMediator palette_mediator)
         {
-            Palette_mediator = palette_mediator;
+            PaletteMediator = palette_mediator;
         }
     }
 }

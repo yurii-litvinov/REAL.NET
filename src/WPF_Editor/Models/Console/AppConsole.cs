@@ -3,11 +3,18 @@ using System.Collections.Generic;
 
 namespace REAL.NET.Models
 {
-    public class AppConsole
+    public class AppConsole : IAppConsole
     {
         private Dictionary<string, ConsoleWindow> windows = new Dictionary<string, ConsoleWindow>();
 
         public bool VisibilityStatus { get; private set; }
+
+        public IAppConsoleMediator AppConsoleMediator { get; }
+
+        public AppConsole(IAppConsoleMediator mediator)
+        {
+            this.AppConsoleMediator = mediator;
+        }
 
         public AppConsole()
         {
@@ -36,5 +43,9 @@ namespace REAL.NET.Models
             VisibilityStatus = false;
         }
 
+        public void ClearConsoleWindowByName(string name)
+        {
+            windows[name].ClearConsoleWindow();
+        }
     }
 }

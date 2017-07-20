@@ -13,7 +13,7 @@
     WindowState="Maximized"
     mc:Ignorable="d">
     <Window.Resources>
-        <convertor:BoolToConsoleVisibiltyConvertor x:Key="BoolToConsoleConvertor" />
+        <convertor:BoolToConsoleVisibiltyConverter x:Key="BoolToConsoleConverter" />
     </Window.Resources>
     <Grid>
         <DockPanel>
@@ -88,17 +88,8 @@
                         <RowDefinition />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <Button
-                        Grid.Row="0"
-                        Width="23"
-                        Height="15"
-                        HorizontalAlignment="Right"
-                        Content="" />
-                    <TabControl
-                        Grid.Row="1"
-                        Height="150"
-                        TabStripPlacement="Bottom"
-                        Visibility="{Binding Path=ConsoleVisibility, Converter={StaticResource BoolToConsoleConvertor}}">
+                    <Button Grid.Row="0" Height="15" Width="23" HorizontalAlignment="Right" Content="" VerticalAlignment="Top" Click="OnShowOrMinimizeConsoleButtonClick"></Button>
+                    <TabControl Grid.Row="1" Height="150" TabStripPlacement="Bottom" Visibility="{Binding Path=ConsoleVisibility, Converter={StaticResource BoolToConsoleConverter}}">
                         <TabItem Header="Messages">
                             <ScrollViewer>
                                 <TextBox
@@ -165,7 +156,7 @@
                         IsEnabled="False"
                         Visibility="Hidden">
                         <StackPanel>
-                            <TextBlock HorizontalAlignment="Center" FontSize="17">Properies</TextBlock>
+                            <TextBlock HorizontalAlignment="Center" FontSize="17">Properties</TextBlock>
 
                         </StackPanel>
                     </Border>

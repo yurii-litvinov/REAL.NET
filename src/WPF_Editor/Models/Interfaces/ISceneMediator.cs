@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WPF_Editor.Models.Interfaces
 {
-    interface ISceneMediator
+    public interface ISceneMediator
     {
         IScene Scene { get; }
     }

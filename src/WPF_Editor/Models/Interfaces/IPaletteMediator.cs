@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WPF_Editor.Models.Interfaces
 {
-    interface IPaletteMediator
+    public interface IPaletteMediator
     {
         IPalette Palette { get; }
     }

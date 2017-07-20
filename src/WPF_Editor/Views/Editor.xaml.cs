@@ -4,8 +4,6 @@ namespace REAL.NET
 {
     using System.Windows;
     using REAL.NET.ViewModels;
-    using WPF_Editor.Models.Interfaces;
-
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -17,7 +15,7 @@ namespace REAL.NET
         public Editor()
         {
             InitializeComponent();
-            DataContext = new EditorViewModel();
+            DataContext = viewModel;
             scene = ((EditorViewModel)DataContext).Mediator.Scene;
             palette = ((EditorViewModel)DataContext).Mediator.Palette;
         }

@@ -15,7 +15,7 @@ namespace REAL.NET.Models
        Each component like palette, for example, has to be defined once.
        You can do it using private constructor and special static method CreateComponent. See Scene implementation.*/
     
-    class Mediator : ISceneMediator, IPaletteMediator
+    public class Mediator : ISceneMediator, IPaletteMediator
     {
         private static Mediator mediator;
 
@@ -23,10 +23,14 @@ namespace REAL.NET.Models
 
         public IPalette Palette { get; }
 
+        public IAppConsole AppConsole { get; }
+
         public static Mediator CreateMediator()
         {
             if (mediator is null)
+            {
                 mediator = new Mediator();
+            }
             return mediator;
         }
 
@@ -36,6 +40,7 @@ namespace REAL.NET.Models
             Scene = Models.Scene.CreateScene(this);
             /* Property this.Palette and class' name are the same. So there's need in full path to class Palette.*/
             Palette = Models.Palette.CreatePalette(this);
+            AppConsole = new Models.AppConsole();
         }
         
     }
