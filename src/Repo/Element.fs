@@ -52,7 +52,7 @@ and [<AbstractClass>] Element
 
         member this.IsAbstract =
             if InfrastructureSemanticLayer.InfrastructureMetamodel.isElement repo element then
-                match CoreSemanticLayer.Element.attributeValue repo element "isAbstract" with
+                match InfrastructureSemanticLayer.Element.attributeValue repo element "isAbstract" with
                 | "true" -> true
                 | "false" -> false
                 | _ -> failwith "Incorrect isAbstract attribute value"
@@ -64,7 +64,7 @@ and [<AbstractClass>] Element
         member this.Metatype = findMetatype element
 
         member this.InstanceMetatype = 
-            match CoreSemanticLayer.Element.attributeValue repo element "instanceMetatype" with
+            match InfrastructureSemanticLayer.Element.attributeValue repo element "instanceMetatype" with
             | "Metatype.Node" -> Metatype.Node
             | "Metatype.Edge" -> Metatype.Edge
             | _ -> failwith "Incorrect instanceMetatype attribute value"

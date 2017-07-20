@@ -102,15 +102,6 @@ type InfrastructureMetamodelBuilder() =
                     let stringValueNode = +value
                     attributeNode ---> (stringValueNode, "stringValue")
 
-            //.Add("Element", [("shape", "Pictures/Vertex.png"); ("isAbstract", "true"); ("instanceMetatype", "Metatype.Node")] |> Map.ofList)
-            //.Add("Node", [("shape", "Pictures/Vertex.png"); ("isAbstract", "false"); ("instanceMetatype", "Metatype.Node")] |> Map.ofList)
-            //.Add("Relationship", [("shape", "Pictures/Edge.png"); ("isAbstract", "true"); ("instanceMetatype", "Metatype.Edge")] |> Map.ofList)
-            //.Add("Generalization", [("shape", "Pictures/Edge.png"); ("isAbstract", "false"); ("instanceMetatype", "Metatype.Edge")] |> Map.ofList)
-            //.Add("Edge", [("shape", "Pictures/Edge.png"); ("isAbstract", "false"); ("instanceMetatype", "Metatype.Edge")] |> Map.ofList)
-            //.Add("Attribute", [("shape", "Pictures/Vertex.png"); ("isAbstract", "true"); ("instanceMetatype", "Metatype.Node")] |> Map.ofList)
-            //.Add("Model", [("shape", "Pictures/Vertex.png"); ("isAbstract", "true"); ("instanceMetatype", "Metatype.Node")] |> Map.ofList)
-            //.Add("Repo", [("shape", "Pictures/Vertex.png"); ("isAbstract", "true"); ("instanceMetatype", "Metatype.Node")] |> Map.ofList)
-
             createAttribute element stringNode "shape" "Pictures/Vertex.png"
             createAttribute element booleanNode "isAbstract" "true"
             createAttribute element metatype "instanceMetatype" "Metatype.Node"
