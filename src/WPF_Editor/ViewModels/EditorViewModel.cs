@@ -21,13 +21,13 @@
 
         public ObservableCollection<NodeInfo> NodeCollection { get; }
         public ObservableCollection<EdgeInfo> EdgeCollection { get; }
-        public Mediator mediator;
+        public Mediator Mediator { get; }
 
 
         public EditorViewModel()
         {
             
-            mediator = Mediator.CreateMediator();
+            Mediator = Mediator.CreateMediator();
             repo = new FakeRepo();
             NodeCollection = new ObservableCollection<NodeInfo>(repo.ModelNodes("FakeModel"));
             EdgeCollection = new ObservableCollection<EdgeInfo>(repo.ModelEdges("FakeModel"));

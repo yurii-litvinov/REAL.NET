@@ -63,7 +63,6 @@
     <Compile Include="Models\Interfaces\ISceneMediator.cs" />
     <Compile Include="Models\Interfaces\IToolbar.cs" />
     <Compile Include="Models\Mediator.cs" />
-    <Compile Include="Models\Point.cs" />
     <Compile Include="Models\Console\ConsoleWindow.cs" />
     <Compile Include="ViewModels\Convertors\BoolToConsoleVisibiltyConvertor.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
@@ -125,8 +124,6 @@
       <Name>Repo</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\Scene\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

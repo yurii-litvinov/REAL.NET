@@ -1,6 +1,9 @@
 ﻿using System;
 using WPF_Editor.Models.Interfaces;
 using WPF_Editor.Models;
+using System.Windows.Input;
+using System.Windows;
+
 namespace REAL.NET.Models
 {
     class Scene : IScene
@@ -16,14 +19,16 @@ namespace REAL.NET.Models
             return scene;
         }
 
-        public void HandleLeftSingleClick(object clickInfo)
+        public void HandleClick(object sender, MouseButtonEventArgs e)
         {
-            throw new NotImplementedException();
+            Point p = Mouse.GetPosition(null);
+            System.Console.WriteLine("X={0} Y={1}", p.X, p.Y);
         }
 
         private Scene(ISceneMediator sceneMediator)
         {
-            Scene_mediator = sceneMediator;
+
         }
+
     }
 }
