@@ -8,7 +8,7 @@ namespace REAL.NET.Models
 {
 	class Scene : IScene
     {
-        public ISceneMediator SceneMediator { get; }
+        private ISceneMediator sceneMediator { get; }
 
         private static IScene scene;
 
@@ -28,7 +28,7 @@ namespace REAL.NET.Models
 
         private Scene(ISceneMediator sceneMediator)
         {
-            Scene_mediator = sceneMediator;
+            this.sceneMediator = sceneMediator;
 		}
 
     }
