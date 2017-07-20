@@ -7,7 +7,7 @@ using Repo;
 using System.Windows.Input;
 namespace WPF_Editor.Models.Interfaces
 {
-    interface IScene
+    public interface IScene
     {
         void HandleClick(object sender, MouseButtonEventArgs e);
     }

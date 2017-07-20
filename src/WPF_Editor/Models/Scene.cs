@@ -6,10 +6,9 @@ using System.Windows;
 
 namespace REAL.NET.Models
 {
-	class Scene : IScene
+	public class Scene : IScene
     {
         private ISceneMediator sceneMediator { get; }
-
         private static IScene scene;
 
         public static IScene CreateScene(ISceneMediator scene_mediator)
@@ -20,10 +19,10 @@ namespace REAL.NET.Models
             }
             return scene;
         }
+
         public void HandleClick(object sender, MouseButtonEventArgs e)
         {
-            Point p = Mouse.GetPosition(null);
-            System.Console.WriteLine("X={0} Y={1}", p.X, p.Y);
+            
         }
 
         private Scene(ISceneMediator sceneMediator)
