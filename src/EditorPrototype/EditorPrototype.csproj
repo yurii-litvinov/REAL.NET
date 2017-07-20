@@ -203,6 +203,9 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">
       <ItemGroup>
+        <Reference Include="Quickgraph">
+          <Paket>True</Paket>
+        </Reference>
         <Reference Include="GraphX.PCL.Common">
           <HintPath>..\..\packages\GraphX\lib\net40-client\GraphX.PCL.Common.dll</HintPath>
           <Private>True</Private>
@@ -254,6 +257,10 @@
     <Analyzer Include="..\..\packages\StyleCop.Analyzers\analyzers\dotnet\cs\StyleCop.Analyzers.dll">
       <Paket>True</Paket>
     </Analyzer>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\enginesBackwardBlock.png" />
+    <Resource Include="Pictures\enginesStopBlock.png" />
   </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">

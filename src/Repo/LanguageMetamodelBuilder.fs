@@ -15,16 +15,17 @@
 namespace Repo.Metametamodels
 
 open Repo.DataLayer
+open Repo.CoreSemanticLayer
 
 /// Initializes repository with Language Metamodel, which is used as a language to define Infrastructure Metamodel, 
 // which in turn is used to define all other metamodels and closely coupled with editor capabilities.
 type LanguageMetamodelBuilder() =
     interface IModelBuilder with
         member this.Build(repo: IRepo): unit = 
-            let coreMetamodel = repo.Models |> Seq.find (fun m -> m.Name = "CoreMetametamodel")
-            let metamodelNode = coreMetamodel.Nodes |> Seq.find (fun n -> n.Name = "Node")
-            let metamodelGeneralization = coreMetamodel.Nodes |> Seq.find (fun n -> n.Name = "Generalization")
-            let metamodelAssociation = coreMetamodel.Nodes |> Seq.find (fun n -> n.Name = "Association")
+            let coreMetamodel = Repo.coreMetamodel repo
+            let metamodelNode = Model.findNode coreMetamodel "Node"
+            let metamodelGeneralization = Model.findNode coreMetamodel "Generalization"
+            let metamodelAssociation = Model.findNode coreMetamodel "Association"
 
             let languageMetamodel = repo.CreateModel("LanguageMetamodel", coreMetamodel)
 

@@ -82,12 +82,12 @@
     <Compile Include="DataRepo.fs" />
     <Compile Include="IModelBuilder.fs" />
     <Compile Include="CoreMetametamodelBuilder.fs" />
+    <Compile Include="CoreSemanticLayer.fs" />
     <Compile Include="LanguageMetamodelBuilder.fs" />
     <Compile Include="InfrastructureMetamodelBuilder.fs" />
+    <Compile Include="InfrastructureSemanticLayer.fs" />
     <Compile Include="RobotsMetamodelBuilder.fs" />
     <Compile Include="RobotsTestModelBuilder.fs" />
-    <Compile Include="CoreSemanticLayer.fs" />
-    <Compile Include="InfrastructureSemanticLayer.fs" />
     <Compile Include="FacadeLayer.fs" />
     <Compile Include="Attribute.fs" />
     <Compile Include="Element.fs" />
@@ -96,7 +96,7 @@
     <Compile Include="ElementRepository.fs" />
     <Compile Include="Model.fs" />
     <Compile Include="Repo.fs" />
-    <Compile Include="ExperimentalRepoFactory.fs" />
+    <Compile Include="RepoFactory.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

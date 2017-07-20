@@ -15,8 +15,6 @@
 namespace Repo.FacadeLayer
 
 open Repo
-open Repo.CoreSemanticLayer
-open Repo.InfrastructureSemanticLayer
 
 /// Repository with wrappers for elements (nodes or edges). Contains already created wrappers and creates new wrappers 
 /// when needed.
@@ -35,9 +33,9 @@ and [<AbstractClass>] Element
     ) = 
 
     let findMetatype (element : DataLayer.IElement) =
-        if InfrastructureMetamodel.isNode repo element then
+        if InfrastructureSemanticLayer.InfrastructureMetamodel.isNode repo element then
             Metatype.Node
-        elif InfrastructureMetamodel.isRelationship repo element then
+        elif InfrastructureSemanticLayer.InfrastructureMetamodel.isRelationship repo element then
             Metatype.Edge
         else
             raise (InvalidSemanticOperationException 
@@ -47,27 +45,26 @@ and [<AbstractClass>] Element
 
     interface IElement with
         member this.Attributes = 
-            Element.attributes repo element |> Seq.map attributeRepository.GetAttribute
+            InfrastructureSemanticLayer.Element.attributes repo element |> Seq.map attributeRepository.GetAttribute
 
         member this.Class = 
             repository.GetElement element.Class 
 
         member this.IsAbstract =
-            if InfrastructureMetamodel.isElement repo element then
-                match Element.attributeValue repo element "isAbstract" with
+            if InfrastructureSemanticLayer.InfrastructureMetamodel.isElement repo element then
+                match CoreSemanticLayer.Element.attributeValue repo element "isAbstract" with
                 | "true" -> true
                 | "false" -> false
                 | _ -> failwith "Incorrect isAbstract attribute value"
             else 
                 true
 
-        member this.Shape = Element.attributeValue repo element "shape"
+        member this.Shape = InfrastructureSemanticLayer.Element.attributeValue repo element "shape"
 
         member this.Metatype = findMetatype element
 
         member this.InstanceMetatype = 
-            match Element.attributeValue repo element "instanceMetatype" with
+            match CoreSemanticLayer.Element.attributeValue repo element "instanceMetatype" with
             | "Metatype.Node" -> Metatype.Node
             | "Metatype.Edge" -> Metatype.Edge
             | _ -> failwith "Incorrect instanceMetatype attribute value"
-

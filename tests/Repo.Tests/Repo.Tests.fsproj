@@ -66,6 +66,7 @@
     <Compile Include="DataRepoTest.fs" />
     <Compile Include="DataElementTests.fs" />
     <Compile Include="CoreMetametamodelBuilderTests.fs" />
+    <Compile Include="InfrastructureSemanticLayerTests.fs" />
     <Compile Include="FacadeRepoTests.fs" />
     <Compile Include="FacadeModelTests.fs" />
     <Compile Include="FacadeAttributeTests.fs" />

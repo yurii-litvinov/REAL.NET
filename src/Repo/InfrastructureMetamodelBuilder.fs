@@ -15,28 +15,23 @@
 namespace Repo.Metametamodels
 
 open Repo.DataLayer
+open Repo.CoreSemanticLayer
 
 /// Initializes repository with Infrastructure Metamodel, which is used to define all other metamodels 
 /// and closely coupled with editor capabilities.
 type InfrastructureMetamodelBuilder() =
     interface IModelBuilder with
         member this.Build(repo: IRepo): unit = 
-            let metamodel = repo.Models |> Seq.find (fun m -> m.Name = "LanguageMetamodel")
+            let metamodel = Repo.findModel repo "LanguageMetamodel"
 
-            let find name =
-                metamodel.Nodes |> Seq.find (fun n -> n.Name = name)
+            let find name = Model.findNode metamodel name
 
             let metamodelNode = find "Node"
             let metamodelGeneralization = find "Generalization"
             let metamodelAssociation = find "Association"
             let metamodelString = find "String"
             let metamodelEnum = find "Enum"
-            let metamodelEnumLiteralLink = 
-                metamodel.Elements 
-                |> Seq.find (function 
-                             | :? IAssociation as a -> a.TargetName = "elements" 
-                             | _ -> false
-                            )
+            let metamodelEnumLiteralLink = Model.findAssociation metamodel "elements"
 
             let model = repo.CreateModel("InfrastructureMetamodel", metamodel)
 
@@ -81,21 +76,54 @@ type InfrastructureMetamodelBuilder() =
             attribute ---> (element, "type")
             relationship ---> (element, "from")
             relationship ---> (element, "to")
-            edge ---> (stringNode, "targetName")
             repoNode ---> (modelNode, "models")
             modelNode ---> (element, "elements")
 
-            let createAttribute node (``type``: IElement) name = 
-                model.CreateAssociation(metamodelAssociation, node, ``type``, name) |> ignore
+            let createAttribute node (``type``: IElement) name value =
+                let typeNodeToKind = function
+                | t when t = stringNode -> "AttributeKind.String"
+                | t when t = booleanNode -> "AttributeKind.Boolean"
+                
+                /// NOTE: It is actually an enum value, but enums are not supported in v1.
+                | t when t = attributeKind -> "AttributeKind.String"
+                | t when t = metatype -> "AttributeKind.String"
+                | _ -> failwith "unknown type node"
 
-            createAttribute element stringNode "shape"
-            createAttribute element booleanNode "isAbstract"
-            createAttribute element metatype "metatype"
-            createAttribute element metatype "instanceMetatype"
+                let attributeNode = +name
+                node ---> (attributeNode, name)
 
-            createAttribute attribute attributeKind "kind"
-            createAttribute attribute stringNode "stringValue"
+                let kindNode = Model.findNode model (typeNodeToKind (``type`` :?> INode))
+                attributeNode ---> (kindNode, "kind")
 
-            createAttribute edge stringNode "targetName"
+                let valueNode = Model.tryFindNode model value 
+                if valueNode.IsSome then
+                    attributeNode ---> (valueNode.Value, "stringValue")
+                else
+                    let stringValueNode = +value
+                    attributeNode ---> (stringValueNode, "stringValue")
+
+            //.Add("Element", [("shape", "Pictures/Vertex.png"); ("isAbstract", "true"); ("instanceMetatype", "Metatype.Node")] |> Map.ofList)
+            //.Add("Node", [("shape", "Pictures/Vertex.png"); ("isAbstract", "false"); ("instanceMetatype", "Metatype.Node")] |> Map.ofList)
+            //.Add("Relationship", [("shape", "Pictures/Edge.png"); ("isAbstract", "true"); ("instanceMetatype", "Metatype.Edge")] |> Map.ofList)
+            //.Add("Generalization", [("shape", "Pictures/Edge.png"); ("isAbstract", "false"); ("instanceMetatype", "Metatype.Edge")] |> Map.ofList)
+            //.Add("Edge", [("shape", "Pictures/Edge.png"); ("isAbstract", "false"); ("instanceMetatype", "Metatype.Edge")] |> Map.ofList)
+            //.Add("Attribute", [("shape", "Pictures/Vertex.png"); ("isAbstract", "true"); ("instanceMetatype", "Metatype.Node")] |> Map.ofList)
+            //.Add("Model", [("shape", "Pictures/Vertex.png"); ("isAbstract", "true"); ("instanceMetatype", "Metatype.Node")] |> Map.ofList)
+            //.Add("Repo", [("shape", "Pictures/Vertex.png"); ("isAbstract", "true"); ("instanceMetatype", "Metatype.Node")] |> Map.ofList)
+
+            createAttribute element stringNode "shape" "Pictures/Vertex.png"
+            createAttribute element booleanNode "isAbstract" "true"
+            createAttribute element metatype "instanceMetatype" "Metatype.Node"
+
+            createAttribute node booleanNode "isAbstract" "false"
+
+            createAttribute relationship stringNode "shape" "Pictures/Edge.png"
+            createAttribute relationship metatype "instanceMetatype" "Metatype.Edge"
+
+            createAttribute edge booleanNode "isAbstract" "false"
+            createAttribute edge stringNode "targetName" ""
+
+            createAttribute attribute attributeKind "kind" "AttributeKind.String"
+            createAttribute attribute stringNode "stringValue" ""
 
             ()

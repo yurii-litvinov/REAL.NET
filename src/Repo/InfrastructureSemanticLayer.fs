@@ -16,7 +16,6 @@ namespace Repo.InfrastructureSemanticLayer
 
 open Repo
 open Repo.DataLayer
-open Repo.CoreSemanticLayer
 
 /// Helper functions to work with Infrastructure Metamodel.
 module InfrastructureMetamodel =
@@ -40,7 +39,12 @@ module InfrastructureMetamodel =
 
     let findAssociation (repo: IRepo) targetName =
         let metamodel = infrastructureMetamodel repo
-        CoreSemanticLayer.Model.findAssociation metamodel targetName
+        // TODO: Looks like kind of hack, but we need to find correct associations here.
+        if targetName = "kind" || targetName = "stringValue" then
+            let attribute = findNode repo "Attribute"
+            CoreSemanticLayer.Model.findAssociationWithSource metamodel attribute targetName
+        else
+            CoreSemanticLayer.Model.findAssociation metamodel targetName
 
     let private node (repo: IRepo) = findNode repo "Node"
 
@@ -49,7 +53,7 @@ module InfrastructureMetamodel =
     let private generalization (repo: IRepo) = findNode repo "Generalization"
 
     let isFromInfrastructureMetamodel repo element =
-        Element.containingModel repo element = infrastructureMetamodel repo
+        CoreSemanticLayer.Element.containingModel repo element = infrastructureMetamodel repo
     
     let isNode repo (element: IElement) =
         if isFromInfrastructureMetamodel repo element then
@@ -75,29 +79,108 @@ module InfrastructureMetamodel =
     let isElement repo element =
         isNode repo element || isRelationship repo element
 
+/// Helper module for working with elements in Infrastructure Metamodel terms.
 module Element =
-    let attributes repo element =
-        if InfrastructureMetamodel.isFromInfrastructureMetamodel repo element then
-            // Elements in Infrastructure Metamodel do not have "ontological" attributes, only linguistic ones
-            // (they play ontological role for this metamodel, but from the point of view of tools it is 
-            // not important).
-            // NODE: Actually Infrastructure Metamodel shall be a proper instance of itself and of Language Metamodel.
-            Seq.empty
-        else
+    let private thisElementAttributes repo element =
+        let rec isAttributeAssociation (a: IAssociation) =
             let attributesAssociation = InfrastructureMetamodel.findAssociation repo "attributes"
-            element
-            |> Element.outgoingAssociations repo
-            |> Seq.filter (Element.isInstanceOf attributesAssociation)
-            |> Seq.map (fun l -> l.Target)
-            |> Seq.choose id
-            |> Seq.filter (fun e -> e :? DataLayer.INode)
-            |> Seq.cast<DataLayer.INode>
+            if CoreSemanticLayer.Element.isInstanceOf attributesAssociation a then
+                true
+            else
+                let target = a.Target
+                match target with
+                | Some n ->
+                    match n with
+                    // NOTE: Heuristic to tell attribute associations from other associations in an infrastructure metamodel:
+                    // attribute associations can not be an instance of "attributes" association since they are on the same 
+                    // metalevel and need to be instances of Language Metamodel associations (or else we break instantiation
+                    // chain from Core Metamodel). So we use hidden knowledge about such associations.
+                    | :? INode as n when InfrastructureMetamodel.isFromInfrastructureMetamodel repo n ->
+                        a.TargetName = n.Name
+                    | _ -> match a.Class with
+                           | :? IAssociation -> isAttributeAssociation (a.Class :?> IAssociation)
+                           | _ -> false
+                | _ -> false
 
+        element
+        |> CoreSemanticLayer.Element.outgoingAssociations repo
+        |> Seq.filter isAttributeAssociation
+        |> Seq.map (fun l -> l.Target)
+        |> Seq.choose id
+        |> Seq.filter (fun e -> e :? DataLayer.INode)
+        |> Seq.cast<DataLayer.INode>
+
+    /// Returns a list of all attributes for an element, respecting generalization. Attributes of most special node
+    /// are the first in resulting sequence.
+    let attributes repo element =
+        let parentsAttributes =
+            CoreSemanticLayer.Element.parents repo element 
+            |> Seq.map (thisElementAttributes repo) 
+            |> Seq.concat 
+
+        Seq.append (thisElementAttributes repo element) parentsAttributes
+
+    /// Returns true if an attribute with given name is present in given element.
+    let hasAttribute repo element name =
+        attributes repo element |> Seq.filter (fun attr -> attr.Name = name) |> Seq.isEmpty |> not
+        
+    /// Returns value of an attribute with given name.
+    let attributeValue repo element attributeName =
+        let values =
+            attributes repo element
+            |> Seq.filter (fun attr -> attr.Name = attributeName)
+            |> Seq.map (fun attr -> CoreSemanticLayer.Element.attributeValue repo attr "stringValue")
+
+        if Seq.isEmpty values then
+            raise (InvalidSemanticOperationException <| sprintf "Attribute %s not found" attributeName)
+        else
+            // TODO: Check that it is actually last overriden attribute, not some attribute from one of the parents.
+            // TODO: Also do something with correctness of attribute inheritance.
+            Seq.head values
+
+    /// Sets value for a given attribute to a given value.
+    let setAttributeValue repo element attributeName value =
+        let attributes = 
+            thisElementAttributes repo element
+            |> Seq.filter (fun attr -> attr.Name = attributeName)
+     
+        if Seq.isEmpty attributes then
+            raise (InvalidSemanticOperationException <| sprintf "Attribute %s not found" attributeName)
+        else
+            // TODO: Check that it is actually last overriden attribute, not some attribute from one of the parents.
+            // TODO: Also do something with correctness of attribute inheritance.
+            CoreSemanticLayer.Element.setAttributeValue repo (Seq.head attributes) "stringValue" value
+
+    /// Adds a new attribute to a given element.
+    let addAttribute repo element name kind =
+        let model = CoreSemanticLayer.Element.containingModel repo element
+        let infrastructureModel = InfrastructureMetamodel.infrastructureMetamodel repo
+        let attributeNode = CoreSemanticLayer.Model.findNode infrastructureModel "Attribute"
+        let attributeKindNode = CoreSemanticLayer.Model.findNode infrastructureModel "AttributeKind"
+        let stringNode = CoreSemanticLayer.Model.findNode infrastructureModel "String"
+
+        let kindAssociation = CoreSemanticLayer.Model.findAssociationWithSource infrastructureModel attributeNode "kind"
+        let stringValueAssociation = CoreSemanticLayer.Model.findAssociationWithSource infrastructureModel attributeNode "stringValue"
+        let attributesAssociation = CoreSemanticLayer.Model.findAssociation infrastructureModel "attributes"
+
+        let attribute = model.CreateNode(name, attributeNode)
+
+        CoreSemanticLayer.Element.addAttribute repo attribute "kind" attributeKindNode kindAssociation kind
+        CoreSemanticLayer.Element.addAttribute repo attribute "stringValue" stringValueAssociation stringNode ""
+        model.CreateAssociation(attributesAssociation, element, attribute, name) |> ignore
+
+        ()
+
+/// Module containing semantic operations on elements.
 module Operations =
-    let private attributeLink repo element attribute =
-        let attributeLinks = 
-            Element.outgoingAssociations repo element
+    /// Returns link corresponding to an attribute respecting generalization hierarchy.
+    let rec private attributeLink repo element attribute =
+        let myAttributeLinks e = 
+            CoreSemanticLayer.Element.outgoingAssociations repo e
             |> Seq.filter (fun a -> a.Target = Some attribute)
+
+        let attributeLinks = 
+            CoreSemanticLayer.Element.parents repo element |> Seq.map myAttributeLinks |> Seq.concat |> Seq.append (myAttributeLinks element) 
 
         if Seq.isEmpty attributeLinks then
             raise (InvalidSemanticOperationException "Attribute link not found for attribute")
@@ -106,66 +189,35 @@ module Operations =
         else
             Seq.head attributeLinks
 
-    // Hardcoded attribute values for all Infrastructure Metamodel nodes, to be able to instantiate them. Actually
-    // to be instantiable Infrastructure Metamodel shall be an instance of Infrastructure Metamodel, but it will
-    // not be done until orthogonal metamodelling will be fully supported (not in v1).
-    let private attributesMap =
-        Map.empty
-            .Add("Element", [("shape", "Pictures/Vertex.png"); ("isAbstract", "true"); ("metatype", "Metatype.Node"); ("instanceMetatype", "Metatype.Node"); ("name", "Element")] |> Map.ofList)
-            .Add("Node", [("shape", "Pictures/Vertex.png"); ("isAbstract", "false"); ("metatype", "Metatype.Node"); ("instanceMetatype", "Metatype.Node"); ("name", "Node")] |> Map.ofList)
-            .Add("Relationship", [("shape", "Pictures/Edge.png"); ("isAbstract", "true"); ("metatype", "Metatype.Node"); ("instanceMetatype", "Metatype.Edge"); ("name", "Relationship")] |> Map.ofList)
-            .Add("Generalization", [("shape", "Pictures/Edge.png"); ("isAbstract", "false"); ("metatype", "Metatype.Node"); ("instanceMetatype", "Metatype.Edge"); ("name", "Generalization")] |> Map.ofList)
-            .Add("Edge", [("shape", "Pictures/Edge.png"); ("isAbstract", "false"); ("metatype", "Metatype.Node"); ("instanceMetatype", "Metatype.Edge"); ("name", "Edge")] |> Map.ofList)
-            .Add("Attribute", [("shape", "Pictures/Vertex.png"); ("isAbstract", "true"); ("metatype", "Metatype.Node"); ("instanceMetatype", "Metatype.Node"); ("name", "Attribute")] |> Map.ofList)
-            .Add("Model", [("shape", "Pictures/Vertex.png"); ("isAbstract", "true"); ("metatype", "Metatype.Node"); ("instanceMetatype", "Metatype.Node"); ("name", "Model")] |> Map.ofList)
-            .Add("Repo", [("shape", "Pictures/Vertex.png"); ("isAbstract", "true"); ("metatype", "Metatype.Node"); ("instanceMetatype", "Metatype.Node"); ("name", "Repo")] |> Map.ofList)
-
-    let private attributeTypesMap = [("shape", "String"); ("isAbstract", "Boolean"); ("instanceMetatype", "Metatype")] |> Map.ofList
-
     let private copyAttribute repo element (``class``: IElement) name =
-        if not <| InfrastructureMetamodel.isFromInfrastructureMetamodel repo ``class`` then
-            let attributeClassNode = Element.attribute repo ``class`` name
-            let kind = Element.attributeValue repo attributeClassNode "kind"
-            let attributeAssociation = InfrastructureMetamodel.findAssociation repo name
-            let kindNode = InfrastructureMetamodel.findNode repo kind
-            let defaultValue = Element.attributeValue repo ``class`` name
-            Element.addAttribute repo element name kindNode attributeAssociation defaultValue
-        else
-            // Here we create attribute by not copying, but instead creating new attribute, because Infrastructure 
-            // Metamodel has attributes in form of Core Metamodel.
-            let attributeClassNode = Element.attribute repo ``class`` name
-            let kind = attributeTypesMap.[name]
-            let attributeAssociation = InfrastructureMetamodel.findAssociation repo name
-            let kindNode = InfrastructureMetamodel.findNode repo kind
-            let defaultValue = attributesMap.[(``class`` :?> INode).Name].[name]
-            Element.addAttribute repo element name kindNode attributeAssociation defaultValue
+        let attributeClassNode = CoreSemanticLayer.Element.attribute repo ``class`` name
+        let kind = CoreSemanticLayer.Element.attributeValue repo attributeClassNode "kind"
+        let attributeAssociation = InfrastructureMetamodel.findAssociation repo name
+        let kindNode = InfrastructureMetamodel.findNode repo kind
+        let defaultValue = CoreSemanticLayer.Element.attributeValue repo ``class`` name
+        CoreSemanticLayer.Element.addAttribute repo element name kindNode attributeAssociation defaultValue
 
     let private copySimpleAttribute repo element (``class``: IElement) name =
-        let attributeClassNode = Element.attribute repo ``class`` name
+        let attributeClassNode = CoreSemanticLayer.Element.attribute repo ``class`` name
         let attributeAssociation = InfrastructureMetamodel.findAssociation repo name
-        let defaultValue = Element.attributeValue repo ``class`` name
-        Element.addAttribute repo element name attributeClassNode attributeAssociation defaultValue
+        let defaultValue = CoreSemanticLayer.Element.attributeValue repo ``class`` name
+        CoreSemanticLayer.Element.addAttribute repo element name attributeClassNode attributeAssociation defaultValue
 
-    let private addAttribute repo (model: IModel) (element: IElement) (attributeClass: INode) =
-        let attributeLink = attributeLink repo element.Class attributeClass
-        let attributeNode = model.CreateNode(attributeClass.Name, attributeClass)
-        model.CreateAssociation(attributeLink, element, attributeNode, attributeClass.Name) |> ignore
+    let private addAttribute repo (element: IElement) (attributeClass: INode) =
+        let model = CoreSemanticLayer.Element.containingModel repo element
+        if Element.hasAttribute repo element attributeClass.Name then
+            let valueFromClass = CoreSemanticLayer.Element.attributeValue repo attributeClass "stringValue"
+            Element.setAttributeValue repo element attributeClass.Name valueFromClass
+        else 
+            let attributeLink = attributeLink repo element.Class attributeClass
+            let attributeNode = model.CreateNode(attributeClass.Name, attributeClass)
+            model.CreateAssociation(attributeLink, element, attributeNode, attributeClass.Name) |> ignore
 
-        copySimpleAttribute repo attributeNode attributeClass "stringValue"
-        copySimpleAttribute repo attributeNode attributeClass "kind"
-
-    let private attributeValue repo (element: IElement) name =
-        if InfrastructureMetamodel.isFromInfrastructureMetamodel repo element then
-            if element :? INode then
-                attributesMap.[(element :?> INode).Name].[name]
-            else
-                raise (InvalidSemanticOperationException 
-                    "Trying to get attribute value from an edge in an Infrastructure Model. It shall not be needed.")
-        else
-            Element.attributeValue repo element name
+            copySimpleAttribute repo attributeNode attributeClass "stringValue"
+            copySimpleAttribute repo attributeNode attributeClass "kind"
 
     let instantiate (repo: IRepo) (model: IModel) (``class``: IElement) =
-        if attributeValue repo ``class`` "isAbstract" = "true" then
+        if Element.attributeValue repo ``class`` "isAbstract" <> "false" then
             raise (InvalidSemanticOperationException "Trying to instantiate abstract node")
         
         let name = 
@@ -176,25 +228,12 @@ module Operations =
                     "Trying to instantiate something that should not be instantiated")
 
         let newElement = 
-            if attributeValue repo ``class`` "instanceMetatype" = "Metatype.Node" then
+            if Element.attributeValue repo ``class`` "instanceMetatype" = "Metatype.Node" then
                 model.CreateNode(name, ``class``) :> IElement
             else
                 model.CreateAssociation(``class``, None, None, name) :> IElement
 
         let attributes = Element.attributes repo ``class``
-        attributes |> Seq.iter (addAttribute repo model newElement)
-
-        let copyAttribute = 
-            if InfrastructureMetamodel.isFromInfrastructureMetamodel repo ``class`` then
-                copyAttribute repo newElement ``class``
-            else
-                // For now metamodel does not contain linguistic attributes ("shape", "isAbstract" and so on) as
-                // proper attributes, since we have no way to tell them from "true" attributes that can be edited.
-                // Actually, attributes shall have potency and be copied as proper attributes if their potency allows.
-                copySimpleAttribute repo newElement ``class``
-
-        copyAttribute "shape"
-        copyAttribute "isAbstract"
-        copyAttribute "instanceMetatype"
+        attributes |> Seq.rev |> Seq.iter (addAttribute repo newElement)
 
         newElement

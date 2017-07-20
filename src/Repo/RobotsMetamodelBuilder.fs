@@ -14,23 +14,18 @@
 
 namespace Repo.Metametamodels
 
+open Repo
 open Repo.DataLayer
+open Repo.InfrastructureSemanticLayer
 
 /// Initializes repository with Robots Metamodel, first testing metamodel of a real language.
 type RobotsMetamodelBuilder() =
     interface IModelBuilder with
         member this.Build(repo: IRepo): unit = 
-            let metamodel = repo.Models |> Seq.find (fun m -> m.Name = "InfrastructureMetamodel")
+            let metamodel = CoreSemanticLayer.Repo.findModel repo "InfrastructureMetamodel"
 
-            let find name =
-                metamodel.Nodes |> Seq.find (fun n -> n.Name = name)
-
-            let findAssociation node name = 
-                metamodel.Elements 
-                |> Seq.find (function 
-                             | :? IAssociation as a -> a.Source = Some node && a.TargetName = name
-                             | _ -> false
-                            )
+            let find name = CoreSemanticLayer.Model.findNode metamodel name
+            let findAssociation node name = CoreSemanticLayer.Model.findAssociationWithSource metamodel node name
 
             let metamodelElement = find "Element"
             let metamodelNode = find "Node"
@@ -47,7 +42,6 @@ type RobotsMetamodelBuilder() =
 
             let shapeAssociation = findAssociation metamodelElement "shape"
             let isAbstractAssociation = findAssociation metamodelElement "isAbstract"
-            let metatypeAssociation = findAssociation metamodelElement "metatype"
             let instanceMetatypeAssociation = findAssociation metamodelElement "instanceMetatype"
 
             let attributeKindAssociation = findAssociation metamodelAttribute "kind"
@@ -57,58 +51,56 @@ type RobotsMetamodelBuilder() =
 
             let model = repo.CreateModel("RobotsMetamodel", metamodel)
 
-            let addAttributeValue node name linkType ``type`` value =
-                let value = model.CreateNode(value, ``type``)
-                model.CreateAssociation(linkType, node, value, name) |> ignore
-
-            let addAttribute node name kind =
-                let attribute = model.CreateNode(name, metamodelAttribute)
-                addAttributeValue attribute "kind" attributeKindAssociation metamodelAttributeKindNode kind
-                
-                addAttributeValue attribute "stringValue" attributeStringValueAssociation metamodelStringNode ""
-
-                model.CreateAssociation(attributesAssociation, node, attribute, name) |> ignore
-
             let (~+) (name, shape, isAbstract) = 
-                let node = model.CreateNode(name, metamodelNode)
+                let node = Operations.instantiate repo model metamodelNode :?> INode
+                node.Name <- name
+                Element.setAttributeValue repo node "shape" shape 
+                Element.setAttributeValue repo node "isAbstract" (if isAbstract then "true" else "false")
+                Element.setAttributeValue repo node "instanceMetatype" "Metatype.Node" 
                 
-                // TODO: attributes of elementary types require special handling in data layer.
-                addAttributeValue node "shape" shapeAssociation metamodelStringNode shape
-                addAttributeValue node "isAbstract" isAbstractAssociation metamodelBooleanNode (if isAbstract then "true" else "false")
-                addAttributeValue node "metatype" metatypeAssociation metamodelMetatypeNode "Metatype.Node"
-                addAttributeValue node "instanceMetatype" instanceMetatypeAssociation metamodelMetatypeNode "Metatype.Node"
-
                 node
 
             let (--|>) (source: IElement) target = model.CreateGeneralization(metamodelGeneralization, source, target) |> ignore
 
-            let (--->) (source: IElement) (target, name, isAbstract) = 
-                let edge = model.CreateAssociation(metamodelEdge, source, target, name)
+            let (--->) (source: IElement) (target, name) = 
+                let edge = Operations.instantiate repo model metamodelEdge :?> IAssociation
+                edge.Source <- Some source
+                edge.Target <- Some target
+                edge.TargetName <- name
 
-                addAttributeValue edge "shape" shapeAssociation metamodelStringNode "Pictures/Edge.png"
-                addAttributeValue edge "isAbstract" isAbstractAssociation metamodelBooleanNode (if isAbstract then "true" else "false")
-                addAttributeValue edge "metatype" metatypeAssociation metamodelMetatypeNode "Metatype.Edge"
-                addAttributeValue edge "instanceMetatype" instanceMetatypeAssociation metamodelMetatypeNode "Metatype.Edge"
+                Element.setAttributeValue repo edge "shape" "Pictures/Edge.png"
+                Element.setAttributeValue repo edge "isAbstract" "false"
+                Element.setAttributeValue repo edge "instanceMetatype" "Metatype.Edge"
 
                 edge
 
             let abstractNode = +("AbstractNode", "", true)
             let initialNode = +("InitialNode", "Pictures/initialBlock.png", false)
             let finalNode = +("FinalNode", "Pictures/finalBlock.png", false)
+            
+            let abstractMotorsBlock = +("AbstractMotorsBlock", "", true)
+            Element.addAttribute repo abstractMotorsBlock "ports" "AttributeKind.String"
+
+            let abstractMotorsPowerBlock = +("AbstractMotorsPowerBlock", "", true)
+            Element.addAttribute repo abstractMotorsPowerBlock "power" "AttributeKind.Int"
+
             let motorsForward = +("MotorsForward", "Pictures/enginesForwardBlock.png", false)
+            let motorsBackward = +("MotorsBackward", "Pictures/enginesBackwardBlock.png", false)
+            let motorsStop = +("MotorsStop", "Pictures/enginesStopBlock.png", false)
             let timer = +("Timer", "Pictures/timerBlock.png", false)
 
-            let link = abstractNode ---> (abstractNode, "target", false)
-            addAttribute link "guard" "AttributeKind.String"
+            let link = abstractNode ---> (abstractNode, "target")
+            Element.addAttribute repo link "guard" "AttributeKind.String"
 
-            addAttribute motorsForward "ports" "AttributeKind.String"
-            addAttribute motorsForward "power" "AttributeKind.Int"
-
-            addAttribute timer "delay" "AttributeKind.Int"
+            Element.addAttribute repo timer "delay" "AttributeKind.Int"
 
             initialNode --|> abstractNode
             finalNode --|> abstractNode
-            motorsForward --|> abstractNode
+            motorsForward --|> abstractMotorsPowerBlock
+            motorsBackward --|> abstractMotorsPowerBlock
+            abstractMotorsPowerBlock --|> abstractMotorsBlock
+            motorsStop --|> abstractMotorsBlock
+            abstractMotorsBlock --|> abstractNode
             timer --|> abstractNode
 
             ()

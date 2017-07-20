@@ -66,5 +66,8 @@ let ``Model shall allow to list its nodes`` () =
 
     let model = repo.Models |> Seq.find (fun m -> m.Name = "RobotsTestModel")
 
+    let underlyingModel = (model :?> Model).UnderlyingModel
+    let initialNode = CoreSemanticLayer.Model.findNode underlyingModel "aInitialNode"
+
     model.Nodes |> should not' (be Empty)
-    model.Nodes |> Seq.filter (fun n -> n.Name = "anInitialNode") |> should not' (be Empty)
+    model.Nodes |> Seq.filter (fun n -> n.Name = "aInitialNode") |> should not' (be Empty)

@@ -26,7 +26,6 @@ let init () =
     builder.Build repo
     repo
 
-
 [<Test>]
 let ``Builder shall be able to create model in repo`` () =
     let repo = init()
