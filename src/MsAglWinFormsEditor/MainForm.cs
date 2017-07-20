@@ -10,7 +10,6 @@ using Microsoft.Msagl.Core.Geometry.Curves;
 using Microsoft.Msagl.Core.Layout;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
-using Repo;
 using Edge = Microsoft.Msagl.Drawing.Edge;
 using Node = Microsoft.Msagl.Drawing.Node;
 using Point = Microsoft.Msagl.Core.Geometry.Point;
@@ -58,15 +57,6 @@ namespace MsAglWinFormsEditor
         private void ViewerOnMouseDown(object sender, MouseEventArgs mouseEventArgs)
            => viewer.PanButtonPressed = viewer.SelectedObject == null;
 
-        private readonly List<EdgeType> edgeTypes = new List<EdgeType>
-        {
-            EdgeType.Generalization,
-            EdgeType.Association,
-            EdgeType.Attribute,
-            EdgeType.Type,
-            EdgeType.Value
-        };
-
         private void ViewerOnEdgeAdded(object sender, EventArgs eventArgs)
         {
             var edge = (Edge)sender;
@@ -74,10 +64,19 @@ namespace MsAglWinFormsEditor
             var tableLayout = new TableLayoutPanel { Dock = DockStyle.Fill };
             form.Controls.Add(tableLayout);
 
-            foreach (var edgeType in edgeTypes)
+            // TODO: GetEdgeTypes or something
+            foreach (var type in graph.GetNodeTypes())
             {
+                if (type.InstanceMetatype != Repo.Metatype.Edge || type.IsAbstract)
+                {
+                    continue;
+                }
+
+                var edgeType = type as Repo.IEdge;
+
                 tableLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25));
-                var associationButton = new Button { Text = edgeType.ToString(), Dock = DockStyle.Fill };
+                // TODO: We definitely need names for non-abstract edges. Maybe as attribute?
+                var associationButton = new Button { Text = "Link", Dock = DockStyle.Fill };
                 associationButton.Click += (o, args) =>
                 {
                     graph.CreateNewEdge(edgeType, edge);
@@ -104,10 +103,10 @@ namespace MsAglWinFormsEditor
         {
             foreach (var type in graph.GetNodeTypes())
             {
-                var button = new Button { Text = type.name, Dock = DockStyle.Bottom };
+                var button = new Button { Text = type.Name, Dock = DockStyle.Bottom };
                 button.Click += (sender, args) =>
                 {
-                    var node = graph.CreateNewNode(type.id);
+                    var node = graph.CreateNewNode(type);
                     node.GeometryNode = GeometryGraphCreator.CreateGeometryNode(viewer.Graph, viewer.Graph.GeometryGraph, node, ConnectionToGraph.Disconnected);
                     var viewNode = viewer.CreateIViewerNode(node, viewer.Graph.Nodes.ToList()[0].Pos - new Point(250, 0), null);
                     viewer.AddNode(viewNode, true);
@@ -127,8 +126,8 @@ namespace MsAglWinFormsEditor
             selectedNode = viewer.SelectedObject as Node;
             if (selectedNode != null)
             {
-                var attributeInfos = selectedNode.UserData as List<AttributeInfo>;
-                if (attributeInfos != null)
+                var attributes = selectedNode.UserData as List<Repo.IAttribute>;
+                if (attributes != null)
                 {
                     attributeTable.Visible = true;
                     loadImageButton.Visible = true;
@@ -145,9 +144,9 @@ namespace MsAglWinFormsEditor
                         imageLayoutPanel.Visible = false;
                     }
                     attributeTable.Rows.Clear();
-                    foreach (var info in attributeInfos)
+                    foreach (var attribute in attributes)
                     {
-                        object[] row = { info.name, graph.GetAttributeName(info.attributeType), info.value };
+                        object[] row = { attribute.Name, attribute.Kind.ToString(), attribute.StringValue };
                         attributeTable.Rows.Add(row);
                     }
                 }
