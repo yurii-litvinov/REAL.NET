@@ -52,10 +52,13 @@ and [<AbstractClass>] Element
 
         member this.IsAbstract =
             if InfrastructureSemanticLayer.InfrastructureMetamodel.isElement repo element then
-                match InfrastructureSemanticLayer.Element.attributeValue repo element "isAbstract" with
-                | "true" -> true
-                | "false" -> false
-                | _ -> failwith "Incorrect isAbstract attribute value"
+                if InfrastructureSemanticLayer.InfrastructureMetamodel.isGeneralization repo element then
+                    true
+                else
+                    match InfrastructureSemanticLayer.Element.attributeValue repo element "isAbstract" with
+                    | "true" -> true
+                    | "false" -> false
+                    | _ -> failwith "Incorrect isAbstract attribute value"
             else 
                 true
 

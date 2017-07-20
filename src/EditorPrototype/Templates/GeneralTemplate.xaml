@@ -12,11 +12,14 @@
     <Style TargetType="{x:Type controls:VertexControl}">
         <Setter Property="Background" Value="{Binding Color}"/>
         <Setter Property="VertexShape" Value="None"/>
-        <Setter Property= "ShowLabel" Value="False"/>
+        <Setter Property= "ShowLabel" Value="True"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:VertexControl}">
-                    <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill"/>
+                    <Grid>
+                        <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill"/>
+                        <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" />
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -26,7 +29,6 @@
         <Setter Property="controls:DragBehaviour.UpdateEdgesOnMove" Value="True" />
 
         <Style.Triggers>
-
             <DataTrigger Binding="{Binding VertexType}" Value="Attribute">
                 <Setter Property="Template">
                     <Setter.Value>
@@ -45,36 +47,6 @@
                 </Setter>
                 <Setter Property="Background" Value="LightCoral" />
             </DataTrigger>
-
-            <!-- <DataTrigger Binding="{Binding VertexType}" Value="Attribute">
-
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type controls:VertexControl}">
-                            <Image Source="pack://application:,,,/Pictures/star1.png" Margin="0" Width="80" Stretch="UniformToFill"/>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding VertexType}" Value="Node">
-
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type controls:VertexControl}">
-                            <Border Background="{TemplateBinding Background}"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    CornerRadius="0,0,0,0"
-                                    Padding="{TemplateBinding Padding}">
-                                <Grid>
-                                    <Image Source="pack://application:,,,/Pictures/star2.png" Margin="0" Width="80" Stretch="UniformToFill"/>
-                                    <ContentPresenter Content="{TemplateBinding Vertex}" />
-                                    <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Vertex, RelativeSource={RelativeSource TemplatedParent}}" />
-                                </Grid>
-                            </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </DataTrigger> -->
         </Style.Triggers>
     </Style>
 
