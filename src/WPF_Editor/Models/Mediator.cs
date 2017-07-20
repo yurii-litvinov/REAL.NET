@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Repo;
 using WPF_Editor.Models.Interfaces;
 
 namespace REAL.NET.Models
@@ -14,7 +15,7 @@ namespace REAL.NET.Models
        It has to be defined in IComponentName or IComponentNameMediator interface.
        Each component like palette, for example, has to be defined once.
        You can do it using private constructor and special static method CreateComponent. See Scene implementation.*/
-    
+    using WPF_Editor.ViewModels;
     class Mediator : ISceneMediator, IPaletteMediator
     {
         private static Mediator mediator;
@@ -32,6 +33,11 @@ namespace REAL.NET.Models
                 mediator = new Mediator();
             }
             return mediator;
+        }
+
+        public Element GetSelectedPaletteItem()
+        {
+            return Palette.SelectedElement;
         }
 
         private Mediator()

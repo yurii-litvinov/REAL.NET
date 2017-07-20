@@ -14,7 +14,7 @@ namespace REAL.NET
         IScene scene { get; }
 
         IPalette palette { get; }
-
+        
         private EditorViewModel viewModel;
 
         public Editor()

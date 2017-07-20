@@ -136,6 +136,7 @@
                                     <ListBox
                                         Margin="5"
                                         ItemsSource="{Binding Nodes}"
+                                        SelectedItem="{Binding Mediator.Palette.SelectedElement}"
                                         SelectionMode="Single">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
@@ -149,7 +150,11 @@
                                         Margin="5"
                                         ItemsSource="{Binding Edges}"
                                         SelectionMode="Single">
-                                        <TextBlock Text="{Binding From}" />
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding}" />
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
                                     </ListBox>
                                 </TabItem>
                             </TabControl>
@@ -164,7 +169,6 @@
                         Visibility="Hidden">
                         <StackPanel>
                             <TextBlock HorizontalAlignment="Center" FontSize="17">Properties</TextBlock>
-
                         </StackPanel>
                     </Border>
                 </StackPanel>
@@ -172,6 +176,7 @@
             <Grid
                 Name="Scene"
                 Background="White"
+                DataContext=""
                 MouseLeftButtonDown="Scene_MouseLeftButtonDown" />
         </DockPanel>
     </Grid>

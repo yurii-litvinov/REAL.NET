@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Repo;
+using WPF_Editor.ViewModels;
 namespace WPF_Editor.Models.Interfaces
 {
     interface IPalette
     {
 	  /* Gets selected item from palette. If there's no such item it will return null.*/
-        object SelectedElement { get; }
+        Element SelectedElement { get; set; }
     }
 }
