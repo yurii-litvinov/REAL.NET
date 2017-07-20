@@ -90,8 +90,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Console\AppConsole.cs" />
-    <Compile Include="Models\FakeRepo\FakeRepo.cs" />
-    <Compile Include="Models\FakeRepo\Model.cs" />
     <Compile Include="Models\Palette.cs" />
     <Compile Include="Models\Scene.cs" />
     <Compile Include="Models\Toolbar.cs" />
