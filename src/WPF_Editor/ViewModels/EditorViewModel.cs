@@ -7,60 +7,15 @@
     using System.Collections.ObjectModel;
     using System;
 
-    public class Node : INode
-    {
-        private INode node { get; }
-        public string Name { get => node.Name; set => node.Name = value;}
-
-        public IElement Class => node.Class;
-
-        public IEnumerable<IAttribute> Attributes => node.Attributes;
-
-        public bool IsAbstract => node.IsAbstract;
-
-        public Metatype Metatype => node.Metatype;
-
-        public Metatype InstanceMetatype => node.InstanceMetatype;
-
-        public string Shape => node.Shape;
-
-        public Node(INode inode)
-        {
-            node = inode;
-        }
-    }
-    public class Edge : IEdge
-    {
-        private IEdge edge { get; }
-        public IElement From { get => edge.From; set => edge.From = value; }
-        public IElement To { get => edge.To; set => edge.To = value; }
-
-        public IElement Class => edge.Class;
-
-        public IEnumerable<IAttribute> Attributes => edge.Attributes;
-
-        public bool IsAbstract => edge.IsAbstract;
-
-        public Metatype Metatype => edge.Metatype;
-
-        public Metatype InstanceMetatype => edge.InstanceMetatype;
-
-        public string Shape => edge.Shape;
-        public Edge(IEdge iedge)
-        {
-            edge = iedge;
-        }
-    }
     public class EditorViewModel : INotifyPropertyChanged
     {
-        
         private IRepo repo;
 
         private string modelName = "RobotsMetamodel";
 
         #region Extern all console members to another class
 
-        private IAppConsole console = new AppConsole();
+        private IAppConsole console;
 
         public bool ConsoleVisibility => console.IsVisible;
 
@@ -83,9 +38,10 @@
         public EditorViewModel()
         {
             Mediator = Mediator.CreateMediator();
+            console = new AppConsole();
             repo = RepoFactory.CreateRepo();
             Model = repo.Model(modelName);
-            var interfaceNodes = new ObservableCollection<INode>(Model.Nodes);
+            var interfaceNodes = Model.Nodes;
             Nodes = new ObservableCollection<Node>();
             foreach(var node in interfaceNodes)
             {
@@ -98,6 +54,7 @@
             console.ShowConsole();
             #endregion
         }
+
         #region Extern all console members to another class
         public void ChangeConsoleVisibilityStatus()
         {
