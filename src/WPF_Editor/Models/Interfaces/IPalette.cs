@@ -9,7 +9,7 @@ namespace WPF_Editor.Models.Interfaces
     /// <summary>
     /// This interface is abstraction of Palette
     /// </summary>
-    interface IPalette
+    public interface IPalette
     {
         /// <summary>
         /// Gets selected item from palette. If there's no such item it will return null.

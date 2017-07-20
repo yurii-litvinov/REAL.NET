@@ -7,7 +7,7 @@
     using System.Collections.ObjectModel;
     using System;
 
-    class Node : INode
+    public class Node : INode
     {
         private INode node { get; }
         public string Name { get => node.Name; set => node.Name = value;}
@@ -29,7 +29,7 @@
             node = inode;
         }
     }
-    class Edge : IEdge
+    public class Edge : IEdge
     {
         private IEdge edge { get; }
         public IElement From { get => edge.From; set => edge.From = value; }
@@ -51,26 +51,33 @@
             edge = iedge;
         }
     }
-    class EditorViewModel : INotifyPropertyChanged
+    public class EditorViewModel : INotifyPropertyChanged
     {
         
         private IRepo repo;
+
         private string modelName = "RobotsMetamodel";
+
         #region Extern all console members to another class
 
         private IAppConsole console = new AppConsole();
 
         public bool ConsoleVisibility => console.IsVisible;
-		public IConsoleWindow ErrorConsole { get; private set; }
 
-        public IConsoleWindow MessageConsole { get; private set; }
+        public string MessageConsoleText => console.GetConsoleWindowByName("MessageConsole").ToString();
+
+        public string ErrorConsoleText => console.GetConsoleWindowByName("ErrorConsole").ToString();
+
         public event PropertyChangedEventHandler PropertyChanged;
         #endregion
 
         public Mediator Mediator { get; }
+
         //Try to use expression body methods.
         private IModel Model { get; set; }
+
         public ObservableCollection<Node> Nodes { get; set; }
+
         public ObservableCollection<Edge> Edges { get; set; }
 
         public EditorViewModel()
@@ -78,21 +85,16 @@
             Mediator = Mediator.CreateMediator();
             repo = RepoFactory.CreateRepo();
             Model = repo.Model(modelName);
-            
             var interfaceNodes = new ObservableCollection<INode>(Model.Nodes);
             Nodes = new ObservableCollection<Node>();
             foreach(var node in interfaceNodes)
             {
                 Nodes.Add(new Node(node));
             }
-
-
             #region Extern all console members to another class
             //Extern all console members to another class
-            this.MessageConsole = console.GetConsoleWindowByName("MessageConsole");
-            this.ErrorConsole = console.GetConsoleWindowByName("ErrorConsole");
-            ErrorConsole.NewMessage("Error");
-            MessageConsole.NewMessage("Message");
+            console.NewMessageToConsoleWindowByName("ErrorConsole", "error");
+            console.NewMessageToConsoleWindowByName("MessageConsole", "message");
             console.ShowConsole();
             #endregion
         }

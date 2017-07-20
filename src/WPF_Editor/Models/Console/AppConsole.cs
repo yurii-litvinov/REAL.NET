@@ -5,7 +5,7 @@ namespace REAL.NET.Models
 {
     public class AppConsole : IAppConsole
     {
-        private Dictionary<string, ConsoleWindow> windows = new Dictionary<string, ConsoleWindow>();
+        private Dictionary<string, IConsoleWindow> windows = new Dictionary<string, IConsoleWindow>();
 
         public bool IsVisible { get; private set; }
 
@@ -23,7 +23,7 @@ namespace REAL.NET.Models
             IsVisible = false;
         }
 
-        public ConsoleWindow GetConsoleWindowByName(string name)
+        public IConsoleWindow GetConsoleWindowByName(string name)
         {
             return windows[name];
         }
