@@ -66,7 +66,7 @@
 
             this.Closed += this.CloseChildrenWindows;
 
-            var modelName = "RobotsTestModel";
+            var modelName = "RobotsMetamodel";
 
             this.g_zoomctrl.MouseDown += (object sender, MouseButtonEventArgs e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
 

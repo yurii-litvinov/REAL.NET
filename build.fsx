@@ -4,7 +4,6 @@
 
 #r @"packages/build/FAKE/tools/FakeLib.dll"
 
-open FSharpLint.Fake
 open Fake
 open Fake.Git
 open Fake.AssemblyInfoFile
@@ -369,10 +368,6 @@ Target "Release" (fun _ ->
     |> releaseDraft
     |> Async.RunSynchronously
 )
-
-Target "Lint" (fun _ ->
-    !! "src/**/*.fsproj"
-        |> Seq.iter (FSharpLint id))
 
 Target "BuildPackage" DoNothing
 
