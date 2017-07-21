@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Repo;
+﻿using WPF_Editor.Models.Console;
 using WPF_Editor.Models.Interfaces;
+using WPF_Editor.ViewModels;
 
-namespace REAL.NET.Models
+namespace WPF_Editor.Models
 {
     /* This class provides connection between components like palette, console, toolbar, etc.
        Now there are only palette and scene.
@@ -15,10 +11,9 @@ namespace REAL.NET.Models
        It has to be defined in IComponentName or IComponentNameMediator interface.
        Each component like palette, for example, has to be defined once.
        You can do it using private constructor and special static method CreateComponent. See Scene implementation.*/
-    using WPF_Editor.ViewModels;
-    class Mediator : ISceneMediator, IPaletteMediator
+    public class Mediator : ISceneMediator, IPaletteMediator
     {
-        private static Mediator mediator;
+        private static Mediator _mediator;
 
         public IScene Scene { get; }
 
@@ -28,11 +23,11 @@ namespace REAL.NET.Models
 
         public static Mediator CreateMediator()
         {
-            if (mediator is null)
+            if (_mediator is null)
             {
-                mediator = new Mediator();
+                _mediator = new Mediator();
             }
-            return mediator;
+            return _mediator;
         }
 
         public Element GetSelectedPaletteItem()
@@ -46,7 +41,7 @@ namespace REAL.NET.Models
             Scene = Models.Scene.CreateScene(this);
             /* Property this.Palette and class' name are the same. So there's need in full path to class Palette.*/
             Palette = Models.Palette.CreatePalette(this);
-            AppConsole = new Models.AppConsole();
+            AppConsole = new AppConsole();
         }
         
     }

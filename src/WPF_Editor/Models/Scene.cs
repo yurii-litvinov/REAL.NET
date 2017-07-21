@@ -1,59 +1,48 @@
 ﻿using System;
-using WPF_Editor.Models.Interfaces;
-using WPF_Editor.Models;
-using System.Windows.Input;
-using System.Windows;
-using Repo;
 using System.Collections.Generic;
+using System.Windows.Input;
+using Repo;
+using WPF_Editor.Models.Interfaces;
 using WPF_Editor.ViewModels;
-using REAL.NET.ViewModels;
-namespace REAL.NET.Models
+
+namespace WPF_Editor.Models
 {
-	class Scene : IScene
-    {
-        private ISceneMediator sceneMediator { get; }
-        private static IScene scene;
-        private List<INode> nodeList = new List<INode>();
-        public static IScene CreateScene(ISceneMediator scene_mediator)
+	public class Scene : IScene
+	{
+	    private readonly ISceneMediator _sceneMediator;
+        private static IScene _scene;
+        private readonly List<INode> _nodeList = new List<INode>();
+        public static IScene CreateScene(ISceneMediator sceneMediator)
         {
-            if (scene is null)
+            if (_scene is null)
             {
-                scene = new Scene(scene_mediator);
+                _scene = new Scene(sceneMediator);
             }
-            return scene;
+            return _scene;
         }
 
         public void HandleClick(object sender, MouseButtonEventArgs e)
         {
-            Point mouseCoordinates = Mouse.GetPosition(null);
-            Element element = sceneMediator.GetSelectedPaletteItem();
+            var mouseCoordinates = Mouse.GetPosition(null);
+            var element = _sceneMediator.GetSelectedPaletteItem();
 
-            if(element is Node)
+            var node = element as Node;
+            if(node != null)
             {
-                INode node = (INode)element;
-                System.Console.WriteLine("Create node with name \"{0}\" at position:", node.Name);
-                System.Console.WriteLine("X={0} Y={1}", mouseCoordinates.X, mouseCoordinates.Y);
-                nodeList.Add(node);
-                System.Console.WriteLine("Node \"{0}\" has been saved at scene.", node.Name);
+                System.Console.WriteLine(@"Node ""{0}"" has been saved at scene.", node.Name);
+                System.Console.WriteLine(@"X={0} Y={1}", mouseCoordinates.X, mouseCoordinates.Y);
+                _nodeList.Add(node);
+                System.Console.WriteLine(@"Node ""{0}"" has been saved at scene.", node.Name);
                 
                 System.Console.WriteLine();
                 return;
             }
-            if(element is null)
-            {
-                System.Console.WriteLine("Element hasn't been selected.");
-                System.Console.WriteLine();
-                return;
-            }
-            throw new Exception("Something went wrong...");
+            if (!(element is null)) throw new Exception("Something went wrong...");
 
+            System.Console.WriteLine(@"Element hasn't been selected.");
+            System.Console.WriteLine();
         }
 
-        private Scene(ISceneMediator sceneMediator)
-        {
-            this.sceneMediator = sceneMediator;
-            
-		}
-
-    }
+        private Scene(ISceneMediator sceneMediator) => _sceneMediator = sceneMediator;
+	}
 }

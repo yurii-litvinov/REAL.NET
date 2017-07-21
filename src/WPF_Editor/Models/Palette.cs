@@ -1,14 +1,12 @@
-﻿namespace REAL.NET.Models
+﻿using System.ComponentModel;
+using WPF_Editor.Models.Interfaces;
+using WPF_Editor.ViewModels;
+
+namespace WPF_Editor.Models
 {
-    using System;
-    using Repo;
-    using WPF_Editor.Models.Interfaces;
-    using System.ComponentModel;
-    using ViewModels;
-    using WPF_Editor.ViewModels;
-    class Palette : IPalette, INotifyPropertyChanged
+    public class Palette : IPalette, INotifyPropertyChanged
     {
-        private static IPalette palette;
+        private static IPalette _palette;
 
         public event PropertyChangedEventHandler PropertyChanged;
         
@@ -16,18 +14,18 @@
         /* This property has to be set from EditorView.xaml */
         public Element SelectedElement { get; set; }
 
-        public IPaletteMediator PaletteMediator { get; }
+        private IPaletteMediator _paletteMediator;
 
-        public static IPalette CreatePalette(IPaletteMediator palette_mediator)
+        public static IPalette CreatePalette(IPaletteMediator paletteMediator)
         {
-            if(palette is null)
-                palette = new Palette(palette_mediator);
-            return palette;
+            if(_palette is null)
+                _palette = new Palette(paletteMediator);
+            return _palette;
         }
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        private Palette(IPaletteMediator palette_mediator)
+        private Palette(IPaletteMediator paletteMediator)
         {
-            PaletteMediator = palette_mediator;
+            _paletteMediator = paletteMediator;
         }
     }
 }

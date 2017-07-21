@@ -7,7 +7,7 @@ using Repo;
 using WPF_Editor.ViewModels;
 namespace WPF_Editor.Models.Interfaces
 {
-    interface ISceneMediator
+    public interface ISceneMediator
     {
 
         IScene Scene { get; }

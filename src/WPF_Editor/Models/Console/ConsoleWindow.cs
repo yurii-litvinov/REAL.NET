@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace REAL.NET.Models
+namespace WPF_Editor.Models.Console
 {
     public class ConsoleWindow
     {

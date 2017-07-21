@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using WPF_Editor.Models.Interfaces;
 
-namespace REAL.NET.Models
+namespace WPF_Editor.Models.Console
 {
     public class AppConsole : IAppConsole
     {

@@ -1,11 +1,11 @@
 ﻿<Window
-    x:Class="REAL.NET.Editor"
+    x:Class="WPF_Editor.Views.Editor"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:col="clr-namespace:System.Collections;assembly=mscorlib"
-    xmlns:convertor="clr-namespace:WPF_Editor.ViewModels.Convertors"
+    xmlns:converters="clr-namespace:WPF_Editor.ViewModels.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:REAL.NET"
+    xmlns:local="clr-namespace:WPF_Editor"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="MainWindow"
     Width="1280"
@@ -13,7 +13,7 @@
     WindowState="Maximized"
     mc:Ignorable="d">
     <Window.Resources>
-        <convertor:BoolToConsoleVisibiltyConverter x:Key="BoolToConsoleConverter" />
+        <converters:BoolToConsoleVisibiltyConverter x:Key="BoolToConsoleConverter" />
     </Window.Resources>
     <Grid>
         <DockPanel>

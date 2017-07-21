@@ -57,7 +57,6 @@
     </ApplicationDefinition>
     <Compile Include="Models\Interfaces\IAppConsole.cs" />
     <Compile Include="Models\Interfaces\IAppConsoleMediator.cs" />
-    <Compile Include="Models\Interfaces\IConsole.cs" />
     <Compile Include="Models\Interfaces\IPalette.cs" />
     <Compile Include="Models\Interfaces\IPaletteMediator.cs" />
     <Compile Include="Models\Interfaces\IPlaginbar.cs" />

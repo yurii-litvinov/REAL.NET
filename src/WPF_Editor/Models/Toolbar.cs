@@ -1,4 +1,4 @@
-﻿namespace REAL.NET.Models
+﻿namespace WPF_Editor.Models
 {
     public class Toolbar
     {

@@ -7,7 +7,7 @@ using Repo;
 using WPF_Editor.ViewModels;
 namespace WPF_Editor.Models.Interfaces
 {
-    interface IPalette
+    public interface IPalette
     {
 	  /* Gets selected item from palette. If there's no such item it will return null.*/
         Element SelectedElement { get; set; }

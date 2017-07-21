@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-namespace REAL.NET
-{
-    using System.Windows;
-    using REAL.NET.ViewModels;
-    using WPF_Editor.Models.Interfaces;
+﻿using System.Windows;
+using WPF_Editor.Models.Interfaces;
+using WPF_Editor.ViewModels;
 
+namespace WPF_Editor.Views
+{
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
