@@ -32,14 +32,16 @@ type CoreMetametamodelBuilder() =
             let association = +"Association"
             let stringNode = +"String"
 
-            let (--|>) (source: IElement) target = model.CreateGeneralization(generalization, source, target) |> ignore
+            let (--|>) (source: IElement) target = 
+                model.CreateGeneralization(generalization, source, target) |> ignore
             
             node --|> element
             relationship --|> element
             generalization --|> relationship
             association --|> relationship
 
-            let (--->) (source: IElement) (target, name) = model.CreateAssociation(association, source, target, name) |> ignore
+            let (--->) (source: IElement) (target, name) = 
+                model.CreateAssociation(association, source, target, name) |> ignore
 
             element ---> (element, "class")
             relationship ---> (element, "source")

@@ -17,9 +17,24 @@ namespace Repo.DataLayer
 [<AbstractClass>]
 /// Implementation of Element.
 type DataElement(``class``: IElement option) =
+    let mutable outgoingEdges = []
+    let mutable incomingEdges = []
+
     interface IElement with
         member this.Class: IElement = 
             match ``class`` with
             | Some v -> v
             | None -> this :> IElement
+        
+        member this.OutgoingEdges = 
+            Seq.ofList outgoingEdges
+
+        member this.IncomingEdges = 
+            Seq.ofList incomingEdges
+
+        member this.AddOutgoingEdge edge = outgoingEdges <- edge :: outgoingEdges
+        member this.AddIncomingEdge edge = incomingEdges <- edge :: incomingEdges
+
+        member this.DeleteOutgoingEdge edge = outgoingEdges <- List.except [edge] outgoingEdges
+        member this.DeleteIncomingEdge edge = incomingEdges <- List.except [edge] incomingEdges
 

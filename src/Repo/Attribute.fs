@@ -39,7 +39,7 @@ type AttributeRepository(repo: DataLayer.IRepo) =
 and Attribute(repo: DataLayer.IRepo, attributeNode: DataLayer.INode, repository: AttributeRepository) =
     interface IAttribute with
         member this.Kind = 
-            let kindNode = Element.attribute repo attributeNode "kind"
+            let kindNode = Element.attribute attributeNode "kind"
             match Node.name kindNode with
             | "AttributeKind.String" -> AttributeKind.String
             | "AttributeKind.Int" -> AttributeKind.Int
@@ -57,8 +57,8 @@ and Attribute(repo: DataLayer.IRepo, attributeNode: DataLayer.INode, repository:
 
         member this.StringValue
             with get (): string = 
-                Node.name <| Element.attribute repo attributeNode "stringValue"
+                Node.name <| Element.attribute attributeNode "stringValue"
             and set (v: string): unit = 
-                (Element.attribute repo attributeNode "stringValue").Name <- v
+                (Element.attribute attributeNode "stringValue").Name <- v
 
         member this.Type = null

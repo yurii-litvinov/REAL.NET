@@ -54,47 +54,43 @@ module Element =
             Seq.head models
 
     /// Returns all outgoing relationships for an element.
-    let outgoingRelationships (repo: IRepo) element = 
-        let isOutgoingRelationship: DataLayer.IElement -> bool = function
-        | :? DataLayer.IRelationship as a -> a.Source = Some element 
-        | _ -> false
-
-        (containingModel repo element).Edges |> Seq.filter isOutgoingRelationship
+    let outgoingRelationships (element: IElement) = 
+        element.OutgoingEdges
 
     /// Returns all outgoing generalizations for an element.
-    let outgoingGeneralizations (repo: IRepo) element = 
-        outgoingRelationships repo element |> Seq.filter (fun r -> r :? IGeneralization) |> Seq.cast<IGeneralization>
+    let outgoingGeneralizations element = 
+        outgoingRelationships element |> Seq.filter (fun r -> r :? IGeneralization) |> Seq.cast<IGeneralization>
 
     /// Returns all outgoing associations for an element.
-    let outgoingAssociations (repo: IRepo) element = 
-        outgoingRelationships repo element |> Seq.filter (fun r -> r :? IAssociation) |> Seq.cast<IAssociation>
+    let outgoingAssociations element = 
+        outgoingRelationships element |> Seq.filter (fun r -> r :? IAssociation) |> Seq.cast<IAssociation>
 
     /// Returns a sequence of all parents (in terms of generalization hierarchy) for given element.
     /// Most special node is the first in resulting sequence, most general is the last.
-    let rec parents repo element =
-        outgoingGeneralizations repo element
+    let rec parents element =
+        outgoingGeneralizations element
         |> Seq.map (fun g -> g.Target)
         |> Seq.choose id
-        |> Seq.map (fun p -> Seq.append (Seq.singleton p) (parents repo p))
+        |> Seq.map (fun p -> Seq.append (Seq.singleton p) (parents p))
         |> Seq.concat
 
     /// Returns a sequence of attributes in a given element, ignoring generalization hierarchy.
-    let private strictElementAttributes (repo: IRepo) element =
-        outgoingAssociations repo element 
+    let private strictElementAttributes element =
+        outgoingAssociations element 
         |> Seq.map (fun a -> (a.TargetName, a))
         |> Seq.map (fun (name, a) -> (name, a.Target))
         |> Seq.choose (fun (name, n) -> if n.IsSome then Some (name, n.Value) else None)
 
     /// Searches for attribute in generalization hierarchy.
-    let attributes (repo: IRepo) element = 
-        let thisElementAttributes e = strictElementAttributes repo e
-        parents repo element |> Seq.map (strictElementAttributes repo) |> Seq.concat |> Seq.append (thisElementAttributes element)
+    let attributes element = 
+        let thisElementAttributes e = strictElementAttributes e
+        parents element |> Seq.map strictElementAttributes |> Seq.concat |> Seq.append (thisElementAttributes element)
 
     /// Returns an attribute (target node of an outgoing association with given target name).
     /// Throws InvalidSemanticOperationException if there is no such association or there is more than one.
-    let rec attribute (repo: IRepo) element name = 
+    let rec attribute element name = 
         let attributes' = 
-            attributes repo element 
+            attributes element 
         
         let attributes = 
             attributes'
@@ -114,12 +110,12 @@ module Element =
                 <| sprintf "Attribute %s is not a node (which is possible but not used and not supported in v1)" name)
 
     /// Returns string value of a given attribute.
-    let attributeValue (repo: IRepo) element name = 
-        (attribute repo element name).Name
+    let attributeValue element name = 
+        (attribute element name).Name
 
     /// Sets attribute value for given attribute.
-    let setAttributeValue (repo: IRepo) element name value = 
-        (attribute repo element name).Name <- value
+    let setAttributeValue element name value = 
+        (attribute element name).Name <- value
 
     /// Adds a new attribute to an element.
     let addAttribute (repo: IRepo) element name ``class`` attributeAssociationClass value =
@@ -128,8 +124,8 @@ module Element =
         model.CreateAssociation(attributeAssociationClass, element, attributeNode, name) |> ignore
 
     /// Returns true if an attribute with given name is present in given element.
-    let hasAttribute repo element name =
-        attributes repo element |> Seq.filter (fun (attrName, _) -> attrName = name) |> Seq.isEmpty |> not
+    let hasAttribute element name =
+        attributes element |> Seq.filter (fun (attrName, _) -> attrName = name) |> Seq.isEmpty |> not
 
     /// Returns true if an 'instance' is an (indirect) instance of a 'class'.
     let rec isInstanceOf (``class``: IElement) (instance: IElement) =

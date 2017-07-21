@@ -40,7 +40,7 @@ let ``Instantiation shall preserve linguistic attributes`` () =
     
     let element = Operations.instantiate repo model node
 
-    let outgoingAssociations = CoreSemanticLayer.Element.outgoingAssociations repo element
+    let outgoingAssociations = CoreSemanticLayer.Element.outgoingAssociations element
     outgoingAssociations |> Seq.map (fun a -> (a.Target.Value :?> INode).Name) |> should contain "shape"
     let attributes = Element.attributes repo element
     attributes |> should not' (be Empty)
@@ -55,7 +55,9 @@ let ``Double instantiation shall result in correct instantiation chain`` () =
     
     let element = Operations.instantiate repo metamodel node
 
-    let attribites = Element.attributes repo element |> Seq.map (fun attr -> CoreSemanticLayer.Element.attributeValue repo attr "stringValue")
+    let attribites = 
+        Element.attributes repo element 
+        |> Seq.map (fun attr -> CoreSemanticLayer.Element.attributeValue attr "stringValue")
 
     let elementInstance = Operations.instantiate repo model element
 

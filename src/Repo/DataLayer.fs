@@ -19,11 +19,29 @@ type IElement =
     interface
         /// Type of an element.
         abstract Class: IElement with get
+
+        /// Outgoing edges for that element.
+        abstract OutgoingEdges: IRelationship seq with get
+
+        /// Incoming edges for that element.
+        abstract IncomingEdges: IRelationship seq with get
+
+        /// Adds outgoing edge to this element.
+        abstract AddOutgoingEdge: edge: IRelationship -> unit
+
+        /// Adds incoming edge to this element.
+        abstract AddIncomingEdge: edge: IRelationship -> unit
+
+        /// Deletes outgoing edge from this element.
+        abstract DeleteOutgoingEdge: edge: IRelationship -> unit
+        
+        /// Deletes incoming edge from this element.
+        abstract DeleteIncomingEdge: edge: IRelationship -> unit
     end
 
 /// Node is a kind of element which can connect only to relationships, corresponds to node of the model graph.
 /// NOTE: Node is an unconnected relationship, so it is highly possible that it does not have to be a separate class.
-type INode =
+and INode =
     interface
         inherit IElement
 
@@ -32,7 +50,7 @@ type INode =
     end
 
 /// Relationship is a kind of element which can connect to everything, corresponds to edge of the model graph.
-type IRelationship =
+and IRelationship =
     interface
         inherit IElement
         /// Element at the beginning of relationship, may be None if relationship is not connected.

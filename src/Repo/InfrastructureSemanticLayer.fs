@@ -69,13 +69,13 @@ module InfrastructureMetamodel =
     
     let isNode repo (element: IElement) =
         if isFromInfrastructureMetamodel repo element then
-            element :? INode && CoreSemanticLayer.Element.hasAttribute repo element "isAbstract"
+            element :? INode && CoreSemanticLayer.Element.hasAttribute element "isAbstract"
         else
             CoreSemanticLayer.Element.isInstanceOf (node repo) element
 
     let isEdge repo (element: IElement) =
         if isFromInfrastructureMetamodel repo element then
-            element :? IAssociation  && CoreSemanticLayer.Element.hasAttribute repo element "isAbstract"
+            element :? IAssociation  && CoreSemanticLayer.Element.hasAttribute element "isAbstract"
         else
             CoreSemanticLayer.Element.isInstanceOf (edge repo) element
             || CoreSemanticLayer.Element.isInstanceOf (generalization repo) element
@@ -117,7 +117,7 @@ module Element =
                 | _ -> false
 
         element
-        |> CoreSemanticLayer.Element.outgoingAssociations repo
+        |> CoreSemanticLayer.Element.outgoingAssociations
         |> Seq.filter isAttributeAssociation
         |> Seq.map (fun l -> l.Target)
         |> Seq.choose id
@@ -128,7 +128,7 @@ module Element =
     /// are the first in resulting sequence.
     let attributes repo element =
         let parentsAttributes =
-            CoreSemanticLayer.Element.parents repo element 
+            CoreSemanticLayer.Element.parents element 
             |> Seq.map (thisElementAttributes repo) 
             |> Seq.concat 
 
@@ -143,7 +143,7 @@ module Element =
         let values =
             attributes repo element
             |> Seq.filter (fun attr -> attr.Name = attributeName)
-            |> Seq.map (fun attr -> CoreSemanticLayer.Element.attributeValue repo attr "stringValue")
+            |> Seq.map (fun attr -> CoreSemanticLayer.Element.attributeValue attr "stringValue")
 
         if Seq.isEmpty values then
             raise (AttributeNotFoundException attributeName)
@@ -163,7 +163,7 @@ module Element =
         else
             // TODO: Check that it is actually last overriden attribute, not some attribute from one of the parents.
             // TODO: Also do something with correctness of attribute inheritance.
-            CoreSemanticLayer.Element.setAttributeValue repo (Seq.head attributes) "stringValue" value
+            CoreSemanticLayer.Element.setAttributeValue (Seq.head attributes) "stringValue" value
 
     /// Adds a new attribute to a given element.
     let addAttribute repo element name kind =
@@ -190,11 +190,11 @@ module Operations =
     /// Returns link corresponding to an attribute respecting generalization hierarchy.
     let rec private attributeLink repo element attribute =
         let myAttributeLinks e = 
-            CoreSemanticLayer.Element.outgoingAssociations repo e
+            CoreSemanticLayer.Element.outgoingAssociations e
             |> Seq.filter (fun a -> a.Target = Some attribute)
 
         let attributeLinks = 
-            CoreSemanticLayer.Element.parents repo element |> Seq.map myAttributeLinks |> Seq.concat |> Seq.append (myAttributeLinks element) 
+            CoreSemanticLayer.Element.parents element |> Seq.map myAttributeLinks |> Seq.concat |> Seq.append (myAttributeLinks element) 
 
         if Seq.isEmpty attributeLinks then
             raise (InvalidSemanticOperationException "Attribute link not found for attribute")
@@ -204,15 +204,15 @@ module Operations =
             Seq.head attributeLinks
 
     let private copySimpleAttribute repo element (``class``: IElement) name =
-        let attributeClassNode = CoreSemanticLayer.Element.attribute repo ``class`` name
+        let attributeClassNode = CoreSemanticLayer.Element.attribute ``class`` name
         let attributeAssociation = InfrastructureMetamodel.findAssociation repo name
-        let defaultValue = CoreSemanticLayer.Element.attributeValue repo ``class`` name
+        let defaultValue = CoreSemanticLayer.Element.attributeValue ``class`` name
         CoreSemanticLayer.Element.addAttribute repo element name attributeClassNode attributeAssociation defaultValue
 
     let private addAttribute repo (element: IElement) (attributeClass: INode) =
         let model = CoreSemanticLayer.Element.containingModel repo element
         if Element.hasAttribute repo element attributeClass.Name then
-            let valueFromClass = CoreSemanticLayer.Element.attributeValue repo attributeClass "stringValue"
+            let valueFromClass = CoreSemanticLayer.Element.attributeValue attributeClass "stringValue"
             Element.setAttributeValue repo element attributeClass.Name valueFromClass
         else 
             let attributeLink = attributeLink repo element.Class attributeClass
