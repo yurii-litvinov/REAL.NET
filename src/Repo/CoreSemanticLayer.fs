@@ -39,6 +39,33 @@ module Repo =
 
 /// Helper functions for element semantics.
 module Element =
+    open System.Collections.Generic
+ 
+    /// Does a breadth-first search from a given element following given interesting edges until element matching
+    /// given predicate is found.
+    let private bfs (element: IElement) (isInterestingEdge: IEdge -> bool) (isWhatWeSearch: IElement -> bool) =
+        let queue = Queue<IElement>()
+        queue.Enqueue element
+        let visited = HashSet<IElement>()
+        let rec doBfs () =
+            if queue.Count = 0 then
+                None
+            else 
+                let currentElement = queue.Dequeue ()
+                if isWhatWeSearch currentElement then
+                    Some currentElement
+                else
+                    visited.Add currentElement |> ignore
+                    currentElement.OutgoingEdges 
+                    |> Seq.filter isInterestingEdge 
+                    |> Seq.map (fun e -> e.Target)
+                    |> Seq.choose id
+                    |> Seq.filter (not << visited.Contains)
+                    |> Seq.iter (fun element -> queue.Enqueue element)
+                    doBfs()
+        
+        doBfs ()
+
     /// Returns a model containing given element.
     let containingModel (element: IElement) =
         element.Model
@@ -49,11 +76,11 @@ module Element =
 
     /// Returns all outgoing generalizations for an element.
     let outgoingGeneralizations element = 
-        outgoingEdges element |> Seq.filter (fun r -> r :? IGeneralization) |> Seq.cast<IGeneralization>
+        outgoingEdges element |> Seq.filter (fun e -> e :? IGeneralization) |> Seq.cast<IGeneralization>
 
     /// Returns all outgoing associations for an element.
     let outgoingAssociations element = 
-        outgoingEdges element |> Seq.filter (fun r -> r :? IAssociation) |> Seq.cast<IAssociation>
+        outgoingEdges element |> Seq.filter (fun e -> e :? IAssociation) |> Seq.cast<IAssociation>
 
     /// Returns a sequence of all parents (in terms of generalization hierarchy) for given element.
     /// Most special node is the first in resulting sequence, most general is the last.
@@ -66,10 +93,12 @@ module Element =
 
     /// Returns a sequence of attributes in a given element, ignoring generalization hierarchy.
     let private strictElementAttributes element =
+        outgoingAssociations element
+
+    /// Returns if a given element has attribute with given name, ignoring generalization hierarchy.
+    let private hasStrictAttribute name element =
         outgoingAssociations element 
-        |> Seq.map (fun a -> (a.TargetName, a))
-        |> Seq.map (fun (name, a) -> (name, a.Target))
-        |> Seq.choose (fun (name, n) -> if n.IsSome then Some (name, n.Value) else None)
+        |> Seq.exists (fun e -> e.TargetName = name)
 
     /// Searches for attribute in generalization hierarchy.
     let attributes element = 
@@ -79,22 +108,17 @@ module Element =
     /// Returns an attribute (target node of an outgoing association with given target name).
     /// Throws InvalidSemanticOperationException if there is no such association or there is more than one.
     let rec attribute element name = 
-        let attributes = 
-            attributes element
-            |> Seq.filter (fun (attrName, attr) -> attrName = name)
-            |> Seq.map (fun (attrName, attr) -> attr)
-    
-        if Seq.isEmpty attributes then
+        let attributeContainer = bfs element (fun e -> e :? IGeneralization) (hasStrictAttribute name)
+        if attributeContainer.IsNone then
             raise (AttributeNotFoundException name)
-        else
-            /// Here we use first found attribute, it is the deepest in inheritance hierarchy.
-            /// NOTE: Multiple inheritance can lead to conflicting attributes, but multiple inheritance
-            /// is not supported in v1.
-            let attribute = Seq.head attributes
-            match attribute with
-            | :? INode as result -> result
-            | _ -> raise (InvalidSemanticOperationException 
-                <| sprintf "Attribute %s is not a node (which is possible but not used and not supported in v1)" name)
+        let attributeLink = outgoingAssociations attributeContainer.Value |> Seq.find (fun e -> e.TargetName = name)
+        let result = attributeLink.Target
+        if result.IsNone then
+            raise (InvalidSemanticOperationException <| sprintf "Attribute link for attribute %s is unconnected" name)
+        match result.Value with
+        | :? INode as result -> result
+        | _ -> raise (InvalidSemanticOperationException 
+            <| sprintf "Attribute %s is not a node (which is possible but not used and not supported in v1)" name)
 
     /// Returns string value of a given attribute.
     let attributeValue element name = 
@@ -114,7 +138,8 @@ module Element =
 
     /// Returns true if an attribute with given name is present in given element.
     let hasAttribute element name =
-        attributes element |> Seq.filter (fun (attrName, _) -> attrName = name) |> Seq.isEmpty |> not
+        let attributeContainer = bfs element (fun e -> e :? IGeneralization) (hasStrictAttribute name)
+        attributeContainer.IsSome
 
     /// Returns true if an 'instance' is a (possibly indirect) instance of a 'class'.
     let rec isInstanceOf (``class``: IElement) (instance: IElement) =
@@ -151,7 +176,7 @@ module Model =
 
     /// Searches for a given node in a given model by name, returns None if not found or found more than one.
     let tryFindNode (model: IModel) name = 
-        let nodes = model.Nodes |> Seq.filter (fun m -> m.Name = name)        
+        let nodes = model.Nodes |> Seq.filter (fun m -> m.Name = name)
         if Seq.isEmpty nodes || Seq.length nodes <> 1 then
             None
         else
@@ -159,39 +184,27 @@ module Model =
 
     /// Searches for a given association in a given model by target name and additional predicate. Assumes that it 
     /// exists and there is only one such association. Throws InvalidSemanticOperationException if not.
-    let findAssociationWithPredicate (model: IModel) targetName predicate = 
+    let private findAssociationIn (edges: IEdge seq) targetName = 
         let associations = 
-            model.Edges 
+            edges 
             |> Seq.filter 
-                (fun e -> e :? IAssociation 
-                          && (predicate (e :?> IAssociation)) 
-                          && (e :?> IAssociation).TargetName = targetName
+                (fun e -> e :? IAssociation && (e :?> IAssociation).TargetName = targetName
                 )
         
         if Seq.isEmpty associations then
-            raise (InvalidSemanticOperationException <| sprintf "Edge %s not found in model %s" targetName model.Name)
+            raise (InvalidSemanticOperationException <| sprintf "Edge %s not found" targetName)
         elif Seq.length associations <> 1 then
             raise (InvalidSemanticOperationException 
-                <| sprintf "Edge %s appears more than once in model %s" targetName model.Name)
+                <| sprintf "Edge %s appears more than once" targetName)
         else
             Seq.head associations :?> IAssociation
 
     /// Searches for a given association in a given model by target name. Assumes that it exists and there is only one 
     /// association with that name. Throws InvalidSemanticOperationException if not.
     let findAssociation (model: IModel) targetName = 
-        findAssociationWithPredicate model targetName (fun _ -> true)
+        findAssociationIn model.Edges targetName
 
     /// Searches for a given association starting in a given element with a given name. Assumes that it exists and 
     /// there is only one association with that name. Throws InvalidSemanticOperationException if not.
-    let findAssociationWithSource (model: IModel) (element: IElement) targetName = 
-        let associations = 
-            element.OutgoingEdges 
-            |> Seq.filter (fun e -> e :? IAssociation && (e :?> IAssociation).TargetName = targetName)
-
-        if Seq.isEmpty associations then
-            raise (InvalidSemanticOperationException <| sprintf "Edge %s not found in model %s" targetName model.Name)
-        elif Seq.length associations <> 1 then
-            raise (InvalidSemanticOperationException 
-                <| sprintf "Edge %s appears more than once in model %s" targetName model.Name)
-        else
-            Seq.head associations :?> IAssociation
+    let findAssociationWithSource (element: IElement) targetName = 
+        findAssociationIn element.OutgoingEdges targetName

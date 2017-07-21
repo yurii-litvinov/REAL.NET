@@ -36,27 +36,34 @@ let init () =
 let ``Instantiation shall preserve linguistic attributes`` () =
     let repo = init ()
     let model = repo.CreateModel ("TestModel", CoreSemanticLayer.Repo.findModel repo "InfrastructureMetamodel")
-    let node = CoreSemanticLayer.Model.findNode (InfrastructureMetamodel.infrastructureMetamodel repo)"Node"
+    let elementHelper = InfrastructureSemanticLayer.ElementHelper repo
+    let infrastructureMetamodel = elementHelper.InfrastructureMetamodel.InfrastructureMetamodel
+
+    let node = CoreSemanticLayer.Model.findNode infrastructureMetamodel "Node"
     
     let element = Operations.instantiate repo model node
 
     let outgoingAssociations = CoreSemanticLayer.Element.outgoingAssociations element
     outgoingAssociations |> Seq.map (fun a -> (a.Target.Value :?> INode).Name) |> should contain "shape"
-    let attributes = Element.attributes repo element
+    let attributes = elementHelper.Attributes element
     attributes |> should not' (be Empty)
-    Element.attributeValue repo element "shape" |> should equal "Pictures/Vertex.png"
+    elementHelper.AttributeValue element "shape" |> should equal "Pictures/Vertex.png"
 
 [<Test>]
 let ``Double instantiation shall result in correct instantiation chain`` () =
     let repo = init ()
     let metamodel = repo.CreateModel ("TestMetamodel", CoreSemanticLayer.Repo.findModel repo "InfrastructureMetamodel")
     let model = repo.CreateModel ("TestModel", metamodel)
-    let node = CoreSemanticLayer.Model.findNode (InfrastructureMetamodel.infrastructureMetamodel repo)"Node"
+
+    let elementHelper = InfrastructureSemanticLayer.ElementHelper repo
+    let infrastructureMetamodel = elementHelper.InfrastructureMetamodel.InfrastructureMetamodel
+
+    let node = CoreSemanticLayer.Model.findNode elementHelper.InfrastructureMetamodel.InfrastructureMetamodel "Node"
     
     let element = Operations.instantiate repo metamodel node
 
     let attribites = 
-        Element.attributes repo element 
+        elementHelper.Attributes element 
         |> Seq.map (fun attr -> CoreSemanticLayer.Element.attributeValue attr "stringValue")
 
     let elementInstance = Operations.instantiate repo model element

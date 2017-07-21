@@ -22,8 +22,9 @@ open Repo.InfrastructureSemanticLayer
 type RobotsTestModelBuilder() =
     interface IModelBuilder with
         member this.Build(repo: IRepo): unit = 
+            let elementHelper = ElementHelper(repo)
             let metamodel = Repo.findModel repo "RobotsMetamodel"
-            let infrastructureMetamodel = InfrastructureMetamodel.infrastructureMetamodel repo
+            let infrastructureMetamodel = elementHelper.InfrastructureMetamodel.InfrastructureMetamodel
 
             let metamodelAbstractNode = Model.findNode metamodel "AbstractNode"
             let metamodelInitialNode = Model.findNode metamodel "InitialNode"
@@ -31,7 +32,7 @@ type RobotsTestModelBuilder() =
             let metamodelMotorsForward = Model.findNode metamodel "MotorsForward"
             let metamodelTimer = Model.findNode metamodel "Timer"
 
-            let link = Model.findAssociationWithSource metamodel metamodelAbstractNode "target"
+            let link = Model.findAssociationWithSource metamodelAbstractNode "target"
             
             let model = repo.CreateModel("RobotsTestModel", metamodel)
 
@@ -39,11 +40,11 @@ type RobotsTestModelBuilder() =
             let finalNode = Operations.instantiate repo model metamodelFinalNode
 
             let motorsForward = Operations.instantiate repo model metamodelMotorsForward
-            Element.setAttributeValue repo motorsForward "ports" "M3, M4"
-            Element.setAttributeValue repo motorsForward "power" "100"
+            elementHelper.SetAttributeValue motorsForward "ports" "M3, M4"
+            elementHelper.SetAttributeValue motorsForward "power" "100"
 
             let timer = Operations.instantiate repo model metamodelTimer
-            Element.setAttributeValue repo timer "delay" "3000"
+            elementHelper.SetAttributeValue timer "delay" "3000"
 
             let (-->) (src: IElement) dst = 
                 let aLink = Operations.instantiate repo model link :?> IAssociation

@@ -34,7 +34,8 @@ let init () =
     let elementRepository = ElementRepository(repo, attributeRepository)
     let modelRepository = ModelRepository(repo, elementRepository)
 
-    let infrastructureMetamodel = InfrastructureSemanticLayer.InfrastructureMetamodel.infrastructureMetamodel repo
+    let elementHelper = InfrastructureSemanticLayer.ElementHelper repo
+    let infrastructureMetamodel = elementHelper.InfrastructureMetamodel.InfrastructureMetamodel
 
     let underlyingModel = (repo :> DataLayer.IRepo).CreateModel("Model", infrastructureMetamodel)
     let model = Model(repo, underlyingModel, elementRepository, modelRepository)

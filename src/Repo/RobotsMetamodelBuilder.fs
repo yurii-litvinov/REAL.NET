@@ -22,10 +22,11 @@ open Repo.InfrastructureSemanticLayer
 type RobotsMetamodelBuilder() =
     interface IModelBuilder with
         member this.Build(repo: IRepo): unit = 
-            let metamodel = CoreSemanticLayer.Repo.findModel repo "InfrastructureMetamodel"
+            let elementHelper = InfrastructureSemanticLayer.ElementHelper(repo)
+            let metamodel = elementHelper.InfrastructureMetamodel.InfrastructureMetamodel
 
             let find name = CoreSemanticLayer.Model.findNode metamodel name
-            let findAssociation node name = CoreSemanticLayer.Model.findAssociationWithSource metamodel node name
+            let findAssociation node name = CoreSemanticLayer.Model.findAssociationWithSource node name
 
             let metamodelElement = find "Element"
             let metamodelNode = find "Node"
@@ -54,9 +55,9 @@ type RobotsMetamodelBuilder() =
             let (~+) (name, shape, isAbstract) = 
                 let node = Operations.instantiate repo model metamodelNode :?> INode
                 node.Name <- name
-                Element.setAttributeValue repo node "shape" shape 
-                Element.setAttributeValue repo node "isAbstract" (if isAbstract then "true" else "false")
-                Element.setAttributeValue repo node "instanceMetatype" "Metatype.Node" 
+                elementHelper.SetAttributeValue node "shape" shape 
+                elementHelper.SetAttributeValue node "isAbstract" (if isAbstract then "true" else "false")
+                elementHelper.SetAttributeValue node "instanceMetatype" "Metatype.Node" 
                 
                 node
 
@@ -69,10 +70,10 @@ type RobotsMetamodelBuilder() =
                 edge.Target <- Some target
                 edge.TargetName <- targetName
 
-                Element.setAttributeValue repo edge "shape" "Pictures/Edge.png"
-                Element.setAttributeValue repo edge "isAbstract" "false"
-                Element.setAttributeValue repo edge "instanceMetatype" "Metatype.Edge"
-                Element.setAttributeValue repo edge "name" linkName
+                elementHelper.SetAttributeValue edge "shape" "Pictures/Edge.png"
+                elementHelper.SetAttributeValue edge "isAbstract" "false"
+                elementHelper.SetAttributeValue edge "instanceMetatype" "Metatype.Edge"
+                elementHelper.SetAttributeValue edge "name" linkName
 
                 edge
 
@@ -81,10 +82,10 @@ type RobotsMetamodelBuilder() =
             let finalNode = +("FinalNode", "Pictures/finalBlock.png", false)
             
             let abstractMotorsBlock = +("AbstractMotorsBlock", "", true)
-            Element.addAttribute repo abstractMotorsBlock "ports" "AttributeKind.String"
+            elementHelper.AddAttribute abstractMotorsBlock "ports" "AttributeKind.String"
 
             let abstractMotorsPowerBlock = +("AbstractMotorsPowerBlock", "", true)
-            Element.addAttribute repo abstractMotorsPowerBlock "power" "AttributeKind.Int"
+            elementHelper.AddAttribute abstractMotorsPowerBlock "power" "AttributeKind.Int"
 
             let motorsForward = +("MotorsForward", "Pictures/enginesForwardBlock.png", false)
             let motorsBackward = +("MotorsBackward", "Pictures/enginesBackwardBlock.png", false)
@@ -92,9 +93,9 @@ type RobotsMetamodelBuilder() =
             let timer = +("Timer", "Pictures/timerBlock.png", false)
 
             let link = abstractNode ---> (abstractNode, "target", "Link")
-            Element.addAttribute repo link "guard" "AttributeKind.String"
+            elementHelper.AddAttribute link "guard" "AttributeKind.String"
 
-            Element.addAttribute repo timer "delay" "AttributeKind.Int"
+            elementHelper.AddAttribute timer "delay" "AttributeKind.Int"
 
             initialNode --|> abstractNode
             finalNode --|> abstractNode

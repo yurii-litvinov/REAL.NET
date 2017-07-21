@@ -32,10 +32,12 @@ and [<AbstractClass>] Element
         , attributeRepository: AttributeRepository
     ) = 
 
+    let elementHelper = InfrastructureSemanticLayer.ElementHelper(repo)
+
     let findMetatype (element : DataLayer.IElement) =
-        if InfrastructureSemanticLayer.InfrastructureMetamodel.isNode repo element then
+        if elementHelper.InfrastructureMetamodel.IsNode element then
             Metatype.Node
-        elif InfrastructureSemanticLayer.InfrastructureMetamodel.isEdge repo element then
+        elif elementHelper.InfrastructureMetamodel.IsEdge element then
             Metatype.Edge
         else
             raise (InvalidSemanticOperationException 
@@ -49,8 +51,8 @@ and [<AbstractClass>] Element
                 match element with
                 | :? DataLayer.INode as n-> n.Name
                 | _ -> 
-                    if InfrastructureSemanticLayer.Element.hasAttribute repo element "name" then
-                        InfrastructureSemanticLayer.Element.attributeValue repo element "name"
+                    if elementHelper.HasAttribute element "name" then
+                        elementHelper.AttributeValue element "name"
                     else
                         ""
 
@@ -58,35 +60,35 @@ and [<AbstractClass>] Element
                 match element with
                 | :? DataLayer.INode as n-> n.Name <- v
                 | _ -> 
-                    if InfrastructureSemanticLayer.Element.hasAttribute repo element "name" then
-                        InfrastructureSemanticLayer.Element.setAttributeValue repo element "name" v
+                    if elementHelper.HasAttribute element "name" then
+                        elementHelper.SetAttributeValue element "name" v
                     else
                         raise (Repo.InvalidSemanticOperationException "Trying to set a name to an element which does not have one") 
 
         member this.Attributes = 
-            InfrastructureSemanticLayer.Element.attributes repo element |> Seq.map attributeRepository.GetAttribute
+            elementHelper.Attributes element |> Seq.map attributeRepository.GetAttribute
 
         member this.Class = 
             repository.GetElement model element.Class
 
         member this.IsAbstract =
-            if InfrastructureSemanticLayer.InfrastructureMetamodel.isElement repo element then
-                if InfrastructureSemanticLayer.InfrastructureMetamodel.isGeneralization repo element then
+            if elementHelper.InfrastructureMetamodel.IsElement element then
+                if elementHelper.InfrastructureMetamodel.IsGeneralization element then
                     true
                 else
-                    match InfrastructureSemanticLayer.Element.attributeValue repo element "isAbstract" with
+                    match elementHelper.AttributeValue element "isAbstract" with
                     | "true" -> true
                     | "false" -> false
                     | _ -> failwith "Incorrect isAbstract attribute value"
             else 
                 true
 
-        member this.Shape = InfrastructureSemanticLayer.Element.attributeValue repo element "shape"
+        member this.Shape = elementHelper.AttributeValue element "shape"
 
         member this.Metatype = findMetatype element
 
         member this.InstanceMetatype = 
-            match InfrastructureSemanticLayer.Element.attributeValue repo element "instanceMetatype" with
+            match elementHelper.AttributeValue element "instanceMetatype" with
             | "Metatype.Node" -> Metatype.Node
             | "Metatype.Edge" -> Metatype.Edge
             | _ -> failwith "Incorrect instanceMetatype attribute value"

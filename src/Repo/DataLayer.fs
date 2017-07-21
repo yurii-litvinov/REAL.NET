@@ -119,7 +119,7 @@ and IModel =
 
         /// Returns all nodes in a model.
         abstract Nodes : INode seq with get
-        
+
         /// Returns all edges in a model.
         abstract Edges : IEdge seq with get
 

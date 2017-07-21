@@ -39,8 +39,11 @@ let ``Generalizations shall be listed as edges in metamodel`` () =
 
     someRawGeneralization.Class |> should sameAs rawGeneralization
 
-    InfrastructureSemanticLayer.InfrastructureMetamodel.isGeneralization rawRepo someRawGeneralization |> should be True
-    InfrastructureSemanticLayer.InfrastructureMetamodel.isEdge rawRepo someRawGeneralization |> should be True
+    let elementHelper = InfrastructureSemanticLayer.ElementHelper rawRepo
+    let infrastructureMetamodel = elementHelper.InfrastructureMetamodel.InfrastructureMetamodel
+    
+    elementHelper.InfrastructureMetamodel.IsGeneralization someRawGeneralization |> should be True
+    elementHelper.InfrastructureMetamodel.IsEdge someRawGeneralization |> should be True
 
     let someWrappedGeneralization = model.Edges |> Seq.find (fun e -> (e :?> FacadeLayer.Edge).UnderlyingElement = (someRawGeneralization :> DataLayer.IElement))
     someWrappedGeneralization.Class |> should sameAs generalization

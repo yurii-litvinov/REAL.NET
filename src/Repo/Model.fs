@@ -34,6 +34,8 @@ type ModelRepository(repo: DataLayer.IRepo, elementRepository: IElementRepositor
         models.Remove unwrappedModel |> ignore
 
 and Model(repo: DataLayer.IRepo, data: DataLayer.IModel, elementRepository: IElementRepository, repository: ModelRepository) = 
+    let elementHelper = InfrastructureSemanticLayer.ElementHelper(repo)
+
     member this.UnderlyingModel = data
 
     interface IModel with
@@ -51,13 +53,13 @@ and Model(repo: DataLayer.IRepo, data: DataLayer.IModel, elementRepository: IEle
         
         member this.Nodes = 
             data.Nodes 
-            |> Seq.filter (InfrastructureSemanticLayer.InfrastructureMetamodel.isNode repo)
+            |> Seq.filter elementHelper.InfrastructureMetamodel.IsNode
             |> Seq.map (elementRepository.GetElement data)
             |> Seq.cast<INode>
 
         member this.Edges = 
             data.Edges 
-            |> Seq.filter (InfrastructureSemanticLayer.InfrastructureMetamodel.isAssociation repo)
+            |> Seq.filter elementHelper.InfrastructureMetamodel.IsAssociation
             |> Seq.map (elementRepository.GetElement data)
             |> Seq.cast<IEdge>
 

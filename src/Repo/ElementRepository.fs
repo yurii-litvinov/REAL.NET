@@ -22,11 +22,12 @@ open Repo.InfrastructureSemanticLayer
 /// Repository for element wrappers. Contains already created wrappers and creates new wrappers if needed.
 type ElementRepository(repo: DataLayer.IRepo, attributeRepository: AttributeRepository) =
     let elements = Dictionary<_, _>()
+    let elementHelper = ElementHelper(repo)
 
     let findMetatype (element : DataLayer.IElement) =
-        if InfrastructureMetamodel.isNode repo element then
+        if elementHelper.InfrastructureMetamodel.IsNode element then
             Metatype.Node
-        elif InfrastructureMetamodel.isEdge repo element then
+        elif elementHelper.InfrastructureMetamodel.IsEdge element then
             Metatype.Edge
         else
             raise (InvalidSemanticOperationException 
