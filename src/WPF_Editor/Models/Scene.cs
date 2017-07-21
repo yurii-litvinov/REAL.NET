@@ -29,7 +29,7 @@ namespace WPF_Editor.Models
             var node = element as Node;
             if(node != null)
             {
-                System.Console.WriteLine(@"Node ""{0}"" has been saved at scene.", node.Name);
+                System.Console.WriteLine(@"Node ""{0}"" has been added at scene.", node.Name);
                 System.Console.WriteLine(@"X={0} Y={1}", mouseCoordinates.X, mouseCoordinates.Y);
                 _nodeList.Add(node);
                 System.Console.WriteLine(@"Node ""{0}"" has been saved at scene.", node.Name);
