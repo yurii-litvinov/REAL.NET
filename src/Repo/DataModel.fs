@@ -26,17 +26,17 @@ type DataModel private (name: string, metamodel: IModel option) =
 
     interface IModel with
         member this.CreateNode name = 
-            let node = DataNode(name) :> INode
+            let node = DataNode(name, this) :> INode
             nodes <- node :: nodes
             node
 
         member this.CreateNode(name, ``class``) = 
-            let node = DataNode(name, ``class``) :> INode
+            let node = DataNode(name, ``class``, this) :> INode
             nodes <- node :: nodes
             node
 
         member this.CreateAssociation(``class``, source, target, targetName) = 
-            let edge = new DataAssociation(``class``, source, target, targetName) :> IAssociation
+            let edge = new DataAssociation(``class``, source, target, targetName, this) :> IAssociation
             edges <- (edge :> IRelationship) :: edges
             if source.IsSome then
                 source.Value.AddOutgoingEdge edge
@@ -45,14 +45,14 @@ type DataModel private (name: string, metamodel: IModel option) =
             edge
 
         member this.CreateAssociation(``class``, source, target, targetName) = 
-            let edge = new DataAssociation(``class``, Some source, Some target, targetName) :> IAssociation
+            let edge = new DataAssociation(``class``, Some source, Some target, targetName, this) :> IAssociation
             edges <- (edge :> IRelationship) :: edges
             source.AddOutgoingEdge edge
             target.AddIncomingEdge edge
             edge
 
         member this.CreateGeneralization(``class``, source, target) = 
-            let edge = new DataGeneralization(``class``, source, target) :> IGeneralization
+            let edge = new DataGeneralization(``class``, source, target, this) :> IGeneralization
             if source.IsSome then
                 source.Value.AddOutgoingEdge edge
             if target.IsSome then
@@ -61,7 +61,7 @@ type DataModel private (name: string, metamodel: IModel option) =
             edge
 
         member this.CreateGeneralization(``class``, source, target) = 
-            let edge = new DataGeneralization(``class``, Some source, Some target) :> IGeneralization
+            let edge = new DataGeneralization(``class``, Some source, Some target, this) :> IGeneralization
             source.AddOutgoingEdge edge
             target.AddIncomingEdge edge
             edges <- (edge :> IRelationship) :: edges

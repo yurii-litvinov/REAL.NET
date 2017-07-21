@@ -40,18 +40,8 @@ module Repo =
 /// Helper functions for element semantics.
 module Element =
     /// Returns a model containing given element.
-    /// Throws InvalidSemanticOperationException if there is no such model or there is more than one model which 
-    /// contains given element.
-    let containingModel (repo: IRepo) element =
-        let models = repo.Models |> Seq.filter (fun m -> Seq.contains element m.Elements)
-
-        if Seq.isEmpty models then
-            raise (InvalidSemanticOperationException "Element not found in repository")
-        elif Seq.length models <> 1 then
-            raise (InvalidSemanticOperationException "Element belongs to more than one model, REAL.NET \
-                   does not allow this")
-        else
-            Seq.head models
+    let containingModel (element: IElement) =
+        element.Model
 
     /// Returns all outgoing relationships for an element.
     let outgoingRelationships (element: IElement) = 
@@ -118,8 +108,8 @@ module Element =
         (attribute element name).Name <- value
 
     /// Adds a new attribute to an element.
-    let addAttribute (repo: IRepo) element name ``class`` attributeAssociationClass value =
-        let model = containingModel repo element
+    let addAttribute element name ``class`` attributeAssociationClass value =
+        let model = containingModel element
         let attributeNode = model.CreateNode(value, ``class``)
         model.CreateAssociation(attributeAssociationClass, element, attributeNode, name) |> ignore
 

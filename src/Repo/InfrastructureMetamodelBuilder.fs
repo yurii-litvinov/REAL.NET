@@ -36,7 +36,8 @@ type InfrastructureMetamodelBuilder() =
             let model = repo.CreateModel("InfrastructureMetamodel", metamodel)
 
             let (~+) name = model.CreateNode(name, metamodelNode)
-            let (--|>) (source: IElement) target = model.CreateGeneralization(metamodelGeneralization, source, target) |> ignore
+            let (--|>) (source: IElement) target = 
+                model.CreateGeneralization(metamodelGeneralization, source, target) |> ignore
 
             let createEnum name = model.CreateNode(name, metamodelEnum)
             let createEnumLiterals enum literals = 
@@ -77,10 +78,12 @@ type InfrastructureMetamodelBuilder() =
                 let valueNode = Model.tryFindNode model value 
                 if valueNode.IsSome then
                     /// All these attribute are immutable, so can be shared (at least it seems so).
-                    model.CreateAssociation(metamodelAssociation, attributeNode, valueNode.Value, "stringValue") |> ignore
+                    model.CreateAssociation(metamodelAssociation, attributeNode, valueNode.Value, "stringValue") 
+                    |> ignore
                 else
                     let stringValueNode = +value
-                    model.CreateAssociation(metamodelAssociation, attributeNode, stringValueNode, "stringValue") |> ignore
+                    model.CreateAssociation(metamodelAssociation, attributeNode, stringValueNode, "stringValue") 
+                    |> ignore
 
             let (--->) (source: IElement) (target, name, isAbstract) = 
                 let association = model.CreateAssociation(metamodelAssociation, source, target, name)

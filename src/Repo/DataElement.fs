@@ -16,7 +16,7 @@ namespace Repo.DataLayer
 
 [<AbstractClass>]
 /// Implementation of Element.
-type DataElement(``class``: IElement option) =
+type DataElement(``class``: IElement option, model: IModel) =
     let mutable outgoingEdges = []
     let mutable incomingEdges = []
 
@@ -37,4 +37,6 @@ type DataElement(``class``: IElement option) =
 
         member this.DeleteOutgoingEdge edge = outgoingEdges <- List.except [edge] outgoingEdges
         member this.DeleteIncomingEdge edge = incomingEdges <- List.except [edge] incomingEdges
+
+        member this.Model = model
 

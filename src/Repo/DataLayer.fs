@@ -37,6 +37,9 @@ type IElement =
         
         /// Deletes incoming edge from this element.
         abstract DeleteIncomingEdge: edge: IRelationship -> unit
+
+        /// Returns a model to which this element belongs.
+        abstract Model: IModel with get
     end
 
 /// Node is a kind of element which can connect only to relationships, corresponds to node of the model graph.
@@ -61,21 +64,20 @@ and IRelationship =
     end
 
 /// Generalization is a kind of relationship which has special semantic in metamodel (allows to inherit relations).
-type IGeneralization =
+and IGeneralization =
     interface
         inherit IRelationship
     end
 
 /// Association is a general kind of relationship, has string attribute describing target of relationship.
-type IAssociation =
+and IAssociation =
     interface
         inherit IRelationship
         abstract TargetName : string with get, set
     end
 
-[<AllowNullLiteral>]
 /// Model is a set of nodes and relationships, corresponds to one diagram (or one palette) in editor.
-type IModel =
+and IModel =
     interface
         /// Model can have descriptive name (possibly not unique).
         abstract Name: string with get, set

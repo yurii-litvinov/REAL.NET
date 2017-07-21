@@ -16,8 +16,8 @@ namespace Repo.DataLayer
 
 /// Implementation of Relationship abstraction.
 [<AbstractClass>]
-type DataRelationship (``class``: IElement option, source: IElement option, target: IElement option) =
-    inherit DataElement(``class``)
+type DataRelationship (``class``: IElement option, source: IElement option, target: IElement option, model: IModel) =
+    inherit DataElement(``class``, model)
 
     interface IRelationship with
         member val Source = source with get, set

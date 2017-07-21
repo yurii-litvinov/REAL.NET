@@ -65,7 +65,7 @@ module InfrastructureMetamodel =
     let private generalization (repo: IRepo) = findNode repo "Generalization"
 
     let isFromInfrastructureMetamodel repo element =
-        CoreSemanticLayer.Element.containingModel repo element = infrastructureMetamodel repo
+        CoreSemanticLayer.Element.containingModel element = infrastructureMetamodel repo
     
     let isNode repo (element: IElement) =
         if isFromInfrastructureMetamodel repo element then
@@ -167,7 +167,7 @@ module Element =
 
     /// Adds a new attribute to a given element.
     let addAttribute repo element name kind =
-        let model = CoreSemanticLayer.Element.containingModel repo element
+        let model = CoreSemanticLayer.Element.containingModel element
         let infrastructureModel = InfrastructureMetamodel.infrastructureMetamodel repo
         let attributeNode = CoreSemanticLayer.Model.findNode infrastructureModel "Attribute"
         let attributeKindNode = CoreSemanticLayer.Model.findNode infrastructureModel "AttributeKind"
@@ -179,8 +179,8 @@ module Element =
 
         let attribute = model.CreateNode(name, attributeNode)
 
-        CoreSemanticLayer.Element.addAttribute repo attribute "kind" attributeKindNode kindAssociation kind
-        CoreSemanticLayer.Element.addAttribute repo attribute "stringValue" stringValueAssociation stringNode ""
+        CoreSemanticLayer.Element.addAttribute attribute "kind" attributeKindNode kindAssociation kind
+        CoreSemanticLayer.Element.addAttribute attribute "stringValue" stringValueAssociation stringNode ""
         model.CreateAssociation(attributesAssociation, element, attribute, name) |> ignore
 
         ()
@@ -207,10 +207,10 @@ module Operations =
         let attributeClassNode = CoreSemanticLayer.Element.attribute ``class`` name
         let attributeAssociation = InfrastructureMetamodel.findAssociation repo name
         let defaultValue = CoreSemanticLayer.Element.attributeValue ``class`` name
-        CoreSemanticLayer.Element.addAttribute repo element name attributeClassNode attributeAssociation defaultValue
+        CoreSemanticLayer.Element.addAttribute element name attributeClassNode attributeAssociation defaultValue
 
     let private addAttribute repo (element: IElement) (attributeClass: INode) =
-        let model = CoreSemanticLayer.Element.containingModel repo element
+        let model = CoreSemanticLayer.Element.containingModel element
         if Element.hasAttribute repo element attributeClass.Name then
             let valueFromClass = CoreSemanticLayer.Element.attributeValue attributeClass "stringValue"
             Element.setAttributeValue repo element attributeClass.Name valueFromClass
