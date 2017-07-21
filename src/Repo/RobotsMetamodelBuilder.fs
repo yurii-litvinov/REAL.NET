@@ -30,7 +30,7 @@ type RobotsMetamodelBuilder() =
             let metamodelElement = find "Element"
             let metamodelNode = find "Node"
             let metamodelGeneralization = find "Generalization"
-            let metamodelEdge = find "Edge"
+            let metamodelAssociation = find "Association"
             let metamodelAttribute = find "Attribute"
 
             let metamodelStringNode = find "String"
@@ -47,7 +47,7 @@ type RobotsMetamodelBuilder() =
             let attributeKindAssociation = findAssociation metamodelAttribute "kind"
             let attributeStringValueAssociation = findAssociation metamodelAttribute "stringValue"
 
-            let edgeTargetNameAssociation = findAssociation metamodelEdge "targetName"
+            let edgeTargetNameAssociation = findAssociation metamodelAssociation "targetName"
 
             let model = repo.CreateModel("RobotsMetamodel", metamodel)
 
@@ -60,10 +60,11 @@ type RobotsMetamodelBuilder() =
                 
                 node
 
-            let (--|>) (source: IElement) target = model.CreateGeneralization(metamodelGeneralization, source, target) |> ignore
+            let (--|>) (source: IElement) target = 
+                model.CreateGeneralization(metamodelGeneralization, source, target) |> ignore
 
             let (--->) (source: IElement) (target, targetName, linkName) = 
-                let edge = Operations.instantiate repo model metamodelEdge :?> IAssociation
+                let edge = Operations.instantiate repo model metamodelAssociation :?> IAssociation
                 edge.Source <- Some source
                 edge.Target <- Some target
                 edge.TargetName <- targetName

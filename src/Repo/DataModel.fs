@@ -37,7 +37,7 @@ type DataModel private (name: string, metamodel: IModel option) =
 
         member this.CreateAssociation(``class``, source, target, targetName) = 
             let edge = new DataAssociation(``class``, source, target, targetName, this) :> IAssociation
-            edges <- (edge :> IRelationship) :: edges
+            edges <- (edge :> IEdge) :: edges
             if source.IsSome then
                 source.Value.AddOutgoingEdge edge
             if target.IsSome then
@@ -46,7 +46,7 @@ type DataModel private (name: string, metamodel: IModel option) =
 
         member this.CreateAssociation(``class``, source, target, targetName) = 
             let edge = new DataAssociation(``class``, Some source, Some target, targetName, this) :> IAssociation
-            edges <- (edge :> IRelationship) :: edges
+            edges <- (edge :> IEdge) :: edges
             source.AddOutgoingEdge edge
             target.AddIncomingEdge edge
             edge
@@ -57,21 +57,21 @@ type DataModel private (name: string, metamodel: IModel option) =
                 source.Value.AddOutgoingEdge edge
             if target.IsSome then
                 target.Value.AddIncomingEdge edge
-            edges <- (edge :> IRelationship) :: edges
+            edges <- (edge :> IEdge) :: edges
             edge
 
         member this.CreateGeneralization(``class``, source, target) = 
             let edge = new DataGeneralization(``class``, Some source, Some target, this) :> IGeneralization
             source.AddOutgoingEdge edge
             target.AddIncomingEdge edge
-            edges <- (edge :> IRelationship) :: edges
+            edges <- (edge :> IEdge) :: edges
             edge
 
         member this.DeleteElement(element: IElement): unit = 
             match element with
             | :? INode -> 
                 nodes <- nodes |> List.except [element :?> INode]
-            | _ -> edges <- edges |> List.except [element :?> IRelationship]
+            | _ -> edges <- edges |> List.except [element :?> IEdge]
             edges |> List.iter (fun e -> 
                 if e.Source = Some element then e.Source <- None
                 if e.Target = Some element then e.Target <- None
@@ -93,5 +93,5 @@ type DataModel private (name: string, metamodel: IModel option) =
         member this.Nodes: seq<INode> = 
             nodes |> Seq.ofList
 
-        member this.Edges: seq<IRelationship> = 
+        member this.Edges: seq<IEdge> = 
             edges |> Seq.ofList

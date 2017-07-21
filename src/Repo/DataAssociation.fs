@@ -14,7 +14,7 @@
 
 namespace Repo.DataLayer
 
-/// Implementation of Association relation.
+/// Implementation of Association edge.
 type DataAssociation
     (
         ``class``: IElement
@@ -23,7 +23,7 @@ type DataAssociation
         , nameTarget: string
         , model: IModel
         ) =
-    inherit DataRelationship(Some ``class``, source, target, model)
+    inherit DataEdge(Some ``class``, source, target, model)
 
     interface IAssociation with
         member val TargetName: string = nameTarget with get, set

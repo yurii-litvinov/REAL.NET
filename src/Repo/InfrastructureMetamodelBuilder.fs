@@ -48,9 +48,9 @@ type InfrastructureMetamodelBuilder() =
 
             let element = +"Element"
             let node = +"Node"
-            let relationship = +"Relationship"
-            let generalization = +"Generalization"
             let edge = +"Edge"
+            let generalization = +"Generalization"
+            let association = +"Association"
             let stringNode = +"String"
             let booleanNode = +"Boolean"
             let attribute = +"Attribute"
@@ -100,15 +100,15 @@ type InfrastructureMetamodelBuilder() =
                 ; "AttributeKind.Boolean"]
 
             node --|> element
-            relationship --|> element
-            generalization --|> relationship
-            edge --|> relationship
+            edge --|> element
+            generalization --|> edge
+            association --|> edge
 
             element ---> (element, "class", true)
             element ---> (attribute, "attributes", true)
             attribute ---> (element, "type", true)
-            relationship ---> (element, "from", true)
-            relationship ---> (element, "to", true)
+            edge ---> (element, "from", true)
+            edge ---> (element, "to", true)
             repoNode ---> (modelNode, "models", true)
             modelNode ---> (element, "elements", true)
 
@@ -118,12 +118,12 @@ type InfrastructureMetamodelBuilder() =
 
             createAttribute node booleanNode "isAbstract" "false"
 
-            createAttribute relationship stringNode "shape" "Pictures/Edge.png"
-            createAttribute relationship metatype "instanceMetatype" "Metatype.Edge"
+            createAttribute edge stringNode "shape" "Pictures/Edge.png"
+            createAttribute edge metatype "instanceMetatype" "Metatype.Edge"
 
-            createAttribute edge booleanNode "isAbstract" "false"
-            createAttribute edge stringNode "name" ""
-            createAttribute edge stringNode "targetName" ""
+            createAttribute association booleanNode "isAbstract" "false"
+            createAttribute association stringNode "name" ""
+            createAttribute association stringNode "targetName" ""
 
             createAttribute generalization booleanNode "isAbstract" "false"
             createAttribute generalization stringNode "targetName" ""

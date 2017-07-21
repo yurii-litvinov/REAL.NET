@@ -14,8 +14,8 @@
 
 namespace Repo.DataLayer
 
-/// Implementation of Generalization relation.
+/// Implementation of Generalization edge.
 type DataGeneralization (``class``: IElement, source: IElement option, target: IElement option, model: IModel) =
-    inherit DataRelationship(Some ``class``, source, target, model)
+    inherit DataEdge(Some ``class``, source, target, model)
 
     interface IGeneralization

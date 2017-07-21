@@ -35,7 +35,7 @@ and [<AbstractClass>] Element
     let findMetatype (element : DataLayer.IElement) =
         if InfrastructureSemanticLayer.InfrastructureMetamodel.isNode repo element then
             Metatype.Node
-        elif InfrastructureSemanticLayer.InfrastructureMetamodel.isRelationship repo element then
+        elif InfrastructureSemanticLayer.InfrastructureMetamodel.isEdge repo element then
             Metatype.Edge
         else
             raise (InvalidSemanticOperationException 

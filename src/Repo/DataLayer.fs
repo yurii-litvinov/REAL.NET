@@ -21,29 +21,29 @@ type IElement =
         abstract Class: IElement with get
 
         /// Outgoing edges for that element.
-        abstract OutgoingEdges: IRelationship seq with get
+        abstract OutgoingEdges: IEdge seq with get
 
         /// Incoming edges for that element.
-        abstract IncomingEdges: IRelationship seq with get
+        abstract IncomingEdges: IEdge seq with get
 
         /// Adds outgoing edge to this element.
-        abstract AddOutgoingEdge: edge: IRelationship -> unit
+        abstract AddOutgoingEdge: edge: IEdge -> unit
 
         /// Adds incoming edge to this element.
-        abstract AddIncomingEdge: edge: IRelationship -> unit
+        abstract AddIncomingEdge: edge: IEdge -> unit
 
         /// Deletes outgoing edge from this element.
-        abstract DeleteOutgoingEdge: edge: IRelationship -> unit
+        abstract DeleteOutgoingEdge: edge: IEdge -> unit
         
         /// Deletes incoming edge from this element.
-        abstract DeleteIncomingEdge: edge: IRelationship -> unit
+        abstract DeleteIncomingEdge: edge: IEdge -> unit
 
         /// Returns a model to which this element belongs.
         abstract Model: IModel with get
     end
 
-/// Node is a kind of element which can connect only to relationships, corresponds to node of the model graph.
-/// NOTE: Node is an unconnected relationship, so it is highly possible that it does not have to be a separate class.
+/// Node is a kind of element which can connect only to edge, corresponds to node of the model graph.
+/// NOTE: Node can be seen as always unconnected edge.
 and INode =
     interface
         inherit IElement
@@ -52,31 +52,31 @@ and INode =
         abstract Name : string with get, set
     end
 
-/// Relationship is a kind of element which can connect to everything, corresponds to edge of the model graph.
-and IRelationship =
+/// Edge is a kind of element which can connect to everything.
+and IEdge =
     interface
         inherit IElement
-        /// Element at the beginning of relationship, may be None if relationship is not connected.
+        /// Element at the beginning of an edge, may be None if edge is not connected.
         abstract Source : IElement option with get, set
 
-        /// Element at the ending of relationship, may be None if relationship is not connected.
+        /// Element at the ending of an edge, may be None if edge is not connected.
         abstract Target : IElement option with get, set
     end
 
-/// Generalization is a kind of relationship which has special semantic in metamodel (allows to inherit relations).
+/// Generalization is a kind of edge which has special semantic in metamodel (allows to inherit associations).
 and IGeneralization =
     interface
-        inherit IRelationship
+        inherit IEdge
     end
 
-/// Association is a general kind of relationship, has string attribute describing target of relationship.
+/// Association is a general kind of edge, has string attribute describing target of an edge.
 and IAssociation =
     interface
-        inherit IRelationship
+        inherit IEdge
         abstract TargetName : string with get, set
     end
 
-/// Model is a set of nodes and relationships, corresponds to one diagram (or one palette) in editor.
+/// Model is a set of nodes and edges, corresponds to one diagram (or one palette) in editor.
 and IModel =
     interface
         /// Model can have descriptive name (possibly not unique).
@@ -92,13 +92,13 @@ and IModel =
         /// Creates a node that is its own type (Node, for example, is an instance of Node).
         abstract CreateNode: name: string -> INode
 
-        /// Creates new Generalization relation with given source and target.
+        /// Creates new Generalization edge with given source and target.
         abstract CreateGeneralization: ``class``: IElement * source: IElement * target: IElement -> IGeneralization
 
-        /// Creates new possibly unconnected Generalization relation.
+        /// Creates new possibly unconnected Generalization edge.
         abstract CreateGeneralization: ``class``: IElement * source: IElement option * target: IElement option -> IGeneralization
 
-        /// Creates new Association relation with given source and target.
+        /// Creates new Association edge with given source and target.
         abstract CreateAssociation: 
                 ``class``: IElement 
                 * source: IElement 
@@ -106,7 +106,7 @@ and IModel =
                 * targetName: string 
                 -> IAssociation
 
-        /// Creates new possibly unconnected Association relation.
+        /// Creates new possibly unconnected Association edge.
         abstract CreateAssociation: 
                 ``class``: IElement 
                 * source: IElement option 
@@ -121,13 +121,13 @@ and IModel =
         abstract Nodes : INode seq with get
         
         /// Returns all edges in a model.
-        abstract Edges : IRelationship seq with get
+        abstract Edges : IEdge seq with get
 
         /// Deletes element from a model and unconnects related elements if needed.
         abstract DeleteElement : element : IElement -> unit
     end
 
-/// Repository is a collection of related models.
+/// Repository is a collection of models.
 type IRepo =
     interface
         /// All models in a repository

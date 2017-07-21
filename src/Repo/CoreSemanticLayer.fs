@@ -43,17 +43,17 @@ module Element =
     let containingModel (element: IElement) =
         element.Model
 
-    /// Returns all outgoing relationships for an element.
-    let outgoingRelationships (element: IElement) = 
+    /// Returns all outgoing edges for an element.
+    let outgoingEdges (element: IElement) = 
         element.OutgoingEdges
 
     /// Returns all outgoing generalizations for an element.
     let outgoingGeneralizations element = 
-        outgoingRelationships element |> Seq.filter (fun r -> r :? IGeneralization) |> Seq.cast<IGeneralization>
+        outgoingEdges element |> Seq.filter (fun r -> r :? IGeneralization) |> Seq.cast<IGeneralization>
 
     /// Returns all outgoing associations for an element.
     let outgoingAssociations element = 
-        outgoingRelationships element |> Seq.filter (fun r -> r :? IAssociation) |> Seq.cast<IAssociation>
+        outgoingEdges element |> Seq.filter (fun r -> r :? IAssociation) |> Seq.cast<IAssociation>
 
     /// Returns a sequence of all parents (in terms of generalization hierarchy) for given element.
     /// Most special node is the first in resulting sequence, most general is the last.
@@ -79,11 +79,8 @@ module Element =
     /// Returns an attribute (target node of an outgoing association with given target name).
     /// Throws InvalidSemanticOperationException if there is no such association or there is more than one.
     let rec attribute element name = 
-        let attributes' = 
-            attributes element 
-        
         let attributes = 
-            attributes'
+            attributes element
             |> Seq.filter (fun (attrName, attr) -> attrName = name)
             |> Seq.map (fun (attrName, attr) -> attr)
     
@@ -104,10 +101,12 @@ module Element =
         (attribute element name).Name
 
     /// Sets attribute value for given attribute.
+    /// If this attribute is inherited from a parent, then attribute of a parent will be changed.
+    /// TODO: Shall setting attribute in descendant affect parent and all its descendants?
     let setAttributeValue element name value = 
         (attribute element name).Name <- value
 
-    /// Adds a new attribute to an element.
+    /// Adds a new attribute with a given value to an element.
     let addAttribute element name ``class`` attributeAssociationClass value =
         let model = containingModel element
         let attributeNode = model.CreateNode(value, ``class``)
@@ -117,7 +116,7 @@ module Element =
     let hasAttribute element name =
         attributes element |> Seq.filter (fun (attrName, _) -> attrName = name) |> Seq.isEmpty |> not
 
-    /// Returns true if an 'instance' is an (indirect) instance of a 'class'.
+    /// Returns true if an 'instance' is a (possibly indirect) instance of a 'class'.
     let rec isInstanceOf (``class``: IElement) (instance: IElement) =
         if instance.Class = ``class`` then
             true
@@ -185,4 +184,14 @@ module Model =
     /// Searches for a given association starting in a given element with a given name. Assumes that it exists and 
     /// there is only one association with that name. Throws InvalidSemanticOperationException if not.
     let findAssociationWithSource (model: IModel) (element: IElement) targetName = 
-        findAssociationWithPredicate model targetName (fun a -> a.Source = Some element)
+        let associations = 
+            element.OutgoingEdges 
+            |> Seq.filter (fun e -> e :? IAssociation && (e :?> IAssociation).TargetName = targetName)
+
+        if Seq.isEmpty associations then
+            raise (InvalidSemanticOperationException <| sprintf "Edge %s not found in model %s" targetName model.Name)
+        elif Seq.length associations <> 1 then
+            raise (InvalidSemanticOperationException 
+                <| sprintf "Edge %s appears more than once in model %s" targetName model.Name)
+        else
+            Seq.head associations :?> IAssociation

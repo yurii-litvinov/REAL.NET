@@ -26,7 +26,7 @@ type ElementRepository(repo: DataLayer.IRepo, attributeRepository: AttributeRepo
     let findMetatype (element : DataLayer.IElement) =
         if InfrastructureMetamodel.isNode repo element then
             Metatype.Node
-        elif InfrastructureMetamodel.isRelationship repo element then
+        elif InfrastructureMetamodel.isEdge repo element then
             Metatype.Edge
         else
             raise (InvalidSemanticOperationException 
@@ -40,15 +40,15 @@ type ElementRepository(repo: DataLayer.IRepo, attributeRepository: AttributeRepo
                 let newElement = 
                     match findMetatype element with
                     | Metatype.Edge -> 
-                        if not <| element :? DataLayer.IRelationship then
+                        if not <| element :? DataLayer.IEdge then
                             raise (InvalidSemanticOperationException 
-                                "Element is an instance of Relationship, but is not a relationship in internal \
-                                representation. Nodes can not be instances of Relationship.")
+                                "Element is an instance of the Edge, but is not an edge in internal \
+                                representation. Nodes can not be instances of Edge.")
                         else 
                             Edge
                                 (repo
                                  , model
-                                 , element :?> DataLayer.IRelationship
+                                 , element :?> DataLayer.IEdge
                                  , this :> IElementRepository
                                  , attributeRepository
                                 ) :> IElement

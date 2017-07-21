@@ -38,21 +38,21 @@ type LanguageMetamodelBuilder() =
 
             let element = +"Element"
             let node = +"Node"
-            let relationship = +"Relationship"
+            let edge = +"Edge"
             let generalization = +"Generalization"
             let association = +"Association"
             let stringNode = +"String"
             let enum = +"Enum"
 
             node --|> element
-            relationship --|> element
+            edge --|> element
             enum --|> element
-            generalization --|> relationship
-            association --|> relationship
+            generalization --|> edge
+            association --|> edge
 
             element ---> (element, "class")
-            relationship ---> (element, "source")
-            relationship ---> (element, "target")
+            edge ---> (element, "source")
+            edge ---> (element, "target")
             association ---> (stringNode, "targetName")
             enum ---> (stringNode, "elements")
 

@@ -57,7 +57,7 @@ and Model(repo: DataLayer.IRepo, data: DataLayer.IModel, elementRepository: IEle
 
         member this.Edges = 
             data.Edges 
-            |> Seq.filter (InfrastructureSemanticLayer.InfrastructureMetamodel.isEdge repo)
+            |> Seq.filter (InfrastructureSemanticLayer.InfrastructureMetamodel.isAssociation repo)
             |> Seq.map (elementRepository.GetElement data)
             |> Seq.cast<IEdge>
 

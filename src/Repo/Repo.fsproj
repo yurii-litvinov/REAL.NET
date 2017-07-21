@@ -75,7 +75,7 @@
     <Compile Include="DataLayer.fs" />
     <Compile Include="DataElement.fs" />
     <Compile Include="DataNode.fs" />
-    <Compile Include="DataRelationship.fs" />
+    <Compile Include="DataEdge.fs" />
     <Compile Include="DataGeneralization.fs" />
     <Compile Include="DataAssociation.fs" />
     <Compile Include="DataModel.fs" />

@@ -96,7 +96,7 @@ and [<AllowNullLiteral>] IElement =
         abstract Metatype: Metatype with get
 
         /// Metatype of the instances of this element, if it is not abstract. Edge can have only edges as instances,
-        /// but nodes may become edges (for example, node "Relation" becomes relation edges after instantiation).
+        /// but nodes may become edges (for example, node "Edge" becomes edge after instantiation).
         abstract InstanceMetatype: Metatype with get
 
         /// A string containing information about how to draw this element. May be XML document or some other string 

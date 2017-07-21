@@ -60,7 +60,7 @@ module InfrastructureMetamodel =
 
     let private node (repo: IRepo) = findNode repo "Node"
 
-    let private edge (repo: IRepo) = findNode repo "Edge"
+    let private association (repo: IRepo) = findNode repo "Association"
 
     let private generalization (repo: IRepo) = findNode repo "Generalization"
 
@@ -73,11 +73,11 @@ module InfrastructureMetamodel =
         else
             CoreSemanticLayer.Element.isInstanceOf (node repo) element
 
-    let isEdge repo (element: IElement) =
+    let isAssociation repo (element: IElement) =
         if isFromInfrastructureMetamodel repo element then
             element :? IAssociation  && CoreSemanticLayer.Element.hasAttribute element "isAbstract"
         else
-            CoreSemanticLayer.Element.isInstanceOf (edge repo) element
+            CoreSemanticLayer.Element.isInstanceOf (association repo) element
             || CoreSemanticLayer.Element.isInstanceOf (generalization repo) element
 
     let isGeneralization repo (element: IElement) =
@@ -86,11 +86,11 @@ module InfrastructureMetamodel =
         else
             CoreSemanticLayer.Element.isInstanceOf (generalization repo) element
 
-    let isRelationship (repo: IRepo) element =
-        isEdge repo element || isGeneralization repo element
+    let isEdge (repo: IRepo) element =
+        isAssociation repo element || isGeneralization repo element
 
     let isElement repo element =
-        isNode repo element || isRelationship repo element
+        isNode repo element || isEdge repo element
 
 /// Helper module for working with elements in Infrastructure Metamodel terms.
 module Element =
