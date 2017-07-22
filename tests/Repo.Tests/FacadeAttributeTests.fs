@@ -23,14 +23,13 @@ open Repo.FacadeLayer
 let getAttributeType nodeName name =
     let repo = RepoFactory.CreateRepo ()
     let underlyingRepo = (repo :?> Repo).UnderlyingRepo
-    let model = repo.Models |> Seq.find (fun m -> m.Name = "RobotsMetamodel")
-    let attributeRepository = AttributeRepository(underlyingRepo)
+    let model = repo.Model "RobotsMetamodel"
+    let attributeRepository = AttributeRepository()
 
     let dataLayerModel = (model :?> Model).UnderlyingModel
     let dataLayerElement = dataLayerModel.Nodes |> Seq.find (fun n -> n.Name = nodeName) :> DataLayer.IElement
 
-    let dataLayerAttribute = 
-        CoreSemanticLayer.Element.attribute dataLayerElement name
+    let dataLayerAttribute = CoreSemanticLayer.Element.attribute dataLayerElement name
 
     attributeRepository.GetAttribute dataLayerAttribute
 
@@ -39,7 +38,7 @@ let getAttributeInstance nodeName name =
     let underlyingRepo = (repo :?> Repo).UnderlyingRepo
     let model = repo.Models |> Seq.find (fun m -> m.Name = "RobotsTestModel")
     let metamodel = model.Metamodel
-    let attributeRepository = AttributeRepository(underlyingRepo)
+    let attributeRepository = AttributeRepository()
 
     let dataLayerModel = (model :?> Model).UnderlyingModel
     let dataLayerMetamodel = (model.Metamodel :?> Model).UnderlyingModel

@@ -18,12 +18,15 @@ open Repo
 
 /// Wrapper around repository from data layer. Maintains a repository of models and creates new models if needed.
 type Repo(repo: DataLayer.IRepo) =
-    let attributeRepository = AttributeRepository(repo)
-    let elementRepository = ElementRepository(repo, attributeRepository)
-    let modelRepository = ModelRepository(repo, elementRepository)
+    let infrastructure = InfrastructureSemanticLayer.InfrastructureSemantic(repo)
+
+    let attributeRepository = AttributeRepository()
+    let elementRepository = ElementRepository(infrastructure, attributeRepository)
+    let modelRepository = ModelRepository(infrastructure, elementRepository)
 
     let unwrap (model: IModel) = (model :?> Model).UnderlyingModel
 
+    /// Returns wrapped repository from a data layer.
     member this.UnderlyingRepo = repo
 
     interface IRepo with

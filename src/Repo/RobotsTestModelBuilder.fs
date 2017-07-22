@@ -22,9 +22,9 @@ open Repo.InfrastructureSemanticLayer
 type RobotsTestModelBuilder() =
     interface IModelBuilder with
         member this.Build(repo: IRepo): unit = 
-            let elementHelper = ElementHelper(repo)
+            let infrastructure = InfrastructureSemantic(repo)
             let metamodel = Repo.findModel repo "RobotsMetamodel"
-            let infrastructureMetamodel = elementHelper.InfrastructureMetamodel.InfrastructureMetamodel
+            let infrastructureMetamodel = infrastructure.Metamodel.Model
 
             let metamodelAbstractNode = Model.findNode metamodel "AbstractNode"
             let metamodelInitialNode = Model.findNode metamodel "InitialNode"
@@ -36,18 +36,18 @@ type RobotsTestModelBuilder() =
             
             let model = repo.CreateModel("RobotsTestModel", metamodel)
 
-            let initialNode = Operations.instantiate repo model metamodelInitialNode
-            let finalNode = Operations.instantiate repo model metamodelFinalNode
+            let initialNode = infrastructure.Instantiate model metamodelInitialNode
+            let finalNode = infrastructure.Instantiate model metamodelFinalNode
 
-            let motorsForward = Operations.instantiate repo model metamodelMotorsForward
-            elementHelper.SetAttributeValue motorsForward "ports" "M3, M4"
-            elementHelper.SetAttributeValue motorsForward "power" "100"
+            let motorsForward = infrastructure.Instantiate model metamodelMotorsForward
+            infrastructure.Element.SetAttributeValue motorsForward "ports" "M3, M4"
+            infrastructure.Element.SetAttributeValue motorsForward "power" "100"
 
-            let timer = Operations.instantiate repo model metamodelTimer
-            elementHelper.SetAttributeValue timer "delay" "3000"
+            let timer = infrastructure.Instantiate model metamodelTimer
+            infrastructure.Element.SetAttributeValue timer "delay" "3000"
 
             let (-->) (src: IElement) dst = 
-                let aLink = Operations.instantiate repo model link :?> IAssociation
+                let aLink = infrastructure.Instantiate model link :?> IAssociation
                 aLink.Source <- Some src
                 aLink.Target <- Some dst
                 dst

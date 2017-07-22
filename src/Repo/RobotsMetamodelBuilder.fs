@@ -22,8 +22,8 @@ open Repo.InfrastructureSemanticLayer
 type RobotsMetamodelBuilder() =
     interface IModelBuilder with
         member this.Build(repo: IRepo): unit = 
-            let elementHelper = InfrastructureSemanticLayer.ElementHelper(repo)
-            let metamodel = elementHelper.InfrastructureMetamodel.InfrastructureMetamodel
+            let infrastructure = InfrastructureSemanticLayer.InfrastructureSemantic(repo)
+            let metamodel = infrastructure.Metamodel.Model
 
             let find name = CoreSemanticLayer.Model.findNode metamodel name
             let findAssociation node name = CoreSemanticLayer.Model.findAssociationWithSource node name
@@ -53,11 +53,11 @@ type RobotsMetamodelBuilder() =
             let model = repo.CreateModel("RobotsMetamodel", metamodel)
 
             let (~+) (name, shape, isAbstract) = 
-                let node = Operations.instantiate repo model metamodelNode :?> INode
+                let node = infrastructure.Instantiate model metamodelNode :?> INode
                 node.Name <- name
-                elementHelper.SetAttributeValue node "shape" shape 
-                elementHelper.SetAttributeValue node "isAbstract" (if isAbstract then "true" else "false")
-                elementHelper.SetAttributeValue node "instanceMetatype" "Metatype.Node" 
+                infrastructure.Element.SetAttributeValue node "shape" shape 
+                infrastructure.Element.SetAttributeValue node "isAbstract" (if isAbstract then "true" else "false")
+                infrastructure.Element.SetAttributeValue node "instanceMetatype" "Metatype.Node" 
                 
                 node
 
@@ -65,15 +65,15 @@ type RobotsMetamodelBuilder() =
                 model.CreateGeneralization(metamodelGeneralization, source, target) |> ignore
 
             let (--->) (source: IElement) (target, targetName, linkName) = 
-                let edge = Operations.instantiate repo model metamodelAssociation :?> IAssociation
+                let edge = infrastructure.Instantiate model metamodelAssociation :?> IAssociation
                 edge.Source <- Some source
                 edge.Target <- Some target
                 edge.TargetName <- targetName
 
-                elementHelper.SetAttributeValue edge "shape" "Pictures/Edge.png"
-                elementHelper.SetAttributeValue edge "isAbstract" "false"
-                elementHelper.SetAttributeValue edge "instanceMetatype" "Metatype.Edge"
-                elementHelper.SetAttributeValue edge "name" linkName
+                infrastructure.Element.SetAttributeValue edge "shape" "Pictures/Edge.png"
+                infrastructure.Element.SetAttributeValue edge "isAbstract" "false"
+                infrastructure.Element.SetAttributeValue edge "instanceMetatype" "Metatype.Edge"
+                infrastructure.Element.SetAttributeValue edge "name" linkName
 
                 edge
 
@@ -82,10 +82,10 @@ type RobotsMetamodelBuilder() =
             let finalNode = +("FinalNode", "Pictures/finalBlock.png", false)
             
             let abstractMotorsBlock = +("AbstractMotorsBlock", "", true)
-            elementHelper.AddAttribute abstractMotorsBlock "ports" "AttributeKind.String"
+            infrastructure.Element.AddAttribute abstractMotorsBlock "ports" "AttributeKind.String"
 
             let abstractMotorsPowerBlock = +("AbstractMotorsPowerBlock", "", true)
-            elementHelper.AddAttribute abstractMotorsPowerBlock "power" "AttributeKind.Int"
+            infrastructure.Element.AddAttribute abstractMotorsPowerBlock "power" "AttributeKind.Int"
 
             let motorsForward = +("MotorsForward", "Pictures/enginesForwardBlock.png", false)
             let motorsBackward = +("MotorsBackward", "Pictures/enginesBackwardBlock.png", false)
@@ -93,9 +93,9 @@ type RobotsMetamodelBuilder() =
             let timer = +("Timer", "Pictures/timerBlock.png", false)
 
             let link = abstractNode ---> (abstractNode, "target", "Link")
-            elementHelper.AddAttribute link "guard" "AttributeKind.String"
+            infrastructure.Element.AddAttribute link "guard" "AttributeKind.String"
 
-            elementHelper.AddAttribute timer "delay" "AttributeKind.Int"
+            infrastructure.Element.AddAttribute timer "delay" "AttributeKind.Int"
 
             initialNode --|> abstractNode
             finalNode --|> abstractNode

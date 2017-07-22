@@ -21,13 +21,13 @@ open Repo.CoreSemanticLayer
 
 /// Repository for attribute wrappers. Contains already created wrappers and creates new wrappers if needed.
 /// Holds references to attribute wrappers and elements.
-type AttributeRepository(repo: DataLayer.IRepo) =
+type AttributeRepository() =
     let attributes = Dictionary<_, _>()
     member this.GetAttribute (attributeNode: DataLayer.INode) =
         if attributes.ContainsKey attributeNode then
             attributes.[attributeNode] :> IAttribute
         else
-            let newAttribute = Attribute(repo, attributeNode, this)
+            let newAttribute = Attribute(attributeNode)
             attributes.Add(attributeNode, newAttribute)
             newAttribute :> IAttribute
     
@@ -36,7 +36,7 @@ type AttributeRepository(repo: DataLayer.IRepo) =
             attributes.Remove(node) |> ignore
 
 /// Implements attribute wrapper.
-and Attribute(repo: DataLayer.IRepo, attributeNode: DataLayer.INode, repository: AttributeRepository) =
+and Attribute(attributeNode: DataLayer.INode) =
     interface IAttribute with
         member this.Kind = 
             let kindNode = Element.attribute attributeNode "kind"

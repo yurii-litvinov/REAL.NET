@@ -30,42 +30,39 @@ let init () =
     CoreMetametamodelBuilder() |> build
     LanguageMetamodelBuilder() |> build
     InfrastructureMetamodelBuilder() |> build
+
     repo
 
 [<Test>]
 let ``Instantiation shall preserve linguistic attributes`` () =
     let repo = init ()
-    let model = repo.CreateModel ("TestModel", CoreSemanticLayer.Repo.findModel repo "InfrastructureMetamodel")
-    let elementHelper = InfrastructureSemanticLayer.ElementHelper repo
-    let infrastructureMetamodel = elementHelper.InfrastructureMetamodel.InfrastructureMetamodel
+    let infrastructure = InfrastructureSemantic(repo)
+    let model = repo.CreateModel ("TestModel", infrastructure.Metamodel.Model)
 
-    let node = CoreSemanticLayer.Model.findNode infrastructureMetamodel "Node"
+    let node = infrastructure.Metamodel.Node
     
-    let element = Operations.instantiate repo model node
+    let element = infrastructure.Instantiate model node
 
     let outgoingAssociations = CoreSemanticLayer.Element.outgoingAssociations element
     outgoingAssociations |> Seq.map (fun a -> (a.Target.Value :?> INode).Name) |> should contain "shape"
-    let attributes = elementHelper.Attributes element
+    let attributes = infrastructure.Element.Attributes element
     attributes |> should not' (be Empty)
-    elementHelper.AttributeValue element "shape" |> should equal "Pictures/Vertex.png"
+    infrastructure.Element.AttributeValue element "shape" |> should equal "Pictures/Vertex.png"
 
 [<Test>]
 let ``Double instantiation shall result in correct instantiation chain`` () =
     let repo = init ()
-    let metamodel = repo.CreateModel ("TestMetamodel", CoreSemanticLayer.Repo.findModel repo "InfrastructureMetamodel")
+    let infrastructure = InfrastructureSemantic(repo)
+    let metamodel = repo.CreateModel ("TestMetamodel", infrastructure.Metamodel.Model)
     let model = repo.CreateModel ("TestModel", metamodel)
+    let node = infrastructure.Metamodel.Node
 
-    let elementHelper = InfrastructureSemanticLayer.ElementHelper repo
-    let infrastructureMetamodel = elementHelper.InfrastructureMetamodel.InfrastructureMetamodel
-
-    let node = CoreSemanticLayer.Model.findNode elementHelper.InfrastructureMetamodel.InfrastructureMetamodel "Node"
-    
-    let element = Operations.instantiate repo metamodel node
+    let element = infrastructure.Instantiate metamodel node
 
     let attribites = 
-        elementHelper.Attributes element 
+        infrastructure.Element.Attributes element 
         |> Seq.map (fun attr -> CoreSemanticLayer.Element.attributeValue attr "stringValue")
 
-    let elementInstance = Operations.instantiate repo model element
+    let elementInstance = infrastructure.Instantiate model element
 
     elementInstance.Class.Class |> should equal node

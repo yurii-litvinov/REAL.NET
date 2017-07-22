@@ -20,21 +20,20 @@ open Repo
 open Repo.InfrastructureSemanticLayer
 
 /// Repository for element wrappers. Contains already created wrappers and creates new wrappers if needed.
-type ElementRepository(repo: DataLayer.IRepo, attributeRepository: AttributeRepository) =
+type ElementRepository(infrastructure: InfrastructureSemantic, attributeRepository: AttributeRepository) =
     let elements = Dictionary<_, _>()
-    let elementHelper = ElementHelper(repo)
 
     let findMetatype (element : DataLayer.IElement) =
-        if elementHelper.InfrastructureMetamodel.IsNode element then
+        if infrastructure.Metamodel.IsNode element then
             Metatype.Node
-        elif elementHelper.InfrastructureMetamodel.IsEdge element then
+        elif infrastructure.Metamodel.IsEdge element then
             Metatype.Edge
         else
             raise (InvalidSemanticOperationException 
                 "Trying to get a metatype of an element that is not instance of the Element. Model is malformed.")
 
     interface IElementRepository with
-        member this.GetElement (model: DataLayer.IModel) (element: DataLayer.IElement) =
+        member this.GetElement (element: DataLayer.IElement) =
             if elements.ContainsKey element then
                 elements.[element]
             else
@@ -47,11 +46,11 @@ type ElementRepository(repo: DataLayer.IRepo, attributeRepository: AttributeRepo
                                 representation. Nodes can not be instances of Edge.")
                         else 
                             Edge
-                                (repo
-                                 , model
-                                 , element :?> DataLayer.IEdge
-                                 , this :> IElementRepository
-                                 , attributeRepository
+                                (
+                                    infrastructure,
+                                    element :?> DataLayer.IEdge,
+                                    this :> IElementRepository,
+                                    attributeRepository
                                 ) :> IElement
                     | Metatype.Node -> 
                         if not <| element :? DataLayer.INode then
@@ -61,17 +60,17 @@ type ElementRepository(repo: DataLayer.IRepo, attributeRepository: AttributeRepo
                                 metatype is edge), but is not used nor supported in v1.")
                         else 
                             Node
-                                (repo
-                                 , model
-                                 , element :?> DataLayer.INode
-                                 , this :> IElementRepository
-                                 , attributeRepository
+                                (
+                                    infrastructure,
+                                    element :?> DataLayer.INode,
+                                    this :> IElementRepository,
+                                    attributeRepository
                                 ) :> IElement
                     | _ -> failwith "Unknown metatype"
                 elements.Add(element, newElement)
                 newElement
     
-        member this.DeleteElement (model: DataLayer.IModel) (element: DataLayer.IElement) =
+        member this.DeleteElement (element: DataLayer.IElement) =
             if elements.ContainsKey element then
                 // TODO: Who will delete attributes?
                 elements.Remove(element) |> ignore

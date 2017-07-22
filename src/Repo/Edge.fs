@@ -17,15 +17,23 @@ namespace Repo.FacadeLayer
 open Repo
 
 /// Implementation of edge wrapper.
-type Edge(repo: DataLayer.IRepo, model: DataLayer.IModel, element: DataLayer.IEdge, elementRepository: IElementRepository, attributeRepository: AttributeRepository) = 
-    inherit Element(repo, model, element, elementRepository, attributeRepository)
+type Edge
+    (
+        infrastructure: InfrastructureSemanticLayer.InfrastructureSemantic,
+        element: DataLayer.IEdge,
+        elementRepository: IElementRepository,
+        attributeRepository: AttributeRepository
+    ) = 
+
+    inherit Element(infrastructure, element, elementRepository, attributeRepository)
+
     interface IEdge with
         member this.From
             with get (): IElement = 
                 if element.Source.IsNone then
                     null
                 else 
-                    elementRepository.GetElement model element.Source.Value
+                    elementRepository.GetElement element.Source.Value
             and set (v: IElement): unit = 
                 let dataElement = (v :?> Element).UnderlyingElement
                 element.Source <- Some dataElement
@@ -35,7 +43,7 @@ type Edge(repo: DataLayer.IRepo, model: DataLayer.IModel, element: DataLayer.IEd
                 if element.Target.IsNone then
                     null
                 else 
-                    elementRepository.GetElement model element.Target.Value 
+                    elementRepository.GetElement element.Target.Value 
             and set (v: IElement): unit = 
                 let dataElement = (v :?> Element).UnderlyingElement
                 element.Target <- Some dataElement

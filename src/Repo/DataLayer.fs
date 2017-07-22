@@ -73,6 +73,9 @@ and IGeneralization =
 and IAssociation =
     interface
         inherit IEdge
+
+        /// String describing a target of an association. For example, field name in UML can be written on association
+        /// next to target (type of the field).
         abstract TargetName : string with get, set
     end
 
