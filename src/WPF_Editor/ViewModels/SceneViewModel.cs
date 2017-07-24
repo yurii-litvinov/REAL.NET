@@ -21,10 +21,9 @@ namespace WPF_Editor.ViewModels
     
     public class SceneViewModel
     {
-        public GraphArea GraphArea { get; }
-        public GXLogicCore LogicCore { get; }
-        public IScene Scene { get; }
-
+        private GraphArea GraphArea { get; }
+        private GXLogicCore LogicCore { get; }
+        private IScene Scene { get; }
         public SceneViewModel(GraphArea graphArea)
         {
             Scene = Models.Scene.CreateScene();
@@ -50,6 +49,7 @@ namespace WPF_Editor.ViewModels
             LogicCore.Graph = graph;
 
             GraphArea.LogicCore = LogicCore;
+            GraphArea.SetVerticesDrag(true);
             GraphArea.GenerateGraph();
         }
 
@@ -61,20 +61,15 @@ namespace WPF_Editor.ViewModels
             if (element is INode)
             {
                 var node = new Node((INode)element);
-                var vertexControl = new VertexControl(node);
-                vertexControl.SetPosition(mousePosition);
-
                 LogicCore.Graph.AddVertex(node);
                 GraphArea.GenerateGraph();
                 return;
             }
-            if (element is IEdge)
+            if (element == null)
             {
-                var edge = new Edge((IEdge)element);
-                LogicCore.Graph.AddEdge(edge);
-                GraphArea.GenerateGraph();
+                return;
             }
-            throw new NotImplementedException();
+            throw new NotImplementedException("Cannot handle edges... yet...");
         }
     }
 }

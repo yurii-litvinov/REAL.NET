@@ -10,6 +10,7 @@ namespace WPF_Editor.ViewModels
     public class Edge : Element, IEdge, IGraphXEdge<Node>
     {
         private readonly IEdge _edge;
+        
         public IElement From { get => _edge.From; set => _edge.From = value; }
         public IElement To { get => _edge.To; set => _edge.To = value; }
 
@@ -24,6 +25,7 @@ namespace WPF_Editor.ViewModels
         public override Metatype InstanceMetatype => _edge.InstanceMetatype;
 
         public override string Shape => _edge.Shape;
+        /*Initialize _edge.From and _edge.To*/
         public Edge(IEdge iedge) : base(iedge)
         {
             _edge = iedge;
@@ -55,6 +57,15 @@ namespace WPF_Editor.ViewModels
         Node IEdge<Node>.Target => To as Node;
 
         public double Weight { get; set; }
-        public string Text { get; set; }
+        public string Text
+        {
+            get => $"{((IGraphXEdge<Node>) this).Source.Name} -> {((IGraphXEdge<Node>)this).Target.Name}";
+            set { throw new System.NotImplementedException(); }
+        }
+
+        public override string ToString()
+        {
+            return Text;
+        }
     }
 }
