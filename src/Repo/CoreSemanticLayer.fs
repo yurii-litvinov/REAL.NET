@@ -108,8 +108,10 @@ module Element =
 
     /// Searches for attribute in generalization hierarchy.
     let attributes element =
-        let thisElementAttributes e = strictElementAttributes e
-        parents element |> Seq.map strictElementAttributes |> Seq.concat |> Seq.append (thisElementAttributes element)
+        parents element
+        |> Seq.map strictElementAttributes
+        |> Seq.concat
+        |> Seq.append (strictElementAttributes element)
 
     /// Returns an attribute (target node of an outgoing association with given target name).
     /// Throws InvalidSemanticOperationException if there is no such association or there is more than one.
@@ -130,17 +132,33 @@ module Element =
     let attributeValue element name =
         (attribute element name).Name
 
-    /// Sets attribute value for given attribute.
-    /// If this attribute is inherited from a parent, then attribute of a parent will be changed.
-    /// TODO: Shall setting attribute in descendant affect parent and all its descendants?
-    let setAttributeValue element name value =
-        (attribute element name).Name <- value
-
     /// Adds a new attribute with a given value to an element.
     let addAttribute element name ``class`` attributeAssociationClass value =
         let model = containingModel element
         let attributeNode = model.CreateNode(value, ``class``)
         model.CreateAssociation(attributeAssociationClass, element, attributeNode, name) |> ignore
+
+    /// Sets attribute value for given attribute. If this attribute is defined in parent, copies it into current
+    /// element and then sets value.
+    let setAttributeValue element name value =
+        let strictAtribute = strictElementAttributes element |> Seq.tryFind (fun attr -> attr.TargetName = name)
+        if strictAtribute.IsSome then
+            match strictAtribute.Value.Target with
+            | Some(e) when (e :? INode) -> (e :?> INode).Name <- value
+            | _ -> raise (InvalidSemanticOperationException
+                <| sprintf "Attribute %s is not connected or not a node" name)
+        else
+            let parentWithAttribute = bfs element isGeneralization (hasStrictAttribute name)
+            if parentWithAttribute.IsNone then
+                raise (AttributeNotFoundException name)
+            let parentWithAttribute = parentWithAttribute.Value
+            let parentAttributeEdge =
+                strictElementAttributes parentWithAttribute |> Seq.find (fun a -> a.TargetName = name)
+            if parentAttributeEdge.Target.IsNone || not (parentAttributeEdge.Target.Value :? INode) then
+                raise (InvalidSemanticOperationException
+                    <| sprintf "Attribute %s is not connected or not a node" name)
+            let parentAttributeNode = parentAttributeEdge.Target.Value :?> INode
+            addAttribute element name parentAttributeNode.Class parentAttributeEdge.Class value
 
     /// Returns true if an attribute with given name is present in given element.
     let hasAttribute element name =

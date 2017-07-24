@@ -94,7 +94,6 @@ let ``isInstanceOf shall respect generalization`` () =
     Element.isInstanceOf parent parentInstance |> should be True
 
 [<Test>]
-[<Ignore("Not implemented yet")>]
 let ``Setting attribute value in descendant shall not affect parent nor siblings`` () =
     let repo = init()
     let model1 = repo.CreateModel("TestModel")
