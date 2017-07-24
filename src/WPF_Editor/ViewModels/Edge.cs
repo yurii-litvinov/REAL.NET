@@ -9,18 +9,18 @@ namespace WPF_Editor.ViewModels
         public IElement From { get => _edge.From; set => _edge.From = value; }
         public IElement To { get => _edge.To; set => _edge.To = value; }
 
-        public IElement Class => _edge.Class;
+        public override IElement Class => _edge.Class;
 
-        public IEnumerable<IAttribute> Attributes => _edge.Attributes;
+        public override IEnumerable<IAttribute> Attributes => _edge.Attributes;
 
-        public bool IsAbstract => _edge.IsAbstract;
+        public override bool IsAbstract => _edge.IsAbstract;
 
-        public Metatype Metatype => _edge.Metatype;
+        public override Metatype Metatype => _edge.Metatype;
 
-        public Metatype InstanceMetatype => _edge.InstanceMetatype;
+        public override Metatype InstanceMetatype => _edge.InstanceMetatype;
 
-        public string Shape => _edge.Shape;
-        public Edge(IEdge iedge)
+        public override string Shape => _edge.Shape;
+        public Edge(IEdge iedge) : base(iedge)
         {
             _edge = iedge;
         }

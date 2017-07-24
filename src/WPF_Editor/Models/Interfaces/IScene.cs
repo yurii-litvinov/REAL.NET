@@ -9,6 +9,6 @@ namespace WPF_Editor.Models.Interfaces
 {
     public interface IScene
     {
-        void HandleClick(object sender, MouseButtonEventArgs e);
+        void HandleSingleLeftClick(object sender, MouseButtonEventArgs e);
     }
 }

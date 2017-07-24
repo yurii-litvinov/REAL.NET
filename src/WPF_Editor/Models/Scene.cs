@@ -11,8 +11,8 @@ namespace WPF_Editor.Models
 	{
 	    private readonly ISceneMediator _sceneMediator;
         private static IScene _scene;
-        private readonly List<INode> _nodeList = new List<INode>();
-        public static IScene CreateScene(ISceneMediator sceneMediator)
+        //private readonly List<INode> _nodeList = new List<INode>();
+        public static IScene CreateScene(ISceneMediator sceneMediator = null)
         {
             if (_scene is null)
             {
@@ -21,8 +21,10 @@ namespace WPF_Editor.Models
             return _scene;
         }
 
-        public void HandleClick(object sender, MouseButtonEventArgs e)
+        public void HandleSingleLeftClick(object sender, MouseButtonEventArgs e)
         {
+
+            /*
             var mouseCoordinates = Mouse.GetPosition(null);
             var element = _sceneMediator.GetSelectedPaletteItem();
 
@@ -41,8 +43,13 @@ namespace WPF_Editor.Models
 
             System.Console.WriteLine(@"Element hasn't been selected.");
             System.Console.WriteLine();
+            */
         }
 
-        private Scene(ISceneMediator sceneMediator) => _sceneMediator = sceneMediator;
+	    private Scene(ISceneMediator sceneMediator)
+        {
+            _sceneMediator = sceneMediator;
+            
+        } 
 	}
 }

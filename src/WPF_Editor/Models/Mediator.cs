@@ -1,4 +1,5 @@
-﻿using WPF_Editor.Models.Console;
+﻿using System;
+using WPF_Editor.Models.Console;
 using WPF_Editor.Models.Interfaces;
 using WPF_Editor.ViewModels;
 
@@ -17,9 +18,13 @@ namespace WPF_Editor.Models
 
         public IScene Scene { get; }
 
-        public IPalette Palette { get; }
+        private IPalette Palette { get; }
+
+        #region Console
 
         public IAppConsole AppConsole { get; }
+
+        #endregion
 
         public static Mediator CreateMediator()
         {
@@ -41,8 +46,10 @@ namespace WPF_Editor.Models
             Scene = Models.Scene.CreateScene(this);
             /* Property this.Palette and class' name are the same. So there's need in full path to class Palette.*/
             Palette = Models.Palette.CreatePalette(this);
+            #region Console
             AppConsole = new AppConsole();
+            #endregion
         }
-        
+
     }
 }
