@@ -163,8 +163,8 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel) =
             // TODO: Also do something with correctness of attribute inheritance.
             Seq.head values
 
-    /// Adds a new attribute to a given element.
-    member this.AddAttribute element name kind =
+    /// Adds a new attribute to a given element and initializes it with given value.
+    member this.AddAttribute element name kind value =
         if thisElementHasAttribute element name then
             raise (InvalidSemanticOperationException <| sprintf "Attribute %s already present" name)
         let model = CoreSemanticLayer.Element.containingModel element
@@ -180,7 +180,7 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel) =
         let attribute = model.CreateNode(name, attributeNode)
 
         CoreSemanticLayer.Element.addAttribute attribute "kind" attributeKindNode kindAssociation kind
-        CoreSemanticLayer.Element.addAttribute attribute "stringValue" stringValueAssociation stringNode ""
+        CoreSemanticLayer.Element.addAttribute attribute "stringValue" stringValueAssociation stringNode value
         model.CreateAssociation(attributesAssociation, element, attribute, name) |> ignore
 
         ()
@@ -201,9 +201,7 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel) =
                 raise (AttributeNotFoundException attributeName)
             let parentAttribute = parentAttribute.Value
             let parentAttributeKind = CoreSemanticLayer.Element.attributeValue parentAttribute "kind"
-            this.AddAttribute element attributeName parentAttributeKind
-            // Attribute is ready, now setting its value with a recursive call.
-            this.SetAttributeValue element attributeName value
+            this.AddAttribute element attributeName parentAttributeKind value
 
 /// Module containing semantic operations on elements.
 module private Operations =

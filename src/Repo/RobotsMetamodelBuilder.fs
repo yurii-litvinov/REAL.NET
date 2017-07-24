@@ -82,10 +82,10 @@ type RobotsMetamodelBuilder() =
             let finalNode = +("FinalNode", "Pictures/finalBlock.png", false)
 
             let abstractMotorsBlock = +("AbstractMotorsBlock", "", true)
-            infrastructure.Element.AddAttribute abstractMotorsBlock "ports" "AttributeKind.String"
+            infrastructure.Element.AddAttribute abstractMotorsBlock "ports" "AttributeKind.String" "M3, M4"
 
             let abstractMotorsPowerBlock = +("AbstractMotorsPowerBlock", "", true)
-            infrastructure.Element.AddAttribute abstractMotorsPowerBlock "power" "AttributeKind.Int"
+            infrastructure.Element.AddAttribute abstractMotorsPowerBlock "power" "AttributeKind.Int" "100"
 
             let motorsForward = +("MotorsForward", "Pictures/enginesForwardBlock.png", false)
             let motorsBackward = +("MotorsBackward", "Pictures/enginesBackwardBlock.png", false)
@@ -93,9 +93,9 @@ type RobotsMetamodelBuilder() =
             let timer = +("Timer", "Pictures/timerBlock.png", false)
 
             let link = abstractNode ---> (abstractNode, "target", "Link")
-            infrastructure.Element.AddAttribute link "guard" "AttributeKind.String"
+            infrastructure.Element.AddAttribute link "guard" "AttributeKind.String" ""
 
-            infrastructure.Element.AddAttribute timer "delay" "AttributeKind.Int"
+            infrastructure.Element.AddAttribute timer "delay" "AttributeKind.Int" "1000"
 
             initialNode --|> abstractNode
             finalNode --|> abstractNode
