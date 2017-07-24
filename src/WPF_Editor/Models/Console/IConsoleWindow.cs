@@ -17,11 +17,6 @@
         void NewMessage(string message);
 
         /// <summary>
-        /// Sets focus on this window
-        /// </summary>
-        void SetFocusOnThisElement();
-
-        /// <summary>
         /// Override method that returns all messages
         /// </summary>
         /// <returns>All messages</returns>

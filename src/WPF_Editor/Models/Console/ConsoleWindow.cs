@@ -30,10 +30,5 @@ namespace REAL.NET.Models
         {
             messages.Clear();
         }
-
-        public void SetFocusOnThisElement()
-        {
-
-        }
     }
 }

@@ -17,7 +17,7 @@ namespace REAL.NET.Models
     ///This class provides connection between components like palette, console, toolbar, etc.
     ///Now there are only palette and scene.
     /// </summary>
-    public class Mediator : ISceneMediator, IPaletteMediator
+    public class Mediator : ISceneMediator, IPaletteMediator, IAppConsoleMediator
     {
         private static Mediator mediator;
 
