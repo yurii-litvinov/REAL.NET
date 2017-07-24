@@ -9,6 +9,6 @@ namespace WPF_Editor.Models.Interfaces
 {
     public interface ISceneMediator
     {
-        Element GetSelectedPaletteItem();
+        IElement GetSelectedPaletteItem();
     }
 }

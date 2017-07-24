@@ -10,9 +10,9 @@ namespace WPF_Editor.Models.Interfaces
     public interface IPalette
     {
 	    /* Gets selected item from palette. If there's no such item it will return null.*/
-        Element SelectedElement { get; set; }
-        IEnumerable<Node> Nodes { get;}
-        IEnumerable<Edge> Edges { get;}
-        IEnumerable<Element> Elements { get;}
+        IElement SelectedElement { get; set; }
+        IEnumerable<INode> Nodes { get;}
+        IEnumerable<IEdge> Edges { get;}
+        IEnumerable<IElement> Elements { get;}
     }
 }

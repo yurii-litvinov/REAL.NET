@@ -1,4 +1,5 @@
 ﻿using System;
+using Repo;
 using WPF_Editor.Models.Console;
 using WPF_Editor.Models.Interfaces;
 using WPF_Editor.ViewModels;
@@ -18,13 +19,8 @@ namespace WPF_Editor.Models
 
         public IScene Scene { get; }
 
-        private IPalette Palette { get; }
+        public IPalette Palette { get; }
 
-        #region Console
-
-        public IAppConsole AppConsole { get; }
-
-        #endregion
 
         public static Mediator CreateMediator()
         {
@@ -35,7 +31,7 @@ namespace WPF_Editor.Models
             return _mediator;
         }
 
-        public Element GetSelectedPaletteItem()
+        public IElement GetSelectedPaletteItem()
         {
             return Palette.SelectedElement;
         }
@@ -46,9 +42,6 @@ namespace WPF_Editor.Models
             Scene = Models.Scene.CreateScene(this);
             /* Property this.Palette and class' name are the same. So there's need in full path to class Palette.*/
             Palette = Models.Palette.CreatePalette(this);
-            #region Console
-            AppConsole = new AppConsole();
-            #endregion
         }
 
     }

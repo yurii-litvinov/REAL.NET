@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Repo;
 using WPF_Editor.Models.Interfaces;
@@ -6,30 +7,19 @@ using WPF_Editor.ViewModels;
 
 namespace WPF_Editor.Models
 {
-    public class Palette : IPalette, INotifyPropertyChanged
+    public class Palette : IPalette
     {
         private static IPalette _palette;
         private IPaletteMediator _paletteMediator;
-        private Element _selectedElement;
-        public event PropertyChangedEventHandler PropertyChanged;
 
+        //Refactor this. PaletteViewModel has to implement INotifyPropertyChanged
+        public IEnumerable<INode> Nodes { get; }
+        public IEnumerable<IEdge> Edges { get; }
+        public IEnumerable<IElement> Elements { get; }
 
         /* This property has to be set from EditorView.xaml */
-        public Element SelectedElement
-        {
-            get => _selectedElement;
-            set
-            {
-                OnPropertyChanged("SelectedItem");
-                _selectedElement = value;
-                //Simple property test
-                //System.Console.WriteLine((_selectedElement is Node)? ((Node)_selectedElement).Name : _selectedElement.ToString());
-            }
-        }
+        public IElement SelectedElement { get; set; }
 
-        public IEnumerable<Node> Nodes { get; }
-        public IEnumerable<Edge> Edges { get; }
-        public IEnumerable<Element> Elements { get; }
 
         public static IPalette CreatePalette(IPaletteMediator paletteMediator = null)
         {
@@ -37,33 +27,42 @@ namespace WPF_Editor.Models
                 _palette = new Palette(paletteMediator);
             return _palette;
         }
-        public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         private Palette(IPaletteMediator paletteMediator, string modelName = "RobotsMetamodel")
         {
+            
+            //Use lambda expressions
             var repo = RepoFactory.CreateRepo();
             IModel model = repo.Model(modelName);
 
-            List<Node> nodeList = new List<Node>();
-            foreach (var node in model.Nodes)
+            List<INode> nodeList = new List<INode>();
+            foreach (var inode in model.Nodes)
             {
-                nodeList.Add(new Node(node));
+                if (!inode.IsAbstract)
+                {
+                    nodeList.Add(inode);
+                }
             }
             Nodes = nodeList;
-            
-            List<Edge> edgeList = new List<Edge>();
-            foreach (var edge in model.Edges)
+
+            List<IEdge> edgeList = new List<IEdge>();
+            foreach (var iedge in model.Edges)
             {
-                edgeList.Add(new Edge(edge));
+                if (!iedge.IsAbstract)
+                {
+                    edgeList.Add(iedge);
+                }
             }
             Edges = edgeList;
 
-            List<Element> elementList = new List<Element>();
-            foreach (var element in model.Elements)
+            List<IElement> elementList = new List<IElement>();
+            foreach (var ielement in model.Elements)
             {
-                elementList.Add(new Element(element));
+                if (!ielement.IsAbstract)
+                {
+                    elementList.Add(ielement);
+                }
             }
             Elements = elementList;
-
             _paletteMediator = paletteMediator;
         }
     }

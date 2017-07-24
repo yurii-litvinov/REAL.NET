@@ -11,14 +11,12 @@ namespace WPF_Editor.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public Mediator Mediator { get; }
+
         //Try to use expression body methods.
         public EditorViewModel()
         {
             Mediator = Mediator.CreateMediator();
         }
-        #region Put all console members in separate class
-
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        #endregion
     }
 }

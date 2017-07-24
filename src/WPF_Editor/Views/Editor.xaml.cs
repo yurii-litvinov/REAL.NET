@@ -15,13 +15,7 @@ using WPF_Editor.ViewModels;
 
 namespace WPF_Editor.Views
 {
-    public class GraphAreaExample : GraphArea<DataVertex, DataEdge, BidirectionalGraph<DataVertex, DataEdge>> { }
 
-    //Graph data class
-    public class GraphExample : BidirectionalGraph<DataVertex, DataEdge> { }
-
-    //Logic core class
-    public class GXLogicCoreExample : GXLogicCore<DataVertex, DataEdge, BidirectionalGraph<DataVertex, DataEdge>> { }
 
     //Vertex data object
     public class DataVertex : VertexBase
