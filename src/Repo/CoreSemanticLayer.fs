@@ -187,6 +187,13 @@ module Node =
             raise (InvalidSemanticOperationException "Only nodes have a name in REAL.NET")
         (element :?> INode).Name
 
+    /// Sets name of a node.
+    /// Throws InvalidSemanticOperationException if given element is not node so it does not have a name.
+    let setName name (element: IElement) =
+        if not <| element :? INode then
+            raise (InvalidSemanticOperationException "Only nodes have a name in REAL.NET")
+        (element :?> INode).Name <- name
+
 /// Helper functions for working with models.
 module Model =
     /// Searches for a given node in a given model by name. Assumes that it exists and there is only one node with

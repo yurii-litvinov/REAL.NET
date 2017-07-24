@@ -31,12 +31,13 @@ let init () =
     LanguageMetamodelBuilder() |> build
     InfrastructureMetamodelBuilder() |> build
 
-    repo
+    let infrastructure = InfrastructureSemantic(repo)
+
+    (repo, infrastructure)
 
 [<Test>]
 let ``Instantiation shall preserve linguistic attributes`` () =
-    let repo = init ()
-    let infrastructure = InfrastructureSemantic(repo)
+    let repo, infrastructure = init ()
     let model = repo.CreateModel ("TestModel", infrastructure.Metamodel.Model)
 
     let node = infrastructure.Metamodel.Node
@@ -51,8 +52,7 @@ let ``Instantiation shall preserve linguistic attributes`` () =
 
 [<Test>]
 let ``Double instantiation shall result in correct instantiation chain`` () =
-    let repo = init ()
-    let infrastructure = InfrastructureSemantic(repo)
+    let repo, infrastructure = init ()
     let metamodel = repo.CreateModel ("TestMetamodel", infrastructure.Metamodel.Model)
     let model = repo.CreateModel ("TestModel", metamodel)
     let node = infrastructure.Metamodel.Node
@@ -69,8 +69,7 @@ let ``Double instantiation shall result in correct instantiation chain`` () =
 
 [<Test>]
 let ``Setting attribute value in descendant shall not affect parent nor siblings`` () =
-    let repo = init ()
-    let infrastructure = InfrastructureSemantic(repo)
+    let repo, infrastructure = init ()
     let model = repo.CreateModel ("TestModel", infrastructure.Metamodel.Model)
 
     let parent = model.CreateNode("Parent", infrastructure.Metamodel.Node)
@@ -91,3 +90,49 @@ let ``Setting attribute value in descendant shall not affect parent nor siblings
     infrastructure.Element.AttributeValue parent "attribute" |> should equal "attributeValueInParent"
     infrastructure.Element.AttributeValue descendant1 "attribute" |> should equal "attributeValueInDescendant"
     infrastructure.Element.AttributeValue descendant2 "attribute" |> should equal "attributeValueInParent"
+
+[<Test>]
+let ``Instantiation shall create attributes from class's parents`` () =
+    let repo, infrastructure = init ()
+    let metamodel = repo.CreateModel ("TestMetamodel", infrastructure.Metamodel.Model)
+    let model = repo.CreateModel ("TestModel", metamodel)
+    let node = infrastructure.Metamodel.Node
+    let generalization = infrastructure.Metamodel.Generalization
+
+    let parent = infrastructure.Instantiate metamodel node
+    CoreSemanticLayer.Node.setName "Parent" parent
+    infrastructure.Element.AddAttribute parent "parentAttribute" "AttributeKind.String"
+    infrastructure.Element.SetAttributeValue parent "parentAttribute" "parent attribute"
+
+    let descendant = infrastructure.Instantiate metamodel node
+    metamodel.CreateGeneralization(generalization, descendant, parent) |> ignore
+    CoreSemanticLayer.Node.setName "Descendant" descendant
+    infrastructure.Element.AddAttribute descendant "descendantAttribute" "AttributeKind.String"
+    infrastructure.Element.SetAttributeValue descendant "descendantAttribute" "descendant attribute"
+
+    let instance = infrastructure.Instantiate model descendant
+
+    infrastructure.Element.AttributeValue instance "descendantAttribute" |> should equal "descendant attribute"
+    infrastructure.Element.AttributeValue instance "parentAttribute" |> should equal "parent attribute"
+
+[<Test>]
+let ``Changing attribute in instance should not affect class or other instances`` () =
+    let repo, infrastructure = init ()
+    let metamodel = repo.CreateModel ("TestMetamodel", infrastructure.Metamodel.Model)
+    let model = repo.CreateModel ("TestModel", metamodel)
+    let node = infrastructure.Metamodel.Node
+
+    let ``class`` = infrastructure.Instantiate metamodel node
+    CoreSemanticLayer.Node.setName "Class" ``class``
+    infrastructure.Element.AddAttribute ``class`` "classAttribute" "AttributeKind.String"
+    infrastructure.Element.SetAttributeValue ``class`` "classAttribute" "class value"
+
+    let instance1 = infrastructure.Instantiate model ``class``
+    let instance2 = infrastructure.Instantiate model ``class``
+
+    infrastructure.Element.AttributeValue instance1 "classAttribute" |> should equal "class value"
+    infrastructure.Element.AttributeValue instance2 "classAttribute" |> should equal "class value"
+    infrastructure.Element.SetAttributeValue instance1 "classAttribute" "instance value"
+    infrastructure.Element.AttributeValue instance1 "classAttribute" |> should equal "instance value"
+    infrastructure.Element.AttributeValue ``class`` "classAttribute" |> should equal "class value"
+    infrastructure.Element.AttributeValue instance2 "classAttribute" |> should equal "class value"

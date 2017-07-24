@@ -214,7 +214,10 @@ module private Operations =
             |> Seq.filter (fun a -> a.Target = Some attribute)
 
         let attributeLinks =
-            CoreSemanticLayer.Element.parents element |> Seq.map myAttributeLinks |> Seq.concat |> Seq.append (myAttributeLinks element)
+            CoreSemanticLayer.Element.parents element
+            |> Seq.map myAttributeLinks
+            |> Seq.concat
+            |> Seq.append (myAttributeLinks element)
 
         if Seq.isEmpty attributeLinks then
             raise (InvalidSemanticOperationException "Attribute link not found for attribute")
