@@ -15,6 +15,7 @@ namespace EditorPrototype
     using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
     using GraphX.PCL.Logic.Models;
     using QuickGraph;
+
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
@@ -24,39 +25,41 @@ namespace EditorPrototype
         private VertexControl prevVer;
         private VertexControl ctrlVer;
         private EdgeControl ctrlEdg;
-        private string currentId;
-        private Point pos;
         private Model model;
         private Controller controller;
         private Graph graph;
+        private Repo.IElement currentElement = null;
+        private Point pos;
 
         public MainWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
             this.model = new Model();
-            controller = new Controller(this.model);
+            this.controller = new Controller(this.model);
             this.graph = new Graph(this.model);
             this.graph.DrawGraph += (sender, args) => this.DrawGraph();
             this.graph.DrawNewEdge += (sender, args) => this.DrawNewEdge(args.Source, args.Target);
             this.graph.DrawNewVertex += (sender, args) => this.DrawNewVertex(args.VertName);
             this.graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVert);
             this.graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.Edge);
-            this.editorManager = new EditorObjectManager(g_Area, g_zoomctrl);
-            this.currentId = String.Empty;
+            this.editorManager = new EditorObjectManager(this.g_Area, this.g_zoomctrl);
             var logic = new GXLogicCore<DataVertex, DataEdge, BidirectionalGraph<DataVertex, DataEdge>>();
             logic.Graph = this.graph.DataGraph;
             logic.DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.LinLog;
-            g_Area.LogicCore = logic;
-            g_Area.VertexSelected += this.VertexSelectedAction;
-            g_Area.EdgeSelected += this.EdgeSelectedAction;
-            g_zoomctrl.Click += this.ClearSelection;
-            elementsListBox.MouseDoubleClick += this.ElementInBoxSelectedAction;
-            ZoomControl.SetViewFinderVisibility(g_zoomctrl, Visibility.Visible);
-            g_zoomctrl.Loaded += (sender, args) =>
+
+            this.g_Area.LogicCore = logic; // need?
+
+            this.g_Area.VertexSelected += this.VertexSelectedAction;
+            this.g_Area.EdgeSelected += this.EdgeSelectedAction;
+            this.g_zoomctrl.Click += this.ClearSelection;
+            this.elementsListBox.MouseDoubleClick += this.ElementInBoxSelectedAction;
+
+            ZoomControl.SetViewFinderVisibility(this.g_zoomctrl, Visibility.Visible);
+            this.g_zoomctrl.Loaded += (sender, args) =>
             {
-                (g_zoomctrl.ViewFinder.Parent as Grid).Children.Remove(g_zoomctrl.ViewFinder);
-                rightPanel.Children.Add(g_zoomctrl.ViewFinder);
-                Grid.SetRow(g_zoomctrl.ViewFinder, 0);
+                (this.g_zoomctrl.ViewFinder.Parent as Grid).Children.Remove(this.g_zoomctrl.ViewFinder);
+                this.rightPanel.Children.Add(this.g_zoomctrl.ViewFinder);
+                Grid.SetRow(this.g_zoomctrl.ViewFinder, 0);
             };
             logic.DefaultLayoutAlgorithmParams =
                 logic.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.LinLog);
@@ -67,45 +70,94 @@ namespace EditorPrototype
             ((OverlapRemovalParameters)logic.DefaultOverlapRemovalAlgorithmParams).VerticalGap = 50;
             logic.DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.None;
             logic.AsyncAlgorithmCompute = false;
-            Closed += this.CloseChildrenWindows;
-            g_zoomctrl.MouseDown += this.ZoomCtrl_MouseDown;
-            this.InitPalette(this.model.ModelName);
-            this.graph.InitModel(this.model.ModelName);
+
+            this.Closed += this.CloseChildrenWindows;
+
+            var modelName = "RobotsTestModel";
+
+            this.g_zoomctrl.MouseDown += (object sender, MouseButtonEventArgs e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
+
+            this.InitPalette(modelName);
+            this.graph.InitModel(modelName);
         }
-        
+
         private void ClearSelection(object sender, RoutedEventArgs e)
         {
             this.prevVer = null;
             this.ctrlVer = null;
-            g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
+            this.g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
         }
 
-        private void InitPalette(string modelName)
+        private void InitPalette(string metamodelName)
         {
-            foreach (var type in this.model.ModelRepo.MetamodelNodes(modelName))
+            var model = this.model.ModelRepo.Model(metamodelName).Metamodel;
+            if (model == null)
             {
-                var button = new ToggleButton { Content = type.name };
-                button.Click += (sender, args) => this.currentId = type.id;
-                if (this.model.ModelRepo.IsEdgeClass(type.id))
+                return;
+            }
+
+            foreach (var type in model.Elements)
+            {
+                if (type.IsAbstract)
                 {
-                    g_Area.VertexSelected += (sender, args) => button.IsChecked = false;
+                    continue;
+                }
+
+                StackPanel sp = new StackPanel() { Orientation = Orientation.Horizontal };
+                sp.HorizontalAlignment = HorizontalAlignment.Left;
+
+                Label l = new Label() { Content = type.Name };
+                Image img = new Image()
+                {
+                    Source = type.Shape != string.Empty
+                    ? new BitmapImage(new Uri("pack://application:,,,/" + type.Shape))
+                    : new BitmapImage(new Uri("pack://application:,,,/Pictures/Vertex.png")),
+                };
+
+                img.LayoutTransform = new ScaleTransform(0.3, 0.3);
+                img.HorizontalAlignment = HorizontalAlignment.Left;
+                l.VerticalAlignment = VerticalAlignment.Center;
+                l.HorizontalAlignment = HorizontalAlignment.Left;
+
+                sp.Children.Add(img);
+                sp.Children.Add(l);
+
+                var button = new ToggleButton { Content = sp };
+                button.HorizontalContentAlignment = HorizontalAlignment.Left;
+
+                RoutedEventHandler createNode = (sender, args) => this.PaletteButton_Checked(type);
+                RoutedEventHandler createEdge = (sender, args) => { };
+                button.Click += (sender, args) => this.currentElement = type;
+                if (type.InstanceMetatype == Repo.Metatype.Edge)
+                {
+                    this.g_Area.VertexSelected += (sender, args) => button.IsChecked = false;
                 }
                 else
                 {
-                    g_zoomctrl.MouseDown += (sender, args) => button.IsChecked = false;
+                    this.g_zoomctrl.MouseDown += (sender, args) => button.IsChecked = false;
                 }
 
                 // TODO: Bind it to XAML, do not do GUI work in C#.
-
-                paletteGrid.RowDefinitions.Add(new RowDefinition());
-                paletteGrid.Children.Add(button);
-                Grid.SetRow(button, paletteGrid.RowDefinitions.Count - 1);
+                this.paletteGrid.RowDefinitions.Add(new RowDefinition());
+                this.paletteGrid.Children.Add(button);
+                Grid.SetRow(button, this.paletteGrid.RowDefinitions.Count - 1);
             }
         }
 
+        private void PaletteButton_Checked(Repo.IElement element)
+        {
+            this.currentElement = element;
+        }
+
+        // TODO: Copypaste is heresy.
         private void ElementInBoxSelectedAction(object sender, EventArgs e)
         {
-            StackPanel sp = (elementsListBox.SelectedItem as ListBoxItem).Content as StackPanel;
+            StackPanel sp = (this.elementsListBox.SelectedItem as ListBoxItem)?.Content as StackPanel;
+            if (sp == null)
+            {
+                return;
+            }
+
             if (sp.Children.Count > 3)
             {
                 var source = (sp.Children[2] as TextBlock).Text;
@@ -116,7 +168,7 @@ namespace EditorPrototype
                         this.graph.DataGraph.Edges.ToList()[i].Target.Name == target)
                     {
                         var edge = this.graph.DataGraph.Edges.ToList()[i];
-                        foreach (KeyValuePair<DataEdge, EdgeControl> ed in g_Area.EdgesList)
+                        foreach (KeyValuePair<DataEdge, EdgeControl> ed in this.g_Area.EdgesList)
                         {
                             if (ed.Key == edge)
                             {
@@ -137,7 +189,8 @@ namespace EditorPrototype
                     if (this.graph.DataGraph.Vertices.ToList()[i].Name == name)
                     {
                         var vertex = this.graph.DataGraph.Vertices.ToList()[i];
-                        foreach (KeyValuePair<DataVertex, VertexControl> ed in g_Area.VertexList)
+                        this.attributesView.DataContext = vertex;
+                        foreach (KeyValuePair<DataVertex, VertexControl> ed in this.g_Area.VertexList)
                         {
                             if (ed.Key == vertex)
                             {
@@ -151,10 +204,53 @@ namespace EditorPrototype
             }
         }
 
+        private void DrawNewVertex(DataVertex vertex)
+        {
+            ListBoxItem lbi = new ListBoxItem();
+            StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
+            Image img = new Image()
+            {
+                Source = vertex.Picture != "pack://application:,,,/"
+                        ? new BitmapImage(new Uri(vertex.Picture))
+                        : new BitmapImage(new Uri("pack://application:,,,/Pictures/Vertex.png")),
+            };
+
+            img.LayoutTransform = new ScaleTransform(0.3, 0.3);
+            TextBlock spaces = new TextBlock { Text = "  " };
+            TextBlock tx = new TextBlock { Text = vertex.Name };
+            tx.VerticalAlignment = VerticalAlignment.Center;
+            sp.Children.Add(img);
+            sp.Children.Add(spaces);
+            sp.Children.Add(tx);
+            lbi.Content = sp;
+            this.elementsListBox.Items.Add(lbi);
+        }
+
+        private void DrawNewEdge(Repo.INode source, Repo.INode target)
+        {
+            ListBoxItem lbi = new ListBoxItem();
+            StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
+            Image img = new Image()
+            {
+                Source = new BitmapImage(new Uri("pack://application:,,,/Pictures/Edge.png")),
+            };
+            TextBlock spaces = new TextBlock { Text = "  " };
+            TextBlock tx0 = new TextBlock { Text = source.Name };
+            TextBlock tx1 = new TextBlock { Text = " - " };
+            TextBlock tx2 = new TextBlock { Text = target.Name };
+            sp.Children.Add(img);
+            sp.Children.Add(spaces);
+            sp.Children.Add(tx0);
+            sp.Children.Add(tx1);
+            sp.Children.Add(tx2);
+            lbi.Content = sp;
+            this.elementsListBox.Items.Add(lbi);
+        }
+
         private void VertexSelectedAction(object sender, VertexSelectedEventArgs args)
         {
             this.ctrlVer = args.VertexControl;
-            if (this.currentId != String.Empty && this.model.ModelRepo.IsEdgeClass(this.currentId))
+            if (this.currentElement != null && this.currentElement.InstanceMetatype == Repo.Metatype.Edge)
             {
                 if (this.prevVer == null)
                 {
@@ -163,12 +259,13 @@ namespace EditorPrototype
                 }
                 else
                 {
-                    this.controller.NewEdge(this.currentId, this.prevVer, this.ctrlVer);
+                    this.controller.NewEdge(this.currentElement, this.prevVer, this.ctrlVer);
+                    this.currentElement = null;
                 }
             }
 
-            attributesView.DataContext = this.ctrlVer.GetDataVertex<DataVertex>();
-            g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().
+            this.attributesView.DataContext = this.ctrlVer.GetDataVertex<DataVertex>();
+            this.g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().
             Color = Brushes.Green);
             this.ctrlVer.GetDataVertex<DataVertex>().Color = Brushes.LightBlue;
             if (this.prevVer != null)
@@ -191,9 +288,8 @@ namespace EditorPrototype
             this.ctrlEdg = args.EdgeControl;
 
             // Those crazy russians intercept MouseUp event, so we are forced to use PreviewMouseUp here.
-
             this.ctrlEdg.PreviewMouseUp += this.OnEdgeMouseUp;
-            g_zoomctrl.MouseMove += this.OnEdgeMouseMove;
+            this.g_zoomctrl.MouseMove += this.OnEdgeMouseMove;
             if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
             {
                 args.EdgeControl.ContextMenu = new ContextMenu();
@@ -213,39 +309,39 @@ namespace EditorPrototype
             }
 
             dataEdge.RoutingPoints[0] = new GraphX.Measure.Point(100, 100);
-            var mousePosition = Mouse.GetPosition(g_Area);
+            var mousePosition = Mouse.GetPosition(this.g_Area);
             dataEdge.RoutingPoints[1] = new GraphX.Measure.Point(mousePosition.X, mousePosition.Y);
             dataEdge.RoutingPoints[2] = new GraphX.Measure.Point(100, 100);
-            g_Area.UpdateAllEdges();
+            this.g_Area.UpdateAllEdges();
         }
 
-        private void ZoomCtrl_MouseDown(object sender, MouseButtonEventArgs e)
+        private void ZoomCtrl_MouseDown(object sender, MouseButtonEventArgs e, string modelName)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                var position = g_zoomctrl.TranslatePoint(e.GetPosition(g_zoomctrl), g_Area);
-                if (this.currentId != string.Empty && !this.model.ModelRepo.IsEdgeClass(this.currentId))
+                var position = this.g_zoomctrl.TranslatePoint(e.GetPosition(this.g_zoomctrl), this.g_Area);
+                if (this.currentElement != null && this.currentElement.InstanceMetatype == Repo.Metatype.Node)
                 {
                     this.pos = position;
-                    this.CreateNewNode(this.currentId);
-                    this.currentId = string.Empty;
+                    this.CreateNewNode(this.currentElement, modelName);
+                    this.currentElement = null;
                 }
 
-                if (this.currentId != string.Empty && this.model.ModelRepo.IsEdgeClass(this.currentId))
+                if (this.currentElement != null && this.currentElement.InstanceMetatype == Repo.Metatype.Edge)
                 {
                     if (this.prevVer != null)
                     {
                         this.prevVer = null;
                         this.editorManager.DestroyVirtualEdge();
-                        this.currentId = string.Empty;
+                        this.currentElement = null;
                     }
                 }
             }
         }
 
-        private void CreateNewNode(string typeId)
+        private void CreateNewNode(Repo.IElement element, string modelName)
         {
-            this.controller.NewNode(typeId);
+            this.controller.NewNode(element, modelName);
         }
 
         private void AddNewVertexControl(DataVertex vertex)
@@ -253,17 +349,16 @@ namespace EditorPrototype
             this.DrawNewVertex(vertex.Name);
             var vc = new VertexControl(vertex);
             vc.SetPosition(this.pos);
-            g_Area.AddVertex(vertex, vc);
+            this.g_Area.AddVertex(vertex, vc);
         }
 
         private void AddNewEdgeControl(DataEdge edge)
         {
             this.DrawNewEdge(edge.Source.Name, edge.Target.Name);
             var ec = new EdgeControl(this.prevVer, this.ctrlVer, edge);
-            g_Area.InsertEdge(edge, ec);
+            this.g_Area.InsertEdge(edge, ec);
             this.prevVer = null;
             this.editorManager.DestroyVirtualEdge();
-            this.currentId = string.Empty;
         }
 
         private void MenuItemClickVert(object sender, EventArgs e)
@@ -280,7 +375,7 @@ namespace EditorPrototype
 
         private void OnEdgeMouseUp(object sender, MouseButtonEventArgs e)
         {
-            g_zoomctrl.MouseMove -= this.OnEdgeMouseMove;
+            this.g_zoomctrl.MouseMove -= this.OnEdgeMouseMove;
             this.ctrlEdg.PreviewMouseUp -= this.OnEdgeMouseUp;
         }
 
@@ -298,7 +393,7 @@ namespace EditorPrototype
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
             Image img = new Image()
             {
-                Source = new BitmapImage(new Uri("pack://application:,,,/Pictures/Vertex.png"))
+                Source = new BitmapImage(new Uri("pack://application:,,,/Pictures/Vertex.png")),
             };
             TextBlock spaces = new TextBlock { Text = "  " };
             TextBlock tx = new TextBlock { Text = vertexName };
@@ -306,7 +401,7 @@ namespace EditorPrototype
             sp.Children.Add(spaces);
             sp.Children.Add(tx);
             lbi.Content = sp;
-            elementsListBox.Items.Add(lbi);
+            this.elementsListBox.Items.Add(lbi);
         }
 
         private void DrawNewEdge(string source, string target)
@@ -315,7 +410,7 @@ namespace EditorPrototype
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
             Image img = new Image()
             {
-                Source = new BitmapImage(new Uri("pack://application:,,,/Pictures/Edge.png"))
+                Source = new BitmapImage(new Uri("pack://application:,,,/Pictures/Edge.png")),
             };
             TextBlock spaces = new TextBlock { Text = "  " };
             TextBlock tx0 = new TextBlock { Text = source };
@@ -327,13 +422,13 @@ namespace EditorPrototype
             sp.Children.Add(tx1);
             sp.Children.Add(tx2);
             lbi.Content = sp;
-            elementsListBox.Items.Add(lbi);
+            this.elementsListBox.Items.Add(lbi);
         }
 
         private void DrawGraph()
         {
-            g_Area.GenerateGraph(this.graph.DataGraph);
-            g_zoomctrl.ZoomToFill();
+            this.g_Area.GenerateGraph(this.graph.DataGraph);
+            this.g_zoomctrl.ZoomToFill();
         }
     }
 }

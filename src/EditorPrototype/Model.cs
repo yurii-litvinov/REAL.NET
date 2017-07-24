@@ -1,10 +1,21 @@
 ﻿namespace EditorPrototype
 {
     using System;
-    using System.Collections.Generic;
 
     public class Model
     {
+        private Repo.IRepo modelRepo;
+        private string modelName;
+
+        public Model()
+        {
+            this.modelRepo = Repo.RepoFactory.CreateRepo();
+        }
+
+        public event EventHandler<VertexEventArgs> NewVertexInRepo;
+
+        public event EventHandler<EdgeEventArgs> NewEdgeInRepo;
+
         public string ModelName
         {
             get
@@ -21,85 +32,68 @@
             }
         }
 
-        public Model()
+        public void NewNode(Repo.IElement element, string modelName)
         {
-            this.modelRepo = Repo.RepoFactory.CreateRepo();
-            this.modelName = "mainModel";
+            var model = this.modelRepo.Model(modelName);
+            var newNode = model.CreateElement(element) as Repo.INode;
+            this.RaiseNewVertexInRepo(newNode);
         }
 
-        public event EventHandler<VertexEventArgs> NewVertexInRepo;
-
-        public event EventHandler<EdgeEventArgs> NewEdgeInRepo;
-
-        public void NewNode(string typeId)
+        public void NewEdge(Repo.IEdge edge, DataVertex prevVer, DataVertex ctrlVer)
         {
-            var node = this.modelRepo.AddNode(typeId, this.modelName);
-            RaiseNewVertexInRepo(node);
+            this.RaiseNewEdgeInRepo(edge, prevVer, ctrlVer);
         }
 
-        public void NewEdge(string typeId, DataVertex prevVer, DataVertex ctrlVer)
+        private void RaiseNewVertexInRepo(Repo.INode node)
         {
-            RaiseNewEdgeInRepo(typeId, prevVer, ctrlVer);
+            VertexEventArgs args = new VertexEventArgs();
+            args.Node = node;
+            this.NewVertexInRepo?.Invoke(this, args);
+        }
+
+        private void RaiseNewEdgeInRepo(Repo.IEdge edge, DataVertex prevVer, DataVertex ctrlVer)
+        {
+            EdgeEventArgs args = new EdgeEventArgs();
+            args.Edge = edge;
+            args.PrevVer = prevVer;
+            args.CtrlVer = ctrlVer;
+            this.NewEdgeInRepo?.Invoke(this, args);
         }
 
         public class VertexEventArgs : EventArgs
         {
-            private string name;
-            private DataVertex.VertexTypeEnum type;
-            private IList<Repo.AttributeInfo> attributes;
+            private Repo.INode node;
 
-            public string Name
+            public Repo.INode Node
             {
                 get
                 {
-                    return name;
+                    return this.node;
                 }
 
                 set
                 {
-                    name = value;
-                }
-            }
-
-            public DataVertex.VertexTypeEnum Type
-            {
-                get
-                {
-                    return type;
-                }
-
-                set
-                {
-                    type = value;
-                }
-            }
-
-            public IList<Repo.AttributeInfo> Attributes
-            {
-                get
-                {
-                    return attributes;
-                }
-
-                set
-                {
-                    attributes = value;
+                    this.node = value;
                 }
             }
         }
 
         public class EdgeEventArgs : EventArgs
         {
-            public string Type
+            private Repo.IEdge edge;
+            private DataVertex prevVer;
+            private DataVertex ctrlVer;
+
+            public Repo.IEdge Edge
             {
                 get
                 {
-                    return type;
+                    return this.edge;
                 }
 
                 set
                 {
-                    type = value;
+                    this.edge = value;
                 }
             }
 
@@ -107,12 +101,12 @@
             {
                 get
                 {
-                    return prevVer;
+                    return this.prevVer;
                 }
 
                 set
                 {
-                    prevVer = value;
+                    this.prevVer = value;
                 }
             }
 
@@ -120,52 +114,14 @@
             {
                 get
                 {
-                    return ctrlVer;
+                    return this.ctrlVer;
                 }
 
                 set
                 {
-                    ctrlVer = value;
+                    this.ctrlVer = value;
                 }
             }
-
-            private string type;
-            private DataVertex prevVer;
-            private DataVertex ctrlVer;
-        }
-
-        private Repo.IRepo modelRepo;
-        private string modelName;
-
-        private void RaiseNewVertexInRepo(Repo.NodeInfo node)
-        {
-            Func<Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
-            {
-                switch (n)
-                {
-                    case Repo.NodeType.Attribute:
-                        return DataVertex.VertexTypeEnum.Attribute;
-                    case Repo.NodeType.Node:
-                        return DataVertex.VertexTypeEnum.Node;
-                }
-
-                return DataVertex.VertexTypeEnum.Node;
-            };
-
-            VertexEventArgs args = new VertexEventArgs();
-            args.Name = node.name;
-            args.Type = nodeType(node.nodeType);
-            args.Attributes = node.attributes;
-            NewVertexInRepo?.Invoke(this, args);
-        }
-
-        private void RaiseNewEdgeInRepo(string typeId, DataVertex prevVer, DataVertex ctrlVer)
-        {
-            EdgeEventArgs args = new EdgeEventArgs();
-            args.Type = typeId;
-            args.PrevVer = prevVer;
-            args.CtrlVer = ctrlVer;
-            NewEdgeInRepo?.Invoke(this, args);
         }
     }
 }

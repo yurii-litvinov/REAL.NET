@@ -12,20 +12,30 @@
         private EdgeBlueprint edgeBp;
         private ResourceDictionary rd;
 
+        public EditorObjectManager(GraphAreaExample graphAreaEx, ZoomControl zc)
+        {
+            this.graphArea = graphAreaEx;
+            this.zoomControl = zc;
+            this.rd = new ResourceDictionary
+            {
+                Source = new Uri("pack://application:,,,/Templates/EditorTemplate.xaml", UriKind.RelativeOrAbsolute),
+            };
+        }
+
         public void CreateVirtualEdge(VertexControl source, Point targetPos)
         {
-            this.zoomControl.MouseMove += ZoomControl_MouseMove;
+            this.zoomControl.MouseMove += this.ZoomControl_MouseMove;
             this.edgeBp = new EdgeBlueprint(source, targetPos, (LinearGradientBrush)this.rd["EdgeBrush"]);
             this.graphArea.InsertCustomChildControl(0, this.edgeBp.EdgePath);
         }
 
         public void Dispose()
         {
-            ClearEdgeBp();
+            this.ClearEdgeBp();
             this.graphArea = null;
             if (this.zoomControl != null)
             {
-                this.zoomControl.MouseMove -= ZoomControl_MouseMove;
+                this.zoomControl.MouseMove -= this.ZoomControl_MouseMove;
             }
 
             this.zoomControl = null;
@@ -34,9 +44,9 @@
 
         public void DestroyVirtualEdge()
         {
-            ClearEdgeBp();
+            this.ClearEdgeBp();
         }
-        
+
         private void ZoomControl_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             if (this.edgeBp == null)
@@ -44,27 +54,21 @@
                 return;
             }
 
-            var pos = zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.graphArea);
+            var pos = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.graphArea);
             pos.Offset(2, 2);
             this.edgeBp.UpdateTargetPosition(pos);
         }
 
         private void ClearEdgeBp()
         {
-            if (this.edgeBp == null) return;
+            if (this.edgeBp == null)
+            {
+                return;
+            }
+
             this.graphArea.RemoveCustomChildControl(this.edgeBp.EdgePath);
             this.edgeBp.Dispose();
             this.edgeBp = null;
-        }
-
-        public EditorObjectManager(GraphAreaExample graphAreaEx, ZoomControl zc)
-        {
-            this.graphArea = graphAreaEx;
-            this.zoomControl = zc;
-            this.rd = new ResourceDictionary
-            {
-                Source = new Uri("pack://application:,,,/Templates/EditorTemplate.xaml", UriKind.RelativeOrAbsolute)
-            };
         }
     }
 }

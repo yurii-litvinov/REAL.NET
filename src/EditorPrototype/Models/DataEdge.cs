@@ -14,21 +14,6 @@
 
         private string text;
 
-        public bool ArrowTarget { get; set; }
-
-        public double Angle { get; set; }
-
-        [YAXCustomSerializer(typeof(YAXPointArraySerializer))]
-        public override Point[] RoutingPoints { get; set; }
-
-        public enum EdgeTypeEnum
-        {
-            Generalization,
-            Association,
-            Type,
-            Attribute
-        }
-
         public DataEdge(DataVertex source, DataVertex target, double weight = 1)
             : base(source, target, weight)
         {
@@ -40,7 +25,24 @@
         {
             this.Angle = 90;
         }
-                
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public enum EdgeTypeEnum
+        {
+            Generalization,
+            Association,
+            Type,
+            Attribute,
+        }
+
+        public bool ArrowTarget { get; set; }
+
+        public double Angle { get; set; }
+
+        [YAXCustomSerializer(typeof(YAXPointArraySerializer))]
+        public override Point[] RoutingPoints { get; set; }
+
         public string Text
         {
             get
@@ -51,16 +53,11 @@
             set
             {
                 this.text = value;
-                OnPropertyChanged(nameof(this.Text));
+                this.OnPropertyChanged(nameof(this.Text));
             }
         }
 
         public string ToolTipText { get; set; }
-
-        public override string ToString()
-        {
-            return this.Text;
-        }
 
         public EdgeTypeEnum EdgeType
         {
@@ -72,16 +69,21 @@
             set
             {
                 this.edgeType = value;
-                OnPropertyChanged(nameof(EdgeType));
+                this.OnPropertyChanged(nameof(this.EdgeType));
             }
         }
-        
+
         public void OnPropertyChanged(string name)
         {
             if (this.PropertyChanged != null)
+            {
                 this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs(name));
+            }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public override string ToString()
+        {
+            return this.Text;
+        }
     }
 }

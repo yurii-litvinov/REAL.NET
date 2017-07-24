@@ -17,6 +17,7 @@
         private Brush color = Brushes.Green;
         private VertexTypeEnum vertexType = VertexTypeEnum.Node;
         private IList<Attribute> attributes = new List<Attribute>();
+        private string picture = string.Empty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataVertex"/> class.
@@ -37,7 +38,7 @@
         public enum VertexTypeEnum
         {
             Node,
-            Attribute
+            Attribute,
         }
 
         /// <summary>
@@ -45,7 +46,7 @@
         /// </summary>
         public string Name { get; set; }
 
-        public string Key { get; set; }
+        public Repo.INode Node { get; set; }
 
         public Brush Color
         {
@@ -86,6 +87,20 @@
             {
                 this.attributes = value;
                 this.OnPropertyChanged(nameof(this.Attributes));
+            }
+        }
+
+        public string Picture
+        {
+            get
+            {
+                return "pack://application:,,,/" + this.picture;
+            }
+
+            set
+            {
+                this.picture = value;
+                this.OnPropertyChanged(nameof(this.Picture));
             }
         }
 

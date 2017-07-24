@@ -9,6 +9,12 @@
 
     public class EdgeBlueprint : IDisposable
     {
+        public EdgeBlueprint(VertexControl source, Point targetPos, Brush brush)
+        {
+            this.EdgePath = new Path() { Stroke = brush, Data = new LineGeometry() };
+            this.Source = source;
+            this.Source.PositionChanged += this.Source_PositionChanged;
+        }
 
         public VertexControl Source { get; set; }
 
@@ -23,13 +29,6 @@
                 this.Source.PositionChanged -= this.Source_PositionChanged;
                 this.Source = null;
             }
-        }
-
-        public EdgeBlueprint(VertexControl source, Point targetPos, Brush brush)
-        {
-            this.EdgePath = new Path() { Stroke = brush, Data = new LineGeometry() };
-            this.Source = source;
-            this.Source.PositionChanged += this.Source_PositionChanged;
         }
 
         internal void UpdateTargetPosition(Point point)

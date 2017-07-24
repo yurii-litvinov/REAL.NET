@@ -11,14 +11,14 @@
             this.model = graphModel;
         }
 
-        public void NewNode(string typeId)
+        public void NewNode(Repo.IElement node, string modelName)
         {
-            this.model.NewNode(typeId);
+            this.model.NewNode(node, modelName);
         }
 
-        public void NewEdge(string typeId, VertexControl prevVer, VertexControl ctrlVer)
+        public void NewEdge(Repo.IElement edge, VertexControl prevVer, VertexControl ctrlVer)
         {
-            this.model.NewEdge(typeId, prevVer?.Vertex as DataVertex, ctrlVer?.Vertex as DataVertex);
-        }    
+            this.model.NewEdge(edge as Repo.IEdge, prevVer?.Vertex as DataVertex, ctrlVer?.Vertex as DataVertex);
+        }
     }
 }

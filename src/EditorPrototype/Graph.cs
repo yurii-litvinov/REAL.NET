@@ -1,7 +1,6 @@
 ﻿namespace EditorPrototype
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
 
     public class Graph
@@ -9,21 +8,13 @@
         private Model model;
 
         private GraphExample dataGraph;
-        
+
         internal Graph(Model repoModel)
         {
             this.model = repoModel;
             this.dataGraph = new GraphExample();
-            this.model.NewVertexInRepo += (sender, args) => CreateNodeWithPos(args.Name, args.Type, args.Attributes);
-            this.model.NewEdgeInRepo += (sender, args) => CreateEdge(args.Type, args.PrevVer, args.CtrlVer);
-        }
-
-        public GraphExample DataGraph
-        {
-            get
-            {
-                return this.dataGraph;
-            }
+            this.model.NewVertexInRepo += (sender, args) => this.CreateNodeWithPos(args.Node);
+            this.model.NewEdgeInRepo += (sender, args) => this.CreateEdge(args.Edge, args.PrevVer, args.CtrlVer);
         }
 
         public event EventHandler DrawGraph;
@@ -36,67 +27,116 @@
 
         public event EventHandler<DataEdgeArgs> AddNewEdgeControl;
 
-        public void InitModel(string modelName)
+        public GraphExample DataGraph
         {
-            foreach (var node in this.model.ModelRepo.ModelNodes(modelName))
+            get
             {
-                Func<Repo.NodeType, DataVertex.VertexTypeEnum> nodeType = n =>
-                {
-                    switch (n)
-                    {
-                        case Repo.NodeType.Attribute:
-                            return DataVertex.VertexTypeEnum.Attribute;
-                        case Repo.NodeType.Node:
-                            return DataVertex.VertexTypeEnum.Node;
-                    }
+                return this.dataGraph;
+            }
+        }
 
-                    return DataVertex.VertexTypeEnum.Node;
-                };
-                CreateNodeWithoutPos(node.name, nodeType(node.nodeType), node.attributes);
+        public void InitModel(string modelName) // peremestit'
+        {
+            Repo.IModel model = this.model.ModelRepo.Model(modelName);
+            if (model == null)
+            {
+                return;
             }
 
-            foreach (var edge in this.model.ModelRepo.ModelEdges(modelName))
+            foreach (var node in model.Nodes)
             {
-                var isViolation = Constraints.CheckEdge(edge, this.model.ModelRepo, modelName);
-                var source = this.dataGraph.Vertices.First(v => v.Name == edge.source);
-                var target = this.dataGraph.Vertices.First(v => v.Name == edge.target);
-                Func<Repo.EdgeType, DataEdge.EdgeTypeEnum> edgeType = e =>
-                {
-                    switch (e)
-                    {
-                        case Repo.EdgeType.Generalization:
-                            return DataEdge.EdgeTypeEnum.Generalization;
-                        case Repo.EdgeType.Association:
-                            return DataEdge.EdgeTypeEnum.Association;
-                        case Repo.EdgeType.Attribute:
-                            return DataEdge.EdgeTypeEnum.Attribute;
-                        case Repo.EdgeType.Type:
-                            return DataEdge.EdgeTypeEnum.Type;
-                    }
+                this.CreateNodeWithoutPos(node);
+            }
 
-                    return DataEdge.EdgeTypeEnum.Generalization;
-                };
-                var newEdge = new DataEdge(source, target, System.Convert.ToDouble(isViolation)) { EdgeType = edgeType(edge.edgeType) };
+            foreach (var edge in model.Edges)
+            {
+                /* var isViolation = Constraints.CheckEdge(edge, this.repo, modelName); */
+
+                var sourceNode = edge.From as Repo.INode;
+                var targetNode = edge.To as Repo.INode;
+                if (sourceNode == null || targetNode == null)
+                {
+                    // Editor does not support edges linked to edges. Yet.
+                    continue;
+                }
+
+                if (this.dataGraph.Vertices.Count(v => v.Node == sourceNode) == 0
+                    || this.dataGraph.Vertices.Count(v => v.Node == targetNode) == 0)
+                {
+                    // Link to an attribute node. TODO: It's ugly.
+                    continue;
+                }
+
+                var source = this.dataGraph.Vertices.First(v => v.Node == sourceNode);
+                var target = this.dataGraph.Vertices.First(v => v.Node == targetNode);
+
+                var newEdge = new DataEdge(source, target, Convert.ToDouble(false)) { EdgeType = DataEdge.EdgeTypeEnum.Association };
                 this.dataGraph.AddEdge(newEdge);
                 SourceTargetArgs args = new SourceTargetArgs();
-                args.Source = source.Key;
-                args.Target = target.Key;
-                DrawNewEdge?.Invoke(this, args);
+                args.Source = source.Name;
+                args.Target = target.Name;
+                this.DrawNewEdge?.Invoke(this, args);
             }
 
-            DrawGraph?.Invoke(this, EventArgs.Empty);
+            this.DrawGraph?.Invoke(this, EventArgs.Empty);
         }
-        
-        public void CreateEdge(string type, DataVertex prevVer, DataVertex ctrlVer)
-        {
-            var newEdge = new DataEdge(prevVer, ctrlVer)
-            {
-                Text = type
-            };
 
+        public void CreateEdge(Repo.IEdge edge, DataVertex prevVer, DataVertex ctrlVer)
+        {
+            if (prevVer == null || ctrlVer == null)
+            {
+                return;
+            }
+
+            var newEdge = new DataEdge(prevVer, ctrlVer, Convert.ToDouble(true));
             DataEdgeArgs args = new DataEdgeArgs();
             args.Edge = newEdge;
-            AddNewEdgeControl?.Invoke(this, args);
+            this.AddNewEdgeControl?.Invoke(this, args);
+        }
+
+        private void CreateNodeWithPos(Repo.INode node)
+        {
+            var vertex = new DataVertex(node.Name)
+            {
+                Node = node,
+                VertexType = DataVertex.VertexTypeEnum.Node,
+                Picture = node.Class.Shape,
+            };
+
+            var attributeInfos = node.Attributes.Select(x => new DataVertex.Attribute()
+            {
+                Name = x.Name,
+                Type = x.Kind.ToString(),
+                Value = x.StringValue,
+            });
+
+            attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
+            DataVertexArgs args = new DataVertexArgs();
+            args.DataVert = vertex;
+            this.AddNewVertexControl?.Invoke(this, args);
+        }
+
+        private void CreateNodeWithoutPos(Repo.INode node)
+        {
+            var vertex = new DataVertex(node.Name)
+            {
+                Node = node,
+                VertexType = DataVertex.VertexTypeEnum.Node,
+                Picture = node.Class.Shape,
+            };
+
+            var attributeInfos = node.Attributes.Select(x => new DataVertex.Attribute()
+            {
+                Name = x.Name,
+                Type = x.Kind.ToString(),
+                Value = x.StringValue,
+            });
+
+            attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
+            this.dataGraph.AddVertex(vertex);
+            VertexNameArgs args = new VertexNameArgs();
+            args.VertName = node.Name;
+            this.DrawNewVertex?.Invoke(this, args);
         }
 
         public class DataVertexArgs : EventArgs
@@ -107,12 +147,12 @@
             {
                 get
                 {
-                    return dataVert;
+                    return this.dataVert;
                 }
 
                 set
                 {
-                    dataVert = value;
+                    this.dataVert = value;
                 }
             }
         }
@@ -125,12 +165,12 @@
             {
                 get
                 {
-                    return edge;
+                    return this.edge;
                 }
 
                 set
                 {
-                    edge = value;
+                    this.edge = value;
                 }
             }
         }
@@ -139,6 +179,7 @@
         {
             private string source;
             private string target;
+
             public string Source
             {
                 get
@@ -182,49 +223,6 @@
                     this.vertName = value;
                 }
             }
-        }
-        
-        private void CreateNodeWithPos(string name, DataVertex.VertexTypeEnum type, IList<Repo.AttributeInfo> attributes)
-        {
-            var vertex = new DataVertex(name)
-            {
-                Key = $"{name}",
-                VertexType = type
-            };
-
-            var attributeInfos = attributes.Select(x => new DataVertex.Attribute()
-            {
-                Name = x.name,
-                Type = this.model.ModelRepo.Node(x.attributeType).name,
-                Value = x.value
-            });
-
-            attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
-            DataVertexArgs args = new DataVertexArgs();
-            args.DataVert = vertex;
-            AddNewVertexControl?.Invoke(this, args);
-        }
-
-        private void CreateNodeWithoutPos(string name, DataVertex.VertexTypeEnum type, IList<Repo.AttributeInfo> attributes)
-        {
-            var vertex = new DataVertex(name)
-            {
-                Key = $"{name}",
-                VertexType = type,
-            };
-
-            var attributeInfos = attributes.Select(x => new DataVertex.Attribute()
-            {
-                Name = x.name,
-                Type = this.model.ModelRepo.Node(x.attributeType).name,
-                Value = x.value
-            });
-
-            attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
-            this.dataGraph.AddVertex(vertex);
-            VertexNameArgs args = new VertexNameArgs();
-            args.VertName = vertex.Key;
-            DrawNewVertex?.Invoke(this, args);
         }
     }
 }

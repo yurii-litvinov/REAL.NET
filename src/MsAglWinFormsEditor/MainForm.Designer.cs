@@ -63,10 +63,11 @@ namespace MsAglWinFormsEditor
             this.mainLayout.Controls.Add(this.toolsLayout, 1, 0);
             this.mainLayout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainLayout.Location = new System.Drawing.Point(0, 0);
+            this.mainLayout.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.mainLayout.Name = "mainLayout";
             this.mainLayout.RowCount = 1;
             this.mainLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.mainLayout.Size = new System.Drawing.Size(958, 533);
+            this.mainLayout.Size = new System.Drawing.Size(1437, 820);
             this.mainLayout.TabIndex = 2;
             // 
             // toolsLayout
@@ -78,7 +79,8 @@ namespace MsAglWinFormsEditor
             this.toolsLayout.Controls.Add(this.refreshButton, 0, 3);
             this.toolsLayout.Controls.Add(this.insertingEdge, 0, 2);
             this.toolsLayout.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.toolsLayout.Location = new System.Drawing.Point(710, 3);
+            this.toolsLayout.Location = new System.Drawing.Point(1064, 5);
+            this.toolsLayout.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.toolsLayout.Name = "toolsLayout";
             this.toolsLayout.RowCount = 4;
             this.toolsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 41.62574F));
@@ -98,7 +100,7 @@ namespace MsAglWinFormsEditor
             this.paletteGrid.Name = "paletteGrid";
             this.paletteGrid.RowCount = 1;
             this.paletteGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.paletteGrid.Size = new System.Drawing.Size(239, 0);
+            this.paletteGrid.Size = new System.Drawing.Size(361, 0);
             this.paletteGrid.TabIndex = 2;
             // 
             // nodeLayout
@@ -129,7 +131,8 @@ namespace MsAglWinFormsEditor
             this.Type,
             this.Value});
             this.attributeTable.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.attributeTable.Location = new System.Drawing.Point(3, 3);
+            this.attributeTable.Location = new System.Drawing.Point(4, 5);
+            this.attributeTable.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.attributeTable.Name = "attributeTable";
             this.attributeTable.RowHeadersVisible = false;
             this.attributeTable.Size = new System.Drawing.Size(233, 91);
@@ -228,7 +231,7 @@ namespace MsAglWinFormsEditor
             0,
             0});
             this.heightEditor.Name = "heightEditor";
-            this.heightEditor.Size = new System.Drawing.Size(111, 20);
+            this.heightEditor.Size = new System.Drawing.Size(169, 26);
             this.heightEditor.TabIndex = 2;
             this.heightEditor.Value = new decimal(new int[] {
             10,
@@ -289,9 +292,9 @@ namespace MsAglWinFormsEditor
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(958, 533);
+            this.ClientSize = new System.Drawing.Size(1437, 820);
             this.Controls.Add(this.mainLayout);
             this.MinimumSize = new System.Drawing.Size(900, 550);
             this.Name = "MainForm";
