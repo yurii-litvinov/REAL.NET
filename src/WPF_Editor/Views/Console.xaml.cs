@@ -21,10 +21,17 @@ namespace WPF_Editor.Views
     /// </summary>
     public partial class Console : UserControl
     {
+        private ConsoleViewModel viewModel = new ConsoleViewModel();
+
         public Console()
         {
             InitializeComponent();
-            DataContext = new ConsoleViewModel();
+            DataContext = viewModel;
+        }
+
+        private void OnHideShowButtonClick(object sender, RoutedEventArgs e)
+        {
+            viewModel.ChangeConsoleVisibility();
         }
     }
 }
