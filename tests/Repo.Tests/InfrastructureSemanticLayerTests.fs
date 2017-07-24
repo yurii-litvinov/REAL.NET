@@ -11,7 +11,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
- 
+
 module InfrastructureSemanticLayerTests
 
 open NUnit.Framework
@@ -40,7 +40,7 @@ let ``Instantiation shall preserve linguistic attributes`` () =
     let model = repo.CreateModel ("TestModel", infrastructure.Metamodel.Model)
 
     let node = infrastructure.Metamodel.Node
-    
+
     let element = infrastructure.Instantiate model node
 
     let outgoingAssociations = CoreSemanticLayer.Element.outgoingAssociations element
@@ -59,10 +59,35 @@ let ``Double instantiation shall result in correct instantiation chain`` () =
 
     let element = infrastructure.Instantiate metamodel node
 
-    let attribites = 
-        infrastructure.Element.Attributes element 
+    let attribites =
+        infrastructure.Element.Attributes element
         |> Seq.map (fun attr -> CoreSemanticLayer.Element.attributeValue attr "stringValue")
 
     let elementInstance = infrastructure.Instantiate model element
 
     elementInstance.Class.Class |> should equal node
+
+[<Test>]
+let ``Setting attribute value in descendant shall not affect parent nor siblings`` () =
+    let repo = init ()
+    let infrastructure = InfrastructureSemantic(repo)
+    let model = repo.CreateModel ("TestModel", infrastructure.Metamodel.Model)
+
+    let parent = model.CreateNode("Parent", infrastructure.Metamodel.Node)
+    let descendant1 = model.CreateNode("Descendant1", infrastructure.Metamodel.Node)
+    let descendant2 = model.CreateNode("Descendant2", infrastructure.Metamodel.Node)
+    model.CreateGeneralization(infrastructure.Metamodel.Generalization, descendant1, parent) |> ignore
+    model.CreateGeneralization(infrastructure.Metamodel.Generalization, descendant2, parent) |> ignore
+
+    infrastructure.Element.AddAttribute parent "attribute" "AttributeKind.String" |> ignore
+    infrastructure.Element.SetAttributeValue parent "attribute" "attributeValueInParent"
+
+    infrastructure.Element.AttributeValue parent "attribute" |> should equal "attributeValueInParent"
+    infrastructure.Element.AttributeValue descendant1 "attribute" |> should equal "attributeValueInParent"
+    infrastructure.Element.AttributeValue descendant2 "attribute" |> should equal "attributeValueInParent"
+
+    infrastructure.Element.SetAttributeValue descendant1 "attribute" "attributeValueInDescendant"
+
+    infrastructure.Element.AttributeValue parent "attribute" |> should equal "attributeValueInParent"
+    infrastructure.Element.AttributeValue descendant1 "attribute" |> should equal "attributeValueInDescendant"
+    infrastructure.Element.AttributeValue descendant2 "attribute" |> should equal "attributeValueInParent"

@@ -125,6 +125,11 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel) =
         |> Seq.filter (fun e -> e :? DataLayer.INode)
         |> Seq.cast<DataLayer.INode>
 
+    /// Returns true if this element has given attribute ignoring generalization hierarchy.
+    let thisElementHasAttribute element name =
+        thisElementAttributes element |> Seq.filter (fun attr -> attr.Name = name) |> Seq.isEmpty |> not
+
+    /// Returns underlying Infrastructure Metamodel.
     member this.InfrastructureMetamodel = infrastructureMetamodel
 
     /// Returns a list of all attributes for an element, respecting generalization. Attributes of most special node
@@ -158,19 +163,10 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel) =
             // TODO: Also do something with correctness of attribute inheritance.
             Seq.head values
 
-    /// Sets value for a given attribute to a given value.
-    /// TODO: Copy parent attribute if needed. For now only this element's attributes can be set, parent attributes
-    /// are ignored.
-    member this.SetAttributeValue element attributeName value =
-        let attribute = thisElementAttributes element|> Seq.tryFind (fun attr -> attr.Name = attributeName)
-
-        if attribute.IsNone then
-            raise (AttributeNotFoundException attributeName)
-        else
-            CoreSemanticLayer.Element.setAttributeValue attribute.Value "stringValue" value
-
     /// Adds a new attribute to a given element.
     member this.AddAttribute element name kind =
+        if thisElementHasAttribute element name then
+            raise (InvalidSemanticOperationException <| sprintf "Attribute %s already present" name)
         let model = CoreSemanticLayer.Element.containingModel element
         let infrastructureModel = infrastructureMetamodel.Model
         let attributeNode = infrastructureMetamodel.Attribute
@@ -188,6 +184,26 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel) =
         model.CreateAssociation(attributesAssociation, element, attribute, name) |> ignore
 
         ()
+
+    /// Sets value for a given attribute to a given value. Copies it from parent if needed.
+    member this.SetAttributeValue element attributeName value =
+        let attribute = thisElementAttributes element|> Seq.tryFind (fun attr -> attr.Name = attributeName)
+        if attribute.IsSome then
+            CoreSemanticLayer.Element.setAttributeValue attribute.Value "stringValue" value
+        else
+            let parentsAttributes =
+                CoreSemanticLayer.Element.parents element
+                |> Seq.map thisElementAttributes
+                |> Seq.concat
+
+            let parentAttribute = parentsAttributes |> Seq.tryFind (fun attr -> attr.Name = attributeName)
+            if parentAttribute.IsNone then
+                raise (AttributeNotFoundException attributeName)
+            let parentAttribute = parentAttribute.Value
+            let parentAttributeKind = CoreSemanticLayer.Element.attributeValue parentAttribute "kind"
+            this.AddAttribute element attributeName parentAttributeKind
+            // Attribute is ready, now setting its value with a recursive call.
+            this.SetAttributeValue element attributeName value
 
 /// Module containing semantic operations on elements.
 module private Operations =

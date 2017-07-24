@@ -21,7 +21,7 @@ open Repo.InfrastructureSemanticLayer
 /// Initializes repository with Robots Metamodel, first testing metamodel of a real language.
 type RobotsMetamodelBuilder() =
     interface IModelBuilder with
-        member this.Build(repo: IRepo): unit = 
+        member this.Build(repo: IRepo): unit =
             let infrastructure = InfrastructureSemanticLayer.InfrastructureSemantic(repo)
             let metamodel = infrastructure.Metamodel.Model
 
@@ -52,19 +52,19 @@ type RobotsMetamodelBuilder() =
 
             let model = repo.CreateModel("RobotsMetamodel", metamodel)
 
-            let (~+) (name, shape, isAbstract) = 
+            let (~+) (name, shape, isAbstract) =
                 let node = infrastructure.Instantiate model metamodelNode :?> INode
                 node.Name <- name
-                infrastructure.Element.SetAttributeValue node "shape" shape 
+                infrastructure.Element.SetAttributeValue node "shape" shape
                 infrastructure.Element.SetAttributeValue node "isAbstract" (if isAbstract then "true" else "false")
-                infrastructure.Element.SetAttributeValue node "instanceMetatype" "Metatype.Node" 
-                
+                infrastructure.Element.SetAttributeValue node "instanceMetatype" "Metatype.Node"
+
                 node
 
-            let (--|>) (source: IElement) target = 
+            let (--|>) (source: IElement) target =
                 model.CreateGeneralization(metamodelGeneralization, source, target) |> ignore
 
-            let (--->) (source: IElement) (target, targetName, linkName) = 
+            let (--->) (source: IElement) (target, targetName, linkName) =
                 let edge = infrastructure.Instantiate model metamodelAssociation :?> IAssociation
                 edge.Source <- Some source
                 edge.Target <- Some target
@@ -80,7 +80,7 @@ type RobotsMetamodelBuilder() =
             let abstractNode = +("AbstractNode", "", true)
             let initialNode = +("InitialNode", "Pictures/initialBlock.png", false)
             let finalNode = +("FinalNode", "Pictures/finalBlock.png", false)
-            
+
             let abstractMotorsBlock = +("AbstractMotorsBlock", "", true)
             infrastructure.Element.AddAttribute abstractMotorsBlock "ports" "AttributeKind.String"
 
