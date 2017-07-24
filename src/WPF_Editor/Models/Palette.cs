@@ -28,7 +28,9 @@ namespace WPF_Editor.Models
         }
 
         public IEnumerable<Node> Nodes { get; }
+
         public IEnumerable<Edge> Edges { get; }
+
         public IEnumerable<Element> Elements { get; }
 
         public static IPalette CreatePalette(IPaletteMediator paletteMediator = null)
@@ -38,6 +40,7 @@ namespace WPF_Editor.Models
             return _palette;
         }
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
         private Palette(IPaletteMediator paletteMediator, string modelName = "RobotsMetamodel")
         {
             var repo = RepoFactory.CreateRepo();
@@ -46,21 +49,30 @@ namespace WPF_Editor.Models
             List<Node> nodeList = new List<Node>();
             foreach (var node in model.Nodes)
             {
-                nodeList.Add(new Node(node));
+                if (!node.IsAbstract)
+                {
+                    nodeList.Add(new Node(node));
+                }
             }
             Nodes = nodeList;
             
             List<Edge> edgeList = new List<Edge>();
             foreach (var edge in model.Edges)
             {
-                edgeList.Add(new Edge(edge));
+                if (!edge.IsAbstract)
+                {
+                    edgeList.Add(new Edge(edge));
+                }
             }
             Edges = edgeList;
 
             List<Element> elementList = new List<Element>();
             foreach (var element in model.Elements)
             {
-                elementList.Add(new Element(element));
+                if (!element.IsAbstract)
+                {
+                    elementList.Add(new Element(element));
+                }
             }
             Elements = elementList;
 
