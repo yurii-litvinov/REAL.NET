@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using Repo;
 using WPF_Editor.Models.Interfaces;
 using WPF_Editor.ViewModels;
@@ -33,7 +34,7 @@ namespace WPF_Editor.Models
             var repo = RepoFactory.CreateRepo();
             IModel model = repo.Model(modelName);
 
-            List<INode> nodeList = new List<INode>();
+            var nodeList = new List<INode>();
             foreach (var inode in model.Nodes)
             {
                 if (!inode.IsAbstract)
@@ -43,7 +44,8 @@ namespace WPF_Editor.Models
             }
             Nodes = nodeList;
 
-            List<IEdge> edgeList = new List<IEdge>();
+            var edgeList = new List<IEdge>();
+
             foreach (var iedge in model.Edges)
             {
                 if (!iedge.IsAbstract)
@@ -53,7 +55,7 @@ namespace WPF_Editor.Models
             }
             Edges = edgeList;
 
-            List<IElement> elementList = new List<IElement>();
+            var elementList = new List<IElement>();
             foreach (var ielement in model.Elements)
             {
                 if (!ielement.IsAbstract)

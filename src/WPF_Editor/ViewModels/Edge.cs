@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using GraphX.Measure;
 using GraphX.PCL.Common.Enums;
 using GraphX.PCL.Common.Interfaces;
@@ -7,31 +9,72 @@ using Repo;
 
 namespace WPF_Editor.ViewModels
 {
-    // Target and source must be initialized.
-    public sealed class Edge : Element, IEdge, IGraphXEdge<Node>
-    {
-        private readonly IEdge _edge;
-        public IElement From { get => _edge.From; set => _edge.From = value; }
-
-        public IElement To { get => _edge.To; set => _edge.To = value; }
-
-        public override IElement Class => _edge.Class;
-
-        public override IEnumerable<IAttribute> Attributes => _edge.Attributes;
-
-        public override bool IsAbstract => _edge.IsAbstract;
-
-        public override Metatype Metatype => _edge.Metatype;
-
-        public override Metatype InstanceMetatype => _edge.InstanceMetatype;
-
-        public override string Shape => _edge.Shape;
-        /*Initialize _edge.From and _edge.To*/
-        public Edge(IEdge iedge) : base(iedge)
+    public class PaletteEdge : IEdge{
+        private readonly IEdge _edgeImplementation;
+        public string Name
         {
-            _edge = iedge;
+            get { return _edgeImplementation.Name; }
+            set { _edgeImplementation.Name = value; }
         }
 
+        public IElement Class
+        {
+            get { return _edgeImplementation.Class; }
+        }
+
+        public IEnumerable<IAttribute> Attributes
+        {
+            get { return _edgeImplementation.Attributes; }
+        }
+
+        public bool IsAbstract
+        {
+            get { return _edgeImplementation.IsAbstract; }
+        }
+
+        public Metatype Metatype
+        {
+            get { return _edgeImplementation.Metatype; }
+        }
+
+        public Metatype InstanceMetatype
+        {
+            get { return _edgeImplementation.InstanceMetatype; }
+        }
+
+        public string Shape
+        {
+            get { return _edgeImplementation.Shape; }
+        }
+
+        public IElement From
+        {
+            get { return _edgeImplementation.From; }
+            set { _edgeImplementation.From = value; }
+        }
+
+        public IElement To
+        {
+            get { return _edgeImplementation.To; }
+            set { _edgeImplementation.To = value; }
+        }
+
+        public PaletteEdge(IEdge iedge)
+        {
+            _edgeImplementation = iedge;
+        }
+    }
+    public sealed class Edge : Element, IEdge, IGraphXEdge<Node>
+    {
+        public IElement From { get; set; }
+        public IElement To { get; set; }
+        
+        public Edge(IEdge iedge, Element from, Element to) : base(iedge)
+        {
+            
+        }
+
+        #region IGraphXEdge<Node> implementation
         public long ID { get; set; }
         public ProcessingOptionEnum SkipProcessing { get; set; }
         public Point[] RoutingPoints { get; set; }
@@ -58,5 +101,6 @@ namespace WPF_Editor.ViewModels
         Node IEdge<Node>.Target => To as Node;
 
         public double Weight { get; set; }
+        #endregion
     }
 }

@@ -11,8 +11,9 @@ namespace WPF_Editor.Models.Interfaces
 {
     public interface IScene
     {
+        //Replace with IElement CreateNode();
         void CreateNode();
-        IElement LastCreatedElement { get;}
-        
+        //Delete
+        IElement LastCreatedElement { get; }
     }
 }

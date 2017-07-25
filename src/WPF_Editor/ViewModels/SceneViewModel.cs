@@ -64,6 +64,7 @@ namespace WPF_Editor.ViewModels
 
         public void HandleSingleLeftClick()
         {
+
             Scene.CreateNode();
             IElement element = Scene.LastCreatedElement;
             if (element is INode)

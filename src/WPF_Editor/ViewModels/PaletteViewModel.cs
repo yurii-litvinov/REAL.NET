@@ -17,7 +17,9 @@ namespace WPF_Editor.ViewModels
         private readonly IPalette _palette = Palette.CreatePalette();
 
         public event PropertyChangedEventHandler PropertyChanged;
+
         // Must be public because bindings use these properties
+        //Create class ViewNode
         public ObservableCollection<Node> Nodes { get; }
 
         public ObservableCollection<Edge> Edges { get; }
@@ -27,14 +29,18 @@ namespace WPF_Editor.ViewModels
         public Element SelectedElement
         {
             get {
+                
                 if (_palette.SelectedElement is INode)
                 {
                     _selectedElement = new Node((INode) _palette.SelectedElement);
                 }
+                //Implement later.
+                /*
                 else if (_palette.SelectedElement is IEdge)
                 {
                     _selectedElement = new Edge((IEdge) _palette.SelectedElement);
                 }
+                */
                 return _selectedElement;
             }
             set
@@ -49,6 +55,10 @@ namespace WPF_Editor.ViewModels
 
         public PaletteViewModel()
         {
+            IRepo repo = RepoFactory.CreateRepo();
+            IModel model = repo.Model("RobotsMetamodel");
+            model.Metamodel.Nodes.First().Name = "ss";
+            
             Nodes = new ObservableCollection<Node>();
             foreach (var inode in _palette.Nodes)
             {
@@ -57,7 +67,7 @@ namespace WPF_Editor.ViewModels
             Edges = new ObservableCollection<Edge>();
             foreach (var iedge in _palette.Edges)
             {
-                Edges.Add(new Edge(iedge));
+                Edges.Add(new Edge(iedge, null, null));
             }
             Elements = new ObservableCollection<Element>();
             foreach (var ielement in _palette.Elements)

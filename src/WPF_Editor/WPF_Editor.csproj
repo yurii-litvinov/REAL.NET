@@ -96,6 +96,7 @@
     <Compile Include="ViewModels\PluginbarViewModel.cs" />
     <Compile Include="ViewModels\SceneViewModel.cs" />
     <Compile Include="ViewModels\ToolbarViewModel.cs" />
+    <Compile Include="ViewModels\ViewNode.cs" />
     <Compile Include="Views\Console.xaml.cs">
       <DependentUpon>Console.xaml</DependentUpon>
     </Compile>

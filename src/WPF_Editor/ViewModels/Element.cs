@@ -3,20 +3,49 @@ using Repo;
 
 namespace WPF_Editor.ViewModels
 {
+    public class Attribute : IAttribute
+    {
+
+        public string Name { get; }
+        public AttributeKind Kind { get; }
+        public IElement Type { get; }
+        public string StringValue { get; set; }
+        public IElement ReferenceValue { get; set; }
+
+        public Attribute(string name, AttributeKind kind, IElement type, string stringValue, IElement referenceValue)
+        {
+            Name = name;
+            Kind = kind;
+            Type = type;
+            StringValue = stringValue;
+            ReferenceValue = referenceValue;
+        }
+    }
     public class Element : IElement
     {
-        private readonly IElement _element;
-        public string Name { get => _element.Name; set => _element.Name = value; }
-        public virtual IElement Class => _element.Class;
-        public virtual IEnumerable<IAttribute> Attributes => _element.Attributes;
-        public virtual bool IsAbstract => _element.IsAbstract;
-        public virtual Metatype Metatype => _element.Metatype;
-        public virtual Metatype InstanceMetatype => _element.InstanceMetatype;
-        public virtual string Shape => _element.Shape;
+        public string Name { get; set; }
+        public IElement Class { get;}
+        public IEnumerable<IAttribute> Attributes { get; }
+        public bool IsAbstract { get; }
+        public Metatype Metatype { get; }
+        public Metatype InstanceMetatype { get; }
+        public string Shape { get; }
 
         public Element(IElement element)
         {
-            _element = element;
+            Name = element.Name;
+            Class = element.Class;
+
+            var attributeList = new List<IAttribute>();
+            foreach (var attribute in element.Attributes)
+            {
+                attributeList.Add(new Attribute(attribute.Name, attribute.Kind, attribute.Type, attribute.StringValue, this));
+            }
+            Attributes = attributeList;
+            IsAbstract = element.IsAbstract;
+            Metatype = element.Metatype;
+            InstanceMetatype = element.InstanceMetatype;
+            Shape = element.Shape;
         }
 
         public override string ToString() => Name;
