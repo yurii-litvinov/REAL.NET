@@ -6,7 +6,7 @@ using Repo;
 
 namespace WPF_Editor.ViewModels
 {
-    public class Node : Element, INode, IGraphXVertex
+    public sealed class Node : Element, INode, IGraphXVertex
     {
         private readonly INode _node;
 
