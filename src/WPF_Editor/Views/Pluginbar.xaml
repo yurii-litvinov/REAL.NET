@@ -8,19 +8,37 @@
     d:DesignHeight="300"
     d:DesignWidth="300"
     mc:Ignorable="d">
+
+    <!-- Style for buttons. Move to another file with styles if necessary. -->
+    <UserControl.Resources>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border CornerRadius="10" 
+                                Margin="3" 
+                                BorderThickness="1" 
+                                BorderBrush="Black" 
+                                Background="LightGray">
+                            <ContentPresenter 
+                                VerticalAlignment="Center" 
+                                HorizontalAlignment="Center" 
+                                ContentSource="Content" 
+                                TextBlock.FontSize="13" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <!-- Panel for plugin buttons -->
     <WrapPanel Height="auto" Orientation="Horizontal">
-        <Rectangle Width="50" Fill="Green" />
-        <Rectangle
-            Width="50"
-            Height="50"
-            Fill="Red" />
-        <Rectangle
-            Width="50"
-            Height="50"
-            Fill="Blue" />
-        <Rectangle
-            Width="50"
-            Height="50"
-            Fill="Yellow" />
+        <Button Content="Plugin 1" Height="30" Width="70"></Button>
+        <Button Content="Plugin 2" Height="30" Width="70"></Button>
+        <Button Content="Plugin 3" Height="30" Width="70"></Button>
+        <Button Content="Plugin 4" Height="30" Width="70"></Button>
     </WrapPanel>
 </UserControl>
+    
+

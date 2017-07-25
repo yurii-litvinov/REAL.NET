@@ -16,7 +16,7 @@
                 BorderBrush="Black"
                 BorderThickness="1"
                 DockPanel.Dock="Top">
-                <StackPanel Name="TopPanel" Height="70">
+                <StackPanel Name="TopPanel" Height="Auto">
                     <views:Toolbar />
                     <views:Pluginbar />
                 </StackPanel>
