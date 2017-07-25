@@ -17,17 +17,20 @@ namespace Repo
 /// Thrown if trying to delete a model that is a metamodel for some another model in repository.
 exception DeletingUsedModel of modelName: string
 
-/// Thrown if model requested by name from the repository was not found. Do not request models by name, enumerate 
+/// Thrown if model requested by name from the repository was not found. Do not request models by name, enumerate
 /// repo.Models instead.
 exception ModelNotFoundException of modelName: string
 
-/// Thrown if model requested by name from the repository appears more than once. Do not request models by name, 
+/// Thrown if model requested by name from the repository appears more than once. Do not request models by name,
 /// enumerate repo.Models instead.
-exception MultipleModelsWithGivenNameException of modelName: string
+exception MultipleModelsException of modelName: string
 
 /// Thrown when someone tries to do something with non-existent attribute. Most likely this means internal error in
 /// repository.
 exception AttributeNotFoundException of attributeName: string
+
+/// Thrown when there is more than one attribute with given name.
+exception MultipleAtributesException of attributeName: string
 
 /// Thrown if we are trying to do something wrong with a model. Most probably means incorrect model or
 /// internal error in repository.
@@ -38,7 +41,7 @@ exception InvalidSemanticOperationException of errorMessage: string
 /// reflected in the code (basically, it is a model of repository data layer itself).
 exception MalformedCoreMetamodelException of errorMessage: string
 
-/// Thrown when some semantic operation can not be completed due to missing or incorrect elements of 
+/// Thrown when some semantic operation can not be completed due to missing or incorrect elements of
 /// Infrastructure Metamodel. Infrastructure Metamodel provides a way for an editor and other tools to work
 /// with models, so if it is malformed, all high-level tools based on a repository will not work.
 exception MalformedInfrastructureMetamodelException of errorMessage: string

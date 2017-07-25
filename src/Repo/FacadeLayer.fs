@@ -61,6 +61,11 @@ type IAttribute =
         /// Kind (or a metatype) of the attribute --- one of elementary types, reference type or enum type.
         abstract Kind: AttributeKind with get
 
+        /// Shall this attribute pass on to instances or is it defined for a class only and is not available for
+        /// instances (much like static fields in a class). True if instances receive a copy of this attribute on
+        /// instantiation, false if instantiation skips this attribute.
+        abstract IsInstantiable: bool with get
+
         /// Reference to a type of the attribute if it is complex attribute, null if this is elementary type attribute.
         /// NOTE: Complex attribute types are not supported in v1, so it is always null.
         /// Note that even in v1 Infrastructure Metamodel may contain elements for elementary types, in such case
@@ -68,7 +73,7 @@ type IAttribute =
         abstract Type: IElement with get
 
         /// String representation of a value of an attribute if it is an attribute of basic type.
-        // TODO: Actually we need a whole hierarchy of attribute classes.
+        // NOTE: Actually we need a whole hierarchy of attribute classes.
         abstract StringValue: string with get, set
 
         /// Holds a reference to an element which is a value of this attribute if this attribute has complex type.
@@ -80,7 +85,6 @@ type IAttribute =
 and [<AllowNullLiteral>] IElement =
     interface
         /// Name of an element, to be displayed on a scene and in various menus.
-        /// TODO: actually, not needed. Nodes can have no name and names can be modelled as attributes.
         abstract Name: string with get, set
 
         /// Returns type of the element.

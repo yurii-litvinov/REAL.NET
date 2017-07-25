@@ -54,7 +54,7 @@ let ``Repo shall throw if searching two models with the same name`` () =
     let model1 = repo.CreateModel("TestModel")
     let model2 = repo.CreateModel("TestModel", model1)
     (fun () -> Repo.findModel repo "TestModel" |> ignore)
-            |> should throw typeof<Repo.MultipleModelsWithGivenNameException>
+            |> should throw typeof<Repo.MultipleModelsException>
 
 [<Test>]
 let ``isInstanceOf shall work for long instantiation chains`` () =

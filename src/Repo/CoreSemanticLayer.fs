@@ -29,7 +29,7 @@ module Repo =
         if Seq.isEmpty models then
             raise (ModelNotFoundException name)
         elif Seq.length models <> 1 then
-            raise (MultipleModelsWithGivenNameException name)
+            raise (MultipleModelsException name)
         else
             Seq.head models
 

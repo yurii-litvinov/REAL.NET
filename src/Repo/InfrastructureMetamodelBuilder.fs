@@ -17,11 +17,11 @@ namespace Repo.Metametamodels
 open Repo.DataLayer
 open Repo.CoreSemanticLayer
 
-/// Initializes repository with Infrastructure Metamodel, which is used to define all other metamodels 
+/// Initializes repository with Infrastructure Metamodel, which is used to define all other metamodels
 /// and closely coupled with editor capabilities.
 type InfrastructureMetamodelBuilder() =
     interface IModelBuilder with
-        member this.Build(repo: IRepo): unit = 
+        member this.Build(repo: IRepo): unit =
             let metamodel = Repo.findModel repo "LanguageMetamodel"
 
             let find name = Model.findNode metamodel name
@@ -36,11 +36,11 @@ type InfrastructureMetamodelBuilder() =
             let model = repo.CreateModel("InfrastructureMetamodel", metamodel)
 
             let (~+) name = model.CreateNode(name, metamodelNode)
-            let (--|>) (source: IElement) target = 
+            let (--|>) (source: IElement) target =
                 model.CreateGeneralization(metamodelGeneralization, source, target) |> ignore
 
             let createEnum name = model.CreateNode(name, metamodelEnum)
-            let createEnumLiterals enum literals = 
+            let createEnumLiterals enum literals =
                 literals |> Seq.iter (fun l ->
                     let enumLiteral = model.CreateNode(l, metamodelString)
                     model.CreateAssociation(metamodelEnumLiteralLink, enum, enumLiteral, "enumElement") |> ignore
@@ -63,7 +63,7 @@ type InfrastructureMetamodelBuilder() =
                 let typeNodeToKind = function
                 | t when t = stringNode -> "AttributeKind.String"
                 | t when t = booleanNode -> "AttributeKind.Boolean"
-                
+
                 /// NOTE: It is actually an enum value, but enums are not supported in v1.
                 | t when t = attributeKind -> "AttributeKind.String"
                 | t when t = metatype -> "AttributeKind.String"
@@ -75,25 +75,32 @@ type InfrastructureMetamodelBuilder() =
                 let kindNode = Model.findNode model (typeNodeToKind (``type`` :?> INode))
                 model.CreateAssociation(metamodelAssociation, attributeNode, kindNode, "kind") |> ignore
 
-                let valueNode = Model.tryFindNode model value 
+                let valueNode = Model.tryFindNode model value
                 if valueNode.IsSome then
                     /// All these attribute are immutable, so can be shared (at least it seems so).
-                    model.CreateAssociation(metamodelAssociation, attributeNode, valueNode.Value, "stringValue") 
+                    model.CreateAssociation(metamodelAssociation, attributeNode, valueNode.Value, "stringValue")
                     |> ignore
                 else
                     let stringValueNode = +value
-                    model.CreateAssociation(metamodelAssociation, attributeNode, stringValueNode, "stringValue") 
+                    model.CreateAssociation(metamodelAssociation, attributeNode, stringValueNode, "stringValue")
                     |> ignore
 
-            let (--->) (source: IElement) (target, name, isAbstract) = 
+                // All linguistic attributes shall be instantiable, since every model shall conform to Infrastructure
+                // Metamodel if it shall be opened in editor.
+                let trueNode = Model.tryFindNode model "true"
+                let trueNode = if trueNode.IsNone then +"true" else trueNode.Value
+
+                model.CreateAssociation(metamodelAssociation, attributeNode, trueNode, "isInstantiable") |> ignore
+
+            let (--->) (source: IElement) (target, name, isAbstract) =
                 let association = model.CreateAssociation(metamodelAssociation, source, target, name)
                 createAttribute association stringNode "shape" "Pictures/Edge.png"
                 createAttribute association booleanNode "isAbstract" (if isAbstract then "true" else "false")
                 createAttribute association metatype "instanceMetatype" "Metatype.Edge"
 
             createEnumLiterals metatype ["Metatype.Node"; "Metatype.Edge"]
-            
-            createEnumLiterals attributeKind 
+
+            createEnumLiterals attributeKind
                 ["AttributeKind.String"
                 ; "AttributeKind.Int"
                 ; "AttributeKind.Double"
@@ -130,5 +137,6 @@ type InfrastructureMetamodelBuilder() =
 
             createAttribute attribute attributeKind "kind" "AttributeKind.String"
             createAttribute attribute stringNode "stringValue" ""
+            createAttribute attribute booleanNode "isInstantiable" "false"
 
             ()
