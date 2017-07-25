@@ -13,37 +13,37 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Button
-                        Grid.Row="0"
-                        Width="23"
-                        Margin="0,0,0.4,0.8"
-                        HorizontalAlignment="Right"
-                        Content=""
-                        RenderTransformOrigin="0.526,0.5" Click="OnHideShowButtonClick" />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Button
+            Grid.Row="0"
+            Width="23"
+            Margin="0,0,0.4,0.8"
+            HorizontalAlignment="Right"
+            Content=""
+            RenderTransformOrigin="0.526,0.5" Click="OnHideShowButtonClick" />
         <TabControl
-                        Grid.Row="1"
-                        Height="150"
-                        TabStripPlacement="Bottom"
-                        Visibility="{Binding Path=ConsoleVisibility, Converter={StaticResource BoolToConsoleConverter}}">
+            Grid.Row="1"
+            Height="150"
+            TabStripPlacement="Bottom"
+            Visibility="{Binding Path=ConsoleVisibility, Converter={StaticResource BoolToConsoleConverter}}">
             <TabItem Header="Messages">
-                            <ScrollViewer>
-                                <TextBox
-                                    IsReadOnly="True"
-                                    Text="{Binding MessageConsole, Mode=OneWay}"
-                                    TextWrapping="Wrap" />
-                            </ScrollViewer>
-                        </TabItem>
-                        <TabItem Header="Errors">
-                            <ScrollViewer>
-                                <TextBox
-                                    IsReadOnly="True"
-                                    Text="{Binding ErrorConsole, Mode=OneWay}"
-                                    TextWrapping="Wrap" />
-                            </ScrollViewer>
-                        </TabItem>
-                    </TabControl>
+                <ScrollViewer>
+                    <TextBox
+                        IsReadOnly="True"
+                        Text="{Binding MessageConsole, Mode=OneWay}"
+                        TextWrapping="Wrap" />
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Errors">
+                <ScrollViewer>
+                    <TextBox
+                        IsReadOnly="True"
+                        Text="{Binding ErrorConsole, Mode=OneWay}"
+                        TextWrapping="Wrap" />
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
     </Grid>
 </UserControl>
