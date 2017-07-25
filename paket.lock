@@ -51,5 +51,5 @@ NUGET
     SourceLink.Fake (1.1)
 GITHUB
   remote: fsharp/FAKE
-    modules/Octokit/Octokit.fsx (9b496581e49c116cff9911570df871eb0258ac83)
+    modules/Octokit/Octokit.fsx (2ee15aef9d007268857c287318650bd68aa074a6)
       Octokit (>= 0.20)
