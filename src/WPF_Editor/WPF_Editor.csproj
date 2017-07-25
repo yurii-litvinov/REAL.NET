@@ -92,7 +92,7 @@
     <Compile Include="ViewModels\Element.cs" />
     <Compile Include="ViewModels\Node.cs" />
     <Compile Include="ViewModels\PaletteViewModel.cs" />
-    <Compile Include="ViewModels\PlaginbarViewModel.cs" />
+    <Compile Include="ViewModels\PluginbarViewModel.cs" />
     <Compile Include="ViewModels\SceneViewModel.cs" />
     <Compile Include="ViewModels\ToolbarViewModel.cs" />
     <Compile Include="Views\Console.xaml.cs">

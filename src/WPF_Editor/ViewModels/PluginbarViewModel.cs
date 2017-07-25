@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WPF_Editor.ViewModels
 {
-    class PlaginbarViewModel
+    class PluginbarViewModel
     {
     }
 }

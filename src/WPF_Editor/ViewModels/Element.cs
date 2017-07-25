@@ -17,5 +17,14 @@ namespace WPF_Editor.ViewModels
         {
             _element = element;
         }
+
+        public override string ToString()
+        {
+            if (this is Node)
+            {
+                return ((Node) this).Name;
+            }
+            return base.ToString();
+        }
     }
 }

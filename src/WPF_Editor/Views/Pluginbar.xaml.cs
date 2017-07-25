@@ -24,7 +24,7 @@ namespace WPF_Editor.Views
         public Pluginbar()
         {
             InitializeComponent();
-            DataContext = new PlaginbarViewModel();
+            DataContext = new PluginbarViewModel();
         }
     }
 }
