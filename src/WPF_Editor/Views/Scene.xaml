@@ -3,17 +3,14 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:graphx="http://schemas.panthernet.ru/graphx/"
     xmlns:graphxctrl="clr-namespace:GraphX.Controls;assembly=GraphX.WPF.Controls"
     xmlns:local="clr-namespace:WPF_Editor.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:WPF_Editor.ViewModels"
     d:DesignHeight="300"
     d:DesignWidth="300"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        
-    </UserControl.Resources>
-    <graphxctrl:ZoomControl x:Name="gg_zoomctrl" Click="{Binding Gg_zoomctrl_OnClick}">
-        <local:GraphAreaExample x:Name="gg_Area" />
+    <graphxctrl:ZoomControl x:Name="zoomctrl" Click="Zoomctrl_OnClick">
+        <viewModels:GraphArea x:Name="graphArea" />
     </graphxctrl:ZoomControl>
 </UserControl>

@@ -17,11 +17,11 @@ using WPF_Editor.ViewModels;
 namespace WPF_Editor.Views
 {
     /// <summary>
-    /// Interaction logic for Plaginbar.xaml
+    /// Interaction logic for Pluginbar.xaml
     /// </summary>
-    public partial class Plaginbar : UserControl
+    public partial class Pluginbar : UserControl
     {
-        public Plaginbar()
+        public Pluginbar()
         {
             InitializeComponent();
             DataContext = new PlaginbarViewModel();

@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using GraphX.PCL.Common.Enums;
+using GraphX.PCL.Common.Interfaces;
+using GraphX.PCL.Common.Models;
 using Repo;
 
 namespace WPF_Editor.ViewModels
 {
-    public class Node : Element, INode
+    public class Node : Element, INode, IGraphXVertex
     {
         private readonly INode _node;
 
@@ -24,6 +27,24 @@ namespace WPF_Editor.ViewModels
         public Node(INode inode) : base(inode)
         {
             _node = inode;
+        }
+
+        public bool Equals(IGraphXVertex other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+            return ID == other.ID;
+        }
+
+        public long ID { get; set; }
+        public ProcessingOptionEnum SkipProcessing { get; set; }
+        public double Angle { get; set; }
+        public int GroupId { get; set; }
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

@@ -87,7 +87,6 @@
     <Compile Include="Models\Mediator.cs" />
     <Compile Include="Models\Console\ConsoleWindow.cs" />
     <Compile Include="ViewModels\ConsoleViewModel.cs" />
-    <Compile Include="ViewModels\Converters\BoolToConsoleVisibiltyConverter.cs" />
     <Compile Include="ViewModels\Edge.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
     <Compile Include="ViewModels\Element.cs" />
@@ -105,8 +104,8 @@
     <Compile Include="Views\Palette.xaml.cs">
       <DependentUpon>Palette.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Plaginbar.xaml.cs">
-      <DependentUpon>Plaginbar.xaml</DependentUpon>
+    <Compile Include="Views\Pluginbar.xaml.cs">
+      <DependentUpon>Pluginbar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Scene.xaml.cs">
       <DependentUpon>Scene.xaml</DependentUpon>
@@ -138,7 +137,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Plaginbar.xaml">
+    <Page Include="Views\Pluginbar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
