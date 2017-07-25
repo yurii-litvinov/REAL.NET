@@ -11,7 +11,6 @@ namespace WPF_Editor.ViewModels
     public class Edge : Element, IEdge, IGraphXEdge<Node>
     {
         private readonly IEdge _edge;
-
         public IElement From { get => _edge.From; set => _edge.From = value; }
 
         public IElement To { get => _edge.To; set => _edge.To = value; }

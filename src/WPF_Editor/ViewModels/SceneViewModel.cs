@@ -21,36 +21,43 @@ namespace WPF_Editor.ViewModels
     
     public class SceneViewModel
     {
-        private GraphArea GraphArea { get; }
-        private GXLogicCore LogicCore { get; }
+        private readonly ZoomControl _zoomControl;
+        private readonly GraphArea _graphArea;
+        private readonly GXLogicCore _logicCore;
+        
         private IScene Scene { get; }
-        public SceneViewModel(GraphArea graphArea)
+        public SceneViewModel(ZoomControl zoomControl)
         {
+            _zoomControl = zoomControl;
             Scene = Models.Scene.CreateScene();
-            GraphArea = graphArea;
+            _graphArea = (zoomControl.Content) as GraphArea;
+            if (_graphArea is null)
+            {
+                throw new ArgumentException("Zoom control doesn't contain an instance of class GraphArea.");
+            }
             var graph = new BidirectionalGraph<Node, Edge>();
 
-            LogicCore = new GXLogicCore
+            _logicCore = new GXLogicCore
             {
                 DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.KK,
             };
-            LogicCore.DefaultLayoutAlgorithmParams =
-                LogicCore.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.KK);
-            ((KKLayoutParameters)LogicCore.DefaultLayoutAlgorithmParams).MaxIterations = 100;
+            _logicCore.DefaultLayoutAlgorithmParams =
+                _logicCore.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.KK);
+            ((KKLayoutParameters)_logicCore.DefaultLayoutAlgorithmParams).MaxIterations = 100;
 
-            LogicCore.DefaultOverlapRemovalAlgorithm = OverlapRemovalAlgorithmTypeEnum.FSA;
-            LogicCore.DefaultOverlapRemovalAlgorithmParams =
-                LogicCore.AlgorithmFactory.CreateOverlapRemovalParameters(OverlapRemovalAlgorithmTypeEnum.FSA);
-            ((OverlapRemovalParameters)LogicCore.DefaultOverlapRemovalAlgorithmParams).HorizontalGap = 50;
-            ((OverlapRemovalParameters)LogicCore.DefaultOverlapRemovalAlgorithmParams).VerticalGap = 50;
+            _logicCore.DefaultOverlapRemovalAlgorithm = OverlapRemovalAlgorithmTypeEnum.FSA;
+            _logicCore.DefaultOverlapRemovalAlgorithmParams =
+                _logicCore.AlgorithmFactory.CreateOverlapRemovalParameters(OverlapRemovalAlgorithmTypeEnum.FSA);
+            ((OverlapRemovalParameters)_logicCore.DefaultOverlapRemovalAlgorithmParams).HorizontalGap = 50;
+            ((OverlapRemovalParameters)_logicCore.DefaultOverlapRemovalAlgorithmParams).VerticalGap = 50;
 
-            LogicCore.DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.SimpleER;
-            LogicCore.AsyncAlgorithmCompute = true;
-            LogicCore.Graph = graph;
+            _logicCore.DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.SimpleER;
+            _logicCore.AsyncAlgorithmCompute = true;
+            _logicCore.Graph = graph;
 
-            GraphArea.LogicCore = LogicCore;
-            GraphArea.SetVerticesDrag(true);
-            GraphArea.GenerateGraph();
+            _graphArea.LogicCore = _logicCore;
+            _graphArea.SetVerticesDrag(true);
+            _graphArea.GenerateGraph();
         }
 
         public void HandleSingleLeftClick()
@@ -60,8 +67,8 @@ namespace WPF_Editor.ViewModels
             if (element is INode)
             {
                 var node = new Node((INode)element);
-                LogicCore.Graph.AddVertex(node);
-                GraphArea.GenerateGraph();
+                _logicCore.Graph.AddVertex(node);
+                _graphArea.GenerateGraph();
                 return;
             }
             // If element isn't selected it won't do anything

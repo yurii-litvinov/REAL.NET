@@ -37,7 +37,7 @@ namespace WPF_Editor.Views
         public Scene()
         {
             InitializeComponent();
-            _sceneViewModel = new SceneViewModel(graphArea);
+            _sceneViewModel = new SceneViewModel(zoomctrl);
             DataContext = _sceneViewModel;
         }
 

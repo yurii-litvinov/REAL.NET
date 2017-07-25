@@ -10,8 +10,6 @@ namespace WPF_Editor.ViewModels
     {
         private readonly INode _node;
 
-        public string Name { get => _node.Name; set => _node.Name = value;}
-
         public override IElement Class => _node.Class;
 
         public override IEnumerable<IAttribute> Attributes => _node.Attributes;
@@ -44,7 +42,7 @@ namespace WPF_Editor.ViewModels
         public int GroupId { get; set; }
         public override string ToString()
         {
-            return Name;
+            return _node.Name;
         }
     }
 }
