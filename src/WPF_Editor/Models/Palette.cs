@@ -12,7 +12,6 @@ namespace WPF_Editor.Models
         private static IPalette _palette;
         private IPaletteMediator _paletteMediator;
 
-        //Refactor this. PaletteViewModel has to implement INotifyPropertyChanged
         public IEnumerable<INode> Nodes { get; }
         public IEnumerable<IEdge> Edges { get; }
         public IEnumerable<IElement> Elements { get; }

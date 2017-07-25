@@ -13,38 +13,39 @@ namespace WPF_Editor.ViewModels
 {
     public class PaletteViewModel : INotifyPropertyChanged
     {
-        private const string ModelName = "RobotsMetamodel";
         private Element _selectedElement;
-        public event PropertyChangedEventHandler PropertyChanged;
+        private readonly IPalette _palette = Palette.CreatePalette();
 
+        public event PropertyChangedEventHandler PropertyChanged;
+        // Must be public because bindings use these properties
         public ObservableCollection<Node> Nodes { get; }
 
         public ObservableCollection<Edge> Edges { get; }
 
         public ObservableCollection<Element> Elements { get; }
 
-        //Test it
         public Element SelectedElement
         {
             get {
-                _selectedElement = new Element(_palette.SelectedElement);
+                if (_palette.SelectedElement is INode)
+                {
+                    _selectedElement = new Node((INode) _palette.SelectedElement);
+                }
+                else if (_palette.SelectedElement is IEdge)
+                {
+                    _selectedElement = new Edge((IEdge) _palette.SelectedElement);
+                }
                 return _selectedElement;
             }
             set
             {
                 OnPropertyChanged("SelectedElement");
                 _palette.SelectedElement = value;
-                if (SelectedElement is Node)
-                {
-                    System.Console.WriteLine((SelectedElement as INode).Name);
-                }
-                System.Console.WriteLine(SelectedElement);
             }
             
         }
-        public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        private readonly IPalette _palette = Palette.CreatePalette();
+        public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         public PaletteViewModel()
         {

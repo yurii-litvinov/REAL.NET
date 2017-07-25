@@ -13,7 +13,7 @@ namespace WPF_Editor.Models
 	    private static IScene _scene;
         //Fix. Initialize from constructor and check if it's a loaded project.
         private List<Node> _nodeList = new List<Node>();
-
+        private List<Edge> _edgeList = new List<Edge>();
 
 	    public IElement LastCreatedElement => _lastCreatedElement;
         

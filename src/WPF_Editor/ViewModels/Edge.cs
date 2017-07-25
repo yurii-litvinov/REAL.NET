@@ -7,6 +7,7 @@ using Repo;
 
 namespace WPF_Editor.ViewModels
 {
+    // Target and source must be initialized.
     public class Edge : Element, IEdge, IGraphXEdge<Node>
     {
         private readonly IEdge _edge;
@@ -57,15 +58,5 @@ namespace WPF_Editor.ViewModels
         Node IEdge<Node>.Target => To as Node;
 
         public double Weight { get; set; }
-        public string Text
-        {
-            get => $"{((IGraphXEdge<Node>) this).Source.Name} -> {((IGraphXEdge<Node>)this).Target.Name}";
-            set { throw new System.NotImplementedException(); }
-        }
-
-        public override string ToString()
-        {
-            return Text;
-        }
     }
 }

@@ -55,7 +55,6 @@ namespace WPF_Editor.ViewModels
 
         public void HandleSingleLeftClick()
         {
-            var mousePosition = Mouse.GetPosition(null);
             Scene.CreateNode();
             IElement element = Scene.LastCreatedElement;
             if (element is INode)
@@ -65,8 +64,10 @@ namespace WPF_Editor.ViewModels
                 GraphArea.GenerateGraph();
                 return;
             }
+            // If element isn't selected it won't do anything
             if (element == null)
             {
+                
                 return;
             }
             throw new NotImplementedException("Cannot handle edges... yet...");

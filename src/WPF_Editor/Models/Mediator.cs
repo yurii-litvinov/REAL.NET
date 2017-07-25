@@ -17,9 +17,9 @@ namespace WPF_Editor.Models
     {
         private static Mediator _mediator;
 
-        public IScene Scene { get; }
+        private IScene Scene { get; }
 
-        public IPalette Palette { get; }
+        private IPalette Palette { get; }
 
 
         public static Mediator CreateMediator()

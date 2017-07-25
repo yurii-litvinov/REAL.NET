@@ -32,15 +32,18 @@ namespace WPF_Editor.Views
     /// </summary>
     public partial class Scene : UserControl
     {
+        private SceneViewModel _sceneViewModel;
+
         public Scene()
         {
             InitializeComponent();
-            DataContext = new SceneViewModel(graphArea);
+            _sceneViewModel = new SceneViewModel(graphArea);
+            DataContext = _sceneViewModel;
         }
 
         private void Zoomctrl_OnClick(object sender, RoutedEventArgs e)
         {
-            ((SceneViewModel)DataContext).HandleSingleLeftClick();
+            _sceneViewModel.HandleSingleLeftClick();
         }
     }
 }
