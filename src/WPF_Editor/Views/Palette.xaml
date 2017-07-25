@@ -36,7 +36,7 @@
                             SelectionMode="Single">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Name}" />
+                                    <TextBlock Text="{Binding}" />
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>

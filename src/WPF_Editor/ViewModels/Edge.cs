@@ -8,7 +8,7 @@ using Repo;
 namespace WPF_Editor.ViewModels
 {
     // Target and source must be initialized.
-    public class Edge : Element, IEdge, IGraphXEdge<Node>
+    public sealed class Edge : Element, IEdge, IGraphXEdge<Node>
     {
         private readonly IEdge _edge;
         public IElement From { get => _edge.From; set => _edge.From = value; }

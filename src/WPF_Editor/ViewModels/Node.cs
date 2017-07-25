@@ -6,7 +6,7 @@ using Repo;
 
 namespace WPF_Editor.ViewModels
 {
-    public class Node : Element, INode, IGraphXVertex
+    public sealed class Node : Element, INode, IGraphXVertex
     {
         private readonly INode _node;
 
@@ -40,9 +40,5 @@ namespace WPF_Editor.ViewModels
         public ProcessingOptionEnum SkipProcessing { get; set; }
         public double Angle { get; set; }
         public int GroupId { get; set; }
-        public override string ToString()
-        {
-            return _node.Name;
-        }
     }
 }
