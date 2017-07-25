@@ -11,9 +11,7 @@
     Height="720"
     WindowState="Maximized"
     mc:Ignorable="d">
-    </Window.Resources>
-    
-        <DockPanel>
+    <DockPanel>
             <Border
                 BorderBrush="Black"
                 BorderThickness="1"

@@ -19,12 +19,6 @@ namespace WPF_Editor.Models
         /* This property has to be set from EditorView.xaml */
         public IElement SelectedElement { get; set; }
 
-        public IEnumerable<Node> Nodes { get; }
-
-        public IEnumerable<Edge> Edges { get; }
-
-        public IEnumerable<Element> Elements { get; }
-
         public static IPalette CreatePalette(IPaletteMediator paletteMediator = null)
         {
             if(_palette is null)

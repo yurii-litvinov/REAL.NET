@@ -5,7 +5,7 @@ using System.Windows.Data;
 namespace WPF_Editor.ViewModels.Converters
 {
     [ValueConversion(typeof(bool), typeof(string))]
-    public class BoolToConsoleVisibiltyConvertor : IValueConverter
+    public class BoolToConsoleVisibiltyConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
