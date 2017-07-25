@@ -74,7 +74,6 @@ namespace WPF_Editor.ViewModels
             // If element isn't selected it won't do anything
             if (element == null)
             {
-                
                 return;
             }
             throw new NotImplementedException("Cannot handle edges... yet...");
