@@ -66,7 +66,7 @@
 
             this.Closed += this.CloseChildrenWindows;
 
-            var modelName = "RobotsMetamodel";
+            var modelName = "RobotsTestModel";
 
             this.g_zoomctrl.MouseDown += (object sender, MouseButtonEventArgs e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
 
@@ -142,18 +142,7 @@
                 StackPanel sp = new StackPanel() { Orientation = Orientation.Horizontal };
                 sp.HorizontalAlignment = HorizontalAlignment.Left;
 
-                var name = string.Empty;
-                switch (type)
-                {
-                    case Repo.INode n:
-                        name = n.Name;
-                        break;
-                    case Repo.IEdge e:
-                        name = "Link";  // TODO: Hmmm...
-                        break;
-                }
-
-                Label l = new Label() { Content = name };
+                Label l = new Label() { Content = type.Name };
                 Image img = new Image()
                 {
                     Source = type.Shape != string.Empty

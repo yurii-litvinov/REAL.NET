@@ -36,20 +36,21 @@ type InfrastructureMetamodelBuilder() =
             let model = repo.CreateModel("InfrastructureMetamodel", metamodel)
 
             let (~+) name = model.CreateNode(name, metamodelNode)
-            let (--|>) (source: IElement) target = model.CreateGeneralization(metamodelGeneralization, source, target) |> ignore
-            let (--->) (source: IElement) (target, name) = model.CreateAssociation(metamodelAssociation, source, target, name) |> ignore
+            let (--|>) (source: IElement) target = 
+                model.CreateGeneralization(metamodelGeneralization, source, target) |> ignore
+
             let createEnum name = model.CreateNode(name, metamodelEnum)
             let createEnumLiterals enum literals = 
                 literals |> Seq.iter (fun l ->
                     let enumLiteral = model.CreateNode(l, metamodelString)
-                    model.CreateAssociation(metamodelEnumLiteralLink, enum, enumLiteral, "") |> ignore
+                    model.CreateAssociation(metamodelEnumLiteralLink, enum, enumLiteral, "enumElement") |> ignore
                 )
 
             let element = +"Element"
             let node = +"Node"
-            let relationship = +"Relationship"
-            let generalization = +"Generalization"
             let edge = +"Edge"
+            let generalization = +"Generalization"
+            let association = +"Association"
             let stringNode = +"String"
             let booleanNode = +"Boolean"
             let attribute = +"Attribute"
@@ -57,27 +58,6 @@ type InfrastructureMetamodelBuilder() =
             let repoNode = +"Repo"
             let metatype = createEnum "Metatype"
             let attributeKind = createEnum "AttributeKind"
-
-            createEnumLiterals metatype ["Metatype.Node"; "Metatype.Edge"]
-            
-            createEnumLiterals attributeKind 
-                ["AttributeKind.String"
-                ; "AttributeKind.Int"
-                ; "AttributeKind.Double"
-                ; "AttributeKind.Boolean"]
-
-            node --|> element
-            relationship --|> element
-            generalization --|> relationship
-            edge --|> relationship
-
-            element ---> (element, "class")
-            element ---> (attribute, "attributes")
-            attribute ---> (element, "type")
-            relationship ---> (element, "from")
-            relationship ---> (element, "to")
-            repoNode ---> (modelNode, "models")
-            modelNode ---> (element, "elements")
 
             let createAttribute node (``type``: IElement) name value =
                 let typeNodeToKind = function
@@ -90,17 +70,47 @@ type InfrastructureMetamodelBuilder() =
                 | _ -> failwith "unknown type node"
 
                 let attributeNode = +name
-                node ---> (attributeNode, name)
+                model.CreateAssociation(metamodelAssociation, node, attributeNode, name) |> ignore
 
                 let kindNode = Model.findNode model (typeNodeToKind (``type`` :?> INode))
-                attributeNode ---> (kindNode, "kind")
+                model.CreateAssociation(metamodelAssociation, attributeNode, kindNode, "kind") |> ignore
 
                 let valueNode = Model.tryFindNode model value 
                 if valueNode.IsSome then
-                    attributeNode ---> (valueNode.Value, "stringValue")
+                    /// All these attribute are immutable, so can be shared (at least it seems so).
+                    model.CreateAssociation(metamodelAssociation, attributeNode, valueNode.Value, "stringValue") 
+                    |> ignore
                 else
                     let stringValueNode = +value
-                    attributeNode ---> (stringValueNode, "stringValue")
+                    model.CreateAssociation(metamodelAssociation, attributeNode, stringValueNode, "stringValue") 
+                    |> ignore
+
+            let (--->) (source: IElement) (target, name, isAbstract) = 
+                let association = model.CreateAssociation(metamodelAssociation, source, target, name)
+                createAttribute association stringNode "shape" "Pictures/Edge.png"
+                createAttribute association booleanNode "isAbstract" (if isAbstract then "true" else "false")
+                createAttribute association metatype "instanceMetatype" "Metatype.Edge"
+
+            createEnumLiterals metatype ["Metatype.Node"; "Metatype.Edge"]
+            
+            createEnumLiterals attributeKind 
+                ["AttributeKind.String"
+                ; "AttributeKind.Int"
+                ; "AttributeKind.Double"
+                ; "AttributeKind.Boolean"]
+
+            node --|> element
+            edge --|> element
+            generalization --|> edge
+            association --|> edge
+
+            element ---> (element, "class", true)
+            element ---> (attribute, "attributes", true)
+            attribute ---> (element, "type", true)
+            edge ---> (element, "from", true)
+            edge ---> (element, "to", true)
+            repoNode ---> (modelNode, "models", true)
+            modelNode ---> (element, "elements", true)
 
             createAttribute element stringNode "shape" "Pictures/Vertex.png"
             createAttribute element booleanNode "isAbstract" "true"
@@ -108,11 +118,15 @@ type InfrastructureMetamodelBuilder() =
 
             createAttribute node booleanNode "isAbstract" "false"
 
-            createAttribute relationship stringNode "shape" "Pictures/Edge.png"
-            createAttribute relationship metatype "instanceMetatype" "Metatype.Edge"
+            createAttribute edge stringNode "shape" "Pictures/Edge.png"
+            createAttribute edge metatype "instanceMetatype" "Metatype.Edge"
 
-            createAttribute edge booleanNode "isAbstract" "false"
-            createAttribute edge stringNode "targetName" ""
+            createAttribute association booleanNode "isAbstract" "false"
+            createAttribute association stringNode "name" ""
+            createAttribute association stringNode "targetName" ""
+
+            createAttribute generalization booleanNode "isAbstract" "false"
+            createAttribute generalization stringNode "targetName" ""
 
             createAttribute attribute attributeKind "kind" "AttributeKind.String"
             createAttribute attribute stringNode "stringValue" ""
