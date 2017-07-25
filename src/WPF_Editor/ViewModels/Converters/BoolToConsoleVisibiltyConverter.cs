@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace WPF_Editor.ViewModels.Convertors
+namespace WPF_Editor.ViewModels.Converters
 {
     [ValueConversion(typeof(bool), typeof(string))]
     public class BoolToConsoleVisibiltyConvertor : IValueConverter
