@@ -6,7 +6,7 @@ namespace WPF_Editor.ViewModels
     public class Element : IElement
     {
         private readonly IElement _element;
-        public string Name { get; set; }
+        public string Name { get => _element.Name; set => _element.Name = value; }
         public virtual IElement Class => _element.Class;
         public virtual IEnumerable<IAttribute> Attributes => _element.Attributes;
         public virtual bool IsAbstract => _element.IsAbstract;
@@ -18,5 +18,8 @@ namespace WPF_Editor.ViewModels
         {
             _element = element;
         }
+
+        public override string ToString() => Name;
+        
     }
 }

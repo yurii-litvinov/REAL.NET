@@ -26,12 +26,13 @@ namespace WPF_Editor.ViewModels
         private readonly GXLogicCore _logicCore;
         
         private IScene Scene { get; }
+
         public SceneViewModel(ZoomControl zoomControl)
         {
             _zoomControl = zoomControl;
             Scene = Models.Scene.CreateScene();
             _graphArea = (zoomControl.Content) as GraphArea;
-            if (_graphArea is null)
+            if (_graphArea == null)
             {
                 throw new ArgumentException("Zoom control doesn't contain an instance of class GraphArea.");
             }
@@ -54,7 +55,8 @@ namespace WPF_Editor.ViewModels
             _logicCore.DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.SimpleER;
             _logicCore.AsyncAlgorithmCompute = true;
             _logicCore.Graph = graph;
-
+            var repo = RepoFactory.CreateRepo();
+            var model = repo.Model("RobotsMetamodel");
             _graphArea.LogicCore = _logicCore;
             _graphArea.SetVerticesDrag(true);
             _graphArea.GenerateGraph();
