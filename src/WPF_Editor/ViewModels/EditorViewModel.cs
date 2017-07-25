@@ -10,6 +10,7 @@ namespace WPF_Editor.ViewModels
     public class EditorViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+
         public Mediator Mediator { get; }
 
         //Try to use expression body methods.
@@ -17,6 +18,7 @@ namespace WPF_Editor.ViewModels
         {
             Mediator = Mediator.CreateMediator();
         }
+
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

@@ -86,6 +86,7 @@
     <Compile Include="Models\Interfaces\IToolbar.cs" />
     <Compile Include="Models\Mediator.cs" />
     <Compile Include="Models\Console\ConsoleWindow.cs" />
+    <Compile Include="ViewModels\Converters\BoolToConsoleVisibiltyConverter.cs" />
     <Compile Include="ViewModels\ConsoleViewModel.cs" />
     <Compile Include="ViewModels\Edge.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />

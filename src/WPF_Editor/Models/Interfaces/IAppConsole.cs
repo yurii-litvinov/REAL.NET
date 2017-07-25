@@ -1,4 +1,6 @@
-﻿namespace WPF_Editor.Models.Interfaces
+﻿using WPF_Editor.Models.Console;
+
+namespace WPF_Editor.Models.Interfaces
 {
     public interface IAppConsole
     {
@@ -7,7 +9,7 @@
         /// <summary>
         /// True, if it's visible, else false
         /// </summary>
-        bool VisibilityStatus { get; }
+        bool IsVisible { get; }
 
         /// <summary>
         /// Hides console from screen
@@ -31,5 +33,12 @@
         /// </summary>
         /// <param name="name">Name of window</param>
         void ClearConsoleWindowByName(string name);
+
+        /// <summary>
+        /// Gets window by name
+        /// </summary>
+        /// <param name="name">Name of window</param>
+        /// <returns></returns>
+        ConsoleWindow GetConsoleWindowByName(string name);
     }
 }

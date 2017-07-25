@@ -19,13 +19,13 @@ namespace WPF_Editor.Models
         /* This property has to be set from EditorView.xaml */
         public IElement SelectedElement { get; set; }
 
-
         public static IPalette CreatePalette(IPaletteMediator paletteMediator = null)
         {
             if(_palette is null)
                 _palette = new Palette(paletteMediator);
             return _palette;
         }
+
         private Palette(IPaletteMediator paletteMediator, string modelName = "RobotsMetamodel")
         {
             

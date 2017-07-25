@@ -21,9 +21,10 @@ open Repo.InfrastructureSemanticLayer
 /// Initializes repository with test model conforming to Robots Metamodel, actual program that can be written by end-user.
 type RobotsTestModelBuilder() =
     interface IModelBuilder with
-        member this.Build(repo: IRepo): unit = 
+        member this.Build(repo: IRepo): unit =
+            let infrastructure = InfrastructureSemantic(repo)
             let metamodel = Repo.findModel repo "RobotsMetamodel"
-            let infrastructureMetamodel = InfrastructureMetamodel.infrastructureMetamodel repo
+            let infrastructureMetamodel = infrastructure.Metamodel.Model
 
             let metamodelAbstractNode = Model.findNode metamodel "AbstractNode"
             let metamodelInitialNode = Model.findNode metamodel "InitialNode"
@@ -31,22 +32,22 @@ type RobotsTestModelBuilder() =
             let metamodelMotorsForward = Model.findNode metamodel "MotorsForward"
             let metamodelTimer = Model.findNode metamodel "Timer"
 
-            let link = Model.findAssociationWithSource metamodel metamodelAbstractNode "target"
-            
+            let link = Model.findAssociationWithSource metamodelAbstractNode "target"
+
             let model = repo.CreateModel("RobotsTestModel", metamodel)
 
-            let initialNode = Operations.instantiate repo model metamodelInitialNode
-            let finalNode = Operations.instantiate repo model metamodelFinalNode
+            let initialNode = infrastructure.Instantiate model metamodelInitialNode
+            let finalNode = infrastructure.Instantiate model metamodelFinalNode
 
-            let motorsForward = Operations.instantiate repo model metamodelMotorsForward
-            Element.setAttributeValue repo motorsForward "ports" "M3, M4"
-            Element.setAttributeValue repo motorsForward "power" "100"
+            let motorsForward = infrastructure.Instantiate model metamodelMotorsForward
+            infrastructure.Element.SetAttributeValue motorsForward "ports" "M3, M4"
+            infrastructure.Element.SetAttributeValue motorsForward "power" "100"
 
-            let timer = Operations.instantiate repo model metamodelTimer
-            Element.setAttributeValue repo timer "delay" "3000"
+            let timer = infrastructure.Instantiate model metamodelTimer
+            infrastructure.Element.SetAttributeValue timer "delay" "3000"
 
-            let (-->) (src: IElement) dst = 
-                let aLink = Operations.instantiate repo model link :?> IAssociation
+            let (-->) (src: IElement) dst =
+                let aLink = infrastructure.Instantiate model link :?> IAssociation
                 aLink.Source <- Some src
                 aLink.Target <- Some dst
                 dst

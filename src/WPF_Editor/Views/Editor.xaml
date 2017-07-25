@@ -11,8 +11,7 @@
     Height="720"
     WindowState="Maximized"
     mc:Ignorable="d">
-    <Grid>
-        <DockPanel>
+    <DockPanel>
             <Border
                 BorderBrush="Black"
                 BorderThickness="1"
@@ -27,34 +26,7 @@
                 BorderBrush="Black"
                 BorderThickness="1"
                 DockPanel.Dock="Bottom">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Button
-                        Grid.Row="0"
-                        Width="23"
-                        Margin="0,0,0.4,0.8"
-                        HorizontalAlignment="Right"
-                        Content=""
-                        RenderTransformOrigin="0.526,0.5" />
-                    <TabControl
-                        Grid.Row="1"
-                        Height="150"
-                        TabStripPlacement="Bottom">
-                        <TabItem Header="Messages">
-                            <ScrollViewer>
-                                <TextBox IsReadOnly="True" TextWrapping="Wrap" />
-                            </ScrollViewer>
-                        </TabItem>
-                        <TabItem Header="Errors">
-                            <ScrollViewer>
-                                <TextBox IsReadOnly="True" TextWrapping="Wrap" />
-                            </ScrollViewer>
-                        </TabItem>
-                    </TabControl>
-                </Grid>
+                <views:Console />
             </Border>
             <Border
                 BorderBrush="Black"
@@ -64,5 +36,5 @@
             </Border>
             <views:Scene/>
         </DockPanel>
-    </Grid>
+    
 </Window>
