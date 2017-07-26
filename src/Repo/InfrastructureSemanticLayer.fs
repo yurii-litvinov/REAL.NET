@@ -231,7 +231,7 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel) =
         addAttribute element name kind value "true" |> ignore
 
     /// Returns value of an attribute with given name.
-    /// TODO: Actually do BFS and stop on first matching attribute.
+    // TODO: Actually do BFS and stop on first matching attribute.
     member this.AttributeValue element attributeName =
         // TODO: Check that it is actually last overriden attribute, not some attribute from one of the parents.
         // TODO: Also do something with correctness of attribute inheritance.

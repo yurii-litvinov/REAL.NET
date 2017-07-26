@@ -46,7 +46,7 @@ type Repo(repo: DataLayer.IRepo) =
         member this.CreateModel(name, metamodel) =
             let underlyingModel = repo.CreateModel(name, unwrap metamodel)
             modelRepository.GetModel underlyingModel
-        
+
         member this.DeleteModel model =
             repo.DeleteModel (unwrap model)
             // TODO: Remove all elements from this model too.

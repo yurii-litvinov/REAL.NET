@@ -11,7 +11,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
- 
+
 module FacadeModelTests
 
 open NUnit.Framework
@@ -40,7 +40,7 @@ let init () =
 
     let underlyingModel = (repo :> DataLayer.IRepo).CreateModel("Model", infrastructureMetamodel)
     let model = Model(infrastructure, underlyingModel, elementRepository, modelRepository)
-    
+
     model :> IModel
 
 [<Test>]

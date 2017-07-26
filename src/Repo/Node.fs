@@ -19,12 +19,12 @@ open Repo
 /// Implementation of a node in model.
 type Node
     (
-        infrastructure: InfrastructureSemanticLayer.InfrastructureSemantic, 
-        element: DataLayer.INode, 
-        elementRepository: IElementRepository, 
+        infrastructure: InfrastructureSemanticLayer.InfrastructureSemantic,
+        element: DataLayer.INode,
+        elementRepository: IElementRepository,
         attributeRepository: AttributeRepository
-    ) = 
-    
+    ) =
+
     inherit Element(infrastructure, element, elementRepository, attributeRepository)
 
     interface INode

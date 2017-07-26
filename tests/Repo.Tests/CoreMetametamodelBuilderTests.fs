@@ -11,7 +11,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
- 
+
 module CoreMetametamodelBuilderTests
 
 open NUnit.Framework
@@ -40,7 +40,7 @@ let ``Every model element shall have correct type`` () =
 
     Seq.length repo.Models |> should equal 1
 
-    let model = repo.Models |> Seq.head 
+    let model = repo.Models |> Seq.head
     let node = model.Nodes |> Seq.find (fun n -> n.Name = "Node") :> IElement
     let generalization = model.Nodes |> Seq.find (fun n -> n.Name = "Generalization") :> IElement
     let association = model.Nodes |> Seq.find (fun n -> n.Name = "Association") :> IElement
