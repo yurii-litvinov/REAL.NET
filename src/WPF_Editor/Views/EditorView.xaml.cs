@@ -10,7 +10,6 @@ using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
 using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
 using GraphX.PCL.Logic.Models;
 using QuickGraph;
-using WPF_Editor.Models.Interfaces;
 using WPF_Editor.ViewModels;
 
 namespace WPF_Editor.Views
@@ -54,9 +53,9 @@ namespace WPF_Editor.Views
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class Editor : Window
+    public partial class EditorView : Window
     {
-        public Editor()
+        public EditorView()
         {
             //EditorViewModel's initialization has to be done before InitializeComponent();
             var x = new EditorViewModel();

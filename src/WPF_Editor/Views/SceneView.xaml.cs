@@ -21,29 +21,25 @@ using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
 using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
 using GraphX.PCL.Logic.Models;
 using QuickGraph;
-using WPF_Editor.Models.Interfaces;
 using WPF_Editor.ViewModels;
+using WPF_Editor.ViewModels.Interfaces;
 
 namespace WPF_Editor.Views
 {
-    //Logic core class
     /// <summary>
-    /// Interaction logic for Scene.xaml
+    /// Interaction logic for SceneView.xaml
     /// </summary>
-    public partial class Scene : UserControl
+    public partial class SceneView : UserControl
     {
-        private SceneViewModel _sceneViewModel;
+        private ISceneViewModel _scene;
 
-        public Scene()
+        public SceneView()
         {
             InitializeComponent();
-            _sceneViewModel = new SceneViewModel(zoomctrl);
-            DataContext = _sceneViewModel;
+            _scene = SceneViewModel.CreateScene();
+            _scene.InitializeScene(zoomctrl);
+            DataContext = _scene;
         }
 
-        private void Zoomctrl_OnClick(object sender, RoutedEventArgs e)
-        {
-            _sceneViewModel.HandleSingleLeftClick();
-        }
     }
 }

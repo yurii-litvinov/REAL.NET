@@ -76,44 +76,43 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Models\Interfaces\IAppConsole.cs" />
-    <Compile Include="Models\Interfaces\IAppConsoleMediator.cs" />
-    <Compile Include="Models\Interfaces\IPalette.cs" />
-    <Compile Include="Models\Interfaces\IPaletteMediator.cs" />
-    <Compile Include="Models\Interfaces\IPlaginbar.cs" />
-    <Compile Include="Models\Interfaces\IScene.cs" />
-    <Compile Include="Models\Interfaces\ISceneMediator.cs" />
-    <Compile Include="Models\Interfaces\IToolbar.cs" />
-    <Compile Include="Models\Mediator.cs" />
-    <Compile Include="Models\Console\ConsoleWindow.cs" />
     <Compile Include="ViewModels\Converters\BoolToConsoleVisibiltyConverter.cs" />
     <Compile Include="ViewModels\ConsoleViewModel.cs" />
-    <Compile Include="ViewModels\Edge.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
-    <Compile Include="ViewModels\Element.cs" />
-    <Compile Include="ViewModels\Node.cs" />
+    <Compile Include="ViewModels\Helpers\GraphArea.cs" />
+    <Compile Include="ViewModels\Helpers\GXLogicCore.cs" />
+    <Compile Include="ViewModels\Interfaces\IPaletteMediatorViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\IPaletteViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\ISceneMediatorViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\ISceneViewModel.cs" />
+    <Compile Include="ViewModels\MediatorViewModel.cs" />
+    <Compile Include="ViewModels\Helpers\MetamodelEdge.cs" />
+    <Compile Include="ViewModels\Helpers\ModelEdge.cs" />
+    <Compile Include="ViewModels\Helpers\ModelElement.cs" />
+    <Compile Include="ViewModels\Helpers\ModelNode.cs" />
     <Compile Include="ViewModels\PaletteViewModel.cs" />
     <Compile Include="ViewModels\PluginbarViewModel.cs" />
     <Compile Include="ViewModels\SceneViewModel.cs" />
     <Compile Include="ViewModels\ToolbarViewModel.cs" />
-    <Compile Include="ViewModels\ViewNode.cs" />
-    <Compile Include="Views\Console.xaml.cs">
-      <DependentUpon>Console.xaml</DependentUpon>
+    <Compile Include="ViewModels\Helpers\MetamodelElement.cs" />
+    <Compile Include="ViewModels\Helpers\MetamodelNode.cs" />
+    <Compile Include="Views\ConsoleView.xaml.cs">
+      <DependentUpon>ConsoleView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Editor.xaml.cs">
-      <DependentUpon>Editor.xaml</DependentUpon>
+    <Compile Include="Views\EditorView.xaml.cs">
+      <DependentUpon>EditorView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Palette.xaml.cs">
-      <DependentUpon>Palette.xaml</DependentUpon>
+    <Compile Include="Views\PaletteView.xaml.cs">
+      <DependentUpon>PaletteView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pluginbar.xaml.cs">
-      <DependentUpon>Pluginbar.xaml</DependentUpon>
+    <Compile Include="Views\PluginbarView.xaml.cs">
+      <DependentUpon>PluginbarView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Scene.xaml.cs">
-      <DependentUpon>Scene.xaml</DependentUpon>
+    <Compile Include="Views\SceneView.xaml.cs">
+      <DependentUpon>SceneView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Toolbar.xaml.cs">
-      <DependentUpon>Toolbar.xaml</DependentUpon>
+    <Compile Include="Views\ToolbarView.xaml.cs">
+      <DependentUpon>ToolbarView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -127,36 +126,32 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\Console.xaml">
+    <Page Include="Views\ConsoleView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Editor.xaml">
+    <Page Include="Views\EditorView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Palette.xaml">
+    <Page Include="Views\PaletteView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pluginbar.xaml">
+    <Page Include="Views\PluginbarView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Scene.xaml">
+    <Page Include="Views\SceneView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Toolbar.xaml">
+    <Page Include="Views\ToolbarView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Console\AppConsole.cs" />
-    <Compile Include="Models\Palette.cs" />
-    <Compile Include="Models\Scene.cs" />
-    <Compile Include="Models\Toolbar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -189,6 +184,8 @@
       <Name>Repo</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

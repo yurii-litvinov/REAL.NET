@@ -1,16 +1,16 @@
 ﻿<UserControl
-    x:Class="WPF_Editor.Views.Scene"
+    x:Class="WPF_Editor.Views.SceneView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:graphxctrl="clr-namespace:GraphX.Controls;assembly=GraphX.WPF.Controls"
     xmlns:local="clr-namespace:WPF_Editor.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModels="clr-namespace:WPF_Editor.ViewModels"
+    xmlns:viewModels="clr-namespace:WPF_Editor.ViewModels.Helpers"
     d:DesignHeight="300"
     d:DesignWidth="300"
     mc:Ignorable="d">
-    <graphxctrl:ZoomControl x:Name="zoomctrl" Click="Zoomctrl_OnClick" ViewFinderVisibility="Collapsed">
+    <graphxctrl:ZoomControl x:Name="zoomctrl" ViewFinderVisibility="Collapsed">
         <viewModels:GraphArea x:Name="graphArea" />
     </graphxctrl:ZoomControl>
 </UserControl>

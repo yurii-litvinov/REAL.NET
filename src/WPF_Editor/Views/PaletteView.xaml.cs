@@ -17,14 +17,14 @@ using WPF_Editor.ViewModels;
 namespace WPF_Editor.Views
 {
     /// <summary>
-    /// Interaction logic for Palette.xaml
+    /// Interaction logic for PaletteView.xaml
     /// </summary>
-    public partial class Palette : UserControl
+    public partial class PaletteView : UserControl
     {
-        public Palette()
+        public PaletteView()
         {
             InitializeComponent();
-            DataContext = new PaletteViewModel();
+            DataContext = PaletteViewModel.CreatePalette();
         }
     }
 }

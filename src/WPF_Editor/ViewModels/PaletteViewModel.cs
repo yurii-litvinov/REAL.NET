@@ -5,75 +5,84 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using QuickGraph;
 using Repo;
-using WPF_Editor.Models;
-using WPF_Editor.Models.Interfaces;
+using WPF_Editor.ViewModels.Interfaces;
 
 namespace WPF_Editor.ViewModels
 {
-    public class PaletteViewModel : INotifyPropertyChanged
+    public class PaletteViewModel : IPaletteViewModel, INotifyPropertyChanged
     {
-        private Element _selectedElement;
-        private readonly IPalette _palette = Palette.CreatePalette();
-
+        private MetamodelElement _selectedElement;
+        private IPaletteMediatorViewModel _paletteMediator;
+        private static IPaletteViewModel _palette;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        // Must be public because bindings use these properties
-        //Create class ViewNode
-        public ObservableCollection<Node> Nodes { get; }
 
-        public ObservableCollection<Edge> Edges { get; }
+        public ObservableCollection<MetamodelNode> Nodes { get; }
 
-        public ObservableCollection<Element> Elements { get; }
+        public ObservableCollection<MetamodelEdge> Edges { get; }
 
-        public Element SelectedElement
+        public ObservableCollection<MetamodelElement> Elements { get; }
+
+        public static IPaletteViewModel CreatePalette(IPaletteMediatorViewModel paletteMediator = null)
         {
-            get {
-                
-                if (_palette.SelectedElement is INode)
-                {
-                    _selectedElement = new Node((INode) _palette.SelectedElement);
-                }
-                //Implement later.
-                /*
-                else if (_palette.SelectedElement is IEdge)
-                {
-                    _selectedElement = new Edge((IEdge) _palette.SelectedElement);
-                }
-                */
-                return _selectedElement;
+            if (_palette == null)
+            {
+                _palette = new PaletteViewModel(paletteMediator);
             }
+            return _palette;
+        }
+
+        private PaletteViewModel(IPaletteMediatorViewModel paletteMediator)
+        {
+            Nodes = new ObservableCollection<MetamodelNode>();
+            Edges = new ObservableCollection<MetamodelEdge>();
+            Elements = new ObservableCollection<MetamodelElement>();
+            _paletteMediator = paletteMediator;
+            foreach (var inode in _paletteMediator.metamodelNodes)
+            {
+                if (!inode.IsAbstract)
+                {
+                    Nodes.Add(new MetamodelNode(inode));
+                }
+            }
+            foreach (var iedge in _paletteMediator.metamodelEdges)
+            {
+                if (!iedge.IsAbstract)
+                {
+                    Edges.Add(new MetamodelEdge(iedge));
+                }
+            }
+            foreach (var ielement in _paletteMediator.metamodelElements)
+            {
+                if (!ielement.IsAbstract)
+                {
+                    if (ielement is INode)
+                    {
+                        Elements.Add(new MetamodelNode(ielement as INode));
+                    }
+                    else
+                    {
+                        Elements.Add(new MetamodelEdge(ielement as IEdge));
+                    }
+                }
+            }
+        }
+
+        public MetamodelElement SelectedElement
+        {
+            get => _selectedElement;
             set
             {
+                _selectedElement = value;
                 OnPropertyChanged("SelectedElement");
-                _palette.SelectedElement = value;
             }
             
         }
 
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        public PaletteViewModel()
-        {
-            IRepo repo = RepoFactory.CreateRepo();
-            IModel model = repo.Model("RobotsMetamodel");
-            model.Metamodel.Nodes.First().Name = "ss";
-            
-            Nodes = new ObservableCollection<Node>();
-            foreach (var inode in _palette.Nodes)
-            {
-                Nodes.Add(new Node(inode));
-            }
-            Edges = new ObservableCollection<Edge>();
-            foreach (var iedge in _palette.Edges)
-            {
-                Edges.Add(new Edge(iedge, null, null));
-            }
-            Elements = new ObservableCollection<Element>();
-            foreach (var ielement in _palette.Elements)
-            {
-                Elements.Add(new Element(ielement));
-            }
-        }
+        
     }
 }

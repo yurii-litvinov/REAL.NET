@@ -32,5 +32,6 @@ namespace WPF_Editor.ViewModels
         {
             _elementImplementation = element;
         }
+        public override string ToString() => Name;
     }
 }

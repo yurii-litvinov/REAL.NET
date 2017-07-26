@@ -17,14 +17,14 @@ using WPF_Editor.ViewModels;
 namespace WPF_Editor.Views
 {
     /// <summary>
-    /// Interaction logic for Pluginbar.xaml
+    /// Interaction logic for ToolbarView.xaml
     /// </summary>
-    public partial class Pluginbar : UserControl
+    public partial class ToolbarView : UserControl
     {
-        public Pluginbar()
+        public ToolbarView()
         {
             InitializeComponent();
-            DataContext = new PluginbarViewModel();
+            DataContext = new ToolbarViewModel();
         }
     }
 }

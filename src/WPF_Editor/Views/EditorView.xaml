@@ -1,5 +1,5 @@
 ﻿<Window
-    x:Class="WPF_Editor.Views.Editor"
+    x:Class="WPF_Editor.Views.EditorView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:col="clr-namespace:System.Collections;assembly=mscorlib"
@@ -17,8 +17,8 @@
                 BorderThickness="1"
                 DockPanel.Dock="Top">
                 <StackPanel Name="TopPanel" Height="Auto">
-                    <views:Toolbar />
-                    <views:Pluginbar />
+                    <views:ToolbarView />
+                    <views:PluginbarView />
                 </StackPanel>
             </Border>
             <Border
@@ -26,15 +26,15 @@
                 BorderBrush="Black"
                 BorderThickness="1"
                 DockPanel.Dock="Bottom">
-                <views:Console />
+                <views:ConsoleView />
             </Border>
             <Border
                 BorderBrush="Black"
                 BorderThickness="1"
                 DockPanel.Dock="Right">
-                <views:Palette />
+                <views:PaletteView />
             </Border>
-            <views:Scene/>
+            <views:SceneView/>
         </DockPanel>
     
 </Window>

@@ -13,6 +13,7 @@ namespace WPF_Editor.ViewModels
 {
     public class ModelEdge : ModelElement, IEdge, IGraphXEdge<ModelNode>
     {
+        //Change
         public IEdge Edge { get; }
 
         public ModelEdge(IEdge edge, ModelElement source, ModelElement target) : base(edge)

@@ -12,31 +12,41 @@ using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
 using GraphX.PCL.Logic.Models;
 using QuickGraph;
 using Repo;
-using WPF_Editor.Models.Interfaces;
+using WPF_Editor.ViewModels.Helpers;
+using WPF_Editor.ViewModels.Interfaces;
 
 namespace WPF_Editor.ViewModels
 {
-    public class GraphArea : GraphArea<Node, Edge, BidirectionalGraph<Node, Edge>> { }
-    public class GXLogicCore : GXLogicCore<Node, Edge, BidirectionalGraph<Node, Edge>> { }
-    
-    public class SceneViewModel
+    public class SceneViewModel : ISceneViewModel
     {
-        private readonly ZoomControl _zoomControl;
-        private readonly GraphArea _graphArea;
-        private readonly GXLogicCore _logicCore;
-        
-        private IScene Scene { get; }
+        private ZoomControl _zoomControl;
+        private GraphArea _graphArea;
+        private GXLogicCore _logicCore;
+        private static ISceneViewModel _scene;
+        private readonly ISceneMediatorViewModel _sceneMediator;
 
-        public SceneViewModel(ZoomControl zoomControl)
+        public static ISceneViewModel CreateScene(ISceneMediatorViewModel sceneMediator = null)
+        {
+            if (_scene == null)
+            {
+                _scene = new SceneViewModel(sceneMediator);
+            }
+            return _scene;
+        }
+
+        private SceneViewModel(ISceneMediatorViewModel sceneMediator)
+        {
+            _sceneMediator = sceneMediator;
+        }
+        public void InitializeScene(ZoomControl zoomControl)
         {
             _zoomControl = zoomControl;
-            Scene = Models.Scene.CreateScene();
             _graphArea = (zoomControl.Content) as GraphArea;
             if (_graphArea == null)
             {
                 throw new ArgumentException("Zoom control doesn't contain an instance of class GraphArea.");
             }
-            var graph = new BidirectionalGraph<Node, Edge>();
+            var graph = new BidirectionalGraph<ModelNode, ModelEdge>();
 
             _logicCore = new GXLogicCore
             {
@@ -55,13 +65,17 @@ namespace WPF_Editor.ViewModels
             _logicCore.DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.SimpleER;
             _logicCore.AsyncAlgorithmCompute = true;
             _logicCore.Graph = graph;
-            var repo = RepoFactory.CreateRepo();
-            var model = repo.Model("RobotsMetamodel");
             _graphArea.LogicCore = _logicCore;
             _graphArea.SetVerticesDrag(true);
             _graphArea.GenerateGraph();
         }
 
+        public ModelElement CreateElement()
+        {
+            throw new NotImplementedException();
+        }
+
+        /*
         public void HandleSingleLeftClick()
         {
 
@@ -81,5 +95,6 @@ namespace WPF_Editor.ViewModels
             }
             throw new NotImplementedException("Cannot handle edges... yet...");
         }
+        */
     }
 }

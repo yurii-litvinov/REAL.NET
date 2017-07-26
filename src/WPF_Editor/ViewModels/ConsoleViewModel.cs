@@ -4,13 +4,13 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WPF_Editor.Models.Console;
-using WPF_Editor.Models.Interfaces;
 
 namespace WPF_Editor.ViewModels
 { 
+    /*
     public class ConsoleViewModel : INotifyPropertyChanged
     {
+
         private readonly IAppConsole console = AppConsole.CreateConsole();
 
         public bool ConsoleVisibility => console.IsVisible;
@@ -42,4 +42,5 @@ namespace WPF_Editor.ViewModels
             console.GetConsoleWindowByName("ErrorConsole").NewMessage("error");
         }
     }
+    */
 }

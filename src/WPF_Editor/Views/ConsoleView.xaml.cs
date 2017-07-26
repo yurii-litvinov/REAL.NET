@@ -17,21 +17,22 @@ using WPF_Editor.ViewModels;
 namespace WPF_Editor.Views
 {
     /// <summary>
-    /// Interaction logic for Console.xaml
+    /// Interaction logic for ConsoleView.xaml
     /// </summary>
-    public partial class Console : UserControl
+    public partial class ConsoleView : UserControl
     {
-        private ConsoleViewModel viewModel = new ConsoleViewModel();
-
-        public Console()
+        
+        //private ConsoleViewModel viewModel = new ConsoleViewModel();
+        
+        public ConsoleView()
         {
             InitializeComponent();
-            DataContext = viewModel;
+            //DataContext = viewModel;
         }
 
-        private void OnHideShowButtonClick(object sender, RoutedEventArgs e)
-        {
-            viewModel.ChangeConsoleVisibility();
-        }
+        //private void OnHideShowButtonClick(object sender, RoutedEventArgs e)
+        //{
+        //    viewModel.ChangeConsoleVisibility();
+        //}
     }
 }
