@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GraphX.PCL.Common.Enums;
+﻿using GraphX.PCL.Common.Enums;
 using GraphX.PCL.Common.Interfaces;
 using Repo;
 
-namespace WPF_Editor.ViewModels
+namespace WPF_Editor.ViewModels.Helpers
 {
     public class ModelNode : ModelElement, INode, IGraphXVertex
     {

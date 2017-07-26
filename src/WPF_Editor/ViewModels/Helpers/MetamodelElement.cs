@@ -1,36 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Repo;
 
-namespace WPF_Editor.ViewModels
+namespace WPF_Editor.ViewModels.Helpers
 {
     public abstract class MetamodelElement : IElement
     {
-        private readonly IElement _elementImplementation;
+        public IElement IElement { get; }
         public string Name
         {
-            get => _elementImplementation.Name;
+            get => IElement.Name;
             set => throw new NotImplementedException($"Cannot change name of {Metatype} from metamodel");
         }
 
-        public IElement Class => _elementImplementation.Class;
+        public IElement Class => IElement.Class;
 
-        public IEnumerable<IAttribute> Attributes => _elementImplementation.Attributes;
+        public IEnumerable<IAttribute> Attributes => IElement.Attributes;
 
-        public bool IsAbstract => _elementImplementation.IsAbstract;
+        public bool IsAbstract => IElement.IsAbstract;
 
-        public Metatype Metatype => _elementImplementation.Metatype;
+        public Metatype Metatype => IElement.Metatype;
 
-        public Metatype InstanceMetatype => _elementImplementation.InstanceMetatype;
+        public Metatype InstanceMetatype => IElement.InstanceMetatype;
 
-        public string Shape => _elementImplementation.Shape;
+        public string Shape => IElement.Shape;
 
         protected MetamodelElement(IElement element)
         {
-            _elementImplementation = element;
+            IElement = element;
         }
         public override string ToString() => Name;
     }

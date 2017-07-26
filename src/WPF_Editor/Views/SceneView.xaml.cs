@@ -41,5 +41,9 @@ namespace WPF_Editor.Views
             DataContext = _scene;
         }
 
+        private void Zoomctrl_OnClick(object sender, RoutedEventArgs e)
+        {
+            _scene.HandleSingleLeftClick();
+        }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Repo;
+using WPF_Editor.ViewModels.Helpers;
 using WPF_Editor.ViewModels.Interfaces;
 
 namespace WPF_Editor.ViewModels
@@ -45,8 +46,19 @@ namespace WPF_Editor.ViewModels
             _palette = PaletteViewModel.CreatePalette(this);
         }
 
-        public IEnumerable<IElement> metamodelElements => _currentMetamodel.Elements;
-        public IEnumerable<INode> metamodelNodes => _currentMetamodel.Nodes;
-        public IEnumerable<IEdge> metamodelEdges => _currentMetamodel.Edges;
+        public IEnumerable<IElement> MetamodelElements => _currentMetamodel.Elements;
+        public IEnumerable<INode> MetamodelNodes => _currentMetamodel.Nodes;
+        public IEnumerable<IEdge> MetamodelEdges => _currentMetamodel.Edges;
+        public ModelElement GetInstanceOfSelectedType()
+        {
+            MetamodelElement element = _palette.SelectedElement;
+            IElement instance = _currentModel.CreateElement(element.IElement);
+
+            if (instance is INode)
+            {
+                return new ModelNode((INode)instance);
+            }
+            return null;
+        }
     }
 }

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Repo;
 
-namespace WPF_Editor.ViewModels
+namespace WPF_Editor.ViewModels.Helpers
 {
     public abstract class ModelElement : IElement
     {

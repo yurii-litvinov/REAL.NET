@@ -1,30 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Repo;
 
-namespace WPF_Editor.ViewModels
+namespace WPF_Editor.ViewModels.Helpers
 {
     public class MetamodelEdge : MetamodelElement, IEdge
     {
-        private readonly IEdge _edgeImplementation;
+        public IEdge IEdge { get; }
         public IElement From
         {
-            get => _edgeImplementation.From;
+            get => IEdge.From;
             set => throw new NotImplementedException("Cannot change source element of metamodel edge.");
         }
 
         public IElement To
         {
-            get => _edgeImplementation.To;
+            get => IEdge.To;
             set => throw new NotImplementedException("Cannot change target element of metamodel edge.");
         }
 
         public MetamodelEdge(IEdge iedge) : base(iedge)
         {
-            _edgeImplementation = iedge;
+            IEdge = iedge;
         }
     }
 }

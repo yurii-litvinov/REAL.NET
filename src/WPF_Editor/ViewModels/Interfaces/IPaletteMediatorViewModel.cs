@@ -9,8 +9,8 @@ namespace WPF_Editor.ViewModels.Interfaces
 {
     public interface IPaletteMediatorViewModel
     {
-        IEnumerable<IElement> metamodelElements { get; }
-        IEnumerable<INode> metamodelNodes { get; }
-        IEnumerable<IEdge> metamodelEdges { get; }
+        IEnumerable<IElement> MetamodelElements { get; }
+        IEnumerable<INode> MetamodelNodes { get; }
+        IEnumerable<IEdge> MetamodelEdges { get; }
     }
 }

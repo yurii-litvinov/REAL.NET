@@ -70,20 +70,14 @@ namespace WPF_Editor.ViewModels
             _graphArea.GenerateGraph();
         }
 
-        public ModelElement CreateElement()
-        {
-            throw new NotImplementedException();
-        }
 
-        /*
+
         public void HandleSingleLeftClick()
         {
-
-            Scene.CreateNode();
-            IElement element = Scene.LastCreatedElement;
-            if (element is INode)
+            ModelElement element = _sceneMediator.GetInstanceOfSelectedType();
+            if (element is ModelNode)
             {
-                var node = new Node((INode)element);
+                var node = (ModelNode)element;
                 _logicCore.Graph.AddVertex(node);
                 _graphArea.GenerateGraph();
                 return;
@@ -91,10 +85,11 @@ namespace WPF_Editor.ViewModels
             // If element isn't selected it won't do anything
             if (element == null)
             {
+
                 return;
             }
-            throw new NotImplementedException("Cannot handle edges... yet...");
+
         }
-        */
+
     }
 }

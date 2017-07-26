@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GraphX.Controls;
+using WPF_Editor.ViewModels.Helpers;
 
 namespace WPF_Editor.ViewModels.Interfaces
 {
     public interface ISceneViewModel
     {
         void InitializeScene(ZoomControl zoomControl);
-        ModelElement CreateElement();
+        void HandleSingleLeftClick();
     }
 }

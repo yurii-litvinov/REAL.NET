@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using QuickGraph;
 using Repo;
+using WPF_Editor.ViewModels.Helpers;
 using WPF_Editor.ViewModels.Interfaces;
 
 namespace WPF_Editor.ViewModels
@@ -40,21 +41,21 @@ namespace WPF_Editor.ViewModels
             Edges = new ObservableCollection<MetamodelEdge>();
             Elements = new ObservableCollection<MetamodelElement>();
             _paletteMediator = paletteMediator;
-            foreach (var inode in _paletteMediator.metamodelNodes)
+            foreach (var inode in _paletteMediator.MetamodelNodes)
             {
                 if (!inode.IsAbstract)
                 {
                     Nodes.Add(new MetamodelNode(inode));
                 }
             }
-            foreach (var iedge in _paletteMediator.metamodelEdges)
+            foreach (var iedge in _paletteMediator.MetamodelEdges)
             {
                 if (!iedge.IsAbstract)
                 {
                     Edges.Add(new MetamodelEdge(iedge));
                 }
             }
-            foreach (var ielement in _paletteMediator.metamodelElements)
+            foreach (var ielement in _paletteMediator.MetamodelElements)
             {
                 if (!ielement.IsAbstract)
                 {
