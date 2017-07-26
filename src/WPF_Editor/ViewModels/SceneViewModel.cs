@@ -12,6 +12,7 @@ using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
 using GraphX.PCL.Logic.Models;
 using QuickGraph;
 using Repo;
+using Repo.CoreSemanticLayer;
 using WPF_Editor.ViewModels.Helpers;
 using WPF_Editor.ViewModels.Interfaces;
 
@@ -72,23 +73,27 @@ namespace WPF_Editor.ViewModels
 
 
 
-        public void HandleSingleLeftClick()
+        public void HandleSingleLeftClick(Point position)
         {
             ModelElement element = _sceneMediator.GetInstanceOfSelectedType();
+            if (element == null)
+            {
+                return;
+            }
             if (element is ModelNode)
             {
                 var node = (ModelNode)element;
+                var nodeControl = new VertexControl(node);
                 _logicCore.Graph.AddVertex(node);
-                _graphArea.GenerateGraph();
+                nodeControl.SetPosition(position);
+                _graphArea.AddVertex(node,nodeControl);
+                _graphArea.RelayoutGraph(true);
                 return;
             }
-            // If element isn't selected it won't do anything
-            if (element == null)
+            if(element is ModelEdge)
             {
-
-                return;
+                
             }
-
         }
 
     }

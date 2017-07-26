@@ -43,7 +43,9 @@ namespace WPF_Editor.Views
 
         private void Zoomctrl_OnClick(object sender, RoutedEventArgs e)
         {
-            _scene.HandleSingleLeftClick();
+            var position = Mouse.GetPosition(this);
+            position = TranslatePoint(position, graphArea);
+            _scene.HandleSingleLeftClick(position);
         }
     }
 }

@@ -15,7 +15,6 @@ namespace WPF_Editor.ViewModels
         private static MediatorViewModel _mediator;
         private ISceneViewModel _scene;
         private IPaletteViewModel _palette;
-        private IRepo repo;
         private IModel _currentMetamodel;
         private IModel _currentModel;
 
@@ -34,11 +33,9 @@ namespace WPF_Editor.ViewModels
 
         private MediatorViewModel()
         {
-            //Find out, why doesn't _currentModel.Metamodel.Elements contain any elements?
-            repo = RepoFactory.CreateRepo();
             _currentMetamodel = _repo.Model("RobotsMetamodel");
-            _currentModel = repo.CreateModel("New model based on RobotsMetamodel", _currentMetamodel);
-            foreach (var element in _currentMetamodel.Elements)
+            _currentModel = _repo.CreateModel("New model based on RobotsMetamodel", _currentMetamodel);
+            foreach (var element in _currentModel.Metamodel.Elements)
             {
                 System.Console.WriteLine(element.Name);
             }
@@ -46,19 +43,21 @@ namespace WPF_Editor.ViewModels
             _palette = PaletteViewModel.CreatePalette(this);
         }
 
-        public IEnumerable<IElement> MetamodelElements => _currentMetamodel.Elements;
-        public IEnumerable<INode> MetamodelNodes => _currentMetamodel.Nodes;
-        public IEnumerable<IEdge> MetamodelEdges => _currentMetamodel.Edges;
+        public IEnumerable<IElement> MetamodelElements => _currentModel.Metamodel.Elements;
+        public IEnumerable<INode> MetamodelNodes => _currentModel.Metamodel.Nodes;
+        public IEnumerable<IEdge> MetamodelEdges => _currentModel.Metamodel.Edges;
         public ModelElement GetInstanceOfSelectedType()
         {
             MetamodelElement element = _palette.SelectedElement;
+            if (element is null)
+                return null;
             IElement instance = _currentModel.CreateElement(element.IElement);
 
             if (instance is INode)
             {
                 return new ModelNode((INode)instance);
             }
-            return null;
+            throw new NotImplementedException("Cannot create edge.");
         }
     }
 }
