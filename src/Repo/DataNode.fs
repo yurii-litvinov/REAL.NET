@@ -19,11 +19,11 @@ type DataNode private (name: string, ``class``: IElement option, model: IModel) 
     inherit DataElement(``class``, model)
 
     let mutable name = name
-    
+
     new (name: string, model: IModel) = DataNode(name, None, model)
     new (name: string, ``class``: IElement, model: IModel) = DataNode(name, Some ``class``, model)
 
     interface INode with
-        member this.Name 
+        member this.Name
             with get(): string = name
             and set v = name <- v

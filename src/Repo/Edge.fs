@@ -23,27 +23,27 @@ type Edge
         element: DataLayer.IEdge,
         elementRepository: IElementRepository,
         attributeRepository: AttributeRepository
-    ) = 
+    ) =
 
     inherit Element(infrastructure, element, elementRepository, attributeRepository)
 
     interface IEdge with
         member this.From
-            with get (): IElement = 
+            with get (): IElement =
                 if element.Source.IsNone then
                     null
-                else 
+                else
                     elementRepository.GetElement element.Source.Value
-            and set (v: IElement): unit = 
+            and set (v: IElement): unit =
                 let dataElement = (v :?> Element).UnderlyingElement
                 element.Source <- Some dataElement
 
         member this.To
-            with get (): IElement = 
+            with get (): IElement =
                 if element.Target.IsNone then
                     null
-                else 
-                    elementRepository.GetElement element.Target.Value 
-            and set (v: IElement): unit = 
+                else
+                    elementRepository.GetElement element.Target.Value
+            and set (v: IElement): unit =
                 let dataElement = (v :?> Element).UnderlyingElement
                 element.Target <- Some dataElement

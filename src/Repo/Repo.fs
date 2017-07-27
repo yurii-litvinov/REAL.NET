@@ -39,14 +39,14 @@ type Repo(repo: DataLayer.IRepo) =
             if Seq.isEmpty models then
                 raise (ModelNotFoundException name)
             elif Seq.length models <> 1 then
-                raise (MultipleModelsWithGivenNameException name)
+                raise (MultipleModelsException name)
             else
                 Seq.head models
 
         member this.CreateModel(name, metamodel) =
             let underlyingModel = repo.CreateModel(name, unwrap metamodel)
             modelRepository.GetModel underlyingModel
-        
+
         member this.DeleteModel model =
             repo.DeleteModel (unwrap model)
             // TODO: Remove all elements from this model too.

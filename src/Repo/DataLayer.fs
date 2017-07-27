@@ -34,7 +34,7 @@ type IElement =
 
         /// Deletes outgoing edge from this element.
         abstract DeleteOutgoingEdge: edge: IEdge -> unit
-        
+
         /// Deletes incoming edge from this element.
         abstract DeleteIncomingEdge: edge: IEdge -> unit
 
@@ -85,7 +85,7 @@ and IModel =
         /// Model can have descriptive name (possibly not unique).
         abstract Name: string with get, set
 
-        /// Metamodel is a model whose elements are types of elements for this model. Model can be a metamodel 
+        /// Metamodel is a model whose elements are types of elements for this model. Model can be a metamodel
         /// for itself.
         abstract Metamodel: IModel with get
 
@@ -102,19 +102,19 @@ and IModel =
         abstract CreateGeneralization: ``class``: IElement * source: IElement option * target: IElement option -> IGeneralization
 
         /// Creates new Association edge with given source and target.
-        abstract CreateAssociation: 
-                ``class``: IElement 
-                * source: IElement 
-                * target: IElement 
-                * targetName: string 
+        abstract CreateAssociation:
+                ``class``: IElement
+                * source: IElement
+                * target: IElement
+                * targetName: string
                 -> IAssociation
 
         /// Creates new possibly unconnected Association edge.
-        abstract CreateAssociation: 
-                ``class``: IElement 
-                * source: IElement option 
-                * target: IElement option 
-                * targetName: string 
+        abstract CreateAssociation:
+                ``class``: IElement
+                * source: IElement option
+                * target: IElement option
+                * targetName: string
                 -> IAssociation
 
         /// Returns all elements in a model.

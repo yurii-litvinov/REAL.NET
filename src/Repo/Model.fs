@@ -29,53 +29,53 @@ type ModelRepository(infrastructure: InfrastructureSemantic, elementRepository: 
             let newModel = Model(infrastructure, data, elementRepository, this)
             models.Add (data, newModel)
             newModel :> IModel
-    
-    member this.DeleteModel (model: IModel) = 
+
+    member this.DeleteModel (model: IModel) =
         let unwrappedModel = (model :?> Model).UnderlyingModel
         models.Remove unwrappedModel |> ignore
 
 and Model
     (
-        infrastructure: InfrastructureSemantic, 
-        model: DataLayer.IModel, 
-        elementRepository: IElementRepository, 
+        infrastructure: InfrastructureSemantic,
+        model: DataLayer.IModel,
+        elementRepository: IElementRepository,
         repository: ModelRepository
-    ) = 
+    ) =
 
     /// Returns model corresponding to this wrapper in a data layer.
     member this.UnderlyingModel = model
 
     interface IModel with
-        member this.CreateElement ``type`` = 
+        member this.CreateElement ``type`` =
             let unwrappedType = (``type`` :?> Element).UnderlyingElement
             let element = infrastructure.Instantiate model unwrappedType
             elementRepository.GetElement element
-            
-        member this.DeleteElement element = 
+
+        member this.DeleteElement element =
             // TODO: Clean up the memory and check correctness (for example, check for "class" relations)
             let unwrappedElement = (element :?> Element).UnderlyingElement
             /// TODO: Delete all attributes.
             model.DeleteElement unwrappedElement
             elementRepository.DeleteElement unwrappedElement
-        
-        member this.Nodes = 
-            model.Nodes 
+
+        member this.Nodes =
+            model.Nodes
             |> Seq.filter infrastructure.Metamodel.IsNode
             |> Seq.map elementRepository.GetElement
             |> Seq.cast<INode>
 
-        member this.Edges = 
-            model.Edges 
+        member this.Edges =
+            model.Edges
             |> Seq.filter infrastructure.Metamodel.IsAssociation
             |> Seq.map elementRepository.GetElement
             |> Seq.cast<IEdge>
 
-        member this.Elements = 
-            (this :> IModel).Nodes 
-            |> Seq.cast<IElement> 
+        member this.Elements =
+            (this :> IModel).Nodes
+            |> Seq.cast<IElement>
             |> Seq.append ((this :> IModel).Edges |> Seq.cast<IElement>)
 
-        member this.Metamodel = 
+        member this.Metamodel =
             repository.GetModel model.Metamodel
 
         member this.Name

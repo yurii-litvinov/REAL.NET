@@ -132,8 +132,18 @@ let ``Changing attribute in instance should not affect class or other instances`
 let ``Instantiation shall respect default values`` () =
     let repo, infrastructure, metamodel, model, node, element = initForMetamodel ()
 
-    let outgoingAssociations = CoreSemanticLayer.Element.outgoingAssociations element
-    outgoingAssociations |> Seq.map (fun a -> (a.Target.Value :?> INode).Name) |> should contain "shape"
-    let attributes = infrastructure.Element.Attributes element
-    attributes |> should not' (be Empty)
-    infrastructure.Element.AttributeValue element "shape" |> should equal "Pictures/Vertex.png"
+    infrastructure.Element.AddAttribute element "attribute" "AttributeKind.String" "default value"
+    let instance = infrastructure.Instantiate model element
+
+    infrastructure.Element.AttributeValue instance "attribute" |> should equal "default value"
+
+[<Test>]
+let ``Instantiation shall ignore non-instantiable attributes`` () =
+    let repo, infrastructure, metamodel, model, node, element = initForMetamodel ()
+
+    infrastructure.Element.AddAttribute element "attribute" "AttributeKind.String" "default value"
+    infrastructure.Element.SetAttributeInstantiable element "attribute" false
+
+    let instance = infrastructure.Instantiate model element
+
+    infrastructure.Element.HasAttribute instance "attribute" |> should be False
