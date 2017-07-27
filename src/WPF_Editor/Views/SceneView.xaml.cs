@@ -42,7 +42,7 @@ namespace WPF_Editor.Views
             
         }
 
-        private void Zoomctrl_OnClick(object sender, MouseButtonEventArgs e)
+        private void HandleSingleLeftClick(object sender, MouseButtonEventArgs e)
         {
 
             var position = Mouse.GetPosition(this);
