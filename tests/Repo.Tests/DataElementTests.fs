@@ -21,7 +21,8 @@ open Repo.DataLayer
 
 [<Test>]
 let ``DataElement shall have class and name`` () =
-    let node = DataNode "node1" :> INode
+    let model = new DataModel("") :> IModel
+    let node = DataNode("node1", model) :> INode
     node.Name |> should equal "node1"
 
     node.Name <- "changedName"
@@ -29,6 +30,6 @@ let ``DataElement shall have class and name`` () =
 
     node.Class |> should equal node
 
-    let node2 = DataNode("node2", node) :> INode
+    let node2 = DataNode("node2", node, model) :> INode
 
     node2.Class |> should equal node

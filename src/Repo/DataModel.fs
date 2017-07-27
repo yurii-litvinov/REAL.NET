@@ -26,40 +26,52 @@ type DataModel private (name: string, metamodel: IModel option) =
 
     interface IModel with
         member this.CreateNode name = 
-            let node = DataNode(name) :> INode
+            let node = DataNode(name, this) :> INode
             nodes <- node :: nodes
             node
 
         member this.CreateNode(name, ``class``) = 
-            let node = DataNode(name, ``class``) :> INode
+            let node = DataNode(name, ``class``, this) :> INode
             nodes <- node :: nodes
             node
 
         member this.CreateAssociation(``class``, source, target, targetName) = 
-            let edge = new DataAssociation(``class``, source, target, targetName) :> IAssociation
-            edges <- (edge :> IRelationship) :: edges
+            let edge = new DataAssociation(``class``, source, target, targetName, this) :> IAssociation
+            edges <- (edge :> IEdge) :: edges
+            if source.IsSome then
+                source.Value.AddOutgoingEdge edge
+            if target.IsSome then
+                target.Value.AddIncomingEdge edge
             edge
 
         member this.CreateAssociation(``class``, source, target, targetName) = 
-            let edge = new DataAssociation(``class``, Some source, Some target, targetName) :> IAssociation
-            edges <- (edge :> IRelationship) :: edges
+            let edge = new DataAssociation(``class``, Some source, Some target, targetName, this) :> IAssociation
+            edges <- (edge :> IEdge) :: edges
+            source.AddOutgoingEdge edge
+            target.AddIncomingEdge edge
             edge
 
         member this.CreateGeneralization(``class``, source, target) = 
-            let edge = new DataGeneralization(``class``, source, target) :> IGeneralization
-            edges <- (edge :> IRelationship) :: edges
+            let edge = new DataGeneralization(``class``, source, target, this) :> IGeneralization
+            if source.IsSome then
+                source.Value.AddOutgoingEdge edge
+            if target.IsSome then
+                target.Value.AddIncomingEdge edge
+            edges <- (edge :> IEdge) :: edges
             edge
 
         member this.CreateGeneralization(``class``, source, target) = 
-            let edge = new DataGeneralization(``class``, Some source, Some target) :> IGeneralization
-            edges <- (edge :> IRelationship) :: edges
+            let edge = new DataGeneralization(``class``, Some source, Some target, this) :> IGeneralization
+            source.AddOutgoingEdge edge
+            target.AddIncomingEdge edge
+            edges <- (edge :> IEdge) :: edges
             edge
 
         member this.DeleteElement(element: IElement): unit = 
             match element with
             | :? INode -> 
-                nodes <- nodes |> List.filter (fun n -> not ((n :> IElement).Equals element))
-            | _ -> edges <- edges |> List.filter (fun e -> not ((e :> IElement).Equals element))
+                nodes <- nodes |> List.except [element :?> INode]
+            | _ -> edges <- edges |> List.except [element :?> IEdge]
             edges |> List.iter (fun e -> 
                 if e.Source = Some element then e.Source <- None
                 if e.Target = Some element then e.Target <- None
@@ -81,5 +93,5 @@ type DataModel private (name: string, metamodel: IModel option) =
         member this.Nodes: seq<INode> = 
             nodes |> Seq.ofList
 
-        member this.Edges: seq<IRelationship> = 
+        member this.Edges: seq<IEdge> = 
             edges |> Seq.ofList

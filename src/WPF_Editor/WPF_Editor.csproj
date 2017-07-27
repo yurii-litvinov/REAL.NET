@@ -50,6 +50,27 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core, Version=4.4.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="GraphX.PCL.Common, Version=2.3.6.0, Culture=neutral, PublicKeyToken=a6cdb671d651b60a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\GraphX.2.3.6.0\lib\net40-client\GraphX.PCL.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphX.PCL.Logic, Version=2.3.6.0, Culture=neutral, PublicKeyToken=3b65ef85075e278f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\GraphX.2.3.6.0\lib\net40-client\GraphX.PCL.Logic.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphX.WPF.Controls, Version=2.3.6.0, Culture=neutral, PublicKeyToken=bab23663f80c9e76, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\GraphX.2.3.6.0\lib\net40-client\GraphX.WPF.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph, Version=3.6.61114.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\QuickGraphPCL.3.6.61114.2\lib\net40-client\QuickGraph.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph.Data, Version=3.6.61114.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\QuickGraphPCL.3.6.61114.2\lib\net40-client\QuickGraph.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph.Graphviz, Version=3.6.61114.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\QuickGraphPCL.3.6.61114.2\lib\net40-client\QuickGraph.Graphviz.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph.Serialization, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\QuickGraphPCL.3.6.61114.2\lib\net40-client\QuickGraph.Serialization.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -71,23 +92,43 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\Console\IConsoleWindow.cs" />
-    <Compile Include="Models\Interfaces\IAppConsole.cs" />
-    <Compile Include="Models\Interfaces\IAppConsoleMediator.cs" />
-    <Compile Include="Models\Interfaces\IPalette.cs" />
-    <Compile Include="Models\Interfaces\IPaletteMediator.cs" />
-    <Compile Include="Models\Interfaces\IPlaginbar.cs" />
-    <Compile Include="Models\Interfaces\IScene.cs" />
-    <Compile Include="Models\Interfaces\ISceneMediator.cs" />
-    <Compile Include="Models\Interfaces\IToolbar.cs" />
-    <Compile Include="Models\Mediator.cs" />
-    <Compile Include="Models\Console\ConsoleWindow.cs" />
     <Compile Include="ViewModels\Converters\BoolToConsoleVisibiltyConverter.cs" />
-    <Compile Include="ViewModels\Edge.cs" />
+    <Compile Include="ViewModels\ConsoleViewModel.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
-    <Compile Include="ViewModels\Element.cs" />
-    <Compile Include="ViewModels\Node.cs" />
-    <Compile Include="Views\Editor.xaml.cs">
-      <DependentUpon>Editor.xaml</DependentUpon>
+    <Compile Include="ViewModels\Helpers\GraphArea.cs" />
+    <Compile Include="ViewModels\Helpers\GXLogicCore.cs" />
+    <Compile Include="ViewModels\Interfaces\IPaletteMediatorViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\IPaletteViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\ISceneMediatorViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\ISceneViewModel.cs" />
+    <Compile Include="ViewModels\MediatorViewModel.cs" />
+    <Compile Include="ViewModels\Helpers\MetamodelEdge.cs" />
+    <Compile Include="ViewModels\Helpers\ModelEdge.cs" />
+    <Compile Include="ViewModels\Helpers\ModelElement.cs" />
+    <Compile Include="ViewModels\Helpers\ModelNode.cs" />
+    <Compile Include="ViewModels\PaletteViewModel.cs" />
+    <Compile Include="ViewModels\PluginbarViewModel.cs" />
+    <Compile Include="ViewModels\SceneViewModel.cs" />
+    <Compile Include="ViewModels\ToolbarViewModel.cs" />
+    <Compile Include="ViewModels\Helpers\MetamodelElement.cs" />
+    <Compile Include="ViewModels\Helpers\MetamodelNode.cs" />
+    <Compile Include="Views\ConsoleView.xaml.cs">
+      <DependentUpon>ConsoleView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EditorView.xaml.cs">
+      <DependentUpon>EditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PaletteView.xaml.cs">
+      <DependentUpon>PaletteView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PluginbarView.xaml.cs">
+      <DependentUpon>PluginbarView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SceneView.xaml.cs">
+      <DependentUpon>SceneView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ToolbarView.xaml.cs">
+      <DependentUpon>ToolbarView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -101,16 +142,32 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\Editor.xaml">
+    <Page Include="Views\ConsoleView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EditorView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\PaletteView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PluginbarView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SceneView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ToolbarView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Console\AppConsole.cs" />
-    <Compile Include="Models\Palette.cs" />
-    <Compile Include="Models\Scene.cs" />
-    <Compile Include="Models\Toolbar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -128,6 +185,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -27,23 +27,25 @@ type CoreMetametamodelBuilder() =
             let (~+) name = model.CreateNode(name, node)
 
             let element = +"Element"
-            let relationship = +"Relationship"
+            let edge = +"Edge"
             let generalization = +"Generalization"
             let association = +"Association"
             let stringNode = +"String"
 
-            let (--|>) (source: IElement) target = model.CreateGeneralization(generalization, source, target) |> ignore
+            let (--|>) (source: IElement) target = 
+                model.CreateGeneralization(generalization, source, target) |> ignore
             
             node --|> element
-            relationship --|> element
-            generalization --|> relationship
-            association --|> relationship
+            edge --|> element
+            generalization --|> edge
+            association --|> edge
 
-            let (--->) (source: IElement) (target, name) = model.CreateAssociation(association, source, target, name) |> ignore
+            let (--->) (source: IElement) (target, name) = 
+                model.CreateAssociation(association, source, target, name) |> ignore
 
             element ---> (element, "class")
-            relationship ---> (element, "source")
-            relationship ---> (element, "target")
+            edge ---> (element, "source")
+            edge ---> (element, "target")
             association ---> (stringNode, "targetName")
 
             ()

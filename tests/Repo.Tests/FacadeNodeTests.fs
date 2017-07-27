@@ -34,8 +34,10 @@ let ``Node in a model shall have metatype`` () =
     let dataLayerClass = dataLayerMetamodel.Nodes |> Seq.find (fun n -> n.Name = "MotorsForward") :> DataLayer.IElement
     let dataLayerElement = dataLayerModel.Nodes |> Seq.find (fun n -> n.Class = dataLayerClass)
 
-    let attributeRepository = AttributeRepository(underlyingRepo)
-    let elementRepository = ElementRepository((repo :?> Repo).UnderlyingRepo, dataLayerModel, attributeRepository) :> IElementRepository
+    let infrastructure = InfrastructureSemanticLayer.InfrastructureSemantic(underlyingRepo)
+
+    let attributeRepository = AttributeRepository()
+    let elementRepository = ElementRepository(infrastructure, attributeRepository) :> IElementRepository
 
     let motorsForwardInstanceNode = elementRepository.GetElement dataLayerElement
 
@@ -55,8 +57,10 @@ let ``Timer block shall have a picture`` () =
     let dataLayerClass = dataLayerMetamodel.Nodes |> Seq.find (fun n -> n.Name = "Timer") :> DataLayer.IElement
     let dataLayerElement = dataLayerModel.Nodes |> Seq.find (fun n -> n.Class = dataLayerClass)
 
-    let attributeRepository = AttributeRepository(underlyingRepo)
-    let elementRepository = ElementRepository((repo :?> Repo).UnderlyingRepo, dataLayerModel, attributeRepository) :> IElementRepository
+    let infrastructure = InfrastructureSemanticLayer.InfrastructureSemantic(underlyingRepo)
+
+    let attributeRepository = AttributeRepository()
+    let elementRepository = ElementRepository(infrastructure, attributeRepository) :> IElementRepository
 
     let timer = elementRepository.GetElement dataLayerElement
 

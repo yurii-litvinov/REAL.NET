@@ -1,0 +1,50 @@
+﻿<UserControl
+    x:Class="WPF_Editor.Views.ConsoleView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:WPF_Editor.ViewModels.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:WPF_Editor.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="200"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:BoolToConsoleVisibiltyConverter x:Key="BoolToConsoleConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Button
+            Grid.Row="0"
+            Width="23"
+            Margin="0,0,0.4,0.8"
+            HorizontalAlignment="Right"
+            Content=""
+            RenderTransformOrigin="0.526,0.5" />
+        <TabControl
+            Grid.Row="1"
+            Height="150"
+            TabStripPlacement="Bottom"
+            Visibility="{Binding Path=ConsoleVisibility, Converter={StaticResource BoolToConsoleConverter}}">
+            <TabItem Header="Messages">
+                <ScrollViewer>
+                    <TextBox
+                        IsReadOnly="True"
+                        Text="{Binding MessageConsole, Mode=OneWay}"
+                        TextWrapping="Wrap" />
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Errors">
+                <ScrollViewer>
+                    <TextBox
+                        IsReadOnly="True"
+                        Text="{Binding ErrorConsole, Mode=OneWay}"
+                        TextWrapping="Wrap" />
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

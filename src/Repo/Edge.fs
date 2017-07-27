@@ -17,8 +17,16 @@ namespace Repo.FacadeLayer
 open Repo
 
 /// Implementation of edge wrapper.
-type Edge(repo: DataLayer.IRepo, model: DataLayer.IModel, element: DataLayer.IRelationship, elementRepository: IElementRepository, attributeRepository: AttributeRepository) = 
-    inherit Element(repo, model, element, elementRepository, attributeRepository)
+type Edge
+    (
+        infrastructure: InfrastructureSemanticLayer.InfrastructureSemantic,
+        element: DataLayer.IEdge,
+        elementRepository: IElementRepository,
+        attributeRepository: AttributeRepository
+    ) = 
+
+    inherit Element(infrastructure, element, elementRepository, attributeRepository)
+
     interface IEdge with
         member this.From
             with get (): IElement = 
