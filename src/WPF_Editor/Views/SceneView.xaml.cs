@@ -31,7 +31,7 @@ namespace WPF_Editor.Views
     /// </summary>
     public partial class SceneView : UserControl
     {
-        private ISceneViewModel _scene;
+        private readonly ISceneViewModel _scene;
 
         public SceneView()
         {

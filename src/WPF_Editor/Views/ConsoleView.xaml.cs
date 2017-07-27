@@ -20,19 +20,12 @@ namespace WPF_Editor.Views
     /// Interaction logic for ConsoleView.xaml
     /// </summary>
     public partial class ConsoleView : UserControl
-    {
-        
-        //private ConsoleViewModel viewModel = new ConsoleViewModel();
-        
+    { 
+      
         public ConsoleView()
         {
             InitializeComponent();
-            //DataContext = viewModel;
         }
 
-        //private void OnHideShowButtonClick(object sender, RoutedEventArgs e)
-        //{
-        //    viewModel.ChangeConsoleVisibility();
-        //}
     }
 }
