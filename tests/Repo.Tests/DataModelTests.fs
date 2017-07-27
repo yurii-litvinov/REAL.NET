@@ -11,7 +11,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
- 
+
 module DataModelTests
 
 open NUnit.Framework
@@ -163,7 +163,7 @@ let ``Data model shall disconnect edges on removing source or target edges`` () 
     let edge1 = model.CreateGeneralization(generalizationClass, None, None)
     let edge2 = model.CreateGeneralization(generalizationClass, Some (edge1 :> IElement), None)
     let edge3 = model.CreateGeneralization(generalizationClass, edge1, edge2)
-     
+
     model.Edges |> should contain edge1
     model.Edges |> should contain edge2
     model.Edges |> should contain edge3

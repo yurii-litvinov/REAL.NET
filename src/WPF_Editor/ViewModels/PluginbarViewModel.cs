@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WPF_Editor.Models.Interfaces
+namespace WPF_Editor.ViewModels
 {
-    interface IToolbar
+    class PluginbarViewModel
     {
     }
 }

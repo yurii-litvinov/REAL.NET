@@ -11,7 +11,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
- 
+
 module FacadeModelTests
 
 open NUnit.Framework
@@ -30,13 +30,17 @@ let init () =
     Metametamodels.LanguageMetamodelBuilder() |> build
     Metametamodels.InfrastructureMetamodelBuilder() |> build
 
-    let modelRepository = ModelRepository(repo)
+    let infrastructure = InfrastructureSemanticLayer.InfrastructureSemantic(repo)
 
-    let infrastructureMetamodel = InfrastructureSemanticLayer.InfrastructureMetamodel.infrastructureMetamodel repo
+    let attributeRepository = AttributeRepository()
+    let elementRepository = ElementRepository(infrastructure, attributeRepository)
+    let modelRepository = ModelRepository(infrastructure, elementRepository)
+
+    let infrastructureMetamodel = infrastructure.Metamodel.Model
 
     let underlyingModel = (repo :> DataLayer.IRepo).CreateModel("Model", infrastructureMetamodel)
-    let model = Model(repo, underlyingModel, modelRepository)
-    
+    let model = Model(infrastructure, underlyingModel, elementRepository, modelRepository)
+
     model :> IModel
 
 [<Test>]

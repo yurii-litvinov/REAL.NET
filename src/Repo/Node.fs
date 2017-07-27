@@ -17,10 +17,15 @@ namespace Repo.FacadeLayer
 open Repo
 
 /// Implementation of a node in model.
-type Node(repo: DataLayer.IRepo, model: DataLayer.IModel, element: DataLayer.INode, elementRepository: IElementRepository, attributeRepository: AttributeRepository) = 
-    inherit Element(repo, model, element, elementRepository, attributeRepository)
+type Node
+    (
+        infrastructure: InfrastructureSemanticLayer.InfrastructureSemantic,
+        element: DataLayer.INode,
+        elementRepository: IElementRepository,
+        attributeRepository: AttributeRepository
+    ) =
 
-    interface INode with
-        member this.Name
-            with get (): string = element.Name
-            and set (v: string): unit =  element.Name <- v
+    inherit Element(infrastructure, element, elementRepository, attributeRepository)
+
+    interface INode
+

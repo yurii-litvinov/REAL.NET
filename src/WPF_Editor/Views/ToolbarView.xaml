@@ -1,0 +1,46 @@
+﻿<UserControl
+    x:Class="WPF_Editor.Views.ToolbarView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:WPF_Editor.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="300"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
+    <ToolBar
+        Background="White"
+        BorderBrush="Black"
+        BorderThickness="1">
+
+        <Menu Background="White">
+            <MenuItem Header="File">
+                <MenuItem Header="New" />
+                <MenuItem Header="Open" />
+                <MenuItem Header="Save" />
+                <MenuItem Header="Save as..." />
+                <Separator />
+                <MenuItem Header="Exit" />
+            </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Header="Undo" />
+                <MenuItem Header="Redo" />
+                <Separator />
+                <MenuItem Header="Cut" />
+                <MenuItem Header="Copy" />
+                <MenuItem Header="Paste" />
+            </MenuItem>
+            <MenuItem Header="Settings">
+                <MenuItem Header="Some setting 1" />
+                <MenuItem Header="Some setting 2" />
+                <Separator />
+                <MenuItem Header="Another setting 1" />
+                <MenuItem Header="Another setting 2" />
+            </MenuItem>
+            <MenuItem Header="Help">
+                <MenuItem Header="Developer's contacts" />
+                <MenuItem Header="Tutorial" />
+            </MenuItem>
+        </Menu>
+    </ToolBar>
+</UserControl>

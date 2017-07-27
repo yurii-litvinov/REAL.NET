@@ -17,11 +17,11 @@ namespace Repo.Metametamodels
 open Repo.DataLayer
 open Repo.CoreSemanticLayer
 
-/// Initializes repository with Language Metamodel, which is used as a language to define Infrastructure Metamodel, 
+/// Initializes repository with Language Metamodel, which is used as a language to define Infrastructure Metamodel,
 // which in turn is used to define all other metamodels and closely coupled with editor capabilities.
 type LanguageMetamodelBuilder() =
     interface IModelBuilder with
-        member this.Build(repo: IRepo): unit = 
+        member this.Build(repo: IRepo): unit =
             let coreMetamodel = Repo.coreMetamodel repo
             let metamodelNode = Model.findNode coreMetamodel "Node"
             let metamodelGeneralization = Model.findNode coreMetamodel "Generalization"
@@ -30,26 +30,29 @@ type LanguageMetamodelBuilder() =
             let languageMetamodel = repo.CreateModel("LanguageMetamodel", coreMetamodel)
 
             let (~+) name = languageMetamodel.CreateNode(name, metamodelNode)
-            let (--|>) (source: IElement) target = languageMetamodel.CreateGeneralization(metamodelGeneralization, source, target) |> ignore
-            let (--->) (source: IElement) (target, name) = languageMetamodel.CreateAssociation(metamodelAssociation, source, target, name) |> ignore
+            let (--|>) (source: IElement) target =
+                languageMetamodel.CreateGeneralization(metamodelGeneralization, source, target) |> ignore
+
+            let (--->) (source: IElement) (target, name) =
+                languageMetamodel.CreateAssociation(metamodelAssociation, source, target, name) |> ignore
 
             let element = +"Element"
             let node = +"Node"
-            let relationship = +"Relationship"
+            let edge = +"Edge"
             let generalization = +"Generalization"
             let association = +"Association"
             let stringNode = +"String"
             let enum = +"Enum"
 
             node --|> element
-            relationship --|> element
+            edge --|> element
             enum --|> element
-            generalization --|> relationship
-            association --|> relationship
+            generalization --|> edge
+            association --|> edge
 
             element ---> (element, "class")
-            relationship ---> (element, "source")
-            relationship ---> (element, "target")
+            edge ---> (element, "source")
+            edge ---> (element, "target")
             association ---> (stringNode, "targetName")
             enum ---> (stringNode, "elements")
 

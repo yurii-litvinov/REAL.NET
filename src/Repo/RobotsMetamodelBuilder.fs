@@ -21,16 +21,17 @@ open Repo.InfrastructureSemanticLayer
 /// Initializes repository with Robots Metamodel, first testing metamodel of a real language.
 type RobotsMetamodelBuilder() =
     interface IModelBuilder with
-        member this.Build(repo: IRepo): unit = 
-            let metamodel = CoreSemanticLayer.Repo.findModel repo "InfrastructureMetamodel"
+        member this.Build(repo: IRepo): unit =
+            let infrastructure = InfrastructureSemanticLayer.InfrastructureSemantic(repo)
+            let metamodel = infrastructure.Metamodel.Model
 
             let find name = CoreSemanticLayer.Model.findNode metamodel name
-            let findAssociation node name = CoreSemanticLayer.Model.findAssociationWithSource metamodel node name
+            let findAssociation node name = CoreSemanticLayer.Model.findAssociationWithSource node name
 
             let metamodelElement = find "Element"
             let metamodelNode = find "Node"
             let metamodelGeneralization = find "Generalization"
-            let metamodelEdge = find "Edge"
+            let metamodelAssociation = find "Association"
             let metamodelAttribute = find "Attribute"
 
             let metamodelStringNode = find "String"
@@ -47,52 +48,54 @@ type RobotsMetamodelBuilder() =
             let attributeKindAssociation = findAssociation metamodelAttribute "kind"
             let attributeStringValueAssociation = findAssociation metamodelAttribute "stringValue"
 
-            let edgeTargetNameAssociation = findAssociation metamodelEdge "targetName"
+            let edgeTargetNameAssociation = findAssociation metamodelAssociation "targetName"
 
             let model = repo.CreateModel("RobotsMetamodel", metamodel)
 
-            let (~+) (name, shape, isAbstract) = 
-                let node = Operations.instantiate repo model metamodelNode :?> INode
+            let (~+) (name, shape, isAbstract) =
+                let node = infrastructure.Instantiate model metamodelNode :?> INode
                 node.Name <- name
-                Element.setAttributeValue repo node "shape" shape 
-                Element.setAttributeValue repo node "isAbstract" (if isAbstract then "true" else "false")
-                Element.setAttributeValue repo node "instanceMetatype" "Metatype.Node" 
-                
+                infrastructure.Element.SetAttributeValue node "shape" shape
+                infrastructure.Element.SetAttributeValue node "isAbstract" (if isAbstract then "true" else "false")
+                infrastructure.Element.SetAttributeValue node "instanceMetatype" "Metatype.Node"
+
                 node
 
-            let (--|>) (source: IElement) target = model.CreateGeneralization(metamodelGeneralization, source, target) |> ignore
+            let (--|>) (source: IElement) target =
+                model.CreateGeneralization(metamodelGeneralization, source, target) |> ignore
 
-            let (--->) (source: IElement) (target, name) = 
-                let edge = Operations.instantiate repo model metamodelEdge :?> IAssociation
+            let (--->) (source: IElement) (target, targetName, linkName) =
+                let edge = infrastructure.Instantiate model metamodelAssociation :?> IAssociation
                 edge.Source <- Some source
                 edge.Target <- Some target
-                edge.TargetName <- name
+                edge.TargetName <- targetName
 
-                Element.setAttributeValue repo edge "shape" "Pictures/Edge.png"
-                Element.setAttributeValue repo edge "isAbstract" "false"
-                Element.setAttributeValue repo edge "instanceMetatype" "Metatype.Edge"
+                infrastructure.Element.SetAttributeValue edge "shape" "Pictures/Edge.png"
+                infrastructure.Element.SetAttributeValue edge "isAbstract" "false"
+                infrastructure.Element.SetAttributeValue edge "instanceMetatype" "Metatype.Edge"
+                infrastructure.Element.SetAttributeValue edge "name" linkName
 
                 edge
 
             let abstractNode = +("AbstractNode", "", true)
             let initialNode = +("InitialNode", "Pictures/initialBlock.png", false)
             let finalNode = +("FinalNode", "Pictures/finalBlock.png", false)
-            
+
             let abstractMotorsBlock = +("AbstractMotorsBlock", "", true)
-            Element.addAttribute repo abstractMotorsBlock "ports" "AttributeKind.String"
+            infrastructure.Element.AddAttribute abstractMotorsBlock "ports" "AttributeKind.String" "M3, M4"
 
             let abstractMotorsPowerBlock = +("AbstractMotorsPowerBlock", "", true)
-            Element.addAttribute repo abstractMotorsPowerBlock "power" "AttributeKind.Int"
+            infrastructure.Element.AddAttribute abstractMotorsPowerBlock "power" "AttributeKind.Int" "100"
 
             let motorsForward = +("MotorsForward", "Pictures/enginesForwardBlock.png", false)
             let motorsBackward = +("MotorsBackward", "Pictures/enginesBackwardBlock.png", false)
             let motorsStop = +("MotorsStop", "Pictures/enginesStopBlock.png", false)
             let timer = +("Timer", "Pictures/timerBlock.png", false)
 
-            let link = abstractNode ---> (abstractNode, "target")
-            Element.addAttribute repo link "guard" "AttributeKind.String"
+            let link = abstractNode ---> (abstractNode, "target", "Link")
+            infrastructure.Element.AddAttribute link "guard" "AttributeKind.String" ""
 
-            Element.addAttribute repo timer "delay" "AttributeKind.Int"
+            infrastructure.Element.AddAttribute timer "delay" "AttributeKind.Int" "1000"
 
             initialNode --|> abstractNode
             finalNode --|> abstractNode
