@@ -31,7 +31,7 @@ namespace WPF_Editor.Views
     /// </summary>
     public partial class SceneView : UserControl
     {
-        private ISceneViewModel _scene;
+        private readonly ISceneViewModel _scene;
 
         public SceneView()
         {
@@ -42,7 +42,7 @@ namespace WPF_Editor.Views
             
         }
 
-        private void Zoomctrl_OnClick(object sender, MouseButtonEventArgs e)
+        private void HandleSingleLeftClick(object sender, MouseButtonEventArgs e)
         {
 
             var position = Mouse.GetPosition(this);

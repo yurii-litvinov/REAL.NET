@@ -12,7 +12,7 @@
     mc:Ignorable="d">
     <graphxctrl:ZoomControl
         x:Name="zoomctrl"
-        MouseLeftButtonDown="Zoomctrl_OnClick"
+        MouseLeftButtonDown="HandleSingleLeftClick"
         ViewFinderVisibility="Collapsed">
         <viewModels:GraphArea x:Name="graphArea" />
     </graphxctrl:ZoomControl>

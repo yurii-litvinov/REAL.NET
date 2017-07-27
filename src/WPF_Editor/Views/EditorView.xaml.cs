@@ -14,9 +14,6 @@ using WPF_Editor.ViewModels;
 
 namespace WPF_Editor.Views
 {
-
-
-    //Vertex data object
     public class DataVertex : VertexBase
     {
         /// <summary>
@@ -30,7 +27,6 @@ namespace WPF_Editor.Views
         }
     }
 
-    //Edge data object
     public class DataEdge : EdgeBase<DataVertex>
     {
         public DataEdge(DataVertex source, DataVertex target, double weight = 1)

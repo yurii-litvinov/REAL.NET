@@ -70,8 +70,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Models\Console\IConsoleWindow.cs" />
-    <Compile Include="ViewModels\Converters\BoolToConsoleVisibiltyConverter.cs" />
     <Compile Include="ViewModels\ConsoleViewModel.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
     <Compile Include="ViewModels\Helpers\GraphArea.cs" />
