@@ -25,7 +25,7 @@ namespace WPF_Editor.ViewModels
         private GXLogicCore _logicCore;
         private static ISceneViewModel _scene;
         private readonly ISceneMediatorViewModel _sceneMediator;
-        private VertexControl _firstSelectedVertexControl;
+
         public static ISceneViewModel CreateScene(ISceneMediatorViewModel sceneMediator = null)
         {
             if (_scene == null)
@@ -52,55 +52,49 @@ namespace WPF_Editor.ViewModels
             _logicCore = new GXLogicCore
             {
                 DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.KK,
-                Graph = graph,
-        };
+            };
+            _logicCore.DefaultLayoutAlgorithmParams =
+                _logicCore.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.KK);
+            ((KKLayoutParameters)_logicCore.DefaultLayoutAlgorithmParams).MaxIterations = 100;
 
+            _logicCore.DefaultOverlapRemovalAlgorithm = OverlapRemovalAlgorithmTypeEnum.FSA;
+            _logicCore.DefaultOverlapRemovalAlgorithmParams =
+                _logicCore.AlgorithmFactory.CreateOverlapRemovalParameters(OverlapRemovalAlgorithmTypeEnum.FSA);
+            ((OverlapRemovalParameters)_logicCore.DefaultOverlapRemovalAlgorithmParams).HorizontalGap = 50;
+            ((OverlapRemovalParameters)_logicCore.DefaultOverlapRemovalAlgorithmParams).VerticalGap = 50;
+
+            _logicCore.DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.SimpleER;
+            _logicCore.AsyncAlgorithmCompute = true;
+            _logicCore.Graph = graph;
             _graphArea.LogicCore = _logicCore;
             _graphArea.SetVerticesDrag(true);
             _graphArea.GenerateGraph();
-            zoomControl.CenterContent();
         }
 
 
 
         public void HandleSingleLeftClick(Point position)
         {
-            var metaElement = _sceneMediator.GetSelectedMetamodelType();
-
-            if (metaElement is MetamodelNode)
+            ModelElement element = _sceneMediator.GetInstanceOfSelectedType();
+            if (element == null)
             {
-                var node = _sceneMediator.GetModelNode(metaElement as MetamodelNode);
+                return;
+            }
+            if (element is ModelNode)
+            {
+                var node = (ModelNode)element;
                 var nodeControl = new VertexControl(node);
-                nodeControl.Click += TryCreateEdge;
+                _logicCore.Graph.AddVertex(node);
                 nodeControl.SetPosition(position);
                 _graphArea.AddVertex(node,nodeControl);
                 _graphArea.RelayoutGraph(true);
+                return;
+            }
+            if(element is ModelEdge)
+            {
+                
             }
         }
 
-        private void TryCreateEdge(object sender, RoutedEventArgs e)
-        {
-            if (_sceneMediator.GetSelectedMetamodelType() is MetamodelNode)
-            {
-                _firstSelectedVertexControl = null;
-                return;
-            }
-            if (_firstSelectedVertexControl == null)
-            {
-                _firstSelectedVertexControl = sender as VertexControl;
-                return;
-            }
-            var metaEdge = _sceneMediator.GetSelectedMetamodelType() as MetamodelEdge;
-            var secondSelectedVertexControl = sender as VertexControl;
-
-            var source = _firstSelectedVertexControl.DataContext as ModelNode;
-            var target = secondSelectedVertexControl.DataContext as ModelNode;
-
-            var edge = _sceneMediator.GetModelEdge(metaEdge, source, target);
-            var edgeControl = new EdgeControl(_firstSelectedVertexControl, sender as VertexControl, edge);
-            _graphArea.AddEdge(edge, edgeControl);
-            _graphArea.RelayoutGraph(true);
-            _firstSelectedVertexControl = null;
-        }
     }
 }

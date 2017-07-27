@@ -39,12 +39,10 @@ namespace WPF_Editor.Views
             _scene = SceneViewModel.CreateScene();
             _scene.InitializeScene(zoomctrl);
             DataContext = _scene;
-            
         }
 
-        private void Zoomctrl_OnClick(object sender, MouseButtonEventArgs e)
+        private void Zoomctrl_OnClick(object sender, RoutedEventArgs e)
         {
-
             var position = Mouse.GetPosition(this);
             position = TranslatePoint(position, graphArea);
             _scene.HandleSingleLeftClick(position);
