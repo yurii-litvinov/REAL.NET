@@ -5,9 +5,9 @@ namespace WPF_Editor.Models.Console
 {
     public class AppConsole : IAppConsole
     {
-        private Dictionary<string, ConsoleWindow> windows = new Dictionary<string, ConsoleWindow>();
+        private Dictionary<string, IConsoleWindow> windows = new Dictionary<string, IConsoleWindow>();
 
-        public bool VisibilityStatus { get; private set; }
+        public bool IsVisible { get; private set; }
 
         public IAppConsoleMediator AppConsoleMediator { get; }
 
@@ -20,10 +20,10 @@ namespace WPF_Editor.Models.Console
         {
             windows.Add("MessageConsole", new ConsoleWindow());
             windows.Add("ErrorConsole", new ConsoleWindow());
-            VisibilityStatus = false;
+            IsVisible = false;
         }
 
-        public ConsoleWindow GetConsoleWindowByName(string name)
+        public IConsoleWindow GetConsoleWindowByName(string name)
         {
             return windows[name];
         }
@@ -35,17 +35,21 @@ namespace WPF_Editor.Models.Console
 
         public void ShowConsole()
         {
-            VisibilityStatus = true;
+            IsVisible = true;
         }
 
         public void HideConsole()
         {
-            VisibilityStatus = false;
+            IsVisible = false;
         }
 
         public void ClearConsoleWindowByName(string name)
         {
             windows[name].ClearConsoleWindow();
         }
+
+        IConsoleWindow IAppConsole.GetConsoleWindowByName(string name) => windows[name];
+
+        public void AddConsoleWindow(IConsoleWindow window, string name) => windows.Add(name, window);
     }
 }

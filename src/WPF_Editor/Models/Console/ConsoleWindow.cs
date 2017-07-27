@@ -2,7 +2,7 @@
 
 namespace WPF_Editor.Models.Console
 {
-    public class ConsoleWindow
+    public class ConsoleWindow : IConsoleWindow
     {
         protected List<string> messages;
 
@@ -29,11 +29,6 @@ namespace WPF_Editor.Models.Console
         public void ClearConsoleWindow()
         {
             messages.Clear();
-        }
-
-        public void SetFocusOnThisElement()
-        {
-
         }
     }
 }

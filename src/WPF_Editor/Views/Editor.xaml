@@ -105,7 +105,7 @@
                             <ScrollViewer>
                                 <TextBox
                                     IsReadOnly="True"
-                                    Text="{Binding MessageConsole, Mode=OneWay}"
+                                    Text="{Binding MessageConsoleText, Mode=OneWay}"
                                     TextWrapping="Wrap" />
                             </ScrollViewer>
                         </TabItem>
@@ -113,7 +113,7 @@
                             <ScrollViewer>
                                 <TextBox
                                     IsReadOnly="True"
-                                    Text="{Binding ErrorConsole, Mode=OneWay}"
+                                    Text="{Binding ErrorConsoleText, Mode=OneWay}"
                                     TextWrapping="Wrap" />
                             </ScrollViewer>
                         </TabItem>

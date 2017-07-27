@@ -7,6 +7,9 @@ using Repo;
 using WPF_Editor.ViewModels;
 namespace WPF_Editor.Models.Interfaces
 {
+    /// <summary>
+    /// This interface is required for connection with Scene
+    /// </summary>
     public interface ISceneMediator
     {
 

@@ -1,28 +1,28 @@
-﻿using System.Collections.Generic;
-using Repo;
-
-namespace WPF_Editor.ViewModels
+﻿namespace REAL.NET.ViewModels
 {
-    public class Node : Element, INode
+    using Repo;
+    using System.Collections.Generic;
+    public class Node : INode
     {
-        private readonly INode _node;
-        public string Name { get => _node.Name; set => _node.Name = value;}
+        private INode node;
 
-        public IElement Class => _node.Class;
+        public string Name { get => node.Name; set => node.Name = value;}
 
-        public IEnumerable<IAttribute> Attributes => _node.Attributes;
+        public IElement Class => node.Class;
 
-        public bool IsAbstract => _node.IsAbstract;
+        public IEnumerable<IAttribute> Attributes => node.Attributes;
 
-        public Metatype Metatype => _node.Metatype;
+        public bool IsAbstract => node.IsAbstract;
 
-        public Metatype InstanceMetatype => _node.InstanceMetatype;
+        public Metatype Metatype => node.Metatype;
 
-        public string Shape => _node.Shape;
+        public Metatype InstanceMetatype => node.InstanceMetatype;
+
+        public string Shape => node.Shape;
 
         public Node(INode inode)
         {
-            _node = inode;
+            node = inode;
         }
     }
 }

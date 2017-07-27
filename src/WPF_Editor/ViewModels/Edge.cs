@@ -1,28 +1,31 @@
-﻿using System.Collections.Generic;
-using Repo;
-
-namespace WPF_Editor.ViewModels
+﻿namespace REAL.NET.ViewModels
 {
-    public class Edge : Element, IEdge
+    using Repo;
+    using System.Collections.Generic;
+
+    public class Edge : IEdge
     {
-        private readonly IEdge _edge;
-        public IElement From { get => _edge.From; set => _edge.From = value; }
-        public IElement To { get => _edge.To; set => _edge.To = value; }
+        private IEdge edge;
 
-        public IElement Class => _edge.Class;
+        public IElement From { get => edge.From; set => edge.From = value; }
 
-        public IEnumerable<IAttribute> Attributes => _edge.Attributes;
+        public IElement To { get => edge.To; set => edge.To = value; }
 
-        public bool IsAbstract => _edge.IsAbstract;
+        public IElement Class => edge.Class;
 
-        public Metatype Metatype => _edge.Metatype;
+        public IEnumerable<IAttribute> Attributes => edge.Attributes;
 
-        public Metatype InstanceMetatype => _edge.InstanceMetatype;
+        public bool IsAbstract => edge.IsAbstract;
 
-        public string Shape => _edge.Shape;
+        public Metatype Metatype => edge.Metatype;
+
+        public Metatype InstanceMetatype => edge.InstanceMetatype;
+
+        public string Shape => edge.Shape;
+
         public Edge(IEdge iedge)
         {
-            _edge = iedge;
+            edge = iedge;
         }
     }
 }
