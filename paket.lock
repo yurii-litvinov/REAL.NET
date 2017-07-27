@@ -14,7 +14,7 @@ NUGET
       Microsoft.Msagl.Drawing (>= 1.0.2)
     NUnit (3.7.1)
     NUnit.ConsoleRunner (3.7)
-    NUnit.Extension.NUnitProjectLoader (3.5)
+    NUnit.Extension.NUnitProjectLoader (3.6)
     NUnit.Extension.NUnitV2Driver (3.6)
     NUnit.Extension.NUnitV2ResultWriter (3.5)
     NUnit.Extension.TeamCityEventListener (1.0.2)
@@ -33,7 +33,7 @@ NUGET
 GROUP build
 NUGET
   remote: https://www.nuget.org/api/v2
-    FAKE (4.62.5)
+    FAKE (4.62.6)
     FSharp.Compiler.Service (2.0.0.6)
     FSharp.Formatting (2.14.4)
       FSharp.Compiler.Service (2.0.0.6)
@@ -51,5 +51,5 @@ NUGET
     SourceLink.Fake (1.1)
 GITHUB
   remote: fsharp/FAKE
-    modules/Octokit/Octokit.fsx (9b496581e49c116cff9911570df871eb0258ac83)
+    modules/Octokit/Octokit.fsx (624c7969758ccdae3390de1a5bb4380df3253dd1)
       Octokit (>= 0.20)
