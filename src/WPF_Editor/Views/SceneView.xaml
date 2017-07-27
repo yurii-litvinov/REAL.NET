@@ -10,7 +10,10 @@
     d:DesignHeight="300"
     d:DesignWidth="300"
     mc:Ignorable="d">
-    <graphxctrl:ZoomControl x:Name="zoomctrl" ViewFinderVisibility="Collapsed" Click="Zoomctrl_OnClick">
+    <graphxctrl:ZoomControl
+        x:Name="zoomctrl"
+        MouseLeftButtonDown="Zoomctrl_OnClick"
+        ViewFinderVisibility="Collapsed">
         <viewModels:GraphArea x:Name="graphArea" />
     </graphxctrl:ZoomControl>
 </UserControl>

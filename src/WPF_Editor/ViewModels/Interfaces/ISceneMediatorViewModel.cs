@@ -10,6 +10,8 @@ namespace WPF_Editor.ViewModels.Interfaces
 {
     public interface ISceneMediatorViewModel
     {
-        ModelElement GetInstanceOfSelectedType();
+        MetamodelElement GetSelectedMetamodelType();
+        ModelNode GetModelNode(MetamodelNode metaNode);
+        ModelEdge GetModelEdge(MetamodelEdge metaEdge, ModelNode source, ModelNode target);
     }
 }

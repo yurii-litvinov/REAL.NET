@@ -292,8 +292,11 @@
 
             img.LayoutTransform = new ScaleTransform(0.3, 0.3);
             TextBlock spaces = new TextBlock { Text = "  " };
-            TextBlock tx = new TextBlock { Text = vertex.Name };
-            tx.VerticalAlignment = VerticalAlignment.Center;
+            TextBlock tx = new TextBlock
+            {
+                Text = vertex.Name,
+                VerticalAlignment = VerticalAlignment.Center,
+            };
             sp.Children.Add(img);
             sp.Children.Add(spaces);
             sp.Children.Add(tx);
