@@ -74,6 +74,7 @@ namespace WPF_Editor.ViewModels
         public MetamodelElement SelectedElement
         {
             get => _selectedElement;
+
             set
             {
                 _selectedElement = value;
