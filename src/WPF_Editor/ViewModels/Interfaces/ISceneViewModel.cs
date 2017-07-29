@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GraphX.Controls;
-using WPF_Editor.ViewModels.Helpers;
+﻿using GraphX.Controls;
 using System.Windows;
 namespace WPF_Editor.ViewModels.Interfaces
 {

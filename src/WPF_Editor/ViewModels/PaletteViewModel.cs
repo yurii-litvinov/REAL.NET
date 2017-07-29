@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using QuickGraph;
 using Repo;
 using WPF_Editor.ViewModels.Helpers;
 using WPF_Editor.ViewModels.Interfaces;
@@ -19,7 +13,7 @@ namespace WPF_Editor.ViewModels
         private static IPaletteViewModel _palette;
         public event PropertyChangedEventHandler PropertyChanged;
 
-
+        //Must be public, because bindings use these properties.
         public ObservableCollection<MetamodelNode> Nodes { get; }
 
         public ObservableCollection<MetamodelEdge> Edges { get; }

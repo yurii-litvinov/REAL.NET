@@ -1,15 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Windows;
-using GraphX.Controls;
-using GraphX.Controls.Animations;
-using GraphX.Controls.Models;
-using GraphX.PCL.Common.Enums;
+﻿using System.Windows;
 using GraphX.PCL.Common.Models;
-using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
-using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
-using GraphX.PCL.Logic.Models;
-using QuickGraph;
 using WPF_Editor.ViewModels;
 
 namespace WPF_Editor.Views

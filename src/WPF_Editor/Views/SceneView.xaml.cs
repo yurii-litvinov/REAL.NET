@@ -19,8 +19,6 @@ using GraphX.PCL.Common.Interfaces;
 using GraphX.PCL.Common.Models;
 using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
 using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
-using GraphX.PCL.Logic.Models;
-using QuickGraph;
 using WPF_Editor.ViewModels;
 using WPF_Editor.ViewModels.Interfaces;
 

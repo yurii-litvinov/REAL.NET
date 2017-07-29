@@ -15,8 +15,8 @@ namespace WPF_Editor.ViewModels
         
         private static MediatorViewModel _mediator;
         private ISceneViewModel _scene;
-        private IPaletteViewModel _palette;
-        private IModel _currentModel;
+        private readonly IPaletteViewModel _palette;
+        private readonly IModel _currentModel;
 
         private readonly IRepo _repo = RepoFactory.CreateRepo();
 

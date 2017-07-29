@@ -11,8 +11,6 @@ using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
 using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
 using GraphX.PCL.Logic.Models;
 using QuickGraph;
-using Repo;
-using Repo.CoreSemanticLayer;
 using WPF_Editor.ViewModels.Helpers;
 using WPF_Editor.ViewModels.Interfaces;
 
