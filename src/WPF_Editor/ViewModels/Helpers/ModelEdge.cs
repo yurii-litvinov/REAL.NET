@@ -8,27 +8,29 @@ namespace WPF_Editor.ViewModels.Helpers
 {
     public class ModelEdge : ModelElement, IEdge, IGraphXEdge<ModelNode>
     {
-        //Change
-        public IEdge Edge { get; }
+        private readonly IEdge _edge;
 
         public ModelEdge(IEdge edge, ModelElement source, ModelElement target) : base(edge)
         {
-            Edge = edge;
+            _edge = edge;
             From = source.Element;
             To = target.Element;
         }
 
         public IElement From
         {
-            get => Edge.From;
-            set => Edge.From = value;
+            get => _edge.From;
+            set => _edge.From = value;
         }
+
         public IElement To
         {
-            get => Edge.To;
-            set => Edge.To = value;
+            get => _edge.To;
+            set => _edge.To = value;
         }
+
         #region IGraphXEdge<ModelNode> implemetation
+
         public long ID { get; set; }
         public ProcessingOptionEnum SkipProcessing { get; set; }
         public Point[] RoutingPoints { get; set; }
@@ -38,22 +40,15 @@ namespace WPF_Editor.ViewModels.Helpers
         public bool ReversePath { get; set; }
 
         ModelNode IEdge<ModelNode>.Source => ((IGraphXEdge<ModelNode>) this).Source;
-        ModelNode IEdge<ModelNode>.Target => ((IGraphXEdge<ModelNode>)this).Target;
+        ModelNode IEdge<ModelNode>.Target => ((IGraphXEdge<ModelNode>) this).Target;
 
-        ModelNode IGraphXEdge<ModelNode>.Target
-        {
-            get;
-            set;
-        }
+        ModelNode IGraphXEdge<ModelNode>.Target { get; set; }
 
-        ModelNode IGraphXEdge<ModelNode>.Source
-        {
-            get;
-            set;
-        }
+        ModelNode IGraphXEdge<ModelNode>.Source { get; set; }
 
 
         public double Weight { get; set; }
+
         #endregion
     }
 }

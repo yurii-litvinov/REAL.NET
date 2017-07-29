@@ -5,7 +5,13 @@ namespace WPF_Editor.ViewModels.Helpers
 {
     public abstract class ModelElement : IElement
     {
+        protected ModelElement(IElement element)
+        {
+            Element = element;
+        }
+
         public IElement Element { get; }
+
         public string Name
         {
             get => Element.Name;
@@ -24,10 +30,9 @@ namespace WPF_Editor.ViewModels.Helpers
 
         public string Shape => Element.Shape;
 
-        protected ModelElement(IElement element)
+        public override string ToString()
         {
-            Element = element;
+            return Name;
         }
-        public override string ToString() => Name;
     }
 }

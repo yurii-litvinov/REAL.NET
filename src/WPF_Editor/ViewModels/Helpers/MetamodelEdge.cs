@@ -5,22 +5,23 @@ namespace WPF_Editor.ViewModels.Helpers
 {
     public class MetamodelEdge : MetamodelElement, IEdge
     {
-        public IEdge IEdge { get; }
+        public MetamodelEdge(IEdge iedge) : base(iedge)
+        {
+            _edge = iedge;
+        }
+
+        private readonly IEdge _edge;
+
         public IElement From
         {
-            get => IEdge.From;
+            get => _edge.From;
             set => throw new NotImplementedException("Cannot change source element of metamodel edge.");
         }
 
         public IElement To
         {
-            get => IEdge.To;
+            get => _edge.To;
             set => throw new NotImplementedException("Cannot change target element of metamodel edge.");
-        }
-
-        public MetamodelEdge(IEdge iedge) : base(iedge)
-        {
-            IEdge = iedge;
         }
     }
 }

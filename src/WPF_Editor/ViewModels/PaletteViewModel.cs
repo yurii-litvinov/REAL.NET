@@ -8,26 +8,9 @@ namespace WPF_Editor.ViewModels
 {
     public class PaletteViewModel : IPaletteViewModel, INotifyPropertyChanged
     {
-        private MetamodelElement _selectedElement;
-        private IPaletteMediatorViewModel _paletteMediator;
         private static IPaletteViewModel _palette;
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        //Must be public, because bindings use these properties.
-        public ObservableCollection<MetamodelNode> Nodes { get; }
-
-        public ObservableCollection<MetamodelEdge> Edges { get; }
-
-        public ObservableCollection<MetamodelElement> Elements { get; }
-
-        public static IPaletteViewModel CreatePalette(IPaletteMediatorViewModel paletteMediator = null)
-        {
-            if (_palette == null)
-            {
-                _palette = new PaletteViewModel(paletteMediator);
-            }
-            return _palette;
-        }
+        private readonly IPaletteMediatorViewModel _paletteMediator;
+        private MetamodelElement _selectedElement;
 
         private PaletteViewModel(IPaletteMediatorViewModel paletteMediator)
         {
@@ -36,34 +19,26 @@ namespace WPF_Editor.ViewModels
             Elements = new ObservableCollection<MetamodelElement>();
             _paletteMediator = paletteMediator;
             foreach (var inode in _paletteMediator.MetamodelNodes)
-            {
                 if (!inode.IsAbstract)
-                {
                     Nodes.Add(new MetamodelNode(inode));
-                }
-            }
             foreach (var iedge in _paletteMediator.MetamodelEdges)
-            {
                 if (!iedge.IsAbstract)
-                {
                     Edges.Add(new MetamodelEdge(iedge));
-                }
-            }
             foreach (var ielement in _paletteMediator.MetamodelElements)
-            {
                 if (!ielement.IsAbstract)
-                {
                     if (ielement is INode)
-                    {
                         Elements.Add(new MetamodelNode(ielement as INode));
-                    }
                     else
-                    {
                         Elements.Add(new MetamodelEdge(ielement as IEdge));
-                    }
-                }
-            }
         }
+
+        //Must be public, because bindings use these properties.
+        public ObservableCollection<MetamodelNode> Nodes { get; }
+
+        public ObservableCollection<MetamodelEdge> Edges { get; }
+
+        public ObservableCollection<MetamodelElement> Elements { get; }
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public MetamodelElement SelectedElement
         {
@@ -74,11 +49,18 @@ namespace WPF_Editor.ViewModels
                 _selectedElement = value;
                 OnPropertyChanged("SelectedElement");
             }
-            
         }
 
-        public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        public static IPaletteViewModel CreatePalette(IPaletteMediatorViewModel paletteMediator = null)
+        {
+            if (_palette == null)
+                _palette = new PaletteViewModel(paletteMediator);
+            return _palette;
+        }
 
-        
+        public void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

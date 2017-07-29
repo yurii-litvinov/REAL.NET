@@ -6,29 +6,34 @@ namespace WPF_Editor.ViewModels.Helpers
 {
     public abstract class MetamodelElement : IElement
     {
-        public IElement IElement { get; }
+        protected MetamodelElement(IElement element)
+        {
+            Element = element;
+        }
+
+        public IElement Element { get; }
+
         public string Name
         {
-            get => IElement.Name;
+            get => Element.Name;
             set => throw new NotImplementedException($"Cannot change name of {Metatype} from metamodel");
         }
 
-        public IElement Class => IElement.Class;
+        public IElement Class => Element.Class;
 
-        public IEnumerable<IAttribute> Attributes => IElement.Attributes;
+        public IEnumerable<IAttribute> Attributes => Element.Attributes;
 
-        public bool IsAbstract => IElement.IsAbstract;
+        public bool IsAbstract => Element.IsAbstract;
 
-        public Metatype Metatype => IElement.Metatype;
+        public Metatype Metatype => Element.Metatype;
 
-        public Metatype InstanceMetatype => IElement.InstanceMetatype;
+        public Metatype InstanceMetatype => Element.InstanceMetatype;
 
-        public string Shape => IElement.Shape;
+        public string Shape => Element.Shape;
 
-        protected MetamodelElement(IElement element)
+        public override string ToString()
         {
-            IElement = element;
+            return Name;
         }
-        public override string ToString() => Name;
     }
 }

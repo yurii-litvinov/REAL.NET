@@ -1,6 +1,6 @@
 ﻿namespace WPF_Editor.ViewModels
 {
-    class PluginbarViewModel
+    internal class PluginbarViewModel
     {
     }
 }

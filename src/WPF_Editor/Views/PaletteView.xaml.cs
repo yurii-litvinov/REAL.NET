@@ -4,7 +4,7 @@ using WPF_Editor.ViewModels;
 namespace WPF_Editor.Views
 {
     /// <summary>
-    /// Interaction logic for PaletteView.xaml
+    ///     Interaction logic for PaletteView.xaml
     /// </summary>
     public partial class PaletteView : UserControl
     {

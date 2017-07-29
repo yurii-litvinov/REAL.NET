@@ -11,29 +11,29 @@
     WindowState="Maximized"
     mc:Ignorable="d">
     <DockPanel>
-            <Border
-                BorderBrush="Black"
-                BorderThickness="1"
-                DockPanel.Dock="Top">
-                <StackPanel Name="TopPanel" Height="Auto">
-                    <views:ToolbarView />
-                    <views:PluginbarView />
-                </StackPanel>
-            </Border>
-            <Border
-                Margin="5"
-                BorderBrush="Black"
-                BorderThickness="1"
-                DockPanel.Dock="Bottom">
-                <views:ConsoleView />
-            </Border>
-            <Border
-                BorderBrush="Black"
-                BorderThickness="1"
-                DockPanel.Dock="Right">
-                <views:PaletteView />
-            </Border>
-            <views:SceneView/>
-        </DockPanel>
-    
+        <Border
+            BorderBrush="Black"
+            BorderThickness="1"
+            DockPanel.Dock="Top">
+            <StackPanel Name="TopPanel" Height="Auto">
+                <views:ToolbarView />
+                <views:PluginbarView />
+            </StackPanel>
+        </Border>
+        <Border
+            Margin="5"
+            BorderBrush="Black"
+            BorderThickness="1"
+            DockPanel.Dock="Bottom">
+            <views:ConsoleView />
+        </Border>
+        <Border
+            BorderBrush="Black"
+            BorderThickness="1"
+            DockPanel.Dock="Right">
+            <views:PaletteView />
+        </Border>
+        <views:SceneView />
+    </DockPanel>
+
 </Window>

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GraphX.Controls;
+﻿using System.Collections.Generic;
 using Repo;
 using WPF_Editor.ViewModels.Helpers;
 using WPF_Editor.ViewModels.Interfaces;
@@ -12,33 +7,18 @@ namespace WPF_Editor.ViewModels
 {
     public class MediatorViewModel : ISceneMediatorViewModel, IPaletteMediatorViewModel
     {
-        
         private static MediatorViewModel _mediator;
-        private ISceneViewModel _scene;
-        private readonly IPaletteViewModel _palette;
         private readonly IModel _currentModel;
+        private readonly IPaletteViewModel _palette;
 
         private readonly IRepo _repo = RepoFactory.CreateRepo();
+        private ISceneViewModel _scene;
 
-
-        public static MediatorViewModel CreateMediator()
-        {
-            if (_mediator is null)
-            {
-                _mediator = new MediatorViewModel();
-            }
-            return _mediator;
-        }
-       
 
         private MediatorViewModel()
         {
             var currentMetamodel = _repo.Model("RobotsMetamodel");
             _currentModel = _repo.CreateModel("New model based on RobotsMetamodel", currentMetamodel);
-            foreach (var element in _currentModel.Metamodel.Elements)
-            {
-                System.Console.WriteLine(element.Name);
-            }
             _scene = SceneViewModel.CreateScene(this);
             _palette = PaletteViewModel.CreatePalette(this);
         }
@@ -46,20 +26,28 @@ namespace WPF_Editor.ViewModels
         public IEnumerable<IElement> MetamodelElements => _currentModel.Metamodel.Elements;
         public IEnumerable<INode> MetamodelNodes => _currentModel.Metamodel.Nodes;
         public IEnumerable<IEdge> MetamodelEdges => _currentModel.Metamodel.Edges;
+
         public MetamodelElement GetSelectedMetamodelType()
         {
             return _palette.SelectedElement;
-            
         }
 
         public ModelNode GetModelNode(MetamodelNode metaNode)
         {
-            return new ModelNode(_currentModel.CreateElement(metaNode.INode) as INode);
+            return new ModelNode(_currentModel.CreateElement(metaNode.Element) as INode);
         }
 
         public ModelEdge GetModelEdge(MetamodelEdge metaEdge, ModelNode source, ModelNode target)
         {
-            return new ModelEdge(_currentModel.CreateElement(metaEdge.IEdge) as IEdge, source, target);
+            return new ModelEdge(_currentModel.CreateElement(metaEdge.Element) as IEdge, source, target);
+        }
+
+
+        public static MediatorViewModel CreateMediator()
+        {
+            if (_mediator is null)
+                _mediator = new MediatorViewModel();
+            return _mediator;
         }
     }
 }

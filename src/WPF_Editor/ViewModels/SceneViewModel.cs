@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 using GraphX.Controls;
 using GraphX.PCL.Common.Enums;
-using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
-using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
-using GraphX.PCL.Logic.Models;
 using QuickGraph;
 using WPF_Editor.ViewModels.Helpers;
 using WPF_Editor.ViewModels.Interfaces;
@@ -18,47 +10,37 @@ namespace WPF_Editor.ViewModels
 {
     public class SceneViewModel : ISceneViewModel
     {
-        private ZoomControl _zoomControl;
-        private GraphArea _graphArea;
-        private GXLogicCore _logicCore;
         private static ISceneViewModel _scene;
         private readonly ISceneMediatorViewModel _sceneMediator;
         private VertexControl _firstSelectedVertexControl;
-        public static ISceneViewModel CreateScene(ISceneMediatorViewModel sceneMediator = null)
-        {
-            if (_scene == null)
-            {
-                _scene = new SceneViewModel(sceneMediator);
-            }
-            return _scene;
-        }
+        private GraphArea _graphArea;
+        private GXLogicCore _logicCore;
+        private ZoomControl _zoomControl;
 
         private SceneViewModel(ISceneMediatorViewModel sceneMediator)
         {
             _sceneMediator = sceneMediator;
         }
+
         public void InitializeScene(ZoomControl zoomControl)
         {
             _zoomControl = zoomControl;
-            _graphArea = (zoomControl.Content) as GraphArea;
+            _graphArea = zoomControl.Content as GraphArea;
             if (_graphArea == null)
-            {
                 throw new ArgumentException("Zoom control doesn't contain an instance of class GraphArea.");
-            }
             var graph = new BidirectionalGraph<ModelNode, ModelEdge>();
 
             _logicCore = new GXLogicCore
             {
                 DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.KK,
-                Graph = graph,
-        };
+                Graph = graph
+            };
 
             _graphArea.LogicCore = _logicCore;
             _graphArea.SetVerticesDrag(true);
             _graphArea.GenerateGraph();
             zoomControl.CenterContent();
         }
-
 
 
         public void HandleSingleLeftClick(Point position)
@@ -71,9 +53,16 @@ namespace WPF_Editor.ViewModels
                 var nodeControl = new VertexControl(node);
                 nodeControl.Click += TryCreateEdge;
                 nodeControl.SetPosition(position);
-                _graphArea.AddVertex(node,nodeControl);
+                _graphArea.AddVertex(node, nodeControl);
                 _graphArea.RelayoutGraph(true);
             }
+        }
+
+        public static ISceneViewModel CreateScene(ISceneMediatorViewModel sceneMediator = null)
+        {
+            if (_scene == null)
+                _scene = new SceneViewModel(sceneMediator);
+            return _scene;
         }
 
         private void TryCreateEdge(object sender, RoutedEventArgs e)

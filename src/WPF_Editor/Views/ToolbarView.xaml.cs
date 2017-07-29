@@ -4,7 +4,7 @@ using WPF_Editor.ViewModels;
 namespace WPF_Editor.Views
 {
     /// <summary>
-    /// Interaction logic for ToolbarView.xaml
+    ///     Interaction logic for ToolbarView.xaml
     /// </summary>
     public partial class ToolbarView : UserControl
     {

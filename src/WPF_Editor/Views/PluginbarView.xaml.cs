@@ -4,7 +4,7 @@ using WPF_Editor.ViewModels;
 namespace WPF_Editor.Views
 {
     /// <summary>
-    /// Interaction logic for PluginbarView.xaml
+    ///     Interaction logic for PluginbarView.xaml
     /// </summary>
     public partial class PluginbarView : UserControl
     {

@@ -1,5 +1,6 @@
-﻿using GraphX.Controls;
-using System.Windows;
+﻿using System.Windows;
+using GraphX.Controls;
+
 namespace WPF_Editor.ViewModels.Interfaces
 {
     public interface ISceneViewModel

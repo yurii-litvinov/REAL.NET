@@ -7,7 +7,7 @@ namespace WPF_Editor.Views
     public class DataVertex : VertexBase
     {
         /// <summary>
-        /// Some string property for example purposes
+        ///     Some string property for example purposes
         /// </summary>
         public string Text { get; set; }
 
@@ -36,8 +36,9 @@ namespace WPF_Editor.Views
             return Text;
         }
     }
+
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    ///     Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class EditorView : Window
     {
