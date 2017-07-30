@@ -98,8 +98,8 @@
     <Compile Include="Views\PaletteView.xaml.cs">
       <DependentUpon>PaletteView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PluginbarView.xaml.cs">
-      <DependentUpon>PluginbarView.xaml</DependentUpon>
+    <Compile Include="Views\PluginBarView.xaml.cs">
+      <DependentUpon>PluginBarView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SceneView.xaml.cs">
       <DependentUpon>SceneView.xaml</DependentUpon>
@@ -131,7 +131,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\PluginbarView.xaml">
+    <Page Include="Views\PluginBarView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

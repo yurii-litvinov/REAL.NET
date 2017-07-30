@@ -17,7 +17,7 @@
             DockPanel.Dock="Top">
             <StackPanel Name="TopPanel" Height="Auto">
                 <views:ToolbarView />
-                <views:PluginbarView />
+                <views:PluginBarView />
             </StackPanel>
         </Border>
         <Border

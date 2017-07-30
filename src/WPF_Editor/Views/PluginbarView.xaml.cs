@@ -22,14 +22,14 @@ using WPF_Editor.ViewModels;
 namespace WPF_Editor.Views
 {
     /// <summary>
-    ///     Interaction logic for PluginbarView.xaml
+    ///     Interaction logic for PluginBarView.xaml
     /// </summary>
-    public partial class PluginbarView : UserControl
+    public partial class PluginBarView : UserControl
     {
-        public PluginbarView()
+        public PluginBarView()
         {
             InitializeComponent();
-            DataContext = new PluginbarViewModel();
+            DataContext = new PluginBarViewModel();
         }
     }
 }
