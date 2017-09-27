@@ -1,0 +1,711 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="00f92c64-0eeb-4c17-ad5d-42e99ce8cfca" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/.idea.REAL.NET/.idea/contentModel.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/.idea.REAL.NET/.idea/modules.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/.idea.REAL.NET/.idea/vcs.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/.idea.REAL.NET/riderModule.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/EditorPrototype/Constraints.xaml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/EditorPrototype/Constraints.cs" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/EditorPrototype/EditorPrototype.csproj" afterPath="$PROJECT_DIR$/src/EditorPrototype/EditorPrototype.csproj" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/EditorPrototype/MainWindow.xaml" afterPath="$PROJECT_DIR$/src/EditorPrototype/MainWindow.xaml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/EditorPrototype/MainWindow.xaml.cs" afterPath="$PROJECT_DIR$/src/EditorPrototype/MainWindow.xaml.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/EditorPrototype/Properties/AssemblyInfo.cs" afterPath="$PROJECT_DIR$/src/EditorPrototype/Properties/AssemblyInfo.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/MsAglWinFormsEditor/Properties/AssemblyInfo.cs" afterPath="$PROJECT_DIR$/src/MsAglWinFormsEditor/Properties/AssemblyInfo.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Repo/AssemblyInfo.fs" afterPath="$PROJECT_DIR$/src/Repo/AssemblyInfo.fs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/WPF_Editor/Properties/AssemblyInfo.cs" afterPath="$PROJECT_DIR$/src/WPF_Editor/Properties/AssemblyInfo.cs" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="MainWindow.xaml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/EditorPrototype/MainWindow.xaml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1275">
+              <caret line="85" column="57" lean-forward="false" selection-start-line="85" selection-start-column="35" selection-end-line="85" selection-end-column="57" />
+              <folding>
+                <marker date="1502391111524" expanded="true" signature="0:3539" ph="&lt;&lt;Grid&gt;&#10;        &lt;Grid.Resources&gt;&#10;            &lt;ResourceDictionary&gt;&#10;                &lt;ResourceDictionary.MergedDictionaries&gt;&#10;                    &lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;&#10;                &lt;/ResourceDictionary.MergedDictionaries&gt;&#10;            &lt;/ResourceDictionary&gt;&#10;        &lt;/Grid.Resources&gt;&#10;&#10;        &lt;Grid.ColumnDefinitions&gt;&#10;            &lt;ColumnDefinition Width=&quot;*&quot; MinWidth=&quot;100&quot; /&gt;&#10;            &lt;ColumnDefinition Width=&quot;Auto&quot; /&gt;&#10;        &lt;/Grid.ColumnDefinitions&gt;&#10;&#10;        &lt;Border&#10;            Grid.Row=&quot;0&quot;&#10;            Grid.Column=&quot;0&quot;&#10;            Margin=&quot;2&quot;&#10;            BorderThickness=&quot;1&quot;&gt;&#10;            &lt;controls1:ZoomControl x:Name=&quot;g_zoomctrl&quot;&gt;&#10;                &lt;wpf:GraphAreaExample x:Name=&quot;g_Area&quot; /&gt;&#10;            &lt;/controls1:ZoomControl&gt;&#10;        &lt;/Border&gt;&#10;&#10;        &lt;DockPanel Grid.Row=&quot;0&quot; Grid.Column=&quot;1&quot;&gt;&#10;            &lt;Grid x:Name=&quot;rightPanel&quot;&gt;&#10;                &lt;Grid.RowDefinitions&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;*&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                &lt;/Grid.RowDefinitions&gt;&#10;&#10;                &lt;Grid x:Name=&quot;paletteGrid&quot; Grid.Row=&quot;1&quot; /&gt;&#10;&#10;                &lt;Label&#10;                    x:Name=&quot;elementsListLabel&quot;&#10;                    Grid.Row=&quot;2&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Elements:&quot; /&gt;&#10;                &lt;ListBox&#10;                    x:Name=&quot;elementsListBox&quot;&#10;                    Grid.Row=&quot;3&quot;&#10;                    Margin=&quot;0,20,0,0&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot; /&gt;&#10;                &lt;Label&#10;                    x:Name=&quot;selectedEntityLabel&quot;&#10;                    Grid.Row=&quot;4&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Selected entity:&quot; /&gt;&#10;&#10;                &lt;DataGrid&#10;                    x:Name=&quot;attributesView&quot;&#10;                    Grid.Row=&quot;5&quot;&#10;                    AutoGenerateColumns=&quot;False&quot;&#10;                    IsReadOnly=&quot;True&quot;&#10;                    ItemsSource=&quot;{Binding Attributes}&quot;&gt;&#10;                    &lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;&#10;                &lt;/DataGrid&gt;&#10;                &#10;                &lt;Grid&gt;&#10;                    &lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;&#10;                &lt;/Grid&gt;&#10;            &lt;/Grid&gt;&#10;        &lt;/DockPanel&gt;&#10;&#10;    &lt;/Grid&gt;.../&gt;" />
+                <marker date="1502391111524" expanded="true" signature="534:3529" ph="&lt;&lt;Grid.Resources&gt;&#10;            &lt;ResourceDictionary&gt;&#10;                &lt;ResourceDictionary.MergedDictionaries&gt;&#10;                    &lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;&#10;                &lt;/ResourceDictionary.MergedDictionaries&gt;&#10;            &lt;/ResourceDictionary&gt;&#10;        &lt;/Grid.Resources&gt; &lt;Grid.ColumnDefinitions&gt;&#10;            &lt;ColumnDefinition Width=&quot;*&quot; MinWidth=&quot;100&quot; /&gt;&#10;            &lt;ColumnDefinition Width=&quot;Auto&quot; /&gt;&#10;        &lt;/Grid.ColumnDefinitions&gt; &lt;Border&#10;            Grid.Row=&quot;0&quot;&#10;            Grid.Column=&quot;0&quot;&#10;            Margin=&quot;2&quot;&#10;            BorderThickness=&quot;1&quot;&gt;&#10;            &lt;controls1:ZoomControl x:Name=&quot;g_zoomctrl&quot;&gt;&#10;                &lt;wpf:GraphAreaExample x:Name=&quot;g_Area&quot; /&gt;&#10;            &lt;/controls1:ZoomControl&gt;&#10;        &lt;/Border&gt; &lt;DockPanel Grid.Row=&quot;0&quot; Grid.Column=&quot;1&quot;&gt;&#10;            &lt;Grid x:Name=&quot;rightPanel&quot;&gt;&#10;                &lt;Grid.RowDefinitions&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;*&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                &lt;/Grid.RowDefinitions&gt;&#10;&#10;                &lt;Grid x:Name=&quot;paletteGrid&quot; Grid.Row=&quot;1&quot; /&gt;&#10;&#10;                &lt;Label&#10;                    x:Name=&quot;elementsListLabel&quot;&#10;                    Grid.Row=&quot;2&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Elements:&quot; /&gt;&#10;                &lt;ListBox&#10;                    x:Name=&quot;elementsListBox&quot;&#10;                    Grid.Row=&quot;3&quot;&#10;                    Margin=&quot;0,20,0,0&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot; /&gt;&#10;                &lt;Label&#10;                    x:Name=&quot;selectedEntityLabel&quot;&#10;                    Grid.Row=&quot;4&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Selected entity:&quot; /&gt;&#10;&#10;                &lt;DataGrid&#10;                    x:Name=&quot;attributesView&quot;&#10;                    Grid.Row=&quot;5&quot;&#10;                    AutoGenerateColumns=&quot;False&quot;&#10;                    IsReadOnly=&quot;True&quot;&#10;                    ItemsSource=&quot;{Binding Attributes}&quot;&gt;&#10;                    &lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;&#10;                &lt;/DataGrid&gt;&#10;                &#10;                &lt;Grid&gt;&#10;                    &lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;&#10;                &lt;/Grid&gt;&#10;            &lt;/Grid&gt;&#10;        &lt;/DockPanel&gt;.../&gt;" />
+                <marker date="1502391111524" expanded="true" signature="549:855" ph="&lt;&lt;ResourceDictionary&gt;&#10;                &lt;ResourceDictionary.MergedDictionaries&gt;&#10;                    &lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;&#10;                &lt;/ResourceDictionary.MergedDictionaries&gt;&#10;            &lt;/ResourceDictionary&gt;.../&gt;" />
+                <marker date="1502391111524" expanded="true" signature="578:829" ph="&lt;&lt;ResourceDictionary.MergedDictionaries&gt;&#10;                    &lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;&#10;                &lt;/ResourceDictionary.MergedDictionaries&gt;.../&gt;" />
+                <marker date="1502391111524" expanded="true" signature="615:795" ph="&lt;&lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;.../&gt;" />
+                <marker date="1502391111524" expanded="true" signature="865:1027" ph="&lt;&lt;ColumnDefinition Width=&quot;*&quot; MinWidth=&quot;100&quot; /&gt; &lt;ColumnDefinition Width=&quot;Auto&quot; /&gt;.../&gt;" />
+                <marker date="1502391111524" expanded="true" signature="1037:1321" ph="&lt;&lt;controls1:ZoomControl x:Name=&quot;g_zoomctrl&quot;&gt;&#10;                &lt;wpf:GraphAreaExample x:Name=&quot;g_Area&quot; /&gt;&#10;            &lt;/controls1:ZoomControl&gt;.../&gt;" />
+                <marker date="1502391111524" expanded="true" signature="1166:1303" ph="&lt;&lt;wpf:GraphAreaExample x:Name=&quot;g_Area&quot; /&gt;.../&gt;" />
+                <marker date="1502391111524" expanded="true" signature="1331:3516" ph="&lt;&lt;Grid x:Name=&quot;rightPanel&quot;&gt;&#10;                &lt;Grid.RowDefinitions&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;*&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                &lt;/Grid.RowDefinitions&gt;&#10;&#10;                &lt;Grid x:Name=&quot;paletteGrid&quot; Grid.Row=&quot;1&quot; /&gt;&#10;&#10;                &lt;Label&#10;                    x:Name=&quot;elementsListLabel&quot;&#10;                    Grid.Row=&quot;2&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Elements:&quot; /&gt;&#10;                &lt;ListBox&#10;                    x:Name=&quot;elementsListBox&quot;&#10;                    Grid.Row=&quot;3&quot;&#10;                    Margin=&quot;0,20,0,0&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot; /&gt;&#10;                &lt;Label&#10;                    x:Name=&quot;selectedEntityLabel&quot;&#10;                    Grid.Row=&quot;4&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Selected entity:&quot; /&gt;&#10;&#10;                &lt;DataGrid&#10;                    x:Name=&quot;attributesView&quot;&#10;                    Grid.Row=&quot;5&quot;&#10;                    AutoGenerateColumns=&quot;False&quot;&#10;                    IsReadOnly=&quot;True&quot;&#10;                    ItemsSource=&quot;{Binding Attributes}&quot;&gt;&#10;                    &lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;&#10;                &lt;/DataGrid&gt;&#10;                &#10;                &lt;Grid&gt;&#10;                    &lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;&#10;                &lt;/Grid&gt;&#10;            &lt;/Grid&gt;.../&gt;" />
+                <marker date="1502391111524" expanded="true" signature="1384:3495" ph="&lt;&lt;Grid.RowDefinitions&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;*&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                &lt;/Grid.RowDefinitions&gt; &lt;Grid x:Name=&quot;paletteGrid&quot; Grid.Row=&quot;1&quot; /&gt; &lt;Label&#10;                    x:Name=&quot;elementsListLabel&quot;&#10;                    Grid.Row=&quot;2&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Elements:&quot; /&gt; &lt;ListBox&#10;                    x:Name=&quot;elementsListBox&quot;&#10;                    Grid.Row=&quot;3&quot;&#10;                    Margin=&quot;0,20,0,0&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot; /&gt; &lt;Label&#10;                    x:Name=&quot;selectedEntityLabel&quot;&#10;                    Grid.Row=&quot;4&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Selected entity:&quot; /&gt; &lt;DataGrid&#10;                    x:Name=&quot;attributesView&quot;&#10;                    Grid.Row=&quot;5&quot;&#10;                    AutoGenerateColumns=&quot;False&quot;&#10;                    IsReadOnly=&quot;True&quot;&#10;                    ItemsSource=&quot;{Binding Attributes}&quot;&gt;&#10;                    &lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;&#10;                &lt;/DataGrid&gt; &lt;Grid&gt;&#10;                    &lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;&#10;                &lt;/Grid&gt;.../&gt;" />
+                <marker date="1502391111524" expanded="true" signature="1427:1843" ph="&lt;&lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt; &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt; &lt;RowDefinition Height=&quot;Auto&quot; /&gt; &lt;RowDefinition Height=&quot;*&quot; /&gt; &lt;RowDefinition Height=&quot;Auto&quot; /&gt; &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;.../&gt;" />
+                <marker date="1502391111524" expanded="true" signature="1921:2100" ph="&lt;.../&gt;" />
+                <marker date="1502391111524" expanded="true" signature="2117:2294" ph="&lt;.../&gt;" />
+                <marker date="1502391111524" expanded="true" signature="2311:2499" ph="&lt;.../&gt;" />
+                <marker date="1502391111524" expanded="true" signature="2517:3112" ph="&lt;&lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;.../&gt;" />
+                <marker date="1502391111524" expanded="true" signature="2766:3084" ph="&lt;&lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt; &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt; &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;.../&gt;" />
+                <marker date="1502391111524" expanded="true" signature="3146:3475" ph="&lt;&lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;.../&gt;" />
+                <marker date="1502391111524" expanded="true" signature="3173:3451" ph="&lt;.../&gt;" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MainWindow.xaml.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/EditorPrototype/MainWindow.xaml.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="7380">
+              <caret line="492" column="23" lean-forward="false" selection-start-line="492" selection-start-column="23" selection-end-line="492" selection-end-column="23" />
+              <folding>
+                <marker date="1502553377246" expanded="true" signature="25:19298" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="38:547" ph="..." />
+                <marker date="1502553377246" expanded="true" signature="553:635" ph="/// Логика взаимодействия для MainWindow.xaml ... " />
+                <marker date="1502553377246" expanded="true" signature="682:19296" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="1052:3256" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="1928:2195" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="3327:3536" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="3586:5081" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="3687:3739" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="3786:3853" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="3900:5040" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="4182:4323" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="4492:4625" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="5137:7381" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="5244:5296" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="5346:7371" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="5397:5463" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="5743:5998" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="6799:6929" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="6950:7079" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="7448:7511" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="7561:8149" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="7771:7823" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="8237:8894" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="8311:8459" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="8562:8688" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="8971:11036" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="9112:9164" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="9204:10163" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="9419:10149" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="9599:10131" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="9788:10077" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="9862:10051" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="10180:11026" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="10331:11012" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="10423:10994" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="10688:10940" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="10764:10914" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="11091:12021" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="11284:11532" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="11714:11827" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="12093:12912" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="12286:12395" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="13000:14586" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="13164:13698" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="13220:13405" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="13426:13684" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="14030:14139" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="14212:14576" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="14670:15398" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="15032:15388" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="15469:16060" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="15592:15690" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="16158:17039" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="16226:17029" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="16454:16615" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="16727:17015" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="16791:16997" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="17132:17322" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="17388:18148" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="17462:17610" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="17713:17839" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="18223:18369" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="18437:18570" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="18638:18765" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="18836:18973" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="18908:18963" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="19007:19124" ph="{...}" />
+                <marker date="1502553377246" expanded="true" signature="19197:19290" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Constraints.xaml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/EditorPrototype/Constraints.xaml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="135">
+              <caret line="9" column="8" lean-forward="false" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="8" />
+              <folding>
+                <marker date="1502389878602" expanded="true" signature="0:544" ph="&lt;&lt;Grid&gt;&#10;        &#10;    &lt;/Grid&gt;.../&gt;" />
+                <marker date="1502389878602" expanded="true" signature="502:529" ph="&lt;.../&gt;" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Constraints.xaml.cs" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/EditorPrototype/Constraints.xaml.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="15" selection-end-column="9" />
+              <folding>
+                <marker date="1502551729152" expanded="true" signature="25:453" ph="{...}" />
+                <marker date="1502551729152" expanded="true" signature="68:175" ph="/// Initializes a new instance of the &lt;see cref=&quot;Constraints&quot;/&gt; class. ... " />
+                <marker date="1502551729152" expanded="true" signature="226:451" ph="{...}" />
+                <marker date="1502551729152" expanded="true" signature="241:356" ph="/// Initializes a new instance of the &lt;see cref=&quot;Constraints&quot;/&gt; class. ... " />
+                <marker date="1502551729152" expanded="true" signature="385:445" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/EditorPrototype/MainWindow.xaml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/EditorPrototype/Constraints.xaml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/EditorPrototype/Constraints.xaml.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/EditorPrototype/MainWindow.xaml.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/src/EditorPrototype/Constraints.cs" />
+        <option value="$PROJECT_DIR$/src/EditorPrototype/MainWindow.xaml" />
+        <option value="$PROJECT_DIR$/src/EditorPrototype/Constraints.xaml.cs" />
+        <option value="$PROJECT_DIR$/src/EditorPrototype/MainWindow.xaml.cs" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1382" />
+    <option name="height" value="744" />
+  </component>
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="SolutionExplorer" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scratches" />
+      <pane id="SolutionExplorer">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" />
+              <option name="myItemType" value="com.jetbrains.rider.projectView.solutionExplorer.SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Loading solution..." />
+              <option name="myItemType" value="com.jetbrains.rider.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+        <option name="show-file-system" value="false" />
+        <option name="show-all-items" value="false" />
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected=".NET Project.Default">
+    <configuration default="true" type="DotNetProject" factoryName=".NET Project">
+      <option name="PROJECT_PATH" value="" />
+      <option name="PROJECT_KIND" value="None" />
+      <option name="PROJECT_TFM" value="" />
+      <option name="EXE_PATH" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="USE_MONO" value="0" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavaScriptTestRunnerJest" factoryName="Jest">
+      <node-interpreter value="project" />
+      <working-dir value="" />
+      <envs />
+      <scope-kind value="ALL" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavaScriptTestRunnerProtractor" factoryName="Protractor">
+      <config-file value="" />
+      <node-interpreter value="project" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
+      <method />
+    </configuration>
+    <configuration default="true" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="project" working-dir="">
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <gulpfile />
+      <tasks />
+      <arguments />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.npm" factoryName="npm">
+      <command value="run" />
+      <scripts />
+      <node-interpreter value="project" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="mocha-javascript-test-runner" factoryName="Mocha">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <working-directory />
+      <pass-parent-env>true</pass-parent-env>
+      <envs />
+      <ui />
+      <extra-mocha-options />
+      <test-kind>DIRECTORY</test-kind>
+      <test-directory />
+      <recursive>false</recursive>
+      <method />
+    </configuration>
+    <configuration default="false" name="Default" type="DotNetProject" factoryName=".NET Project">
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/src/EditorPrototype/EditorPrototype.csproj" />
+      <option name="PROJECT_KIND" value="Console" />
+      <option name="PROJECT_TFM" value=".NETFramework,Version=v4.5.2" />
+      <option name="EXE_PATH" value="$PROJECT_DIR$/src/EditorPrototype/bin/Debug/EditorPrototype.exe" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="USE_MONO" value="0" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <envs />
+      <method />
+    </configuration>
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue=".NET Project.Default" />
+    </list>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="00f92c64-0eeb-4c17-ad5d-42e99ce8cfca" name="Default" comment="" />
+      <created>1501609725119</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1501609725119</updated>
+      <workItem from="1501609753508" duration="1766000" />
+      <workItem from="1501783267543" duration="1432000" />
+      <workItem from="1502387436799" duration="4326000" />
+      <workItem from="1502605769208" duration="67000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="7591000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <layout>
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2489019" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Errors In Solution" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Unit Tests" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="NuGet" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3280757" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Build" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3280757" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="processedProjectFiles" value="true" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/EditorPrototype/MainWindow.xaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1275">
+          <caret line="85" column="57" lean-forward="false" selection-start-line="85" selection-start-column="35" selection-end-line="85" selection-end-column="57" />
+          <folding>
+            <marker date="1502391111524" expanded="true" signature="0:3539" ph="&lt;&lt;Grid&gt;&#10;        &lt;Grid.Resources&gt;&#10;            &lt;ResourceDictionary&gt;&#10;                &lt;ResourceDictionary.MergedDictionaries&gt;&#10;                    &lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;&#10;                &lt;/ResourceDictionary.MergedDictionaries&gt;&#10;            &lt;/ResourceDictionary&gt;&#10;        &lt;/Grid.Resources&gt;&#10;&#10;        &lt;Grid.ColumnDefinitions&gt;&#10;            &lt;ColumnDefinition Width=&quot;*&quot; MinWidth=&quot;100&quot; /&gt;&#10;            &lt;ColumnDefinition Width=&quot;Auto&quot; /&gt;&#10;        &lt;/Grid.ColumnDefinitions&gt;&#10;&#10;        &lt;Border&#10;            Grid.Row=&quot;0&quot;&#10;            Grid.Column=&quot;0&quot;&#10;            Margin=&quot;2&quot;&#10;            BorderThickness=&quot;1&quot;&gt;&#10;            &lt;controls1:ZoomControl x:Name=&quot;g_zoomctrl&quot;&gt;&#10;                &lt;wpf:GraphAreaExample x:Name=&quot;g_Area&quot; /&gt;&#10;            &lt;/controls1:ZoomControl&gt;&#10;        &lt;/Border&gt;&#10;&#10;        &lt;DockPanel Grid.Row=&quot;0&quot; Grid.Column=&quot;1&quot;&gt;&#10;            &lt;Grid x:Name=&quot;rightPanel&quot;&gt;&#10;                &lt;Grid.RowDefinitions&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;*&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                &lt;/Grid.RowDefinitions&gt;&#10;&#10;                &lt;Grid x:Name=&quot;paletteGrid&quot; Grid.Row=&quot;1&quot; /&gt;&#10;&#10;                &lt;Label&#10;                    x:Name=&quot;elementsListLabel&quot;&#10;                    Grid.Row=&quot;2&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Elements:&quot; /&gt;&#10;                &lt;ListBox&#10;                    x:Name=&quot;elementsListBox&quot;&#10;                    Grid.Row=&quot;3&quot;&#10;                    Margin=&quot;0,20,0,0&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot; /&gt;&#10;                &lt;Label&#10;                    x:Name=&quot;selectedEntityLabel&quot;&#10;                    Grid.Row=&quot;4&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Selected entity:&quot; /&gt;&#10;&#10;                &lt;DataGrid&#10;                    x:Name=&quot;attributesView&quot;&#10;                    Grid.Row=&quot;5&quot;&#10;                    AutoGenerateColumns=&quot;False&quot;&#10;                    IsReadOnly=&quot;True&quot;&#10;                    ItemsSource=&quot;{Binding Attributes}&quot;&gt;&#10;                    &lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;&#10;                &lt;/DataGrid&gt;&#10;                &#10;                &lt;Grid&gt;&#10;                    &lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;&#10;                &lt;/Grid&gt;&#10;            &lt;/Grid&gt;&#10;        &lt;/DockPanel&gt;&#10;&#10;    &lt;/Grid&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="534:3529" ph="&lt;&lt;Grid.Resources&gt;&#10;            &lt;ResourceDictionary&gt;&#10;                &lt;ResourceDictionary.MergedDictionaries&gt;&#10;                    &lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;&#10;                &lt;/ResourceDictionary.MergedDictionaries&gt;&#10;            &lt;/ResourceDictionary&gt;&#10;        &lt;/Grid.Resources&gt; &lt;Grid.ColumnDefinitions&gt;&#10;            &lt;ColumnDefinition Width=&quot;*&quot; MinWidth=&quot;100&quot; /&gt;&#10;            &lt;ColumnDefinition Width=&quot;Auto&quot; /&gt;&#10;        &lt;/Grid.ColumnDefinitions&gt; &lt;Border&#10;            Grid.Row=&quot;0&quot;&#10;            Grid.Column=&quot;0&quot;&#10;            Margin=&quot;2&quot;&#10;            BorderThickness=&quot;1&quot;&gt;&#10;            &lt;controls1:ZoomControl x:Name=&quot;g_zoomctrl&quot;&gt;&#10;                &lt;wpf:GraphAreaExample x:Name=&quot;g_Area&quot; /&gt;&#10;            &lt;/controls1:ZoomControl&gt;&#10;        &lt;/Border&gt; &lt;DockPanel Grid.Row=&quot;0&quot; Grid.Column=&quot;1&quot;&gt;&#10;            &lt;Grid x:Name=&quot;rightPanel&quot;&gt;&#10;                &lt;Grid.RowDefinitions&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;*&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                &lt;/Grid.RowDefinitions&gt;&#10;&#10;                &lt;Grid x:Name=&quot;paletteGrid&quot; Grid.Row=&quot;1&quot; /&gt;&#10;&#10;                &lt;Label&#10;                    x:Name=&quot;elementsListLabel&quot;&#10;                    Grid.Row=&quot;2&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Elements:&quot; /&gt;&#10;                &lt;ListBox&#10;                    x:Name=&quot;elementsListBox&quot;&#10;                    Grid.Row=&quot;3&quot;&#10;                    Margin=&quot;0,20,0,0&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot; /&gt;&#10;                &lt;Label&#10;                    x:Name=&quot;selectedEntityLabel&quot;&#10;                    Grid.Row=&quot;4&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Selected entity:&quot; /&gt;&#10;&#10;                &lt;DataGrid&#10;                    x:Name=&quot;attributesView&quot;&#10;                    Grid.Row=&quot;5&quot;&#10;                    AutoGenerateColumns=&quot;False&quot;&#10;                    IsReadOnly=&quot;True&quot;&#10;                    ItemsSource=&quot;{Binding Attributes}&quot;&gt;&#10;                    &lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;&#10;                &lt;/DataGrid&gt;&#10;                &#10;                &lt;Grid&gt;&#10;                    &lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;&#10;                &lt;/Grid&gt;&#10;            &lt;/Grid&gt;&#10;        &lt;/DockPanel&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="549:855" ph="&lt;&lt;ResourceDictionary&gt;&#10;                &lt;ResourceDictionary.MergedDictionaries&gt;&#10;                    &lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;&#10;                &lt;/ResourceDictionary.MergedDictionaries&gt;&#10;            &lt;/ResourceDictionary&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="578:829" ph="&lt;&lt;ResourceDictionary.MergedDictionaries&gt;&#10;                    &lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;&#10;                &lt;/ResourceDictionary.MergedDictionaries&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="615:795" ph="&lt;&lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="865:1027" ph="&lt;&lt;ColumnDefinition Width=&quot;*&quot; MinWidth=&quot;100&quot; /&gt; &lt;ColumnDefinition Width=&quot;Auto&quot; /&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1037:1321" ph="&lt;&lt;controls1:ZoomControl x:Name=&quot;g_zoomctrl&quot;&gt;&#10;                &lt;wpf:GraphAreaExample x:Name=&quot;g_Area&quot; /&gt;&#10;            &lt;/controls1:ZoomControl&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1166:1303" ph="&lt;&lt;wpf:GraphAreaExample x:Name=&quot;g_Area&quot; /&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1331:3516" ph="&lt;&lt;Grid x:Name=&quot;rightPanel&quot;&gt;&#10;                &lt;Grid.RowDefinitions&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;*&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                &lt;/Grid.RowDefinitions&gt;&#10;&#10;                &lt;Grid x:Name=&quot;paletteGrid&quot; Grid.Row=&quot;1&quot; /&gt;&#10;&#10;                &lt;Label&#10;                    x:Name=&quot;elementsListLabel&quot;&#10;                    Grid.Row=&quot;2&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Elements:&quot; /&gt;&#10;                &lt;ListBox&#10;                    x:Name=&quot;elementsListBox&quot;&#10;                    Grid.Row=&quot;3&quot;&#10;                    Margin=&quot;0,20,0,0&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot; /&gt;&#10;                &lt;Label&#10;                    x:Name=&quot;selectedEntityLabel&quot;&#10;                    Grid.Row=&quot;4&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Selected entity:&quot; /&gt;&#10;&#10;                &lt;DataGrid&#10;                    x:Name=&quot;attributesView&quot;&#10;                    Grid.Row=&quot;5&quot;&#10;                    AutoGenerateColumns=&quot;False&quot;&#10;                    IsReadOnly=&quot;True&quot;&#10;                    ItemsSource=&quot;{Binding Attributes}&quot;&gt;&#10;                    &lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;&#10;                &lt;/DataGrid&gt;&#10;                &#10;                &lt;Grid&gt;&#10;                    &lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;&#10;                &lt;/Grid&gt;&#10;            &lt;/Grid&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1384:3495" ph="&lt;&lt;Grid.RowDefinitions&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;*&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                &lt;/Grid.RowDefinitions&gt; &lt;Grid x:Name=&quot;paletteGrid&quot; Grid.Row=&quot;1&quot; /&gt; &lt;Label&#10;                    x:Name=&quot;elementsListLabel&quot;&#10;                    Grid.Row=&quot;2&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Elements:&quot; /&gt; &lt;ListBox&#10;                    x:Name=&quot;elementsListBox&quot;&#10;                    Grid.Row=&quot;3&quot;&#10;                    Margin=&quot;0,20,0,0&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot; /&gt; &lt;Label&#10;                    x:Name=&quot;selectedEntityLabel&quot;&#10;                    Grid.Row=&quot;4&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Selected entity:&quot; /&gt; &lt;DataGrid&#10;                    x:Name=&quot;attributesView&quot;&#10;                    Grid.Row=&quot;5&quot;&#10;                    AutoGenerateColumns=&quot;False&quot;&#10;                    IsReadOnly=&quot;True&quot;&#10;                    ItemsSource=&quot;{Binding Attributes}&quot;&gt;&#10;                    &lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;&#10;                &lt;/DataGrid&gt; &lt;Grid&gt;&#10;                    &lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;&#10;                &lt;/Grid&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1427:1843" ph="&lt;&lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt; &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt; &lt;RowDefinition Height=&quot;Auto&quot; /&gt; &lt;RowDefinition Height=&quot;*&quot; /&gt; &lt;RowDefinition Height=&quot;Auto&quot; /&gt; &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1921:2100" ph="&lt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="2117:2294" ph="&lt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="2311:2499" ph="&lt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="2517:3112" ph="&lt;&lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="2766:3084" ph="&lt;&lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt; &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt; &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="3146:3475" ph="&lt;&lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="3173:3451" ph="&lt;.../&gt;" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/EditorPrototype/MainWindow.xaml.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7380">
+          <caret line="492" column="23" lean-forward="false" selection-start-line="492" selection-start-column="23" selection-end-line="492" selection-end-column="23" />
+          <folding>
+            <marker date="1502553377246" expanded="true" signature="25:19298" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="38:547" ph="..." />
+            <marker date="1502553377246" expanded="true" signature="553:635" ph="/// Логика взаимодействия для MainWindow.xaml ... " />
+            <marker date="1502553377246" expanded="true" signature="682:19296" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="1052:3256" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="1928:2195" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="3327:3536" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="3586:5081" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="3687:3739" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="3786:3853" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="3900:5040" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="4182:4323" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="4492:4625" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="5137:7381" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="5244:5296" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="5346:7371" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="5397:5463" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="5743:5998" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="6799:6929" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="6950:7079" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="7448:7511" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="7561:8149" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="7771:7823" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="8237:8894" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="8311:8459" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="8562:8688" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="8971:11036" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="9112:9164" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="9204:10163" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="9419:10149" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="9599:10131" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="9788:10077" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="9862:10051" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="10180:11026" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="10331:11012" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="10423:10994" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="10688:10940" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="10764:10914" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="11091:12021" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="11284:11532" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="11714:11827" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="12093:12912" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="12286:12395" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="13000:14586" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="13164:13698" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="13220:13405" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="13426:13684" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="14030:14139" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="14212:14576" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="14670:15398" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="15032:15388" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="15469:16060" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="15592:15690" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="16158:17039" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="16226:17029" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="16454:16615" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="16727:17015" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="16791:16997" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="17132:17322" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="17388:18148" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="17462:17610" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="17713:17839" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="18223:18369" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="18437:18570" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="18638:18765" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="18836:18973" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="18908:18963" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="19007:19124" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="19197:19290" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/EditorPrototype/Constraints.xaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="8" lean-forward="false" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="8" />
+          <folding>
+            <marker date="1502389878602" expanded="true" signature="0:544" ph="&lt;&lt;Grid&gt;&#10;        &#10;    &lt;/Grid&gt;.../&gt;" />
+            <marker date="1502389878602" expanded="true" signature="502:529" ph="&lt;.../&gt;" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/EditorPrototype/Constraints.xaml.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="15" selection-end-column="9" />
+          <folding>
+            <marker date="1502551729152" expanded="true" signature="25:453" ph="{...}" />
+            <marker date="1502551729152" expanded="true" signature="68:175" ph="/// Initializes a new instance of the &lt;see cref=&quot;Constraints&quot;/&gt; class. ... " />
+            <marker date="1502551729152" expanded="true" signature="226:451" ph="{...}" />
+            <marker date="1502551729152" expanded="true" signature="241:356" ph="/// Initializes a new instance of the &lt;see cref=&quot;Constraints&quot;/&gt; class. ... " />
+            <marker date="1502551729152" expanded="true" signature="385:445" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/EditorPrototype/MainWindow.xaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1502391111524" expanded="true" signature="0:3539" ph="&lt;&lt;Grid&gt;&#10;        &lt;Grid.Resources&gt;&#10;            &lt;ResourceDictionary&gt;&#10;                &lt;ResourceDictionary.MergedDictionaries&gt;&#10;                    &lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;&#10;                &lt;/ResourceDictionary.MergedDictionaries&gt;&#10;            &lt;/ResourceDictionary&gt;&#10;        &lt;/Grid.Resources&gt;&#10;&#10;        &lt;Grid.ColumnDefinitions&gt;&#10;            &lt;ColumnDefinition Width=&quot;*&quot; MinWidth=&quot;100&quot; /&gt;&#10;            &lt;ColumnDefinition Width=&quot;Auto&quot; /&gt;&#10;        &lt;/Grid.ColumnDefinitions&gt;&#10;&#10;        &lt;Border&#10;            Grid.Row=&quot;0&quot;&#10;            Grid.Column=&quot;0&quot;&#10;            Margin=&quot;2&quot;&#10;            BorderThickness=&quot;1&quot;&gt;&#10;            &lt;controls1:ZoomControl x:Name=&quot;g_zoomctrl&quot;&gt;&#10;                &lt;wpf:GraphAreaExample x:Name=&quot;g_Area&quot; /&gt;&#10;            &lt;/controls1:ZoomControl&gt;&#10;        &lt;/Border&gt;&#10;&#10;        &lt;DockPanel Grid.Row=&quot;0&quot; Grid.Column=&quot;1&quot;&gt;&#10;            &lt;Grid x:Name=&quot;rightPanel&quot;&gt;&#10;                &lt;Grid.RowDefinitions&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;*&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                &lt;/Grid.RowDefinitions&gt;&#10;&#10;                &lt;Grid x:Name=&quot;paletteGrid&quot; Grid.Row=&quot;1&quot; /&gt;&#10;&#10;                &lt;Label&#10;                    x:Name=&quot;elementsListLabel&quot;&#10;                    Grid.Row=&quot;2&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Elements:&quot; /&gt;&#10;                &lt;ListBox&#10;                    x:Name=&quot;elementsListBox&quot;&#10;                    Grid.Row=&quot;3&quot;&#10;                    Margin=&quot;0,20,0,0&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot; /&gt;&#10;                &lt;Label&#10;                    x:Name=&quot;selectedEntityLabel&quot;&#10;                    Grid.Row=&quot;4&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Selected entity:&quot; /&gt;&#10;&#10;                &lt;DataGrid&#10;                    x:Name=&quot;attributesView&quot;&#10;                    Grid.Row=&quot;5&quot;&#10;                    AutoGenerateColumns=&quot;False&quot;&#10;                    IsReadOnly=&quot;True&quot;&#10;                    ItemsSource=&quot;{Binding Attributes}&quot;&gt;&#10;                    &lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;&#10;                &lt;/DataGrid&gt;&#10;                &#10;                &lt;Grid&gt;&#10;                    &lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;&#10;                &lt;/Grid&gt;&#10;            &lt;/Grid&gt;&#10;        &lt;/DockPanel&gt;&#10;&#10;    &lt;/Grid&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="534:3529" ph="&lt;&lt;Grid.Resources&gt;&#10;            &lt;ResourceDictionary&gt;&#10;                &lt;ResourceDictionary.MergedDictionaries&gt;&#10;                    &lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;&#10;                &lt;/ResourceDictionary.MergedDictionaries&gt;&#10;            &lt;/ResourceDictionary&gt;&#10;        &lt;/Grid.Resources&gt; &lt;Grid.ColumnDefinitions&gt;&#10;            &lt;ColumnDefinition Width=&quot;*&quot; MinWidth=&quot;100&quot; /&gt;&#10;            &lt;ColumnDefinition Width=&quot;Auto&quot; /&gt;&#10;        &lt;/Grid.ColumnDefinitions&gt; &lt;Border&#10;            Grid.Row=&quot;0&quot;&#10;            Grid.Column=&quot;0&quot;&#10;            Margin=&quot;2&quot;&#10;            BorderThickness=&quot;1&quot;&gt;&#10;            &lt;controls1:ZoomControl x:Name=&quot;g_zoomctrl&quot;&gt;&#10;                &lt;wpf:GraphAreaExample x:Name=&quot;g_Area&quot; /&gt;&#10;            &lt;/controls1:ZoomControl&gt;&#10;        &lt;/Border&gt; &lt;DockPanel Grid.Row=&quot;0&quot; Grid.Column=&quot;1&quot;&gt;&#10;            &lt;Grid x:Name=&quot;rightPanel&quot;&gt;&#10;                &lt;Grid.RowDefinitions&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;*&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                &lt;/Grid.RowDefinitions&gt;&#10;&#10;                &lt;Grid x:Name=&quot;paletteGrid&quot; Grid.Row=&quot;1&quot; /&gt;&#10;&#10;                &lt;Label&#10;                    x:Name=&quot;elementsListLabel&quot;&#10;                    Grid.Row=&quot;2&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Elements:&quot; /&gt;&#10;                &lt;ListBox&#10;                    x:Name=&quot;elementsListBox&quot;&#10;                    Grid.Row=&quot;3&quot;&#10;                    Margin=&quot;0,20,0,0&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot; /&gt;&#10;                &lt;Label&#10;                    x:Name=&quot;selectedEntityLabel&quot;&#10;                    Grid.Row=&quot;4&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Selected entity:&quot; /&gt;&#10;&#10;                &lt;DataGrid&#10;                    x:Name=&quot;attributesView&quot;&#10;                    Grid.Row=&quot;5&quot;&#10;                    AutoGenerateColumns=&quot;False&quot;&#10;                    IsReadOnly=&quot;True&quot;&#10;                    ItemsSource=&quot;{Binding Attributes}&quot;&gt;&#10;                    &lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;&#10;                &lt;/DataGrid&gt;&#10;                &#10;                &lt;Grid&gt;&#10;                    &lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;&#10;                &lt;/Grid&gt;&#10;            &lt;/Grid&gt;&#10;        &lt;/DockPanel&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="549:855" ph="&lt;&lt;ResourceDictionary&gt;&#10;                &lt;ResourceDictionary.MergedDictionaries&gt;&#10;                    &lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;&#10;                &lt;/ResourceDictionary.MergedDictionaries&gt;&#10;            &lt;/ResourceDictionary&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="578:829" ph="&lt;&lt;ResourceDictionary.MergedDictionaries&gt;&#10;                    &lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;&#10;                &lt;/ResourceDictionary.MergedDictionaries&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="615:795" ph="&lt;&lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="865:1027" ph="&lt;&lt;ColumnDefinition Width=&quot;*&quot; MinWidth=&quot;100&quot; /&gt; &lt;ColumnDefinition Width=&quot;Auto&quot; /&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1037:1321" ph="&lt;&lt;controls1:ZoomControl x:Name=&quot;g_zoomctrl&quot;&gt;&#10;                &lt;wpf:GraphAreaExample x:Name=&quot;g_Area&quot; /&gt;&#10;            &lt;/controls1:ZoomControl&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1166:1303" ph="&lt;&lt;wpf:GraphAreaExample x:Name=&quot;g_Area&quot; /&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1331:3516" ph="&lt;&lt;Grid x:Name=&quot;rightPanel&quot;&gt;&#10;                &lt;Grid.RowDefinitions&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;*&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                &lt;/Grid.RowDefinitions&gt;&#10;&#10;                &lt;Grid x:Name=&quot;paletteGrid&quot; Grid.Row=&quot;1&quot; /&gt;&#10;&#10;                &lt;Label&#10;                    x:Name=&quot;elementsListLabel&quot;&#10;                    Grid.Row=&quot;2&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Elements:&quot; /&gt;&#10;                &lt;ListBox&#10;                    x:Name=&quot;elementsListBox&quot;&#10;                    Grid.Row=&quot;3&quot;&#10;                    Margin=&quot;0,20,0,0&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot; /&gt;&#10;                &lt;Label&#10;                    x:Name=&quot;selectedEntityLabel&quot;&#10;                    Grid.Row=&quot;4&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Selected entity:&quot; /&gt;&#10;&#10;                &lt;DataGrid&#10;                    x:Name=&quot;attributesView&quot;&#10;                    Grid.Row=&quot;5&quot;&#10;                    AutoGenerateColumns=&quot;False&quot;&#10;                    IsReadOnly=&quot;True&quot;&#10;                    ItemsSource=&quot;{Binding Attributes}&quot;&gt;&#10;                    &lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;&#10;                &lt;/DataGrid&gt;&#10;                &#10;                &lt;Grid&gt;&#10;                    &lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;&#10;                &lt;/Grid&gt;&#10;            &lt;/Grid&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1384:3495" ph="&lt;&lt;Grid.RowDefinitions&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;*&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                &lt;/Grid.RowDefinitions&gt; &lt;Grid x:Name=&quot;paletteGrid&quot; Grid.Row=&quot;1&quot; /&gt; &lt;Label&#10;                    x:Name=&quot;elementsListLabel&quot;&#10;                    Grid.Row=&quot;2&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Elements:&quot; /&gt; &lt;ListBox&#10;                    x:Name=&quot;elementsListBox&quot;&#10;                    Grid.Row=&quot;3&quot;&#10;                    Margin=&quot;0,20,0,0&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot; /&gt; &lt;Label&#10;                    x:Name=&quot;selectedEntityLabel&quot;&#10;                    Grid.Row=&quot;4&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Selected entity:&quot; /&gt; &lt;DataGrid&#10;                    x:Name=&quot;attributesView&quot;&#10;                    Grid.Row=&quot;5&quot;&#10;                    AutoGenerateColumns=&quot;False&quot;&#10;                    IsReadOnly=&quot;True&quot;&#10;                    ItemsSource=&quot;{Binding Attributes}&quot;&gt;&#10;                    &lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;&#10;                &lt;/DataGrid&gt; &lt;Grid&gt;&#10;                    &lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;&#10;                &lt;/Grid&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1427:1843" ph="&lt;&lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt; &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt; &lt;RowDefinition Height=&quot;Auto&quot; /&gt; &lt;RowDefinition Height=&quot;*&quot; /&gt; &lt;RowDefinition Height=&quot;Auto&quot; /&gt; &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1921:2100" ph="&lt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="2117:2294" ph="&lt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="2311:2499" ph="&lt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="2517:3112" ph="&lt;&lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="2766:3084" ph="&lt;&lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt; &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt; &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="3146:3475" ph="&lt;&lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="3173:3451" ph="&lt;.../&gt;" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/EditorPrototype/MainWindow.xaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1502391111524" expanded="true" signature="0:3539" ph="&lt;&lt;Grid&gt;&#10;        &lt;Grid.Resources&gt;&#10;            &lt;ResourceDictionary&gt;&#10;                &lt;ResourceDictionary.MergedDictionaries&gt;&#10;                    &lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;&#10;                &lt;/ResourceDictionary.MergedDictionaries&gt;&#10;            &lt;/ResourceDictionary&gt;&#10;        &lt;/Grid.Resources&gt;&#10;&#10;        &lt;Grid.ColumnDefinitions&gt;&#10;            &lt;ColumnDefinition Width=&quot;*&quot; MinWidth=&quot;100&quot; /&gt;&#10;            &lt;ColumnDefinition Width=&quot;Auto&quot; /&gt;&#10;        &lt;/Grid.ColumnDefinitions&gt;&#10;&#10;        &lt;Border&#10;            Grid.Row=&quot;0&quot;&#10;            Grid.Column=&quot;0&quot;&#10;            Margin=&quot;2&quot;&#10;            BorderThickness=&quot;1&quot;&gt;&#10;            &lt;controls1:ZoomControl x:Name=&quot;g_zoomctrl&quot;&gt;&#10;                &lt;wpf:GraphAreaExample x:Name=&quot;g_Area&quot; /&gt;&#10;            &lt;/controls1:ZoomControl&gt;&#10;        &lt;/Border&gt;&#10;&#10;        &lt;DockPanel Grid.Row=&quot;0&quot; Grid.Column=&quot;1&quot;&gt;&#10;            &lt;Grid x:Name=&quot;rightPanel&quot;&gt;&#10;                &lt;Grid.RowDefinitions&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;*&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                &lt;/Grid.RowDefinitions&gt;&#10;&#10;                &lt;Grid x:Name=&quot;paletteGrid&quot; Grid.Row=&quot;1&quot; /&gt;&#10;&#10;                &lt;Label&#10;                    x:Name=&quot;elementsListLabel&quot;&#10;                    Grid.Row=&quot;2&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Elements:&quot; /&gt;&#10;                &lt;ListBox&#10;                    x:Name=&quot;elementsListBox&quot;&#10;                    Grid.Row=&quot;3&quot;&#10;                    Margin=&quot;0,20,0,0&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot; /&gt;&#10;                &lt;Label&#10;                    x:Name=&quot;selectedEntityLabel&quot;&#10;                    Grid.Row=&quot;4&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Selected entity:&quot; /&gt;&#10;&#10;                &lt;DataGrid&#10;                    x:Name=&quot;attributesView&quot;&#10;                    Grid.Row=&quot;5&quot;&#10;                    AutoGenerateColumns=&quot;False&quot;&#10;                    IsReadOnly=&quot;True&quot;&#10;                    ItemsSource=&quot;{Binding Attributes}&quot;&gt;&#10;                    &lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;&#10;                &lt;/DataGrid&gt;&#10;                &#10;                &lt;Grid&gt;&#10;                    &lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;&#10;                &lt;/Grid&gt;&#10;            &lt;/Grid&gt;&#10;        &lt;/DockPanel&gt;&#10;&#10;    &lt;/Grid&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="534:3529" ph="&lt;&lt;Grid.Resources&gt;&#10;            &lt;ResourceDictionary&gt;&#10;                &lt;ResourceDictionary.MergedDictionaries&gt;&#10;                    &lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;&#10;                &lt;/ResourceDictionary.MergedDictionaries&gt;&#10;            &lt;/ResourceDictionary&gt;&#10;        &lt;/Grid.Resources&gt; &lt;Grid.ColumnDefinitions&gt;&#10;            &lt;ColumnDefinition Width=&quot;*&quot; MinWidth=&quot;100&quot; /&gt;&#10;            &lt;ColumnDefinition Width=&quot;Auto&quot; /&gt;&#10;        &lt;/Grid.ColumnDefinitions&gt; &lt;Border&#10;            Grid.Row=&quot;0&quot;&#10;            Grid.Column=&quot;0&quot;&#10;            Margin=&quot;2&quot;&#10;            BorderThickness=&quot;1&quot;&gt;&#10;            &lt;controls1:ZoomControl x:Name=&quot;g_zoomctrl&quot;&gt;&#10;                &lt;wpf:GraphAreaExample x:Name=&quot;g_Area&quot; /&gt;&#10;            &lt;/controls1:ZoomControl&gt;&#10;        &lt;/Border&gt; &lt;DockPanel Grid.Row=&quot;0&quot; Grid.Column=&quot;1&quot;&gt;&#10;            &lt;Grid x:Name=&quot;rightPanel&quot;&gt;&#10;                &lt;Grid.RowDefinitions&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;*&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                &lt;/Grid.RowDefinitions&gt;&#10;&#10;                &lt;Grid x:Name=&quot;paletteGrid&quot; Grid.Row=&quot;1&quot; /&gt;&#10;&#10;                &lt;Label&#10;                    x:Name=&quot;elementsListLabel&quot;&#10;                    Grid.Row=&quot;2&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Elements:&quot; /&gt;&#10;                &lt;ListBox&#10;                    x:Name=&quot;elementsListBox&quot;&#10;                    Grid.Row=&quot;3&quot;&#10;                    Margin=&quot;0,20,0,0&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot; /&gt;&#10;                &lt;Label&#10;                    x:Name=&quot;selectedEntityLabel&quot;&#10;                    Grid.Row=&quot;4&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Selected entity:&quot; /&gt;&#10;&#10;                &lt;DataGrid&#10;                    x:Name=&quot;attributesView&quot;&#10;                    Grid.Row=&quot;5&quot;&#10;                    AutoGenerateColumns=&quot;False&quot;&#10;                    IsReadOnly=&quot;True&quot;&#10;                    ItemsSource=&quot;{Binding Attributes}&quot;&gt;&#10;                    &lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;&#10;                &lt;/DataGrid&gt;&#10;                &#10;                &lt;Grid&gt;&#10;                    &lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;&#10;                &lt;/Grid&gt;&#10;            &lt;/Grid&gt;&#10;        &lt;/DockPanel&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="549:855" ph="&lt;&lt;ResourceDictionary&gt;&#10;                &lt;ResourceDictionary.MergedDictionaries&gt;&#10;                    &lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;&#10;                &lt;/ResourceDictionary.MergedDictionaries&gt;&#10;            &lt;/ResourceDictionary&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="578:829" ph="&lt;&lt;ResourceDictionary.MergedDictionaries&gt;&#10;                    &lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;&#10;                &lt;/ResourceDictionary.MergedDictionaries&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="615:795" ph="&lt;&lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="865:1027" ph="&lt;&lt;ColumnDefinition Width=&quot;*&quot; MinWidth=&quot;100&quot; /&gt; &lt;ColumnDefinition Width=&quot;Auto&quot; /&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1037:1321" ph="&lt;&lt;controls1:ZoomControl x:Name=&quot;g_zoomctrl&quot;&gt;&#10;                &lt;wpf:GraphAreaExample x:Name=&quot;g_Area&quot; /&gt;&#10;            &lt;/controls1:ZoomControl&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1166:1303" ph="&lt;&lt;wpf:GraphAreaExample x:Name=&quot;g_Area&quot; /&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1331:3516" ph="&lt;&lt;Grid x:Name=&quot;rightPanel&quot;&gt;&#10;                &lt;Grid.RowDefinitions&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;*&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                &lt;/Grid.RowDefinitions&gt;&#10;&#10;                &lt;Grid x:Name=&quot;paletteGrid&quot; Grid.Row=&quot;1&quot; /&gt;&#10;&#10;                &lt;Label&#10;                    x:Name=&quot;elementsListLabel&quot;&#10;                    Grid.Row=&quot;2&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Elements:&quot; /&gt;&#10;                &lt;ListBox&#10;                    x:Name=&quot;elementsListBox&quot;&#10;                    Grid.Row=&quot;3&quot;&#10;                    Margin=&quot;0,20,0,0&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot; /&gt;&#10;                &lt;Label&#10;                    x:Name=&quot;selectedEntityLabel&quot;&#10;                    Grid.Row=&quot;4&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Selected entity:&quot; /&gt;&#10;&#10;                &lt;DataGrid&#10;                    x:Name=&quot;attributesView&quot;&#10;                    Grid.Row=&quot;5&quot;&#10;                    AutoGenerateColumns=&quot;False&quot;&#10;                    IsReadOnly=&quot;True&quot;&#10;                    ItemsSource=&quot;{Binding Attributes}&quot;&gt;&#10;                    &lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;&#10;                &lt;/DataGrid&gt;&#10;                &#10;                &lt;Grid&gt;&#10;                    &lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;&#10;                &lt;/Grid&gt;&#10;            &lt;/Grid&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1384:3495" ph="&lt;&lt;Grid.RowDefinitions&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;*&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                &lt;/Grid.RowDefinitions&gt; &lt;Grid x:Name=&quot;paletteGrid&quot; Grid.Row=&quot;1&quot; /&gt; &lt;Label&#10;                    x:Name=&quot;elementsListLabel&quot;&#10;                    Grid.Row=&quot;2&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Elements:&quot; /&gt; &lt;ListBox&#10;                    x:Name=&quot;elementsListBox&quot;&#10;                    Grid.Row=&quot;3&quot;&#10;                    Margin=&quot;0,20,0,0&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot; /&gt; &lt;Label&#10;                    x:Name=&quot;selectedEntityLabel&quot;&#10;                    Grid.Row=&quot;4&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Selected entity:&quot; /&gt; &lt;DataGrid&#10;                    x:Name=&quot;attributesView&quot;&#10;                    Grid.Row=&quot;5&quot;&#10;                    AutoGenerateColumns=&quot;False&quot;&#10;                    IsReadOnly=&quot;True&quot;&#10;                    ItemsSource=&quot;{Binding Attributes}&quot;&gt;&#10;                    &lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;&#10;                &lt;/DataGrid&gt; &lt;Grid&gt;&#10;                    &lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;&#10;                &lt;/Grid&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1427:1843" ph="&lt;&lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt; &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt; &lt;RowDefinition Height=&quot;Auto&quot; /&gt; &lt;RowDefinition Height=&quot;*&quot; /&gt; &lt;RowDefinition Height=&quot;Auto&quot; /&gt; &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1921:2100" ph="&lt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="2117:2294" ph="&lt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="2311:2499" ph="&lt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="2517:3112" ph="&lt;&lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="2766:3084" ph="&lt;&lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt; &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt; &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="3146:3475" ph="&lt;&lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="3173:3451" ph="&lt;.../&gt;" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/EditorPrototype/Constraints.xaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="8" lean-forward="false" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="8" />
+          <folding>
+            <marker date="1502389878602" expanded="true" signature="0:544" ph="&lt;&lt;Grid&gt;&#10;        &#10;    &lt;/Grid&gt;.../&gt;" />
+            <marker date="1502389878602" expanded="true" signature="502:529" ph="&lt;.../&gt;" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/EditorPrototype/Constraints.cs" />
+    <entry file="file://$PROJECT_DIR$/src/EditorPrototype/MainWindow.xaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1275">
+          <caret line="85" column="57" lean-forward="false" selection-start-line="85" selection-start-column="35" selection-end-line="85" selection-end-column="57" />
+          <folding>
+            <marker date="1502391111524" expanded="true" signature="0:3539" ph="&lt;&lt;Grid&gt;&#10;        &lt;Grid.Resources&gt;&#10;            &lt;ResourceDictionary&gt;&#10;                &lt;ResourceDictionary.MergedDictionaries&gt;&#10;                    &lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;&#10;                &lt;/ResourceDictionary.MergedDictionaries&gt;&#10;            &lt;/ResourceDictionary&gt;&#10;        &lt;/Grid.Resources&gt;&#10;&#10;        &lt;Grid.ColumnDefinitions&gt;&#10;            &lt;ColumnDefinition Width=&quot;*&quot; MinWidth=&quot;100&quot; /&gt;&#10;            &lt;ColumnDefinition Width=&quot;Auto&quot; /&gt;&#10;        &lt;/Grid.ColumnDefinitions&gt;&#10;&#10;        &lt;Border&#10;            Grid.Row=&quot;0&quot;&#10;            Grid.Column=&quot;0&quot;&#10;            Margin=&quot;2&quot;&#10;            BorderThickness=&quot;1&quot;&gt;&#10;            &lt;controls1:ZoomControl x:Name=&quot;g_zoomctrl&quot;&gt;&#10;                &lt;wpf:GraphAreaExample x:Name=&quot;g_Area&quot; /&gt;&#10;            &lt;/controls1:ZoomControl&gt;&#10;        &lt;/Border&gt;&#10;&#10;        &lt;DockPanel Grid.Row=&quot;0&quot; Grid.Column=&quot;1&quot;&gt;&#10;            &lt;Grid x:Name=&quot;rightPanel&quot;&gt;&#10;                &lt;Grid.RowDefinitions&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;*&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                &lt;/Grid.RowDefinitions&gt;&#10;&#10;                &lt;Grid x:Name=&quot;paletteGrid&quot; Grid.Row=&quot;1&quot; /&gt;&#10;&#10;                &lt;Label&#10;                    x:Name=&quot;elementsListLabel&quot;&#10;                    Grid.Row=&quot;2&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Elements:&quot; /&gt;&#10;                &lt;ListBox&#10;                    x:Name=&quot;elementsListBox&quot;&#10;                    Grid.Row=&quot;3&quot;&#10;                    Margin=&quot;0,20,0,0&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot; /&gt;&#10;                &lt;Label&#10;                    x:Name=&quot;selectedEntityLabel&quot;&#10;                    Grid.Row=&quot;4&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Selected entity:&quot; /&gt;&#10;&#10;                &lt;DataGrid&#10;                    x:Name=&quot;attributesView&quot;&#10;                    Grid.Row=&quot;5&quot;&#10;                    AutoGenerateColumns=&quot;False&quot;&#10;                    IsReadOnly=&quot;True&quot;&#10;                    ItemsSource=&quot;{Binding Attributes}&quot;&gt;&#10;                    &lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;&#10;                &lt;/DataGrid&gt;&#10;                &#10;                &lt;Grid&gt;&#10;                    &lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;&#10;                &lt;/Grid&gt;&#10;            &lt;/Grid&gt;&#10;        &lt;/DockPanel&gt;&#10;&#10;    &lt;/Grid&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="534:3529" ph="&lt;&lt;Grid.Resources&gt;&#10;            &lt;ResourceDictionary&gt;&#10;                &lt;ResourceDictionary.MergedDictionaries&gt;&#10;                    &lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;&#10;                &lt;/ResourceDictionary.MergedDictionaries&gt;&#10;            &lt;/ResourceDictionary&gt;&#10;        &lt;/Grid.Resources&gt; &lt;Grid.ColumnDefinitions&gt;&#10;            &lt;ColumnDefinition Width=&quot;*&quot; MinWidth=&quot;100&quot; /&gt;&#10;            &lt;ColumnDefinition Width=&quot;Auto&quot; /&gt;&#10;        &lt;/Grid.ColumnDefinitions&gt; &lt;Border&#10;            Grid.Row=&quot;0&quot;&#10;            Grid.Column=&quot;0&quot;&#10;            Margin=&quot;2&quot;&#10;            BorderThickness=&quot;1&quot;&gt;&#10;            &lt;controls1:ZoomControl x:Name=&quot;g_zoomctrl&quot;&gt;&#10;                &lt;wpf:GraphAreaExample x:Name=&quot;g_Area&quot; /&gt;&#10;            &lt;/controls1:ZoomControl&gt;&#10;        &lt;/Border&gt; &lt;DockPanel Grid.Row=&quot;0&quot; Grid.Column=&quot;1&quot;&gt;&#10;            &lt;Grid x:Name=&quot;rightPanel&quot;&gt;&#10;                &lt;Grid.RowDefinitions&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;*&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                &lt;/Grid.RowDefinitions&gt;&#10;&#10;                &lt;Grid x:Name=&quot;paletteGrid&quot; Grid.Row=&quot;1&quot; /&gt;&#10;&#10;                &lt;Label&#10;                    x:Name=&quot;elementsListLabel&quot;&#10;                    Grid.Row=&quot;2&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Elements:&quot; /&gt;&#10;                &lt;ListBox&#10;                    x:Name=&quot;elementsListBox&quot;&#10;                    Grid.Row=&quot;3&quot;&#10;                    Margin=&quot;0,20,0,0&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot; /&gt;&#10;                &lt;Label&#10;                    x:Name=&quot;selectedEntityLabel&quot;&#10;                    Grid.Row=&quot;4&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Selected entity:&quot; /&gt;&#10;&#10;                &lt;DataGrid&#10;                    x:Name=&quot;attributesView&quot;&#10;                    Grid.Row=&quot;5&quot;&#10;                    AutoGenerateColumns=&quot;False&quot;&#10;                    IsReadOnly=&quot;True&quot;&#10;                    ItemsSource=&quot;{Binding Attributes}&quot;&gt;&#10;                    &lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;&#10;                &lt;/DataGrid&gt;&#10;                &#10;                &lt;Grid&gt;&#10;                    &lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;&#10;                &lt;/Grid&gt;&#10;            &lt;/Grid&gt;&#10;        &lt;/DockPanel&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="549:855" ph="&lt;&lt;ResourceDictionary&gt;&#10;                &lt;ResourceDictionary.MergedDictionaries&gt;&#10;                    &lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;&#10;                &lt;/ResourceDictionary.MergedDictionaries&gt;&#10;            &lt;/ResourceDictionary&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="578:829" ph="&lt;&lt;ResourceDictionary.MergedDictionaries&gt;&#10;                    &lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;&#10;                &lt;/ResourceDictionary.MergedDictionaries&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="615:795" ph="&lt;&lt;ResourceDictionary Source=&quot;/Templates/GeneralTemplate.xaml&quot; /&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="865:1027" ph="&lt;&lt;ColumnDefinition Width=&quot;*&quot; MinWidth=&quot;100&quot; /&gt; &lt;ColumnDefinition Width=&quot;Auto&quot; /&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1037:1321" ph="&lt;&lt;controls1:ZoomControl x:Name=&quot;g_zoomctrl&quot;&gt;&#10;                &lt;wpf:GraphAreaExample x:Name=&quot;g_Area&quot; /&gt;&#10;            &lt;/controls1:ZoomControl&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1166:1303" ph="&lt;&lt;wpf:GraphAreaExample x:Name=&quot;g_Area&quot; /&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1331:3516" ph="&lt;&lt;Grid x:Name=&quot;rightPanel&quot;&gt;&#10;                &lt;Grid.RowDefinitions&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;*&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                &lt;/Grid.RowDefinitions&gt;&#10;&#10;                &lt;Grid x:Name=&quot;paletteGrid&quot; Grid.Row=&quot;1&quot; /&gt;&#10;&#10;                &lt;Label&#10;                    x:Name=&quot;elementsListLabel&quot;&#10;                    Grid.Row=&quot;2&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Elements:&quot; /&gt;&#10;                &lt;ListBox&#10;                    x:Name=&quot;elementsListBox&quot;&#10;                    Grid.Row=&quot;3&quot;&#10;                    Margin=&quot;0,20,0,0&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot; /&gt;&#10;                &lt;Label&#10;                    x:Name=&quot;selectedEntityLabel&quot;&#10;                    Grid.Row=&quot;4&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Selected entity:&quot; /&gt;&#10;&#10;                &lt;DataGrid&#10;                    x:Name=&quot;attributesView&quot;&#10;                    Grid.Row=&quot;5&quot;&#10;                    AutoGenerateColumns=&quot;False&quot;&#10;                    IsReadOnly=&quot;True&quot;&#10;                    ItemsSource=&quot;{Binding Attributes}&quot;&gt;&#10;                    &lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;&#10;                &lt;/DataGrid&gt;&#10;                &#10;                &lt;Grid&gt;&#10;                    &lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;&#10;                &lt;/Grid&gt;&#10;            &lt;/Grid&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1384:3495" ph="&lt;&lt;Grid.RowDefinitions&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;*&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; /&gt;&#10;                    &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;&#10;                &lt;/Grid.RowDefinitions&gt; &lt;Grid x:Name=&quot;paletteGrid&quot; Grid.Row=&quot;1&quot; /&gt; &lt;Label&#10;                    x:Name=&quot;elementsListLabel&quot;&#10;                    Grid.Row=&quot;2&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Elements:&quot; /&gt; &lt;ListBox&#10;                    x:Name=&quot;elementsListBox&quot;&#10;                    Grid.Row=&quot;3&quot;&#10;                    Margin=&quot;0,20,0,0&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot; /&gt; &lt;Label&#10;                    x:Name=&quot;selectedEntityLabel&quot;&#10;                    Grid.Row=&quot;4&quot;&#10;                    HorizontalAlignment=&quot;Stretch&quot;&#10;                    Content=&quot;Selected entity:&quot; /&gt; &lt;DataGrid&#10;                    x:Name=&quot;attributesView&quot;&#10;                    Grid.Row=&quot;5&quot;&#10;                    AutoGenerateColumns=&quot;False&quot;&#10;                    IsReadOnly=&quot;True&quot;&#10;                    ItemsSource=&quot;{Binding Attributes}&quot;&gt;&#10;                    &lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;&#10;                &lt;/DataGrid&gt; &lt;Grid&gt;&#10;                    &lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;&#10;                &lt;/Grid&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1427:1843" ph="&lt;&lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt; &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;70&quot; /&gt; &lt;RowDefinition Height=&quot;Auto&quot; /&gt; &lt;RowDefinition Height=&quot;*&quot; /&gt; &lt;RowDefinition Height=&quot;Auto&quot; /&gt; &lt;RowDefinition Height=&quot;Auto&quot; MinHeight=&quot;100&quot; /&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="1921:2100" ph="&lt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="2117:2294" ph="&lt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="2311:2499" ph="&lt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="2517:3112" ph="&lt;&lt;DataGrid.Columns&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt;&#10;                        &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;&#10;                    &lt;/DataGrid.Columns&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="2766:3084" ph="&lt;&lt;DataGridTextColumn Binding=&quot;{Binding Name}&quot; Header=&quot;Name&quot; /&gt; &lt;DataGridTextColumn Binding=&quot;{Binding Type}&quot; Header=&quot;Type&quot; /&gt; &lt;DataGridTextColumn Binding=&quot;{Binding Value}&quot; Header=&quot;Value&quot; /&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="3146:3475" ph="&lt;&lt;Button Content=&quot;Button&quot;&#10;                            HorizontalAlignment=&quot;Left&quot;&#10;                            Margin=&quot;10,10,0,0&quot;&#10;                            VerticalAlignment=&quot;Top&quot;&#10;                            Width=&quot;75&quot;&#10;                            Click=&quot;ConstraintsButtonClick&quot;/&gt;.../&gt;" />
+            <marker date="1502391111524" expanded="true" signature="3173:3451" ph="&lt;.../&gt;" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/EditorPrototype/MainWindow.xaml.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7380">
+          <caret line="492" column="23" lean-forward="false" selection-start-line="492" selection-start-column="23" selection-end-line="492" selection-end-column="23" />
+          <folding>
+            <marker date="1502553377246" expanded="true" signature="25:19298" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="38:547" ph="..." />
+            <marker date="1502553377246" expanded="true" signature="553:635" ph="/// Логика взаимодействия для MainWindow.xaml ... " />
+            <marker date="1502553377246" expanded="true" signature="682:19296" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="1052:3256" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="1928:2195" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="3327:3536" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="3586:5081" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="3687:3739" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="3786:3853" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="3900:5040" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="4182:4323" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="4492:4625" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="5137:7381" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="5244:5296" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="5346:7371" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="5397:5463" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="5743:5998" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="6799:6929" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="6950:7079" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="7448:7511" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="7561:8149" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="7771:7823" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="8237:8894" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="8311:8459" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="8562:8688" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="8971:11036" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="9112:9164" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="9204:10163" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="9419:10149" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="9599:10131" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="9788:10077" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="9862:10051" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="10180:11026" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="10331:11012" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="10423:10994" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="10688:10940" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="10764:10914" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="11091:12021" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="11284:11532" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="11714:11827" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="12093:12912" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="12286:12395" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="13000:14586" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="13164:13698" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="13220:13405" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="13426:13684" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="14030:14139" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="14212:14576" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="14670:15398" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="15032:15388" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="15469:16060" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="15592:15690" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="16158:17039" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="16226:17029" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="16454:16615" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="16727:17015" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="16791:16997" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="17132:17322" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="17388:18148" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="17462:17610" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="17713:17839" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="18223:18369" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="18437:18570" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="18638:18765" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="18836:18973" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="18908:18963" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="19007:19124" ph="{...}" />
+            <marker date="1502553377246" expanded="true" signature="19197:19290" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/EditorPrototype/Constraints.xaml.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="15" selection-end-column="9" />
+          <folding>
+            <marker date="1502551729152" expanded="true" signature="25:453" ph="{...}" />
+            <marker date="1502551729152" expanded="true" signature="68:175" ph="/// Initializes a new instance of the &lt;see cref=&quot;Constraints&quot;/&gt; class. ... " />
+            <marker date="1502551729152" expanded="true" signature="226:451" ph="{...}" />
+            <marker date="1502551729152" expanded="true" signature="241:356" ph="/// Initializes a new instance of the &lt;see cref=&quot;Constraints&quot;/&gt; class. ... " />
+            <marker date="1502551729152" expanded="true" signature="385:445" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

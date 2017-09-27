@@ -58,35 +58,6 @@
     </Otherwise>
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
-  <ItemGroup>
-    <None Include="App.config" />
-    <Compile Include="AssemblyInfo.fs" />
-    <None Include="paket.references" />
-    <Compile Include="DataModelTests.fs" />
-    <Compile Include="DataRepoTest.fs" />
-    <Compile Include="DataElementTests.fs" />
-    <Compile Include="CoreMetametamodelBuilderTests.fs" />
-    <Compile Include="CoreSemanticLayerTests.fs" />
-    <Compile Include="InfrastructureSemanticLayerTests.fs" />
-    <Compile Include="RobotsTestModelsTests.fs" />
-    <Compile Include="FacadeRepoTests.fs" />
-    <Compile Include="FacadeModelTests.fs" />
-    <Compile Include="FacadeAttributeTests.fs" />
-    <Compile Include="FacadeNodeTests.fs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="mscorlib" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Repo\Repo.fsproj">
-      <Name>Repo</Name>
-      <Project>{9e7065a4-ba5e-4752-84bf-54d5c00db60c}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-  </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -127,4 +98,54 @@
       </ItemGroup>
     </When>
   </Choose>
+  <ItemGroup>
+    <None Include="App.config" />
+    <Compile Include="AssemblyInfo.fs" />
+    <None Include="paket.references" />
+    <Compile Include="DataModelTests.fs" />
+    <Compile Include="DataRepoTest.fs" />
+    <Compile Include="DataElementTests.fs" />
+    <Compile Include="CoreMetametamodelBuilderTests.fs" />
+    <Compile Include="CoreSemanticLayerTests.fs" />
+    <Compile Include="InfrastructureSemanticLayerTests.fs" />
+    <Compile Include="RobotsTestModelsTests.fs" />
+    <Compile Include="FacadeRepoTests.fs" />
+    <Compile Include="FacadeModelTests.fs" />
+    <Compile Include="FacadeAttributeTests.fs" />
+    <Compile Include="FacadeNodeTests.fs" />
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="Xceed.Wpf.AvalonDock">
+      <HintPath>..\..\packages\Extended.Wpf.Toolkit.3.1\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero">
+      <HintPath>..\..\packages\Extended.Wpf.Toolkit.3.1\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro">
+      <HintPath>..\..\packages\Extended.Wpf.Toolkit.3.1\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010">
+      <HintPath>..\..\packages\Extended.Wpf.Toolkit.3.1\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.DataGrid">
+      <HintPath>..\..\packages\Extended.Wpf.Toolkit.3.1\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit">
+      <HintPath>..\..\packages\Extended.Wpf.Toolkit.3.1\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
+    <ProjectReference Include="..\..\src\Repo\Repo.fsproj">
+      <Name>Repo</Name>
+      <Project>{9e7065a4-ba5e-4752-84bf-54d5c00db60c}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

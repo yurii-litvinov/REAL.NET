@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="RIDER_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$/../..">
+      <sourceFolder url="file://$MODULE_DIR$/../../build.fsx" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../docs/content/index.fsx" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../docs/content/tutorial.fsx" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../docs/tools/generate.fsx" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../docs/tools/templates/template.cshtml" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../packages/StyleCop.Analyzers/analyzers/dotnet/cs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../paket.dependencies" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../paket.lock" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../README.md" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../RELEASE_NOTES.md" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../src/EditorPrototype" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../src/MsAglWinFormsEditor" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../src/Repo" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../src/WPF_Editor" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../tests/Repo.Tests" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/../../packages" />
+      <excludeFolder url="file://$MODULE_DIR$/../../src/EditorPrototype/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../src/EditorPrototype/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../src/MsAglWinFormsEditor/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../src/MsAglWinFormsEditor/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../src/Repo/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../src/Repo/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../src/WPF_Editor/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../src/WPF_Editor/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/../../tests/Repo.Tests/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../tests/Repo.Tests/obj" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

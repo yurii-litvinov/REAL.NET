@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -484,6 +485,12 @@
         {
             this.g_Area.GenerateGraph(this.dataGraph);
             this.g_zoomctrl.ZoomToFill();
+        }
+
+        private void ConstraintsButtonClick(object sender, EventArgs e)
+        {
+            ConstraintsWindow constraints = new ConstraintsWindow();
+            constraints.Show();
         }
     }
 }
