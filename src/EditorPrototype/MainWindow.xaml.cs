@@ -490,7 +490,7 @@
         private void ConstraintsButtonClick(object sender, EventArgs e)
         {
             ConstraintsWindow constraints = new ConstraintsWindow();
-            constraints.Show();
+            constraints.ShowDialog();
         }
     }
 }
