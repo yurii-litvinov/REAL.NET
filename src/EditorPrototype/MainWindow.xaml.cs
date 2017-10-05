@@ -487,9 +487,9 @@
             this.g_zoomctrl.ZoomToFill();
         }
 
-        private void ConstraintsButtonClick(object sender, EventArgs e)
+        private void ConstraintsButtonClick(object sender, RoutedEventArgs e)
         {
-            ConstraintsWindow constraints = new ConstraintsWindow();
+            ConstraintsWindow constraints = new ConstraintsWindow(this.dataGraph);
             constraints.ShowDialog();
         }
     }

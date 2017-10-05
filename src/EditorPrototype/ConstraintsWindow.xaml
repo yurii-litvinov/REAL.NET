@@ -5,8 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EditorPrototype"
         mc:Ignorable="d"
-        Title="ConstraintsWindow" Height="300" Width="300">
+        Title="ConstraintsWindow" Height="346" Width="490">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <!--Constraint field-->
+        </Grid>
         
+        <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3"
+        HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+        <Grid Grid.Column="2">
+            <!--Constraints list-->
+        </Grid>
     </Grid>
 </Window>

@@ -7,7 +7,7 @@
     /// </summary>
     public partial class ConstraintsWindow : Window
     {
-        public ConstraintsWindow()
+        public ConstraintsWindow(GraphExample graph)
         {
             this.InitializeComponent();
         }
