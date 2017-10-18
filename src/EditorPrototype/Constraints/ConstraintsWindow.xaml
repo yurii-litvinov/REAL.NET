@@ -13,9 +13,16 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
-            <!--Constraint field-->
+            <Label Margin="10,10,96,281" RenderTransformOrigin="0.716,1.958" Content="Constraints on:" />
+            <ComboBox Margin="10,34,96,257" RenderTransformOrigin="0.716,1.958">
+                <ComboBoxItem>Common</ComboBoxItem>
+                <ComboBoxItem>Edge</ComboBoxItem>
+                <ComboBoxItem>Vertex</ComboBoxItem>
+            </ComboBox>
+            <Label Margin="10,63,96,228" RenderTransformOrigin="0.716,1.958" Content="Item:" />
+
         </Grid>
-        
+
         <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3"
         HorizontalAlignment="Center" VerticalAlignment="Stretch" />
         <Grid Grid.Column="2">
