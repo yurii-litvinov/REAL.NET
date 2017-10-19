@@ -5,7 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EditorPrototype"
         mc:Ignorable="d"
+        ResizeMode="NoResize"
         Title="ConstraintsWindow" Height="346" Width="490">
+    <Window.Resources>
+        <DataTemplate x:Key="TypeClass">
+            <TextBlock Text="{Binding ElementType}"/>
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -13,16 +19,39 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
-            <Label Margin="10,10,96,281" RenderTransformOrigin="0.716,1.958" Content="Constraints on:" />
-            <ComboBox Margin="10,34,96,257" RenderTransformOrigin="0.716,1.958">
-                <ComboBoxItem>Common</ComboBoxItem>
-                <ComboBoxItem>Edge</ComboBoxItem>
-                <ComboBoxItem>Vertex</ComboBoxItem>
-            </ComboBox>
-            <Label Margin="10,63,96,228" RenderTransformOrigin="0.716,1.958" Content="Item:" />
-
+            <TextBlock Text="Класс элементов" Margin="10,7,0,0" Grid.ColumnSpan="2"/>
+        <ComboBox x:Name="ObjType"
+            HorizontalAlignment="Left"
+            Margin="10,26,0,0"
+            VerticalAlignment="Top"
+            Width="147" SelectionChanged="ObjType_SelectionChanged" Grid.ColumnSpan="2">
+            <ComboBoxItem Name="edge">Edge</ComboBoxItem>
+            <ComboBoxItem Name="node">Node</ComboBoxItem>
+        </ComboBox>
+        <TextBlock Text="Тип элемента" Margin="10,53,0,97" Grid.ColumnSpan="2"/>
+        <ComboBox x:Name="ElementType"
+            SelectionChanged="ElementType_SelectionChanged"
+            HorizontalAlignment="Left"
+            Margin="10,68,0,0"
+            VerticalAlignment="Top"
+            Width="147"
+            ItemTemplate="{StaticResource TypeClass}" Grid.ColumnSpan="2"/>
+        <TextBlock x:Name="ammountButton" 
+            Text="Количество:" 
+            Margin="10,98,72,94" 
+            Visibility="Hidden" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="ammountBox" 
+                 FontSize="12"
+                 Margin="87,95,135,148" 
+                 RenderTransformOrigin="0.381,-0.327" 
+                 Visibility="Hidden"
+                 Grid.ColumnSpan="2"/>
+        <Button x:Name="createConstraint"
+                Content="Создать" 
+                Margin="10,124,135,116"
+                Click="CreateConstraint_Click" Grid.ColumnSpan="2"
+                />
         </Grid>
-
         <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3"
         HorizontalAlignment="Center" VerticalAlignment="Stretch" />
         <Grid Grid.Column="2">

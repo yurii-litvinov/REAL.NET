@@ -111,17 +111,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ConstraintsWindow.xaml.cs">
+    <Compile Include="Constraints\Constraints.cs" />
+    <Compile Include="Constraints\ConstraintsValues.cs" />
+    <Compile Include="Constraints\ConstraintsWindow.xaml.cs">
       <DependentUpon>ConstraintsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Constraints\RepoInfo.cs" />
     <Compile Include="Models\BoolToColorConverter.cs" />
     <Compile Include="Models\EdgeBlueprint.cs" />
     <Compile Include="Models\EditorObjectManager.cs" />
     <Compile Include="Models\ImageLoader.cs" />
     <Compile Include="Models\ValueToImageConverter.cs" />
-    <Page Include="ConstraintsWindow.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Constraints\ConstraintsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -284,6 +287,7 @@
       <Paket>True</Paket>
     </Analyzer>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">
       <ItemGroup>

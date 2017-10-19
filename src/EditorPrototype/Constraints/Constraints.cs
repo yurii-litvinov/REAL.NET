@@ -1,6 +1,5 @@
 ﻿namespace EditorPrototype
 {
-    using System;
     using System.Linq;
 
     /// <summary>
@@ -43,11 +42,7 @@
         /// </summary>
         public static bool CheckEdge(Repo.IEdge edge, Repo.IRepo repo, string modelName)
         {
-            return repo.Model(modelName).Edges.Any(otherEdge =>
-                    ((otherEdge.edgeType == Repo.EdgeType.Generalization)
-                    && (edge.edgeType == Repo.EdgeType.Generalization)
-                    && (otherEdge.source == edge.target)
-                    && (otherEdge.target == edge.source)));
+            return true; // TODO
         }
 
         public static bool AllowCreateEdge(Repo.IRepo repo, string modelName)

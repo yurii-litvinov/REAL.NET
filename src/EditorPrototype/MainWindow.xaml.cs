@@ -31,6 +31,7 @@
         private Repo.IElement currentElement = null;
 
         private Repo.IRepo repo = Repo.RepoFactory.CreateRepo();
+        private string modelName = "RobotsTestModel";
 
         public MainWindow()
         {
@@ -67,12 +68,10 @@
 
             this.Closed += this.CloseChildrenWindows;
 
-            var modelName = "RobotsTestModel";
+            this.g_zoomctrl.MouseDown += (object sender, MouseButtonEventArgs e) => this.ZoomCtrl_MouseDown(sender, e, this.modelName);
 
-            this.g_zoomctrl.MouseDown += (object sender, MouseButtonEventArgs e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
-
-            this.InitPalette(modelName);
-            this.InitModel(modelName);
+            this.InitPalette(this.modelName);
+            this.InitModel(this.modelName);
         }
 
         private void ClearSelection(object sender, RoutedEventArgs e)
@@ -489,7 +488,7 @@
 
         private void ConstraintsButtonClick(object sender, RoutedEventArgs e)
         {
-            ConstraintsWindow constraints = new ConstraintsWindow(this.dataGraph);
+            ConstraintsWindow constraints = new ConstraintsWindow(this.repo, this.repo.Model(this.modelName));
             constraints.ShowDialog();
         }
     }
