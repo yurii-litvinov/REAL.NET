@@ -6,10 +6,6 @@
     using System.Windows;
     using System.Windows.Controls;
 
-    /*public struct ConstraintsUnit
-    {
-    }*/
-
     /// <summary>
     /// Логика взаимодействия для ConstraintsWindow.xaml
     /// </summary>
@@ -63,6 +59,10 @@
                     Constraints.EdgesAmmount = Convert.ToInt32(this.ammountBox.Text);
                 }
             }
+        }
+
+        public struct ConstraintsUnit
+        {
         }
     }
 }

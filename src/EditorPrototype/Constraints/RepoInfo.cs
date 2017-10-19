@@ -30,7 +30,7 @@
             types.Add("All");
             foreach (var node in this.repo.Model(this.modelName).Nodes)
             {
-                var typeName = Convert.ToString(node.Metatype);
+                var typeName = Convert.ToString(node.Name);
                 if (!types.Contains(typeName))
                 {
                     types.Add(typeName);
@@ -46,7 +46,7 @@
             types.Add("All");
             foreach (var edge in this.repo.Model(this.modelName).Edges)
             {
-                var typeName = Convert.ToString(edge.Metatype);
+                var typeName = Convert.ToString(edge.Name);
                 if (!types.Contains(typeName))
                 {
                     types.Add(typeName);
