@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -30,8 +29,9 @@
         private GraphExample dataGraph;
         private Repo.IElement currentElement = null;
 
-        private Repo.IRepo repo = Repo.RepoFactory.CreateRepo();
         private string modelName = "RobotsTestModel";
+
+        private Repo.IRepo repo = Repo.RepoFactory.CreateRepo();
 
         public MainWindow()
         {

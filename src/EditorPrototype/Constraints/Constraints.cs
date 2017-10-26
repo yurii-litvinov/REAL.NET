@@ -47,26 +47,12 @@
 
         public static bool AllowCreateEdge(Repo.IRepo repo, string modelName)
         {
-            if (repo.Model(modelName).Edges.Count() < EdgesAmmount)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return repo.Model(modelName).Edges.Count() < EdgesAmmount;
         }
 
         public static bool AllowCreateNode(Repo.IRepo repo, string modelName)
         {
-            if (repo.Model(modelName).Nodes.Count() < NodesAmmount)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return repo.Model(modelName).Nodes.Count() < NodesAmmount;
         }
     }
 }

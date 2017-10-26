@@ -8,85 +8,85 @@
     xmlns:wpf="clr-namespace:EditorPrototype"
     Title="REAL.NET"
     Width="800"
-    Height="670"
+    Height="644"
     x:ClassModifier="internal"
     mc:Ignorable="d">
-  <Grid>
-    <Grid.Resources>
-      <ResourceDictionary>
-        <ResourceDictionary.MergedDictionaries>
-          <ResourceDictionary Source="/Templates/GeneralTemplate.xaml" />
-        </ResourceDictionary.MergedDictionaries>
-      </ResourceDictionary>
-    </Grid.Resources>
+    <Grid>
+        <Grid.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="/Templates/GeneralTemplate.xaml" />
+                </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
+        </Grid.Resources>
 
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="*" MinWidth="100" />
-      <ColumnDefinition Width="Auto" />
-    </Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="100" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
 
-    <Border
+        <Border
             Grid.Row="0"
             Grid.Column="0"
             Margin="2"
             BorderThickness="1">
-      <controls1:ZoomControl x:Name="g_zoomctrl">
-        <wpf:GraphAreaExample x:Name="g_Area" />
-      </controls1:ZoomControl>
-    </Border>
+            <controls1:ZoomControl x:Name="g_zoomctrl">
+                <wpf:GraphAreaExample x:Name="g_Area" />
+            </controls1:ZoomControl>
+        </Border>
 
-    <DockPanel Grid.Row="0" Grid.Column="1">
-      <Grid x:Name="rightPanel">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="Auto" MinHeight="100" />
-          <RowDefinition Height="Auto" MinHeight="70" />
-          <RowDefinition Height="Auto" />
-          <RowDefinition Height="*" />
-          <RowDefinition Height="Auto" />
-          <RowDefinition Height="Auto" MinHeight="100" />
-        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0" Grid.Column="1">
+            <Grid x:Name="rightPanel">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" MinHeight="100" />
+                    <RowDefinition Height="Auto" MinHeight="70" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" MinHeight="100" />
+                </Grid.RowDefinitions>
 
-        <Grid x:Name="paletteGrid" Grid.Row="1" />
+                <Grid x:Name="paletteGrid" Grid.Row="1" />
 
-        <Label
+                <Label
                     x:Name="elementsListLabel"
                     Grid.Row="2"
                     HorizontalAlignment="Stretch"
                     Content="Elements:" />
-        <ListBox
+                <ListBox
                     x:Name="elementsListBox"
                     Grid.Row="3"
-                    Margin="0,20,0,78"
+                    Margin="0,20,0,79"
                     HorizontalAlignment="Stretch" />
-        <Label
+                <Label
                     x:Name="selectedEntityLabel"
                     Grid.Row="3"
                     HorizontalAlignment="Stretch"
-                    Content="Selected entity:" Margin="0,270,0,50" />
+                    Content="Selected entity:" Margin="0,240,0,42" />
 
-        <DataGrid
+                <DataGrid
                     x:Name="attributesView"
                     Grid.Row="3"
                     AutoGenerateColumns="False"
                     IsReadOnly="True"
-                    ItemsSource="{Binding Attributes}" Margin="0,298,0,33" Grid.RowSpan="3">
-          <DataGrid.Columns>
-            <DataGridTextColumn Binding="{Binding Name}" Header="Name" />
-            <DataGridTextColumn Binding="{Binding Type}" Header="Type" />
-            <DataGridTextColumn Binding="{Binding Value}" Header="Value" />
-          </DataGrid.Columns>
-        </DataGrid>
-
-        <Grid>
-          <Button Content="Constraints"
+                    ItemsSource="{Binding Attributes}" Margin="0,272,0,36" Grid.RowSpan="3">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Name}" Header="Name" />
+                        <DataGridTextColumn Binding="{Binding Type}" Header="Type" />
+                        <DataGridTextColumn Binding="{Binding Value}" Header="Value" />
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Grid>
+                    <Button Content="Constraints"
                             HorizontalAlignment="Left"
-                            Margin="0,611,0,-531"
+                            Margin="0,585,0,-505"
                             VerticalAlignment="Top"
                             Width="118"
                             Click="ConstraintsButtonClick"/>
-        </Grid>
-      </Grid>
-    </DockPanel>
+                </Grid>
+            </Grid>
 
-  </Grid>
+        </DockPanel>
+
+    </Grid>
 </Window>
