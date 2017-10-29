@@ -5,9 +5,11 @@
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Media;
+    using System.Windows.Shapes;
 
     /// <summary>
-    /// Логика взаимодействия для ConstraintsWindow.xaml
+    /// Interaction logic for ConstraintsWindow.xaml
     /// </summary>
     public partial class ConstraintsWindow : Window
     {
@@ -48,6 +50,7 @@
 
         private void CreateConstraint_Click(object sender, RoutedEventArgs e)
         {
+            var item = new ConstraintsItem();
             if (!string.IsNullOrEmpty(this.ammountBox.Text))
             {
                 if (this.objType == "Node")
@@ -59,10 +62,11 @@
                     Constraints.EdgesAmmount = Convert.ToInt32(this.ammountBox.Text);
                 }
             }
-        }
 
-        public struct ConstraintsUnit
-        {
+            item.ElementType = this.ElementType.Text;
+            item.ObjectType = this.objType;
+            item.Initialize();
+            this.ConstraintsPanel.Children.Add(item);
         }
     }
 }

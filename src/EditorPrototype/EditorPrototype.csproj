@@ -94,6 +94,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Constraints\Constraints.cs" />
+    <Compile Include="Constraints\ConstraintsItem.cs" />
     <Compile Include="Constraints\ConstraintsValues.cs" />
     <Compile Include="Constraints\ConstraintsWindow.xaml.cs" />
     <Compile Include="Models\BoolToColorConverter.cs" />

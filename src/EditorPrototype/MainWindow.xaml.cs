@@ -488,7 +488,7 @@
 
         private void ConstraintsButtonClick(object sender, RoutedEventArgs e)
         {
-            ConstraintsWindow constraints = new ConstraintsWindow(this.repo, this.repo.Model(this.modelName));
+            var constraints = new ConstraintsWindow(this.repo, this.repo.Model(this.modelName));
             constraints.ShowDialog();
         }
     }

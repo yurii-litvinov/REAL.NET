@@ -19,7 +19,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
-            <TextBlock Text="Класс элементов" Margin="10,7,0,0" Grid.ColumnSpan="2"/>
+            <TextBlock Text="Object Type:" Margin="10,7,0,0" Grid.ColumnSpan="2"/>
         <ComboBox x:Name="ObjType"
             HorizontalAlignment="Left"
             Margin="10,26,0,0"
@@ -28,7 +28,7 @@
             <ComboBoxItem Name="edge">Edge</ComboBoxItem>
             <ComboBoxItem Name="node">Node</ComboBoxItem>
         </ComboBox>
-        <TextBlock Text="Тип элемента" Margin="10,53,0,97" Grid.ColumnSpan="2"/>
+        <TextBlock Text="Element Type:" Margin="10,53,0,97" Grid.ColumnSpan="2"/>
         <ComboBox x:Name="ElementType"
             SelectionChanged="ElementType_SelectionChanged"
             HorizontalAlignment="Left"
@@ -55,7 +55,9 @@
         <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3"
         HorizontalAlignment="Center" VerticalAlignment="Stretch" />
         <Grid Grid.Column="2">
-            <!--Constraints list-->
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <WrapPanel Name="ConstraintsPanel"/>
+            </ScrollViewer>
         </Grid>
     </Grid>
 </Window>
