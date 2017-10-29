@@ -66,7 +66,7 @@
 
             this.Closed += this.CloseChildrenWindows;
 
-            var modelName = "RobotsTestModel";
+            var modelName = "GreenhouseTestModel";
 
             this.g_zoomctrl.MouseDown += (object sender, MouseButtonEventArgs e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
 
@@ -117,6 +117,8 @@
                 var target = this.dataGraph.Vertices.First(v => v.Node == targetNode);
 
                 var newEdge = new DataEdge(source, target, false) { EdgeType = DataEdge.EdgeTypeEnum.Association };
+                newEdge.TargetConnectionPointId = 1;
+                newEdge.SourceConnectionPointId = 2;
                 this.dataGraph.AddEdge(newEdge);
                 this.DrawNewEdge(source.Node, target.Node);
             }
@@ -195,6 +197,8 @@
             }
 
             var newEdge = new DataEdge(prevVerVertex, ctrlVerVertex, true);
+            newEdge.SourceConnectionPointId = 2;
+            newEdge.TargetConnectionPointId = 1;
             this.dataGraph.AddEdge(newEdge);
             this.DrawNewEdge(prevVerVertex.Node, ctrlVerVertex.Node);
             var ec = new EdgeControl(this.prevVer, this.ctrlVer, newEdge);
@@ -222,7 +226,6 @@
 
             this.dataGraph.AddVertex(vertex);
             this.DrawNewVertex(vertex);
-            this.DrawGraph();
         }
 
         private void ElementInBoxSelectedAction(object sender, EventArgs e)

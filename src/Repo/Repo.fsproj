@@ -86,6 +86,8 @@
     <Compile Include="InfrastructureSemanticLayer.fs" />
     <Compile Include="RobotsMetamodelBuilder.fs" />
     <Compile Include="RobotsTestModelBuilder.fs" />
+    <Compile Include="GreenhouseMetamodelBuilder.fs" />
+    <Compile Include="GreenhouseTestModelBuilder.fs" />
     <Compile Include="FacadeLayer.fs" />
     <Compile Include="Attribute.fs" />
     <Compile Include="Element.fs" />

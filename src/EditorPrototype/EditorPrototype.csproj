@@ -262,6 +262,16 @@
       <Paket>True</Paket>
     </Analyzer>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\airTemperature.png" />
+    <Resource Include="Pictures\andOperation.png" />
+    <Resource Include="Pictures\closeWindow.png" />
+    <Resource Include="Pictures\interval.png" />
+    <Resource Include="Pictures\openWindow.png" />
+    <Resource Include="Pictures\orOperation.png" />
+    <Resource Include="Pictures\pourSoil.png" />
+    <Resource Include="Pictures\soilTemperature.png" />
+  </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">
       <ItemGroup>
