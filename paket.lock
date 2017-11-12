@@ -12,7 +12,9 @@ NUGET
       Microsoft.Msagl (>= 1.0.2)
     Microsoft.Msagl.GraphViewerGDI (1.0.2)
       Microsoft.Msagl.Drawing (>= 1.0.2)
-    NUnit (3.8.1)
+    MSTest.TestAdapter (1.1.18)
+    MSTest.TestFramework (1.1.18)
+    NUnit (3.9)
     NUnit.ConsoleRunner (3.7)
     NUnit.Extension.NUnitProjectLoader (3.6)
     NUnit.Extension.NUnitV2Driver (3.7)
@@ -91,7 +93,7 @@ NUGET
       System.Threading.Timer (>= 4.3) - restriction: || (&& (< monoandroid) (< net45) (>= netstandard1.2) (< netstandard1.3) (< wpa81)) (&& (< monoandroid) (< net45) (>= netstandard1.3) (< netstandard1.4) (< wpa81)) (&& (< monoandroid) (< net45) (>= netstandard1.4) (< netstandard1.5) (< wpa81)) (&& (< monoandroid) (< net45) (>= netstandard1.5) (< netstandard1.6)) (&& (< monotouch) (< net45) (>= netstandard1.6) (< netstandard2.0) (< xamarinios) (< xamarinmac) (< xamarintvos) (< xamarinwatchos)) (&& (>= uap10.0) (< uap10.1))
       System.Xml.ReaderWriter (>= 4.3) - restriction: || (&& (< monoandroid) (< net45) (>= netstandard1.2) (< netstandard1.3) (< wpa81)) (&& (< monoandroid) (< net45) (>= netstandard1.3) (< netstandard1.4) (< wpa81)) (&& (< monoandroid) (< net45) (>= netstandard1.4) (< netstandard1.5) (< wpa81)) (&& (< monoandroid) (< net45) (>= netstandard1.5) (< netstandard1.6)) (&& (< monotouch) (< net45) (>= netstandard1.6) (< netstandard2.0) (< xamarinios) (< xamarinmac) (< xamarintvos) (< xamarinwatchos)) (&& (< net45) (>= netstandard1.1) (< portable-net451+win81+wpa81)) (&& (>= net46) (< netstandard1.4)) (&& (>= netstandard1.0) (< portable-net45+win8+wpa81)) (&& (>= uap10.0) (< uap10.1))
       System.Xml.XDocument (>= 4.3) - restriction: || (&& (< monoandroid) (< net45) (>= netstandard1.2) (< netstandard1.3) (< wpa81)) (&& (< monoandroid) (< net45) (>= netstandard1.3) (< netstandard1.4) (< wpa81)) (&& (< monoandroid) (< net45) (>= netstandard1.4) (< netstandard1.5) (< wpa81)) (&& (< monoandroid) (< net45) (>= netstandard1.5) (< netstandard1.6)) (&& (< monotouch) (< net45) (>= netstandard1.6) (< netstandard2.0) (< xamarinios) (< xamarinmac) (< xamarintvos) (< xamarinwatchos)) (&& (< net45) (>= netstandard1.1) (< portable-net451+win81+wpa81)) (&& (>= netstandard1.0) (< portable-net45+win8+wpa81)) (&& (>= uap10.0) (< uap10.1))
-    Octokit (0.27)
+    Octokit (0.28)
       NETStandard.Library (>= 1.6.1) - restriction: && (< net45) (>= netstandard1.1)
     runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl (4.3.2) - restriction: || (&& (< monoandroid) (< net45) (>= netstandard1.3) (< netstandard1.4) (< wpa81)) (&& (< monoandroid) (< net45) (< netstandard1.3) (>= netstandard1.6)) (&& (< monoandroid) (< net45) (>= netstandard1.4) (< netstandard1.5) (< wpa81)) (&& (< monoandroid) (< net45) (< netstandard1.4) (>= netstandard1.6)) (&& (< monoandroid) (< net45) (>= netstandard1.5) (< netstandard1.6)) (&& (< monoandroid) (< net45) (< netstandard1.5) (>= netstandard1.6)) (&& (< monotouch) (< net45) (>= netstandard1.6) (< netstandard2.0) (< xamarinios) (< xamarinmac) (< xamarintvos) (< xamarinwatchos)) (&& (< net45) (>= net46) (< netstandard1.4)) (&& (< net45) (>= netstandard1.6) (< portable-net451+win81+wpa81)) (&& (>= netstandard1.6) (>= uap10.0)) (&& (>= uap10.0) (< uap10.1))
     runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl (4.3.2) - restriction: || (&& (< monoandroid) (< net45) (>= netstandard1.3) (< netstandard1.4) (< wpa81)) (&& (< monoandroid) (< net45) (< netstandard1.3) (>= netstandard1.6)) (&& (< monoandroid) (< net45) (>= netstandard1.4) (< netstandard1.5) (< wpa81)) (&& (< monoandroid) (< net45) (< netstandard1.4) (>= netstandard1.6)) (&& (< monoandroid) (< net45) (>= netstandard1.5) (< netstandard1.6)) (&& (< monoandroid) (< net45) (< netstandard1.5) (>= netstandard1.6)) (&& (< monotouch) (< net45) (>= netstandard1.6) (< netstandard2.0) (< xamarinios) (< xamarinmac) (< xamarintvos) (< xamarinwatchos)) (&& (< net45) (>= net46) (< netstandard1.4)) (&& (< net45) (>= netstandard1.6) (< portable-net451+win81+wpa81)) (&& (>= netstandard1.6) (>= uap10.0)) (&& (>= uap10.0) (< uap10.1))
@@ -539,5 +541,5 @@ NUGET
       System.Xml.ReaderWriter (>= 4.3) - restriction: || (&& (< monoandroid) (< net45) (>= netstandard1.0) (< netstandard1.3) (< win8) (< wp8) (< wpa81)) (&& (< monotouch) (< net45) (>= netstandard1.3) (< win8) (< wpa81) (< xamarinios) (< xamarinmac) (< xamarintvos) (< xamarinwatchos)) (< portable-net45+win8+wp8+wpa81)
 GITHUB
   remote: fsharp/FAKE
-    modules/Octokit/Octokit.fsx (ddf45441759a2a7bc528b3b4c6f9a1edc7bd9f55)
+    modules/Octokit/Octokit.fsx (0341a2e614eb2a7f34607cec914eb0ed83ce9add)
       Octokit (>= 0.20)

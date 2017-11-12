@@ -3,12 +3,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{291C5AD9-26AE-4300-9E10-50061487E993}</ProjectGuid>
+    <ProjectGuid>{A0056C25-4EF7-4AF9-99E4-C13B937A3343}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UnitTest1</RootNamespace>
-    <AssemblyName>UnitTest1</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <RootNamespace>PluginLibraryTests</RootNamespace>
+    <AssemblyName>PluginLibraryTests</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework, Version=3.9.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.9.0\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
@@ -55,28 +58,13 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">
-      <PropertyGroup>
-        <__paket__MSTest_TestAdapter_props>net45\MSTest.TestAdapter</__paket__MSTest_TestAdapter_props>
-        <__paket__MSTest_TestAdapter_targets>net45\MSTest.TestAdapter</__paket__MSTest_TestAdapter_targets>
-      </PropertyGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework">
-          <HintPath>..\packages\MSTest.TestFramework\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions">
-          <HintPath>..\packages\MSTest.TestFramework\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
+        <Reference Include="nunit.framework">
+          <HintPath>..\packages\NUnit\lib\net45\nunit.framework.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
       </ItemGroup>
     </When>
   </Choose>
-  <Import Project="..\packages\MSTest.TestAdapter\build\$(__paket__MSTest_TestAdapter_props).props" Condition="Exists('..\packages\MSTest.TestAdapter\build\$(__paket__MSTest_TestAdapter_props).props')" Label="Paket" />
-  <Import Project="..\packages\MSTest.TestAdapter\build\$(__paket__MSTest_TestAdapter_targets).targets" Condition="Exists('..\packages\MSTest.TestAdapter\build\$(__paket__MSTest_TestAdapter_targets).targets')" Label="Paket" />
 </Project>

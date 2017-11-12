@@ -9,17 +9,9 @@ namespace PluginLibrary
     {
         public IList<IPlugin> Plugins => pluginsList;
 
-        public void PrintAvailiblePlugins()
-        {
-            foreach (var plugin in pluginsList)
-            {
-                Console.WriteLine(plugin.Name);
-            }
-        }
-
-        private List<IPlugin> pluginsList;
+        private List<IPlugin> pluginsList = new List<IPlugin>();
        
-        public void LaunchPlugins(string folder = "plugins")
+        public void LaunchPlugins(string folder)
         {
             var files = Directory.GetFiles(folder, "*Plugin*.dll");
             var assemblies = new List<Assembly>();
@@ -27,7 +19,7 @@ namespace PluginLibrary
             {
                 try
                 {
-                    var assembly = Assembly.Load(file);
+                    var assembly = Assembly.LoadFrom(file);
                     assemblies.Add(assembly);
                 }
                 catch (FileLoadException)
@@ -40,12 +32,16 @@ namespace PluginLibrary
                 var types = assembly.GetTypes();
                 foreach (var type in types)
                 {
+                    if (type.IsAbstract)
+                    {
+                        continue;
+                    }
                     var interfaces = type.GetInterfaces();
                     foreach (var interFace in interfaces)
                     {
-                        if (interFace is IPlugin)
+                        if (interFace.Name == "IPlugin")
                         {
-                            var constructor = type.GetConstructor(new Type[]{});
+                            var constructor = type.GetConstructor(Type.EmptyTypes);
                             if (constructor == null)
                             {
                                 continue;

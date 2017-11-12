@@ -9,5 +9,8 @@ namespace PluginLibrary
     public class SamplePlugin : IPlugin
     {
         public string Name => "samplePlugin";
+
+        public SamplePlugin()
+        { }
     }
 }
