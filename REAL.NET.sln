@@ -41,11 +41,11 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Repo", "src\Repo\Repo.fspro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF_Editor", "src\WPF_Editor\WPF_Editor.csproj", "{EE68E91E-374C-46AF-AD7C-2783EE099A71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginLibrary", "PluginLibrary\PluginLibrary.csproj", "{8B9C8D76-65B3-4A01-9D6F-B6192A823642}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "plugins", "plugins", "{F12CD406-E1CD-43B7-B4BC-E2991723C56E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginLibraryTests", "PluginLibraryTests\PluginLibraryTests.csproj", "{A0056C25-4EF7-4AF9-99E4-C13B937A3343}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginLibrary", "src\PluginLibrary\PluginLibrary.csproj", "{8B9C8D76-65B3-4A01-9D6F-B6192A823642}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginLibraryTests", "tests\PluginLibraryTests\PluginLibraryTests.csproj", "{A0056C25-4EF7-4AF9-99E4-C13B937A3343}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
