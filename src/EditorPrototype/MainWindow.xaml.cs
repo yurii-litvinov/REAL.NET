@@ -45,6 +45,7 @@
             this.g_Area.EdgeSelected += this.EdgeSelectedAction;
             this.g_zoomctrl.Click += this.ClearSelection;
             this.elementsListBox.MouseDoubleClick += this.ElementInBoxSelectedAction;
+            this.attributesView.CellEditEnding += this.AttributeValueChanged;
 
             ZoomControl.SetViewFinderVisibility(this.g_zoomctrl, Visibility.Visible);
             this.g_zoomctrl.Loaded += (sender, args) =>
@@ -68,7 +69,8 @@
 
             var modelName = "GreenhouseTestModel";
 
-            this.g_zoomctrl.MouseDown += (object sender, MouseButtonEventArgs e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
+            this.g_zoomctrl.MouseDown += (object sender, MouseButtonEventArgs e)
+                => this.ZoomCtrl_MouseDown(sender, e, modelName);
 
             this.InitPalette(modelName);
             this.InitModel(modelName);
@@ -78,7 +80,9 @@
         {
             this.prevVer = null;
             this.ctrlVer = null;
-            this.g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
+            this.attributesView.Visibility = Visibility.Collapsed;
+            this.g_Area.GetAllVertexControls().ToList().
+                ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
         }
 
         private void InitModel(string modelName)
@@ -114,16 +118,96 @@
                 }
 
                 var source = this.dataGraph.Vertices.First(v => v.Node == sourceNode);
+                var sourceControl = this.g_Area.VertexList.First(vc => vc.Key == source).Value;
                 var target = this.dataGraph.Vertices.First(v => v.Node == targetNode);
+                var targetControl = this.g_Area.VertexList.First(vc => vc.Key == target).Value;
+                var newEdge = new DataEdge(source, target, false)
+                    { EdgeType = DataEdge.EdgeTypeEnum.Association };
 
-                var newEdge = new DataEdge(source, target, false) { EdgeType = DataEdge.EdgeTypeEnum.Association };
-                newEdge.TargetConnectionPointId = 1;
-                newEdge.SourceConnectionPointId = 2;
                 this.dataGraph.AddEdge(newEdge);
                 this.DrawNewEdge(source.Node, target.Node);
+                var ec = new EdgeControl(sourceControl, targetControl, newEdge);
+                this.g_Area.InsertEdge(newEdge, ec);
             }
 
-            this.DrawGraph();
+            this.g_Area.RelayoutGraph(true);
+            this.g_zoomctrl.ZoomToFill();
+
+            foreach (var vertex in this.g_Area.VertexList)
+            {
+                foreach (var edge in this.dataGraph.Edges)
+                {
+                    if (edge.Target == vertex.Key)
+                    {
+                        StaticVertexConnectionPointForGH targetVCP = null;
+                        foreach (var x in vertex.Value.VertexConnectionPointsList)
+                        {
+                            var aVCPforGH = x as StaticVertexConnectionPointForGH;
+                            if (aVCPforGH != null && aVCPforGH.IsOccupied == false && aVCPforGH.IsSource == false)
+                            {
+                                aVCPforGH.IsOccupied = true;
+                                targetVCP = aVCPforGH;
+                                break;
+                            }
+                        }
+
+                        if (targetVCP != null)
+                        {
+                            edge.TargetConnectionPointId = targetVCP.Id;
+                        }
+                        else
+                        {
+                            // if the model is initially incorret
+                            if (vertex.Key.Node.Name == "aInterval")
+                            {
+                                return;
+                            }
+
+                            var newId = vertex.Value.VertexConnectionPointsList.Last().Id + 1;
+                            var vcp = new StaticVertexConnectionPointForGH()
+                                { Id = newId, IsOccupied = true, IsSource = false };
+                            var ctrl = new Border
+                                { Margin = new Thickness(0, 2, 2, 0), Padding = new Thickness(0), Child = vcp };
+                            ((VertexControlForGH)vertex.Value).VCPTargetRoot.Children.Add(ctrl);
+                            vertex.Value.VertexConnectionPointsList.Add(vcp);
+                            edge.TargetConnectionPointId = newId;
+                        }
+                    }
+
+                    if (edge.Source == vertex.Key)
+                    {
+                        StaticVertexConnectionPointForGH sourceVCP = null;
+                        foreach (var x in vertex.Value.VertexConnectionPointsList)
+                        {
+                            var aVCPforGH = x as StaticVertexConnectionPointForGH;
+                            if (aVCPforGH != null && aVCPforGH.IsOccupied == false && aVCPforGH.IsSource == true)
+                            {
+                                aVCPforGH.IsOccupied = true;
+                                sourceVCP = aVCPforGH;
+                                break;
+                            }
+                        }
+
+                        if (sourceVCP != null)
+                        {
+                            edge.SourceConnectionPointId = sourceVCP.Id;
+                        }
+                        else
+                        {
+                            var newId = vertex.Value.VertexConnectionPointsList.Last().Id + 1;
+                            sourceVCP = new StaticVertexConnectionPointForGH()
+                                { Id = newId, IsOccupied = true, IsSource = true };
+                            var ctrl = new Border
+                                { Margin = new Thickness(0, 2, 2, 0), Padding = new Thickness(0), Child = sourceVCP };
+                            ((VertexControlForGH)vertex.Value).VCPSourceRoot.Children.Add(ctrl);
+                            vertex.Value.VertexConnectionPointsList.Add(sourceVCP);
+                            edge.SourceConnectionPointId = newId;
+                        }
+                    }
+
+                    this.g_Area.EdgesList[edge].UpdateEdge();
+                }
+            }
         }
 
         private void InitPalette(string metamodelName)
@@ -196,9 +280,70 @@
                 return;
             }
 
-            var newEdge = new DataEdge(prevVerVertex, ctrlVerVertex, true);
-            newEdge.SourceConnectionPointId = 2;
-            newEdge.TargetConnectionPointId = 1;
+            var newEdge = new DataEdge(prevVerVertex, ctrlVerVertex, true)
+                { EdgeType = DataEdge.EdgeTypeEnum.Association };
+
+            StaticVertexConnectionPointForGH targetVCP = null;
+            foreach (var x in this.ctrlVer.VertexConnectionPointsList)
+            {
+                var aVCPforGH = x as StaticVertexConnectionPointForGH;
+                if (aVCPforGH != null && aVCPforGH.IsOccupied == false && aVCPforGH.IsSource == false)
+                {
+                    aVCPforGH.IsOccupied = true;
+                    targetVCP = aVCPforGH;
+                    break;
+                }
+            }
+
+            if (targetVCP != null)
+            {
+                newEdge.TargetConnectionPointId = targetVCP.Id;
+            }
+            else
+            {
+                if (ctrlVerVertex.Node.Name == "aInterval")
+                {
+                    return;
+                }
+
+                var newId = this.ctrlVer.VertexConnectionPointsList.Last().Id + 1;
+                targetVCP = new StaticVertexConnectionPointForGH()
+                    { Id = newId, IsOccupied = true, IsSource = false };
+                var ctrl = new Border
+                    { Margin = new Thickness(0, 2, 2, 0), Padding = new Thickness(0), Child = targetVCP };
+                ((VertexControlForGH)this.ctrlVer).VCPTargetRoot.Children.Add(ctrl);
+                this.ctrlVer.VertexConnectionPointsList.Add(targetVCP);
+                newEdge.TargetConnectionPointId = newId;
+            }
+
+            StaticVertexConnectionPointForGH sourceVCP = null;
+            foreach (var x in this.prevVer.VertexConnectionPointsList)
+            {
+                var aVCPforGH = x as StaticVertexConnectionPointForGH;
+                if (aVCPforGH != null && aVCPforGH.IsOccupied == false && aVCPforGH.IsSource == true)
+                {
+                    aVCPforGH.IsOccupied = true;
+                    sourceVCP = aVCPforGH;
+                    break;
+                }
+            }
+
+            if (sourceVCP != null)
+            {
+                newEdge.SourceConnectionPointId = sourceVCP.Id;
+            }
+            else
+            {
+                var newId = this.prevVer.VertexConnectionPointsList.Last().Id + 1;
+                sourceVCP = new StaticVertexConnectionPointForGH()
+                    { Id = newId, IsOccupied = true, IsSource = true };
+                var ctrl = new Border
+                    { Margin = new Thickness(0, 2, 2, 0), Padding = new Thickness(0), Child = sourceVCP };
+                ((VertexControlForGH)this.prevVer).VCPSourceRoot.Children.Add(ctrl);
+                this.prevVer.VertexConnectionPointsList.Add(sourceVCP);
+                newEdge.SourceConnectionPointId = newId;
+            }
+
             this.dataGraph.AddEdge(newEdge);
             this.DrawNewEdge(prevVerVertex.Node, ctrlVerVertex.Node);
             var ec = new EdgeControl(this.prevVer, this.ctrlVer, newEdge);
@@ -226,6 +371,8 @@
 
             this.dataGraph.AddVertex(vertex);
             this.DrawNewVertex(vertex);
+            var vc = new VertexControlForGH(vertex);
+            this.g_Area.AddVertex(vertex, vc);
         }
 
         private void ElementInBoxSelectedAction(object sender, EventArgs e)
@@ -328,6 +475,26 @@
             this.elementsListBox.Items.Add(lbi);
         }
 
+        private void AttributeValueChanged(object sender, DataGridCellEditEndingEventArgs args)
+        {
+            var changedTextBox = args.EditingElement as TextBox;
+            if (changedTextBox == null)
+            {
+                return;
+            }
+
+            var newValue = changedTextBox.Text;
+            var changedAttribute = args.Row.Item as DataVertex.Attribute;
+            if (changedAttribute == null)
+            {
+                return;
+            }
+
+            var changedAttributeName = changedAttribute.Name;
+            DataVertex ctrlDataVertex = this.ctrlVer.GetDataVertex<DataVertex>();
+            ctrlDataVertex.Node.Attributes.First(x => x.Name == changedAttributeName).StringValue = newValue;
+        }
+
         private void VertexSelectedAction(object sender, VertexSelectedEventArgs args)
         {
             this.ctrlVer = args.VertexControl;
@@ -347,9 +514,11 @@
                 }
             }
 
+            this.attributesView.Visibility = Visibility.Visible;
             this.attributesView.DataContext = this.ctrlVer.GetDataVertex<DataVertex>();
 
-            this.g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
+            this.g_Area.GetAllVertexControls().ToList().
+                ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
 
             this.ctrlVer.GetDataVertex<DataVertex>().Color = Brushes.LightBlue;
             if (this.prevVer != null)
@@ -361,7 +530,7 @@
             {
                 args.VertexControl.ContextMenu = new ContextMenu();
                 var mi = new MenuItem { Header = "Delete item", Tag = args.VertexControl };
-                mi.Click += this.MenuItemClickVert;
+                mi.Click += this.MenuItemClickRemoveVertex;
                 args.VertexControl.ContextMenu.Items.Add(mi);
                 args.VertexControl.ContextMenu.IsOpen = true;
             }
@@ -380,7 +549,7 @@
             {
                 args.EdgeControl.ContextMenu = new ContextMenu();
                 var mi = new MenuItem { Header = "Delete item", Tag = args.EdgeControl };
-                mi.Click += this.MenuItemClickEdge;
+                mi.Click += this.MenuItemClickRemoveEdge;
                 args.EdgeControl.ContextMenu.Items.Add(mi);
                 args.EdgeControl.ContextMenu.IsOpen = true;
             }
@@ -450,7 +619,7 @@
 
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
 
-            var vc = new VertexControl(vertex);
+            var vc = new VertexControlForGH(vertex);
             vc.SetPosition(position);
             this.dataGraph.AddVertex(vertex);
             this.g_Area.AddVertex(vertex, vc);
@@ -463,16 +632,15 @@
             this.ctrlEdg.PreviewMouseUp -= this.OnEdgeMouseUp;
         }
 
-        private void MenuItemClickVert(object sender, EventArgs e)
+        private void MenuItemClickRemoveVertex(object sender, EventArgs e)
         {
-            this.dataGraph.RemoveVertex(this.ctrlVer.GetDataVertex<DataVertex>());
-            this.DrawGraph();
+            this.g_Area.RemoveVertexAndEdges(this.ctrlVer.GetDataVertex<DataVertex>());
         }
 
-        private void MenuItemClickEdge(object sender, EventArgs e)
+        private void MenuItemClickRemoveEdge(object sender, EventArgs e)
         {
-            this.dataGraph.RemoveEdge(this.ctrlEdg.GetDataEdge<DataEdge>());
-            this.DrawGraph();
+            this.g_zoomctrl.MouseMove -= this.OnEdgeMouseMove;
+            this.g_Area.RemoveEdge(this.ctrlEdg.GetDataEdge<DataEdge>(), true);
         }
 
         private void CloseChildrenWindows(object sender, EventArgs e)

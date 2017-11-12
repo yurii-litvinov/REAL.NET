@@ -97,6 +97,7 @@
     <Compile Include="Models\EdgeBlueprint.cs" />
     <Compile Include="Models\EditorObjectManager.cs" />
     <Compile Include="Models\ImageLoader.cs" />
+    <Compile Include="Models\StaticVertexConnectionPointForGH.cs" />
     <Compile Include="Models\ValueToImageConverter.cs" />
     <Compile Include="Constraints.cs" />
     <Page Include="MainWindow.xaml">
@@ -128,6 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\GraphExample.cs" />
+    <Compile Include="Models\VertexControlForGH.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

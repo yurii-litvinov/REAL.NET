@@ -4,11 +4,9 @@
     xmlns:local="clr-namespace:EditorPrototype"
     xmlns:controls="http://schemas.panthernet.ru/graphx/">
 
-    
-    
     <ControlTemplate x:Key="NodeVertex"></ControlTemplate>
 
-    <Style x:Shared="False" TargetType="controls:StaticVertexConnectionPoint">
+    <Style x:Shared="False" TargetType="local:StaticVertexConnectionPointForGH">
 
         <Setter Property="Shape" Value="Circle" />
 
@@ -34,8 +32,8 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <StackPanel Name="PART_vcproot" Grid.Column="0">
-                <Border Margin="0,4,2,2" Padding="0">
-                    <controls:StaticVertexConnectionPoint Id="1" />
+                <Border Margin="0,2,0,0" Padding="0">
+                    <controls:StaticVertexConnectionPoint Id="1"/>
                 </Border>
             </StackPanel>
             <StackPanel Grid.Column="1">
@@ -43,7 +41,7 @@
                 <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" />
             </StackPanel>
             <StackPanel Grid.Column="2" Orientation="Vertical">
-                <Border Margin="0,4,2,2" Padding="0">
+                <Border Margin="0,30,0,0" Padding="0">
                     <controls:StaticVertexConnectionPoint Id="2" />
                 </Border>
             </StackPanel>
@@ -61,7 +59,7 @@
                 <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" />
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Vertical">
-                <Border Margin="0,4,2,2" Padding="0">
+                <Border Margin="0,4,0,0" Padding="0">
                     <controls:StaticVertexConnectionPoint Id="2" />
                 </Border>
             </StackPanel>
@@ -75,7 +73,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0">
-                <Border Margin="0,4,2,2" Padding="0">
+                <Border Margin="0,4,0,0" Padding="0">
                     <controls:StaticVertexConnectionPoint Id="1" />
                 </Border>
             </StackPanel>
@@ -94,7 +92,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0">
-                <Border Margin="0,4,2,2" Padding="0">
+                <Border Margin="0,4,0,0" Padding="0">
                     <controls:StaticVertexConnectionPoint Id="1" />
                 </Border>
             </StackPanel>
@@ -103,8 +101,92 @@
                 <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" />
             </StackPanel>
             <StackPanel Grid.Column="2">
-                <Border Margin="0,4,2,2" Padding="0">
+                <Border Margin="0,4,0,0" Padding="0">
                     <controls:StaticVertexConnectionPoint Id="2" />
+                </Border>
+            </StackPanel>
+        </Grid>
+    </ControlTemplate>
+    
+    <ControlTemplate x:Key="OperationVertexGH" TargetType="{x:Type local:VertexControlForGH}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Name="PART_target_vcproot" Grid.Column="0">
+                <Border Margin="0,2,0,0" Padding="0">
+                    <local:StaticVertexConnectionPointForGH Id="1" IsOccupied="False" IsSource="False"/>
+                </Border>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill"/>
+                <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" />
+            </StackPanel>
+            <StackPanel Name="PART_source_vcproot" Grid.Column="2">
+                <Border Margin="0,30,0,0" Padding="0">
+                    <local:StaticVertexConnectionPointForGH Id="2" IsOccupied="False" IsSource="True"/>
+                </Border>
+            </StackPanel>
+        </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="SensorVertexGH" TargetType="{x:Type local:VertexControlForGH}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill"/>
+                <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" />
+            </StackPanel>
+            <StackPanel Name="PART_source_vcproot" Grid.Column="1">
+                <Border Margin="0,4,0,0" Padding="0">
+                    <local:StaticVertexConnectionPointForGH Id="1" IsOccupied="False" IsSource="True"/>
+                </Border>
+            </StackPanel>
+        </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="ActuatorVertexGH" TargetType="{x:Type local:VertexControlForGH}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Name="PART_target_vcproot" Grid.Column="0">
+                <Border Margin="0,4,0,0" Padding="0">
+                    <local:StaticVertexConnectionPointForGH Id="1" IsOccupied="False" IsSource="False"/>
+                </Border>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill"/>
+                <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" />
+            </StackPanel>
+        </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="IntervalVertexGH" TargetType="{x:Type local:VertexControlForGH}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Name="PART_target_vcproot" Grid.Column="0">
+                <Border Margin="0,4,0,0" Padding="0">
+                    <local:StaticVertexConnectionPointForGH Id="1" IsOccupied="False" IsSource="False"/>
+                </Border>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill"/>
+                <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" />
+            </StackPanel>
+            <StackPanel Name="PART_source_vcproot" Grid.Column="2">
+                <Border Margin="0,4,0,0" Padding="0">
+                    <local:StaticVertexConnectionPointForGH Id="2" IsOccupied="False" IsSource="True"/>
                 </Border>
             </StackPanel>
         </Grid>
@@ -115,6 +197,7 @@
         <Setter Property="Background" Value="{Binding Color}"/>
         <Setter Property="VertexShape" Value="None"/>
         <Setter Property= "ShowLabel" Value="True"/>
+        <!--Setter Property="Template" Value="{StaticResource OperationVertex}"/-->
 
         <!-- VERTEX DRAGGING CONTROL -->
         <Setter Property="controls:DragBehaviour.IsDragEnabled" Value="True" />
@@ -162,6 +245,59 @@
             </DataTrigger>
             <DataTrigger Binding="{Binding Name}" Value="aInterval">
                 <Setter Property="Template" Value="{StaticResource IntervalVertex}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type local:VertexControlForGH}">
+        <Setter Property="Background" Value="{Binding Color}"/>
+        <Setter Property="VertexShape" Value="None"/>
+        <Setter Property= "ShowLabel" Value="True"/>
+        <Setter Property="controls:DragBehaviour.IsDragEnabled" Value="True" />
+        <Setter Property="controls:DragBehaviour.UpdateEdgesOnMove" Value="True" />
+
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding VertexType}" Value="Attribute">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type local:VertexControlForGH}">
+                            <Border Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        CornerRadius="0,0,0,0"
+                                        Padding="{TemplateBinding Padding}">
+                                <Grid>
+                                    <ContentPresenter Content="{TemplateBinding Vertex}" />
+                                    <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Vertex, RelativeSource={RelativeSource TemplatedParent}}" />
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Background" Value="LightCoral" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Name}" Value="aAndOperation">
+                <Setter Property="Template" Value="{StaticResource OperationVertexGH}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Name}" Value="aOrOperation">
+                <Setter Property="Template" Value="{StaticResource OperationVertexGH}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Name}" Value="aOpenWindow">
+                <Setter Property="Template" Value="{StaticResource ActuatorVertexGH}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Name}" Value="aCloseWindow">
+                <Setter Property="Template" Value="{StaticResource ActuatorVertexGH}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Name}" Value="aPourSoil">
+                <Setter Property="Template" Value="{StaticResource ActuatorVertexGH}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Name}" Value="aAirTemperature">
+                <Setter Property="Template" Value="{StaticResource SensorVertexGH}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Name}" Value="aSoilTemperature">
+                <Setter Property="Template" Value="{StaticResource SensorVertexGH}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Name}" Value="aInterval">
+                <Setter Property="Template" Value="{StaticResource IntervalVertexGH}"/>
             </DataTrigger>
         </Style.Triggers>
     </Style>

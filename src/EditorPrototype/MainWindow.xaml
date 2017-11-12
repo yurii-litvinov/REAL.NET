@@ -68,11 +68,10 @@
                     x:Name="attributesView"
                     Grid.Row="5"
                     AutoGenerateColumns="False"
-                    IsReadOnly="True"
                     ItemsSource="{Binding Attributes}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Name}" Header="Name" />
-                        <DataGridTextColumn Binding="{Binding Type}" Header="Type" />
+                        <DataGridTextColumn Binding="{Binding Name}" Header="Name" IsReadOnly="True"/>
+                        <DataGridTextColumn Binding="{Binding Type}" Header="Type" IsReadOnly="True"/>
                         <DataGridTextColumn Binding="{Binding Value}" Header="Value" />
                     </DataGrid.Columns>
                 </DataGrid>
