@@ -119,11 +119,27 @@
 
         public class Attribute
         {
-            public string Name { get; set; }
+            private string name;
+            private string type;
+            private string value;
 
-            public string Type { get; set; }
+            public string Name
+            {
+                get { return this.name; }
+                set { this.name = value; }
+            }
 
-            public string Value { get; set; }
+            public string Type
+            {
+                get { return this.type; }
+                set { this.type = value; }
+            }
+
+            public string Value
+            {
+                get { return this.value; }
+                set { this.value = value; }
+            }
         }
     }
 }
