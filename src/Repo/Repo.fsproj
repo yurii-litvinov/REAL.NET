@@ -95,6 +95,7 @@
     <Compile Include="ElementRepository.fs" />
     <Compile Include="Repo.fs" />
     <Compile Include="RepoFactory.fs" />
+    <Content Include="app.config" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

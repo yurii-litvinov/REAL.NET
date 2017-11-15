@@ -5,15 +5,31 @@ using System.Reflection;
 
 namespace PluginLibrary
 {
+    /// <summary>
+    /// Class that is responsible for launching and keeping plugins
+    /// </summary>
     public class PluginLauncher
     {
+        /// <summary>
+        /// Gets list of available plugins 
+        /// </summary>
         public IList<IPlugin> Plugins => pluginsList;
 
+        /// <summary>
+        /// Gets list of plugins
+        /// </summary>
         private List<IPlugin> pluginsList = new List<IPlugin>();
        
-        public void LaunchPlugins(string folder)
+        /// <summary>
+        /// Launch plugins from this directory
+        /// </summary>
+        /// <param name="path">Directory with plugins</param>
+        /// <exception cref="DirectoryNotFoundException">This directory does not exist</exception>
+        /// <exception cref="ArgumentException">Path is just spaces or null string</exception>
+        /// <exception cref="PathTooLongException">Path is more than 260 digits</exception>
+        public void LaunchPlugins(string path)
         {
-            var files = Directory.GetFiles(folder, "*Plugin*.dll");
+            var files = Directory.GetFiles(path, "*Plugin*.dll");
             var assemblies = new List<Assembly>();
             foreach (var file in files)
             {
@@ -22,10 +38,7 @@ namespace PluginLibrary
                     var assembly = Assembly.LoadFrom(file);
                     assemblies.Add(assembly);
                 }
-                catch (FileLoadException)
-                {
-                    
-                }
+                catch (FileLoadException){}
             }
             foreach (var assembly in assemblies)
             {
@@ -46,7 +59,8 @@ namespace PluginLibrary
                             {
                                 continue;
                             }
-                            object almostPlugin = constructor.Invoke(new object[] { });
+                            object almostPlugin = Activator.CreateInstance(type);
+                            //TODO:create instance with invoked constructor object almostPlugin = constructor.Invoke(new object[] { });
                             var plugin = almostPlugin as IPlugin;
                             pluginsList.Add(plugin);
                         }
