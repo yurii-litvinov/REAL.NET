@@ -344,6 +344,7 @@
                 }
             }
 
+            // тут добавляются arrtibutes в attribute window
             this.attributesView.DataContext = this.ctrlVer.GetDataVertex<DataVertex>();
 
             this.g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
