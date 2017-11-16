@@ -9,6 +9,7 @@
         Title="REAL.NET"
         mc:Ignorable="d"
         Height="600" Width="800">
+
     <Grid>
         <Grid.Resources>
             <ResourceDictionary>
@@ -21,23 +22,28 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" MinWidth="100"/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
+        <!-- Column = 0 -->
         <Grid Grid.Column="0">
+
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" BorderThickness="1"  Margin="2" >
-                <controls1:ZoomControl x:Name="g_zoomctrl" >
+            <!-- Area -->
+            <Border Grid.Row="0" BorderThickness="1"  Margin="2">
+                <controls1:ZoomControl x:Name="g_zoomctrl" Margin="1,1,-1,-1" >
                     <wpf:GraphAreaExample x:Name="g_Area" />
                 </controls1:ZoomControl>
             </Border>
 
+            <!-- Console -->
             <!-- Need to be in different file, may be -->
             <Grid Grid.Row="1">
-                <TabControl Grid.Row="1" Height="150" TabStripPlacement="Bottom">
+                <TabControl Height="150" TabStripPlacement="Bottom">
                     <TabItem Header="Messages">
                         <ScrollViewer>
                             <TextBox IsReadOnly="True" TextWrapping="Wrap" />
@@ -53,7 +59,13 @@
 
         </Grid>
 
-        <DockPanel Grid.Column="1">
+        <!-- Colunm = 1 -->
+        <!-- GridSplitter -->
+        <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="10"/>
+
+        <!-- Column = 2 -->
+        <!-- RightPannel -->
+        <DockPanel Grid.Column="2">
             <Grid x:Name="rightPanel">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" MinHeight="100"/>
@@ -64,10 +76,10 @@
                     <RowDefinition Height="Auto" MinHeight="100"/>
                 </Grid.RowDefinitions>
 
-                <Grid x:Name="paletteGrid" Grid.Row="1"/>
+                <Grid x:Name="paletteGrid" Grid.Row="1" Grid.Column="1"/>
 
                 <Label x:Name="elementsListLabel" Grid.Row="2" Content="Elements:" HorizontalAlignment="Stretch"/>
-                <ListBox x:Name="elementsListBox" Grid.Row="3" HorizontalAlignment="Stretch" Margin="0,20,0,0"/>
+                <ListBox x:Name="elementsListBox" Grid.Row="3" Margin="0,20,0,0"/>
                 <Label x:Name="selectedEntityLabel" Grid.Row="4" Content="Selected entity:" HorizontalAlignment="Stretch" />
 
                 <DataGrid x:Name="attributesView" Grid.Row="5" IsReadOnly="True" ItemsSource="{Binding Attributes}" AutoGenerateColumns="False">
@@ -77,8 +89,9 @@
                         <DataGridTextColumn Header="Value" Binding="{Binding Value}"/>
                     </DataGrid.Columns>
                 </DataGrid>
+
             </Grid>
         </DockPanel>
-        
+
     </Grid>
 </Window>
