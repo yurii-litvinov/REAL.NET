@@ -3,17 +3,14 @@ framework: net452
 source https://nuget.org/api/v2
 
 nuget FSharp.Core redirects: force
-nuget GraphX 2.3.6.0 restriction: >= net452
+nuget GraphX
+nuget QuickGraphPCL
 nuget Microsoft.Msagl 1.0.2
 nuget Microsoft.Msagl.Drawing 1.0.2
 nuget Microsoft.Msagl.GraphViewerGDI 1.0.2
-nuget MSTest.TestAdapter 1.1.18
-nuget MSTest.TestFramework 1.1.18
-nuget QuickGraphPCL 3.6.61114.2 restriction: >= net452
 nuget YAXLib
 nuget StyleCop.Analyzers
-
-nuget NUnit 3.9.0 restriction: >= net47
+nuget NUnit
 nuget NUnit.Runners
 nuget FsUnit
 
