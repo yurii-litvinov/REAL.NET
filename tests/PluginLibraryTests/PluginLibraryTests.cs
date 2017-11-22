@@ -13,7 +13,7 @@ namespace PluginLibraryTests
         public void TestLaunchingSamplePlugin()
         {
             var libs = new PluginLauncher();
-            libs.LaunchPlugins("REAL.NET/src/PluginLibrary/bin/debug");
+            //fixme//libs.LaunchPlugins("REAL.NET/src/PluginLibrary/bin/debug");
             Assert.AreEqual(1, libs.Plugins.Count);
         }
     }
