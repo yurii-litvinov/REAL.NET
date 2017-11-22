@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2008
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{63297B98-5CED-492C-A5B7-A5B4F73CF142}"
 	ProjectSection(SolutionItems) = preProject
@@ -79,19 +79,19 @@ Global
 		{9E7065A4-BA5E-4752-84BF-54D5C00DB60C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EE68E91E-374C-46AF-AD7C-2783EE099A71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EE68E91E-374C-46AF-AD7C-2783EE099A71}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EE68E91E-374C-46AF-AD7C-2783EE099A71}.MonoRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{EE68E91E-374C-46AF-AD7C-2783EE099A71}.MonoRelease|Any CPU.ActiveCfg = MonoRelease|Any CPU
 		{EE68E91E-374C-46AF-AD7C-2783EE099A71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE68E91E-374C-46AF-AD7C-2783EE099A71}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8B9C8D76-65B3-4A01-9D6F-B6192A823642}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8B9C8D76-65B3-4A01-9D6F-B6192A823642}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8B9C8D76-65B3-4A01-9D6F-B6192A823642}.MonoRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{8B9C8D76-65B3-4A01-9D6F-B6192A823642}.MonoRelease|Any CPU.Build.0 = Release|Any CPU
+		{8B9C8D76-65B3-4A01-9D6F-B6192A823642}.MonoRelease|Any CPU.ActiveCfg = MonoRelease|Any CPU
+		{8B9C8D76-65B3-4A01-9D6F-B6192A823642}.MonoRelease|Any CPU.Build.0 = MonoRelease|Any CPU
 		{8B9C8D76-65B3-4A01-9D6F-B6192A823642}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B9C8D76-65B3-4A01-9D6F-B6192A823642}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A0056C25-4EF7-4AF9-99E4-C13B937A3343}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A0056C25-4EF7-4AF9-99E4-C13B937A3343}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A0056C25-4EF7-4AF9-99E4-C13B937A3343}.MonoRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{A0056C25-4EF7-4AF9-99E4-C13B937A3343}.MonoRelease|Any CPU.Build.0 = Release|Any CPU
+		{A0056C25-4EF7-4AF9-99E4-C13B937A3343}.MonoRelease|Any CPU.ActiveCfg = MonoRelease|Any CPU
+		{A0056C25-4EF7-4AF9-99E4-C13B937A3343}.MonoRelease|Any CPU.Build.0 = MonoRelease|Any CPU
 		{A0056C25-4EF7-4AF9-99E4-C13B937A3343}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0056C25-4EF7-4AF9-99E4-C13B937A3343}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
