@@ -60,9 +60,16 @@ namespace PluginLibrary
                                 continue;
                             }
                             object almostPlugin = Activator.CreateInstance(type);
-                            //TODO:create instance with invoked constructor object almostPlugin = constructor.Invoke(new object[] { });
-                            var plugin = almostPlugin as IPlugin;
-                            pluginsList.Add(plugin);
+                            //var plugin = almostPlugin as IPlugin;
+                            IPlugin plugin = null;
+                            if (almostPlugin is IPlugin)
+                            {
+                                plugin = (IPlugin) almostPlugin;
+                            }
+                            if (plugin != null)
+                            {
+                                pluginsList.Add(plugin);
+                            }
                         }
                     }
                 }
