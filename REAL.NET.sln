@@ -47,7 +47,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginLibrary", "src\Plugin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginLibraryTests", "tests\PluginLibraryTests\PluginLibraryTests.csproj", "{A0056C25-4EF7-4AF9-99E4-C13B937A3343}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamplesPlugin", "plugins\SamplesPlugin\SamplesPlugin.csproj", "{C57410A1-A86F-418B-9AC7-38249450C497}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamplesPlugin", "src\plugins\SamplesPlugin\SamplesPlugin.csproj", "{C57410A1-A86F-418B-9AC7-38249450C497}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -98,8 +98,8 @@ Global
 		{A0056C25-4EF7-4AF9-99E4-C13B937A3343}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C57410A1-A86F-418B-9AC7-38249450C497}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C57410A1-A86F-418B-9AC7-38249450C497}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C57410A1-A86F-418B-9AC7-38249450C497}.MonoRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{C57410A1-A86F-418B-9AC7-38249450C497}.MonoRelease|Any CPU.Build.0 = Release|Any CPU
+		{C57410A1-A86F-418B-9AC7-38249450C497}.MonoRelease|Any CPU.ActiveCfg = MonoRelease|Any CPU
+		{C57410A1-A86F-418B-9AC7-38249450C497}.MonoRelease|Any CPU.Build.0 = MonoRelease|Any CPU
 		{C57410A1-A86F-418B-9AC7-38249450C497}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C57410A1-A86F-418B-9AC7-38249450C497}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection

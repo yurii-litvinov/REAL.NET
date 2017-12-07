@@ -30,6 +30,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoRelease|AnyCPU'">
+    <OutputPath>bin\MonoRelease\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -45,7 +48,7 @@
     <Compile Include="SamplePlugin.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\PluginLibrary\PluginLibrary.csproj">
+    <ProjectReference Include="..\..\PluginLibrary\PluginLibrary.csproj">
       <Project>{8b9c8d76-65b3-4a01-9d6f-b6192a823642}</Project>
       <Name>PluginLibrary</Name>
     </ProjectReference>

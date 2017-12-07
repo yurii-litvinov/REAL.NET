@@ -48,5 +48,15 @@
     <Compile Include="IPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EditorPrototype\EditorPrototype.csproj">
+      <Project>{1dcb1d77-ab11-404c-bce4-8eb7bf8f549d}</Project>
+      <Name>EditorPrototype</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Repo\Repo.fsproj">
+      <Project>{9e7065a4-ba5e-4752-84bf-54d5c00db60c}</Project>
+      <Name>Repo</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
