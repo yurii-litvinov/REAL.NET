@@ -33,6 +33,10 @@ namespace PluginLibrary
             var assemblies = new List<Assembly>();
             foreach (var file in files)
             {
+                if (file.Contains("PluginLibrary.dll"))
+                {
+                    continue;
+                }
                 try
                 {
                     var assembly = Assembly.LoadFrom(file);
@@ -60,12 +64,7 @@ namespace PluginLibrary
                                 continue;
                             }
                             object almostPlugin = Activator.CreateInstance(type);
-                            //var plugin = almostPlugin as IPlugin;
-                            IPlugin plugin = null;
-                            if (almostPlugin is IPlugin)
-                            {
-                                plugin = (IPlugin) almostPlugin;
-                            }
+                            var plugin = almostPlugin as IPlugin;
                             if (plugin != null)
                             {
                                 pluginsList.Add(plugin);
