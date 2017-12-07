@@ -3,6 +3,7 @@ using NUnit.Framework;
 using PluginLibrary;
 using System.Reflection;
 using System.IO;
+using System.Collections.Generic;
 
 namespace PluginLibraryTests
 {
@@ -13,8 +14,13 @@ namespace PluginLibraryTests
         public void TestLaunchingSamplePlugin()
         {
             var libs = new PluginLauncher();
-            libs.LaunchPlugins("src/plugins/SamplesPlugin/bin/Release");
-            Assert.AreEqual(1, libs.Plugins.Count);
+            var folder = "src/plugins/SamplesPlugin/bin";
+            var dirs = new List<string>(Directory.GetDirectories(folder));
+            foreach (var dir in dirs)
+            {
+                libs.LaunchPlugins(dir);
+            }
+            Assert.IsTrue(libs.Plugins.Count >= 1);
         }
     }
 }
