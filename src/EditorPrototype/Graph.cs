@@ -103,7 +103,7 @@
                 Picture = node.Class.Shape,
             };
 
-            var attributeInfos = node.Attributes.Select(x => new DataVertex.Attribute()
+            var attributeInfos = node.Attributes.Select(x => new DataVertex.Attribute(x)
             {
                 Name = x.Name,
                 Type = x.Kind.ToString(),
@@ -125,7 +125,7 @@
                 Picture = node.Class.Shape,
             };
 
-            var attributeInfos = node.Attributes.Select(x => new DataVertex.Attribute()
+            var attributeInfos = node.Attributes.Select(x => new DataVertex.Attribute(x)
             {
                 Name = x.Name,
                 Type = x.Kind.ToString(),

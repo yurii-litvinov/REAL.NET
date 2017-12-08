@@ -4,6 +4,7 @@
     using System.ComponentModel;
     using System.Windows.Media;
     using GraphX.PCL.Common.Models;
+    using Repo;
 
     /* DataVertex is the data class for the vertices. It contains all custom vertex data specified by the user.
      * This class also must be derived from VertexBase that provides properties and methods mandatory for
@@ -119,11 +120,61 @@
 
         public class Attribute
         {
-            public string Name { get; set; }
+            private string name;
+            private string type;
+            private string value;
+            private Repo.IAttribute attribute;
 
-            public string Type { get; set; }
+            public Attribute()
+            {
+            }
 
-            public string Value { get; set; }
+            public Attribute(IAttribute x)
+            {
+                this.attribute = x;
+            }
+
+            public string Name
+            {
+                get
+                {
+                    return this.name;
+                }
+
+                set
+                {
+                    this.attribute.StringValue = value;
+                    this.name = value;
+                }
+            }
+
+            public string Type
+            {
+                get
+                {
+                    return this.type;
+                }
+
+                set
+                {
+                    this.attribute.StringValue = value;
+                    this.type = value;
+                }
+            }
+
+            public string Value
+            {
+                get
+                {
+                    return this.value;
+                }
+
+                set
+                {
+                    this.attribute.StringValue = value;
+                    this.value = value;
+                }
+            }
         }
     }
 }
