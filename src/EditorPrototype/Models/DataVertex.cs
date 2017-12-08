@@ -129,9 +129,11 @@
             {
             }
 
-            public Attribute(IAttribute x)
+            public Attribute(IAttribute x, string name, string type)
             {
                 this.attribute = x;
+                this.name = name;
+                this.type = type;
             }
 
             public string Name
@@ -143,7 +145,6 @@
 
                 set
                 {
-                    this.attribute.StringValue = value;
                     this.name = value;
                 }
             }
@@ -157,7 +158,6 @@
 
                 set
                 {
-                    this.attribute.StringValue = value;
                     this.type = value;
                 }
             }
