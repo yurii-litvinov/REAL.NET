@@ -195,3 +195,4 @@ docs/tools/FSharp.Formatting.svclog
 # VisualParadigm-specific
 # ===================================================
 **/*.vpp.*
+/paket.exe

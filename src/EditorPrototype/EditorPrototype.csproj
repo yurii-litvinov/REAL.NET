@@ -192,6 +192,12 @@
     <Resource Include="Pictures\enginesBackwardBlock.png" />
     <Resource Include="Pictures\enginesStopBlock.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\edge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\Vertex.png" />
+  </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">
       <ItemGroup>
@@ -260,12 +266,6 @@
     <Analyzer Include="..\..\packages\StyleCop.Analyzers\analyzers\dotnet\cs\StyleCop.Analyzers.dll">
       <Paket>True</Paket>
     </Analyzer>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Pictures\edge.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Pictures\Vertex.png" />
   </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">
