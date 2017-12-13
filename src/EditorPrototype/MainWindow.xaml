@@ -47,7 +47,7 @@
             <!-- Console -->
             <!-- Need to be in different files, may be -->
             <Grid Grid.Row="2">
-                <TabControl Height="100"  TabStripPlacement="Bottom">
+                <TabControl TabStripPlacement="Bottom">
                     <TabItem Header="Messages">
                         <ScrollViewer>
                             <TextBox x:Name="Messages" IsReadOnly="True" TextWrapping="Wrap" />

@@ -93,9 +93,6 @@ namespace EditorPrototype
             this.console = factory.CreateConsole();
             this.console.NewMessage += new EventHandler<EventArgs>(OnConsoleMessagesHaveBeenUpdated);
             this.console.NewError += new EventHandler<EventArgs>(OnConsoleErrorsHaveBeenUpdated);
-            this.console.SendMessage("Hello world");
-            this.console.SendMessage("hurray");
-            this.console.ReportError("Hello error");
         }
 
         private void InitAndLaunchPlugins()
