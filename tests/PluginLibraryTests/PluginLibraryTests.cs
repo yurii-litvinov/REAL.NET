@@ -4,6 +4,7 @@ using PluginLibrary;
 using System.Reflection;
 using System.IO;
 using System.Collections.Generic;
+using EditorPrototype.Models.InternalConsole;
 
 namespace PluginLibraryTests
 {
@@ -18,7 +19,7 @@ namespace PluginLibraryTests
             var dirs = new List<string>(Directory.GetDirectories(folder));
             foreach (var dir in dirs)
             {
-                libs.LaunchPlugins(dir);
+                libs.LaunchPlugins(dir, new AppConsole());
             }
             Assert.IsTrue(libs.Plugins.Count >= 1);
         }

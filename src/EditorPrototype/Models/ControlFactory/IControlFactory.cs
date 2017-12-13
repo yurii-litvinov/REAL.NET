@@ -1,4 +1,4 @@
-﻿using EditorPrototype.Models.Console;
+﻿using EditorPrototype.Models.InternalConsole;
 using EditorPrototype.Models.Palette;
 using EditorPrototype.Models.Scene;
 using EditorPrototype.Models.Toolbar;

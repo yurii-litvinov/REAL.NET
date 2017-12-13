@@ -1,5 +1,5 @@
 ﻿using System;
-using EditorPrototype.Models.Console;
+using EditorPrototype.Models.InternalConsole;
 using EditorPrototype.Models.Palette;
 using EditorPrototype.Models.Scene;
 using EditorPrototype.Models.Toolbar;
@@ -8,16 +8,18 @@ namespace EditorPrototype.Models.ControlFactory
 {
     public class ControlFactoryCreator
     {
-        private IControlFactory factory;
+        private static volatile IControlFactory factory;
+
+        private static object SyncRoot = new Object();
+
+        private ControlFactoryCreator()
+        { }
 
         private class ControlFactory : IControlFactory
         {
-            private IToolbar toolbar;
+            private IConsole console;
 
-            public IConsole CreateConsole()
-            {
-                throw new NotImplementedException();
-            }
+            public IConsole CreateConsole() => console ?? new AppConsole();
 
             public IScene CreateNewScene()
             {
@@ -36,33 +38,23 @@ namespace EditorPrototype.Models.ControlFactory
 
             public IToolbar CreateToolbar()
             {
-                lock (this)
-                {
-                    if (toolbar == null)
-                    {
-                        return new Toolbar.Toolbar();
-                    }
-                    else
-                    {
-                        return toolbar;
-                    }
-                }
+                throw new NotImplementedException();
             }
         }
 
-        public IControlFactory CreateControlFactory()
+        public static IControlFactory CreateControlFactory()
         {
-            lock (this)
+            if (factory == null)
             {
-                if (factory == null)
+                lock (SyncRoot)
                 {
-                    return new ControlFactory();
-                }
-                else
-                {
-                    return factory;
+                    if (factory == null)
+                    {
+                        return new ControlFactory();
+                    }
                 }
             }
+            return factory;
         }
     }
 }

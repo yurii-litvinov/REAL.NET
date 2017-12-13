@@ -24,10 +24,11 @@ namespace PluginLibrary
         /// Launch plugins from this directory
         /// </summary>
         /// <param name="path">Directory with plugins</param>
+        /// <param name="config">Plugins' configuration</param>
         /// <exception cref="DirectoryNotFoundException">This directory does not exist</exception>
         /// <exception cref="ArgumentException">Path is just spaces or null string</exception>
         /// <exception cref="PathTooLongException">Path is more than 260 digits</exception>
-        public void LaunchPlugins(string path)
+        public void LaunchPlugins(string path, object config)
         {
             var files = Directory.GetFiles(path, "*Plugin*.dll");
             var assemblies = new List<Assembly>();
@@ -67,6 +68,7 @@ namespace PluginLibrary
                             var plugin = almostPlugin as IPlugin;
                             if (plugin != null)
                             {
+                                plugin.SetConfig(config);
                                 pluginsList.Add(plugin);
                             }
                         }

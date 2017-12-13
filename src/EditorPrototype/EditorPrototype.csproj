@@ -96,14 +96,15 @@
     <Compile Include="Graph.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="Models\BoolToColorConverter.cs" />
-    <Compile Include="Models\Console\AppConsole.cs" />
-    <Compile Include="Models\Console\IConsole.cs" />
+    <Compile Include="Models\InternalConsole\AppConsole.cs" />
+    <Compile Include="Models\InternalConsole\IConsole.cs" />
     <Compile Include="Models\ControlFactory\ControlFactoryCreator.cs" />
     <Compile Include="Models\ControlFactory\IControlFactory.cs" />
     <Compile Include="Models\EdgeBlueprint.cs" />
     <Compile Include="Models\EditorObjectManager.cs" />
     <Compile Include="Models\ImageLoader.cs" />
     <Compile Include="Models\Palette\IPalette.cs" />
+    <Compile Include="Models\PluginConfig\PluginConfig.cs" />
     <Compile Include="Models\Scene\IScene.cs" />
     <Compile Include="Models\Toolbar\IButton.cs" />
     <Compile Include="Models\Toolbar\ICommand.cs" />
@@ -174,6 +175,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PluginLibrary\PluginLibrary.csproj">
+      <Project>{8b9c8d76-65b3-4a01-9d6f-b6192a823642}</Project>
+      <Name>PluginLibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Repo\Repo.fsproj">
       <Project>{9e7065a4-ba5e-4752-84bf-54d5c00db60c}</Project>
       <Name>Repo</Name>
@@ -284,9 +289,7 @@
       <Paket>True</Paket>
     </Analyzer>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">
       <ItemGroup>

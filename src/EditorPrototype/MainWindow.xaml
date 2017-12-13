@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        
         xmlns:wpf="clr-namespace:EditorPrototype"
         xmlns:controls1="http://schemas.panthernet.ru/graphx/"
         Title="REAL.NET"
@@ -48,15 +47,15 @@
             <!-- Console -->
             <!-- Need to be in different files, may be -->
             <Grid Grid.Row="2">
-                <TabControl TabStripPlacement="Bottom">
+                <TabControl Height="100"  TabStripPlacement="Bottom">
                     <TabItem Header="Messages">
                         <ScrollViewer>
-                            <TextBox IsReadOnly="True" TextWrapping="Wrap" />
+                            <TextBox x:Name="Messages" IsReadOnly="True" TextWrapping="Wrap" />
                         </ScrollViewer>
                     </TabItem>
                     <TabItem Header="Errors">
                         <ScrollViewer>
-                            <TextBox IsReadOnly="True" TextWrapping="Wrap" />
+                            <TextBox x:Name="Errors" IsReadOnly="True" TextWrapping="Wrap" />
                         </ScrollViewer>
                     </TabItem>
                 </TabControl>

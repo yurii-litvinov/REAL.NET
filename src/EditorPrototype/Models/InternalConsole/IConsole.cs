@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EditorPrototype.Models.Console
+namespace EditorPrototype.Models.InternalConsole
 {
     public interface IConsole
     {

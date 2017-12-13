@@ -9,11 +9,14 @@ namespace EditorPrototype
     using System.Windows.Input;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
+    using EditorPrototype.Models.InternalConsole;
+    using EditorPrototype.Models.PluginConfig;
     using GraphX.Controls;
     using GraphX.Controls.Models;
     using GraphX.PCL.Common.Enums;
     using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
     using GraphX.PCL.Logic.Models;
+    using PluginLibrary;
     using QuickGraph;
 
     /// <summary>
@@ -26,6 +29,7 @@ namespace EditorPrototype
         private VertexControl ctrlVer;
         private EdgeControl ctrlEdg;
         private Model model;
+        private IConsole console;
         private Controller controller;
         private Graph graph;
         private Repo.IElement currentElement = null;
@@ -79,6 +83,51 @@ namespace EditorPrototype
 
             this.InitPalette(modelName);
             this.graph.InitModel(modelName);
+            this.InitConsole();
+            this.InitAndLaunchPlugins();
+        }
+
+        private void InitConsole()
+        {
+            var factory = Models.ControlFactory.ControlFactoryCreator.CreateControlFactory();
+            this.console = factory.CreateConsole();
+            this.console.NewMessage += new EventHandler<EventArgs>(OnConsoleMessagesHaveBeenUpdated);
+            this.console.NewError += new EventHandler<EventArgs>(OnConsoleErrorsHaveBeenUpdated);
+            this.console.SendMessage("Hello world");
+            this.console.SendMessage("hurray");
+            this.console.ReportError("Hello error");
+        }
+
+        private void InitAndLaunchPlugins()
+        {
+            var libs = new PluginLauncher();
+            var folder = "../../../plugins/SamplesPlugin/bin";
+            var dirs = new List<string>(System.IO.Directory.GetDirectories(folder));
+            var config = new PluginConfig(console);
+            foreach (var dir in dirs)
+            {
+                libs.LaunchPlugins(dir, config);
+            }
+        }
+
+        private void OnConsoleMessagesHaveBeenUpdated(object sender, EventArgs args)
+        {
+            string allMessages = "";
+            foreach (var message in console.Messages)
+            {
+                allMessages += message + "\n";
+            }
+            Messages.Text = allMessages;
+        }
+
+        private void OnConsoleErrorsHaveBeenUpdated(object sender, EventArgs args)
+        {
+            string allErrors = "";
+            foreach(var error in console.Errors)
+            {
+                allErrors += error + "\n";
+            }
+            Errors.Text = allErrors;
         }
 
         private void ClearSelection(object sender, RoutedEventArgs e)

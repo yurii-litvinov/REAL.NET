@@ -48,6 +48,10 @@
     <Compile Include="SamplePlugin.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\EditorPrototype\EditorPrototype.csproj">
+      <Project>{1dcb1d77-ab11-404c-bce4-8eb7bf8f549d}</Project>
+      <Name>EditorPrototype</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\PluginLibrary\PluginLibrary.csproj">
       <Project>{8b9c8d76-65b3-4a01-9d6f-b6192a823642}</Project>
       <Name>PluginLibrary</Name>
