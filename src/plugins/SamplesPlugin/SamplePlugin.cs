@@ -20,7 +20,7 @@ namespace PluginLibrary
         public void SetConfig(object config)
         {
             var configuration = config as PluginConfig;
-            if (config == null)
+            if (configuration == null)
             {
                 throw new ArgumentException("This is not correct type of configuration");
             }
