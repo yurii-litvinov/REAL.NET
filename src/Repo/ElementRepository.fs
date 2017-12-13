@@ -29,7 +29,7 @@ type ElementRepository(infrastructure: InfrastructureSemantic, attributeReposito
         elif infrastructure.Metamodel.IsEdge element then
             Metatype.Edge
         else
-            raise (InvalidSemanticOperationException 
+            raise (InvalidSemanticOperationException
                 "Trying to get a metatype of an element that is not instance of the Element. Model is malformed.")
 
     interface IElementRepository with
@@ -37,14 +37,14 @@ type ElementRepository(infrastructure: InfrastructureSemantic, attributeReposito
             if elements.ContainsKey element then
                 elements.[element]
             else
-                let newElement = 
+                let newElement =
                     match findMetatype element with
-                    | Metatype.Edge -> 
+                    | Metatype.Edge ->
                         if not <| element :? DataLayer.IEdge then
-                            raise (InvalidSemanticOperationException 
+                            raise (InvalidSemanticOperationException
                                 "Element is an instance of the Edge, but is not an edge in internal \
                                 representation. Nodes can not be instances of Edge.")
-                        else 
+                        else
                             Edge
                                 (
                                     infrastructure,
@@ -52,13 +52,13 @@ type ElementRepository(infrastructure: InfrastructureSemantic, attributeReposito
                                     this :> IElementRepository,
                                     attributeRepository
                                 ) :> IElement
-                    | Metatype.Node -> 
+                    | Metatype.Node ->
                         if not <| element :? DataLayer.INode then
-                            raise (InvalidSemanticOperationException 
+                            raise (InvalidSemanticOperationException
                                 "Element is an instance of Node, but is not a node in internal representation. \
                                 Theoretically it is possible (when its ontological metatype is node, but linguistic \
                                 metatype is edge), but is not used nor supported in v1.")
-                        else 
+                        else
                             Node
                                 (
                                     infrastructure,
@@ -69,7 +69,7 @@ type ElementRepository(infrastructure: InfrastructureSemantic, attributeReposito
                     | _ -> failwith "Unknown metatype"
                 elements.Add(element, newElement)
                 newElement
-    
+
         member this.DeleteElement (element: DataLayer.IElement) =
             if elements.ContainsKey element then
                 // TODO: Who will delete attributes?

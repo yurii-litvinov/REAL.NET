@@ -16,7 +16,7 @@ namespace Repo.FacadeLayer
 
 open Repo
 
-/// Repository with wrappers for elements (nodes or edges). Contains already created wrappers and creates new wrappers 
+/// Repository with wrappers for elements (nodes or edges). Contains already created wrappers and creates new wrappers
 /// when needed.
 type IElementRepository =
     abstract GetElement: element: DataLayer.IElement -> IElement
@@ -29,7 +29,7 @@ and [<AbstractClass>] Element
         , element: DataLayer.IElement
         , repository: IElementRepository
         , attributeRepository: AttributeRepository
-    ) = 
+    ) =
 
     let findMetatype (element : DataLayer.IElement) =
         if infrastructureSemantic.Metamodel.IsNode element then
@@ -37,7 +37,7 @@ and [<AbstractClass>] Element
         elif infrastructureSemantic.Metamodel.IsEdge element then
             Metatype.Edge
         else
-            raise (InvalidSemanticOperationException 
+            raise (InvalidSemanticOperationException
                 "Trying to get a metatype of an element that is not instance of the Element. Model is malformed.")
 
     /// Returns corresponding element from data repository.
@@ -45,28 +45,28 @@ and [<AbstractClass>] Element
 
     interface IElement with
         member this.Name
-            with get (): string = 
+            with get (): string =
                 match element with
                 | :? DataLayer.INode as n-> n.Name
-                | _ -> 
+                | _ ->
                     if infrastructureSemantic.Element.HasAttribute element "name" then
                         infrastructureSemantic.Element.AttributeValue element "name"
                     else
                         ""
 
-            and set (v: string): unit =  
+            and set (v: string): unit =
                 match element with
                 | :? DataLayer.INode as n-> n.Name <- v
-                | _ -> 
+                | _ ->
                     if infrastructureSemantic.Element.HasAttribute element "name" then
                         infrastructureSemantic.Element.SetAttributeValue element "name" v
                     else
-                        raise (Repo.InvalidSemanticOperationException "Trying to set a name to an element which does not have one") 
+                        raise (Repo.InvalidSemanticOperationException "Trying to set a name to an element which does not have one")
 
-        member this.Attributes = 
+        member this.Attributes =
             infrastructureSemantic.Element.Attributes element |> Seq.map attributeRepository.GetAttribute
 
-        member this.Class = 
+        member this.Class =
             repository.GetElement element.Class
 
         member this.IsAbstract =
@@ -78,14 +78,14 @@ and [<AbstractClass>] Element
                     | "true" -> true
                     | "false" -> false
                     | _ -> failwith "Incorrect isAbstract attribute value"
-            else 
+            else
                 true
 
         member this.Shape = infrastructureSemantic.Element.AttributeValue element "shape"
 
         member this.Metatype = findMetatype element
 
-        member this.InstanceMetatype = 
+        member this.InstanceMetatype =
             match infrastructureSemantic.Element.AttributeValue element "instanceMetatype" with
             | "Metatype.Node" -> Metatype.Node
             | "Metatype.Edge" -> Metatype.Edge

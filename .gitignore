@@ -176,7 +176,7 @@ docs/output/
 temp/
 
 # Test results produced by build
-TestResults.xml
+TestResult*.xml
 
 # Nuget outputs
 nuget/*.nupkg
@@ -186,6 +186,7 @@ localpackages/
 paket-files
 *.orig
 .paket/paket.exe
+paket.exe
 docs/content/license.md
 docs/content/release-notes.md
 .fake

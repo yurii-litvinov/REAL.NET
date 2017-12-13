@@ -21,7 +21,7 @@ open Repo.InfrastructureSemanticLayer
 /// Initializes repository with test model conforming to Robots Metamodel, actual program that can be written by end-user.
 type RobotsTestModelBuilder() =
     interface IModelBuilder with
-        member this.Build(repo: IRepo): unit = 
+        member this.Build(repo: IRepo): unit =
             let infrastructure = InfrastructureSemantic(repo)
             let metamodel = Repo.findModel repo "RobotsMetamodel"
             let infrastructureMetamodel = infrastructure.Metamodel.Model
@@ -33,7 +33,7 @@ type RobotsTestModelBuilder() =
             let metamodelTimer = Model.findNode metamodel "Timer"
 
             let link = Model.findAssociationWithSource metamodelAbstractNode "target"
-            
+
             let model = repo.CreateModel("RobotsTestModel", metamodel)
 
             let initialNode = infrastructure.Instantiate model metamodelInitialNode
@@ -46,7 +46,7 @@ type RobotsTestModelBuilder() =
             let timer = infrastructure.Instantiate model metamodelTimer
             infrastructure.Element.SetAttributeValue timer "delay" "3000"
 
-            let (-->) (src: IElement) dst = 
+            let (-->) (src: IElement) dst =
                 let aLink = infrastructure.Instantiate model link :?> IAssociation
                 aLink.Source <- Some src
                 aLink.Target <- Some dst

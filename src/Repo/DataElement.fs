@@ -21,15 +21,15 @@ type DataElement(``class``: IElement option, model: IModel) =
     let mutable incomingEdges = []
 
     interface IElement with
-        member this.Class: IElement = 
+        member this.Class: IElement =
             match ``class`` with
             | Some v -> v
             | None -> this :> IElement
-        
-        member this.OutgoingEdges = 
+
+        member this.OutgoingEdges =
             Seq.ofList outgoingEdges
 
-        member this.IncomingEdges = 
+        member this.IncomingEdges =
             Seq.ofList incomingEdges
 
         member this.AddOutgoingEdge edge = outgoingEdges <- edge :: outgoingEdges

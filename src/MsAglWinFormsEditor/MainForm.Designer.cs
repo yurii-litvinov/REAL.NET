@@ -163,7 +163,6 @@ namespace MsAglWinFormsEditor
             // loadImageButton
             // 
             this.loadImageButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.loadImageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", fontSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.loadImageButton.Location = new System.Drawing.Point(3, 100);
             this.loadImageButton.Name = "loadImageButton";
             this.loadImageButton.Size = new System.Drawing.Size(233, 38);
@@ -244,7 +243,6 @@ namespace MsAglWinFormsEditor
             // 
             this.label1.AutoSize = true;
             this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", fontSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label1.Location = new System.Drawing.Point(119, 0);
             this.label1.Name = "label1";
             this.label1.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -257,7 +255,6 @@ namespace MsAglWinFormsEditor
             // 
             this.widthLabel.AutoSize = true;
             this.widthLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.widthLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", fontSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.widthLabel.Location = new System.Drawing.Point(3, 0);
             this.widthLabel.Name = "widthLabel";
             this.widthLabel.Size = new System.Drawing.Size(110, 23);
@@ -268,7 +265,6 @@ namespace MsAglWinFormsEditor
             // refreshButton
             // 
             this.refreshButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.refreshButton.Font = new System.Drawing.Font("Microsoft Sans Serif", fontSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.refreshButton.Location = new System.Drawing.Point(3, 485);
             this.refreshButton.Name = "refreshButton";
             this.refreshButton.Size = new System.Drawing.Size(239, 39);
@@ -281,10 +277,9 @@ namespace MsAglWinFormsEditor
             // 
             this.insertingEdge.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.insertingEdge.AutoSize = true;
-            this.insertingEdge.Font = new System.Drawing.Font("Microsoft Sans Serif", fontSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.insertingEdge.Location = new System.Drawing.Point(72, 449);
+            this.insertingEdge.Location = new System.Drawing.Point(82, 451);
             this.insertingEdge.Name = "insertingEdge";
-            this.insertingEdge.Size = new System.Drawing.Size(101, 22);
+            this.insertingEdge.Size = new System.Drawing.Size(80, 17);
             this.insertingEdge.TabIndex = 6;
             this.insertingEdge.Text = "Insert Edge";
             this.insertingEdge.UseVisualStyleBackColor = true;
@@ -296,7 +291,7 @@ namespace MsAglWinFormsEditor
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1437, 820);
             this.Controls.Add(this.mainLayout);
-            this.MinimumSize = new System.Drawing.Size(900, 550);
+            this.MinimumSize = new System.Drawing.Size(900, 548);
             this.Name = "MainForm";
             this.Text = "MainForm";
             this.mainLayout.ResumeLayout(false);

@@ -90,14 +90,31 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controller.cs" />
+    <Compile Include="Controls\Toolbar.xaml.cs">
+      <DependentUpon>Toolbar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Graph.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="Models\BoolToColorConverter.cs" />
+    <Compile Include="Models\Console\IConsole.cs" />
+    <Compile Include="Models\ControlFactory\ControlFactoryCreator.cs" />
+    <Compile Include="Models\ControlFactory\IControlFactory.cs" />
     <Compile Include="Models\EdgeBlueprint.cs" />
     <Compile Include="Models\EditorObjectManager.cs" />
     <Compile Include="Models\ImageLoader.cs" />
+    <Compile Include="Models\Palette\IPalette.cs" />
+    <Compile Include="Models\Scene\IScene.cs" />
+    <Compile Include="Models\Toolbar\IButton.cs" />
+    <Compile Include="Models\Toolbar\ICommand.cs" />
+    <Compile Include="Models\Toolbar\IMenu.cs" />
+    <Compile Include="Models\Toolbar\IToolbar.cs" />
+    <Compile Include="Models\Toolbar\Toolbar.cs" />
     <Compile Include="Models\ValueToImageConverter.cs" />
     <Compile Include="Constraints.cs" />
+    <Page Include="Controls\Toolbar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -145,7 +162,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="EditorPrototype.ruleset" />
-    <None Include="packages.config" />
     <None Include="paket.references" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -267,6 +283,7 @@
       <Paket>True</Paket>
     </Analyzer>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">
       <ItemGroup>

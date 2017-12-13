@@ -15,7 +15,7 @@
 namespace Repo
 
 /// Enumeration with all kinds of attributes supported by repository
-type AttributeKind = 
+type AttributeKind =
     /// Attribute whose value is a string.
     | String = 0
 
@@ -27,7 +27,7 @@ type AttributeKind =
 
     /// Attribute whose value is a boolean.
     | Boolean = 3
-    
+
     /// Complex attribute kind, actual enumeration shall be in metamodel for given model, and attribute shall reference
     /// enumeration type for editor to be able to show available enumeration values.
     /// NOTE: Enums are not supported in v1, so AttributeKind value shall never be Enum.
@@ -35,14 +35,14 @@ type AttributeKind =
 
     /// Complex attribute kind, reference to another node in the same (or some other) model. Attribute shall reference
     /// target node in tis case. Example of reference types usage is UML class diagram, where field of a class
-    /// can be an object of another class defined on the same diagram. Note that in UML reference attributes and 
+    /// can be an object of another class defined on the same diagram. Note that in UML reference attributes and
     /// associations are the same thing from the point of view of abstract syntax (and our Core Metametamodel does not
-    /// have a notion of attribute for that reason, they are modelled as associations). But concrete syntax (and, 
+    /// have a notion of attribute for that reason, they are modelled as associations). But concrete syntax (and,
     /// consequently, editors) shall distinquish these two cases.
     /// NOTE: Reference types are not supported in v1, so AttributeKind value shall never be Reference.
     | Reference = 5
 
-/// "Metatype" of the element, i.e. type of the type. For example, edge can have type "Generalization", which is an 
+/// "Metatype" of the element, i.e. type of the type. For example, edge can have type "Generalization", which is an
 /// instance of "Edge". This information can be obtained by looking up metamodel, but editors need it readily available
 /// to know what to do with the element.
 type Metatype =
@@ -60,15 +60,20 @@ type IAttribute =
 
         /// Kind (or a metatype) of the attribute --- one of elementary types, reference type or enum type.
         abstract Kind: AttributeKind with get
-        
+
+        /// Shall this attribute pass on to instances or is it defined for a class only and is not available for
+        /// instances (much like static fields in a class). True if instances receive a copy of this attribute on
+        /// instantiation, false if instantiation skips this attribute.
+        abstract IsInstantiable: bool with get
+
         /// Reference to a type of the attribute if it is complex attribute, null if this is elementary type attribute.
         /// NOTE: Complex attribute types are not supported in v1, so it is always null.
-        /// Note that even in v1 Infrastructure Metamodel may contain elements for elementary types, in such case 
+        /// Note that even in v1 Infrastructure Metamodel may contain elements for elementary types, in such case
         /// this property shall return corresponding element.
         abstract Type: IElement with get
 
         /// String representation of a value of an attribute if it is an attribute of basic type.
-        // TODO: Actually we need a whole hierarchy of attribute classes.
+        // NOTE: Actually we need a whole hierarchy of attribute classes.
         abstract StringValue: string with get, set
 
         /// Holds a reference to an element which is a value of this attribute if this attribute has complex type.
@@ -80,7 +85,6 @@ type IAttribute =
 and [<AllowNullLiteral>] IElement =
     interface
         /// Name of an element, to be displayed on a scene and in various menus.
-        /// TODO: actually, not needed. Nodes can have no name and names can be modelled as attributes.
         abstract Name: string with get, set
 
         /// Returns type of the element.
@@ -99,11 +103,11 @@ and [<AllowNullLiteral>] IElement =
         /// but nodes may become edges (for example, node "Edge" becomes edge after instantiation).
         abstract InstanceMetatype: Metatype with get
 
-        /// A string containing information about how to draw this element. May be XML document or some other string 
-        // that provides required info. It can be editor-specific, like XAML document for WPF-based editor, that will 
-        /// not be useful in WinForms editor. Also it can have different formats and different meaning for nodes and 
+        /// A string containing information about how to draw this element. May be XML document or some other string
+        // that provides required info. It can be editor-specific, like XAML document for WPF-based editor, that will
+        /// not be useful in WinForms editor. Also it can have different formats and different meaning for nodes and
         /// edges.
-        /// TODO: shapes are actually more complex structures than strings, and some uniform format for shape 
+        /// TODO: shapes are actually more complex structures than strings, and some uniform format for shape
         /// representation is needed. Can be postponed after v1.
         abstract Shape: string with get
     end
@@ -114,10 +118,10 @@ type INode =
         inherit IElement
     end
 
-/// Edge --- an edge in a model. Note that here it can connect not only nodes, but edges too. It is needed to model 
+/// Edge --- an edge in a model. Note that here it can connect not only nodes, but edges too. It is needed to model
 /// relations between edges (like "instance of" relation between association on a class diagram and link on object
 /// diagram).
-type IEdge = 
+type IEdge =
     interface
         inherit IElement
 
@@ -160,8 +164,8 @@ type IModel =
 /// Repository is a collection of models.
 type IRepo =
     interface
-        /// A list of models in this repository. Shall always contain at least Core Metametamodel, because model 
-        /// semantics are defined through its elements and all other elements of all other models shall be the 
+        /// A list of models in this repository. Shall always contain at least Core Metametamodel, because model
+        /// semantics are defined through its elements and all other elements of all other models shall be the
         /// instances (possibly indirect) of some elements of Core Metametamodel.
         abstract Models: IModel seq with get
 

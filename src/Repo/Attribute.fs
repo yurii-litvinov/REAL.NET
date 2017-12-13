@@ -30,7 +30,7 @@ type AttributeRepository() =
             let newAttribute = Attribute(attributeNode)
             attributes.Add(attributeNode, newAttribute)
             newAttribute :> IAttribute
-    
+
     member this.DeleteAttribute (node: DataLayer.INode) =
         if attributes.ContainsKey node then
             attributes.Remove(node) |> ignore
@@ -38,7 +38,7 @@ type AttributeRepository() =
 /// Implements attribute wrapper.
 and Attribute(attributeNode: DataLayer.INode) =
     interface IAttribute with
-        member this.Kind = 
+        member this.Kind =
             let kindNode = Element.attribute attributeNode "kind"
             match Node.name kindNode with
             | "AttributeKind.String" -> AttributeKind.String
@@ -50,15 +50,17 @@ and Attribute(attributeNode: DataLayer.INode) =
         member this.Name = attributeNode.Name
 
         member this.ReferenceValue
-            with get (): IElement = 
+            with get (): IElement =
                 null
-            and set (v: IElement): unit = 
+            and set (v: IElement): unit =
                 ()
 
         member this.StringValue
-            with get (): string = 
+            with get (): string =
                 Node.name <| Element.attribute attributeNode "stringValue"
-            and set (v: string): unit = 
+            and set (v: string): unit =
                 (Element.attribute attributeNode "stringValue").Name <- v
 
         member this.Type = null
+
+        member this.IsInstantiable = Element.attributeValue attributeNode "isInstantiable" = "true"
