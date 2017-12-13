@@ -36,7 +36,7 @@
             </Grid.RowDefinitions>
 
             <Border Grid.Row="2">
-                <controls:toolbar></controls:toolbar>
+            <!--there is supposed to be toolbar-->               
             </Border> 
             <!-- Area -->
             <Border Grid.Row="1" BorderThickness="1"  Margin="2">

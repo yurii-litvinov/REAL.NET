@@ -96,6 +96,7 @@
     <Compile Include="Graph.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="Models\BoolToColorConverter.cs" />
+    <Compile Include="Models\Console\AppConsole.cs" />
     <Compile Include="Models\Console\IConsole.cs" />
     <Compile Include="Models\ControlFactory\ControlFactoryCreator.cs" />
     <Compile Include="Models\ControlFactory\IControlFactory.cs" />
@@ -283,7 +284,9 @@
       <Paket>True</Paket>
     </Analyzer>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">
       <ItemGroup>
