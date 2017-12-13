@@ -35,22 +35,19 @@
                 <RowDefinition Height="Auto" MinHeight="50"/>
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="2">
-            <!--there is supposed to be toolbar-->               
-            </Border> 
             <!-- Area -->
-            <Border Grid.Row="1" BorderThickness="1"  Margin="2">
+            <Border Grid.Row="0" BorderThickness="1"  Margin="2">
                 <controls1:ZoomControl x:Name="g_zoomctrl" Margin="1,1,-1,-1">
                     <wpf:GraphAreaExample x:Name="g_Area" />
                 </controls1:ZoomControl>
             </Border>
 
             <!-- GridSplitter for console -->
-            <GridSplitter Grid.Row ="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Aqua" Height="5"/>
+            <GridSplitter Grid.Row ="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Aqua" Height="5"/>
             
             <!-- Console -->
             <!-- Need to be in different files, may be -->
-            <Grid Grid.Row="3">
+            <Grid Grid.Row="2">
                 <TabControl TabStripPlacement="Bottom">
                     <TabItem Header="Messages">
                         <ScrollViewer>
