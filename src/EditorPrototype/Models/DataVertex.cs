@@ -136,38 +136,13 @@
                 this.type = type;
             }
 
-            public string Name
-            {
-                get
-                {
-                    return this.name;
-                }
+            public string Name { get; set; }
 
-                set
-                {
-                    this.name = value;
-                }
-            }
-
-            public string Type
-            {
-                get
-                {
-                    return this.type;
-                }
-
-                set
-                {
-                    this.type = value;
-                }
-            }
+            public string Type { get; set; }
 
             public string Value
             {
-                get
-                {
-                    return this.value;
-                }
+                get => this.value;
 
                 set
                 {
