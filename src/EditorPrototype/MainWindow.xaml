@@ -46,11 +46,11 @@
                 <ListBox x:Name="elementsListBox" Grid.Row="3" HorizontalAlignment="Stretch" Margin="0,20,0,0"/>
                 <Label x:Name="selectedEntityLabel" Grid.Row="4" Content="Selected entity:" HorizontalAlignment="Stretch" />
 
-                <DataGrid x:Name="attributesView" Grid.Row="5" IsReadOnly="False" ItemsSource="{Binding Attributes}" AutoGenerateColumns="False">
+                <DataGrid x:Name="attributesView" Grid.Row="5" ItemsSource="{Binding Attributes}" AutoGenerateColumns="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
-                        <DataGridTextColumn Header="Type" Binding="{Binding Type}"/>
-                        <DataGridTextColumn Header="Value" Binding="{Binding Value}"/>
+                        <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Name}"/>
+                        <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Type}"/>
+                        <DataGridTextColumn Header="Value" IsReadOnly="False" Binding="{Binding Value}"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

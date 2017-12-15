@@ -120,25 +120,19 @@
 
         public class Attribute
         {
-            private string name;
-            private string type;
             private string value;
             private Repo.IAttribute attribute;
 
-            public Attribute()
+            public Attribute(IAttribute attribute, string name, string type)
             {
+                this.attribute = attribute;
+                this.Name = name;
+                this.Type = type;
             }
 
-            public Attribute(IAttribute x, string name, string type)
-            {
-                this.attribute = x;
-                this.name = name;
-                this.type = type;
-            }
+            public string Name { get; }
 
-            public string Name { get; set; }
-
-            public string Type { get; set; }
+            public string Type { get; }
 
             public string Value
             {
