@@ -180,8 +180,7 @@ namespace EditorPrototype
                 RoutedEventHandler createNode = (sender, args) => this.PaletteButton_Checked(type);
                 RoutedEventHandler createEdge = (sender, args) => { };
                 button.Click += (sender, args) => this.currentElement = type;
-                button.PreviewMouseMove += (sender, args) => this.currentElement = type;
-                button.PreviewMouseMove += PaletteButtonMove;
+                
                 if (type.InstanceMetatype == Repo.Metatype.Edge)
                 {
                     this.g_Area.VertexSelected += (sender, args) => button.IsChecked = false;
@@ -189,6 +188,8 @@ namespace EditorPrototype
                 else
                 {
                     this.g_zoomctrl.MouseDown += (sender, args) => button.IsChecked = false;
+                    button.PreviewMouseMove += (sender, args) => this.currentElement = type;
+                    button.PreviewMouseMove += PaletteButtonMove;
                 }
 
                 // TODO: Bind it to XAML, do not do GUI work in C#.
