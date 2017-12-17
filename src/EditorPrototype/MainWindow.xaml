@@ -36,7 +36,7 @@
 
             <!-- Area -->
             <Border Grid.Row="0" BorderThickness="1"  Margin="2">
-                <controls1:ZoomControl x:Name="g_zoomctrl" Margin="1,1,-1,-1">
+                <controls1:ZoomControl x:Name="g_zoomctrl" AllowDrop="True" Margin="1,1,-1,-1">
                     <wpf:GraphAreaExample AllowDrop="True" x:Name="g_Area" />
                 </controls1:ZoomControl>
             </Border>

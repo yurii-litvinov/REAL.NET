@@ -108,12 +108,6 @@ namespace EditorPrototype
             }
         }
 
-        private void ElementInPaletteGridSelectionAction(object sender, EventArgs args)
-        {
-            var el = (Repo.IElement)sender;
-            this.currentElement = el;
-        }
-
         private void OnConsoleMessagesHaveBeenUpdated(object sender, EventArgs args)
         {
             string allMessages = "";
@@ -184,8 +178,7 @@ namespace EditorPrototype
                 {
                     this.currentElement = type;
                 };
-                button.Click += PaletteButtonClicked;
-                button.MouseMove += PaletteButtonMove;
+                button.PreviewMouseMove += PaletteButtonMove;
                 if (type.InstanceMetatype == Repo.Metatype.Edge)
                 {
                     this.g_Area.VertexSelected += (sender, args) => button.IsChecked = false;
@@ -205,15 +198,11 @@ namespace EditorPrototype
         private void PaletteButtonMove(object sender, MouseEventArgs args)
         {
             ToggleButton button = (ToggleButton)sender;
-            if (button != null)
+
+            if (button != null && button.IsPressed)
             {
                 DragDrop.DoDragDrop(button, button, DragDropEffects.Copy);
             }
-        }
-
-        private void PaletteButtonClicked(object sender, EventArgs e)
-        {
-            
         }
 
         private void PaletteButton_Checked(Repo.IElement element)
