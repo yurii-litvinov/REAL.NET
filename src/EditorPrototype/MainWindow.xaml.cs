@@ -86,6 +86,9 @@ namespace EditorPrototype
             this.graph.InitModel(modelName);
             this.InitConsole();
             this.InitAndLaunchPlugins();
+
+            // Implenet drop.
+            this.g_zoomctrl.Drop += ZoomControlDrop;
         }
 
         private void InitConsole()
@@ -174,10 +177,7 @@ namespace EditorPrototype
 
                 RoutedEventHandler createNode = (sender, args) => this.PaletteButton_Checked(type);
                 RoutedEventHandler createEdge = (sender, args) => { };
-                button.Click += (sender, args) =>
-                {
-                    this.currentElement = type;
-                };
+                button.Click += (sender, args) => this.currentElement = type;
                 button.PreviewMouseMove += PaletteButtonMove;
                 if (type.InstanceMetatype == Repo.Metatype.Edge)
                 {
@@ -202,6 +202,18 @@ namespace EditorPrototype
             if (button != null && button.IsPressed)
             {
                 DragDrop.DoDragDrop(button, button, DragDropEffects.Copy);
+            }
+        }
+
+        private void ZoomControlDrop(object sender, DragEventArgs e)
+        {
+            var position = this.g_zoomctrl.TranslatePoint(e.GetPosition(this.g_zoomctrl), this.g_Area);
+            
+            if (this.currentElement != null && this.currentElement.InstanceMetatype == Repo.Metatype.Node)
+            {
+                this.pos = position;
+                this.CreateNewNode(this.currentElement, currentElement.Name);
+                this.currentElement = null;
             }
         }
 
