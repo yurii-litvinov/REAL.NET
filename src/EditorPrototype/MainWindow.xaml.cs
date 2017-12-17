@@ -81,7 +81,8 @@ namespace EditorPrototype
             var modelName = "RobotsTestModel";
 
             this.g_zoomctrl.MouseDown += (object sender, MouseButtonEventArgs e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
-
+            this.g_zoomctrl.Drop += (object sender, MouseButtonEventArgs e) =>
+            
             this.InitPalette(modelName);
             this.graph.InitModel(modelName);
             this.InitConsole();
