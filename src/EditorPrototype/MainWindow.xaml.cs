@@ -57,7 +57,6 @@ namespace EditorPrototype
             this.g_Area.EdgeSelected += this.EdgeSelectedAction;
             this.g_zoomctrl.Click += this.ClearSelection;
             this.elementsListBox.MouseDoubleClick += this.ElementInBoxSelectedAction;
-            // this.paletteGrid.MouseDown += this.ElementInPaletteGridSelectionAction;
 
             ZoomControl.SetViewFinderVisibility(this.g_zoomctrl, Visibility.Visible);
             this.g_zoomctrl.Loaded += (sender, args) =>
@@ -81,15 +80,12 @@ namespace EditorPrototype
             var modelName = "RobotsTestModel";
 
             this.g_zoomctrl.MouseDown += (object sender, MouseButtonEventArgs e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
-            this.g_zoomctrl.Drop += (object sender, MouseButtonEventArgs e) =>
-            
+            this.g_zoomctrl.Drop += (object sender, DragEventArgs e) => this.ZoomControlDrop(sender, e, modelName);
+
             this.InitPalette(modelName);
             this.graph.InitModel(modelName);
             this.InitConsole();
             this.InitAndLaunchPlugins();
-
-            // Implenet drop.
-            this.g_zoomctrl.Drop += (object sender, DragEventArgs e) => this.ZoomControlDrop(sender, e, modelName);
         }
 
         private void InitConsole()
@@ -106,6 +102,7 @@ namespace EditorPrototype
             var folder = "../../../plugins/SamplesPlugin/bin";
             var dirs = new List<string>(System.IO.Directory.GetDirectories(folder));
             var config = new PluginConfig(console);
+
             foreach (var dir in dirs)
             {
                 libs.LaunchPlugins(dir, config);
@@ -115,20 +112,24 @@ namespace EditorPrototype
         private void OnConsoleMessagesHaveBeenUpdated(object sender, EventArgs args)
         {
             string allMessages = "";
+
             foreach (var message in console.Messages)
             {
                 allMessages += message + "\n";
             }
+
             Messages.Text = allMessages;
         }
 
         private void OnConsoleErrorsHaveBeenUpdated(object sender, EventArgs args)
         {
             string allErrors = "";
+
             foreach(var error in console.Errors)
             {
                 allErrors += error + "\n";
             }
+
             Errors.Text = allErrors;
         }
 
