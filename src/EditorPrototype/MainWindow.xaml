@@ -37,7 +37,7 @@
             <!-- Area -->
             <Border Grid.Row="0" BorderThickness="1"  Margin="2">
                 <controls1:ZoomControl x:Name="g_zoomctrl" Margin="1,1,-1,-1">
-                    <wpf:GraphAreaExample x:Name="g_Area" />
+                    <wpf:GraphAreaExample AllowDrop="True" x:Name="g_Area" />
                 </controls1:ZoomControl>
             </Border>
 
@@ -80,8 +80,7 @@
                     <RowDefinition Height="Auto" MinHeight="50"/>
                 </Grid.RowDefinitions>
 
-                <Grid x:Name="paletteGrid" Grid.Row="1" Grid.Column="1"/>
-
+                <Grid x:Name="paletteGrid" Grid.Row="1" Grid.Column="1"></Grid>
                 <Label x:Name="elementsListLabel" Grid.Row="2" Content="Elements:" HorizontalAlignment="Stretch"/>
                 <ListBox x:Name="elementsListBox" Grid.Row="3"/>
                 <Label x:Name="selectedEntityLabel" Grid.Row="4" Content="Selected entity:" HorizontalAlignment="Stretch" />

@@ -57,6 +57,7 @@ namespace EditorPrototype
             this.g_Area.EdgeSelected += this.EdgeSelectedAction;
             this.g_zoomctrl.Click += this.ClearSelection;
             this.elementsListBox.MouseDoubleClick += this.ElementInBoxSelectedAction;
+            // this.paletteGrid.MouseDown += this.ElementInPaletteGridSelectionAction;
 
             ZoomControl.SetViewFinderVisibility(this.g_zoomctrl, Visibility.Visible);
             this.g_zoomctrl.Loaded += (sender, args) =>
@@ -105,6 +106,12 @@ namespace EditorPrototype
             {
                 libs.LaunchPlugins(dir, config);
             }
+        }
+
+        private void ElementInPaletteGridSelectionAction(object sender, EventArgs args)
+        {
+            var el = (Repo.IElement)sender;
+            this.currentElement = el;
         }
 
         private void OnConsoleMessagesHaveBeenUpdated(object sender, EventArgs args)
@@ -173,7 +180,12 @@ namespace EditorPrototype
 
                 RoutedEventHandler createNode = (sender, args) => this.PaletteButton_Checked(type);
                 RoutedEventHandler createEdge = (sender, args) => { };
-                button.Click += (sender, args) => this.currentElement = type;
+                button.Click += (sender, args) =>
+                {
+                    this.currentElement = type;
+                };
+                button.Click += PaletteButtonClicked;
+                button.MouseMove += PaletteButtonMove;
                 if (type.InstanceMetatype == Repo.Metatype.Edge)
                 {
                     this.g_Area.VertexSelected += (sender, args) => button.IsChecked = false;
@@ -188,6 +200,20 @@ namespace EditorPrototype
                 this.paletteGrid.Children.Add(button);
                 Grid.SetRow(button, this.paletteGrid.RowDefinitions.Count - 1);
             }
+        }
+
+        private void PaletteButtonMove(object sender, MouseEventArgs args)
+        {
+            ToggleButton button = (ToggleButton)sender;
+            if (button != null)
+            {
+                DragDrop.DoDragDrop(button, button, DragDropEffects.Copy);
+            }
+        }
+
+        private void PaletteButtonClicked(object sender, EventArgs e)
+        {
+            
         }
 
         private void PaletteButton_Checked(Repo.IElement element)
