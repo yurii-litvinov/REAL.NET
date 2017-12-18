@@ -83,7 +83,7 @@ namespace EditorPrototype
             var modelName = "RobotsTestModel";
 
             this.g_zoomctrl.MouseDown += (object sender, MouseButtonEventArgs e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
-            this.g_zoomctrl.Drop += (object sender, DragEventArgs e) => this.ZoomControlDrop(sender, e, modelName);
+            this.g_zoomctrl.Drop += (object sender, DragEventArgs e) => this.ZoomControl_Drop(sender, e, modelName);
 
             this.InitPalette(modelName);
             this.graph.InitModel(modelName);
@@ -192,7 +192,7 @@ namespace EditorPrototype
                 {
                     this.g_zoomctrl.MouseDown += (sender, args) => button.IsChecked = false;
                     button.PreviewMouseMove += (sender, args) => this.currentElement = type;
-                    button.PreviewMouseMove += PaletteButtonMove;
+                    button.PreviewMouseMove += PaletteButton_MouseMove;
                     button.GiveFeedback += DragSource_GiveFeedback;
                 }
 
@@ -203,13 +203,18 @@ namespace EditorPrototype
             }
         }
 
+        // Code for drag-n-drop.
+        // Helps dragging button image.
+        private Window dragdropWindow = new Window();
+
         // Need for dragging.
-        private void PaletteButtonMove(object sender, MouseEventArgs args)
+        private void PaletteButton_MouseMove(object sender, MouseEventArgs args)
         {
             var button = sender as ToggleButton;
 
             if (button.IsPressed)
             {
+                // Setting shadow for button.
                 button.Effect = new DropShadowEffect
                 {
                     Color = new Color { A = 50, R = 0, G = 0, B = 0 },
@@ -222,49 +227,14 @@ namespace EditorPrototype
                 {
                     CreateDragDropWindow(button);
                     DragDrop.DoDragDrop(button, button, DragDropEffects.Copy);
-                    if (this._dragdropWindow != null)
+
+                    if (this.dragdropWindow != null)
                     {
-                        this._dragdropWindow.Close();
-                        this._dragdropWindow = null;
+                        this.dragdropWindow.Close();
+                        this.dragdropWindow = null;
                     }
                 }
-            }
-
-            
-        }
-
-        private Window _dragdropWindow = new Window();
-
-        private void CreateDragDropWindow(Visual dragElement)
-        {
-            this._dragdropWindow = new Window();
-            _dragdropWindow.WindowStyle = WindowStyle.None;
-            _dragdropWindow.AllowsTransparency = true;
-            _dragdropWindow.AllowDrop = false;
-            _dragdropWindow.Background = null;
-            _dragdropWindow.IsHitTestVisible = false;
-            _dragdropWindow.SizeToContent = SizeToContent.WidthAndHeight;
-            _dragdropWindow.Topmost = true;
-            _dragdropWindow.ShowInTaskbar = false;
-
-            Rectangle r = new Rectangle
-            {
-                Width = ((FrameworkElement)dragElement).ActualWidth,
-                Height = ((FrameworkElement)dragElement).ActualHeight,
-                Fill = new VisualBrush(dragElement)
-            };
-            _dragdropWindow.Content = r;
-
-
-            Win32Point w32Mouse = new Win32Point();
-            GetCursorPos(ref w32Mouse);
-
-            _dragdropWindow.Left = w32Mouse.X;
-            /_dragdropWindow.Top = w32Mouse.Y;
-
-            //_dragdropWindow.Left = w32Mouse.X;
-            //_dragdropWindow.Top = w32Mouse.Y;
-            _dragdropWindow.Show();
+            }    
         }
 
         [DllImport("user32.dll")]
@@ -278,37 +248,53 @@ namespace EditorPrototype
             public Int32 Y;
         };
 
-        // Need for dropping.
-        private void ZoomControlDrop(object sender, DragEventArgs e, string modelName)
+        // Need for creating an image on cursor.
+        private void CreateDragDropWindow(Visual dragElement)
         {
-            //var position = this.g_zoomctrl.TranslatePoint(e.GetPosition(this.g_zoomctrl), this.g_Area);
+            this.dragdropWindow = new Window();
+            this.dragdropWindow.WindowStyle = WindowStyle.None;
+            this.dragdropWindow.AllowsTransparency = true;
+            this.dragdropWindow.AllowDrop = false;
+            this.dragdropWindow.Background = null;
+            this.dragdropWindow.IsHitTestVisible = false;
+            this.dragdropWindow.SizeToContent = SizeToContent.WidthAndHeight;
+            this.dragdropWindow.Topmost = true;
+            this.dragdropWindow.ShowInTaskbar = false;
 
-            //this.pos = position;
-            //this.CreateNewNode(this.currentElement, modelName);
-            //this.currentElement = null;
+            var r = new Rectangle
+            {
+                Width = ((FrameworkElement)dragElement).ActualWidth,
+                Height = ((FrameworkElement)dragElement).ActualHeight,
+                Fill = new VisualBrush(dragElement)
+            };
 
-            var droppedData = currentElement;
-            var target = this.g_zoomctrl;
+            this.dragdropWindow.Content = r;
 
-            var position = this.g_zoomctrl.TranslatePoint(e.GetPosition(this.g_zoomctrl), this.g_Area);
+            var w32Mouse = new Win32Point();
+            GetCursorPos(ref w32Mouse);
 
-            this.pos = position;
-            this.CreateNewNode(this.currentElement, modelName);
-            this.currentElement = null;
-
-
+            this.dragdropWindow.Left = w32Mouse.X;
+            this.dragdropWindow.Top = w32Mouse.Y;
+            this.dragdropWindow.Show();
         }
 
+        // Need for dropping.
+        private void ZoomControl_Drop(object sender, DragEventArgs e, string modelName)
+        { 
+            this.pos = this.g_zoomctrl.TranslatePoint(e.GetPosition(this.g_zoomctrl), this.g_Area);
+            this.CreateNewNode(this.currentElement, modelName);
+            this.currentElement = null;
+        }
 
         // Need for pre-defined cursor while dragging.
         private void DragSource_GiveFeedback(object sender, GiveFeedbackEventArgs e)
         {
-            // update the position of the visual feedback item
-            Win32Point w32Mouse = new Win32Point();
+            // Update the position of the visual feedback item.
+            var w32Mouse = new Win32Point();
             GetCursorPos(ref w32Mouse);
 
-            this._dragdropWindow.Left = w32Mouse.X;
-            this._dragdropWindow.Top = w32Mouse.Y;
+            this.dragdropWindow.Left = w32Mouse.X;
+            this.dragdropWindow.Top = w32Mouse.Y;
         }
 
         private void PaletteButton_Checked(Repo.IElement element)
