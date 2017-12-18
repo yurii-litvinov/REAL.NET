@@ -223,10 +223,12 @@ namespace EditorPrototype
                     Opacity = 0.75
                 };
 
+                var dragData = new DataObject("MyFormat",this.currentElement);
+
                 if (button != null && button.IsPressed)
                 {
                     CreateDragDropWindow(button);
-                    DragDrop.DoDragDrop(button, button, DragDropEffects.Copy);
+                    DragDrop.DoDragDrop(button, dragData, DragDropEffects.Copy);
 
                     if (this.dragdropWindow != null)
                     {
@@ -282,7 +284,7 @@ namespace EditorPrototype
         private void ZoomControl_Drop(object sender, DragEventArgs e, string modelName)
         { 
             this.pos = this.g_zoomctrl.TranslatePoint(e.GetPosition(this.g_zoomctrl), this.g_Area);
-            this.CreateNewNode(this.currentElement, modelName);
+            this.CreateNewNode((Repo.IElement)e.Data.GetData("MyFormat"), modelName);
             this.currentElement = null;
         }
 
