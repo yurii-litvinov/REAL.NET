@@ -94,8 +94,8 @@ namespace EditorPrototype
         {
             var factory = Models.ControlFactory.ControlFactoryCreator.CreateControlFactory();
             this.console = factory.CreateConsole();
-            this.console.NewMessage += new EventHandler<EventArgs>(this.OnConsoleMessagesHaveBeenUpdated);
-            this.console.NewError += new EventHandler<EventArgs>(this.OnConsoleErrorsHaveBeenUpdated);
+            this.console.NewMessage += this.OnConsoleMessagesHaveBeenUpdated;
+            this.console.NewError += this.OnConsoleErrorsHaveBeenUpdated;
         }
 
         private void InitAndLaunchPlugins()
@@ -103,8 +103,7 @@ namespace EditorPrototype
             var libs = new PluginLauncher();
             var folder = "../../../plugins/SamplesPlugin/bin";
             var dirs = new List<string>(System.IO.Directory.GetDirectories(folder));
-            var config = new PluginConfig(console);
-
+            var config = new PluginConfig(null, null, console, null);
             foreach (var dir in dirs)
             {
                 libs.LaunchPlugins(dir, config);
