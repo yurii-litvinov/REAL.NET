@@ -11,9 +11,6 @@ namespace EditorPrototype
     using System.Windows.Media;
     using System.Windows.Media.Effects;
     using System.Windows.Media.Imaging;
-    using System.Windows.Shapes;
-    using EditorPrototype.Models.InternalConsole;
-    using EditorPrototype.Models.PluginConfig;
     using GraphX.Controls;
     using GraphX.Controls.Models;
     using GraphX.PCL.Common.Enums;
