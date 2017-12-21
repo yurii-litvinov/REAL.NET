@@ -27,26 +27,31 @@
         <!-- Column = 0 -->
         <!-- Area and console -->
         <Grid Grid.Column="0">
-
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto" MinHeight="50"/>
             </Grid.RowDefinitions>
 
+            <!-- ToolBar -->
+            <ToolBar Grid.Row="0">
+                <ComboBox x:Name="modelsComboBox"/>
+            </ToolBar>
+
             <!-- Area -->
-            <Border Grid.Row="0" BorderThickness="1"  Margin="2">
-                <controls1:ZoomControl x:Name="g_zoomctrl" Margin="1,1,-1,-1">
+            <Border Grid.Row="1" Grid.RowSpan="3" BorderThickness="1">
+                <controls1:ZoomControl x:Name="g_zoomctrl" Margin="0, 0, 0, 54">
                     <wpf:GraphAreaExample x:Name="g_Area" />
                 </controls1:ZoomControl>
             </Border>
 
             <!-- GridSplitter for console -->
-            <GridSplitter Grid.Row ="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Aqua" Height="5"/>
+            <GridSplitter Grid.Row ="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Aqua" Height="5"/>
             
             <!-- Console -->
             <!-- Need to be in different files, may be -->
-            <Grid Grid.Row="2">
+            <Grid Grid.Row="3">
                 <TabControl TabStripPlacement="Bottom">
                     <TabItem Header="Messages">
                         <ScrollViewer>
@@ -72,28 +77,25 @@
         <DockPanel Grid.Column="2">
             <Grid x:Name="rightPanel">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="0"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto" MinHeight="70"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto" MinHeight="50"/>
                 </Grid.RowDefinitions>
+                <Grid x:Name="paletteGrid" Grid.Row="0" Grid.Column="1"/>
 
-                <Grid x:Name="paletteGrid" Grid.Row="1" Grid.Column="1"/>
+                <Label x:Name="elementsListLabel" Grid.Row="1" Content="Elements:" HorizontalAlignment="Stretch"/>
+                <ListBox x:Name="elementsListBox" Grid.Row="2" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="100" />
+                <Label x:Name="selectedEntityLabel" Grid.Row="3" Content="Selected entity:" HorizontalAlignment="Stretch" />
 
-                <Label x:Name="elementsListLabel" Grid.Row="2" Content="Elements:" HorizontalAlignment="Stretch"/>
-                <ListBox x:Name="elementsListBox" Grid.Row="3"/>
-                <Label x:Name="selectedEntityLabel" Grid.Row="4" Content="Selected entity:" HorizontalAlignment="Stretch" />
-
-                <DataGrid x:Name="attributesView" Grid.Row="5" IsReadOnly="False" ItemsSource="{Binding Attributes}" AutoGenerateColumns="False">
+                <DataGrid x:Name="attributesView" Grid.Row="4" IsReadOnly="False" ItemsSource="{Binding Attributes}" AutoGenerateColumns="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
                         <DataGridTextColumn Header="Type" Binding="{Binding Type}"/>
                         <DataGridTextColumn Header="Value" Binding="{Binding Value}"/>
                     </DataGrid.Columns>
                 </DataGrid>
-
             </Grid>
         </DockPanel>
 

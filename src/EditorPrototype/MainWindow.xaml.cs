@@ -58,13 +58,16 @@ namespace EditorPrototype
             this.g_zoomctrl.Click += this.ClearSelection;
             this.elementsListBox.MouseDoubleClick += this.ElementInBoxSelectedAction;
 
-            ZoomControl.SetViewFinderVisibility(this.g_zoomctrl, Visibility.Visible);
-            this.g_zoomctrl.Loaded += (sender, args) =>
-            {
-                (this.g_zoomctrl.ViewFinder.Parent as Grid).Children.Remove(this.g_zoomctrl.ViewFinder);
-                this.rightPanel.Children.Add(this.g_zoomctrl.ViewFinder);
-                Grid.SetRow(this.g_zoomctrl.ViewFinder, 0);
-            };
+            ZoomControl.SetViewFinderVisibility(this.g_zoomctrl, Visibility.Collapsed);
+
+            // Need for set ViewFinder to necessary area.
+            //this.g_zoomctrl.Loaded += (sender, args) =>
+            //{
+            //    (this.g_zoomctrl.ViewFinder.Parent as Grid).Children.Remove(this.g_zoomctrl.ViewFinder);
+            //    this.rightPanel.Children.Add(this.g_zoomctrl.ViewFinder);
+            //    Grid.SetRow(this.g_zoomctrl.ViewFinder, 0);
+            //};
+
             logic.DefaultLayoutAlgorithmParams =
                 logic.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.LinLog);
             logic.DefaultOverlapRemovalAlgorithm = OverlapRemovalAlgorithmTypeEnum.FSA;
@@ -85,6 +88,17 @@ namespace EditorPrototype
             this.graph.InitModel(modelName);
             this.InitConsole();
             this.InitAndLaunchPlugins();
+
+            var repo = Repo.RepoFactory.CreateRepo();
+            
+            foreach (var model in repo.Models)
+            {
+                this.modelsComboBox.Items.Add(model.Name);
+            }
+            this.modelsComboBox.SelectedIndex = 0;
+
+
+            
         }
 
         private void InitConsole()
