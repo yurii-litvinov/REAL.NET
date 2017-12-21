@@ -19,6 +19,7 @@ namespace EditorPrototype
     using PluginLibrary;
     using PluginLibrary.MainInterfaces;
     using QuickGraph;
+    using System.Windows.Shapes;
 
     /// <summary>
     /// Ëîãèêà âçàèìîäåéñòâèÿ äëÿ MainWindow.xaml
