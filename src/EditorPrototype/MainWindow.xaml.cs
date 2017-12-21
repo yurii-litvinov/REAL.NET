@@ -20,10 +20,11 @@ namespace EditorPrototype
     using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
     using GraphX.PCL.Logic.Models;
     using PluginLibrary;
+    using PluginLibrary.MainInterfaces;
     using QuickGraph;
 
     /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
+    /// Г‹Г®ГЈГЁГЄГ  ГўГ§Г ГЁГ¬Г®Г¤ГҐГ©Г±ГІГўГЁГї Г¤Г«Гї MainWindow.xaml
     /// </summary>
     internal partial class MainWindow : Window
     {
@@ -95,8 +96,8 @@ namespace EditorPrototype
         {
             var factory = Models.ControlFactory.ControlFactoryCreator.CreateControlFactory();
             this.console = factory.CreateConsole();
-            this.console.NewMessage += new EventHandler<EventArgs>(OnConsoleMessagesHaveBeenUpdated);
-            this.console.NewError += new EventHandler<EventArgs>(OnConsoleErrorsHaveBeenUpdated);
+            this.console.NewMessage += new EventHandler<EventArgs>(this.OnConsoleMessagesHaveBeenUpdated);
+            this.console.NewError += new EventHandler<EventArgs>(this.OnConsoleErrorsHaveBeenUpdated);
         }
 
         private void InitAndLaunchPlugins()

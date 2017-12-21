@@ -35,7 +35,8 @@
             }
         }
 
-        public void InitModel(string modelName) // peremestit'
+        // Should be replaced
+        public void InitModel(string modelName)
         {
             Repo.IModel model = this.model.ModelRepo.Model(modelName);
             if (model == null)

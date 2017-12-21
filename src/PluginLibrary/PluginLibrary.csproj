@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\PluginLibrary.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,9 +30,11 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\PluginLibrary.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoRelease|AnyCPU'">
     <OutputPath>bin\MonoRelease\</OutputPath>
+    <DocumentationFile>bin\MonoRelease\PluginLibrary.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -45,6 +48,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IPlugin.cs" />
+    <Compile Include="MainInterfaces\Console\IConsole.cs" />
+    <Compile Include="MainInterfaces\Palette\IPalette.cs" />
+    <Compile Include="MainInterfaces\PluginConfig\PluginConfig.cs" />
+    <Compile Include="MainInterfaces\Scene\IScene.cs" />
+    <Compile Include="MainInterfaces\Toolbar\IButton.cs" />
+    <Compile Include="MainInterfaces\Toolbar\ICommand.cs" />
+    <Compile Include="MainInterfaces\Toolbar\IMenu.cs" />
+    <Compile Include="MainInterfaces\Toolbar\IToolbar.cs" />
     <Compile Include="PluginLauncher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

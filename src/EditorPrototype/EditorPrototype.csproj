@@ -14,6 +14,8 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <CodeAnalysisRuleSet>EditorPrototype.ruleset</CodeAnalysisRuleSet>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -26,10 +28,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <CodeAnalysisRuleSet>EditorPrototype.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -90,33 +90,17 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controller.cs" />
-    <Compile Include="Controls\Toolbar.xaml.cs">
-      <DependentUpon>Toolbar.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Graph.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="Models\BoolToColorConverter.cs" />
     <Compile Include="Models\InternalConsole\AppConsole.cs" />
-    <Compile Include="Models\InternalConsole\IConsole.cs" />
     <Compile Include="Models\ControlFactory\ControlFactoryCreator.cs" />
     <Compile Include="Models\ControlFactory\IControlFactory.cs" />
     <Compile Include="Models\EdgeBlueprint.cs" />
     <Compile Include="Models\EditorObjectManager.cs" />
     <Compile Include="Models\ImageLoader.cs" />
-    <Compile Include="Models\Palette\IPalette.cs" />
-    <Compile Include="Models\PluginConfig\PluginConfig.cs" />
-    <Compile Include="Models\Scene\IScene.cs" />
-    <Compile Include="Models\Toolbar\IButton.cs" />
-    <Compile Include="Models\Toolbar\ICommand.cs" />
-    <Compile Include="Models\Toolbar\IMenu.cs" />
-    <Compile Include="Models\Toolbar\IToolbar.cs" />
-    <Compile Include="Models\Toolbar\Toolbar.cs" />
     <Compile Include="Models\ValueToImageConverter.cs" />
     <Compile Include="Constraints.cs" />
-    <Page Include="Controls\Toolbar.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -163,7 +147,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="EditorPrototype.ruleset" />
+    <None Include="EditorPrototype.ruleset">
+      <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
+    </None>
     <None Include="paket.references" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -195,7 +181,7 @@
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
       <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 and x64%29</ProductName>
+      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 и x64%29</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
@@ -219,6 +205,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Pictures\Vertex.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controls\" />
+    <Folder Include="Models\Palette\" />
+    <Folder Include="Models\Scene\" />
+    <Folder Include="Models\Toolbar\" />
   </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">

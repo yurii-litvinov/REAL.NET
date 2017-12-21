@@ -4,13 +4,14 @@ source https://nuget.org/api/v2
 
 nuget FSharp.Core redirects: force
 nuget GraphX
+nuget NSubstitute
 nuget QuickGraphPCL
 nuget Microsoft.Msagl 1.0.2
 nuget Microsoft.Msagl.Drawing 1.0.2
 nuget Microsoft.Msagl.GraphViewerGDI 1.0.2
 nuget YAXLib
 nuget StyleCop.Analyzers
-nuget NUnit
+nuget NUnit redirects: force
 nuget NUnit.Runners
 nuget FsUnit
 
