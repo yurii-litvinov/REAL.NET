@@ -28,6 +28,7 @@ namespace PluginLibrary
         /// <exception cref="DirectoryNotFoundException">This directory does not exist</exception>
         /// <exception cref="ArgumentException">Path is just spaces or null string</exception>
         /// <exception cref="PathTooLongException">Path is more than 260 digits</exception>
+        /// <exception cref="FileLoadException">Can't load some assemblies from this directory</exception>
         public void LaunchPlugins(string path, object config)
         {
             var files = Directory.GetFiles(path, "*Plugin*.dll");
@@ -43,7 +44,10 @@ namespace PluginLibrary
                     var assembly = Assembly.LoadFrom(file);
                     assemblies.Add(assembly);
                 }
-                catch (FileLoadException){}
+                catch (FileLoadException e)
+                {
+                    throw new FileLoadException("Cannot load assembly in this directory " + e.StackTrace);
+                }
             }
             foreach (var assembly in assemblies)
             {

@@ -1,10 +1,7 @@
-﻿using EditorPrototype.Models.InternalConsole;
-using EditorPrototype.Models.Palette;
-using EditorPrototype.Models.Scene;
-using EditorPrototype.Models.Toolbar;
-
-namespace EditorPrototype.Models.ControlFactory
+﻿namespace EditorPrototype.Models.ControlFactory
 {
+    using PluginLibrary.MainInterfaces;
+
     public interface IControlFactory
     {
         IToolbar CreateToolbar();

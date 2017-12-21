@@ -16,21 +16,9 @@
 
         public event EventHandler<EdgeEventArgs> NewEdgeInRepo;
 
-        public string ModelName
-        {
-            get
-            {
-                return this.modelName;
-            }
-        }
+        public string ModelName => this.modelName;
 
-        public Repo.IRepo ModelRepo
-        {
-            get
-            {
-                return this.modelRepo;
-            }
-        }
+        public Repo.IRepo ModelRepo => this.modelRepo;
 
         public void NewNode(Repo.IElement element, string modelName)
         {
@@ -46,17 +34,21 @@
 
         private void RaiseNewVertexInRepo(Repo.INode node)
         {
-            VertexEventArgs args = new VertexEventArgs();
-            args.Node = node;
+            VertexEventArgs args = new VertexEventArgs
+            {
+                Node = node
+            };
             this.NewVertexInRepo?.Invoke(this, args);
         }
 
         private void RaiseNewEdgeInRepo(Repo.IEdge edge, DataVertex prevVer, DataVertex ctrlVer)
         {
-            EdgeEventArgs args = new EdgeEventArgs();
-            args.Edge = edge;
-            args.PrevVer = prevVer;
-            args.CtrlVer = ctrlVer;
+            EdgeEventArgs args = new EdgeEventArgs
+            {
+                Edge = edge,
+                PrevVer = prevVer,
+                CtrlVer = ctrlVer
+            };
             this.NewEdgeInRepo?.Invoke(this, args);
         }
 
@@ -66,15 +58,9 @@
 
             public Repo.INode Node
             {
-                get
-                {
-                    return this.node;
-                }
+                get => this.node;
 
-                set
-                {
-                    this.node = value;
-                }
+                set => this.node = value;
             }
         }
 
@@ -86,41 +72,23 @@
 
             public Repo.IEdge Edge
             {
-                get
-                {
-                    return this.edge;
-                }
+                get => this.edge;
 
-                set
-                {
-                    this.edge = value;
-                }
+                set => this.edge = value;
             }
 
             public DataVertex PrevVer
             {
-                get
-                {
-                    return this.prevVer;
-                }
+                get => this.prevVer;
 
-                set
-                {
-                    this.prevVer = value;
-                }
+                set => this.prevVer = value;
             }
 
             public DataVertex CtrlVer
             {
-                get
-                {
-                    return this.ctrlVer;
-                }
+                get => this.ctrlVer;
 
-                set
-                {
-                    this.ctrlVer = value;
-                }
+                set => this.ctrlVer = value;
             }
         }
     }

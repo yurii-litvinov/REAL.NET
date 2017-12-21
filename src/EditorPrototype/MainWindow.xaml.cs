@@ -9,14 +9,13 @@ namespace EditorPrototype
     using System.Windows.Input;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
-    using EditorPrototype.Models.InternalConsole;
-    using EditorPrototype.Models.PluginConfig;
     using GraphX.Controls;
     using GraphX.Controls.Models;
     using GraphX.PCL.Common.Enums;
     using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
     using GraphX.PCL.Logic.Models;
     using PluginLibrary;
+    using PluginLibrary.MainInterfaces;
     using QuickGraph;
 
     /// <summary>
@@ -91,40 +90,32 @@ namespace EditorPrototype
         {
             var factory = Models.ControlFactory.ControlFactoryCreator.CreateControlFactory();
             this.console = factory.CreateConsole();
-            this.console.NewMessage += new EventHandler<EventArgs>(OnConsoleMessagesHaveBeenUpdated);
-            this.console.NewError += new EventHandler<EventArgs>(OnConsoleErrorsHaveBeenUpdated);
+            this.console.NewMessage += new EventHandler<EventArgs>(this.OnConsoleMessagesHaveBeenUpdated);
+            this.console.NewError += new EventHandler<EventArgs>(this.OnConsoleErrorsHaveBeenUpdated);
         }
 
         private void InitAndLaunchPlugins()
         {
-            var libs = new PluginLauncher();
-            var folder = "../../../plugins/SamplesPlugin/bin";
-            var dirs = new List<string>(System.IO.Directory.GetDirectories(folder));
-            var config = new PluginConfig(console);
-            foreach (var dir in dirs)
-            {
-                libs.LaunchPlugins(dir, config);
-            }
         }
 
         private void OnConsoleMessagesHaveBeenUpdated(object sender, EventArgs args)
         {
-            string allMessages = "";
-            foreach (var message in console.Messages)
+            string allMessages = string.Empty;
+            foreach (var message in this.console.Messages)
             {
                 allMessages += message + "\n";
             }
-            Messages.Text = allMessages;
+            this.Messages.Text = allMessages;
         }
 
         private void OnConsoleErrorsHaveBeenUpdated(object sender, EventArgs args)
         {
-            string allErrors = "";
-            foreach(var error in console.Errors)
+            string allErrors = string.Empty;
+            foreach (var error in this.console.Errors)
             {
                 allErrors += error + "\n";
             }
-            Errors.Text = allErrors;
+            this.Errors.Text = allErrors;
         }
 
         private void ClearSelection(object sender, RoutedEventArgs e)
