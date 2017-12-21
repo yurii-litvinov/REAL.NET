@@ -223,7 +223,7 @@ namespace EditorPrototype
                     Opacity = 0.75
                 };
 
-                var dragData = new DataObject("MyFormat",this.currentElement);
+                var dragData = new DataObject("MyFormat", this.currentElement);
 
                 if (button != null && button.IsPressed)
                 {
@@ -263,14 +263,14 @@ namespace EditorPrototype
             this.dragdropWindow.Topmost = true;
             this.dragdropWindow.ShowInTaskbar = false;
 
-            var r = new Rectangle
+            var rectangle = new Rectangle
             {
                 Width = ((FrameworkElement)dragElement).ActualWidth,
                 Height = ((FrameworkElement)dragElement).ActualHeight,
                 Fill = new VisualBrush(dragElement)
             };
 
-            this.dragdropWindow.Content = r;
+            this.dragdropWindow.Content = rectangle;
 
             var w32Mouse = new Win32Point();
             GetCursorPos(ref w32Mouse);
