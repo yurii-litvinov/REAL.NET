@@ -82,10 +82,10 @@ namespace EditorPrototype
 
             InitModelComboBox();
 
-            this.g_zoomctrl.MouseDown += (object sender, MouseButtonEventArgs e) => this.ZoomCtrl_MouseDown(sender, e, model.ModelName);
+            this.g_zoomctrl.MouseDown += (object sender, MouseButtonEventArgs e) => this.ZoomCtrl_MouseDown(sender, e, this.model.ModelName);
 
-            this.InitPalette(model.ModelName);
-            this.graph.InitModel(model.ModelName);
+            this.InitPalette(this.model.ModelName);
+            this.graph.InitModel(this.model.ModelName);
             this.InitConsole();
             this.InitAndLaunchPlugins();
         }
@@ -100,8 +100,18 @@ namespace EditorPrototype
             }
 
             this.modelsComboBox.SelectedIndex = 0;
-            var modelName = this.model.ModelRepo.Model(this.modelsComboBox.SelectedItem.ToString()).Name;
+            this.model.ModelName = this.modelsComboBox.SelectedItem.ToString();
 
+
+            this.modelsComboBox.SelectionChanged += (sender, args) =>
+            {
+                this.paletteGrid.Children.Clear();
+                this.graph.DataGraph.Clear();
+                this.model.ModelName = this.modelsComboBox.SelectedItem.ToString();
+                this.InitPalette(this.model.ModelName);
+                this.graph.InitModel(this.model.ModelName);
+            };
+            //this.modelsComboBox.PreviewMouseDown += (sender, args) => this.model.ModelNam
         }
 
         private void InitConsole()
