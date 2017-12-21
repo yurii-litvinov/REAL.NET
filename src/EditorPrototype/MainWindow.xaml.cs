@@ -80,25 +80,28 @@ namespace EditorPrototype
 
             this.Closed += this.CloseChildrenWindows;
 
-            var modelName = "RobotsTestModel";
+            InitModelComboBox();
 
-            this.g_zoomctrl.MouseDown += (object sender, MouseButtonEventArgs e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
+            this.g_zoomctrl.MouseDown += (object sender, MouseButtonEventArgs e) => this.ZoomCtrl_MouseDown(sender, e, model.ModelName);
 
-            this.InitPalette(modelName);
-            this.graph.InitModel(modelName);
+            this.InitPalette(model.ModelName);
+            this.graph.InitModel(model.ModelName);
             this.InitConsole();
             this.InitAndLaunchPlugins();
+        }
 
-            var repo = Repo.RepoFactory.CreateRepo();
-            
+        private void InitModelComboBox()
+        {
+            var repo = this.model.ModelRepo;
+
             foreach (var model in repo.Models)
             {
                 this.modelsComboBox.Items.Add(model.Name);
             }
+
             this.modelsComboBox.SelectedIndex = 0;
+            var modelName = this.model.ModelRepo.Model(this.modelsComboBox.SelectedItem.ToString()).Name;
 
-
-            
         }
 
         private void InitConsole()

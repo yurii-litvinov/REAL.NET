@@ -22,6 +22,11 @@
             {
                 return this.modelName;
             }
+
+            set
+            {
+                this.modelName = value;
+            }
         }
 
         public Repo.IRepo ModelRepo
