@@ -107,6 +107,7 @@ namespace EditorPrototype
             {
                 this.paletteGrid.Children.Clear();
                 this.graph.DataGraph.Clear();
+                this.elementsListBox.Items.Clear();
                 this.model.ModelName = this.modelsComboBox.SelectedItem.ToString();
                 this.InitPalette(this.model.ModelName);
                 this.graph.InitModel(this.model.ModelName);
