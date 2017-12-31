@@ -14,8 +14,8 @@
 
 module CoreMetametamodelBuilderTests
 
-open NUnit.Framework
 open FsUnit
+open NUnit.Framework
 
 open Repo.Metametamodels
 open Repo.DataLayer

@@ -95,6 +95,7 @@
     <Compile Include="ElementRepository.fs" />
     <Compile Include="Repo.fs" />
     <Compile Include="RepoFactory.fs" />
+    <Content Include="app.config" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -102,4 +103,15 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
   </ItemGroup>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">
+      <ItemGroup>
+        <Reference Include="FSharp.Core">
+          <HintPath>..\..\packages\FSharp.Core\lib\net45\FSharp.Core.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
 </Project>

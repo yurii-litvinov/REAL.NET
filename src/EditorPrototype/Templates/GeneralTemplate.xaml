@@ -4,8 +4,8 @@
     xmlns:local="clr-namespace:EditorPrototype"
     xmlns:controls="http://schemas.panthernet.ru/graphx/">
 
-    
-    
+    <local:ValueToImageConverter x:Key="ValueToImage"/>
+
     <ControlTemplate x:Key="NodeVertex"></ControlTemplate>
 
     <!-- VERTEX CONTROL -->
@@ -114,7 +114,7 @@
                               Data="F1 M 17.4167,32.25L 32.9107,32.25L 38,18L 43.0893,32.25L 58.5833,32.25L 45.6798,41.4944L 51.4583,56L 38,48.0833L 26.125,56L 30.5979,41.7104L 17.4167,32.25 Z "/>
         </Grid>
     </ControlTemplate>
-    
+
     <ControlTemplate x:Key="TypeEdge" TargetType="{x:Type controls:EdgeControl}">
         <Grid>
             <Path Stroke="Blue"
@@ -157,3 +157,7 @@
     </Style>
 
 </ResourceDictionary>
+
+
+
+

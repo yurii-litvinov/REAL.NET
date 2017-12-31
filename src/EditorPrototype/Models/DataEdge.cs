@@ -2,7 +2,7 @@
 {
     using System;
     using System.ComponentModel;
-    using EditorPrototype.FileSerialization;
+    using FileSerialization;
     using GraphX.Measure;
     using GraphX.PCL.Common.Models;
     using YAXLib;
@@ -10,14 +10,11 @@
     [Serializable]
     public class DataEdge : EdgeBase<DataVertex>, INotifyPropertyChanged
     {
-        /// <summary>
-        /// Node main description (header)
-        /// </summary>
-        private string text;
-
         private EdgeTypeEnum edgeType = EdgeTypeEnum.Association;
 
-        public DataEdge(DataVertex source, DataVertex target, bool isViolation, double weight = 1)
+        private string text;
+
+        public DataEdge(DataVertex source, DataVertex target, double weight = 1)
             : base(source, target, weight)
         {
             this.Angle = 90;
@@ -36,15 +33,15 @@
             Generalization,
             Association,
             Type,
-            Attribute
+            Attribute,
         }
-
-        [YAXCustomSerializer(typeof(YAXPointArraySerializer))]
-        public override Point[] RoutingPoints { get; set; }
 
         public bool ArrowTarget { get; set; }
 
         public double Angle { get; set; }
+
+        [YAXCustomSerializer(typeof(YAXPointArraySerializer))]
+        public override Point[] RoutingPoints { get; set; }
 
         public string Text
         {
@@ -60,6 +57,8 @@
             }
         }
 
+        public string ToolTipText { get; set; }
+
         public EdgeTypeEnum EdgeType
         {
             get
@@ -74,19 +73,17 @@
             }
         }
 
-        public string ToolTipText { get; set; }
-
-        public override string ToString()
-        {
-            return this.Text;
-        }
-
         public void OnPropertyChanged(string name)
         {
             if (this.PropertyChanged != null)
             {
                 this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs(name));
             }
+        }
+
+        public override string ToString()
+        {
+            return this.Text;
         }
     }
 }

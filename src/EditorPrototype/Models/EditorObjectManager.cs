@@ -12,26 +12,15 @@
         private EdgeBlueprint edgeBp;
         private ResourceDictionary rd;
 
-        private bool virtualSource;
-        private bool virtualTarget;
-
-        public EditorObjectManager(GraphAreaExample graphArea, ZoomControl zc)
+        public EditorObjectManager(GraphAreaExample graphAreaEx, ZoomControl zc)
         {
-            this.graphArea = graphArea;
+            this.graphArea = graphAreaEx;
             this.zoomControl = zc;
             this.rd = new ResourceDictionary
             {
-                Source = new Uri(
-                    "pack://application:,,,/Templates/EditorTemplate.xaml",
-                    UriKind.RelativeOrAbsolute)
+                Source = new Uri("pack://application:,,,/Templates/EditorTemplate.xaml", UriKind.RelativeOrAbsolute),
             };
-            this.VirtualSource = false;
-            this.VirtualTarget = false;
         }
-
-        public bool VirtualSource { get => this.virtualSource; set => this.virtualSource = value; }
-
-        public bool VirtualTarget { get => this.virtualTarget; set => this.virtualTarget = value; }
 
         public void CreateVirtualEdge(VertexControl source, Point targetPos)
         {
@@ -53,7 +42,10 @@
             this.rd = null;
         }
 
-        public void DestroyVirtualEdge() => this.ClearEdgeBp();
+        public void DestroyVirtualEdge()
+        {
+            this.ClearEdgeBp();
+        }
 
         private void ZoomControl_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
