@@ -3,11 +3,13 @@ namespace EditorPrototype
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using System.Windows.Input;
     using System.Windows.Media;
+    using System.Windows.Media.Effects;
     using System.Windows.Media.Imaging;
     using GraphX.Controls;
     using GraphX.Controls.Models;
@@ -17,9 +19,10 @@ namespace EditorPrototype
     using PluginLibrary;
     using PluginLibrary.MainInterfaces;
     using QuickGraph;
+    using System.Windows.Shapes;
 
     /// <summary>
-    /// Ëîãèêà âçàèìîäåéñòâèÿ äëÿ MainWindow.xaml
+    /// Ã‹Ã®Ã£Ã¨ÃªÃ  Ã¢Ã§Ã Ã¨Ã¬Ã®Ã¤Ã¥Ã©Ã±Ã²Ã¢Ã¨Ã¿ Ã¤Ã«Ã¿ MainWindow.xaml
     /// </summary>
     internal partial class MainWindow : Window
     {
@@ -79,6 +82,7 @@ namespace EditorPrototype
             var modelName = "RobotsTestModel";
 
             this.g_zoomctrl.MouseDown += (object sender, MouseButtonEventArgs e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
+            this.g_zoomctrl.Drop += (object sender, DragEventArgs e) => this.ZoomControl_Drop(sender, e, modelName);
 
             this.InitPalette(modelName);
             this.graph.InitModel(modelName);
@@ -90,32 +94,44 @@ namespace EditorPrototype
         {
             var factory = Models.ControlFactory.ControlFactoryCreator.CreateControlFactory();
             this.console = factory.CreateConsole();
-            this.console.NewMessage += new EventHandler<EventArgs>(this.OnConsoleMessagesHaveBeenUpdated);
-            this.console.NewError += new EventHandler<EventArgs>(this.OnConsoleErrorsHaveBeenUpdated);
+            this.console.NewMessage += this.OnConsoleMessagesHaveBeenUpdated;
+            this.console.NewError += this.OnConsoleErrorsHaveBeenUpdated;
         }
 
         private void InitAndLaunchPlugins()
         {
+            var libs = new PluginLauncher();
+            var folder = "../../../plugins/SamplesPlugin/bin";
+            var dirs = new List<string>(System.IO.Directory.GetDirectories(folder));
+            var config = new PluginConfig(null, null, console, null);
+            foreach (var dir in dirs)
+            {
+                libs.LaunchPlugins(dir, config);
+            }
         }
 
         private void OnConsoleMessagesHaveBeenUpdated(object sender, EventArgs args)
         {
-            string allMessages = string.Empty;
-            foreach (var message in this.console.Messages)
+            string allMessages = "";
+
+            foreach (var message in console.Messages)
             {
                 allMessages += message + "\n";
             }
-            this.Messages.Text = allMessages;
+
+            Messages.Text = allMessages;
         }
 
         private void OnConsoleErrorsHaveBeenUpdated(object sender, EventArgs args)
         {
-            string allErrors = string.Empty;
-            foreach (var error in this.console.Errors)
+            string allErrors = "";
+
+            foreach(var error in console.Errors)
             {
                 allErrors += error + "\n";
             }
-            this.Errors.Text = allErrors;
+
+            Errors.Text = allErrors;
         }
 
         private void ClearSelection(object sender, RoutedEventArgs e)
@@ -165,6 +181,7 @@ namespace EditorPrototype
                 RoutedEventHandler createNode = (sender, args) => this.PaletteButton_Checked(type);
                 RoutedEventHandler createEdge = (sender, args) => { };
                 button.Click += (sender, args) => this.currentElement = type;
+                
                 if (type.InstanceMetatype == Repo.Metatype.Edge)
                 {
                     this.g_Area.VertexSelected += (sender, args) => button.IsChecked = false;
@@ -172,6 +189,9 @@ namespace EditorPrototype
                 else
                 {
                     this.g_zoomctrl.MouseDown += (sender, args) => button.IsChecked = false;
+                    button.PreviewMouseMove += (sender, args) => this.currentElement = type;
+                    button.PreviewMouseMove += PaletteButton_MouseMove;
+                    button.GiveFeedback += DragSource_GiveFeedback;
                 }
 
                 // TODO: Bind it to XAML, do not do GUI work in C#.
@@ -179,6 +199,102 @@ namespace EditorPrototype
                 this.paletteGrid.Children.Add(button);
                 Grid.SetRow(button, this.paletteGrid.RowDefinitions.Count - 1);
             }
+        }
+
+        // Code for drag-n-drop.
+        // Helps dragging button image.
+        private Window dragdropWindow = new Window();
+
+        // Need for dragging.
+        private void PaletteButton_MouseMove(object sender, MouseEventArgs args)
+        {
+            var button = sender as ToggleButton;
+
+            if (button.IsPressed)
+            {
+                // Setting shadow for button.
+                button.Effect = new DropShadowEffect
+                {
+                    Color = new Color { A = 50, R = 0, G = 0, B = 0 },
+                    Direction = 300,
+                    ShadowDepth = 0,
+                    Opacity = 0.75
+                };
+
+                var dragData = new DataObject("MyFormat", this.currentElement);
+
+                if (button != null && button.IsPressed)
+                {
+                    CreateDragDropWindow(button);
+                    DragDrop.DoDragDrop(button, dragData, DragDropEffects.Copy);
+
+                    if (this.dragdropWindow != null)
+                    {
+                        this.dragdropWindow.Close();
+                        this.dragdropWindow = null;
+                    }
+                }
+            }    
+        }
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool GetCursorPos(ref Win32Point pt);
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct Win32Point
+        {
+            public Int32 X;
+            public Int32 Y;
+        };
+
+        // Need for creating an image on cursor.
+        private void CreateDragDropWindow(Visual dragElement)
+        {
+            this.dragdropWindow = new Window();
+            this.dragdropWindow.WindowStyle = WindowStyle.None;
+            this.dragdropWindow.AllowsTransparency = true;
+            this.dragdropWindow.AllowDrop = false;
+            this.dragdropWindow.Background = null;
+            this.dragdropWindow.IsHitTestVisible = false;
+            this.dragdropWindow.SizeToContent = SizeToContent.WidthAndHeight;
+            this.dragdropWindow.Topmost = true;
+            this.dragdropWindow.ShowInTaskbar = false;
+
+            var rectangle = new Rectangle
+            {
+                Width = ((FrameworkElement)dragElement).ActualWidth,
+                Height = ((FrameworkElement)dragElement).ActualHeight,
+                Fill = new VisualBrush(dragElement)
+            };
+
+            this.dragdropWindow.Content = rectangle;
+
+            var w32Mouse = new Win32Point();
+            GetCursorPos(ref w32Mouse);
+
+            this.dragdropWindow.Left = w32Mouse.X;
+            this.dragdropWindow.Top = w32Mouse.Y;
+            this.dragdropWindow.Show();
+        }
+
+        // Need for dropping.
+        private void ZoomControl_Drop(object sender, DragEventArgs e, string modelName)
+        { 
+            this.pos = this.g_zoomctrl.TranslatePoint(e.GetPosition(this.g_zoomctrl), this.g_Area);
+            this.CreateNewNode((Repo.IElement)e.Data.GetData("MyFormat"), modelName);
+            this.currentElement = null;
+        }
+
+        // Need for pre-defined cursor while dragging.
+        private void DragSource_GiveFeedback(object sender, GiveFeedbackEventArgs e)
+        {
+            // Update the position of the visual feedback item.
+            var w32Mouse = new Win32Point();
+            GetCursorPos(ref w32Mouse);
+
+            this.dragdropWindow.Left = w32Mouse.X;
+            this.dragdropWindow.Top = w32Mouse.Y;
         }
 
         private void PaletteButton_Checked(Repo.IElement element)
