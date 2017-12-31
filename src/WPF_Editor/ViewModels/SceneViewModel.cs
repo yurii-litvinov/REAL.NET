@@ -37,42 +37,42 @@ namespace WPF_Editor.ViewModels
 
         private SceneViewModel(ISceneMediatorViewModel sceneMediator)
         {
-            _sceneMediator = sceneMediator;
+            this._sceneMediator = sceneMediator;
         }
 
         public void InitializeScene(ZoomControl zoomControl)
         {
-            _zoomControl = zoomControl;
-            _graphArea = zoomControl.Content as GraphArea;
-            if (_graphArea == null)
+            this._zoomControl = zoomControl;
+            this._graphArea = zoomControl.Content as GraphArea;
+            if (this._graphArea == null)
                 throw new ArgumentException("Zoom control doesn't contain an instance of class GraphArea.");
             var graph = new BidirectionalGraph<ModelNode, ModelEdge>();
 
-            _logicCore = new GXLogicCore
+            this._logicCore = new GXLogicCore
             {
                 DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.KK,
                 Graph = graph
             };
 
-            _graphArea.LogicCore = _logicCore;
-            _graphArea.SetVerticesDrag(true);
-            _graphArea.GenerateGraph();
+            this._graphArea.LogicCore = this._logicCore;
+            this._graphArea.SetVerticesDrag(true);
+            this._graphArea.GenerateGraph();
             zoomControl.CenterContent();
         }
 
 
         public void HandleSingleLeftClick(Point position)
         {
-            var metaElement = _sceneMediator.GetSelectedMetamodelType();
+            var metaElement = this._sceneMediator.GetSelectedMetamodelType();
 
             if (metaElement is MetamodelNode)
             {
-                var node = _sceneMediator.GetModelNode(metaElement as MetamodelNode);
+                var node = this._sceneMediator.GetModelNode(metaElement as MetamodelNode);
                 var nodeControl = new VertexControl(node);
-                nodeControl.Click += TryCreateEdge;
+                nodeControl.Click += this.TryCreateEdge;
                 nodeControl.SetPosition(position);
-                _graphArea.AddVertex(node, nodeControl);
-                _graphArea.RelayoutGraph(true);
+                this._graphArea.AddVertex(node, nodeControl);
+                this._graphArea.RelayoutGraph(true);
             }
         }
 
@@ -85,27 +85,27 @@ namespace WPF_Editor.ViewModels
 
         private void TryCreateEdge(object sender, RoutedEventArgs e)
         {
-            if (_sceneMediator.GetSelectedMetamodelType() is MetamodelNode)
+            if (this._sceneMediator.GetSelectedMetamodelType() is MetamodelNode)
             {
-                _firstSelectedVertexControl = null;
+                this._firstSelectedVertexControl = null;
                 return;
             }
-            if (_firstSelectedVertexControl == null)
+            if (this._firstSelectedVertexControl == null)
             {
-                _firstSelectedVertexControl = sender as VertexControl;
+                this._firstSelectedVertexControl = sender as VertexControl;
                 return;
             }
-            var metaEdge = _sceneMediator.GetSelectedMetamodelType() as MetamodelEdge;
+            var metaEdge = this._sceneMediator.GetSelectedMetamodelType() as MetamodelEdge;
             var secondSelectedVertexControl = sender as VertexControl;
 
-            var source = _firstSelectedVertexControl.DataContext as ModelNode;
+            var source = this._firstSelectedVertexControl.DataContext as ModelNode;
             var target = secondSelectedVertexControl.DataContext as ModelNode;
 
-            var edge = _sceneMediator.GetModelEdge(metaEdge, source, target);
-            var edgeControl = new EdgeControl(_firstSelectedVertexControl, sender as VertexControl, edge);
-            _graphArea.AddEdge(edge, edgeControl);
-            _graphArea.RelayoutGraph(true);
-            _firstSelectedVertexControl = null;
+            var edge = this._sceneMediator.GetModelEdge(metaEdge, source, target);
+            var edgeControl = new EdgeControl(this._firstSelectedVertexControl, sender as VertexControl, edge);
+            this._graphArea.AddEdge(edge, edgeControl);
+            this._graphArea.RelayoutGraph(true);
+            this._firstSelectedVertexControl = null;
         }
     }
 }

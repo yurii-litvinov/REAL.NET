@@ -3,7 +3,7 @@
     using System;
     using System.Globalization;
     using System.Windows.Data;
-    using EditorPrototype.Models;
+    using Models;
 
     public sealed class ValueToImageConverter : IValueConverter
     {

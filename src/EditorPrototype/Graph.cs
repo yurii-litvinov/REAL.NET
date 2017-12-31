@@ -5,9 +5,9 @@
 
     public class Graph
     {
-        private Model model;
+        private readonly Model model;
 
-        private GraphExample dataGraph;
+        private readonly GraphExample dataGraph;
 
         internal Graph(Model repoModel)
         {

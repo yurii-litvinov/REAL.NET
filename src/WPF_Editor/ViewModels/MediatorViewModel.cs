@@ -35,29 +35,29 @@ namespace WPF_Editor.ViewModels
 
         private MediatorViewModel()
         {
-            var currentMetamodel = _repo.Model("RobotsMetamodel");
-            _currentModel = _repo.CreateModel("New model based on RobotsMetamodel", currentMetamodel);
-            _scene = SceneViewModel.CreateScene(this);
-            _palette = PaletteViewModel.CreatePalette(this);
+            var currentMetamodel = this._repo.Model("RobotsMetamodel");
+            this._currentModel = this._repo.CreateModel("New model based on RobotsMetamodel", currentMetamodel);
+            this._scene = SceneViewModel.CreateScene(this);
+            this._palette = PaletteViewModel.CreatePalette(this);
         }
 
-        public IEnumerable<IElement> MetamodelElements => _currentModel.Metamodel.Elements;
-        public IEnumerable<INode> MetamodelNodes => _currentModel.Metamodel.Nodes;
-        public IEnumerable<IEdge> MetamodelEdges => _currentModel.Metamodel.Edges;
+        public IEnumerable<IElement> MetamodelElements => this._currentModel.Metamodel.Elements;
+        public IEnumerable<INode> MetamodelNodes => this._currentModel.Metamodel.Nodes;
+        public IEnumerable<IEdge> MetamodelEdges => this._currentModel.Metamodel.Edges;
 
         public MetamodelElement GetSelectedMetamodelType()
         {
-            return _palette.SelectedElement;
+            return this._palette.SelectedElement;
         }
 
         public ModelNode GetModelNode(MetamodelNode metaNode)
         {
-            return new ModelNode(_currentModel.CreateElement(metaNode.Element) as INode);
+            return new ModelNode(this._currentModel.CreateElement(metaNode.Element) as INode);
         }
 
         public ModelEdge GetModelEdge(MetamodelEdge metaEdge, ModelNode source, ModelNode target)
         {
-            return new ModelEdge(_currentModel.CreateElement(metaEdge.Element) as IEdge, source, target);
+            return new ModelEdge(this._currentModel.CreateElement(metaEdge.Element) as IEdge, source, target);
         }
 
 

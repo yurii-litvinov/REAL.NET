@@ -28,7 +28,7 @@ namespace WPF_Editor.ViewModels.Helpers
 
         public ModelNode(INode node) : base(node)
         {
-            _node = node;
+            this._node = node;
         }
 
         #region IGraphXVertex implementation
@@ -37,7 +37,7 @@ namespace WPF_Editor.ViewModels.Helpers
         {
             if (other is null)
                 return false;
-            return ID == other.ID;
+            return this.ID == other.ID;
         }
 
         public long ID { get; set; }

@@ -32,17 +32,17 @@ namespace WPF_Editor.Views
 
         public SceneView()
         {
-            InitializeComponent();
-            _scene = SceneViewModel.CreateScene();
-            _scene.InitializeScene(zoomctrl);
-            DataContext = _scene;
+            this.InitializeComponent();
+            this._scene = SceneViewModel.CreateScene();
+            this._scene.InitializeScene(this.zoomctrl);
+            this.DataContext = this._scene;
         }
 
         private void HandleSingleLeftClick(object sender, MouseButtonEventArgs e)
         {
             var position = Mouse.GetPosition(this);
-            position = TranslatePoint(position, graphArea);
-            _scene.HandleSingleLeftClick(position);
+            position = this.TranslatePoint(position, this.graphArea);
+            this._scene.HandleSingleLeftClick(position);
         }
     }
 }

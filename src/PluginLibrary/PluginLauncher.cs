@@ -13,12 +13,12 @@ namespace PluginLibrary
         /// <summary>
         /// Gets list of available plugins 
         /// </summary>
-        public IList<IPlugin> Plugins => pluginsList;
+        public IList<IPlugin> Plugins => this.pluginsList;
 
         /// <summary>
         /// Gets list of plugins
         /// </summary>
-        private List<IPlugin> pluginsList = new List<IPlugin>();
+        private readonly List<IPlugin> pluginsList = new List<IPlugin>();
        
         /// <summary>
         /// Launch plugins from this directory
@@ -73,7 +73,7 @@ namespace PluginLibrary
                             if (plugin != null)
                             {
                                 plugin.SetConfig(config);
-                                pluginsList.Add(plugin);
+                                this.pluginsList.Add(plugin);
                             }
                         }
                     }

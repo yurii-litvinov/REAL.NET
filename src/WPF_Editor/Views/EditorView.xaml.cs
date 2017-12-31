@@ -31,7 +31,7 @@ namespace WPF_Editor.Views
 
         public override string ToString()
         {
-            return Text;
+            return this.Text;
         }
     }
 
@@ -51,7 +51,7 @@ namespace WPF_Editor.Views
 
         public override string ToString()
         {
-            return Text;
+            return this.Text;
         }
     }
 
@@ -64,8 +64,8 @@ namespace WPF_Editor.Views
         {
             //EditorViewModel's initialization has to be done before InitializeComponent();
             var x = new EditorViewModel();
-            InitializeComponent();
-            DataContext = x;
+            this.InitializeComponent();
+            this.DataContext = x;
         }
     }
 }

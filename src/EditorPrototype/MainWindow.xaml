@@ -92,8 +92,16 @@
                         <DataGridTextColumn Header="Value" IsReadOnly="False" Binding="{Binding Value}"/>
                     </DataGrid.Columns>
                 </DataGrid>
-
+                <Grid>
+                    <Button Content="Constraints"
+                            HorizontalAlignment="Left"
+                            Margin="0,585,0,-505"
+                            VerticalAlignment="Top"
+                            Width="118"
+                            Click="ConstraintsButtonClick"/>
+                </Grid>
             </Grid>
+
         </DockPanel>
 
     </Grid>

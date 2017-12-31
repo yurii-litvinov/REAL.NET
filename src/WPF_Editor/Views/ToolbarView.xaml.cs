@@ -28,8 +28,8 @@ namespace WPF_Editor.Views
     {
         public ToolbarView()
         {
-            InitializeComponent();
-            DataContext = new ToolbarViewModel();
+            this.InitializeComponent();
+            this.DataContext = new ToolbarViewModel();
         }
     }
 }

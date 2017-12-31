@@ -4,7 +4,7 @@
 
     public class Model
     {
-        private Repo.IRepo modelRepo;
+        private readonly Repo.IRepo modelRepo;
         private string modelName;
 
         public Model()

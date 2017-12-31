@@ -30,21 +30,21 @@ namespace WPF_Editor.ViewModels.Helpers
 
         public ModelEdge(IEdge edge, ModelElement source, ModelElement target) : base(edge)
         {
-            _edge = edge;
-            From = source.Element;
-            To = target.Element;
+            this._edge = edge;
+            this.From = source.Element;
+            this.To = target.Element;
         }
 
         public IElement From
         {
-            get => _edge.From;
-            set => _edge.From = value;
+            get => this._edge.From;
+            set => this._edge.From = value;
         }
 
         public IElement To
         {
-            get => _edge.To;
-            set => _edge.To = value;
+            get => this._edge.To;
+            set => this._edge.To = value;
         }
 
         #region IGraphXEdge<ModelNode> implemetation

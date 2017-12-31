@@ -22,7 +22,7 @@ namespace WPF_Editor.ViewModels
     {
         public EditorViewModel()
         {
-            Mediator = MediatorViewModel.CreateMediator();
+            this.Mediator = MediatorViewModel.CreateMediator();
         }
 
         public MediatorViewModel Mediator { get; }

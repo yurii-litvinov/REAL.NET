@@ -24,7 +24,7 @@ namespace WPF_Editor.ViewModels.Helpers
     {
         public MetamodelNode(INode inode) : base(inode)
         {
-            _node = inode;
+            this._node = inode;
         }
 
         private INode _node;

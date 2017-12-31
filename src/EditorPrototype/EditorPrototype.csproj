@@ -92,6 +92,10 @@
     <Compile Include="Controller.cs" />
     <Compile Include="Graph.cs" />
     <Compile Include="Model.cs" />
+    <Compile Include="Constraints\Constraints.cs" />
+    <Compile Include="Constraints\ConstraintsItem.cs" />
+    <Compile Include="Constraints\ConstraintsValues.cs" />
+    <Compile Include="Constraints\ConstraintsWindow.xaml.cs" />
     <Compile Include="Models\BoolToColorConverter.cs" />
     <Compile Include="Models\InternalConsole\AppConsole.cs" />
     <Compile Include="Models\ControlFactory\ControlFactoryCreator.cs" />
@@ -100,7 +104,11 @@
     <Compile Include="Models\EditorObjectManager.cs" />
     <Compile Include="Models\ImageLoader.cs" />
     <Compile Include="Models\ValueToImageConverter.cs" />
-    <Compile Include="Constraints.cs" />
+    <Compile Include="Constraints\RepoInfo.cs" />
+    <Page Include="Constraints\ConstraintsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

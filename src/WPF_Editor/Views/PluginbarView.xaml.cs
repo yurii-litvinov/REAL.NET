@@ -28,8 +28,8 @@ namespace WPF_Editor.Views
     {
         public PluginBarView()
         {
-            InitializeComponent();
-            DataContext = new PluginBarViewModel();
+            this.InitializeComponent();
+            this.DataContext = new PluginBarViewModel();
         }
     }
 }

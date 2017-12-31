@@ -32,22 +32,22 @@ namespace WPF_Editor.ViewModels
 
         private PaletteViewModel(IPaletteMediatorViewModel paletteMediator)
         {
-            Nodes = new ObservableCollection<MetamodelNode>();
-            Edges = new ObservableCollection<MetamodelEdge>();
-            Elements = new ObservableCollection<MetamodelElement>();
-            _paletteMediator = paletteMediator;
-            foreach (var inode in _paletteMediator.MetamodelNodes)
+            this.Nodes = new ObservableCollection<MetamodelNode>();
+            this.Edges = new ObservableCollection<MetamodelEdge>();
+            this.Elements = new ObservableCollection<MetamodelElement>();
+            this._paletteMediator = paletteMediator;
+            foreach (var inode in this._paletteMediator.MetamodelNodes)
                 if (!inode.IsAbstract)
-                    Nodes.Add(new MetamodelNode(inode));
-            foreach (var iedge in _paletteMediator.MetamodelEdges)
+                    this.Nodes.Add(new MetamodelNode(inode));
+            foreach (var iedge in this._paletteMediator.MetamodelEdges)
                 if (!iedge.IsAbstract)
-                    Edges.Add(new MetamodelEdge(iedge));
-            foreach (var ielement in _paletteMediator.MetamodelElements)
+                    this.Edges.Add(new MetamodelEdge(iedge));
+            foreach (var ielement in this._paletteMediator.MetamodelElements)
                 if (!ielement.IsAbstract)
                     if (ielement is INode)
-                        Elements.Add(new MetamodelNode(ielement as INode));
+                        this.Elements.Add(new MetamodelNode(ielement as INode));
                     else
-                        Elements.Add(new MetamodelEdge(ielement as IEdge));
+                        this.Elements.Add(new MetamodelEdge(ielement as IEdge));
         }
 
         //Must be public, because bindings use these properties.
@@ -60,12 +60,12 @@ namespace WPF_Editor.ViewModels
 
         public MetamodelElement SelectedElement
         {
-            get => _selectedElement;
+            get => this._selectedElement;
 
             set
             {
-                _selectedElement = value;
-                OnPropertyChanged("SelectedElement");
+                this._selectedElement = value;
+                this.OnPropertyChanged("SelectedElement");
             }
         }
 
@@ -78,7 +78,7 @@ namespace WPF_Editor.ViewModels
 
         public void OnPropertyChanged(string propertyName)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

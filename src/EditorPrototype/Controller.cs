@@ -4,7 +4,7 @@
 
     public class Controller
     {
-        private Model model;
+        private readonly Model model;
 
         internal Controller(Model graphModel)
         {

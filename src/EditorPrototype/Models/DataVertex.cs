@@ -47,7 +47,7 @@
         /// </summary>
         public string Name { get; set; }
 
-        public Repo.INode Node { get; set; }
+        public INode Node { get; set; }
 
         public Brush Color
         {
@@ -121,7 +121,7 @@
         public class Attribute
         {
             private string value;
-            private Repo.IAttribute attribute;
+            private readonly IAttribute attribute;
 
             public Attribute(IAttribute attribute, string name, string type)
             {

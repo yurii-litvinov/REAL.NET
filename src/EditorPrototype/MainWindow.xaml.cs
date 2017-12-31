@@ -1,4 +1,4 @@
-namespace EditorPrototype
+﻿namespace EditorPrototype
 {
     using System;
     using System.Collections.Generic;
@@ -30,11 +30,11 @@ namespace EditorPrototype
         private VertexControl prevVer;
         private VertexControl ctrlVer;
         private EdgeControl ctrlEdg;
-        private Model model;
+        private readonly Model model;
         private IConsole console;
-        private Controller controller;
-        private Graph graph;
-        private Repo.IElement currentElement = null;
+        private readonly Controller controller;
+        private readonly Graph graph;
+        private Repo.IElement currentElement;
         private Point pos;
 
         public MainWindow()
@@ -49,9 +49,12 @@ namespace EditorPrototype
             this.graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVert);
             this.graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.Edge);
             this.editorManager = new EditorObjectManager(this.g_Area, this.g_zoomctrl);
-            var logic = new GXLogicCore<DataVertex, DataEdge, BidirectionalGraph<DataVertex, DataEdge>>();
-            logic.Graph = this.graph.DataGraph;
-            logic.DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.LinLog;
+            var logic =
+                new GXLogicCore<DataVertex, DataEdge, BidirectionalGraph<DataVertex, DataEdge>>
+                {
+                    Graph = this.graph.DataGraph,
+                    DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.LinLog
+                };
 
             this.g_Area.LogicCore = logic; // need?
 
@@ -79,10 +82,12 @@ namespace EditorPrototype
 
             this.Closed += this.CloseChildrenWindows;
 
-            var modelName = "RobotsTestModel";
+            const string modelName = "RobotsTestModel";
 
-            this.g_zoomctrl.MouseDown += (object sender, MouseButtonEventArgs e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
-            this.g_zoomctrl.Drop += (object sender, DragEventArgs e) => this.ZoomControl_Drop(sender, e, modelName);
+            this.g_zoomctrl.MouseDown += (sender, e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
+
+            this.g_zoomctrl.MouseDown += (sender, e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
+            this.g_zoomctrl.Drop += (sender, e) => this.ZoomControl_Drop(sender, e, modelName);
 
             this.InitPalette(modelName);
             this.graph.InitModel(modelName);
@@ -103,7 +108,7 @@ namespace EditorPrototype
             var libs = new PluginLauncher();
             var folder = "../../../plugins/SamplesPlugin/bin";
             var dirs = new List<string>(System.IO.Directory.GetDirectories(folder));
-            var config = new PluginConfig(null, null, console, null);
+            var config = new PluginConfig(null, null, this.console, null);
             foreach (var dir in dirs)
             {
                 libs.LaunchPlugins(dir, config);
@@ -114,24 +119,24 @@ namespace EditorPrototype
         {
             string allMessages = "";
 
-            foreach (var message in console.Messages)
+            foreach (var message in this.console.Messages)
             {
                 allMessages += message + "\n";
             }
 
-            Messages.Text = allMessages;
+            this.Messages.Text = allMessages;
         }
 
         private void OnConsoleErrorsHaveBeenUpdated(object sender, EventArgs args)
         {
             string allErrors = "";
 
-            foreach(var error in console.Errors)
+            foreach(var error in this.console.Errors)
             {
                 allErrors += error + "\n";
             }
 
-            Errors.Text = allErrors;
+            this.Errors.Text = allErrors;
         }
 
         private void ClearSelection(object sender, RoutedEventArgs e)
@@ -190,8 +195,8 @@ namespace EditorPrototype
                 {
                     this.g_zoomctrl.MouseDown += (sender, args) => button.IsChecked = false;
                     button.PreviewMouseMove += (sender, args) => this.currentElement = type;
-                    button.PreviewMouseMove += PaletteButton_MouseMove;
-                    button.GiveFeedback += DragSource_GiveFeedback;
+                    button.PreviewMouseMove += this.PaletteButton_MouseMove;
+                    button.GiveFeedback += this.DragSource_GiveFeedback;
                 }
 
                 // TODO: Bind it to XAML, do not do GUI work in C#.
@@ -210,31 +215,32 @@ namespace EditorPrototype
         {
             var button = sender as ToggleButton;
 
-            if (button.IsPressed)
+            if (button == null || !button.IsPressed)
             {
-                // Setting shadow for button.
-                button.Effect = new DropShadowEffect
-                {
-                    Color = new Color { A = 50, R = 0, G = 0, B = 0 },
-                    Direction = 300,
-                    ShadowDepth = 0,
-                    Opacity = 0.75
-                };
+                return;
+            }
 
-                var dragData = new DataObject("MyFormat", this.currentElement);
+            // Setting shadow for button.
+            button.Effect = new DropShadowEffect
+            {
+                Color = new Color { A = 50, R = 0, G = 0, B = 0 },
+                Direction = 300,
+                ShadowDepth = 0,
+                Opacity = 0.75
+            };
 
-                if (button != null && button.IsPressed)
-                {
-                    CreateDragDropWindow(button);
-                    DragDrop.DoDragDrop(button, dragData, DragDropEffects.Copy);
+            var dragData = new DataObject("MyFormat", this.currentElement);
 
-                    if (this.dragdropWindow != null)
-                    {
-                        this.dragdropWindow.Close();
-                        this.dragdropWindow = null;
-                    }
-                }
-            }    
+            this.CreateDragDropWindow(button);
+            DragDrop.DoDragDrop(button, dragData, DragDropEffects.Copy);
+
+            if (this.dragdropWindow == null)
+            {
+                return;
+            }
+
+            this.dragdropWindow.Close();
+            this.dragdropWindow = null;
         }
 
         [DllImport("user32.dll")]
@@ -589,6 +595,12 @@ namespace EditorPrototype
         {
             this.g_Area.GenerateGraph(this.graph.DataGraph);
             this.g_zoomctrl.ZoomToFill();
+        }
+
+        private void ConstraintsButtonClick(object sender, RoutedEventArgs e)
+        {
+            //var constraints = new ConstraintsWindow(this.repo, this.repo.Model(this.modelName));
+            //constraints.ShowDialog();
         }
     }
 }

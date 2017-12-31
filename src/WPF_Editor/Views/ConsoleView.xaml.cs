@@ -27,7 +27,7 @@ namespace WPF_Editor.Views
     {
         public ConsoleView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

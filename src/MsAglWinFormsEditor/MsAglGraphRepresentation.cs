@@ -16,8 +16,8 @@ namespace MsAglWinFormsEditor
         private readonly IRepo repo = RepoFactory.CreateRepo();
 
         private const string modelName = "RobotsTestModel";
-        private IModel currentModel = null;
-        private Dictionary<IElement, string> ids = new Dictionary<IElement, string>();
+        private readonly IModel currentModel;
+        private readonly Dictionary<IElement, string> ids = new Dictionary<IElement, string>();
         private int idCounter;
 
         /// <summary>
@@ -25,10 +25,10 @@ namespace MsAglWinFormsEditor
         /// </summary>
         public MsAglGraphRepresentation()
         {
-            Graph = new Graph("graph");
-            currentModel = repo.Model(modelName);
-            AddEdges();
-            AddNodes();
+            this.Graph = new Graph("graph");
+            this.currentModel = this.repo.Model(modelName);
+            this.AddEdges();
+            this.AddNodes();
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace MsAglWinFormsEditor
         /// </summary>
         /// <returns> Collection of node types </returns>
         public IEnumerable<INode> GetNodeTypes()
-            => currentModel.Metamodel.Nodes;
+            => this.currentModel.Metamodel.Nodes;
 
         /// <summary>
         /// Getting name by Repo type
@@ -53,11 +53,11 @@ namespace MsAglWinFormsEditor
         /// <returns> MSAGL node for addig to view </returns>
         public Node CreateNewNode(INode type)
         {
-            var newNodeData = currentModel.CreateElement(type) as INode;
-            var newNode = Graph.AddNode(Graph.NodeCount.ToString());
+            var newNodeData = this.currentModel.CreateElement(type) as INode;
+            var newNode = this.Graph.AddNode(this.Graph.NodeCount.ToString());
             newNode.LabelText = newNodeData.Name;
             newNode.UserData = new List<IAttribute>();
-            FormatNode(newNode, newNodeData);
+            this.FormatNode(newNode, newNodeData);
             return newNode;
         }
 
@@ -71,8 +71,8 @@ namespace MsAglWinFormsEditor
         {
             //TODO: uncomment it when addEdge will be implemented 
             //repo.AddEdge(edgeType.ToString(), edge.Source, edge.Target);
-            Graph.AddPrecalculatedEdge(edge);
-            FormatEdge(edgeType, edge);
+            this.Graph.AddPrecalculatedEdge(edge);
+            this.FormatEdge(edgeType, edge);
         }
 
         private void FormatEdge(IEdge edgeData, Edge edge)
@@ -91,10 +91,10 @@ namespace MsAglWinFormsEditor
 
         private void AddEdges()
         {
-            foreach (var edge in currentModel.Edges)
+            foreach (var edge in this.currentModel.Edges)
             {
-                var newEdge = Graph.AddEdge(Id(edge.From), Id(edge.To));
-                FormatEdge(edge, newEdge);
+                var newEdge = this.Graph.AddEdge(this.Id(edge.From), this.Id(edge.To));
+                this.FormatEdge(edge, newEdge);
             }
         }
 
@@ -115,24 +115,24 @@ namespace MsAglWinFormsEditor
 
         private void AddNodes()
         {
-            foreach (var node in currentModel.Nodes)
+            foreach (var node in this.currentModel.Nodes)
             {
-                var newNode = Graph.FindNode(Id(node));
+                var newNode = this.Graph.FindNode(this.Id(node));
                 newNode.UserData = node.Attributes;
                 newNode.Attr.LabelMargin = Padding.Empty.Left;
                 newNode.LabelText = node.Name;
-                FormatNode(newNode, node);
+                this.FormatNode(newNode, node);
             }
         }
 
         private string Id(IElement element)
         {
-            if (!ids.ContainsKey(element))
+            if (!this.ids.ContainsKey(element))
             {
-                ids.Add(element, (++idCounter).ToString());
+                this.ids.Add(element, (++this.idCounter).ToString());
             }
 
-            return ids[element];
+            return this.ids[element];
         }
     }
 }

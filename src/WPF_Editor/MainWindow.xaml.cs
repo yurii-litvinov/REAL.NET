@@ -27,7 +27,7 @@ namespace WPF_Editor
     {
         public MainWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

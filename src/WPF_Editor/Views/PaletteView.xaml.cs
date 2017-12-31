@@ -28,8 +28,8 @@ namespace WPF_Editor.Views
     {
         public PaletteView()
         {
-            InitializeComponent();
-            DataContext = PaletteViewModel.CreatePalette();
+            this.InitializeComponent();
+            this.DataContext = PaletteViewModel.CreatePalette();
         }
     }
 }

@@ -26,32 +26,32 @@ namespace WPF_Editor.ViewModels.Helpers
     {
         protected MetamodelElement(IElement element)
         {
-            Element = element;
+            this.Element = element;
         }
 
         public IElement Element { get; }
 
         public string Name
         {
-            get => Element.Name;
-            set => throw new NotImplementedException($"Cannot change name of {Metatype} from metamodel");
+            get => this.Element.Name;
+            set => throw new NotImplementedException($"Cannot change name of {this.Metatype} from metamodel");
         }
 
-        public IElement Class => Element.Class;
+        public IElement Class => this.Element.Class;
 
-        public IEnumerable<IAttribute> Attributes => Element.Attributes;
+        public IEnumerable<IAttribute> Attributes => this.Element.Attributes;
 
-        public bool IsAbstract => Element.IsAbstract;
+        public bool IsAbstract => this.Element.IsAbstract;
 
-        public Metatype Metatype => Element.Metatype;
+        public Metatype Metatype => this.Element.Metatype;
 
-        public Metatype InstanceMetatype => Element.InstanceMetatype;
+        public Metatype InstanceMetatype => this.Element.InstanceMetatype;
 
-        public string Shape => Element.Shape;
+        public string Shape => this.Element.Shape;
 
         public override string ToString()
         {
-            return Name;
+            return this.Name;
         }
     }
 }
