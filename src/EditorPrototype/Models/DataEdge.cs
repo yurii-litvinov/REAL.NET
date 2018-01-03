@@ -2,10 +2,8 @@
 {
     using System;
     using System.ComponentModel;
-    using FileSerialization;
     using GraphX.Measure;
     using GraphX.PCL.Common.Models;
-    using YAXLib;
 
     [Serializable]
     public class DataEdge : EdgeBase<DataVertex>, INotifyPropertyChanged
@@ -40,7 +38,6 @@
 
         public double Angle { get; set; }
 
-        [YAXCustomSerializer(typeof(YAXPointArraySerializer))]
         public override Point[] RoutingPoints { get; set; }
 
         public string Text

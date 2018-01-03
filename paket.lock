@@ -39,7 +39,6 @@ NUGET
       System.Collections (>= 4.3)
       System.Runtime (>= 4.3)
       System.Threading.Tasks (>= 4.3)
-    YAXLib (2.15)
 
 GROUP build
 NUGET
@@ -550,5 +549,5 @@ NUGET
       System.Xml.ReaderWriter (>= 4.3) - restriction: || (&& (< monoandroid) (< net45) (>= netstandard1.0) (< netstandard1.3) (< win8) (< wp8) (< wpa81)) (&& (< monotouch) (< net45) (>= netstandard1.3) (< win8) (< wpa81) (< xamarinios) (< xamarinmac) (< xamarintvos) (< xamarinwatchos)) (< portable-net45+win8+wp8+wpa81)
 GITHUB
   remote: fsharp/FAKE
-    modules/Octokit/Octokit.fsx (642a01a5e17b870f816cdd7ee09115e018b786f0)
+    modules/Octokit/Octokit.fsx (489e9ff2d8f88d27ec36de69a18e946ceec91c68)
       Octokit (>= 0.20)

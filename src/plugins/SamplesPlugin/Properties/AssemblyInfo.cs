@@ -9,11 +9,11 @@ using System.Reflection;
 [assembly: AssemblyConfigurationAttribute("Release")]
 namespace System {
     internal static class AssemblyVersionInformation {
-        internal const String AssemblyTitle = "SamplesPlugin";
-        internal const String AssemblyProduct = "REAL.NET";
-        internal const String AssemblyDescription = "Domain-specific modeling toolkit";
-        internal const String AssemblyVersion = "0.1";
-        internal const String AssemblyFileVersion = "0.1";
-        internal const String AssemblyConfiguration = "Release";
+        internal const System.String AssemblyTitle = "SamplesPlugin";
+        internal const System.String AssemblyProduct = "REAL.NET";
+        internal const System.String AssemblyDescription = "Domain-specific modeling toolkit";
+        internal const System.String AssemblyVersion = "0.1";
+        internal const System.String AssemblyFileVersion = "0.1";
+        internal const System.String AssemblyConfiguration = "Release";
     }
 }

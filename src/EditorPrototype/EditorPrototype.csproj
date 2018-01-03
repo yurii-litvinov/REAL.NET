@@ -103,6 +103,7 @@
     <Compile Include="Models\EdgeBlueprint.cs" />
     <Compile Include="Models\EditorObjectManager.cs" />
     <Compile Include="Models\ImageLoader.cs" />
+    <Compile Include="Models\Toolbar\Toolbar.cs" />
     <Compile Include="Models\ValueToImageConverter.cs" />
     <Compile Include="Constraints\RepoInfo.cs" />
     <Page Include="Constraints\ConstraintsWindow.xaml">
@@ -117,9 +118,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FileSerialization\FileServiceProviderWPF.cs" />
-    <Compile Include="FileSerialization\YAXPointArraySerializer.cs" />
-    <Compile Include="FileSerialization\YAXPointSerializer.cs" />
     <Compile Include="Models\DataEdge.cs" />
     <Compile Include="Models\DataVertex.cs" />
     <Compile Include="Models\GraphAreaExample.cs" />
@@ -214,12 +212,6 @@
   <ItemGroup>
     <Resource Include="Pictures\Vertex.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls\" />
-    <Folder Include="Models\Palette\" />
-    <Folder Include="Models\Scene\" />
-    <Folder Include="Models\Toolbar\" />
-  </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">
       <ItemGroup>
@@ -289,15 +281,4 @@
       <Paket>True</Paket>
     </Analyzer>
   </ItemGroup>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">
-      <ItemGroup>
-        <Reference Include="YAXLib">
-          <HintPath>..\..\packages\YAXLib\lib\net4.0\YAXLib.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
 </Project>
