@@ -1,4 +1,4 @@
-﻿namespace PluginLibrary.MainInterfaces
+﻿namespace EditorPluginInterfaces.Toolbar
 {
     /// <summary>
     /// Pattern command

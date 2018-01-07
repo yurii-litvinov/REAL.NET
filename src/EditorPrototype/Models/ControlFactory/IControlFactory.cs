@@ -1,6 +1,7 @@
 ﻿namespace EditorPrototype.Models.ControlFactory
 {
-    using PluginLibrary.MainInterfaces;
+    using EditorPluginInterfaces;
+    using EditorPluginInterfaces.Toolbar;
 
     public interface IControlFactory
     {

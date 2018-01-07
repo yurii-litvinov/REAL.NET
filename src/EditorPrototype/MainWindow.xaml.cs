@@ -16,10 +16,11 @@
     using GraphX.PCL.Common.Enums;
     using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
     using GraphX.PCL.Logic.Models;
-    using PluginLibrary;
-    using PluginLibrary.MainInterfaces;
     using QuickGraph;
     using System.Windows.Shapes;
+    using EditorPluginInterfaces;
+    using Models.InternalConsole;
+    using PluginManager;
 
     /// <summary>
     /// Ëîãèêà âçàèìîäåéñòâèÿ äëÿ MainWindow.xaml
@@ -31,7 +32,7 @@
         private VertexControl ctrlVer;
         private EdgeControl ctrlEdg;
         private readonly Model model;
-        private IConsole console;
+        private AppConsole console;
         private readonly Controller controller;
         private readonly Graph graph;
         private Repo.IElement currentElement;
@@ -98,15 +99,15 @@
         private void InitConsole()
         {
             var factory = Models.ControlFactory.ControlFactoryCreator.CreateControlFactory();
-            this.console = factory.CreateConsole();
+            this.console = factory.CreateConsole() as AppConsole;
             this.console.NewMessage += this.OnConsoleMessagesHaveBeenUpdated;
             this.console.NewError += this.OnConsoleErrorsHaveBeenUpdated;
         }
 
         private void InitAndLaunchPlugins()
         {
-            var libs = new PluginLauncher();
-            var folder = "../../../plugins/SamplesPlugin/bin";
+            var libs = new PluginLauncher<PluginConfig>();
+            const string folder = "../../../plugins/SamplePlugin/bin";
             var dirs = new List<string>(System.IO.Directory.GetDirectories(folder));
             var config = new PluginConfig(null, null, this.console, null);
             foreach (var dir in dirs)

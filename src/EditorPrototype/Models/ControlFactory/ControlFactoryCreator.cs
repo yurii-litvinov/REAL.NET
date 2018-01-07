@@ -1,6 +1,7 @@
 ﻿using System;
+using EditorPluginInterfaces;
+using EditorPluginInterfaces.Toolbar;
 using EditorPrototype.Models.InternalConsole;
-using PluginLibrary.MainInterfaces;
 
 namespace EditorPrototype.Models.ControlFactory
 {

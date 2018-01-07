@@ -6,8 +6,8 @@
     <ProjectGuid>{A0056C25-4EF7-4AF9-99E4-C13B937A3343}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PluginLibraryTests</RootNamespace>
-    <AssemblyName>PluginLibraryTests</AssemblyName>
+    <RootNamespace>PluginLibrary.Tests</RootNamespace>
+    <AssemblyName>PluginLibrary.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -47,9 +47,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\PluginLibrary\PluginLibrary.csproj">
+    <ProjectReference Include="..\..\src\EditorPluginInterfaces\EditorPluginInterfaces.csproj">
+      <Project>{6E5F1B5D-F165-4CEC-A240-8887EBD28E3B}</Project>
+      <Name>EditorPluginInterfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\PluginManager\PluginManager.csproj">
       <Project>{8b9c8d76-65b3-4a01-9d6f-b6192a823642}</Project>
-      <Name>PluginLibrary</Name>
+      <Name>PluginManager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,6 @@
-﻿using PluginLibrary.MainInterfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using EditorPluginInterfaces.Toolbar;
 
 namespace EditorPrototype.Models.Toolbar
 {

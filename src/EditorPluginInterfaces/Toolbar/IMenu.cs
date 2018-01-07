@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PluginLibrary.MainInterfaces
+namespace EditorPluginInterfaces.Toolbar
 {
     /// <summary>
     /// Menu which can be added to toolbar
