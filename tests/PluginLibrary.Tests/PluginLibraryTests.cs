@@ -28,7 +28,7 @@ namespace PluginLibraryTests
         public void TestLaunchingSamplePlugin()
         {
             var libs = new PluginLauncher<PluginConfig>();
-            const string folder = "src/plugins/SamplesPlugin/bin";
+            const string folder = "src/plugins/SamplePlugin/bin";
             var dirs = new List<string>(Directory.GetDirectories(folder));
             var console = Substitute.For<IConsole>();
             var config = new PluginConfig(null, null, console, null);
