@@ -66,34 +66,34 @@
   </Target>
   -->
   <ItemGroup>
-    <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="AssemblyInternalsVisibleTo.fs" />
     <None Include="paket.references" />
+    <Compile Include="Properties\AssemblyInfo.fs" />
+    <Compile Include="Properties\AssemblyInternalsVisibleTo.fs" />
     <Compile Include="Exceptions.fs" />
-    <Compile Include="DataLayer.fs" />
-    <Compile Include="DataElement.fs" />
-    <Compile Include="DataNode.fs" />
-    <Compile Include="DataEdge.fs" />
-    <Compile Include="DataGeneralization.fs" />
-    <Compile Include="DataAssociation.fs" />
-    <Compile Include="DataModel.fs" />
-    <Compile Include="DataRepo.fs" />
-    <Compile Include="IModelBuilder.fs" />
-    <Compile Include="CoreMetametamodelBuilder.fs" />
+    <Compile Include="DataLayer\DataLayer.fs" />
+    <Compile Include="DataLayer\DataElement.fs" />
+    <Compile Include="DataLayer\DataEdge.fs" />
+    <Compile Include="DataLayer\DataAssociation.fs" />
+    <Compile Include="DataLayer\DataGeneralization.fs" />
+    <Compile Include="DataLayer\DataNode.fs" />
+    <Compile Include="DataLayer\DataModel.fs" />
+    <Compile Include="DataLayer\DataRepo.fs" />
     <Compile Include="CoreSemanticLayer.fs" />
-    <Compile Include="LanguageMetamodelBuilder.fs" />
-    <Compile Include="InfrastructureMetamodelBuilder.fs" />
     <Compile Include="InfrastructureSemanticLayer.fs" />
-    <Compile Include="RobotsMetamodelBuilder.fs" />
-    <Compile Include="RobotsTestModelBuilder.fs" />
+    <Compile Include="ModelBuilders\IModelBuilder.fs" />
+    <Compile Include="ModelBuilders\InfrastructureMetamodelBuilder.fs" />
+    <Compile Include="ModelBuilders\LanguageMetamodelBuilder.fs" />
+    <Compile Include="ModelBuilders\RobotsMetamodelBuilder.fs" />
+    <Compile Include="ModelBuilders\RobotsTestModelBuilder.fs" />
+    <Compile Include="ModelBuilders\CoreMetametamodelBuilder.fs" />
     <Compile Include="FacadeLayer.fs" />
-    <Compile Include="Attribute.fs" />
-    <Compile Include="Element.fs" />
-    <Compile Include="Node.fs" />
-    <Compile Include="Edge.fs" />
-    <Compile Include="Model.fs" />
-    <Compile Include="ElementRepository.fs" />
-    <Compile Include="Repo.fs" />
+    <Compile Include="FacadeLayer\Attribute.fs" />
+    <Compile Include="FacadeLayer\Element.fs" />
+    <Compile Include="FacadeLayer\Edge.fs" />
+    <Compile Include="FacadeLayer\Model.fs" />
+    <Compile Include="FacadeLayer\Node.fs" />
+    <Compile Include="FacadeLayer\ElementRepository.fs" />
+    <Compile Include="FacadeLayer\Repo.fs" />
     <Compile Include="RepoFactory.fs" />
     <Content Include="app.config" />
   </ItemGroup>

@@ -1,4 +1,4 @@
-﻿(* Copyright 2017 Yurii Litvinov
+﻿(* Copyright 2017-2018 REAL.NET group
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
 
 namespace Repo.DataLayer
 
-[<AbstractClass>]
 /// Implementation of Element.
+[<AbstractClass>]
 type DataElement(``class``: IElement option, model: IModel) =
     let mutable outgoingEdges = []
     let mutable incomingEdges = []
