@@ -67,7 +67,7 @@
   -->
   <ItemGroup>
     <None Include="paket.references" />
-    <Compile Include="Properties\AssemblyInfo.fs" />
+    <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Properties\AssemblyInternalsVisibleTo.fs" />
     <Compile Include="Exceptions.fs" />
     <Compile Include="DataLayer\DataLayer.fs" />

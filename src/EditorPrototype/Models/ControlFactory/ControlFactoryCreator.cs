@@ -7,18 +7,18 @@ namespace EditorPrototype.Models.ControlFactory
 {
     public class ControlFactoryCreator
     {
-        private static IControlFactory factory;
+        private static readonly IControlFactory factory = new ControlFactory();
 
         private ControlFactoryCreator()
         { }
 
-        public static IControlFactory CreateControlFactory() => factory ?? new ControlFactory();
+        public static IControlFactory CreateControlFactory() => factory;
 
         private class ControlFactory : IControlFactory
         {
-            private IConsole console;
+            private readonly IConsole console = new AppConsole();
 
-            public IConsole CreateConsole() => this.console ?? new AppConsole();
+            public IConsole CreateConsole() => this.console;
 
             public IScene CreateNewScene()
             {
