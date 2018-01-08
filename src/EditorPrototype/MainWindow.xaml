@@ -36,13 +36,13 @@
 
             <!-- Area -->
             <Border Grid.Row="0" BorderThickness="1"  Margin="2">
-                <controls1:ZoomControl x:Name="g_zoomctrl" AllowDrop="True" Margin="1,1,-1,-1">
-                    <wpf:GraphAreaExample AllowDrop="True" x:Name="g_Area" />
+                <controls1:ZoomControl x:Name="zoomControl" AllowDrop="True" Margin="1,1,-1,-1">
+                    <wpf:GraphAreaExample AllowDrop="True" x:Name="scene" />
                 </controls1:ZoomControl>
             </Border>
 
             <!-- GridSplitter for console -->
-            <GridSplitter Grid.Row ="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Aqua" Height="5"/>
+            <GridSplitter Grid.Row ="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5"/>
             
             <!-- Console -->
             <!-- Need to be in different files, may be -->
@@ -65,7 +65,7 @@
 
         <!-- Colunm = 1 -->
         <!-- GridSplitter for RightPannel-->
-        <GridSplitter Grid.Column="1" Grid.Row ="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Background="Aqua" Width="5"/>
+        <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5"/>
 
         <!-- Column = 2 -->
         <!-- RightPannel -->
@@ -80,7 +80,7 @@
                     <RowDefinition Height="Auto" MinHeight="50"/>
                 </Grid.RowDefinitions>
 
-                <Grid x:Name="paletteGrid" Grid.Row="1" Grid.Column="1"></Grid>
+                <Grid x:Name="paletteGrid" Grid.Row="1"></Grid>
                 <Label x:Name="elementsListLabel" Grid.Row="2" Content="Elements:" HorizontalAlignment="Stretch"/>
                 <ListBox x:Name="elementsListBox" Grid.Row="3"/>
                 <Label x:Name="selectedEntityLabel" Grid.Row="4" Content="Selected entity:" HorizontalAlignment="Stretch" />
@@ -92,14 +92,12 @@
                         <DataGridTextColumn Header="Value" IsReadOnly="False" Binding="{Binding Value}"/>
                     </DataGrid.Columns>
                 </DataGrid>
-                <Grid>
-                    <Button Content="Constraints"
-                            HorizontalAlignment="Left"
-                            Margin="0,585,0,-505"
-                            VerticalAlignment="Top"
-                            Width="118"
-                            Click="ConstraintsButtonClick"/>
-                </Grid>
+                <Button Content="Constraints"
+                        HorizontalAlignment="Left"
+                        Margin="0,585,0,-505"
+                        VerticalAlignment="Top"
+                        Width="118"
+                        Click="ConstraintsButtonClick"/>
             </Grid>
 
         </DockPanel>

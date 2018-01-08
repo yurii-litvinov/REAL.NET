@@ -22,7 +22,7 @@ namespace PluginManager
     using EditorPluginInterfaces;
 
     /// <summary>
-    /// Class that is responsible for launching and managing plugins
+    /// Class that is responsible for launching and managing plugins.
     /// </summary>
     public class PluginLauncher<T>
     {

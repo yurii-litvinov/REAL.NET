@@ -1,11 +1,9 @@
 ﻿namespace EditorPrototype
 {
-    using System.Windows;
-
     /// <summary>
-    /// Логика взаимодействия для App.xaml
+    /// Code-behind for starting point of an application.
     /// </summary>
-    public partial class App : Application
+    public partial class App
     {
     }
 }

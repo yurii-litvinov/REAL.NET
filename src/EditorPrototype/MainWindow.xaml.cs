@@ -49,7 +49,7 @@
             this.graph.DrawNewVertex += (sender, args) => this.DrawNewVertex(args.VertName);
             this.graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVert);
             this.graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.Edge);
-            this.editorManager = new EditorObjectManager(this.g_Area, this.g_zoomctrl);
+            this.editorManager = new EditorObjectManager(this.scene, this.zoomControl);
             var logic =
                 new GXLogicCore<DataVertex, DataEdge, BidirectionalGraph<DataVertex, DataEdge>>
                 {
@@ -57,19 +57,19 @@
                     DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.LinLog
                 };
 
-            this.g_Area.LogicCore = logic; // need?
+            this.scene.LogicCore = logic; // need?
 
-            this.g_Area.VertexSelected += this.VertexSelectedAction;
-            this.g_Area.EdgeSelected += this.EdgeSelectedAction;
-            this.g_zoomctrl.Click += this.ClearSelection;
+            this.scene.VertexSelected += this.VertexSelectedAction;
+            this.scene.EdgeSelected += this.EdgeSelectedAction;
+            this.zoomControl.Click += this.ClearSelection;
             this.elementsListBox.MouseDoubleClick += this.ElementInBoxSelectedAction;
 
-            ZoomControl.SetViewFinderVisibility(this.g_zoomctrl, Visibility.Visible);
-            this.g_zoomctrl.Loaded += (sender, args) =>
+            ZoomControl.SetViewFinderVisibility(this.zoomControl, Visibility.Visible);
+            this.zoomControl.Loaded += (sender, args) =>
             {
-                (this.g_zoomctrl.ViewFinder.Parent as Grid).Children.Remove(this.g_zoomctrl.ViewFinder);
-                this.rightPanel.Children.Add(this.g_zoomctrl.ViewFinder);
-                Grid.SetRow(this.g_zoomctrl.ViewFinder, 0);
+                (this.zoomControl.ViewFinder.Parent as Grid).Children.Remove(this.zoomControl.ViewFinder);
+                this.rightPanel.Children.Add(this.zoomControl.ViewFinder);
+                Grid.SetRow(this.zoomControl.ViewFinder, 0);
             };
             logic.DefaultLayoutAlgorithmParams =
                 logic.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.LinLog);
@@ -85,10 +85,10 @@
 
             const string modelName = "RobotsTestModel";
 
-            this.g_zoomctrl.MouseDown += (sender, e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
+            this.zoomControl.MouseDown += (sender, e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
 
-            this.g_zoomctrl.MouseDown += (sender, e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
-            this.g_zoomctrl.Drop += (sender, e) => this.ZoomControl_Drop(sender, e, modelName);
+            this.zoomControl.MouseDown += (sender, e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
+            this.zoomControl.Drop += (sender, e) => this.ZoomControl_Drop(sender, e, modelName);
 
             this.InitPalette(modelName);
             this.graph.InitModel(modelName);
@@ -144,7 +144,7 @@
         {
             this.prevVer = null;
             this.ctrlVer = null;
-            this.g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
+            this.scene.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
         }
 
         private void InitPalette(string metamodelName)
@@ -190,11 +190,11 @@
                 
                 if (type.InstanceMetatype == Repo.Metatype.Edge)
                 {
-                    this.g_Area.VertexSelected += (sender, args) => button.IsChecked = false;
+                    this.scene.VertexSelected += (sender, args) => button.IsChecked = false;
                 }
                 else
                 {
-                    this.g_zoomctrl.MouseDown += (sender, args) => button.IsChecked = false;
+                    this.zoomControl.MouseDown += (sender, args) => button.IsChecked = false;
                     button.PreviewMouseMove += (sender, args) => this.currentElement = type;
                     button.PreviewMouseMove += this.PaletteButton_MouseMove;
                     button.GiveFeedback += this.DragSource_GiveFeedback;
@@ -288,7 +288,7 @@
         // Need for dropping.
         private void ZoomControl_Drop(object sender, DragEventArgs e, string modelName)
         { 
-            this.pos = this.g_zoomctrl.TranslatePoint(e.GetPosition(this.g_zoomctrl), this.g_Area);
+            this.pos = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.scene);
             this.CreateNewNode((Repo.IElement)e.Data.GetData("MyFormat"), modelName);
             this.currentElement = null;
         }
@@ -328,7 +328,7 @@
                         this.graph.DataGraph.Edges.ToList()[i].Target.Name == target)
                     {
                         var edge = this.graph.DataGraph.Edges.ToList()[i];
-                        foreach (KeyValuePair<DataEdge, EdgeControl> ed in this.g_Area.EdgesList)
+                        foreach (KeyValuePair<DataEdge, EdgeControl> ed in this.scene.EdgesList)
                         {
                             if (ed.Key == edge)
                             {
@@ -350,7 +350,7 @@
                     {
                         var vertex = this.graph.DataGraph.Vertices.ToList()[i];
                         this.attributesView.DataContext = vertex;
-                        foreach (KeyValuePair<DataVertex, VertexControl> ed in this.g_Area.VertexList)
+                        foreach (KeyValuePair<DataVertex, VertexControl> ed in this.scene.VertexList)
                         {
                             if (ed.Key == vertex)
                             {
@@ -428,7 +428,7 @@
             }
 
             this.attributesView.DataContext = this.ctrlVer.GetDataVertex<DataVertex>();
-            this.g_Area.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().
+            this.scene.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().
             Color = Brushes.Green);
             this.ctrlVer.GetDataVertex<DataVertex>().Color = Brushes.LightBlue;
             if (this.prevVer != null)
@@ -452,7 +452,7 @@
 
             // Those crazy russians intercept MouseUp event, so we are forced to use PreviewMouseUp here.
             this.ctrlEdg.PreviewMouseUp += this.OnEdgeMouseUp;
-            this.g_zoomctrl.MouseMove += this.OnEdgeMouseMove;
+            this.zoomControl.MouseMove += this.OnEdgeMouseMove;
             if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
             {
                 args.EdgeControl.ContextMenu = new ContextMenu();
@@ -472,17 +472,17 @@
             }
 
             dataEdge.RoutingPoints[0] = new GraphX.Measure.Point(100, 100);
-            var mousePosition = Mouse.GetPosition(this.g_Area);
+            var mousePosition = Mouse.GetPosition(this.scene);
             dataEdge.RoutingPoints[1] = new GraphX.Measure.Point(mousePosition.X, mousePosition.Y);
             dataEdge.RoutingPoints[2] = new GraphX.Measure.Point(100, 100);
-            this.g_Area.UpdateAllEdges();
+            this.scene.UpdateAllEdges();
         }
 
         private void ZoomCtrl_MouseDown(object sender, MouseButtonEventArgs e, string modelName)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                var position = this.g_zoomctrl.TranslatePoint(e.GetPosition(this.g_zoomctrl), this.g_Area);
+                var position = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.scene);
                 if (this.currentElement != null && this.currentElement.InstanceMetatype == Repo.Metatype.Node)
                 {
                     this.pos = position;
@@ -512,14 +512,14 @@
             this.DrawNewVertex(vertex.Name);
             var vc = new VertexControl(vertex);
             vc.SetPosition(this.pos);
-            this.g_Area.AddVertex(vertex, vc);
+            this.scene.AddVertex(vertex, vc);
         }
 
         private void AddNewEdgeControl(DataEdge edge)
         {
             this.DrawNewEdge(edge.Source.Name, edge.Target.Name);
             var ec = new EdgeControl(this.prevVer, this.ctrlVer, edge);
-            this.g_Area.InsertEdge(edge, ec);
+            this.scene.InsertEdge(edge, ec);
             this.prevVer = null;
             this.editorManager.DestroyVirtualEdge();
         }
@@ -538,7 +538,7 @@
 
         private void OnEdgeMouseUp(object sender, MouseButtonEventArgs e)
         {
-            this.g_zoomctrl.MouseMove -= this.OnEdgeMouseMove;
+            this.zoomControl.MouseMove -= this.OnEdgeMouseMove;
             this.ctrlEdg.PreviewMouseUp -= this.OnEdgeMouseUp;
         }
 
@@ -594,8 +594,8 @@
 
         private void DrawGraph()
         {
-            this.g_Area.GenerateGraph(this.graph.DataGraph);
-            this.g_zoomctrl.ZoomToFill();
+            this.scene.GenerateGraph(this.graph.DataGraph);
+            this.zoomControl.ZoomToFill();
         }
 
         private void ConstraintsButtonClick(object sender, RoutedEventArgs e)

@@ -11,16 +11,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License. */
- 
-using NUnit.Framework;
-using System.IO;
-using System.Collections.Generic;
-using EditorPluginInterfaces;
-using NSubstitute;
-using PluginManager;
 
-namespace PluginLibraryTests
+namespace PluginLibrary.Tests
 {
+    using System.Collections.Generic;
+    using System.IO;
+    using EditorPluginInterfaces;
+    using NSubstitute;
+    using NUnit.Framework;
+    using PluginManager;
+
     [TestFixture]
     public class PluginLaunchTest
     {
