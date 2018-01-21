@@ -82,7 +82,7 @@
 
             this.Closed += this.CloseChildrenWindows;
 
-            const string modelName = "RobotsTestModel";
+            const string modelName = "AirSimModel";
 
             this.g_zoomctrl.MouseDown += (sender, e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
 

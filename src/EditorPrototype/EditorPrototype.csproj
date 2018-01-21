@@ -281,4 +281,12 @@
       <Paket>True</Paket>
     </Analyzer>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\hover.png" />
+    <Resource Include="Pictures\land.png" />
+    <Resource Include="Pictures\move.png" />
+    <Resource Include="Pictures\star1.png" />
+    <Resource Include="Pictures\star2.png" />
+    <Resource Include="Pictures\takeoff.png" />
+  </ItemGroup>
 </Project>
