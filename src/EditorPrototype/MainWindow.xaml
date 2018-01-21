@@ -7,7 +7,7 @@
         xmlns:controls1="http://schemas.panthernet.ru/graphx/"
         Title="REAL.NET"
         mc:Ignorable="d"
-        Height="600" Width="800">
+        Height="795" Width="1167">
 
     <Grid>
         <Grid.Resources>

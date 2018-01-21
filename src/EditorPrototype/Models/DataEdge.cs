@@ -1,4 +1,6 @@
-﻿namespace EditorPrototype
+﻿using System.Collections.Generic;
+
+namespace EditorPrototype
 {
     using System;
     using System.ComponentModel;
@@ -9,8 +11,7 @@
     public class DataEdge : EdgeBase<DataVertex>, INotifyPropertyChanged
     {
         private EdgeTypeEnum edgeType = EdgeTypeEnum.Association;
-
-        private string text;
+        private IList<Attribute> attributes = new List<Attribute>();
 
         public DataEdge(DataVertex source, DataVertex target, double weight = 1)
             : base(source, target, weight)
@@ -40,20 +41,17 @@
 
         public override Point[] RoutingPoints { get; set; }
 
-        public string Text
-        {
-            get
-            {
-                return this.text;
-            }
+        public string Text { get; set; }
 
+        public IList<Attribute> Attributes
+        {
+            get => this.attributes;
             set
             {
-                this.text = value;
-                this.OnPropertyChanged(nameof(this.Text));
+                this.attributes = value;
+                this.OnPropertyChanged(nameof(this.Attributes));
             }
         }
-
         public string ToolTipText { get; set; }
 
         public EdgeTypeEnum EdgeType
@@ -82,5 +80,14 @@
         {
             return this.Text;
         }
-    }
+
+        public class Attribute
+        {
+            public string Name { get; set; }
+
+            public string Type { get; set; }
+
+            public string Value { get; set; }
+        }
+}
 }

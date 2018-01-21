@@ -54,7 +54,7 @@ type AirSimModelBuilder() =
             infrastructure.Element.SetAttributeValue timer2 "delay" "10"
             infrastructure.Element.SetAttributeValue timer3 "delay" "10"
             
-            let hover = infrastructure.Instantiate model metamodelHover
+            // let hover = infrastructure.Instantiate model metamodelHover
 
             let (-->) (src: IElement) dst =
                 let aLink = infrastructure.Instantiate model link :?> IAssociation

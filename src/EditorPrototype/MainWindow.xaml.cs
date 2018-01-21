@@ -1,4 +1,9 @@
-﻿namespace EditorPrototype
+﻿using System.CodeDom.Compiler;
+using System.Security.Permissions;
+using System.Threading;
+using EditorPrototype.AirSim;
+
+namespace EditorPrototype
 {
     using System;
     using System.Collections.Generic;
@@ -605,7 +610,9 @@
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
+            Thread newThread = new Thread(CodeExecution.Execute);
+            newThread.Start(this.graph);
+            Messages.Text = "Running your code";
         }
     }
 }
