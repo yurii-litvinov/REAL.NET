@@ -602,5 +602,10 @@
             //var constraints = new ConstraintsWindow(this.repo, this.repo.Model(this.modelName));
             //constraints.ShowDialog();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
