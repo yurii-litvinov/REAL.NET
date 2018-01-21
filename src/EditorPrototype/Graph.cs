@@ -72,6 +72,15 @@
                 var target = this.dataGraph.Vertices.First(v => v.Node == targetNode);
 
                 var newEdge = new DataEdge(source, target, Convert.ToDouble(false)) { EdgeType = DataEdge.EdgeTypeEnum.Association };
+
+                var attributeInfos = edge.Attributes.Select(x => new DataEdge.Attribute()
+                {
+                    Name = x.Name,
+                    Type = x.Kind.ToString(),
+                    Value = x.StringValue
+                });
+                attributeInfos.ToList().ForEach(x => newEdge.Attributes.Add(x));
+
                 this.dataGraph.AddEdge(newEdge);
                 SourceTargetArgs args = new SourceTargetArgs();
                 args.Source = source.Name;

@@ -455,6 +455,7 @@ namespace EditorPrototype
             this.ctrlEdg = args.EdgeControl;
 
             // Those crazy russians intercept MouseUp event, so we are forced to use PreviewMouseUp here.
+            this.attributesView.DataContext = this.ctrlEdg.GetDataEdge<DataEdge>();
             this.ctrlEdg.PreviewMouseUp += this.OnEdgeMouseUp;
             this.g_zoomctrl.MouseMove += this.OnEdgeMouseMove;
             if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
