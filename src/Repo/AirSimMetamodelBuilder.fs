@@ -52,8 +52,17 @@ type AirSimMetamodelBuilder() =
                 edge.TargetName <- targetName
 
                 infrastructure.Element.SetAttributeValue edge "shape" "Pictures/Edge.png"
-                infrastructure.Element.SetAttributeValue edge "isAbstract" "false"
-                infrastructure.Element.SetAttributeValue edge "instanceMetatype" "Metatype.Edge"
+                infrastructure.Element.SetAttributeValue edge "name" linkName
+
+                edge
+
+            let (--->>) (source: IElement) (target, targetName, linkName) =
+                let edge = infrastructure.Instantiate model metamodelAssociation :?> IAssociation
+                edge.Source <- Some source
+                edge.Target <- Some target
+                edge.TargetName <- targetName
+
+                infrastructure.Element.SetAttributeValue edge "shape" "Pictures/Edge.png"
                 infrastructure.Element.SetAttributeValue edge "name" linkName
 
                 edge
@@ -62,21 +71,17 @@ type AirSimMetamodelBuilder() =
             let initialNode = +("InitialNode", "Pictures/initialBlock.png", false)
             let finalNode = +("FinalNode", "Pictures/finalBlock.png", false)
 
-            let abstractMotorsBlock = +("AbstractMotorsBlock", "", true)
-            infrastructure.Element.AddAttribute abstractMotorsBlock "ports" "AttributeKind.String" "M3, M4"
-
-            let abstractMotorsPowerBlock = +("AbstractMotorsPowerBlock", "", true)
-            infrastructure.Element.AddAttribute abstractMotorsPowerBlock "power" "AttributeKind.Int" "100"
-
             let takeoff = +("Takeoff", "Pictures/takeoff.png", false)
             let landing = +("Land", "Pictures/land.png", false)
             let move = +("Move", "Pictures/move.png", false)
             let hover = +("Hover", "Pictures/hover.png", false)
             let timer = +("Timer", "Pictures/timerBlock.png", false)
             let ifNode = +("IfNode", "Pictures/if.png", false)
-
+            
             let link = abstractNode ---> (abstractNode, "target", "Link")
-            infrastructure.Element.AddAttribute link "guard" "AttributeKind.String" ""
+            let ifLink = abstractNode --->> (abstractNode, "ifTarget", "If Link")
+            //infrastructure.Element.AddAttribute link "guard" "AttributeKind.String" ""
+            infrastructure.Element.AddAttribute ifLink "Value" "AttributeKind.Boolean" "true"
             
             infrastructure.Element.AddAttribute takeoff "delay" "AttributeKind.Int" "10"
             infrastructure.Element.AddAttribute move "speed" "AttributeKind.Int" "10"

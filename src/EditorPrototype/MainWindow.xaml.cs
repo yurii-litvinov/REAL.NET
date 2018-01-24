@@ -611,7 +611,7 @@ namespace EditorPrototype
         {
             this.g_Area.ShowAllEdgesArrows(false);
             this.g_Area.ShowAllEdgesLabels(true);
-            //this.g_Area.GenerateGraph(this.graph.DataGraph);
+            this.g_Area.GenerateGraph(this.graph.DataGraph);
             this.g_zoomctrl.ZoomToFill();
         }
 

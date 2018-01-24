@@ -37,11 +37,13 @@ type AirSimModelBuilder() =
             let metamodelIf = Model.findNode metamodel "IfNode"
 
             let link = Model.findAssociationWithSource metamodelAbstractNode "target"
+            let ifLink = Model.findAssociationWithSource metamodelAbstractNode "ifTarget"
 
             let model = repo.CreateModel("AirSimModel", metamodel)
 
             let initialNode = infrastructure.Instantiate model metamodelInitialNode
             let finalNode = infrastructure.Instantiate model metamodelFinalNode
+            let finalNode2 = infrastructure.Instantiate model metamodelFinalNode
 
             let takeoff = infrastructure.Instantiate model metamodelTakeoff
             
@@ -63,6 +65,21 @@ type AirSimModelBuilder() =
                 aLink.Source <- Some src
                 aLink.Target <- Some dst
                 dst
+            
+            let (-->>) (src: IElement) dst =
+                infrastructure.Element.SetAttributeValue ifLink "Value" "true"
+                let aLink = infrastructure.Instantiate model ifLink :?> IAssociation
+                aLink.Source <- Some src
+                aLink.Target <- Some dst
+                dst
+            
+            let (-->>>) (src: IElement) dst =
+                infrastructure.Element.SetAttributeValue ifLink "Value" "false"
+                let aLink = infrastructure.Instantiate model ifLink :?> IAssociation
+                aLink.Source <- Some src
+                aLink.Target <- Some dst
+                dst
 
-            initialNode --> ifNode --> timer1 --> takeoff --> timer2 --> move --> timer3 --> landing --> finalNode |> ignore
+            initialNode --> ifNode -->> timer1 --> takeoff --> timer2 --> move --> timer3 --> landing --> finalNode |> ignore
+            ifNode -->>> finalNode2 |> ignore
             ()
