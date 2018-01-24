@@ -36,7 +36,7 @@ namespace EditorPrototype.AirSim
                 writeToMessageBox("\n");
                 return;
             }
-
+            
             DataVertex curNode = initNode;
             MutirotorClient client = null;
             while (curNode.Name != "aFinalNode")

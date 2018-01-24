@@ -6,8 +6,14 @@
     public class MutirotorClient : IDisposable
     {
         private IntPtr client;
+        private string defaultDirectory;
 
-        public void CreateClient() => this.client = CreateClientCPP();
+        public void CreateClient()
+        {
+            defaultDirectory = Environment.CurrentDirectory;
+            Environment.CurrentDirectory = Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.IndexOf("bin", StringComparison.Ordinal));
+            this.client = CreateClientCPP();
+        }
 
         public void ConfirmConnection() => ConfirmConnectionCPP(this.client);
 
@@ -29,36 +35,37 @@
         {
             Land();
             DisposeClientCPP(this.client);
+            Environment.CurrentDirectory = defaultDirectory;
         }
 
-        [DllImport("HelloDrone.dll")]
+        [DllImport("DroneLib.dll")]
         private static extern IntPtr CreateClientCPP();
 
-        [DllImport("HelloDrone.dll")]
+        [DllImport("DroneLib.dll")]
         private static extern void DisposeClientCPP(IntPtr ptr);
 
-        [DllImport("HelloDrone.dll")]
+        [DllImport("DroneLib.dll")]
         private static extern void ConfirmConnectionCPP(IntPtr ptr);
 
-        [DllImport("HelloDrone.dll")]
+        [DllImport("DroneLib.dll")]
         private static extern void ArmDisarmCPP(IntPtr ptr, bool isArm);
 
-        [DllImport("HelloDrone.dll")]
+        [DllImport("DroneLib.dll")]
         private static extern void TakeoffCPP(IntPtr ptr, float timeout);
 
-        [DllImport("HelloDrone.dll")]
+        [DllImport("DroneLib.dll")]
         private static extern void HoverCPP(IntPtr ptr);
 
-        [DllImport("HelloDrone.dll")]
+        [DllImport("DroneLib.dll")]
         private static extern void SleepClientCPP(IntPtr ptr, float time);
 
-        [DllImport("HelloDrone.dll")]
+        [DllImport("DroneLib.dll")]
         private static extern void LandCPP(IntPtr ptr);
 
-        [DllImport("HelloDrone.dll")]
+        [DllImport("DroneLib.dll")]
         private static extern void MoveByVelocityZCPP(IntPtr ptr, float speed);
 
-        [DllImport("HelloDrone.dll")]
+        [DllImport("DroneLib.dll")]
         private static extern void EnableApiControlCPP(IntPtr ptr);
 
     }
