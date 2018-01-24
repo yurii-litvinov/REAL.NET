@@ -74,37 +74,29 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="0"/>
                     <RowDefinition Height="Auto" MinHeight="70"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="Auto" MinHeight="95"/>
+                    <RowDefinition Height="Auto" MinHeight="26"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto" MinHeight="50"/>
-                    <RowDefinition Height="Auto" MinHeight="31"/>
-                    <RowDefinition Height="32"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
-                <Grid x:Name="paletteGrid" Grid.Row="1" Margin="0,1,0,10"/>
-                <Label x:Name="elementsListLabel" Grid.Row="2" Content="Elements:" HorizontalAlignment="Stretch" Margin="0,2,0,1" Grid.RowSpan="2"/>
-                <ListBox x:Name="elementsListBox" Grid.Row="3" Margin="0,3,0,22" Grid.RowSpan="2"/>
-                <Label x:Name="selectedEntityLabel" Grid.Row="4" Content="Selected entity:" HorizontalAlignment="Stretch" Margin="0,4,0,77" Grid.RowSpan="2" />
+                <Grid x:Name="paletteGrid" Grid.Row="1"/>
+                <Label x:Name="elementsListLabel" Grid.Row="2" Content="Elements:" HorizontalAlignment="Left" Height="25" VerticalAlignment="Bottom" Width="118"/>
+                <ListBox x:Name="elementsListBox" Grid.Row="3" VerticalAlignment="Top" Height="95"/>
+                <Label x:Name="selectedEntityLabel" Grid.Row="4" Content="Selected entity:" HorizontalAlignment="Stretch" />
 
-                <DataGrid x:Name="attributesView" Grid.Row="5" ItemsSource="{Binding Attributes}" AutoGenerateColumns="False" Margin="0,4,0,1">
+                <DataGrid x:Name="attributesView" Grid.Row="5" ItemsSource="{Binding Attributes}" AutoGenerateColumns="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Name}"/>
                         <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Type}"/>
                         <DataGridTextColumn Header="Value" IsReadOnly="False" Binding="{Binding Value}"/>
                     </DataGrid.Columns>
                 </DataGrid>
-                <Grid Margin="0,0,0,69" Grid.RowSpan="2">
-                    <Button Content="Constraints"
-                            HorizontalAlignment="Left"
-                            Margin="0,585,0,-505"
-                            VerticalAlignment="Top"
-                            Width="118"
-                            Click="ConstraintsButtonClick"/>
-                </Grid>
-                <Button x:Name="generateButton" Content="Generate" Margin="0,1,0,0" Grid.Row="6" Click="ExecuteButtonClick"/>
-                <Button x:Name="stopExecutionButton" Content="Stop" Margin="0,1,0,0" Grid.Row="7" Click="StopButtonClick"/>
+                <Button x:Name="generateButton" Content="Generate" Grid.Row="6" Click="ExecuteButtonClick" FontSize="14"/>
+                <Button x:Name="stopExecutionButton" Content="Stop" Grid.Row="7" Click="StopButtonClick" FontSize="14"/>
             </Grid>
 
         </DockPanel>

@@ -49,11 +49,11 @@ namespace EditorPrototype
             this.model = new Model();
             this.controller = new Controller(this.model);
             this.graph = new Graph(this.model);
-            //this.graph.DrawGraph += (sender, args) => this.DrawGraph();
-            //this.graph.DrawNewEdge += (sender, args) => this.DrawNewEdge(args.Source, args.Target);
-            //this.graph.DrawNewVertex += (sender, args) => this.DrawNewVertex(args.VertName);
+            this.graph.DrawGraph += (sender, args) => this.DrawGraph();
+            this.graph.DrawNewEdge += (sender, args) => this.DrawNewEdge(args.Source, args.Target);
+            this.graph.DrawNewVertex += (sender, args) => this.DrawNewVertex(args.VertName);
             this.graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVert);
-            //this.graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.Edge);
+            this.graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.Edge);
             this.editorManager = new EditorObjectManager(this.g_Area, this.g_zoomctrl);
 
             this.g_Area.VertexSelected += this.VertexSelectedAction;
@@ -87,8 +87,8 @@ namespace EditorPrototype
                 logic.AlgorithmFactory.CreateOverlapRemovalParameters(OverlapRemovalAlgorithmTypeEnum.FSA);
             ((OverlapRemovalParameters)logic.DefaultOverlapRemovalAlgorithmParams).HorizontalGap = 50;
             ((OverlapRemovalParameters)logic.DefaultOverlapRemovalAlgorithmParams).VerticalGap = 50;
-            //logic.DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.None;
-            //logic.AsyncAlgorithmCompute = false;
+            logic.DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.None;
+            logic.AsyncAlgorithmCompute = false;
 
             this.g_Area.LogicCore = logic;
 
@@ -102,7 +102,6 @@ namespace EditorPrototype
             this.InitConsole();
             this.InitAndLaunchPlugins();
             this.g_Area.GenerateGraph(true, true);
-            this.g_Area.SetEdgesDashStyle(EdgeDashStyle.Dash);
             this.g_Area.ShowAllEdgesLabels();
             this.graph.Draw();
             this.g_zoomctrl.ZoomToFill();

@@ -15,8 +15,8 @@ namespace EditorPrototype
         {
             this.model = repoModel;
             this.DataGraph = new GraphExample();
-            //this.model.NewVertexInRepo += (sender, args) => this.CreateNodeWithPos(args.Node);
-            //this.model.NewEdgeInRepo += (sender, args) => this.CreateEdge(args.Edge, args.PrevVer, args.CtrlVer);
+            this.model.NewVertexInRepo += (sender, args) => this.CreateNodeWithPos(args.Node);
+            this.model.NewEdgeInRepo += (sender, args) => this.CreateEdge(args.Edge, args.PrevVer, args.CtrlVer);
         }
 
         public event EventHandler DrawGraph;
@@ -81,7 +81,7 @@ namespace EditorPrototype
                     Source = source.Name,
                     Target = target.Name
                 };
-                //this.DrawNewEdge?.Invoke(this, args);
+                this.DrawNewEdge?.Invoke(this, args);
             }
             
         }
