@@ -1,4 +1,6 @@
-﻿namespace EditorPrototype
+﻿using System.Drawing;
+
+namespace EditorPrototype
 {
     using System;
     using System.Linq;
@@ -7,14 +9,14 @@
     {
         private readonly Model model;
 
-        private readonly GraphExample dataGraph;
+        public GraphExample DataGraph { get; }
 
         internal Graph(Model repoModel)
         {
             this.model = repoModel;
-            this.dataGraph = new GraphExample();
-            this.model.NewVertexInRepo += (sender, args) => this.CreateNodeWithPos(args.Node);
-            this.model.NewEdgeInRepo += (sender, args) => this.CreateEdge(args.Edge, args.PrevVer, args.CtrlVer);
+            this.DataGraph = new GraphExample();
+            //this.model.NewVertexInRepo += (sender, args) => this.CreateNodeWithPos(args.Node);
+            //this.model.NewEdgeInRepo += (sender, args) => this.CreateEdge(args.Edge, args.PrevVer, args.CtrlVer);
         }
 
         public event EventHandler DrawGraph;
@@ -26,15 +28,7 @@
         public event EventHandler<DataVertexArgs> AddNewVertexControl;
 
         public event EventHandler<DataEdgeArgs> AddNewEdgeControl;
-
-        public GraphExample DataGraph
-        {
-            get
-            {
-                return this.dataGraph;
-            }
-        }
-
+        
         // Should be replaced
         public void InitModel(string modelName)
         {
@@ -61,19 +55,19 @@
                     continue;
                 }
 
-                if (this.dataGraph.Vertices.Count(v => v.Node == sourceNode) == 0
-                    || this.dataGraph.Vertices.Count(v => v.Node == targetNode) == 0)
+                if (this.DataGraph.Vertices.Count(v => v.Node == sourceNode) == 0
+                    || this.DataGraph.Vertices.Count(v => v.Node == targetNode) == 0)
                 {
                     // Link to an attribute node. TODO: It's ugly.
                     continue;
                 }
 
-                var source = this.dataGraph.Vertices.First(v => v.Node == sourceNode);
-                var target = this.dataGraph.Vertices.First(v => v.Node == targetNode);
+                var source = this.DataGraph.Vertices.First(v => v.Node == sourceNode);
+                var target = this.DataGraph.Vertices.First(v => v.Node == targetNode);
 
-                var newEdge = new DataEdge(source, target, Convert.ToDouble(false)) { EdgeType = DataEdge.EdgeTypeEnum.Association };
+                var newEdge = new DataEdge(source, target) { Text = string.Format("{0} -> {1}", 0, 1), EdgeType = DataEdge.EdgeTypeEnum.Association };
 
-                var attributeInfos = edge.Attributes.Select(x => new DataEdge.Attribute()
+                var attributeInfos = edge.Attributes.Select(x => new DataEdge.Attribute
                 {
                     Name = x.Name,
                     Type = x.Kind.ToString(),
@@ -81,13 +75,19 @@
                 });
                 attributeInfos.ToList().ForEach(x => newEdge.Attributes.Add(x));
 
-                this.dataGraph.AddEdge(newEdge);
-                SourceTargetArgs args = new SourceTargetArgs();
-                args.Source = source.Name;
-                args.Target = target.Name;
-                this.DrawNewEdge?.Invoke(this, args);
+                this.DataGraph.AddEdge(newEdge);
+                SourceTargetArgs args = new SourceTargetArgs
+                {
+                    Source = source.Name,
+                    Target = target.Name
+                };
+                //this.DrawNewEdge?.Invoke(this, args);
             }
+            
+        }
 
+        public void Draw()
+        {
             this.DrawGraph?.Invoke(this, EventArgs.Empty);
         }
 
@@ -98,9 +98,8 @@
                 return;
             }
 
-            var newEdge = new DataEdge(prevVer, ctrlVer, Convert.ToDouble(true));
-            DataEdgeArgs args = new DataEdgeArgs();
-            args.Edge = newEdge;
+            var newEdge = new DataEdge(prevVer, ctrlVer, Convert.ToDouble(true)){Text = "OLOLO"};
+            DataEdgeArgs args = new DataEdgeArgs {Edge = newEdge};
             this.AddNewEdgeControl?.Invoke(this, args);
         }
 
@@ -115,12 +114,11 @@
 
             var attributeInfos = node.Attributes.Select(x => new DataVertex.Attribute(x, x.Name, x.Kind.ToString())
             {
-                Value = x.StringValue,
+                Value = x.StringValue
             });
 
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
-            DataVertexArgs args = new DataVertexArgs();
-            args.DataVert = vertex;
+            DataVertexArgs args = new DataVertexArgs {DataVert = vertex};
             this.AddNewVertexControl?.Invoke(this, args);
         }
 
@@ -135,100 +133,35 @@
 
             var attributeInfos = node.Attributes.Select(x => new DataVertex.Attribute(x, x.Name, x.Kind.ToString())
             {
-                Value = x.StringValue,
+                Value = x.StringValue
             });
 
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
-            this.dataGraph.AddVertex(vertex);
-            VertexNameArgs args = new VertexNameArgs();
-            args.VertName = node.Name;
+            this.DataGraph.AddVertex(vertex);
+            VertexNameArgs args = new VertexNameArgs {VertName = node.Name};
             this.DrawNewVertex?.Invoke(this, args);
         }
 
         public class DataVertexArgs : EventArgs
         {
-            private DataVertex dataVert;
-
-            public DataVertex DataVert
-            {
-                get
-                {
-                    return this.dataVert;
-                }
-
-                set
-                {
-                    this.dataVert = value;
-                }
-            }
+            public DataVertex DataVert { get; set; }
         }
 
         public class DataEdgeArgs : EventArgs
-        {
-            private DataEdge edge;
-
-            public DataEdge Edge
-            {
-                get
-                {
-                    return this.edge;
-                }
-
-                set
-                {
-                    this.edge = value;
-                }
-            }
+        { 
+            public DataEdge Edge { get; set; }
         }
 
         public class SourceTargetArgs : EventArgs
         {
-            private string source;
-            private string target;
+            public string Source { get; set; }
 
-            public string Source
-            {
-                get
-                {
-                    return this.source;
-                }
-
-                set
-                {
-                    this.source = value;
-                }
-            }
-
-            public string Target
-            {
-                get
-                {
-                    return this.target;
-                }
-
-                set
-                {
-                    this.target = value;
-                }
-            }
+            public string Target { get; set; }
         }
 
         public class VertexNameArgs : EventArgs
         {
-            private string vertName;
-
-            public string VertName
-            {
-                get
-                {
-                    return this.vertName;
-                }
-
-                set
-                {
-                    this.vertName = value;
-                }
-            }
+            public string VertName { get; set; }
         }
     }
 }

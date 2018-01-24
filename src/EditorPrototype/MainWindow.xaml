@@ -31,13 +31,13 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto" MinHeight="50"/>
+                <RowDefinition Height="Auto" MinHeight="100"/>
             </Grid.RowDefinitions>
 
             <!-- Area -->
             <Border Grid.Row="0" BorderThickness="1"  Margin="2">
                 <controls1:ZoomControl x:Name="g_zoomctrl" AllowDrop="True" Margin="1,1,-1,-1">
-                    <wpf:GraphAreaExample AllowDrop="True" x:Name="g_Area" />
+                    <wpf:GraphAreaExample AllowDrop="True" x:Name="g_Area"/>
                 </controls1:ZoomControl>
             </Border>
 
@@ -79,6 +79,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto" MinHeight="50"/>
                     <RowDefinition Height="Auto" MinHeight="31"/>
+                    <RowDefinition Height="32"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
@@ -102,7 +103,8 @@
                             Width="118"
                             Click="ConstraintsButtonClick"/>
                 </Grid>
-                <Button x:Name="generateButton" Content="Generate" Margin="0,1,0,0" Grid.Row="6" Width="118" Height="30" Click="Button_Click"/>
+                <Button x:Name="generateButton" Content="Generate" Margin="0,1,0,0" Grid.Row="6" Click="ExecuteButtonClick"/>
+                <Button x:Name="stopExecutionButton" Content="Stop" Margin="0,1,0,0" Grid.Row="7" Click="StopButtonClick"/>
             </Grid>
 
         </DockPanel>

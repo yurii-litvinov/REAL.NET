@@ -1,6 +1,6 @@
-﻿using System.CodeDom.Compiler;
-using System.Security.Permissions;
+﻿using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 using EditorPrototype.AirSim;
 
 namespace EditorPrototype
@@ -41,27 +41,20 @@ namespace EditorPrototype
         private readonly Graph graph;
         private Repo.IElement currentElement;
         private Point pos;
+        private Thread executionThread;
 
         public MainWindow()
         {
-            this.InitializeComponent();
+            this.InitializeComponent(); 
             this.model = new Model();
             this.controller = new Controller(this.model);
             this.graph = new Graph(this.model);
-            this.graph.DrawGraph += (sender, args) => this.DrawGraph();
-            this.graph.DrawNewEdge += (sender, args) => this.DrawNewEdge(args.Source, args.Target);
-            this.graph.DrawNewVertex += (sender, args) => this.DrawNewVertex(args.VertName);
+            //this.graph.DrawGraph += (sender, args) => this.DrawGraph();
+            //this.graph.DrawNewEdge += (sender, args) => this.DrawNewEdge(args.Source, args.Target);
+            //this.graph.DrawNewVertex += (sender, args) => this.DrawNewVertex(args.VertName);
             this.graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVert);
-            this.graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.Edge);
+            //this.graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.Edge);
             this.editorManager = new EditorObjectManager(this.g_Area, this.g_zoomctrl);
-            var logic =
-                new GXLogicCore<DataVertex, DataEdge, BidirectionalGraph<DataVertex, DataEdge>>
-                {
-                    Graph = this.graph.DataGraph,
-                    DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.LinLog
-                };
-
-            this.g_Area.LogicCore = logic; // need?
 
             this.g_Area.VertexSelected += this.VertexSelectedAction;
             this.g_Area.EdgeSelected += this.EdgeSelectedAction;
@@ -71,10 +64,22 @@ namespace EditorPrototype
             ZoomControl.SetViewFinderVisibility(this.g_zoomctrl, Visibility.Visible);
             this.g_zoomctrl.Loaded += (sender, args) =>
             {
-                (this.g_zoomctrl.ViewFinder.Parent as Grid).Children.Remove(this.g_zoomctrl.ViewFinder);
+                (this.g_zoomctrl.ViewFinder.Parent as Grid)?.Children.Remove(this.g_zoomctrl.ViewFinder);
                 this.rightPanel.Children.Add(this.g_zoomctrl.ViewFinder);
                 Grid.SetRow(this.g_zoomctrl.ViewFinder, 0);
             };
+
+
+            const string modelName = "AirSimModel";
+            this.graph.InitModel(modelName);
+
+            var logic =
+                new GXLogicCore<DataVertex, DataEdge, BidirectionalGraph<DataVertex, DataEdge>>
+                {
+                    Graph = this.graph.DataGraph,
+                    DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.LinLog
+                };
+
             logic.DefaultLayoutAlgorithmParams =
                 logic.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.LinLog);
             logic.DefaultOverlapRemovalAlgorithm = OverlapRemovalAlgorithmTypeEnum.FSA;
@@ -82,22 +87,25 @@ namespace EditorPrototype
                 logic.AlgorithmFactory.CreateOverlapRemovalParameters(OverlapRemovalAlgorithmTypeEnum.FSA);
             ((OverlapRemovalParameters)logic.DefaultOverlapRemovalAlgorithmParams).HorizontalGap = 50;
             ((OverlapRemovalParameters)logic.DefaultOverlapRemovalAlgorithmParams).VerticalGap = 50;
-            logic.DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.None;
-            logic.AsyncAlgorithmCompute = false;
+            //logic.DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.None;
+            //logic.AsyncAlgorithmCompute = false;
 
+            this.g_Area.LogicCore = logic;
+
+            
             this.Closed += this.CloseChildrenWindows;
-
-            const string modelName = "AirSimModel";
-
             this.g_zoomctrl.MouseDown += (sender, e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
-
             this.g_zoomctrl.MouseDown += (sender, e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
             this.g_zoomctrl.Drop += (sender, e) => this.ZoomControl_Drop(sender, e, modelName);
 
             this.InitPalette(modelName);
-            this.graph.InitModel(modelName);
             this.InitConsole();
             this.InitAndLaunchPlugins();
+            this.g_Area.GenerateGraph(true, true);
+            this.g_Area.SetEdgesDashStyle(EdgeDashStyle.Dash);
+            this.g_Area.ShowAllEdgesLabels();
+            this.graph.Draw();
+            this.g_zoomctrl.ZoomToFill();
         }
 
         private void InitConsole()
@@ -370,18 +378,18 @@ namespace EditorPrototype
 
         private void DrawNewVertex(DataVertex vertex)
         {
-            ListBoxItem lbi = new ListBoxItem();
-            StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
-            Image img = new Image()
+            var lbi = new ListBoxItem();
+            var sp = new StackPanel { Orientation = Orientation.Horizontal };
+            var img = new Image
             {
                 Source = vertex.Picture != "pack://application:,,,/"
-                        ? new BitmapImage(new Uri(vertex.Picture))
-                        : new BitmapImage(new Uri("pack://application:,,,/Pictures/Vertex.png")),
+                    ? new BitmapImage(new Uri(vertex.Picture))
+                    : new BitmapImage(new Uri("pack://application:,,,/Pictures/Vertex.png")),
+                LayoutTransform = new ScaleTransform(0.3, 0.3),
             };
 
-            img.LayoutTransform = new ScaleTransform(0.3, 0.3);
-            TextBlock spaces = new TextBlock { Text = "  " };
-            TextBlock tx = new TextBlock
+            var spaces = new TextBlock { Text = "  " };
+            var tx = new TextBlock
             {
                 Text = vertex.Name,
                 VerticalAlignment = VerticalAlignment.Center,
@@ -525,6 +533,9 @@ namespace EditorPrototype
             this.DrawNewEdge(edge.Source.Name, edge.Target.Name);
             var ec = new EdgeControl(this.prevVer, this.ctrlVer, edge);
             this.g_Area.InsertEdge(edge, ec);
+            this.g_Area.ShowAllEdgesLabels();
+            this.g_Area.UpdateAllEdges();
+            this.g_Area.UpdateEdgeLabelPosition(true);
             this.prevVer = null;
             this.editorManager.DestroyVirtualEdge();
         }
@@ -599,7 +610,9 @@ namespace EditorPrototype
 
         private void DrawGraph()
         {
-            this.g_Area.GenerateGraph(this.graph.DataGraph);
+            this.g_Area.ShowAllEdgesArrows(false);
+            this.g_Area.ShowAllEdgesLabels(true);
+            //this.g_Area.GenerateGraph(this.graph.DataGraph);
             this.g_zoomctrl.ZoomToFill();
         }
 
@@ -609,11 +622,22 @@ namespace EditorPrototype
             //constraints.ShowDialog();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private CancellationToken ct;
+        private CancellationTokenSource token;
+
+        private async void ExecuteButtonClick(object sender, RoutedEventArgs e)
         {
-            Thread newThread = new Thread(CodeExecution.Execute);
-            newThread.Start(this.graph);
-            Messages.Text = "Running your code";
+            Messages.Text = "Running your code\n";
+            token = new CancellationTokenSource();
+            ct = token.Token;
+            void Action(string str) => this.Dispatcher.Invoke(delegate { Messages.Text += str; });
+            await Task.Factory.StartNew(() => CodeExecution.Execute(new Tuple<Graph, Action<string>>(graph, Action)), ct);
+        }
+
+        private void StopButtonClick(object sender, RoutedEventArgs e)
+        {
+            token.Cancel();
+            Messages.Text += "Stop execution of code \n";
         }
     }
 }

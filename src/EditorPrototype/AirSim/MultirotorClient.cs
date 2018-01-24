@@ -3,14 +3,11 @@
     using System;
     using System.Runtime.InteropServices;
 
-    public class MutirotorClient
+    public class MutirotorClient : IDisposable
     {
         private IntPtr client;
 
         public void CreateClient() => this.client = CreateClientCPP();
-
-        // TODO make disposable
-        public void DisposeClient() => DisposeClientCPP(this.client);
 
         public void ConfirmConnection() => ConfirmConnectionCPP(this.client);
 
@@ -27,6 +24,12 @@
         public void MoveByVelocityZ(float speed) => MoveByVelocityZCPP(this.client, speed);
 
         public void Land() => LandCPP(this.client);
+
+        public void Dispose()
+        {
+            Land();
+            DisposeClientCPP(this.client);
+        }
 
         [DllImport("HelloDrone.dll")]
         private static extern IntPtr CreateClientCPP();
@@ -57,5 +60,6 @@
 
         [DllImport("HelloDrone.dll")]
         private static extern void EnableApiControlCPP(IntPtr ptr);
+
     }
 }

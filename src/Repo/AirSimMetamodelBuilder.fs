@@ -73,6 +73,7 @@ type AirSimMetamodelBuilder() =
             let move = +("Move", "Pictures/move.png", false)
             let hover = +("Hover", "Pictures/hover.png", false)
             let timer = +("Timer", "Pictures/timerBlock.png", false)
+            let ifNode = +("IfNode", "Pictures/if.png", false)
 
             let link = abstractNode ---> (abstractNode, "target", "Link")
             infrastructure.Element.AddAttribute link "guard" "AttributeKind.String" ""
@@ -80,6 +81,7 @@ type AirSimMetamodelBuilder() =
             infrastructure.Element.AddAttribute takeoff "delay" "AttributeKind.Int" "10"
             infrastructure.Element.AddAttribute move "speed" "AttributeKind.Int" "10"
             infrastructure.Element.AddAttribute timer "delay" "AttributeKind.Int" "10"
+            infrastructure.Element.AddAttribute ifNode "condition" "AttributeKind.Boolean" "true"
 
             initialNode --|> abstractNode
             finalNode --|> abstractNode
@@ -88,5 +90,6 @@ type AirSimMetamodelBuilder() =
             move --|> abstractNode
             hover --|> abstractNode
             timer --|> abstractNode
+            ifNode --|> abstractNode
 
             ()

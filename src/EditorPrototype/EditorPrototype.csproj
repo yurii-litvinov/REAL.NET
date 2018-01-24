@@ -355,4 +355,7 @@
     <Resource Include="Pictures\star2.png" />
     <Resource Include="Pictures\takeoff.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\if.png" />
+  </ItemGroup>
 </Project>

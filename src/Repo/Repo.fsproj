@@ -129,8 +129,6 @@
     <Compile Include="Repo.fs" />
     <Compile Include="RepoFactory.fs" />
     <Content Include="app.config" />
-    <Compile Include="AirSimMetamodelBuilder.fs" />
-    <Compile Include="AirSimModelBuilder.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

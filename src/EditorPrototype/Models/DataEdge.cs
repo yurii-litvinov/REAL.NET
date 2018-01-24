@@ -76,10 +76,7 @@ namespace EditorPrototype
             }
         }
 
-        public override string ToString()
-        {
-            return this.Text;
-        }
+        public override string ToString() => this.Text;
 
         public class Attribute
         {
