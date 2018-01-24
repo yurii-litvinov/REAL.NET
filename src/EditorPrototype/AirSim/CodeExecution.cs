@@ -41,6 +41,7 @@ namespace EditorPrototype.AirSim
             MutirotorClient client = null;
             while (curNode.Name != "aFinalNode")
             {
+                var name = curNode.Name;
                 bool condition = false;
                 switch (curNode.Name)
                 {
@@ -67,7 +68,7 @@ namespace EditorPrototype.AirSim
                         client.EnableApiControl();
                         break;
                     case "aIfNode":
-                        condition = true;
+                        condition = false;
                         break;
                 }
 
@@ -111,8 +112,11 @@ namespace EditorPrototype.AirSim
                             : graph.DataGraph.OutEdges(curNode).ToList()[1].Target;
                     }
                 }
-
+                writeToMessageBox($"Node {name} done\n");
             }
+            client.Land();
+            client.Dispose();
+            writeToMessageBox($"Program done\n");
         }
     }
 }
