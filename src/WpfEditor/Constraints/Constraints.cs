@@ -7,38 +7,13 @@ namespace WpfEditor.Constraints
     /// </summary>
     public class Constraints
     {
-        private static int nodesAmmount = 100;
-        private static int edgesAmmount = 100;
+        public static int NodesAmount { get; set; } = 100;
 
-        public static int NodesAmmount
-        {
-            get
-            {
-                return nodesAmmount;
-            }
-
-            set
-            {
-                nodesAmmount = value;
-            }
-        }
-
-        public static int EdgesAmmount
-        {
-            get
-            {
-                return edgesAmmount;
-            }
-
-            set
-            {
-                edgesAmmount = value;
-            }
-        }
+        public static int EdgesAmount { get; set; } = 100;
 
         /// <summary>
-        /// Checking if EdgeViewModel is initialized with constraint violation
-        /// For now (02.04) checks if generalization is a one-side edgeViewModel
+        /// Checking if edge is initialized with constraint violation
+        /// For now (02.04) checks if generalization is a one-side edge.
         /// </summary>
         public static bool CheckEdge(Repo.IEdge edge, Repo.IRepo repo, string modelName)
         {
@@ -47,12 +22,12 @@ namespace WpfEditor.Constraints
 
         public static bool AllowCreateEdge(Repo.IRepo repo, string modelName)
         {
-            return repo.Model(modelName).Edges.Count() < EdgesAmmount;
+            return repo.Model(modelName).Edges.Count() < EdgesAmount;
         }
 
         public static bool AllowCreateNode(Repo.IRepo repo, string modelName)
         {
-            return repo.Model(modelName).Nodes.Count() < NodesAmmount;
+            return repo.Model(modelName).Nodes.Count() < NodesAmount;
         }
     }
 }

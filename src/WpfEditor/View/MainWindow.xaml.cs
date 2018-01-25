@@ -18,7 +18,6 @@ using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
 using GraphX.PCL.Logic.Models;
 using PluginManager;
 using QuickGraph;
-using WpfEditor.Controls;
 using WpfEditor.Controls.Console;
 using WpfEditor.Model;
 using WpfEditor.ViewModel;

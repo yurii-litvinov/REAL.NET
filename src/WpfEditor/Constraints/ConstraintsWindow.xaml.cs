@@ -53,11 +53,11 @@ namespace WpfEditor.Constraints
             {
                 if (this.objType == "Node")
                 {
-                    Constraints.NodesAmmount = Convert.ToInt32(this.ammountBox.Text);
+                    Constraints.NodesAmount = Convert.ToInt32(this.ammountBox.Text);
                 }
                 else
                 {
-                    Constraints.EdgesAmmount = Convert.ToInt32(this.ammountBox.Text);
+                    Constraints.EdgesAmount = Convert.ToInt32(this.ammountBox.Text);
                 }
             }
 

@@ -40,10 +40,7 @@ namespace WpfEditor.ViewModel
 
         public string Text
         {
-            get
-            {
-                return this.text;
-            }
+            get => this.text;
 
             set
             {
@@ -56,10 +53,7 @@ namespace WpfEditor.ViewModel
 
         public EdgeTypeEnum EdgeType
         {
-            get
-            {
-                return this.edgeType;
-            }
+            get => this.edgeType;
 
             set
             {
@@ -70,15 +64,9 @@ namespace WpfEditor.ViewModel
 
         public void OnPropertyChanged(string name)
         {
-            if (this.PropertyChanged != null)
-            {
-                this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs(name));
-            }
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        public override string ToString()
-        {
-            return this.Text;
-        }
+        public override string ToString() => this.Text;
     }
 }

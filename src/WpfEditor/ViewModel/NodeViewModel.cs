@@ -6,13 +6,11 @@ using Repo;
 
 namespace WpfEditor.ViewModel
 {
-    /* NodeViewModel is the data class for the vertices. It contains all custom vertex data specified by the user.
-     * This class also must be derived from VertexBase that provides properties and methods mandatory for
-     * correct GraphX operations.
-     * Some of the useful VertexBase members are:
-     *  - ID property that stores unique positive identfication number. Property must be filled by user.
-     */
-
+    /// <summary>
+    /// NodeViewModel is the data class for the vertices. It contains all custom vertex data specified by the user.
+    /// This class also must be derived from VertexBase that provides properties and methods mandatory for
+    /// correct GraphX operations.
+    /// </summary>
     public class NodeViewModel : VertexBase, INotifyPropertyChanged
     {
         private Brush color = Brushes.Green;
@@ -51,10 +49,7 @@ namespace WpfEditor.ViewModel
 
         public Brush Color
         {
-            get
-            {
-                return this.color;
-            }
+            get => this.color;
 
             set
             {
@@ -65,10 +60,7 @@ namespace WpfEditor.ViewModel
 
         public VertexTypeEnum VertexType
         {
-            get
-            {
-                return this.vertexType;
-            }
+            get => this.vertexType;
 
             set
             {
@@ -79,10 +71,7 @@ namespace WpfEditor.ViewModel
 
         public IList<Attribute> Attributes
         {
-            get
-            {
-                return this.attributes;
-            }
+            get => this.attributes;
 
             set
             {
@@ -93,10 +82,7 @@ namespace WpfEditor.ViewModel
 
         public string Picture
         {
-            get
-            {
-                return "pack://application:,,,/" + this.picture;
-            }
+            get => "pack://application:,,,/" + this.picture;
 
             set
             {
@@ -112,10 +98,7 @@ namespace WpfEditor.ViewModel
 
         public void OnPropertyChanged(string name)
         {
-            if (this.PropertyChanged != null)
-            {
-                this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs(name));
-            }
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
         public class Attribute
