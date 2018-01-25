@@ -22,9 +22,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:graphx="http://schemas.panthernet.ru/graphx/"
     xmlns:view="clr-namespace:WpfEditor.View"
+    xmlns:console="clr-namespace:WpfEditor.Controls.Console"
     Title="REAL.NET"
     mc:Ignorable="d"
-    Height="600" Width="800">
+    d:DataContext="{view:MainWindow}">
 
     <Grid>
         <Grid.Resources>
@@ -60,22 +61,8 @@
             <!-- GridSplitter for console -->
             <GridSplitter Grid.Row ="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5"/>
             
-            <!-- Console -->
-            <!-- Need to be in different files, may be -->
-            <Grid Grid.Row="2">
-                <TabControl TabStripPlacement="Bottom">
-                    <TabItem Header="Messages">
-                        <ScrollViewer>
-                            <TextBox x:Name="Messages" IsReadOnly="True" TextWrapping="Wrap" />
-                        </ScrollViewer>
-                    </TabItem>
-                    <TabItem Header="Errors">
-                        <ScrollViewer>
-                            <TextBox x:Name="Errors" IsReadOnly="True" TextWrapping="Wrap" />
-                        </ScrollViewer>
-                    </TabItem>
-                </TabControl>
-            </Grid>
+            <!-- Console with error messages -->
+            <console:AppConsole Grid.Row="2" DataContext="{Binding Console}"/>
 
         </Grid>
 
@@ -120,4 +107,6 @@
 
     </Grid>
 </Window>
+
+
 

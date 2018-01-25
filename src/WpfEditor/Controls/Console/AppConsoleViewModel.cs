@@ -14,34 +14,21 @@
 
 namespace WpfEditor.Controls.Console
 {
-    using System;
-    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using EditorPluginInterfaces;
 
     /// <summary>
     /// ViewModel for errors and warnings window that is shown below the main scene.
     /// Allows to add new messages.
     /// </summary>
-    internal class AppConsole : IConsole
+    internal class AppConsoleViewModel : IConsole
     {
-        public event EventHandler<EventArgs> NewMessage;
+        public ObservableCollection<string> Messages { get; } = new ObservableCollection<string>();
 
-        public event EventHandler<EventArgs> NewError;
+        public ObservableCollection<string> Errors { get; } = new ObservableCollection<string>();
 
-        public IList<string> Messages { get; } = new List<string>();
+        public void ReportError(string error) => this.Errors.Add(error);
 
-        public IList<string> Errors { get; } = new List<string>();
-
-        public void ReportError(string error)
-        {
-            this.Errors.Add(error);
-            this.NewError?.Invoke(this, EventArgs.Empty);
-        }
-
-        public void SendMessage(string message)
-        {
-            this.Messages.Add(message);
-            this.NewMessage?.Invoke(this, EventArgs.Empty);
-        }
+        public void SendMessage(string message) => this.Messages.Add(message);
     }
 }

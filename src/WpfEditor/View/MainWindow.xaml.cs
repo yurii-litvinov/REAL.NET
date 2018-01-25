@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,22 +29,39 @@ namespace WpfEditor.View
     /// <summary>
     /// Main window of the application, launches on application startup.
     /// </summary>
-    internal partial class MainWindow : Window
+    internal partial class MainWindow : Window, INotifyPropertyChanged
     {
         private readonly EditorObjectManager editorManager;
         private VertexControl prevVer;
         private VertexControl ctrlVer;
         private EdgeControl ctrlEdg;
         private readonly Model.Model model;
-        private AppConsole console;
         private readonly Controller.Controller controller;
         private readonly Graph graph;
         private Repo.IElement currentElement;
         private Point pos;
 
+        // Code for drag-n-drop.
+        // Helps dragging button image.
+        private Window dragdropWindow = new Window();
+
+        private AppConsoleViewModel console;
+
+        public AppConsoleViewModel Console
+        {
+            get => this.console;
+            private set
+            {
+                if (Equals(value, this.console)) return;
+                this.console = value;
+                this.OnPropertyChanged();
+            }
+        }
+
         public MainWindow()
         {
             this.InitializeComponent();
+            this.DataContext = this;
             this.model = new Model.Model();
             this.controller = new Controller.Controller(this.model);
             this.graph = new Graph(this.model);
@@ -100,9 +119,9 @@ namespace WpfEditor.View
 
         private void InitConsole()
         {
-            this.console = new AppConsole();
-            this.console.NewMessage += this.OnConsoleMessagesHaveBeenUpdated;
-            this.console.NewError += this.OnConsoleErrorsHaveBeenUpdated;
+            this.Console = new AppConsoleViewModel();
+            //this.console.NewMessage += this.OnConsoleMessagesHaveBeenUpdated;
+            //this.console.NewError += this.OnConsoleErrorsHaveBeenUpdated;
         }
 
         private void InitAndLaunchPlugins()
@@ -110,35 +129,11 @@ namespace WpfEditor.View
             var libs = new PluginLauncher<PluginConfig>();
             const string folder = "../../../plugins/SamplePlugin/bin";
             var dirs = new List<string>(System.IO.Directory.GetDirectories(folder));
-            var config = new PluginConfig(null, null, this.console, null);
+            var config = new PluginConfig(null, null, this.Console, null);
             foreach (var dir in dirs)
             {
                 libs.LaunchPlugins(dir, config);
             }
-        }
-
-        private void OnConsoleMessagesHaveBeenUpdated(object sender, EventArgs args)
-        {
-            string allMessages = string.Empty;
-
-            foreach (var message in this.console.Messages)
-            {
-                allMessages += message + "\n";
-            }
-
-            this.Messages.Text = allMessages;
-        }
-
-        private void OnConsoleErrorsHaveBeenUpdated(object sender, EventArgs args)
-        {
-            string allErrors = string.Empty;
-
-            foreach (var error in this.console.Errors)
-            {
-                allErrors += error + "\n";
-            }
-
-            this.Errors.Text = allErrors;
         }
 
         private void ClearSelection(object sender, RoutedEventArgs e)
@@ -207,10 +202,6 @@ namespace WpfEditor.View
                 Grid.SetRow(button, this.paletteGrid.RowDefinitions.Count - 1);
             }
         }
-
-        // Code for drag-n-drop.
-        // Helps dragging button image.
-        private Window dragdropWindow = new Window();
 
         // Need for dragging.
         private void PaletteButton_MouseMove(object sender, MouseEventArgs args)
@@ -603,6 +594,13 @@ namespace WpfEditor.View
         {
             //var constraints = new ConstraintsWindow(this.repo, this.repo.Model(this.modelName));
             //constraints.ShowDialog();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
