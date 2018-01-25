@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -163,8 +161,6 @@ namespace WpfEditor.View
                 var button = new ToggleButton { Content = sp };
                 button.HorizontalContentAlignment = HorizontalAlignment.Left;
 
-                RoutedEventHandler createNode = (sender, args) => this.PaletteButton_Checked(type);
-                RoutedEventHandler createEdge = (sender, args) => { };
                 button.Click += (sender, args) => this.currentElement = type;
 
                 if (type.InstanceMetatype == Repo.Metatype.Edge)
@@ -337,52 +333,6 @@ namespace WpfEditor.View
                     }
                 }
             }
-        }
-
-        private void DrawNewVertex(NodeViewModel vertex)
-        {
-            ListBoxItem lbi = new ListBoxItem();
-            StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
-            Image img = new Image
-            {
-                Source = vertex.Picture != "pack://application:,,,/"
-                        ? new BitmapImage(new Uri(vertex.Picture))
-                        : new BitmapImage(new Uri("pack://application:,,,/View/Pictures/vertex.png")),
-            };
-
-            img.LayoutTransform = new ScaleTransform(0.3, 0.3);
-            TextBlock spaces = new TextBlock { Text = "  " };
-            TextBlock tx = new TextBlock
-            {
-                Text = vertex.Name,
-                VerticalAlignment = VerticalAlignment.Center,
-            };
-            sp.Children.Add(img);
-            sp.Children.Add(spaces);
-            sp.Children.Add(tx);
-            lbi.Content = sp;
-            this.elementsListBox.Items.Add(lbi);
-        }
-
-        private void DrawNewEdge(Repo.INode source, Repo.INode target)
-        {
-            ListBoxItem lbi = new ListBoxItem();
-            StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
-            Image img = new Image
-            {
-                Source = new BitmapImage(new Uri("pack://application:,,,/View/Pictures/EdgeViewModel.png")),
-            };
-            TextBlock spaces = new TextBlock { Text = "  " };
-            TextBlock tx0 = new TextBlock { Text = source.Name };
-            TextBlock tx1 = new TextBlock { Text = " - " };
-            TextBlock tx2 = new TextBlock { Text = target.Name };
-            sp.Children.Add(img);
-            sp.Children.Add(spaces);
-            sp.Children.Add(tx0);
-            sp.Children.Add(tx1);
-            sp.Children.Add(tx2);
-            lbi.Content = sp;
-            this.elementsListBox.Items.Add(lbi);
         }
 
         private void VertexSelectedAction(object sender, VertexSelectedEventArgs args)

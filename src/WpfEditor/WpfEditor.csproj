@@ -96,6 +96,9 @@
     <Compile Include="Controls\Console\AppConsole.xaml.cs">
       <DependentUpon>AppConsole.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Toolbar\ToolbarView.xaml.cs">
+      <DependentUpon>ToolbarView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Model\Graph.cs" />
     <Compile Include="Model\Model.cs" />
     <Compile Include="Constraints\Constraints.cs" />
@@ -105,7 +108,7 @@
     <Compile Include="Controls\Console\AppConsoleViewModel.cs" />
     <Compile Include="View\EdgeBlueprint.cs" />
     <Compile Include="View\EditorObjectManager.cs" />
-    <Compile Include="Controls\Toolbar\Toolbar.cs" />
+    <Compile Include="Controls\Toolbar\ToolbarViewModel.cs" />
     <Compile Include="Constraints\RepoInfo.cs" />
     <Page Include="Constraints\ConstraintsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -114,6 +117,10 @@
     <Page Include="Controls\Console\AppConsole.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Toolbar\ToolbarView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

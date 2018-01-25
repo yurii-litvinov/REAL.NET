@@ -14,26 +14,17 @@
 
 namespace WpfEditor.Controls.Toolbar
 {
-    using System;
-    using System.Collections.Generic;
-    using EditorPluginInterfaces.Toolbar;
+    using System.Windows.Controls;
 
     /// <summary>
-    /// ViewModel for toolbar control, allows to register some commands and show them as buttons. Can be used from
-    /// plugins.
+    /// Interaction logic for ToolbarView.xaml
     /// </summary>
-    public class Toolbar : IToolbar
+    public partial class ToolbarView : UserControl
     {
-        public IList<IButton> Buttons => throw new NotImplementedException();
-
-        public void AddButton(ICommand command, string desription, string image)
+        public ToolbarView()
         {
-            throw new NotImplementedException();
-        }
-
-        public void AddMenu(IMenu menu)
-        {
-            throw new NotImplementedException();
+            this.InitializeComponent();
+            this.DataContext = new ToolbarViewModel();
         }
     }
 }
