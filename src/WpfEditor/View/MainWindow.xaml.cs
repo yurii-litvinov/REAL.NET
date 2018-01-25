@@ -29,7 +29,7 @@ namespace WpfEditor.View
     /// <summary>
     /// Main window of the application, launches on application startup.
     /// </summary>
-    internal partial class MainWindow : Window, INotifyPropertyChanged
+    internal partial class MainWindow : Window
     {
         private readonly EditorObjectManager editorManager;
         private VertexControl prevVer;
@@ -45,23 +45,13 @@ namespace WpfEditor.View
         // Helps dragging button image.
         private Window dragdropWindow = new Window();
 
-        private AppConsoleViewModel console;
-
-        public AppConsoleViewModel Console
-        {
-            get => this.console;
-            private set
-            {
-                if (Equals(value, this.console)) return;
-                this.console = value;
-                this.OnPropertyChanged();
-            }
-        }
+        public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();
 
         public MainWindow()
         {
-            this.InitializeComponent();
             this.DataContext = this;
+            this.InitializeComponent();
+
             this.model = new Model.Model();
             this.controller = new Controller.Controller(this.model);
             this.graph = new Graph(this.model);
@@ -113,15 +103,8 @@ namespace WpfEditor.View
 
             this.InitPalette(modelName);
             this.graph.InitModel(modelName);
-            this.InitConsole();
+            
             this.InitAndLaunchPlugins();
-        }
-
-        private void InitConsole()
-        {
-            this.Console = new AppConsoleViewModel();
-            //this.console.NewMessage += this.OnConsoleMessagesHaveBeenUpdated;
-            //this.console.NewError += this.OnConsoleErrorsHaveBeenUpdated;
         }
 
         private void InitAndLaunchPlugins()
@@ -594,13 +577,6 @@ namespace WpfEditor.View
         {
             //var constraints = new ConstraintsWindow(this.repo, this.repo.Model(this.modelName));
             //constraints.ShowDialog();
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
