@@ -1,18 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EE68E91E-374C-46AF-AD7C-2783EE099A71}</ProjectGuid>
+    <ProjectGuid>{1DCB1D77-AB11-404C-BCE4-8EB7BF8F549D}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>WPF_Editor</RootNamespace>
-    <AssemblyName>WPF_Editor</AssemblyName>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WpfEditor</RootNamespace>
+    <AssemblyName>WpfEditor</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <CodeAnalysisRuleSet>WpfEditor.ruleset</CodeAnalysisRuleSet>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -25,7 +28,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -38,7 +40,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet />
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
+    <DocumentationFile>bin\Debug\WpfEditor.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -48,16 +52,28 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet />
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
+    <DocumentationFile>bin\Release\WpfEditor.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoRelease|AnyCPU'">
     <OutputPath>bin\MonoRelease\</OutputPath>
-    <CodeAnalysisRuleSet />
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FSharp.Core, Version=4.4.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -76,43 +92,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ViewModels\ConsoleViewModel.cs" />
-    <Compile Include="ViewModels\EditorViewModel.cs" />
-    <Compile Include="ViewModels\Helpers\GraphArea.cs" />
-    <Compile Include="ViewModels\Helpers\GXLogicCore.cs" />
-    <Compile Include="ViewModels\Interfaces\IPaletteMediatorViewModel.cs" />
-    <Compile Include="ViewModels\Interfaces\IPaletteViewModel.cs" />
-    <Compile Include="ViewModels\Interfaces\ISceneMediatorViewModel.cs" />
-    <Compile Include="ViewModels\Interfaces\ISceneViewModel.cs" />
-    <Compile Include="ViewModels\MediatorViewModel.cs" />
-    <Compile Include="ViewModels\Helpers\MetamodelEdge.cs" />
-    <Compile Include="ViewModels\Helpers\ModelEdge.cs" />
-    <Compile Include="ViewModels\Helpers\ModelElement.cs" />
-    <Compile Include="ViewModels\Helpers\ModelNode.cs" />
-    <Compile Include="ViewModels\PaletteViewModel.cs" />
-    <Compile Include="ViewModels\PluginbarViewModel.cs" />
-    <Compile Include="ViewModels\SceneViewModel.cs" />
-    <Compile Include="ViewModels\ToolbarViewModel.cs" />
-    <Compile Include="ViewModels\Helpers\MetamodelElement.cs" />
-    <Compile Include="ViewModels\Helpers\MetamodelNode.cs" />
-    <Compile Include="Views\ConsoleView.xaml.cs">
-      <DependentUpon>ConsoleView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\EditorView.xaml.cs">
-      <DependentUpon>EditorView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PaletteView.xaml.cs">
-      <DependentUpon>PaletteView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PluginBarView.xaml.cs">
-      <DependentUpon>PluginBarView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SceneView.xaml.cs">
-      <DependentUpon>SceneView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ToolbarView.xaml.cs">
-      <DependentUpon>ToolbarView.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Controller.cs" />
+    <Compile Include="Graph.cs" />
+    <Compile Include="Model.cs" />
+    <Compile Include="Constraints\Constraints.cs" />
+    <Compile Include="Constraints\ConstraintsItem.cs" />
+    <Compile Include="Constraints\ConstraintsValues.cs" />
+    <Compile Include="Constraints\ConstraintsWindow.xaml.cs" />
+    <Compile Include="Models\BoolToColorConverter.cs" />
+    <Compile Include="Models\InternalConsole\AppConsole.cs" />
+    <Compile Include="Models\ControlFactory\ControlFactoryCreator.cs" />
+    <Compile Include="Models\ControlFactory\IControlFactory.cs" />
+    <Compile Include="Models\EdgeBlueprint.cs" />
+    <Compile Include="Models\EditorObjectManager.cs" />
+    <Compile Include="Models\ImageLoader.cs" />
+    <Compile Include="Models\Toolbar\Toolbar.cs" />
+    <Compile Include="Models\ValueToImageConverter.cs" />
+    <Compile Include="Constraints\RepoInfo.cs" />
+    <Page Include="Constraints\ConstraintsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -121,36 +121,24 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Models\DataEdge.cs" />
+    <Compile Include="Models\DataVertex.cs" />
+    <Compile Include="Models\GraphAreaExample.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\ConsoleView.xaml">
+    <Page Include="Templates\EditorTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\EditorView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\PaletteView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PluginBarView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SceneView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ToolbarView.xaml">
+    <Page Include="Templates\GeneralTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\GraphExample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -173,16 +161,34 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <AppDesigner Include="Properties\" />
+    <None Include="WpfEditor.ruleset" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EditorPluginInterfaces\EditorPluginInterfaces.csproj">
+      <Project>{6e5f1b5d-f165-4cec-a240-8887ebd28e3b}</Project>
+      <Name>EditorPluginInterfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PluginManager\PluginManager.csproj">
+      <Project>{8b9c8d76-65b3-4a01-9d6f-b6192a823642}</Project>
+      <Name>PluginManager</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Repo\Repo.fsproj">
       <Project>{9e7065a4-ba5e-4752-84bf-54d5c00db60c}</Project>
       <Name>Repo</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
       <Visible>False</Visible>
@@ -195,7 +201,33 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Resource Include="Pictures\enginesForwardBlock.png" />
+    <Resource Include="Pictures\finalBlock.png" />
+    <Resource Include="Pictures\initialBlock.png" />
+    <Resource Include="Pictures\timerBlock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\enginesBackwardBlock.png" />
+    <Resource Include="Pictures\enginesStopBlock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\edge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\Vertex.png" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">
+      <ItemGroup>
+        <Reference Include="FSharp.Core">
+          <HintPath>..\..\packages\FSharp.Core\lib\net45\FSharp.Core.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">
       <ItemGroup>
@@ -233,11 +265,6 @@
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
-        <Reference Include="QuickGraph.Graphviz">
-          <HintPath>..\..\packages\QuickGraphPCL\lib\net40-client\QuickGraph.Graphviz.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
         <Reference Include="QuickGraph.Serialization">
           <HintPath>..\..\packages\QuickGraphPCL\lib\net40-client\QuickGraph.Serialization.dll</HintPath>
           <Private>True</Private>
@@ -246,4 +273,12 @@
       </ItemGroup>
     </When>
   </Choose>
+  <ItemGroup>
+    <Analyzer Include="..\..\packages\StyleCop.Analyzers\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll">
+      <Paket>True</Paket>
+    </Analyzer>
+    <Analyzer Include="..\..\packages\StyleCop.Analyzers\analyzers\dotnet\cs\StyleCop.Analyzers.dll">
+      <Paket>True</Paket>
+    </Analyzer>
+  </ItemGroup>
 </Project>
