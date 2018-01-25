@@ -70,7 +70,7 @@ type RobotsMetamodelBuilder() =
                 edge.Target <- Some target
                 edge.TargetName <- targetName
 
-                infrastructure.Element.SetAttributeValue edge "shape" "Pictures/Edge.png"
+                infrastructure.Element.SetAttributeValue edge "shape" "View/Pictures/edge.png"
                 infrastructure.Element.SetAttributeValue edge "isAbstract" "false"
                 infrastructure.Element.SetAttributeValue edge "instanceMetatype" "Metatype.Edge"
                 infrastructure.Element.SetAttributeValue edge "name" linkName
@@ -78,8 +78,8 @@ type RobotsMetamodelBuilder() =
                 edge
 
             let abstractNode = +("AbstractNode", "", true)
-            let initialNode = +("InitialNode", "Pictures/initialBlock.png", false)
-            let finalNode = +("FinalNode", "Pictures/finalBlock.png", false)
+            let initialNode = +("InitialNode", "View/Pictures/initialBlock.png", false)
+            let finalNode = +("FinalNode", "View/Pictures/finalBlock.png", false)
 
             let abstractMotorsBlock = +("AbstractMotorsBlock", "", true)
             infrastructure.Element.AddAttribute abstractMotorsBlock "ports" "AttributeKind.String" "M3, M4"
@@ -87,10 +87,10 @@ type RobotsMetamodelBuilder() =
             let abstractMotorsPowerBlock = +("AbstractMotorsPowerBlock", "", true)
             infrastructure.Element.AddAttribute abstractMotorsPowerBlock "power" "AttributeKind.Int" "100"
 
-            let motorsForward = +("MotorsForward", "Pictures/enginesForwardBlock.png", false)
-            let motorsBackward = +("MotorsBackward", "Pictures/enginesBackwardBlock.png", false)
-            let motorsStop = +("MotorsStop", "Pictures/enginesStopBlock.png", false)
-            let timer = +("Timer", "Pictures/timerBlock.png", false)
+            let motorsForward = +("MotorsForward", "View/Pictures/enginesForwardBlock.png", false)
+            let motorsBackward = +("MotorsBackward", "View/Pictures/enginesBackwardBlock.png", false)
+            let motorsStop = +("MotorsStop", "View/Pictures/enginesStopBlock.png", false)
+            let timer = +("Timer", "View/Pictures/timerBlock.png", false)
 
             let link = abstractNode ---> (abstractNode, "target", "Link")
             infrastructure.Element.AddAttribute link "guard" "AttributeKind.String" ""

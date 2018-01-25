@@ -1,9 +1,9 @@
 ﻿using System;
 using EditorPluginInterfaces;
 using EditorPluginInterfaces.Toolbar;
-using WpfEditor.Models.InternalConsole;
+using WpfEditor.Controls.Console;
 
-namespace WpfEditor.Models.ControlFactory
+namespace WpfEditor.Controls
 {
     public class ControlFactoryCreator
     {

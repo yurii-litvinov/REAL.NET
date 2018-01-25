@@ -3,7 +3,8 @@
                     xmlns:controls="http://schemas.panthernet.ru/graphx/"
                     xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     xmlns:local="clr-namespace:WpfEditor"
-                    xmlns:models="clr-namespace:WpfEditor.Models">
+                    xmlns:model="clr-namespace:WpfEditor.Model"
+                    xmlns:converters="clr-namespace:WpfEditor.ViewModel.Converters">
     <LinearGradientBrush x:Key="NormalBrush" EndPoint="0.5,1" StartPoint="0.5,0" po:Freeze="true">
         <GradientStop Color="#FFFFFFFF" Offset="0"/>
         <GradientStop Color="#FFA4ADBB" Offset="0.521"/>
@@ -24,8 +25,6 @@
 
     <SolidColorBrush x:Key="EdgeArrowBrush" Color="Black" po:Freeze="true" />
 
-    <models:ValueToImageConverter x:Key="ImageConverter"/>
-
     <!-- VERTEX CONTROL -->
     <Style TargetType="{x:Type controls:VertexControl}">
         <!-- Set background color through attached property -->
@@ -35,12 +34,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:VertexControl}">
                     <Grid>
-                        <!-- <Border CornerRadius="50" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Name="hlBorder">
-                            <Image Source="{Binding ImageId, Converter={StaticResource ImageConverter}}" Width="45" Stretch="Uniform" Margin="2" />
-                        </Border> -->
-
                         <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Vertex.Text, RelativeSource={RelativeSource TemplatedParent}}" LabelPositionSide="Bottom" FontFamily="Comic Sans MS" />
-
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

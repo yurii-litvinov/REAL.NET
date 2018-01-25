@@ -3,22 +3,22 @@ using System.Windows;
 using System.Windows.Media;
 using GraphX.Controls;
 
-namespace WpfEditor.Models
+namespace WpfEditor.View
 {
     public class EditorObjectManager : IDisposable
     {
-        private GraphAreaExample graphArea;
+        private GraphArea graphArea;
         private ZoomControl zoomControl;
         private EdgeBlueprint edgeBp;
         private ResourceDictionary rd;
 
-        public EditorObjectManager(GraphAreaExample graphAreaEx, ZoomControl zc)
+        public EditorObjectManager(GraphArea graphArea, ZoomControl zc)
         {
-            this.graphArea = graphAreaEx;
+            this.graphArea = graphArea;
             this.zoomControl = zc;
             this.rd = new ResourceDictionary
             {
-                Source = new Uri("pack://application:,,,/Templates/EditorTemplate.xaml", UriKind.RelativeOrAbsolute),
+                Source = new Uri("pack://application:,,,/View/Templates/EditorTemplate.xaml", UriKind.RelativeOrAbsolute),
             };
         }
 

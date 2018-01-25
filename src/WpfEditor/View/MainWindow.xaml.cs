@@ -18,10 +18,12 @@ using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
 using GraphX.PCL.Logic.Models;
 using PluginManager;
 using QuickGraph;
-using WpfEditor.Models;
-using WpfEditor.Models.InternalConsole;
+using WpfEditor.Controls;
+using WpfEditor.Controls.Console;
+using WpfEditor.Model;
+using WpfEditor.ViewModel;
 
-namespace WpfEditor
+namespace WpfEditor.View
 {
     /// <summary>
     /// Main window of the application, launches on application startup.
@@ -32,9 +34,9 @@ namespace WpfEditor
         private VertexControl prevVer;
         private VertexControl ctrlVer;
         private EdgeControl ctrlEdg;
-        private readonly Model model;
+        private readonly Model.Model model;
         private AppConsole console;
-        private readonly Controller controller;
+        private readonly Controller.Controller controller;
         private readonly Graph graph;
         private Repo.IElement currentElement;
         private Point pos;
@@ -42,17 +44,17 @@ namespace WpfEditor
         public MainWindow()
         {
             this.InitializeComponent();
-            this.model = new Model();
-            this.controller = new Controller(this.model);
+            this.model = new Model.Model();
+            this.controller = new Controller.Controller(this.model);
             this.graph = new Graph(this.model);
             this.graph.DrawGraph += (sender, args) => this.DrawGraph();
             this.graph.DrawNewEdge += (sender, args) => this.DrawNewEdge(args.Source, args.Target);
             this.graph.DrawNewVertex += (sender, args) => this.DrawNewVertex(args.VertName);
             this.graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVert);
-            this.graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.Edge);
+            this.graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.EdgeViewModel);
             this.editorManager = new EditorObjectManager(this.scene, this.zoomControl);
             var logic =
-                new GXLogicCore<DataVertex, DataEdge, BidirectionalGraph<DataVertex, DataEdge>>
+                new GXLogicCore<NodeViewModel, EdgeViewModel, BidirectionalGraph<NodeViewModel, EdgeViewModel>>
                 {
                     Graph = this.graph.DataGraph,
                     DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.LinLog
@@ -99,7 +101,7 @@ namespace WpfEditor
 
         private void InitConsole()
         {
-            var factory = Models.ControlFactory.ControlFactoryCreator.CreateControlFactory();
+            var factory = ControlFactoryCreator.CreateControlFactory();
             this.console = factory.CreateConsole() as AppConsole;
             this.console.NewMessage += this.OnConsoleMessagesHaveBeenUpdated;
             this.console.NewError += this.OnConsoleErrorsHaveBeenUpdated;
@@ -119,7 +121,7 @@ namespace WpfEditor
 
         private void OnConsoleMessagesHaveBeenUpdated(object sender, EventArgs args)
         {
-            string allMessages = "";
+            string allMessages = string.Empty;
 
             foreach (var message in this.console.Messages)
             {
@@ -131,9 +133,9 @@ namespace WpfEditor
 
         private void OnConsoleErrorsHaveBeenUpdated(object sender, EventArgs args)
         {
-            string allErrors = "";
+            string allErrors = string.Empty;
 
-            foreach(var error in this.console.Errors)
+            foreach (var error in this.console.Errors)
             {
                 allErrors += error + "\n";
             }
@@ -145,7 +147,7 @@ namespace WpfEditor
         {
             this.prevVer = null;
             this.ctrlVer = null;
-            this.scene.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().Color = Brushes.Green);
+            this.scene.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<NodeViewModel>().Color = Brushes.Green);
         }
 
         private void InitPalette(string metamodelName)
@@ -163,15 +165,15 @@ namespace WpfEditor
                     continue;
                 }
 
-                StackPanel sp = new StackPanel() { Orientation = Orientation.Horizontal };
+                StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
                 sp.HorizontalAlignment = HorizontalAlignment.Left;
 
-                Label l = new Label() { Content = type.Name };
-                Image img = new Image()
+                Label l = new Label { Content = type.Name };
+                Image img = new Image
                 {
                     Source = type.Shape != string.Empty
                     ? new BitmapImage(new Uri("pack://application:,,,/" + type.Shape))
-                    : new BitmapImage(new Uri("pack://application:,,,/Pictures/Vertex.png")),
+                    : new BitmapImage(new Uri("pack://application:,,,/View/Pictures/vertex.png")),
                 };
 
                 img.LayoutTransform = new ScaleTransform(0.3, 0.3);
@@ -188,7 +190,7 @@ namespace WpfEditor
                 RoutedEventHandler createNode = (sender, args) => this.PaletteButton_Checked(type);
                 RoutedEventHandler createEdge = (sender, args) => { };
                 button.Click += (sender, args) => this.currentElement = type;
-                
+
                 if (type.InstanceMetatype == Repo.Metatype.Edge)
                 {
                     this.scene.VertexSelected += (sender, args) => button.IsChecked = false;
@@ -329,7 +331,7 @@ namespace WpfEditor
                         this.graph.DataGraph.Edges.ToList()[i].Target.Name == target)
                     {
                         var edge = this.graph.DataGraph.Edges.ToList()[i];
-                        foreach (KeyValuePair<DataEdge, EdgeControl> ed in this.scene.EdgesList)
+                        foreach (KeyValuePair<EdgeViewModel, EdgeControl> ed in this.scene.EdgesList)
                         {
                             if (ed.Key == edge)
                             {
@@ -351,7 +353,7 @@ namespace WpfEditor
                     {
                         var vertex = this.graph.DataGraph.Vertices.ToList()[i];
                         this.attributesView.DataContext = vertex;
-                        foreach (KeyValuePair<DataVertex, VertexControl> ed in this.scene.VertexList)
+                        foreach (KeyValuePair<NodeViewModel, VertexControl> ed in this.scene.VertexList)
                         {
                             if (ed.Key == vertex)
                             {
@@ -365,15 +367,15 @@ namespace WpfEditor
             }
         }
 
-        private void DrawNewVertex(DataVertex vertex)
+        private void DrawNewVertex(NodeViewModel vertex)
         {
             ListBoxItem lbi = new ListBoxItem();
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
-            Image img = new Image()
+            Image img = new Image
             {
                 Source = vertex.Picture != "pack://application:,,,/"
                         ? new BitmapImage(new Uri(vertex.Picture))
-                        : new BitmapImage(new Uri("pack://application:,,,/Pictures/Vertex.png")),
+                        : new BitmapImage(new Uri("pack://application:,,,/View/Pictures/vertex.png")),
             };
 
             img.LayoutTransform = new ScaleTransform(0.3, 0.3);
@@ -394,9 +396,9 @@ namespace WpfEditor
         {
             ListBoxItem lbi = new ListBoxItem();
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
-            Image img = new Image()
+            Image img = new Image
             {
-                Source = new BitmapImage(new Uri("pack://application:,,,/Pictures/Edge.png")),
+                Source = new BitmapImage(new Uri("pack://application:,,,/View/Pictures/EdgeViewModel.png")),
             };
             TextBlock spaces = new TextBlock { Text = "  " };
             TextBlock tx0 = new TextBlock { Text = source.Name };
@@ -428,13 +430,13 @@ namespace WpfEditor
                 }
             }
 
-            this.attributesView.DataContext = this.ctrlVer.GetDataVertex<DataVertex>();
-            this.scene.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<DataVertex>().
+            this.attributesView.DataContext = this.ctrlVer.GetDataVertex<NodeViewModel>();
+            this.scene.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<NodeViewModel>().
             Color = Brushes.Green);
-            this.ctrlVer.GetDataVertex<DataVertex>().Color = Brushes.LightBlue;
+            this.ctrlVer.GetDataVertex<NodeViewModel>().Color = Brushes.LightBlue;
             if (this.prevVer != null)
             {
-                this.prevVer.GetDataVertex<DataVertex>().Color = Brushes.Yellow;
+                this.prevVer.GetDataVertex<NodeViewModel>().Color = Brushes.Yellow;
             }
 
             if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
@@ -466,7 +468,7 @@ namespace WpfEditor
 
         private void OnEdgeMouseMove(object sender, MouseEventArgs e)
         {
-            var dataEdge = this.ctrlEdg.GetDataEdge<DataEdge>();
+            var dataEdge = this.ctrlEdg.GetDataEdge<EdgeViewModel>();
             if (dataEdge.RoutingPoints == null)
             {
                 dataEdge.RoutingPoints = new GraphX.Measure.Point[3];
@@ -508,7 +510,7 @@ namespace WpfEditor
             this.controller.NewNode(element, modelName);
         }
 
-        private void AddNewVertexControl(DataVertex vertex)
+        private void AddNewVertexControl(NodeViewModel vertex)
         {
             this.DrawNewVertex(vertex.Name);
             var vc = new VertexControl(vertex);
@@ -516,24 +518,24 @@ namespace WpfEditor
             this.scene.AddVertex(vertex, vc);
         }
 
-        private void AddNewEdgeControl(DataEdge edge)
+        private void AddNewEdgeControl(EdgeViewModel edgeViewModel)
         {
-            this.DrawNewEdge(edge.Source.Name, edge.Target.Name);
-            var ec = new EdgeControl(this.prevVer, this.ctrlVer, edge);
-            this.scene.InsertEdge(edge, ec);
+            this.DrawNewEdge(edgeViewModel.Source.Name, edgeViewModel.Target.Name);
+            var ec = new EdgeControl(this.prevVer, this.ctrlVer, edgeViewModel);
+            this.scene.InsertEdge(edgeViewModel, ec);
             this.prevVer = null;
             this.editorManager.DestroyVirtualEdge();
         }
 
         private void MenuItemClickVert(object sender, EventArgs e)
         {
-            this.graph.DataGraph.RemoveVertex(this.ctrlVer.GetDataVertex<DataVertex>());
+            this.graph.DataGraph.RemoveVertex(this.ctrlVer.GetDataVertex<NodeViewModel>());
             this.DrawGraph();
         }
 
         private void MenuItemClickEdge(object sender, EventArgs e)
         {
-            this.graph.DataGraph.RemoveEdge(this.ctrlEdg.GetDataEdge<DataEdge>());
+            this.graph.DataGraph.RemoveEdge(this.ctrlEdg.GetDataEdge<EdgeViewModel>());
             this.DrawGraph();
         }
 
@@ -556,9 +558,9 @@ namespace WpfEditor
             ListBoxItem lbi = new ListBoxItem();
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
 
-            Image img = new Image()
+            Image img = new Image
             {
-                Source = new BitmapImage(new Uri("pack://application:,,,/Pictures/Vertex.png")),
+                Source = new BitmapImage(new Uri("pack://application:,,,/View/Pictures/vertex.png")),
             };
             TextBlock spaces = new TextBlock { Text = "  " };
             TextBlock tx = new TextBlock { Text = vertexName };
@@ -575,9 +577,9 @@ namespace WpfEditor
             ListBoxItem lbi = new ListBoxItem();
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
 
-            Image img = new Image()
+            Image img = new Image
             {
-                Source = new BitmapImage(new Uri("pack://application:,,,/Pictures/Edge.png")),
+                Source = new BitmapImage(new Uri("pack://application:,,,/View/Pictures/edge.png")),
             };
             TextBlock spaces = new TextBlock { Text = "  " };
             TextBlock tx0 = new TextBlock { Text = source };

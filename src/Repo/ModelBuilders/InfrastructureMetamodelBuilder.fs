@@ -94,7 +94,7 @@ type InfrastructureMetamodelBuilder() =
 
             let (--->) (source: IElement) (target, name, isAbstract) =
                 let association = model.CreateAssociation(metamodelAssociation, source, target, name)
-                createAttribute association stringNode "shape" "Pictures/Edge.png"
+                createAttribute association stringNode "shape" "View/Pictures/edge.png"
                 createAttribute association booleanNode "isAbstract" (if isAbstract then "true" else "false")
                 createAttribute association metatype "instanceMetatype" "Metatype.Edge"
 
@@ -119,13 +119,13 @@ type InfrastructureMetamodelBuilder() =
             repoNode ---> (modelNode, "models", true)
             modelNode ---> (element, "elements", true)
 
-            createAttribute element stringNode "shape" "Pictures/Vertex.png"
+            createAttribute element stringNode "shape" "View/Pictures/vertex.png"
             createAttribute element booleanNode "isAbstract" "true"
             createAttribute element metatype "instanceMetatype" "Metatype.Node"
 
             createAttribute node booleanNode "isAbstract" "false"
 
-            createAttribute edge stringNode "shape" "Pictures/Edge.png"
+            createAttribute edge stringNode "shape" "View/Pictures/edge.png"
             createAttribute edge metatype "instanceMetatype" "Metatype.Edge"
 
             createAttribute association booleanNode "isAbstract" "false"

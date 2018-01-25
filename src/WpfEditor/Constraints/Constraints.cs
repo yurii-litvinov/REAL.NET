@@ -37,8 +37,8 @@ namespace WpfEditor.Constraints
         }
 
         /// <summary>
-        /// Checking if Edge is initialized with constraint violation
-        /// For now (02.04) checks if generalization is a one-side edge
+        /// Checking if EdgeViewModel is initialized with constraint violation
+        /// For now (02.04) checks if generalization is a one-side edgeViewModel
         /// </summary>
         public static bool CheckEdge(Repo.IEdge edge, Repo.IRepo repo, string modelName)
         {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using EditorPluginInterfaces;
 
-namespace WpfEditor.Models.InternalConsole
+namespace WpfEditor.Controls.Console
 {
     public class AppConsole : IConsole
     {
@@ -10,9 +10,9 @@ namespace WpfEditor.Models.InternalConsole
 
         public event EventHandler<EventArgs> NewError;
 
-        public IList<string> Messages { get; private set; } = new List<string>();
+        public IList<string> Messages { get; } = new List<string>();
 
-        public IList<string> Errors { get; private set; } = new List<string>();
+        public IList<string> Errors { get; } = new List<string>();
 
         public void ReportError(string error)
         {

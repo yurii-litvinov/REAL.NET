@@ -4,16 +4,16 @@ using System.Windows.Media;
 using GraphX.PCL.Common.Models;
 using Repo;
 
-namespace WpfEditor.Models
+namespace WpfEditor.ViewModel
 {
-    /* DataVertex is the data class for the vertices. It contains all custom vertex data specified by the user.
+    /* NodeViewModel is the data class for the vertices. It contains all custom vertex data specified by the user.
      * This class also must be derived from VertexBase that provides properties and methods mandatory for
      * correct GraphX operations.
      * Some of the useful VertexBase members are:
      *  - ID property that stores unique positive identfication number. Property must be filled by user.
      */
 
-    public class DataVertex : VertexBase, INotifyPropertyChanged
+    public class NodeViewModel : VertexBase, INotifyPropertyChanged
     {
         private Brush color = Brushes.Green;
         private VertexTypeEnum vertexType = VertexTypeEnum.Node;
@@ -21,15 +21,15 @@ namespace WpfEditor.Models
         private string picture = string.Empty;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DataVertex"/> class.
+        /// Initializes a new instance of the <see cref="NodeViewModel"/> class.
         /// Default parameterless constructor for this class (required for YAXLib serialization)
         /// </summary>
-        public DataVertex()
+        public NodeViewModel()
             : this(string.Empty)
         {
         }
 
-        public DataVertex(string text = "")
+        public NodeViewModel(string text = "")
         {
             this.Name = text;
         }

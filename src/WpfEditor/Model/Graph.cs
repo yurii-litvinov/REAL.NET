@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Linq;
-using WpfEditor.Models;
+using QuickGraph;
+using Repo;
+using WpfEditor.ViewModel;
 
-namespace WpfEditor
+namespace WpfEditor.Model
 {
     public class Graph
     {
         private readonly Model model;
 
-        private readonly GraphExample dataGraph;
+        private readonly BidirectionalGraph<NodeViewModel, EdgeViewModel> dataGraph;
 
         internal Graph(Model repoModel)
         {
             this.model = repoModel;
-            this.dataGraph = new GraphExample();
+            this.dataGraph = new BidirectionalGraph<NodeViewModel, EdgeViewModel>();
             this.model.NewVertexInRepo += (sender, args) => this.CreateNodeWithPos(args.Node);
             this.model.NewEdgeInRepo += (sender, args) => this.CreateEdge(args.Edge, args.PrevVer, args.CtrlVer);
         }
@@ -28,18 +30,12 @@ namespace WpfEditor
 
         public event EventHandler<DataEdgeArgs> AddNewEdgeControl;
 
-        public GraphExample DataGraph
-        {
-            get
-            {
-                return this.dataGraph;
-            }
-        }
+        public BidirectionalGraph<NodeViewModel, EdgeViewModel> DataGraph => this.dataGraph;
 
         // Should be replaced
         public void InitModel(string modelName)
         {
-            Repo.IModel model = this.model.ModelRepo.Model(modelName);
+            IModel model = this.model.ModelRepo.Model(modelName);
             if (model == null)
             {
                 return;
@@ -52,10 +48,10 @@ namespace WpfEditor
 
             foreach (var edge in model.Edges)
             {
-                /* var isViolation = Constraints.CheckEdge(edge, this.repo, modelName); */
+                /* var isViolation = Constraints.CheckEdge(edgeViewModel, this.repo, modelName); */
 
-                var sourceNode = edge.From as Repo.INode;
-                var targetNode = edge.To as Repo.INode;
+                var sourceNode = edge.From as INode;
+                var targetNode = edge.To as INode;
                 if (sourceNode == null || targetNode == null)
                 {
                     // Editor does not support edges linked to edges. Yet.
@@ -72,7 +68,7 @@ namespace WpfEditor
                 var source = this.dataGraph.Vertices.First(v => v.Node == sourceNode);
                 var target = this.dataGraph.Vertices.First(v => v.Node == targetNode);
 
-                var newEdge = new DataEdge(source, target, Convert.ToDouble(false)) { EdgeType = DataEdge.EdgeTypeEnum.Association };
+                var newEdge = new EdgeViewModel(source, target, Convert.ToDouble(false)) { EdgeType = EdgeViewModel.EdgeTypeEnum.Association };
                 this.dataGraph.AddEdge(newEdge);
                 SourceTargetArgs args = new SourceTargetArgs();
                 args.Source = source.Name;
@@ -83,31 +79,31 @@ namespace WpfEditor
             this.DrawGraph?.Invoke(this, EventArgs.Empty);
         }
 
-        public void CreateEdge(Repo.IEdge edge, DataVertex prevVer, DataVertex ctrlVer)
+        public void CreateEdge(IEdge edge, NodeViewModel prevVer, NodeViewModel ctrlVer)
         {
             if (prevVer == null || ctrlVer == null)
             {
                 return;
             }
 
-            var newEdge = new DataEdge(prevVer, ctrlVer, Convert.ToDouble(true));
+            var newEdge = new EdgeViewModel(prevVer, ctrlVer, Convert.ToDouble(true));
             DataEdgeArgs args = new DataEdgeArgs();
-            args.Edge = newEdge;
+            args.EdgeViewModel = newEdge;
             this.AddNewEdgeControl?.Invoke(this, args);
         }
 
-        private void CreateNodeWithPos(Repo.INode node)
+        private void CreateNodeWithPos(INode node)
         {
-            var vertex = new DataVertex(node.Name)
+            var vertex = new NodeViewModel(node.Name)
             {
                 Node = node,
-                VertexType = DataVertex.VertexTypeEnum.Node,
-                Picture = node.Class.Shape,
+                VertexType = NodeViewModel.VertexTypeEnum.Node,
+                Picture = node.Class.Shape
             };
 
-            var attributeInfos = node.Attributes.Select(x => new DataVertex.Attribute(x, x.Name, x.Kind.ToString())
+            var attributeInfos = node.Attributes.Select(x => new NodeViewModel.Attribute(x, x.Name, x.Kind.ToString())
             {
-                Value = x.StringValue,
+                Value = x.StringValue
             });
 
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
@@ -116,18 +112,18 @@ namespace WpfEditor
             this.AddNewVertexControl?.Invoke(this, args);
         }
 
-        private void CreateNodeWithoutPos(Repo.INode node)
+        private void CreateNodeWithoutPos(INode node)
         {
-            var vertex = new DataVertex(node.Name)
+            var vertex = new NodeViewModel(node.Name)
             {
                 Node = node,
-                VertexType = DataVertex.VertexTypeEnum.Node,
-                Picture = node.Class.Shape,
+                VertexType = NodeViewModel.VertexTypeEnum.Node,
+                Picture = node.Class.Shape
             };
 
-            var attributeInfos = node.Attributes.Select(x => new DataVertex.Attribute(x, x.Name, x.Kind.ToString())
+            var attributeInfos = node.Attributes.Select(x => new NodeViewModel.Attribute(x, x.Name, x.Kind.ToString())
             {
-                Value = x.StringValue,
+                Value = x.StringValue
             });
 
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
@@ -139,37 +135,25 @@ namespace WpfEditor
 
         public class DataVertexArgs : EventArgs
         {
-            private DataVertex dataVert;
+            private NodeViewModel dataVert;
 
-            public DataVertex DataVert
+            public NodeViewModel DataVert
             {
-                get
-                {
-                    return this.dataVert;
-                }
+                get => this.dataVert;
 
-                set
-                {
-                    this.dataVert = value;
-                }
+                set => this.dataVert = value;
             }
         }
 
         public class DataEdgeArgs : EventArgs
         {
-            private DataEdge edge;
+            private EdgeViewModel edgeViewModel;
 
-            public DataEdge Edge
+            public EdgeViewModel EdgeViewModel
             {
-                get
-                {
-                    return this.edge;
-                }
+                get => this.edgeViewModel;
 
-                set
-                {
-                    this.edge = value;
-                }
+                set => this.edgeViewModel = value;
             }
         }
 
@@ -180,47 +164,22 @@ namespace WpfEditor
 
             public string Source
             {
-                get
-                {
-                    return this.source;
-                }
+                get => this.source;
 
-                set
-                {
-                    this.source = value;
-                }
+                set => this.source = value;
             }
 
             public string Target
             {
-                get
-                {
-                    return this.target;
-                }
+                get => this.target;
 
-                set
-                {
-                    this.target = value;
-                }
+                set => this.target = value;
             }
         }
 
         public class VertexNameArgs : EventArgs
         {
-            private string vertName;
-
-            public string VertName
-            {
-                get
-                {
-                    return this.vertName;
-                }
-
-                set
-                {
-                    this.vertName = value;
-                }
-            }
+            public string VertName { get; set; }
         }
     }
 }

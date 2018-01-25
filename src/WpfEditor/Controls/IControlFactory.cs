@@ -1,7 +1,7 @@
 ﻿using EditorPluginInterfaces;
 using EditorPluginInterfaces.Toolbar;
 
-namespace WpfEditor.Models.ControlFactory
+namespace WpfEditor.Controls
 {
     public interface IControlFactory
     {

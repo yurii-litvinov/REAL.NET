@@ -1,13 +1,14 @@
 ﻿using GraphX.Controls;
-using WpfEditor.Models;
+using WpfEditor.Model;
+using WpfEditor.ViewModel;
 
-namespace WpfEditor
+namespace WpfEditor.Controller
 {
     public class Controller
     {
-        private readonly Model model;
+        private readonly Model.Model model;
 
-        internal Controller(Model graphModel)
+        internal Controller(Model.Model graphModel)
         {
             this.model = graphModel;
         }
@@ -19,7 +20,7 @@ namespace WpfEditor
 
         public void NewEdge(Repo.IElement edge, VertexControl prevVer, VertexControl ctrlVer)
         {
-            this.model.NewEdge(edge as Repo.IEdge, prevVer?.Vertex as DataVertex, ctrlVer?.Vertex as DataVertex);
+            this.model.NewEdge(edge as Repo.IEdge, prevVer?.Vertex as NodeViewModel, ctrlVer?.Vertex as NodeViewModel);
         }
     }
 }

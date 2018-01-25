@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using EditorPluginInterfaces.Toolbar;
 
-namespace WpfEditor.Models.Toolbar
+namespace WpfEditor.Controls.Toolbar
 {
     public class Toolbar : IToolbar
     {

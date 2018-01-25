@@ -1,7 +1,7 @@
 ﻿using System;
-using WpfEditor.Models;
+using WpfEditor.ViewModel;
 
-namespace WpfEditor
+namespace WpfEditor.Model
 {
     public class Model
     {
@@ -28,7 +28,7 @@ namespace WpfEditor
             this.RaiseNewVertexInRepo(newNode);
         }
 
-        public void NewEdge(Repo.IEdge edge, DataVertex prevVer, DataVertex ctrlVer)
+        public void NewEdge(Repo.IEdge edge, NodeViewModel prevVer, NodeViewModel ctrlVer)
         {
             this.RaiseNewEdgeInRepo(edge, prevVer, ctrlVer);
         }
@@ -42,7 +42,7 @@ namespace WpfEditor
             this.NewVertexInRepo?.Invoke(this, args);
         }
 
-        private void RaiseNewEdgeInRepo(Repo.IEdge edge, DataVertex prevVer, DataVertex ctrlVer)
+        private void RaiseNewEdgeInRepo(Repo.IEdge edge, NodeViewModel prevVer, NodeViewModel ctrlVer)
         {
             EdgeEventArgs args = new EdgeEventArgs
             {
@@ -68,8 +68,8 @@ namespace WpfEditor
         public class EdgeEventArgs : EventArgs
         {
             private Repo.IEdge edge;
-            private DataVertex prevVer;
-            private DataVertex ctrlVer;
+            private NodeViewModel prevVer;
+            private NodeViewModel ctrlVer;
 
             public Repo.IEdge Edge
             {
@@ -78,14 +78,14 @@ namespace WpfEditor
                 set => this.edge = value;
             }
 
-            public DataVertex PrevVer
+            public NodeViewModel PrevVer
             {
                 get => this.prevVer;
 
                 set => this.prevVer = value;
             }
 
-            public DataVertex CtrlVer
+            public NodeViewModel CtrlVer
             {
                 get => this.ctrlVer;
 

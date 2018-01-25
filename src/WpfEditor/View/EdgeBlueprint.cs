@@ -5,13 +5,13 @@ using System.Windows.Shapes;
 using GraphX.Controls;
 using GraphX.Controls.Models;
 
-namespace WpfEditor.Models
+namespace WpfEditor.View
 {
     public class EdgeBlueprint : IDisposable
     {
         public EdgeBlueprint(VertexControl source, Point targetPos, Brush brush)
         {
-            this.EdgePath = new Path() { Stroke = brush, Data = new LineGeometry() };
+            this.EdgePath = new Path { Stroke = brush, Data = new LineGeometry() };
             this.Source = source;
             this.Source.PositionChanged += this.Source_PositionChanged;
         }

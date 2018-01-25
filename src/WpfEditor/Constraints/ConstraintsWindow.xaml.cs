@@ -28,9 +28,9 @@ namespace WpfEditor.Constraints
                     this.ElementType.ItemsSource = new List<ConstraintsValues>(this.info.GetNodeTypes().Select(x => new ConstraintsValues { ElementType = x }));
                     this.objType = "Node";
                     break;
-                case "Edge":
+                case "EdgeViewModel":
                     this.ElementType.ItemsSource = new List<ConstraintsValues>(this.info.GetEdgeTypes().Select(x => new ConstraintsValues { ElementType = x }));
-                    this.objType = "Edge";
+                    this.objType = "EdgeViewModel";
                     break;
             }
         }

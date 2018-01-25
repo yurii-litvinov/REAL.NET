@@ -1,24 +1,23 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using GraphX.Measure;
 using GraphX.PCL.Common.Models;
+using WpfEditor.Model;
 
-namespace WpfEditor.Models
+namespace WpfEditor.ViewModel
 {
-    [Serializable]
-    public class DataEdge : EdgeBase<DataVertex>, INotifyPropertyChanged
+    public class EdgeViewModel : EdgeBase<NodeViewModel>, INotifyPropertyChanged
     {
         private EdgeTypeEnum edgeType = EdgeTypeEnum.Association;
 
         private string text;
 
-        public DataEdge(DataVertex source, DataVertex target, double weight = 1)
+        public EdgeViewModel(NodeViewModel source, NodeViewModel target, double weight = 1)
             : base(source, target, weight)
         {
             this.Angle = 90;
         }
 
-        public DataEdge()
+        public EdgeViewModel()
             : base(null, null, 1)
         {
             this.Angle = 90;
