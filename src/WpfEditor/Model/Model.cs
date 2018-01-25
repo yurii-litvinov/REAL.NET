@@ -1,29 +1,49 @@
-﻿using System;
-using WpfEditor.ViewModel;
+﻿/* Copyright 2017-2018 REAL.NET group
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. */
 
 namespace WpfEditor.Model
 {
+    using System;
+    using ViewModel;
+
+    /// <summary>
+    /// Model in MVC architecture. Wraps repository, provides operations like adding or removing models, edges and 
+    /// nodes (note that "model" is used with two different meanings around the project -- a visual model consisting 
+    /// of nodes and edges and a model in MVC sense) and notifications for all concerned tools about changes in repo.
+    /// This class is a ground truth about visual model currently edited and is supposed to be used by all tools and
+    /// parts of an editor who need to listen for visual model changes and/or modify visual model.
+    /// 
+    /// Also this class serves as a factory and container for ViewModels for various parts of visual model
+    /// (see <see cref="NodeViewModel"/> and <see cref="EdgeViewModel"/> as an example). Those view models can only
+    /// be created by this class and their lifecycle is managed here.
+    /// </summary>
     public class Model
     {
-        private readonly Repo.IRepo modelRepo;
-        private string modelName;
-
         public Model()
         {
-            this.modelRepo = Repo.RepoFactory.CreateRepo();
+            this.Repo = global::Repo.RepoFactory.CreateRepo();
         }
 
         public event EventHandler<VertexEventArgs> NewVertexInRepo;
 
         public event EventHandler<EdgeEventArgs> NewEdgeInRepo;
 
-        public string ModelName => this.modelName;
-
-        public Repo.IRepo ModelRepo => this.modelRepo;
+        public Repo.IRepo Repo { get; }
 
         public void NewNode(Repo.IElement element, string modelName)
         {
-            var model = this.modelRepo.Model(modelName);
+            var model = this.Repo.Model(modelName);
             var newNode = model.CreateElement(element) as Repo.INode;
             this.RaiseNewVertexInRepo(newNode);
         }
@@ -55,42 +75,16 @@ namespace WpfEditor.Model
 
         public class VertexEventArgs : EventArgs
         {
-            private Repo.INode node;
-
-            public Repo.INode Node
-            {
-                get => this.node;
-
-                set => this.node = value;
-            }
+            public Repo.INode Node { get; set; }
         }
 
         public class EdgeEventArgs : EventArgs
         {
-            private Repo.IEdge edge;
-            private NodeViewModel prevVer;
-            private NodeViewModel ctrlVer;
+            public Repo.IEdge Edge { get; set; }
 
-            public Repo.IEdge Edge
-            {
-                get => this.edge;
+            public NodeViewModel PrevVer { get; set; }
 
-                set => this.edge = value;
-            }
-
-            public NodeViewModel PrevVer
-            {
-                get => this.prevVer;
-
-                set => this.prevVer = value;
-            }
-
-            public NodeViewModel CtrlVer
-            {
-                get => this.ctrlVer;
-
-                set => this.ctrlVer = value;
-            }
+            public NodeViewModel CtrlVer { get; set; }
         }
     }
 }

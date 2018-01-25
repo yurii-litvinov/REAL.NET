@@ -197,3 +197,5 @@ docs/tools/FSharp.Formatting.svclog
 # ===================================================
 **/*.vpp.*
 
+# Line endings unifier plugin
+.leu

@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using GraphX.Measure;
 using GraphX.PCL.Common.Models;
-using WpfEditor.Model;
 
 namespace WpfEditor.ViewModel
 {

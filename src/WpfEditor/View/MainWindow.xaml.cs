@@ -101,8 +101,7 @@ namespace WpfEditor.View
 
         private void InitConsole()
         {
-            var factory = ControlFactoryCreator.CreateControlFactory();
-            this.console = factory.CreateConsole() as AppConsole;
+            this.console = new AppConsole();
             this.console.NewMessage += this.OnConsoleMessagesHaveBeenUpdated;
             this.console.NewError += this.OnConsoleErrorsHaveBeenUpdated;
         }
@@ -152,7 +151,7 @@ namespace WpfEditor.View
 
         private void InitPalette(string metamodelName)
         {
-            var model = this.model.ModelRepo.Model(metamodelName).Metamodel;
+            var model = this.model.Repo.Model(metamodelName).Metamodel;
             if (model == null)
             {
                 return;
