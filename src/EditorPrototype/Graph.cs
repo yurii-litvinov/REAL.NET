@@ -1,4 +1,7 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
+using GraphX.Controls;
+using GraphX.PCL.Common;
 
 namespace EditorPrototype
 {
@@ -65,16 +68,21 @@ namespace EditorPrototype
                 var source = this.DataGraph.Vertices.First(v => v.Node == sourceNode);
                 var target = this.DataGraph.Vertices.First(v => v.Node == targetNode);
 
-                var newEdge = new DataEdge(source, target) { Text = string.Format("{0} -> {1}", 0, 1), EdgeType = DataEdge.EdgeTypeEnum.Association };
-
+                var newEdge = new DataEdge(source, target) { EdgeType = DataEdge.EdgeTypeEnum.Association};
                 var attributeInfos = edge.Attributes.Select(x => new DataEdge.Attribute
                 {
                     Name = x.Name,
                     Type = x.Kind.ToString(),
                     Value = x.StringValue
                 });
-                attributeInfos.ToList().ForEach(x => newEdge.Attributes.Add(x));
-
+                var attributes = attributeInfos as IList<DataEdge.Attribute> ?? attributeInfos.ToList();
+                attributes.ForEach(x => newEdge.Attributes.Add(x));
+                var value = attributes.SingleOrDefault(x => x.Name == "Value");
+                if (value != null)
+                {
+                    newEdge.EdgeType = DataEdge.EdgeTypeEnum.Attribute;
+                    newEdge.Text = value.Value;
+                }
                 this.DataGraph.AddEdge(newEdge);
                 SourceTargetArgs args = new SourceTargetArgs
                 {

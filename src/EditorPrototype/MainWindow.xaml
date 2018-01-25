@@ -88,7 +88,7 @@
                 <ListBox x:Name="elementsListBox" Grid.Row="3" VerticalAlignment="Top" Height="95"/>
                 <Label x:Name="selectedEntityLabel" Grid.Row="4" Content="Selected entity:" HorizontalAlignment="Stretch" />
 
-                <DataGrid x:Name="attributesView" Grid.Row="5" ItemsSource="{Binding Attributes}" AutoGenerateColumns="False">
+                <DataGrid x:Name="attributesView" Grid.Row="5" ItemsSource="{Binding Attributes}" AutoGenerateColumns="False" CellEditEnding="attributesView_CellEditEnding">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Name}"/>
                         <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Type}"/>

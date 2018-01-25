@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Data;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using EditorPrototype.AirSim;
@@ -41,7 +42,8 @@ namespace EditorPrototype
         private readonly Graph graph;
         private Repo.IElement currentElement;
         private Point pos;
-        private Thread executionThread;
+        private CancellationToken ct;
+        private CancellationTokenSource token;
 
         public MainWindow()
         {
@@ -423,6 +425,7 @@ namespace EditorPrototype
 
         private void VertexSelectedAction(object sender, VertexSelectedEventArgs args)
         {
+            this.ctrlEdg = null;
             this.ctrlVer = args.VertexControl;
             if (this.currentElement != null && this.currentElement.InstanceMetatype == Repo.Metatype.Edge)
             {
@@ -621,9 +624,6 @@ namespace EditorPrototype
             //constraints.ShowDialog();
         }
 
-        private CancellationToken ct;
-        private CancellationTokenSource token;
-
         private async void ExecuteButtonClick(object sender, RoutedEventArgs e)
         {
             Messages.Text = "Running your code\n";
@@ -637,6 +637,17 @@ namespace EditorPrototype
         {
             token.Cancel();
             Messages.Text += "Stop execution of code \n";
+        }
+
+        private void attributesView_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            if (this.ctrlEdg != null)
+            {
+                Messages.Text += ((TextBox)e.EditingElement).Text;
+                var data = ctrlEdg.GetDataEdge<DataEdge>();
+                data.Text = ((TextBox) e.EditingElement).Text;
+                this.g_Area.GenerateAllEdges();
+            }
         }
     }
 }
