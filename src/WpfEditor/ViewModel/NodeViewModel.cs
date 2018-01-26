@@ -1,32 +1,24 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using System.Windows.Media;
-using GraphX.PCL.Common.Models;
-using Repo;
-
-namespace WpfEditor.ViewModel
+﻿namespace WpfEditor.ViewModel
 {
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Runtime.CompilerServices;
+    using System.Windows.Media;
+    using GraphX.PCL.Common.Models;
+    using Repo;
+
     /// <summary>
-    /// NodeViewModel is the data class for the vertices. It contains all custom vertex data specified by the user.
-    /// This class also must be derived from VertexBase that provides properties and methods mandatory for
-    /// correct GraphX operations.
+    /// NodeViewModel is the view model for visual model nodes. It is used to bind to GraphX vertex controls.
     /// </summary>
     public class NodeViewModel : VertexBase, INotifyPropertyChanged
     {
         private Brush color = Brushes.Green;
-        private VertexTypeEnum vertexType = VertexTypeEnum.Node;
         private IList<Attribute> attributes = new List<Attribute>();
         private string picture = string.Empty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NodeViewModel"/> class.
-        /// Default parameterless constructor for this class (required for YAXLib serialization)
         /// </summary>
-        public NodeViewModel()
-            : this(string.Empty)
-        {
-        }
-
         public NodeViewModel(string text = "")
         {
             this.Name = text;
@@ -34,14 +26,8 @@ namespace WpfEditor.ViewModel
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public enum VertexTypeEnum
-        {
-            Node,
-            Attribute,
-        }
-
         /// <summary>
-        /// Gets or sets some string property for example purposes
+        /// Gets or sets name of the node.
         /// </summary>
         public string Name { get; set; }
 
@@ -54,18 +40,7 @@ namespace WpfEditor.ViewModel
             set
             {
                 this.color = value;
-                this.OnPropertyChanged(nameof(this.Color));
-            }
-        }
-
-        public VertexTypeEnum VertexType
-        {
-            get => this.vertexType;
-
-            set
-            {
-                this.vertexType = value;
-                this.OnPropertyChanged(nameof(this.VertexType));
+                this.OnPropertyChanged();
             }
         }
 
@@ -76,7 +51,7 @@ namespace WpfEditor.ViewModel
             set
             {
                 this.attributes = value;
-                this.OnPropertyChanged(nameof(this.Attributes));
+                this.OnPropertyChanged();
             }
         }
 
@@ -87,7 +62,7 @@ namespace WpfEditor.ViewModel
             set
             {
                 this.picture = value;
-                this.OnPropertyChanged(nameof(this.Picture));
+                this.OnPropertyChanged();
             }
         }
 
@@ -96,7 +71,7 @@ namespace WpfEditor.ViewModel
             return this.Name;
         }
 
-        public void OnPropertyChanged(string name)
+        public void OnPropertyChanged([CallerMemberName] string name = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }

@@ -19,9 +19,9 @@ namespace WpfEditor.Constraints
 
         public void Initialize()
         {
-            ColumnDefinition gridCol1 = new ColumnDefinition();
+            var gridCol1 = new ColumnDefinition();
             gridCol1.Width = new GridLength(8, GridUnitType.Star);
-            ColumnDefinition gridCol2 = new ColumnDefinition();
+            var gridCol2 = new ColumnDefinition();
             this.ColumnDefinitions.Add(gridCol1);
             this.ColumnDefinitions.Add(gridCol2);
 

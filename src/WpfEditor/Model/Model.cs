@@ -55,7 +55,7 @@ namespace WpfEditor.Model
 
         private void RaiseNewVertexInRepo(Repo.INode node)
         {
-            VertexEventArgs args = new VertexEventArgs
+            var args = new VertexEventArgs
             {
                 Node = node
             };
@@ -64,7 +64,7 @@ namespace WpfEditor.Model
 
         private void RaiseNewEdgeInRepo(Repo.IEdge edge, NodeViewModel prevVer, NodeViewModel ctrlVer)
         {
-            EdgeEventArgs args = new EdgeEventArgs
+            var args = new EdgeEventArgs
             {
                 Edge = edge,
                 PrevVer = prevVer,

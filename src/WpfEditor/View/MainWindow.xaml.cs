@@ -139,27 +139,33 @@ namespace WpfEditor.View
                     continue;
                 }
 
-                StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
-                sp.HorizontalAlignment = HorizontalAlignment.Left;
-
-                Label l = new Label { Content = type.Name };
-                Image img = new Image
+                var sp = new StackPanel
                 {
-                    Source = type.Shape != string.Empty
-                    ? new BitmapImage(new Uri("pack://application:,,,/" + type.Shape))
-                    : new BitmapImage(new Uri("pack://application:,,,/View/Pictures/vertex.png")),
+                    Orientation = Orientation.Horizontal,
+                    HorizontalAlignment = HorizontalAlignment.Left
                 };
 
-                img.LayoutTransform = new ScaleTransform(0.3, 0.3);
-                img.HorizontalAlignment = HorizontalAlignment.Left;
+                var l = new Label { Content = type.Name };
+                var img = new Image
+                {
+                    Source = type.Shape != string.Empty
+                        ? new BitmapImage(new Uri("pack://application:,,,/" + type.Shape))
+                        : new BitmapImage(new Uri("pack://application:,,,/View/Pictures/vertex.png")),
+                    LayoutTransform = new ScaleTransform(0.3, 0.3),
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                };
+
                 l.VerticalAlignment = VerticalAlignment.Center;
                 l.HorizontalAlignment = HorizontalAlignment.Left;
 
                 sp.Children.Add(img);
                 sp.Children.Add(l);
 
-                var button = new ToggleButton { Content = sp };
-                button.HorizontalContentAlignment = HorizontalAlignment.Left;
+                var button = new ToggleButton
+                {
+                    Content = sp,
+                    HorizontalContentAlignment = HorizontalAlignment.Left
+                };
 
                 button.Click += (sender, args) => this.currentElement = type;
 
@@ -185,9 +191,7 @@ namespace WpfEditor.View
         // Need for dragging.
         private void PaletteButton_MouseMove(object sender, MouseEventArgs args)
         {
-            var button = sender as ToggleButton;
-
-            if (button == null || !button.IsPressed)
+            if (!(sender is ToggleButton button) || !button.IsPressed)
             {
                 return;
             }
@@ -229,15 +233,17 @@ namespace WpfEditor.View
         // Need for creating an image on cursor.
         private void CreateDragDropWindow(Visual dragElement)
         {
-            this.dragdropWindow = new Window();
-            this.dragdropWindow.WindowStyle = WindowStyle.None;
-            this.dragdropWindow.AllowsTransparency = true;
-            this.dragdropWindow.AllowDrop = false;
-            this.dragdropWindow.Background = null;
-            this.dragdropWindow.IsHitTestVisible = false;
-            this.dragdropWindow.SizeToContent = SizeToContent.WidthAndHeight;
-            this.dragdropWindow.Topmost = true;
-            this.dragdropWindow.ShowInTaskbar = false;
+            this.dragdropWindow = new Window
+            {
+                WindowStyle = WindowStyle.None,
+                AllowsTransparency = true,
+                AllowDrop = false,
+                Background = null,
+                IsHitTestVisible = false,
+                SizeToContent = SizeToContent.WidthAndHeight,
+                Topmost = true,
+                ShowInTaskbar = false
+            };
 
             var rectangle = new Rectangle
             {
@@ -283,7 +289,7 @@ namespace WpfEditor.View
         // TODO: Copypaste is heresy.
         private void ElementInBoxSelectedAction(object sender, EventArgs e)
         {
-            StackPanel sp = (this.elementsListBox.SelectedItem as ListBoxItem)?.Content as StackPanel;
+            var sp = (this.elementsListBox.SelectedItem as ListBoxItem)?.Content as StackPanel;
             if (sp == null)
             {
                 return;
@@ -293,13 +299,13 @@ namespace WpfEditor.View
             {
                 var source = (sp.Children[2] as TextBlock).Text;
                 var target = (sp.Children[4] as TextBlock).Text;
-                for (int i = 0; i < this.graph.DataGraph.Edges.Count(); i++)
+                for (var i = 0; i < this.graph.DataGraph.Edges.Count(); i++)
                 {
                     if (this.graph.DataGraph.Edges.ToList()[i].Source.Name == source &&
                         this.graph.DataGraph.Edges.ToList()[i].Target.Name == target)
                     {
                         var edge = this.graph.DataGraph.Edges.ToList()[i];
-                        foreach (KeyValuePair<EdgeViewModel, EdgeControl> ed in this.scene.EdgesList)
+                        foreach (var ed in this.scene.EdgesList)
                         {
                             if (ed.Key == edge)
                             {
@@ -315,13 +321,13 @@ namespace WpfEditor.View
             else
             {
                 var name = (sp.Children[2] as TextBlock).Text;
-                for (int i = 0; i < this.graph.DataGraph.Vertices.Count(); i++)
+                for (var i = 0; i < this.graph.DataGraph.Vertices.Count(); i++)
                 {
                     if (this.graph.DataGraph.Vertices.ToList()[i].Name == name)
                     {
                         var vertex = this.graph.DataGraph.Vertices.ToList()[i];
                         this.attributesView.DataContext = vertex;
-                        foreach (KeyValuePair<NodeViewModel, VertexControl> ed in this.scene.VertexList)
+                        foreach (var ed in this.scene.VertexList)
                         {
                             if (ed.Key == vertex)
                             {
@@ -477,15 +483,15 @@ namespace WpfEditor.View
 
         private void DrawNewVertex(string vertexName)
         {
-            ListBoxItem lbi = new ListBoxItem();
-            StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
+            var lbi = new ListBoxItem();
+            var sp = new StackPanel { Orientation = Orientation.Horizontal };
 
-            Image img = new Image
+            var img = new Image
             {
                 Source = new BitmapImage(new Uri("pack://application:,,,/View/Pictures/vertex.png")),
             };
-            TextBlock spaces = new TextBlock { Text = "  " };
-            TextBlock tx = new TextBlock { Text = vertexName };
+            var spaces = new TextBlock { Text = "  " };
+            var tx = new TextBlock { Text = vertexName };
 
             sp.Children.Add(img);
             sp.Children.Add(spaces);
@@ -496,17 +502,17 @@ namespace WpfEditor.View
 
         private void DrawNewEdge(string source, string target)
         {
-            ListBoxItem lbi = new ListBoxItem();
-            StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
+            var lbi = new ListBoxItem();
+            var sp = new StackPanel { Orientation = Orientation.Horizontal };
 
-            Image img = new Image
+            var img = new Image
             {
                 Source = new BitmapImage(new Uri("pack://application:,,,/View/Pictures/edge.png")),
             };
-            TextBlock spaces = new TextBlock { Text = "  " };
-            TextBlock tx0 = new TextBlock { Text = source };
-            TextBlock tx1 = new TextBlock { Text = " - " };
-            TextBlock tx2 = new TextBlock { Text = target };
+            var spaces = new TextBlock { Text = "  " };
+            var tx0 = new TextBlock { Text = source };
+            var tx1 = new TextBlock { Text = " - " };
+            var tx2 = new TextBlock { Text = target };
 
             sp.Children.Add(img);
             sp.Children.Add(spaces);

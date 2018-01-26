@@ -51,7 +51,7 @@ namespace WpfEditor.Model
         // Should be replaced
         public void InitModel(string modelName)
         {
-            IModel model = this.model.Repo.Model(modelName);
+            var model = this.model.Repo.Model(modelName);
             if (model == null)
             {
                 return;
@@ -86,7 +86,7 @@ namespace WpfEditor.Model
 
                 var newEdge = new EdgeViewModel(source, target, Convert.ToDouble(false)) { EdgeType = EdgeViewModel.EdgeTypeEnum.Association };
                 this.DataGraph.AddEdge(newEdge);
-                SourceTargetArgs args = new SourceTargetArgs();
+                var args = new SourceTargetArgs();
                 args.Source = source.Name;
                 args.Target = target.Name;
                 this.DrawNewEdge?.Invoke(this, args);
@@ -103,7 +103,7 @@ namespace WpfEditor.Model
             }
 
             var newEdge = new EdgeViewModel(prevVer, ctrlVer, Convert.ToDouble(true));
-            DataEdgeArgs args = new DataEdgeArgs();
+            var args = new DataEdgeArgs();
             args.EdgeViewModel = newEdge;
             this.AddNewEdgeControl?.Invoke(this, args);
         }
@@ -113,7 +113,6 @@ namespace WpfEditor.Model
             var vertex = new NodeViewModel(node.Name)
             {
                 Node = node,
-                VertexType = NodeViewModel.VertexTypeEnum.Node,
                 Picture = node.Class.Shape
             };
 
@@ -123,7 +122,7 @@ namespace WpfEditor.Model
             });
 
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
-            DataVertexArgs args = new DataVertexArgs();
+            var args = new DataVertexArgs();
             args.DataVert = vertex;
             this.AddNewVertexControl?.Invoke(this, args);
         }
@@ -133,7 +132,6 @@ namespace WpfEditor.Model
             var vertex = new NodeViewModel(node.Name)
             {
                 Node = node,
-                VertexType = NodeViewModel.VertexTypeEnum.Node,
                 Picture = node.Class.Shape
             };
 
@@ -144,7 +142,7 @@ namespace WpfEditor.Model
 
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
             this.DataGraph.AddVertex(vertex);
-            VertexNameArgs args = new VertexNameArgs();
+            var args = new VertexNameArgs();
             args.VertName = node.Name;
             this.DrawNewVertex?.Invoke(this, args);
         }
