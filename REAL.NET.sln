@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.0
+VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{63297B98-5CED-492C-A5B7-A5B4F73CF142}"
 	ProjectSection(SolutionItems) = preProject
@@ -33,21 +33,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{ED8079DD
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Repo.Tests", "tests\Repo.Tests\Repo.Tests.fsproj", "{CF713CDC-81BE-411B-98D7-08DBB3FB7DB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditorPrototype", "src\EditorPrototype\EditorPrototype.csproj", "{1DCB1D77-AB11-404C-BCE4-8EB7BF8F549D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfEditor", "src\WpfEditor\WpfEditor.csproj", "{1DCB1D77-AB11-404C-BCE4-8EB7BF8F549D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsAglWinFormsEditor", "src\MsAglWinFormsEditor\MsAglWinFormsEditor.csproj", "{3124748C-3750-4FFE-B793-51A95E7C7CCB}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Repo", "src\Repo\Repo.fsproj", "{9E7065A4-BA5E-4752-84BF-54D5C00DB60C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF_Editor", "src\WPF_Editor\WPF_Editor.csproj", "{EE68E91E-374C-46AF-AD7C-2783EE099A71}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "plugins", "plugins", "{F12CD406-E1CD-43B7-B4BC-E2991723C56E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginLibrary", "src\PluginLibrary\PluginLibrary.csproj", "{8B9C8D76-65B3-4A01-9D6F-B6192A823642}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginManager", "src\PluginManager\PluginManager.csproj", "{8B9C8D76-65B3-4A01-9D6F-B6192A823642}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginLibraryTests", "tests\PluginLibraryTests\PluginLibraryTests.csproj", "{A0056C25-4EF7-4AF9-99E4-C13B937A3343}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginLibrary.Tests", "tests\PluginLibrary.Tests\PluginLibrary.Tests.csproj", "{A0056C25-4EF7-4AF9-99E4-C13B937A3343}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamplesPlugin", "src\plugins\SamplesPlugin\SamplesPlugin.csproj", "{C57410A1-A86F-418B-9AC7-38249450C497}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamplePlugin", "src\plugins\SamplePlugin\SamplePlugin.csproj", "{C57410A1-A86F-418B-9AC7-38249450C497}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditorPluginInterfaces", "src\EditorPluginInterfaces\EditorPluginInterfaces.csproj", "{6E5F1B5D-F165-4CEC-A240-8887EBD28E3B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,11 +79,6 @@ Global
 		{9E7065A4-BA5E-4752-84BF-54D5C00DB60C}.MonoRelease|Any CPU.Build.0 = MonoRelease|Any CPU
 		{9E7065A4-BA5E-4752-84BF-54D5C00DB60C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E7065A4-BA5E-4752-84BF-54D5C00DB60C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EE68E91E-374C-46AF-AD7C-2783EE099A71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EE68E91E-374C-46AF-AD7C-2783EE099A71}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EE68E91E-374C-46AF-AD7C-2783EE099A71}.MonoRelease|Any CPU.ActiveCfg = MonoRelease|Any CPU
-		{EE68E91E-374C-46AF-AD7C-2783EE099A71}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EE68E91E-374C-46AF-AD7C-2783EE099A71}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8B9C8D76-65B3-4A01-9D6F-B6192A823642}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8B9C8D76-65B3-4A01-9D6F-B6192A823642}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B9C8D76-65B3-4A01-9D6F-B6192A823642}.MonoRelease|Any CPU.ActiveCfg = MonoRelease|Any CPU
@@ -102,6 +97,12 @@ Global
 		{C57410A1-A86F-418B-9AC7-38249450C497}.MonoRelease|Any CPU.Build.0 = MonoRelease|Any CPU
 		{C57410A1-A86F-418B-9AC7-38249450C497}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C57410A1-A86F-418B-9AC7-38249450C497}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E5F1B5D-F165-4CEC-A240-8887EBD28E3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E5F1B5D-F165-4CEC-A240-8887EBD28E3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E5F1B5D-F165-4CEC-A240-8887EBD28E3B}.MonoRelease|Any CPU.ActiveCfg = MonoRelease|Any CPU
+		{6E5F1B5D-F165-4CEC-A240-8887EBD28E3B}.MonoRelease|Any CPU.Build.0 = MonoRelease|Any CPU
+		{6E5F1B5D-F165-4CEC-A240-8887EBD28E3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E5F1B5D-F165-4CEC-A240-8887EBD28E3B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
