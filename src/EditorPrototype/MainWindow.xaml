@@ -95,7 +95,7 @@
                         <DataGridTextColumn Header="Value" IsReadOnly="False" Binding="{Binding Value}"/>
                     </DataGrid.Columns>
                 </DataGrid>
-                <Button x:Name="generateButton" Content="Generate" Grid.Row="6" Click="ExecuteButtonClick" FontSize="14"/>
+                <Button x:Name="generateButton" Content="Execute" Grid.Row="6" Click="ExecuteButtonClick" FontSize="14"/>
                 <Button x:Name="stopExecutionButton" Content="Stop" Grid.Row="7" Click="StopButtonClick" FontSize="14"/>
             </Grid>
 
