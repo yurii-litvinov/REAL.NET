@@ -74,6 +74,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -96,6 +97,15 @@
     <Compile Include="Controls\Console\AppConsole.xaml.cs">
       <DependentUpon>AppConsole.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Palette\DragAndDropFeedback.xaml.cs">
+      <DependentUpon>DragAndDropFeedback.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Palette\DragAndDropHelper.cs" />
+    <Compile Include="Controls\Palette\Palette.xaml.cs">
+      <DependentUpon>Palette.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Palette\PaletteElement.cs" />
+    <Compile Include="Controls\Palette\PaletteViewModel.cs" />
     <Compile Include="Controls\Toolbar\ToolbarView.xaml.cs">
       <DependentUpon>ToolbarView.xaml</DependentUpon>
     </Compile>
@@ -115,6 +125,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Console\AppConsole.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Palette\DragAndDropFeedback.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Palette\Palette.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -273,6 +291,11 @@
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
+        <Reference Include="QuickGraph.Graphviz">
+          <HintPath>..\..\packages\QuickGraphPCL\lib\net40-client\QuickGraph.Graphviz.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
         <Reference Include="QuickGraph.Serialization">
           <HintPath>..\..\packages\QuickGraphPCL\lib\net40-client\QuickGraph.Serialization.dll</HintPath>
           <Private>True</Private>
@@ -281,6 +304,7 @@
       </ItemGroup>
     </When>
   </Choose>
+  <Import Project="..\..\packages\NETStandard.Library\build\NETStandard.Library.targets" Condition="Exists('..\..\packages\NETStandard.Library\build\NETStandard.Library.targets')" Label="Paket" />
   <ItemGroup>
     <Analyzer Include="..\..\packages\StyleCop.Analyzers\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll">
       <Paket>True</Paket>
@@ -289,4 +313,26 @@
       <Paket>True</Paket>
     </Analyzer>
   </ItemGroup>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">
+      <ItemGroup>
+        <Reference Include="System.Runtime.InteropServices.RuntimeInformation">
+          <HintPath>..\..\packages\System.Runtime.InteropServices.RuntimeInformation\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">
+      <ItemGroup>
+        <Reference Include="System.ValueTuple">
+          <HintPath>..\..\packages\System.ValueTuple\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
 </Project>
