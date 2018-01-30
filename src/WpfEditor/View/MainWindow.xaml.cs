@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using EditorPluginInterfaces;
 using GraphX.Controls;
 using GraphX.Controls.Models;
@@ -36,13 +32,7 @@ namespace WpfEditor.View
         private readonly Model.Model model;
         private readonly Controller.Controller controller;
         private readonly Graph graph;
-        private Repo.IElement currentElement;
         private Point pos;
-
-        // Code for drag-n-drop.
-        // Helps dragging button image.
-        private Window dragdropWindow = new Window();
-
         public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();
 
         public MainWindow()
@@ -51,6 +41,9 @@ namespace WpfEditor.View
             this.InitializeComponent();
 
             this.model = new Model.Model();
+
+            this.palette.SetModel(this.model);
+
             this.controller = new Controller.Controller(this.model);
             this.graph = new Graph(this.model);
             this.graph.DrawGraph += (sender, args) => this.DrawGraph();
@@ -99,7 +92,7 @@ namespace WpfEditor.View
             this.zoomControl.MouseDown += (sender, e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
             this.zoomControl.Drop += (sender, e) => this.ZoomControl_Drop(sender, e, modelName);
 
-            this.InitPalette(modelName);
+            this.palette.InitPalette(modelName);
             this.graph.InitModel(modelName);
             
             this.InitAndLaunchPlugins();
@@ -124,166 +117,12 @@ namespace WpfEditor.View
             this.scene.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<NodeViewModel>().Color = Brushes.Green);
         }
 
-        private void InitPalette(string metamodelName)
-        {
-            var model = this.model.Repo.Model(metamodelName).Metamodel;
-            if (model == null)
-            {
-                return;
-            }
-
-            foreach (var type in model.Elements)
-            {
-                if (type.IsAbstract)
-                {
-                    continue;
-                }
-
-                var sp = new StackPanel
-                {
-                    Orientation = Orientation.Horizontal,
-                    HorizontalAlignment = HorizontalAlignment.Left
-                };
-
-                var l = new Label { Content = type.Name };
-                var img = new Image
-                {
-                    Source = type.Shape != string.Empty
-                        ? new BitmapImage(new Uri("pack://application:,,,/" + type.Shape))
-                        : new BitmapImage(new Uri("pack://application:,,,/View/Pictures/vertex.png")),
-                    LayoutTransform = new ScaleTransform(0.3, 0.3),
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                };
-
-                l.VerticalAlignment = VerticalAlignment.Center;
-                l.HorizontalAlignment = HorizontalAlignment.Left;
-
-                sp.Children.Add(img);
-                sp.Children.Add(l);
-
-                var button = new ToggleButton
-                {
-                    Content = sp,
-                    HorizontalContentAlignment = HorizontalAlignment.Left
-                };
-
-                button.Click += (sender, args) => this.currentElement = type;
-
-                if (type.InstanceMetatype == Repo.Metatype.Edge)
-                {
-                    this.scene.VertexSelected += (sender, args) => button.IsChecked = false;
-                }
-                else
-                {
-                    this.zoomControl.MouseDown += (sender, args) => button.IsChecked = false;
-                    button.PreviewMouseMove += (sender, args) => this.currentElement = type;
-                    button.PreviewMouseMove += this.PaletteButton_MouseMove;
-                    button.GiveFeedback += this.DragSource_GiveFeedback;
-                }
-
-                // TODO: Bind it to XAML, do not do GUI work in C#.
-                this.paletteGrid.RowDefinitions.Add(new RowDefinition());
-                this.paletteGrid.Children.Add(button);
-                Grid.SetRow(button, this.paletteGrid.RowDefinitions.Count - 1);
-            }
-        }
-
-        // Need for dragging.
-        private void PaletteButton_MouseMove(object sender, MouseEventArgs args)
-        {
-            if (!(sender is ToggleButton button) || !button.IsPressed)
-            {
-                return;
-            }
-
-            // Setting shadow for button.
-            button.Effect = new DropShadowEffect
-            {
-                Color = new Color { A = 50, R = 0, G = 0, B = 0 },
-                Direction = 300,
-                ShadowDepth = 0,
-                Opacity = 0.75
-            };
-
-            var dragData = new DataObject("MyFormat", this.currentElement);
-
-            this.CreateDragDropWindow(button);
-            DragDrop.DoDragDrop(button, dragData, DragDropEffects.Copy);
-
-            if (this.dragdropWindow == null)
-            {
-                return;
-            }
-
-            this.dragdropWindow.Close();
-            this.dragdropWindow = null;
-        }
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool GetCursorPos(ref Win32Point pt);
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct Win32Point
-        {
-            public Int32 X;
-            public Int32 Y;
-        };
-
-        // Need for creating an image on cursor.
-        private void CreateDragDropWindow(Visual dragElement)
-        {
-            this.dragdropWindow = new Window
-            {
-                WindowStyle = WindowStyle.None,
-                AllowsTransparency = true,
-                AllowDrop = false,
-                Background = null,
-                IsHitTestVisible = false,
-                SizeToContent = SizeToContent.WidthAndHeight,
-                Topmost = true,
-                ShowInTaskbar = false
-            };
-
-            var rectangle = new Rectangle
-            {
-                Width = ((FrameworkElement)dragElement).ActualWidth,
-                Height = ((FrameworkElement)dragElement).ActualHeight,
-                Fill = new VisualBrush(dragElement)
-            };
-
-            this.dragdropWindow.Content = rectangle;
-
-            var w32Mouse = new Win32Point();
-            GetCursorPos(ref w32Mouse);
-
-            this.dragdropWindow.Left = w32Mouse.X;
-            this.dragdropWindow.Top = w32Mouse.Y;
-            this.dragdropWindow.Show();
-        }
-
         // Need for dropping.
         private void ZoomControl_Drop(object sender, DragEventArgs e, string modelName)
         { 
             this.pos = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.scene);
-            this.CreateNewNode((Repo.IElement)e.Data.GetData("MyFormat"), modelName);
-            this.currentElement = null;
-        }
-
-        // Need for pre-defined cursor while dragging.
-        private void DragSource_GiveFeedback(object sender, GiveFeedbackEventArgs e)
-        {
-            // Update the position of the visual feedback item.
-            var w32Mouse = new Win32Point();
-            GetCursorPos(ref w32Mouse);
-
-            this.dragdropWindow.Left = w32Mouse.X;
-            this.dragdropWindow.Top = w32Mouse.Y;
-        }
-
-        private void PaletteButton_Checked(Repo.IElement element)
-        {
-            this.currentElement = element;
+            this.CreateNewNode((Repo.IElement)e.Data.GetData("REAL.NET palette element"), modelName);
+            this.palette.ClearSelection();
         }
 
         // TODO: Copypaste is heresy.
@@ -344,7 +183,7 @@ namespace WpfEditor.View
         private void VertexSelectedAction(object sender, VertexSelectedEventArgs args)
         {
             this.ctrlVer = args.VertexControl;
-            if (this.currentElement != null && this.currentElement.InstanceMetatype == Repo.Metatype.Edge)
+            if (this.palette.SelectedElement?.InstanceMetatype == Repo.Metatype.Edge)
             {
                 if (this.prevVer == null)
                 {
@@ -353,9 +192,11 @@ namespace WpfEditor.View
                 }
                 else
                 {
-                    this.controller.NewEdge(this.currentElement, this.prevVer, this.ctrlVer);
-                    this.currentElement = null;
+                    this.controller.NewEdge(this.palette.SelectedElement, this.prevVer, this.ctrlVer);
+                    this.palette.ClearSelection();
                 }
+
+                return;
             }
 
             this.attributesView.DataContext = this.ctrlVer.GetDataVertex<NodeViewModel>();
@@ -414,20 +255,20 @@ namespace WpfEditor.View
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 var position = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.scene);
-                if (this.currentElement != null && this.currentElement.InstanceMetatype == Repo.Metatype.Node)
+                if (this.palette.SelectedElement?.InstanceMetatype == Repo.Metatype.Node)
                 {
                     this.pos = position;
-                    this.CreateNewNode(this.currentElement, modelName);
-                    this.currentElement = null;
+                    this.CreateNewNode(this.palette.SelectedElement, modelName);
+                    this.palette.ClearSelection();
                 }
 
-                if (this.currentElement != null && this.currentElement.InstanceMetatype == Repo.Metatype.Edge)
+                if (this.palette.SelectedElement?.InstanceMetatype == Repo.Metatype.Edge)
                 {
                     if (this.prevVer != null)
                     {
                         this.prevVer = null;
                         this.editorManager.DestroyVirtualEdge();
-                        this.currentElement = null;
+                        this.palette.ClearSelection();
                     }
                 }
             }

@@ -23,6 +23,7 @@
     xmlns:graphx="http://schemas.panthernet.ru/graphx/"
     xmlns:view="clr-namespace:WpfEditor.View"
     xmlns:console="clr-namespace:WpfEditor.Controls.Console"
+    xmlns:palette="clr-namespace:WpfEditor.Controls.Palette"
     Title="REAL.NET"
     mc:Ignorable="d"
     d:DataContext="{view:MainWindow}">
@@ -82,7 +83,8 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Grid x:Name="paletteGrid" Grid.Row="1"/>
+                <palette:Palette x:Name="palette" Grid.Row="1"/>
+
                 <Label x:Name="elementsListLabel" Grid.Row="2" Content="Elements:" HorizontalAlignment="Stretch"/>
                 <ListBox x:Name="elementsListBox" Grid.Row="3"/>
                 <Label x:Name="selectedEntityLabel" Grid.Row="4" Content="Selected entity:" HorizontalAlignment="Stretch" />
