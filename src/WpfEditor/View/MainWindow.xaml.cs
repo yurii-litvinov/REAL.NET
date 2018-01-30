@@ -100,9 +100,28 @@ namespace WpfEditor.View
         {
             var repo = this.model.Repo;
 
+            bool IsBasedOnInfrastructureMetamodel(Repo.IModel model)
+            {
+                var metamodel = model.Metamodel;
+                while (metamodel != metamodel.Metamodel)
+                {
+                    if (metamodel.Name == "InfrastructureMetamodel")
+                    {
+                        return true;
+                    }
+
+                    metamodel = metamodel.Metamodel;
+                }
+
+                return false;
+            }
+
             foreach (var currentModel in repo.Models)
             {
-                this.modelsComboBox.Items.Add(currentModel.Name);
+                if (IsBasedOnInfrastructureMetamodel(currentModel))
+                {
+                    this.modelsComboBox.Items.Add(currentModel.Name);
+                }
             }
 
             this.modelsComboBox.SelectedIndex = 0;
