@@ -25,6 +25,7 @@
     xmlns:console="clr-namespace:WpfEditor.Controls.Console"
     xmlns:palette="clr-namespace:WpfEditor.Controls.Palette"
     xmlns:modelSelector="clr-namespace:WpfEditor.Controls.ModelSelector"
+    xmlns:scene="clr-namespace:WpfEditor.Controls.Scene"
     Title="REAL.NET"
     mc:Ignorable="d"
     d:DataContext="{view:MainWindow}">
@@ -60,11 +61,7 @@
             </ToolBar>
 
             <!-- Area -->
-            <Border Grid.Row="1" Grid.RowSpan="3" BorderThickness="1"  Margin="2">
-                <graphx:ZoomControl x:Name="zoomControl" AllowDrop="True" Margin="0,0,0,54">
-                    <view:GraphArea AllowDrop="True" x:Name="scene" />
-                </graphx:ZoomControl>
-            </Border>
+            <scene:Scene x:Name="scene"  Grid.Row="1"/>
 
             <!-- GridSplitter for console -->
             <GridSplitter Grid.Row ="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5"/>

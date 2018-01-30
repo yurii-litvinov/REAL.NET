@@ -26,7 +26,7 @@ namespace WpfEditor.Controls.Palette
     {
         private bool isInDrag;
         private readonly PaletteViewModel paletteViewModel;
-        private Point dragOriginPoint = new Point();
+        private Point dragOriginPoint;
 
         /// <summary>
         /// Creates a new instance of the <see cref="Palette"/> class.

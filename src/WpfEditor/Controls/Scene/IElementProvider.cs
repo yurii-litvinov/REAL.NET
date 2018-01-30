@@ -12,17 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-namespace WpfEditor.View
+namespace WpfEditor.Controls.Scene
 {
-    using GraphX.Controls;
-    using QuickGraph;
-    using ViewModel;
-
     /// <summary>
-    /// Visual representation of a GraphX graph, supposed to be used with GraphX zoom control as a scene to draw
-    /// a diagram on.
+    /// Something that can say what element scene shall create when someone clicks on it. For example, selected
+    /// element on a palette.
     /// </summary>
-    public class GraphArea : GraphArea<NodeViewModel, EdgeViewModel, BidirectionalGraph<NodeViewModel, EdgeViewModel>>
+    internal interface IElementProvider
     {
+        /// <summary>
+        /// Gets an element that the scene shall create on left-click, null if none.
+        /// </summary>
+        Repo.IElement Element { get; }
     }
 }
