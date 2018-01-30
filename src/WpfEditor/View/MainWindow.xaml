@@ -24,6 +24,7 @@
     xmlns:view="clr-namespace:WpfEditor.View"
     xmlns:console="clr-namespace:WpfEditor.Controls.Console"
     xmlns:palette="clr-namespace:WpfEditor.Controls.Palette"
+    xmlns:modelSelector="clr-namespace:WpfEditor.Controls.ModelSelector"
     Title="REAL.NET"
     mc:Ignorable="d"
     d:DataContext="{view:MainWindow}">
@@ -55,7 +56,7 @@
 
             <!-- ToolBar -->
             <ToolBar Grid.Row="0">
-                <ComboBox x:Name="modelsComboBox"/>
+                <modelSelector:ModelSelector x:Name="modelSelector" ModelSelected="OnModelSelectionChanged"/>
             </ToolBar>
 
             <!-- Area -->

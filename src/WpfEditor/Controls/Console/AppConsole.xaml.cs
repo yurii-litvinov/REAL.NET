@@ -17,13 +17,13 @@ namespace WpfEditor.Controls.Console
     using System.Windows.Controls;
 
     /// <summary>
-    /// Interaction logic for AppConsole.
+    /// Application console --- centralized place where various messages and error reports shall be placed.
     /// </summary>
     public partial class AppConsole : UserControl
     {
         public AppConsole()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

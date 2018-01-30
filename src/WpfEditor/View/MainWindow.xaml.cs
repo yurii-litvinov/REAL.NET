@@ -15,6 +15,7 @@ using GraphX.PCL.Logic.Models;
 using PluginManager;
 using QuickGraph;
 using WpfEditor.Controls.Console;
+using WpfEditor.Controls.ModelSelector;
 using WpfEditor.Model;
 using WpfEditor.ViewModel;
 
@@ -85,56 +86,21 @@ namespace WpfEditor.View
 
             this.Closed += this.CloseChildrenWindows;
 
-            this.InitModelComboBox();
+            this.modelSelector.Init(this.model);
 
             this.zoomControl.MouseDown += (sender, e) => this.ZoomCtrl_MouseDown(sender, e, this.model.ModelName);
             this.zoomControl.Drop += (sender, e) => this.ZoomControl_Drop(sender, e, this.model.ModelName);
 
-            this.palette.InitPalette(this.model.ModelName);
-            this.graph.InitModel(this.model.ModelName);
-            
             this.InitAndLaunchPlugins();
         }
 
-        private void InitModelComboBox()
+        private void OnModelSelectionChanged(object sender, ModelSelector.ModelSelectedEventArgs args)
         {
-            var repo = this.model.Repo;
-
-            bool IsBasedOnInfrastructureMetamodel(Repo.IModel model)
-            {
-                var metamodel = model.Metamodel;
-                while (metamodel != metamodel.Metamodel)
-                {
-                    if (metamodel.Name == "InfrastructureMetamodel")
-                    {
-                        return true;
-                    }
-
-                    metamodel = metamodel.Metamodel;
-                }
-
-                return false;
-            }
-
-            foreach (var currentModel in repo.Models)
-            {
-                if (IsBasedOnInfrastructureMetamodel(currentModel))
-                {
-                    this.modelsComboBox.Items.Add(currentModel.Name);
-                }
-            }
-
-            this.modelsComboBox.SelectedIndex = 0;
-            this.model.ModelName = this.modelsComboBox.SelectedItem.ToString();
-
-            this.modelsComboBox.SelectionChanged += (sender, args) =>
-            {
-                this.graph.DataGraph.Clear();
-                this.elementsListBox.Items.Clear();
-                this.model.ModelName = this.modelsComboBox.SelectedItem.ToString();
-                this.palette.InitPalette(this.model.ModelName);
-                this.graph.InitModel(this.model.ModelName);
-            };
+            this.graph.DataGraph.Clear();
+            this.elementsListBox.Items.Clear();
+            this.model.ModelName = args.ModelName;
+            this.palette.InitPalette(this.model.ModelName);
+            this.graph.InitModel(this.model.ModelName);
         }
 
         private void InitAndLaunchPlugins()

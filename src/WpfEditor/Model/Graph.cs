@@ -90,9 +90,11 @@ namespace WpfEditor.Model
 
                 var newEdge = new EdgeViewModel(source, target, Convert.ToDouble(false)) { EdgeType = EdgeViewModel.EdgeTypeEnum.Association };
                 this.DataGraph.AddEdge(newEdge);
-                var args = new SourceTargetArgs();
-                args.Source = source.Name;
-                args.Target = target.Name;
+                var args = new SourceTargetArgs
+                {
+                    Source = source.Name,
+                    Target = target.Name
+                };
                 this.DrawNewEdge?.Invoke(this, args);
             }
 
@@ -107,8 +109,10 @@ namespace WpfEditor.Model
             }
 
             var newEdge = new EdgeViewModel(prevVer, ctrlVer, Convert.ToDouble(true));
-            var args = new DataEdgeArgs();
-            args.EdgeViewModel = newEdge;
+            var args = new DataEdgeArgs
+            {
+                EdgeViewModel = newEdge
+            };
             this.AddNewEdgeControl?.Invoke(this, args);
         }
 
@@ -120,14 +124,16 @@ namespace WpfEditor.Model
                 Picture = node.Class.Shape
             };
 
-            var attributeInfos = node.Attributes.Select(x => new NodeViewModel.Attribute(x, x.Name, x.Kind.ToString())
+            var attributeInfos = node.Attributes.Select(x => new AttributeViewModel(x, x.Name, x.Kind.ToString())
             {
                 Value = x.StringValue
             });
 
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
-            var args = new DataVertexArgs();
-            args.DataVert = vertex;
+            var args = new DataVertexArgs
+            {
+                DataVert = vertex
+            };
             this.AddNewVertexControl?.Invoke(this, args);
         }
 
@@ -139,15 +145,17 @@ namespace WpfEditor.Model
                 Picture = node.Class.Shape
             };
 
-            var attributeInfos = node.Attributes.Select(x => new NodeViewModel.Attribute(x, x.Name, x.Kind.ToString())
+            var attributeInfos = node.Attributes.Select(x => new AttributeViewModel(x, x.Name, x.Kind.ToString())
             {
                 Value = x.StringValue
             });
 
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
             this.DataGraph.AddVertex(vertex);
-            var args = new VertexNameArgs();
-            args.VertName = node.Name;
+            var args = new VertexNameArgs
+            {
+                VertName = node.Name
+            };
             this.DrawNewVertex?.Invoke(this, args);
         }
 
