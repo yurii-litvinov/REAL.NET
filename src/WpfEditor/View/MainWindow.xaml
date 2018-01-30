@@ -47,23 +47,29 @@
         <Grid Grid.Column="0">
 
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto" MinHeight="50"/>
             </Grid.RowDefinitions>
 
+            <!-- ToolBar -->
+            <ToolBar Grid.Row="0">
+                <ComboBox x:Name="modelsComboBox"/>
+            </ToolBar>
+
             <!-- Area -->
-            <Border Grid.Row="0" BorderThickness="1"  Margin="2">
-                <graphx:ZoomControl x:Name="zoomControl" AllowDrop="True" Margin="1,1,-1,-1">
+            <Border Grid.Row="1" Grid.RowSpan="3" BorderThickness="1"  Margin="2">
+                <graphx:ZoomControl x:Name="zoomControl" AllowDrop="True" Margin="0,0,0,54">
                     <view:GraphArea AllowDrop="True" x:Name="scene" />
                 </graphx:ZoomControl>
             </Border>
 
             <!-- GridSplitter for console -->
-            <GridSplitter Grid.Row ="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5"/>
+            <GridSplitter Grid.Row ="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5"/>
             
             <!-- Console with error messages -->
-            <console:AppConsole Grid.Row="2" DataContext="{Binding Console}"/>
+            <console:AppConsole Grid.Row="3" DataContext="{Binding Console}"/>
 
         </Grid>
 
