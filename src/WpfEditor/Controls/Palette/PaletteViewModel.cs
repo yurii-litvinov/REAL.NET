@@ -58,6 +58,7 @@ namespace WpfEditor.Controls.Palette
         /// <param name="metamodelName">Name of a metamodel whose elements shall be drawn on palette.</param>
         public void InitPalette(string metamodelName)
         {
+            this.Elements.Clear();
             var metamodel = this.model?.Repo.Model(metamodelName).Metamodel;
             if (metamodel == null)
             {

@@ -85,17 +85,37 @@ namespace WpfEditor.View
 
             this.Closed += this.CloseChildrenWindows;
 
-            const string modelName = "RobotsTestModel";
+            this.InitModelComboBox();
 
-            this.zoomControl.MouseDown += (sender, e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
+            this.zoomControl.MouseDown += (sender, e) => this.ZoomCtrl_MouseDown(sender, e, this.model.ModelName);
+            this.zoomControl.Drop += (sender, e) => this.ZoomControl_Drop(sender, e, this.model.ModelName);
 
-            this.zoomControl.MouseDown += (sender, e) => this.ZoomCtrl_MouseDown(sender, e, modelName);
-            this.zoomControl.Drop += (sender, e) => this.ZoomControl_Drop(sender, e, modelName);
-
-            this.palette.InitPalette(modelName);
-            this.graph.InitModel(modelName);
+            this.palette.InitPalette(this.model.ModelName);
+            this.graph.InitModel(this.model.ModelName);
             
             this.InitAndLaunchPlugins();
+        }
+
+        private void InitModelComboBox()
+        {
+            var repo = this.model.Repo;
+
+            foreach (var currentModel in repo.Models)
+            {
+                this.modelsComboBox.Items.Add(currentModel.Name);
+            }
+
+            this.modelsComboBox.SelectedIndex = 0;
+            this.model.ModelName = this.modelsComboBox.SelectedItem.ToString();
+
+            this.modelsComboBox.SelectionChanged += (sender, args) =>
+            {
+                this.graph.DataGraph.Clear();
+                this.elementsListBox.Items.Clear();
+                this.model.ModelName = this.modelsComboBox.SelectedItem.ToString();
+                this.palette.InitPalette(this.model.ModelName);
+                this.graph.InitModel(this.model.ModelName);
+            };
         }
 
         private void InitAndLaunchPlugins()

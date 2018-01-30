@@ -23,10 +23,6 @@ namespace WpfEditor.Model
     /// of nodes and edges and a model in MVC sense) and notifications for all concerned tools about changes in repo.
     /// This class is a ground truth about visual model currently edited and is supposed to be used by all tools and
     /// parts of an editor who need to listen for visual model changes and/or modify visual model.
-    /// 
-    /// Also this class serves as a factory and container for ViewModels for various parts of visual model
-    /// (see <see cref="NodeViewModel"/> and <see cref="EdgeViewModel"/> as an example). Those view models can only
-    /// be created by this class and their lifecycle is managed here.
     /// </summary>
     public class Model
     {
@@ -38,6 +34,8 @@ namespace WpfEditor.Model
         public event EventHandler<VertexEventArgs> NewVertexInRepo;
 
         public event EventHandler<EdgeEventArgs> NewEdgeInRepo;
+
+        public string ModelName { get; set; }
 
         public Repo.IRepo Repo { get; }
 

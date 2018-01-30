@@ -23,6 +23,10 @@ namespace WpfEditor.Model
     /// <summary>
     /// Represents diagram as GraphX graph. Wraps <see cref="Model"/> and synchronizes changes in repo and in GraphX
     /// graph representation.
+    ///
+    /// Also this class serves as a factory and container for ViewModels for various parts of visual model
+    /// (see <see cref="NodeViewModel"/> and <see cref="EdgeViewModel"/> as an example). Those view models can only
+    /// be created by this class and their lifecycle is managed here.
     /// </summary>
     public class Graph
     {
