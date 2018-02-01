@@ -43,11 +43,10 @@ namespace WpfEditor.Model
         public event EventHandler DrawGraph;
 
         public event EventHandler<VertexNameArgs> DrawNewVertex;
-
         public event EventHandler<SourceTargetArgs> DrawNewEdge;
+        public event EventHandler<ElementAddedEventArgs> ElementAdded;
 
         public event EventHandler<DataVertexArgs> AddNewVertexControl;
-
         public event EventHandler<DataEdgeArgs> AddNewEdgeControl;
 
         public BidirectionalGraph<NodeViewModel, EdgeViewModel> DataGraph { get; }
@@ -96,6 +95,7 @@ namespace WpfEditor.Model
                     Target = target.Name
                 };
                 this.DrawNewEdge?.Invoke(this, args);
+                this.ElementAdded?.Invoke(this, new ElementAddedEventArgs {Element = edge});
             }
 
             this.DrawGraph?.Invoke(this, EventArgs.Empty);
@@ -157,6 +157,7 @@ namespace WpfEditor.Model
                 VertName = node.Name
             };
             this.DrawNewVertex?.Invoke(this, args);
+            this.ElementAdded?.Invoke(this, new ElementAddedEventArgs { Element = node });
         }
 
         public class DataVertexArgs : EventArgs
@@ -179,6 +180,11 @@ namespace WpfEditor.Model
         public class VertexNameArgs : EventArgs
         {
             public string VertName { get; set; }
+        }
+
+        public class ElementAddedEventArgs : EventArgs
+        {
+            public IElement Element { get; set; }
         }
     }
 }

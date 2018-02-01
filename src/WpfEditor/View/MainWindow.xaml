@@ -26,6 +26,7 @@
     xmlns:palette="clr-namespace:WpfEditor.Controls.Palette"
     xmlns:modelSelector="clr-namespace:WpfEditor.Controls.ModelSelector"
     xmlns:scene="clr-namespace:WpfEditor.Controls.Scene"
+    xmlns:modelExplorer="clr-namespace:WpfEditor.Controls.ModelExplorer"
     Title="REAL.NET"
     mc:Ignorable="d"
     d:DataContext="{view:MainWindow}">
@@ -82,18 +83,17 @@
                     <RowDefinition Height="Auto" MinHeight="70"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto" MinHeight="50"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <palette:Palette x:Name="palette" Grid.Row="1"/>
 
-                <Label x:Name="elementsListLabel" Grid.Row="2" Content="Elements:" HorizontalAlignment="Stretch"/>
-                <ListBox x:Name="elementsListBox" Grid.Row="3"/>
-                <Label x:Name="selectedEntityLabel" Grid.Row="4" Content="Selected entity:" HorizontalAlignment="Stretch" />
+                <modelExplorer:ModelExplorer x:Name="modelExplorer" Grid.Row="2"/>
 
-                <DataGrid x:Name="attributesView" Grid.Row="5" ItemsSource="{Binding Attributes}" AutoGenerateColumns="False">
+                <Label x:Name="selectedEntityLabel" Grid.Row="3" Content="Selected entity:" HorizontalAlignment="Stretch" />
+
+                <DataGrid x:Name="attributesView" Grid.Row="4" ItemsSource="{Binding Attributes}" AutoGenerateColumns="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Name}"/>
                         <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Type}"/>
@@ -102,7 +102,7 @@
                 </DataGrid>
 
                 <Button 
-                    Grid.Row="6"
+                    Grid.Row="5"
                     Content="Constraints"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"

@@ -49,6 +49,8 @@ namespace WpfEditor.Controls.Scene
         public event EventHandler<Graph.VertexNameArgs> DrawNewVertex;
         public event EventHandler<Graph.SourceTargetArgs> DrawNewEdge;
 
+        public event EventHandler<Graph.ElementAddedEventArgs> ElementAdded;
+
         public Scene()
         {
             this.InitializeComponent();
@@ -96,6 +98,7 @@ namespace WpfEditor.Controls.Scene
             this.graph.DrawGraph += (sender, args) => this.DrawGraph();
             this.graph.DrawNewEdge += (sender, args) => this.DrawNewEdge?.Invoke(this, args);
             this.graph.DrawNewVertex += (sender, args) => this.DrawNewVertex?.Invoke(this, args);
+            this.graph.ElementAdded += (sender, args) => this.ElementAdded?.Invoke(this, args);
             this.graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVert);
             this.graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.EdgeViewModel);
 

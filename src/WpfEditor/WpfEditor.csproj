@@ -97,6 +97,11 @@
     <Compile Include="Controls\Console\AppConsole.xaml.cs">
       <DependentUpon>AppConsole.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ModelExplorer\ModelElementTemplateSelector.cs" />
+    <Compile Include="Controls\ModelExplorer\ModelExplorer.xaml.cs">
+      <DependentUpon>ModelExplorer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ModelExplorer\ModelExplorerElement.cs" />
     <Compile Include="Controls\ModelSelector\ModelSelector.xaml.cs">
       <DependentUpon>ModelSelector.xaml</DependentUpon>
     </Compile>
@@ -133,6 +138,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Console\AppConsole.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ModelExplorer\ModelExplorer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
