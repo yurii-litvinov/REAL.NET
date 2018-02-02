@@ -1,46 +1,29 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿/* Copyright 2017-2018 REAL.NET group
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. */
 
 namespace WpfEditor.Controls.ModelExplorer
 {
-    public class ModelExplorerElement: INotifyPropertyChanged
+    /// <summary>
+    /// Base class for view models for elements in model explorer.
+    /// </summary>
+    public abstract class ModelExplorerElement
     {
-        public ModelExplorerElement(Repo.IElement element)
-        {
-            this.Element = element;
-        }
+        protected ModelExplorerElement(Repo.IElement element)
+            => this.Element = element;
 
         public Repo.IElement Element { get; }
 
         public Repo.Metatype Metatype => this.Element.Metatype;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
-    public class ModelExplorerNode : ModelExplorerElement
-    {
-        public ModelExplorerNode(Repo.IElement element)
-        : base(element)
-        {
-        }
-
-        public string Name => this.Element.Name;
-        public string Image => "pack://application:,,,/" + this.Element.Shape;
-    }
-
-    public class ModelExplorerEdge : ModelExplorerElement
-    {
-        public ModelExplorerEdge(Repo.IElement element)
-            : base(element)
-        {
-        }
-
-        public string Source => (this.Element as Repo.IEdge)?.From.Name;
-        public string Target => (this.Element as Repo.IEdge)?.To.Name;
     }
 }

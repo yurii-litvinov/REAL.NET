@@ -42,8 +42,6 @@ namespace WpfEditor.Model
 
         public event EventHandler DrawGraph;
 
-        public event EventHandler<VertexNameArgs> DrawNewVertex;
-        public event EventHandler<SourceTargetArgs> DrawNewEdge;
         public event EventHandler<ElementAddedEventArgs> ElementAdded;
 
         public event EventHandler<DataVertexArgs> AddNewVertexControl;
@@ -87,14 +85,11 @@ namespace WpfEditor.Model
                 var source = this.DataGraph.Vertices.First(v => v.Node == sourceNode);
                 var target = this.DataGraph.Vertices.First(v => v.Node == targetNode);
 
-                var newEdge = new EdgeViewModel(source, target, Convert.ToDouble(false)) { EdgeType = EdgeViewModel.EdgeTypeEnum.Association };
-                this.DataGraph.AddEdge(newEdge);
-                var args = new SourceTargetArgs
+                var newEdge = new EdgeViewModel(source, target, Convert.ToDouble(false))
                 {
-                    Source = source.Name,
-                    Target = target.Name
+                    EdgeType = EdgeViewModel.EdgeTypeEnum.Association
                 };
-                this.DrawNewEdge?.Invoke(this, args);
+                this.DataGraph.AddEdge(newEdge);
                 this.ElementAdded?.Invoke(this, new ElementAddedEventArgs {Element = edge});
             }
 
@@ -114,6 +109,7 @@ namespace WpfEditor.Model
                 EdgeViewModel = newEdge
             };
             this.AddNewEdgeControl?.Invoke(this, args);
+            this.ElementAdded?.Invoke(this, new ElementAddedEventArgs { Element = edge });
         }
 
         private void CreateNodeWithPos(INode node)
@@ -135,6 +131,7 @@ namespace WpfEditor.Model
                 DataVert = vertex
             };
             this.AddNewVertexControl?.Invoke(this, args);
+            this.ElementAdded?.Invoke(this, new ElementAddedEventArgs { Element = node });
         }
 
         private void CreateNodeWithoutPos(INode node)
@@ -152,11 +149,6 @@ namespace WpfEditor.Model
 
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
             this.DataGraph.AddVertex(vertex);
-            var args = new VertexNameArgs
-            {
-                VertName = node.Name
-            };
-            this.DrawNewVertex?.Invoke(this, args);
             this.ElementAdded?.Invoke(this, new ElementAddedEventArgs { Element = node });
         }
 
@@ -168,18 +160,6 @@ namespace WpfEditor.Model
         public class DataEdgeArgs : EventArgs
         {
             public EdgeViewModel EdgeViewModel { get; set; }
-        }
-
-        public class SourceTargetArgs : EventArgs
-        {
-            public string Source { get; set; }
-
-            public string Target { get; set; }
-        }
-
-        public class VertexNameArgs : EventArgs
-        {
-            public string VertName { get; set; }
         }
 
         public class ElementAddedEventArgs : EventArgs

@@ -45,10 +45,6 @@ namespace WpfEditor.Controls.Scene
         public event EventHandler<EventArgs> ElementUsed;
         public event EventHandler<NodeSelectedEventArgs> NodeSelected;
 
-        // TODO: Actually sort out events for underlying graph and model modification.
-        public event EventHandler<Graph.VertexNameArgs> DrawNewVertex;
-        public event EventHandler<Graph.SourceTargetArgs> DrawNewEdge;
-
         public event EventHandler<Graph.ElementAddedEventArgs> ElementAdded;
 
         public Scene()
@@ -62,7 +58,7 @@ namespace WpfEditor.Controls.Scene
             this.scene.VertexSelected += this.VertexSelectedAction;
             this.scene.EdgeSelected += this.EdgeSelectedAction;
             this.zoomControl.Click += this.ClearSelection;
-            this.zoomControl.MouseDown += this.ZoomCtrl_MouseDown;
+            this.zoomControl.MouseDown += this.OnSceneMouseDown;
             this.zoomControl.Drop += this.ZoomControl_Drop;
         }
 
@@ -96,8 +92,6 @@ namespace WpfEditor.Controls.Scene
 
             this.graph = new Graph(model);
             this.graph.DrawGraph += (sender, args) => this.DrawGraph();
-            this.graph.DrawNewEdge += (sender, args) => this.DrawNewEdge?.Invoke(this, args);
-            this.graph.DrawNewVertex += (sender, args) => this.DrawNewVertex?.Invoke(this, args);
             this.graph.ElementAdded += (sender, args) => this.ElementAdded?.Invoke(this, args);
             this.graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVert);
             this.graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.EdgeViewModel);
@@ -229,7 +223,6 @@ namespace WpfEditor.Controls.Scene
 
         private void AddNewVertexControl(NodeViewModel vertex)
         {
-            this.DrawNewVertex?.Invoke(this, new Graph.VertexNameArgs {VertName = vertex.Name});
             var vc = new VertexControl(vertex);
             vc.SetPosition(this.pos);
             this.scene.AddVertex(vertex, vc);
@@ -237,8 +230,6 @@ namespace WpfEditor.Controls.Scene
 
         private void AddNewEdgeControl(EdgeViewModel edgeViewModel)
         {
-            this.DrawNewEdge?.Invoke(this,
-                new Graph.SourceTargetArgs {Source = edgeViewModel.Source.Name, Target = edgeViewModel.Target.Name});
             var ec = new EdgeControl(this.prevVer, this.ctrlVer, edgeViewModel);
             this.scene.InsertEdge(edgeViewModel, ec);
             this.prevVer = null;
@@ -289,7 +280,7 @@ namespace WpfEditor.Controls.Scene
             this.scene.UpdateAllEdges();
         }
 
-        private void ZoomCtrl_MouseDown(object sender, MouseButtonEventArgs e)
+        private void OnSceneMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {

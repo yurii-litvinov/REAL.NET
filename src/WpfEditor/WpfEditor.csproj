@@ -101,7 +101,9 @@
     <Compile Include="Controls\ModelExplorer\ModelExplorer.xaml.cs">
       <DependentUpon>ModelExplorer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ModelExplorer\ModelExplorerEdge.cs" />
     <Compile Include="Controls\ModelExplorer\ModelExplorerElement.cs" />
+    <Compile Include="Controls\ModelExplorer\ModelExplorerNode.cs" />
     <Compile Include="Controls\ModelSelector\ModelSelector.xaml.cs">
       <DependentUpon>ModelSelector.xaml</DependentUpon>
     </Compile>

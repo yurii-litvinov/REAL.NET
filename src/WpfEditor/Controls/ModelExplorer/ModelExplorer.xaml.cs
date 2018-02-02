@@ -1,12 +1,25 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Windows.Controls;
-using Repo;
+﻿/* Copyright 2017-2018 REAL.NET group
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. */
 
 namespace WpfEditor.Controls.ModelExplorer
 {
+    using System;
+    using System.Collections.ObjectModel;
+    using System.Windows.Controls;
+
     /// <summary>
-    /// Shows all elements in currently opened model.
+    /// Shows all elements in currently opened model as a list.
     /// </summary>
     public partial class ModelExplorer : UserControl
     {
@@ -18,7 +31,7 @@ namespace WpfEditor.Controls.ModelExplorer
 
         public void Clear() => this.Elements.Clear();
 
-        public ObservableCollection<ModelExplorerElement> Elements { get; } 
+        public ObservableCollection<ModelExplorerElement> Elements { get; }
             = new ObservableCollection<ModelExplorerElement>();
 
         public EventHandler<NodeSelectedEventArgs> NodeSelected;
@@ -46,53 +59,9 @@ namespace WpfEditor.Controls.ModelExplorer
         }
 
         public void NewElement(Repo.IElement element)
-            => this.Elements.Add(element.Metatype == Metatype.Node
+            => this.Elements.Add(element.Metatype == Repo.Metatype.Node
                 ? (ModelExplorerElement) new ModelExplorerNode(element)
                 : new ModelExplorerEdge(element));
-
-        // TODO: Do it in XAML. Why have special DSL for initializing trees of objects and don't use it?
-        // TODO: Model-View here.
-        public void DrawNewVertex(string vertexName)
-        {
-            //var lbi = new ListBoxItem();
-            //var sp = new StackPanel { Orientation = Orientation.Horizontal };
-
-            //var img = new Image
-            //{
-            //    Source = new BitmapImage(new Uri("pack://application:,,,/View/Pictures/vertex.png"))
-            //};
-            //var spaces = new TextBlock { Text = "  " };
-            //var tx = new TextBlock { Text = vertexName };
-
-            //sp.Children.Add(img);
-            //sp.Children.Add(spaces);
-            //sp.Children.Add(tx);
-            //lbi.Content = sp;
-            //this.elementsListBox.Items.Add(lbi);
-        }
-
-        public void DrawNewEdge(string source, string target)
-        {
-            //var lbi = new ListBoxItem();
-            //var sp = new StackPanel { Orientation = Orientation.Horizontal };
-
-            //var img = new Image
-            //{
-            //    Source = new BitmapImage(new Uri("pack://application:,,,/View/Pictures/edge.png"))
-            //};
-            //var spaces = new TextBlock { Text = "  " };
-            //var tx0 = new TextBlock { Text = source };
-            //var tx1 = new TextBlock { Text = " - " };
-            //var tx2 = new TextBlock { Text = target };
-
-            //sp.Children.Add(img);
-            //sp.Children.Add(spaces);
-            //sp.Children.Add(tx0);
-            //sp.Children.Add(tx1);
-            //sp.Children.Add(tx2);
-            //lbi.Content = sp;
-            //this.elementsListBox.Items.Add(lbi);
-        }
 
         public class NodeSelectedEventArgs : EventArgs
         {

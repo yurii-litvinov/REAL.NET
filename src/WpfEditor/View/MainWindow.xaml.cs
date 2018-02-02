@@ -30,18 +30,11 @@ namespace WpfEditor.View
             this.palette.SetModel(this.model);
 
             var controller = new Controller.Controller(this.model);
-            //this.modelExplorer.MouseDoubleClick += this.ElementInBoxSelectedAction;
 
             this.Closed += this.CloseChildrenWindows;
 
             this.scene.ElementUsed += (sender, args) => this.palette.ClearSelection();
-            //this.scene.DrawNewEdge += (sender, args) => this.DrawNewEdge(args.Source, args.Target);
-            //this.scene.DrawNewVertex += (sender, args) => this.DrawNewVertex(args.VertName);
-
-            this.scene.DrawNewEdge += (sender, args) => this.modelExplorer.DrawNewEdge(args.Source, args.Target);
-            this.scene.DrawNewVertex += (sender, args) => this.modelExplorer.DrawNewVertex(args.VertName);
             this.scene.ElementAdded += (sender, args) => this.modelExplorer.NewElement(args.Element);
-
             this.scene.NodeSelected += (sender, args) => this.attributesView.DataContext = args.Node;
 
             this.scene.Init(this.model, controller, new PaletteAdapter(this.palette));
