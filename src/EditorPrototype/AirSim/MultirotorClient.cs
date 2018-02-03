@@ -3,7 +3,7 @@
     using System;
     using System.Runtime.InteropServices;
 
-    public class MutirotorClient : IDisposable
+    public class MultirotorClient : IDisposable
     {
         private IntPtr client;
         private string defaultDirectory;

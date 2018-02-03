@@ -1,11 +1,13 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Linq;
+using System.Security.Permissions;
 
 namespace EditorPrototype.AirSim
 {
     class CodeExecution
     {
-        public static void Execute(object pair)
+        public void Execute(object pair)
         {
             var tuple = pair as Tuple<Graph, Action<string>>;
             var graph = tuple.Item1;
@@ -36,9 +38,9 @@ namespace EditorPrototype.AirSim
                 writeToMessageBox("\n");
                 return;
             }
-            
+
             DataVertex curNode = initNode;
-            MutirotorClient client = null;
+            MultirotorClient client = null;
             while (curNode.Name != "aFinalNode")
             {
                 var name = curNode.Name;
@@ -46,7 +48,7 @@ namespace EditorPrototype.AirSim
                 switch (curNode.Name)
                 {
                     case "aInitialNode":
-                        client = new MutirotorClient();
+                        client = new MultirotorClient();
                         client.CreateClient();
                         client.ConfirmConnection();
                         client.EnableApiControl();
@@ -68,7 +70,7 @@ namespace EditorPrototype.AirSim
                         client.EnableApiControl();
                         break;
                     case "aIfNode":
-                        condition = false;
+                        condition = CheckCondition(client, curNode.Attributes[0].Value);
                         break;
                 }
 
@@ -116,7 +118,58 @@ namespace EditorPrototype.AirSim
             }
             client.Land();
             client.Dispose();
-            writeToMessageBox($"Program done\n");
+            writeToMessageBox("Program done\n");
+        }
+
+        private bool CheckCondition(MultirotorClient client, string condition)
+        {
+            string sourceCode =
+                @"using System; 
+                using System.IO;
+                using EditorPrototype;
+                    public class Code
+                    { 
+                        public bool Exe(MultirotorClient client)
+                        {
+                            return " + condition + @";
+                        }
+                    }";
+            return bool.Parse(EvalCode("Code", "Exe", sourceCode, new object[] { client }));
+        }
+
+        private string EvalCode(string typeName, string methodName, string sourceCode, object[] args)
+        {
+            string output;
+            var compiler = CodeDomProvider.CreateProvider("CSharp");
+            var parameters = new CompilerParameters
+            {
+                CompilerOptions = "/t:library",
+                GenerateInMemory = true,
+                IncludeDebugInformation = true,
+                ReferencedAssemblies = { "bin/Debug/EditorPrototype.exe" }
+            };
+
+            var results = compiler.CompileAssemblyFromSource(parameters, sourceCode);
+
+            if (!results.Errors.HasErrors)
+            {
+                var assembly = results.CompiledAssembly;
+                var evaluatorType = assembly.GetType(typeName);
+                var evaluator = Activator.CreateInstance(evaluatorType);
+
+                output = this.InvokeMethod(evaluatorType, methodName, evaluator, args).ToString();
+                return output;
+            }
+
+            output = "\r\nHouston, we have a problem at compile time!";
+            return results.Errors.Cast<CompilerError>().Aggregate(output, (current, ce) => current +
+                                                                                           $"\r\nline {ce.Line}: {ce.ErrorText}");
+        }
+
+        [FileIOPermission(SecurityAction.Assert, Unrestricted = true)]
+        private object InvokeMethod(Type evaluatorType, string methodName, object evaluator, object[] args)
+        {
+            return evaluatorType.InvokeMember(methodName, System.Reflection.BindingFlags.InvokeMethod, null, evaluator, args);
         }
     }
 }

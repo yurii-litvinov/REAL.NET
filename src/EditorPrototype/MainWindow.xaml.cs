@@ -630,7 +630,8 @@ namespace EditorPrototype
             token = new CancellationTokenSource();
             ct = token.Token;
             void Action(string str) => this.Dispatcher.Invoke(delegate { Messages.Text += str; });
-            await Task.Factory.StartNew(() => CodeExecution.Execute(new Tuple<Graph, Action<string>>(graph, Action)), ct);
+            var codeExe = new CodeExecution();
+            await Task.Factory.StartNew(() => codeExe.Execute(new Tuple<Graph, Action<string>>(graph, Action)), ct);
         }
 
         private void StopButtonClick(object sender, RoutedEventArgs e)
