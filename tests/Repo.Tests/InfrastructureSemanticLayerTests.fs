@@ -58,7 +58,7 @@ let ``Instantiation shall preserve linguistic attributes`` () =
     outgoingAssociations |> Seq.map (fun a -> (a.Target.Value :?> INode).Name) |> should contain "shape"
     let attributes = infrastructure.Element.Attributes element
     attributes |> should not' (be Empty)
-    infrastructure.Element.AttributeValue element "shape" |> should equal "Pictures/Vertex.png"
+    infrastructure.Element.AttributeValue element "shape" |> should equal "View/Pictures/vertex.png"
 
 [<Test>]
 let ``Double instantiation shall result in correct instantiation chain`` () =

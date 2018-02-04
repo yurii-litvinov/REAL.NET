@@ -8,7 +8,7 @@
 
 [![BCH compliance](https://bettercodehub.com/edge/badge/yurii-litvinov/REAL.NET?branch=master)](https://bettercodehub.com/)
 
-A set of .NET libraries for quick creation of visual languages and related tools (spriritual successor of QReal project)
+A set of .NET libraries for quick creation of visual languages and related tools (spiritual successor of QReal project)
 
 ## Usage
 

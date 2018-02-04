@@ -13,6 +13,7 @@ nuget StyleCop.Analyzers
 nuget NUnit redirects: force
 nuget NUnit.Runners
 nuget FsUnit
+nuget System.ValueTuple
 
 group build 
   source https://nuget.org/api/v2

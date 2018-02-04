@@ -254,7 +254,6 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel) =
             match v with
             | true -> "true"
             | false -> "false"
-            | _ -> raise (InvalidSemanticOperationException "Incorrect value for isInstantiable")
 
         let attribute = copyIfNeeded element attributeName
         CoreSemanticLayer.Element.setAttributeValue attribute "isInstantiable" (boolToString value)

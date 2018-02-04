@@ -64,4 +64,4 @@ let ``Timer block shall have a picture`` () =
 
     let timer = elementRepository.GetElement dataLayerElement
 
-    timer.Class.Shape |> should equal "Pictures/timerBlock.png"
+    timer.Class.Shape |> should equal "View/Pictures/timerBlock.png"
