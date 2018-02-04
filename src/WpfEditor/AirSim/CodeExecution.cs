@@ -42,6 +42,7 @@ namespace WpfEditor.AirSim
                 return;
             }
 
+            writeToMessageBox("Running your code\n");
             NodeViewModel curNode = initNode;
             MultirotorClient client = null;
             while (curNode.Name != "aFinalNode")
@@ -149,7 +150,7 @@ namespace WpfEditor.AirSim
                 CompilerOptions = "/t:library",
                 GenerateInMemory = true,
                 IncludeDebugInformation = true,
-                ReferencedAssemblies = { "bin/Debug/EditorPrototype.exe" }
+                ReferencedAssemblies = { "EditorPrototype.exe" }
             };
 
             var results = compiler.CompileAssemblyFromSource(parameters, sourceCode);

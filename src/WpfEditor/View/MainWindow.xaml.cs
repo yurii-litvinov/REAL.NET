@@ -415,13 +415,12 @@ namespace WpfEditor.View
             this.zoomControl.ZoomToFill();
         }
 
-        private async void ExecuteButtonClick(object sender, RoutedEventArgs e)
+        private void ExecuteButtonClick(object sender, RoutedEventArgs e)
         {
-            this.Console.SendMessage("Running your code\n");
             token = new CancellationTokenSource();
             ct = token.Token;
             var codeExe = new CodeExecution();
-            await Task.Factory.StartNew(() => codeExe.Execute(new Tuple<Graph, Action<string>>(graph, this.Console.SendMessage)), ct);
+            Task.Factory.StartNew(() => codeExe.Execute(new Tuple<Graph, Action<string>>(graph, this.Console.SendMessage)), ct);
         }
 
         private void StopButtonClick(object sender, RoutedEventArgs e)

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace WpfEditor.AirSim
@@ -6,12 +8,15 @@ namespace WpfEditor.AirSim
     public class MultirotorClient : IDisposable
     {
         private IntPtr client;
-        private string defaultDirectory;
+
+        private const string LibName = "DroneLib.dll";
+        static readonly string currentPath = Environment.CurrentDirectory;
 
         public void CreateClient()
         {
-            defaultDirectory = Environment.CurrentDirectory;
-            Environment.CurrentDirectory = Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.IndexOf("bin", StringComparison.Ordinal));
+            var substring = currentPath.Substring(0, currentPath.IndexOf(@"\bin", StringComparison.Ordinal)) +
+                            @"\Airsim\" + LibName;
+            LoadLibrary(substring);
             this.client = CreateClientCPP();
         }
 
@@ -35,37 +40,41 @@ namespace WpfEditor.AirSim
         {
             Land();
             DisposeClientCPP(this.client);
-            Environment.CurrentDirectory = defaultDirectory;
         }
 
-        [DllImport("DroneLib.dll")]
+
+        [DllImport("kernel32.dll")]
+
+        private static extern IntPtr LoadLibrary(string lpFileName);
+
+        [DllImport(LibName)]
         private static extern IntPtr CreateClientCPP();
 
-        [DllImport("DroneLib.dll")]
+        [DllImport(LibName)]
         private static extern void DisposeClientCPP(IntPtr ptr);
 
-        [DllImport("DroneLib.dll")]
+        [DllImport(LibName)]
         private static extern void ConfirmConnectionCPP(IntPtr ptr);
 
-        [DllImport("DroneLib.dll")]
+        [DllImport(LibName)]
         private static extern void ArmDisarmCPP(IntPtr ptr, bool isArm);
 
-        [DllImport("DroneLib.dll")]
+        [DllImport(LibName)]
         private static extern void TakeoffCPP(IntPtr ptr, float timeout);
 
-        [DllImport("DroneLib.dll")]
+        [DllImport(LibName)]
         private static extern void HoverCPP(IntPtr ptr);
 
-        [DllImport("DroneLib.dll")]
+        [DllImport(LibName)]
         private static extern void SleepClientCPP(IntPtr ptr, float time);
 
-        [DllImport("DroneLib.dll")]
+        [DllImport(LibName)]
         private static extern void LandCPP(IntPtr ptr);
 
-        [DllImport("DroneLib.dll")]
+        [DllImport(LibName)]
         private static extern void MoveByVelocityZCPP(IntPtr ptr, float speed);
 
-        [DllImport("DroneLib.dll")]
+        [DllImport(LibName)]
         private static extern void EnableApiControlCPP(IntPtr ptr);
 
     }
