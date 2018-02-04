@@ -14,7 +14,6 @@
 
 using System.Collections.Generic;
 using GraphX.PCL.Common;
-using Repo.DataLayer;
 
 namespace WpfEditor.Model
 {
@@ -59,18 +58,18 @@ namespace WpfEditor.Model
         // Should be replaced
         public void InitModel(string modelName)
         {
-            var model = this.model.Repo.Model(modelName);
-            if (model == null)
+            var newModel = this.model.Repo.Model(modelName);
+            if (newModel == null)
             {
                 return;
             }
 
-            foreach (var node in model.Nodes)
+            foreach (var node in newModel.Nodes)
             {
                 this.CreateNodeWithoutPos(node);
             }
 
-            foreach (var edge in model.Edges)
+            foreach (var edge in newModel.Edges)
             {
                 /* var isViolation = Constraints.CheckEdge(edgeViewModel, this.repo, modelName); */
 
@@ -108,9 +107,11 @@ namespace WpfEditor.Model
                     newEdge.Text = value.Value;
                 }
                 this.DataGraph.AddEdge(newEdge);
-                var args = new SourceTargetArgs();
-                args.Source = source.Name;
-                args.Target = target.Name;
+                var args = new SourceTargetArgs
+                {
+                    Source = source.Name,
+                    Target = target.Name
+                };
                 this.DrawNewEdge?.Invoke(this, args);
             }
 
@@ -125,8 +126,7 @@ namespace WpfEditor.Model
             }
 
             var newEdge = new EdgeViewModel(prevVer, ctrlVer, Convert.ToDouble(true));
-            var args = new DataEdgeArgs();
-            args.EdgeViewModel = newEdge;
+            var args = new DataEdgeArgs {EdgeViewModel = newEdge};
             this.AddNewEdgeControl?.Invoke(this, args);
         }
 
@@ -144,8 +144,7 @@ namespace WpfEditor.Model
             });
 
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
-            var args = new DataVertexArgs();
-            args.DataVert = vertex;
+            var args = new DataVertexArgs {DataVert = vertex};
             this.AddNewVertexControl?.Invoke(this, args);
         }
 
@@ -164,8 +163,7 @@ namespace WpfEditor.Model
 
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
             this.DataGraph.AddVertex(vertex);
-            var args = new VertexNameArgs();
-            args.VertName = node.Name;
+            var args = new VertexNameArgs {VertName = node.Name};
             this.DrawNewVertex?.Invoke(this, args);
         }
 

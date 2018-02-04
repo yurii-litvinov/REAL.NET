@@ -26,7 +26,7 @@ namespace WpfEditor.View
     /// <summary>
     /// Main window of the application, launches on application startup.
     /// </summary>
-    internal partial class MainWindow : Window
+    internal partial class MainWindow
     {
         private readonly EditorObjectManager editorManager;
         private VertexControl prevVer;
@@ -65,7 +65,7 @@ namespace WpfEditor.View
                     DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.LinLog
                 };
 
-            this.scene.LogicCore = logic; // need?
+            this.scene.LogicCore = logic;
 
             this.scene.VertexSelected += this.VertexSelectedAction;
             this.scene.EdgeSelected += this.EdgeSelectedAction;
@@ -75,7 +75,7 @@ namespace WpfEditor.View
             ZoomControl.SetViewFinderVisibility(this.zoomControl, Visibility.Visible);
             this.zoomControl.Loaded += (sender, args) =>
             {
-                (this.zoomControl.ViewFinder.Parent as Grid).Children.Remove(this.zoomControl.ViewFinder);
+                (this.zoomControl.ViewFinder.Parent as Grid)?.Children.Remove(this.zoomControl.ViewFinder);
                 this.rightPanel.Children.Add(this.zoomControl.ViewFinder);
                 Grid.SetRow(this.zoomControl.ViewFinder, 0);
             };
@@ -93,8 +93,8 @@ namespace WpfEditor.View
 
             this.InitModelComboBox();
 
-            this.zoomControl.MouseDown += (sender, e) => this.ZoomCtrl_MouseDown(sender, e, this.model.ModelName);
-            this.zoomControl.Drop += (sender, e) => this.ZoomControl_Drop(sender, e, this.model.ModelName);
+            this.zoomControl.MouseDown += (sender, e) => this.ZoomCtrl_MouseDown(e, this.model.ModelName);
+            this.zoomControl.Drop += (sender, e) => this.ZoomControl_Drop(e, this.model.ModelName);
 
             this.palette.InitPalette(this.model.ModelName);
             this.graph.InitModel(this.model.ModelName);
@@ -106,9 +106,9 @@ namespace WpfEditor.View
         {
             var repo = this.model.Repo;
 
-            bool IsBasedOnInfrastructureMetamodel(Repo.IModel model)
+            bool IsBasedOnInfrastructureMetamodel(Repo.IModel repoModel)
             {
-                var metamodel = model.Metamodel;
+                var metamodel = repoModel.Metamodel;
                 while (metamodel != metamodel.Metamodel)
                 {
                     if (metamodel.Name == "InfrastructureMetamodel")
@@ -163,7 +163,7 @@ namespace WpfEditor.View
         }
 
         // Need for dropping.
-        private void ZoomControl_Drop(object sender, DragEventArgs e, string modelName)
+        private void ZoomControl_Drop(DragEventArgs e, string modelName)
         {
             this.pos = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.scene);
             this.CreateNewNode((Repo.IElement)e.Data.GetData("REAL.NET palette element"), modelName);
@@ -173,16 +173,15 @@ namespace WpfEditor.View
         // TODO: Copypaste is heresy.
         private void ElementInBoxSelectedAction(object sender, EventArgs e)
         {
-            var sp = (this.elementsListBox.SelectedItem as ListBoxItem)?.Content as StackPanel;
-            if (sp == null)
+            if (!((this.elementsListBox.SelectedItem as ListBoxItem)?.Content is StackPanel sp))
             {
                 return;
             }
 
             if (sp.Children.Count > 3)
             {
-                var source = (sp.Children[2] as TextBlock).Text;
-                var target = (sp.Children[4] as TextBlock).Text;
+                var source = (sp.Children[2] as TextBlock)?.Text;
+                var target = (sp.Children[4] as TextBlock)?.Text;
                 for (var i = 0; i < this.graph.DataGraph.Edges.Count(); i++)
                 {
                     if (this.graph.DataGraph.Edges.ToList()[i].Source.Name == source &&
@@ -204,7 +203,7 @@ namespace WpfEditor.View
             }
             else
             {
-                var name = (sp.Children[2] as TextBlock).Text;
+                var name = (sp.Children[2] as TextBlock)?.Text;
                 for (var i = 0; i < this.graph.DataGraph.Vertices.Count(); i++)
                 {
                     if (this.graph.DataGraph.Vertices.ToList()[i].Name == name)
@@ -297,7 +296,7 @@ namespace WpfEditor.View
             this.scene.UpdateAllEdges();
         }
 
-        private void ZoomCtrl_MouseDown(object sender, MouseButtonEventArgs e, string modelName)
+        private void ZoomCtrl_MouseDown(MouseButtonEventArgs e, string modelName)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {

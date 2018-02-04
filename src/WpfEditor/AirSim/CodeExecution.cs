@@ -2,49 +2,34 @@
 using System.CodeDom.Compiler;
 using System.Linq;
 using System.Security.Permissions;
-using Repo.DataLayer;
 using WpfEditor.Model;
 using WpfEditor.ViewModel;
 
 namespace WpfEditor.AirSim
 {
-    class CodeExecution
+    /// <summary>
+    /// Class for execution of visual program on AirSim
+    /// </summary>
+    internal class CodeExecution
     {
+        private Action<string> writeToMessageBox;
+
+        /// <summary>
+        /// Main execution method
+        /// </summary>
+        /// <param name="pair"> Should be touple of grapth and function of writing to console casted to object </param>
         public void Execute(object pair)
         {
-            var tuple = pair as Tuple<Graph, Action<string>>;
-            var graph = tuple.Item1;
-            Action<string> writeToMessageBox = tuple.Item2;
-            
-            var edges = graph.DataGraph.Edges.ToList();
-            NodeViewModel initNode = null;
-            int cnt = 0;
-            foreach (var edge in edges)
-            {
-                if (edge.Source.Name == "aInitialNode")
-                {
-                    initNode = edge.Source;
-                    ++cnt;
-                }
-            }
-            if (cnt != 1)
-            {
-                writeToMessageBox("Error: ");
-                if (initNode == null)
-                {
-                    writeToMessageBox("There is no initial nodes");
-                }
-                else
-                {
-                    writeToMessageBox("There is more than one initial nodes");
-                }
-                writeToMessageBox("\n");
+            var tuple = (Tuple<Graph, Action<string>>)pair;
+            Graph graph = tuple.Item1;
+            writeToMessageBox = tuple.Item2;
+
+            NodeViewModel curNode = GetInitNode(graph);
+            if (curNode == null)
                 return;
-            }
 
             writeToMessageBox("Running your code\n");
-            NodeViewModel curNode = initNode;
-            MultirotorClient client = null;
+            var client = new MultirotorClient();
             while (curNode.Name != "aFinalNode")
             {
                 var name = curNode.Name;
@@ -52,7 +37,6 @@ namespace WpfEditor.AirSim
                 switch (curNode.Name)
                 {
                     case "aInitialNode":
-                        client = new MultirotorClient();
                         client.CreateClient();
                         client.ConfirmConnection();
                         client.EnableApiControl();
@@ -125,6 +109,30 @@ namespace WpfEditor.AirSim
             writeToMessageBox("Program done\n");
         }
 
+        private NodeViewModel GetInitNode(Graph graph)
+        {
+            NodeViewModel initNode = null;
+            var edges = graph.DataGraph.Edges.ToList();
+            int cnt = 0;
+            foreach (var edge in edges)
+            {
+                if (edge.Source.Name == "aInitialNode")
+                {
+                    initNode = edge.Source;
+                    ++cnt;
+                }
+            }
+            if (initNode == null || cnt > 1)
+            {
+                writeToMessageBox("Error: ");
+                writeToMessageBox(initNode == null
+                    ? "There is no initial nodes"
+                    : "There is more than one initial nodes");
+                writeToMessageBox("\n");
+            }
+            return initNode;
+        }
+
         private bool CheckCondition(MultirotorClient client, string condition)
         {
             string sourceCode =
@@ -140,6 +148,7 @@ namespace WpfEditor.AirSim
                     }";
             return bool.Parse(EvalCode("Code", "Exe", sourceCode, new object[] { client }));
         }
+
 
         private string EvalCode(string typeName, string methodName, string sourceCode, object[] args)
         {

@@ -1,16 +1,17 @@
 ﻿using System;
-using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace WpfEditor.AirSim
 {
-    public class MultirotorClient : IDisposable
+    /// <summary>
+    /// DLL library wrapper
+    /// </summary>
+    internal class MultirotorClient : IDisposable
     {
         private IntPtr client;
 
         private const string LibName = "DroneLib.dll";
-        static readonly string currentPath = Environment.CurrentDirectory;
+        private static readonly string currentPath = Environment.CurrentDirectory;
 
         public void CreateClient()
         {
@@ -42,9 +43,7 @@ namespace WpfEditor.AirSim
             DisposeClientCPP(this.client);
         }
 
-
         [DllImport("kernel32.dll")]
-
         private static extern IntPtr LoadLibrary(string lpFileName);
 
         [DllImport(LibName)]
