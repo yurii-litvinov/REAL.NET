@@ -98,7 +98,7 @@ namespace WpfEditor.View
 
             this.palette.InitPalette(this.model.ModelName);
             this.graph.InitModel(this.model.ModelName);
-            
+
             this.InitAndLaunchPlugins();
         }
 
@@ -164,7 +164,7 @@ namespace WpfEditor.View
 
         // Need for dropping.
         private void ZoomControl_Drop(object sender, DragEventArgs e, string modelName)
-        { 
+        {
             this.pos = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.scene);
             this.CreateNewNode((Repo.IElement)e.Data.GetData("REAL.NET palette element"), modelName);
             this.palette.ClearSelection();
@@ -268,6 +268,8 @@ namespace WpfEditor.View
             this.ctrlEdg = args.EdgeControl;
 
             // Those crazy russians intercept MouseUp event, so we are forced to use PreviewMouseUp here.
+
+            this.attributesView.DataContext = this.ctrlEdg.GetDataEdge<EdgeViewModel>();
             this.ctrlEdg.PreviewMouseUp += this.OnEdgeMouseUp;
             this.zoomControl.MouseMove += this.OnEdgeMouseMove;
             if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
@@ -436,9 +438,14 @@ namespace WpfEditor.View
             //constraints.ShowDialog();
         }
 
-        private void Stop(object sender, RoutedEventArgs e)
+        private void AttributesViewCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-
+            if (this.ctrlEdg != null)
+            {
+                var data = ctrlEdg.GetDataEdge<EdgeViewModel>();
+                data.Text = ((TextBox)e.EditingElement).Text;
+                this.scene.GenerateAllEdges();
+            }
         }
     }
 }

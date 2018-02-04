@@ -12,6 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
+using System.Collections.Generic;
+using GraphX.PCL.Common;
+using Repo.DataLayer;
+
 namespace WpfEditor.Model
 {
     using System;
@@ -89,6 +93,20 @@ namespace WpfEditor.Model
                 var target = this.DataGraph.Vertices.First(v => v.Node == targetNode);
 
                 var newEdge = new EdgeViewModel(source, target, Convert.ToDouble(false)) { EdgeType = EdgeViewModel.EdgeTypeEnum.Association };
+                var attributeInfos = edge.Attributes.Select(x => new EdgeViewModel.Attribute
+                {
+                    Name = x.Name,
+                    Type = x.Kind.ToString(),
+                    Value = x.StringValue
+                });
+                var attributes = attributeInfos as IList<EdgeViewModel.Attribute> ?? attributeInfos.ToList();
+                attributes.ForEach(x => newEdge.Attributes.Add(x));
+                var value = attributes.SingleOrDefault(x => x.Name == "Value");
+                if (value != null)
+                {
+                    newEdge.EdgeType = EdgeViewModel.EdgeTypeEnum.Attribute;
+                    newEdge.Text = value.Value;
+                }
                 this.DataGraph.AddEdge(newEdge);
                 var args = new SourceTargetArgs();
                 args.Source = source.Name;
