@@ -418,17 +418,23 @@
 
         private async void ExecuteButtonClick(object sender, RoutedEventArgs e)
         {
+            stopButton.Visibility = Visibility.Visible;
+            executeButton.Visibility = Visibility.Hidden;
             token = new CancellationTokenSource();
             ct = token.Token;
             var codeExe = new CodeExecution();
             void Action(string str) => this.Dispatcher.Invoke(delegate { this.Console.SendMessage(str); });
             await Task.Factory.StartNew(() => codeExe.Execute(new Tuple<Graph, Action<string>>(graph, Action)), ct);
+            stopButton.Visibility = Visibility.Hidden;
+            executeButton.Visibility = Visibility.Visible;
         }
 
         private void StopButtonClick(object sender, RoutedEventArgs e)
         {
             token.Cancel();
-            this.Console.SendMessage("Stop execution of code ");
+            this.Console.SendMessage("Stop execution of code");
+            stopButton.Visibility = Visibility.Hidden;
+            executeButton.Visibility = Visibility.Visible;
         }
 
 

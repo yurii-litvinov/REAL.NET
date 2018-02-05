@@ -108,7 +108,7 @@
 
                 <Button Grid.Row="6" Content="Constraints" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="ConstraintsButtonClick"/>
                 <Button x:Name="executeButton" Grid.Row="7" Content="Execute" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="ExecuteButtonClick"/>
-                <Button x:Name="stopButton" Grid.Row="8" Content="Stop" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="StopButtonClick"/>
+                <Button x:Name="stopButton" Grid.Row="8" Content="Stop" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="StopButtonClick" Visibility="Hidden"/>
             </Grid>
 
         </DockPanel>

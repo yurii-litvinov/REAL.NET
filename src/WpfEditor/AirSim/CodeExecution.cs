@@ -135,19 +135,18 @@ namespace WpfEditor.AirSim
 
         private bool CheckCondition(MultirotorClient client, string condition)
         {
-            return true;
-            /*string sourceCode =
+            string sourceCode =
                 @"using System; 
                 using System.IO;
-                using EditorPrototype;
-                    public class Code
-                    { 
-                        public bool Exe(MultirotorClient client)
-                        {
-                            return " + condition + @";
-                        }
-                    }";
-            return bool.Parse(EvalCode("Code", "Exe", sourceCode, new object[] { client }));*/
+                using WpfEditor.AirSim;
+                public class Code
+                { 
+                    public bool Exe(MultirotorClient client)
+                    {
+                        return " + condition + @";
+                    }
+                }";
+            return bool.Parse(EvalCode("Code", "Exe", sourceCode, new object[] { client }));
         }
 
 
@@ -160,7 +159,7 @@ namespace WpfEditor.AirSim
                 CompilerOptions = "/t:library",
                 GenerateInMemory = true,
                 IncludeDebugInformation = true,
-                ReferencedAssemblies = { "EditorPrototype.exe" }
+                ReferencedAssemblies = { "WpfEditor.exe" }
             };
 
             var results = compiler.CompileAssemblyFromSource(parameters, sourceCode);

@@ -6,7 +6,7 @@ namespace WpfEditor.AirSim
     /// <summary>
     /// DLL library wrapper
     /// </summary>
-    internal class MultirotorClient : IDisposable
+    public class MultirotorClient : IDisposable
     {
         private IntPtr client;
 
