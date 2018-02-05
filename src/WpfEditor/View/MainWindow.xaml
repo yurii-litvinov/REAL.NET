@@ -50,7 +50,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto" MinHeight="50"/>
+                <RowDefinition Height="Auto" MinHeight="100"/>
             </Grid.RowDefinitions>
 
             <!-- ToolBar -->
@@ -60,7 +60,7 @@
 
             <!-- Area -->
             <Border Grid.Row="1" Grid.RowSpan="3" BorderThickness="1"  Margin="2">
-                <graphx:ZoomControl x:Name="zoomControl" AllowDrop="True" Margin="0,0,0,54">
+                <graphx:ZoomControl x:Name="zoomControl" AllowDrop="True" Margin="0,0,0,106">
                     <view:GraphArea AllowDrop="True" x:Name="scene" />
                 </graphx:ZoomControl>
             </Border>

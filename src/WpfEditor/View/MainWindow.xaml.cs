@@ -1,28 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using EditorPluginInterfaces;
-using GraphX.Controls;
-using GraphX.Controls.Models;
-using GraphX.PCL.Common.Enums;
-using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
-using GraphX.PCL.Logic.Models;
-using PluginManager;
-using QuickGraph;
-using WpfEditor.AirSim;
-using WpfEditor.Controls.Console;
-using WpfEditor.Model;
-using WpfEditor.ViewModel;
-
-namespace WpfEditor.View
+﻿namespace WpfEditor.View
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Imaging;
+    using AirSim;
+    using Controls.Console;
+    using EditorPluginInterfaces;
+    using GraphX.Controls;
+    using GraphX.Controls.Models;
+    using GraphX.PCL.Common.Enums;
+    using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
+    using GraphX.PCL.Logic.Models;
+    using Model;
+    using PluginManager;
+    using QuickGraph;
+    using ViewModel;
+
     /// <summary>
     /// Main window of the application, launches on application startup.
     /// </summary>
@@ -32,7 +32,7 @@ namespace WpfEditor.View
         private VertexControl prevVer;
         private VertexControl ctrlVer;
         private EdgeControl ctrlEdg;
-        private readonly Model.Model model;
+        private readonly Model model;
         private readonly Controller.Controller controller;
         private readonly Graph graph;
         private Point pos;
@@ -46,7 +46,7 @@ namespace WpfEditor.View
             this.DataContext = this;
             this.InitializeComponent();
 
-            this.model = new Model.Model();
+            this.model = new Model();
 
             this.palette.SetModel(this.model);
 
@@ -416,18 +416,19 @@ namespace WpfEditor.View
             this.zoomControl.ZoomToFill();
         }
 
-        private void ExecuteButtonClick(object sender, RoutedEventArgs e)
+        private async void ExecuteButtonClick(object sender, RoutedEventArgs e)
         {
             token = new CancellationTokenSource();
             ct = token.Token;
             var codeExe = new CodeExecution();
-            Task.Factory.StartNew(() => codeExe.Execute(new Tuple<Graph, Action<string>>(graph, this.Console.SendMessage)), ct);
+            void Action(string str) => this.Dispatcher.Invoke(delegate { this.Console.SendMessage(str); });
+            await Task.Factory.StartNew(() => codeExe.Execute(new Tuple<Graph, Action<string>>(graph, Action)), ct);
         }
 
         private void StopButtonClick(object sender, RoutedEventArgs e)
         {
             token.Cancel();
-            this.Console.SendMessage("Stop execution of code \n");
+            this.Console.SendMessage("Stop execution of code ");
         }
 
 

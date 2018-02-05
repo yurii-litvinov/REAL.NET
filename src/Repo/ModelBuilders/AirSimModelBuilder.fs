@@ -53,9 +53,9 @@ type AirSimModelBuilder() =
             let timer1 = infrastructure.Instantiate model metamodelTimer
             let timer2 = infrastructure.Instantiate model metamodelTimer
             let timer3 = infrastructure.Instantiate model metamodelTimer
-            infrastructure.Element.SetAttributeValue timer1 "delay" "10"
-            infrastructure.Element.SetAttributeValue timer2 "delay" "10"
-            infrastructure.Element.SetAttributeValue timer3 "delay" "10"
+            infrastructure.Element.SetAttributeValue timer1 "delay" "1"
+            infrastructure.Element.SetAttributeValue timer2 "delay" "1"
+            infrastructure.Element.SetAttributeValue timer3 "delay" "1"
             
             // let hover = infrastructure.Instantiate model metamodelHover
             let ifNode = infrastructure.Instantiate model metamodelIf

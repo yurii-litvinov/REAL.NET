@@ -28,7 +28,7 @@ namespace WpfEditor.AirSim
             if (curNode == null)
                 return;
 
-            writeToMessageBox("Running your code\n");
+            writeToMessageBox("Running your code");
             var client = new MultirotorClient();
             while (curNode.Name != "aFinalNode")
             {
@@ -66,14 +66,14 @@ namespace WpfEditor.AirSim
                 {
                     if (graph.DataGraph.OutEdges(curNode).Count() > 1)
                     {
-                        writeToMessageBox("Error: Node " + curNode.Name + " has more than the 1 out edge \n");
+                        writeToMessageBox("Error: Node " + curNode.Name + " has more than the 1 out edge ");
                         client.Dispose();
                         return;
                     }
                     if (!graph.DataGraph.OutEdges(curNode).Any())
                     {
                         writeToMessageBox("Error: Node " + curNode.Name +
-                                           " has no out edges and it is not the final node \n");
+                                           " has no out edges and it is not the final node ");
                         client.Dispose();
                         return;
                     }
@@ -83,7 +83,7 @@ namespace WpfEditor.AirSim
                 {
                     if (graph.DataGraph.OutEdges(curNode).Count() != 2)
                     {
-                        writeToMessageBox("Error: ifNode out edges count is not equal 2 \n");
+                        writeToMessageBox("Error: ifNode out edges count is not equal 2 ");
                         client.Dispose();
                         return;
                     }
@@ -102,11 +102,11 @@ namespace WpfEditor.AirSim
                             : graph.DataGraph.OutEdges(curNode).ToList()[1].Target;
                     }
                 }
-                writeToMessageBox($"Node {name} done\n");
+                writeToMessageBox($"Node {name} done");
             }
             client.Land();
             client.Dispose();
-            writeToMessageBox("Program done\n");
+            writeToMessageBox("Program done");
         }
 
         private NodeViewModel GetInitNode(Graph graph)
@@ -128,14 +128,15 @@ namespace WpfEditor.AirSim
                 writeToMessageBox(initNode == null
                     ? "There is no initial nodes"
                     : "There is more than one initial nodes");
-                writeToMessageBox("\n");
+                writeToMessageBox("");
             }
             return initNode;
         }
 
         private bool CheckCondition(MultirotorClient client, string condition)
         {
-            string sourceCode =
+            return true;
+            /*string sourceCode =
                 @"using System; 
                 using System.IO;
                 using EditorPrototype;
@@ -146,7 +147,7 @@ namespace WpfEditor.AirSim
                             return " + condition + @";
                         }
                     }";
-            return bool.Parse(EvalCode("Code", "Exe", sourceCode, new object[] { client }));
+            return bool.Parse(EvalCode("Code", "Exe", sourceCode, new object[] { client }));*/
         }
 
 
@@ -174,9 +175,9 @@ namespace WpfEditor.AirSim
                 return output;
             }
 
-            output = "\r\nHouston, we have a problem at compile time!";
+            output = "\rHouston, we have a problem at compile time!";
             return results.Errors.Cast<CompilerError>().Aggregate(output, (current, ce) => current +
-                                                                                           $"\r\nline {ce.Line}: {ce.ErrorText}");
+                                                                                           $"\rline {ce.Line}: {ce.ErrorText}");
         }
 
         [FileIOPermission(SecurityAction.Assert, Unrestricted = true)]
