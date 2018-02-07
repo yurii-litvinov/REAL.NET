@@ -13,7 +13,7 @@
     public class NodeViewModel : VertexBase, INotifyPropertyChanged
     {
         private Brush color = Brushes.Green;
-        private IList<Attribute> attributes = new List<Attribute>();
+        private IList<AttributeViewModel> attributes = new List<AttributeViewModel>();
         private string picture = string.Empty;
 
         /// <summary>
@@ -44,7 +44,7 @@
             }
         }
 
-        public IList<Attribute> Attributes
+        public IList<AttributeViewModel> Attributes
         {
             get => this.attributes;
 
@@ -74,34 +74,6 @@
         public void OnPropertyChanged([CallerMemberName] string name = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-
-        public class Attribute
-        {
-            private string value;
-            private readonly IAttribute attribute;
-
-            public Attribute(IAttribute attribute, string name, string type)
-            {
-                this.attribute = attribute;
-                this.Name = name;
-                this.Type = type;
-            }
-
-            public string Name { get; }
-
-            public string Type { get; }
-
-            public string Value
-            {
-                get => this.value;
-
-                set
-                {
-                    this.attribute.StringValue = value;
-                    this.value = value;
-                }
-            }
         }
     }
 }

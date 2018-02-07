@@ -42,12 +42,9 @@ namespace WpfEditor.Model
 
         public event EventHandler DrawGraph;
 
-        public event EventHandler<VertexNameArgs> DrawNewVertex;
-
-        public event EventHandler<SourceTargetArgs> DrawNewEdge;
+        public event EventHandler<ElementAddedEventArgs> ElementAdded;
 
         public event EventHandler<DataVertexArgs> AddNewVertexControl;
-
         public event EventHandler<DataEdgeArgs> AddNewEdgeControl;
 
         public BidirectionalGraph<NodeViewModel, EdgeViewModel> DataGraph { get; }
@@ -88,12 +85,12 @@ namespace WpfEditor.Model
                 var source = this.DataGraph.Vertices.First(v => v.Node == sourceNode);
                 var target = this.DataGraph.Vertices.First(v => v.Node == targetNode);
 
-                var newEdge = new EdgeViewModel(source, target, Convert.ToDouble(false)) { EdgeType = EdgeViewModel.EdgeTypeEnum.Association };
+                var newEdge = new EdgeViewModel(source, target, Convert.ToDouble(false))
+                {
+                    EdgeType = EdgeViewModel.EdgeTypeEnum.Association
+                };
                 this.DataGraph.AddEdge(newEdge);
-                var args = new SourceTargetArgs();
-                args.Source = source.Name;
-                args.Target = target.Name;
-                this.DrawNewEdge?.Invoke(this, args);
+                this.ElementAdded?.Invoke(this, new ElementAddedEventArgs {Element = edge});
             }
 
             this.DrawGraph?.Invoke(this, EventArgs.Empty);
@@ -107,9 +104,12 @@ namespace WpfEditor.Model
             }
 
             var newEdge = new EdgeViewModel(prevVer, ctrlVer, Convert.ToDouble(true));
-            var args = new DataEdgeArgs();
-            args.EdgeViewModel = newEdge;
+            var args = new DataEdgeArgs
+            {
+                EdgeViewModel = newEdge
+            };
             this.AddNewEdgeControl?.Invoke(this, args);
+            this.ElementAdded?.Invoke(this, new ElementAddedEventArgs { Element = edge });
         }
 
         private void CreateNodeWithPos(INode node)
@@ -120,15 +120,18 @@ namespace WpfEditor.Model
                 Picture = node.Class.Shape
             };
 
-            var attributeInfos = node.Attributes.Select(x => new NodeViewModel.Attribute(x, x.Name, x.Kind.ToString())
+            var attributeInfos = node.Attributes.Select(x => new AttributeViewModel(x, x.Name, x.Kind.ToString())
             {
                 Value = x.StringValue
             });
 
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
-            var args = new DataVertexArgs();
-            args.DataVert = vertex;
+            var args = new DataVertexArgs
+            {
+                DataVert = vertex
+            };
             this.AddNewVertexControl?.Invoke(this, args);
+            this.ElementAdded?.Invoke(this, new ElementAddedEventArgs { Element = node });
         }
 
         private void CreateNodeWithoutPos(INode node)
@@ -139,16 +142,14 @@ namespace WpfEditor.Model
                 Picture = node.Class.Shape
             };
 
-            var attributeInfos = node.Attributes.Select(x => new NodeViewModel.Attribute(x, x.Name, x.Kind.ToString())
+            var attributeInfos = node.Attributes.Select(x => new AttributeViewModel(x, x.Name, x.Kind.ToString())
             {
                 Value = x.StringValue
             });
 
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
             this.DataGraph.AddVertex(vertex);
-            var args = new VertexNameArgs();
-            args.VertName = node.Name;
-            this.DrawNewVertex?.Invoke(this, args);
+            this.ElementAdded?.Invoke(this, new ElementAddedEventArgs { Element = node });
         }
 
         public class DataVertexArgs : EventArgs
@@ -161,16 +162,9 @@ namespace WpfEditor.Model
             public EdgeViewModel EdgeViewModel { get; set; }
         }
 
-        public class SourceTargetArgs : EventArgs
+        public class ElementAddedEventArgs : EventArgs
         {
-            public string Source { get; set; }
-
-            public string Target { get; set; }
-        }
-
-        public class VertexNameArgs : EventArgs
-        {
-            public string VertName { get; set; }
+            public IElement Element { get; set; }
         }
     }
 }

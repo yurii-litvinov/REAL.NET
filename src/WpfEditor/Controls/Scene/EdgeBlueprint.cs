@@ -12,15 +12,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-namespace WpfEditor.View
-{
-    using System;
-    using System.Windows;
-    using System.Windows.Media;
-    using System.Windows.Shapes;
-    using GraphX.Controls;
-    using GraphX.Controls.Models;
+using System;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Shapes;
+using GraphX.Controls;
+using GraphX.Controls.Models;
 
+namespace WpfEditor.Controls.Scene
+{
     /// <summary>
     /// Control for virtual edge that is used when one clicks on a first node and draws an edge to a second node.
     /// Actual edge is created only when drawing is finished (by clicking on a target node).

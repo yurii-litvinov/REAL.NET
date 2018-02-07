@@ -12,18 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-namespace WpfEditor.Controls.Console
+namespace WpfEditor.Controls.Scene
 {
-    using System.Windows.Controls;
-
     /// <summary>
-    /// Application console --- centralized place where various messages and error reports shall be placed.
+    /// Something that can say what element scene shall create when someone clicks on it. For example, selected
+    /// element on a palette.
     /// </summary>
-    public partial class AppConsole : UserControl
+    internal interface IElementProvider
     {
-        public AppConsole()
-        {
-            this.InitializeComponent();
-        }
+        /// <summary>
+        /// Gets an element that the scene shall create on left-click, null if none.
+        /// </summary>
+        Repo.IElement Element { get; }
     }
 }

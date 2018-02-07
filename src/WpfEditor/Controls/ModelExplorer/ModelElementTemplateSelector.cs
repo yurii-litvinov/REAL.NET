@@ -12,17 +12,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-namespace WpfEditor.View
+namespace WpfEditor.Controls.ModelExplorer
 {
-    using GraphX.Controls;
-    using QuickGraph;
-    using ViewModel;
+    using System.Windows;
+    using System.Windows.Controls;
 
     /// <summary>
-    /// Visual representation of a GraphX graph, supposed to be used with GraphX zoom control as a scene to draw
-    /// a diagram on.
+    /// Template selector that selects data template for model explorer element list based on a type of an element
+    /// --- node or edge.
     /// </summary>
-    public class GraphArea : GraphArea<NodeViewModel, EdgeViewModel, BidirectionalGraph<NodeViewModel, EdgeViewModel>>
+    internal class ModelElementTemplateSelector: DataTemplateSelector
     {
+        public DataTemplate NodeTemplate { get; set; }
+        public DataTemplate EdgeTemplate { get; set; }
+
+        public override DataTemplate SelectTemplate(object item, DependencyObject container) 
+            => item is ModelExplorerNode ? this.NodeTemplate : this.EdgeTemplate;
     }
 }

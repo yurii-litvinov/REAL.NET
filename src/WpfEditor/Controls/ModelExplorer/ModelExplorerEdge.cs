@@ -12,18 +12,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-namespace WpfEditor.Controls.Console
+namespace WpfEditor.Controls.ModelExplorer
 {
-    using System.Windows.Controls;
-
     /// <summary>
-    /// Application console --- centralized place where various messages and error reports shall be placed.
+    /// View model for edge in model explorer.
     /// </summary>
-    public partial class AppConsole : UserControl
+    public class ModelExplorerEdge : ModelExplorerElement
     {
-        public AppConsole()
+        public ModelExplorerEdge(Repo.IElement element)
+            : base(element)
         {
-            this.InitializeComponent();
         }
+
+        public string Source => (this.Element as Repo.IEdge)?.From.Name;
+        public string Target => (this.Element as Repo.IEdge)?.To.Name;
     }
 }

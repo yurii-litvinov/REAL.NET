@@ -97,6 +97,16 @@
     <Compile Include="Controls\Console\AppConsole.xaml.cs">
       <DependentUpon>AppConsole.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ModelExplorer\ModelElementTemplateSelector.cs" />
+    <Compile Include="Controls\ModelExplorer\ModelExplorer.xaml.cs">
+      <DependentUpon>ModelExplorer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ModelExplorer\ModelExplorerEdge.cs" />
+    <Compile Include="Controls\ModelExplorer\ModelExplorerElement.cs" />
+    <Compile Include="Controls\ModelExplorer\ModelExplorerNode.cs" />
+    <Compile Include="Controls\ModelSelector\ModelSelector.xaml.cs">
+      <DependentUpon>ModelSelector.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Palette\DragAndDropFeedback.xaml.cs">
       <DependentUpon>DragAndDropFeedback.xaml</DependentUpon>
     </Compile>
@@ -106,6 +116,10 @@
     </Compile>
     <Compile Include="Controls\Palette\PaletteElement.cs" />
     <Compile Include="Controls\Palette\PaletteViewModel.cs" />
+    <Compile Include="Controls\Scene\IElementProvider.cs" />
+    <Compile Include="Controls\Scene\Scene.xaml.cs">
+      <DependentUpon>Scene.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Toolbar\ToolbarView.xaml.cs">
       <DependentUpon>ToolbarView.xaml</DependentUpon>
     </Compile>
@@ -116,8 +130,9 @@
     <Compile Include="Constraints\ConstraintsValues.cs" />
     <Compile Include="Constraints\ConstraintsWindow.xaml.cs" />
     <Compile Include="Controls\Console\AppConsoleViewModel.cs" />
-    <Compile Include="View\EdgeBlueprint.cs" />
-    <Compile Include="View\EditorObjectManager.cs" />
+    <Compile Include="ViewModel\AttributeViewModel.cs" />
+    <Compile Include="Controls\Scene\EdgeBlueprint.cs" />
+    <Compile Include="Controls\Scene\EditorObjectManager.cs" />
     <Compile Include="Controls\Toolbar\ToolbarViewModel.cs" />
     <Compile Include="Constraints\RepoInfo.cs" />
     <Page Include="Constraints\ConstraintsWindow.xaml">
@@ -128,11 +143,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\ModelExplorer\ModelExplorer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ModelSelector\ModelSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Palette\DragAndDropFeedback.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Palette\Palette.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Scene\Scene.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -150,7 +177,7 @@
     </Compile>
     <Compile Include="ViewModel\EdgeViewModel.cs" />
     <Compile Include="ViewModel\NodeViewModel.cs" />
-    <Compile Include="View\GraphArea.cs" />
+    <Compile Include="Controls\Scene\GraphArea.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

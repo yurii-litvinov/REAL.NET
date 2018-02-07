@@ -12,13 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-namespace WpfEditor.View
-{
-    using System;
-    using System.Windows;
-    using System.Windows.Media;
-    using GraphX.Controls;
+using System;
+using System.Windows;
+using System.Windows.Media;
+using GraphX.Controls;
 
+namespace WpfEditor.Controls.Scene
+{
     /// <summary>
     /// Creates, holds and controls various auxiliary objects on a scene, like virtual edge used to draw future edge
     /// position when user draws a new edge.
