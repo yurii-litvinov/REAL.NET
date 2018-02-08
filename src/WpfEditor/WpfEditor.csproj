@@ -46,6 +46,7 @@
     <CodeAnalysisRuleSet>WpfEditor.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>
     </DocumentationFile>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -58,6 +59,7 @@
     <CodeAnalysisRuleSet>
     </CodeAnalysisRuleSet>
     <DocumentationFile>bin\Release\WpfEditor.xml</DocumentationFile>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoRelease|AnyCPU'">
     <OutputPath>bin\MonoRelease\</OutputPath>
@@ -69,6 +71,7 @@
     <CodeAnalysisRuleSet>
     </CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>

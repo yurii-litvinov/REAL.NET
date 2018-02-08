@@ -1,4 +1,4 @@
-﻿(* Copyright 2017 Yurii Litvinov
+﻿(* Copyright 2017-2018 REAL.NET group
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,6 @@ type AirSimModelBuilder() =
             let metamodelLand = Model.findNode metamodel "Land"
             let metamodelMove = Model.findNode metamodel "Move"
             let metamodelTimer = Model.findNode metamodel "Timer"
-            let metamodelHover = Model.findNode metamodel "Hover"
             let metamodelIf = Model.findNode metamodel "IfNode"
 
             let link = Model.findAssociationWithSource metamodelAbstractNode "target"
@@ -57,7 +56,6 @@ type AirSimModelBuilder() =
             infrastructure.Element.SetAttributeValue timer2 "delay" "1"
             infrastructure.Element.SetAttributeValue timer3 "delay" "1"
             
-            // let hover = infrastructure.Instantiate model metamodelHover
             let ifNode = infrastructure.Instantiate model metamodelIf
 
             let (-->) (src: IElement) dst =

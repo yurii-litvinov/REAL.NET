@@ -1,4 +1,4 @@
-﻿(* Copyright 2017 Yurii Litvinov
+﻿(* Copyright 2017-2018 REAL.NET group
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,18 +55,7 @@ type AirSimMetamodelBuilder() =
                 infrastructure.Element.SetAttributeValue edge "name" linkName
 
                 edge
-
-            let (--->>) (source: IElement) (target, targetName, linkName) =
-                let edge = infrastructure.Instantiate model metamodelAssociation :?> IAssociation
-                edge.Source <- Some source
-                edge.Target <- Some target
-                edge.TargetName <- targetName
-
-                infrastructure.Element.SetAttributeValue edge "shape" "View/Pictures/Edge.png"
-                infrastructure.Element.SetAttributeValue edge "name" linkName
-
-                edge
-
+                
             let abstractNode = +("AbstractNode", "", true)
             let initialNode = +("InitialNode", "View/Pictures/initialBlock.png", false)
             let finalNode = +("FinalNode", "View/Pictures/finalBlock.png", false)
@@ -79,7 +68,7 @@ type AirSimMetamodelBuilder() =
             let ifNode = +("IfNode", "View/Pictures/if.png", false)
             
             let link = abstractNode ---> (abstractNode, "target", "Link")
-            let ifLink = abstractNode --->> (abstractNode, "ifTarget", "If Link")
+            let ifLink = ifNode ---> (abstractNode, "ifTarget", "If Link")
             infrastructure.Element.AddAttribute ifLink "Value" "AttributeKind.Boolean" "true"
             
             infrastructure.Element.AddAttribute takeoff "delay" "AttributeKind.Int" "1"

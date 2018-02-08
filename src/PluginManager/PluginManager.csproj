@@ -23,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\PluginManager.xml</DocumentationFile>
     <CodeAnalysisRuleSet />
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,11 +34,13 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\PluginManager.xml</DocumentationFile>
     <CodeAnalysisRuleSet />
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoRelease|AnyCPU'">
     <OutputPath>bin\MonoRelease\</OutputPath>
     <DocumentationFile>bin\MonoRelease\PluginManager.xml</DocumentationFile>
     <CodeAnalysisRuleSet />
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
