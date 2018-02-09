@@ -24,6 +24,13 @@
             this.Name = text;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NodeViewModel"/> class.
+        /// </summary>
+        public NodeViewModel()
+        {
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>

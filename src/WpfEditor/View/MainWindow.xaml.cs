@@ -35,7 +35,7 @@ namespace WpfEditor.View
 
             this.scene.ElementUsed += (sender, args) => this.palette.ClearSelection();
             this.scene.ElementAdded += (sender, args) => this.modelExplorer.NewElement(args.Element);
-            this.scene.NodeSelected += (sender, args) => this.attributesView.DataContext = args.Node;
+            this.scene.NodeSelected += (sender, args) => this.propertyEditor.DataContext = args.Node;
 
             this.scene.Init(this.model, controller, new PaletteAdapter(this.palette));
             this.modelSelector.Init(this.model);
