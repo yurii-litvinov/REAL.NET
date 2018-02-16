@@ -40,13 +40,12 @@ namespace WpfEditor.Controls.Scene
         private Model.Model model;
         private Controller.Controller controller;
         private IElementProvider elementProvider;
-
+        
         public Graph Graph { get; set; }
 
         public event EventHandler<EventArgs> ElementUsed;
         public event EventHandler<NodeSelectedEventArgs> NodeSelected;
         public event EventHandler<EdgeSelectedEventArgs> EdgeSelected;
-
         public event EventHandler<Graph.ElementAddedEventArgs> ElementAdded;
 
         public Scene()
@@ -91,7 +90,7 @@ namespace WpfEditor.Controls.Scene
             this.controller = controller;
             this.model = model;
             this.elementProvider = elementProvider;
-
+            
             this.Graph = new Graph(model);
             this.Graph.DrawGraph += (sender, args) => this.DrawGraph();
             this.Graph.ElementAdded += (sender, args) => this.ElementAdded?.Invoke(this, args);
@@ -100,7 +99,7 @@ namespace WpfEditor.Controls.Scene
 
             this.InitGraphXLogicCore();
         }
-
+        
         public void Clear() => this.Graph.DataGraph.Clear();
 
         public void Reload() => this.Graph.InitModel(this.model.ModelName);
@@ -226,6 +225,7 @@ namespace WpfEditor.Controls.Scene
 
             this.EdgeSelected?.Invoke(this,
                 new EdgeSelectedEventArgs { Edge = this.ctrlEdg.GetDataEdge<EdgeViewModel>() });
+
             if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
             {
                 args.EdgeControl.ContextMenu = new ContextMenu();
