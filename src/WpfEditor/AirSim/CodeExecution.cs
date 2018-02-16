@@ -49,8 +49,8 @@ namespace WpfEditor.AirSim
             var client = new MultirotorClient();
             while (curNode.Name != "aFinalNode")
             {
-                Context.ExecuteNode(curNode, client);
-                curNode = Context.GetNextNode(curNode, client);
+                Execution.ExecuteNode(curNode, client);
+                curNode = Execution.GetNextNode(curNode, client);
                 if (curNode == null)
                     return;
                 writeToMessageBox($"Node {curNode.Name} done");
@@ -234,12 +234,12 @@ namespace WpfEditor.AirSim
             }
         }
 
-        private static class Context
+        private static class Execution
         {
             private static readonly Dictionary<string, NodeExecution> strategies =
                 new Dictionary<string, NodeExecution>();
 
-            static Context()
+            static Execution()
             {
                 strategies.Add("aInitialNode", new InitNode());
                 strategies.Add("aTakeoff", new TakeoffNode());
