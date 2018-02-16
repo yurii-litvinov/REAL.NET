@@ -65,15 +65,15 @@ type AirSimModelBuilder() =
                 dst
             
             let (-->>) (src: IElement) dst =
-                infrastructure.Element.SetAttributeValue ifLink "Value" "true"
                 let aLink = infrastructure.Instantiate model ifLink :?> IAssociation
+                infrastructure.Element.SetAttributeValue aLink "Value" "true"
                 aLink.Source <- Some src
                 aLink.Target <- Some dst
                 dst
             
             let (-->>>) (src: IElement) dst =
-                infrastructure.Element.SetAttributeValue ifLink "Value" "false"
                 let aLink = infrastructure.Instantiate model ifLink :?> IAssociation
+                infrastructure.Element.SetAttributeValue aLink "Value" "false"
                 aLink.Source <- Some src
                 aLink.Target <- Some dst
                 dst
