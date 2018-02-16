@@ -24,9 +24,12 @@
     xmlns:view="clr-namespace:WpfEditor.View"
     xmlns:console="clr-namespace:WpfEditor.Controls.Console"
     xmlns:palette="clr-namespace:WpfEditor.Controls.Palette"
+    xmlns:modelSelector="clr-namespace:WpfEditor.Controls.ModelSelector"
+    xmlns:scene="clr-namespace:WpfEditor.Controls.Scene"
+    xmlns:modelExplorer="clr-namespace:WpfEditor.Controls.ModelExplorer"
     Title="REAL.NET"
     mc:Ignorable="d"
-    d:DataContext="{view:MainWindow}">
+    d:DataContext="{view:MainWindow}" Height="685" Width="936">
 
     <Grid>
         <Grid.Resources>
@@ -50,20 +53,16 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto" MinHeight="100"/>
+                <RowDefinition Height="Auto" MinHeight="50"/>
             </Grid.RowDefinitions>
 
             <!-- ToolBar -->
             <ToolBar Grid.Row="0">
-                <ComboBox x:Name="modelsComboBox"/>
+                <modelSelector:ModelSelector x:Name="modelSelector" ModelSelected="OnModelSelectionChanged"/>
             </ToolBar>
 
             <!-- Area -->
-            <Border Grid.Row="1" Grid.RowSpan="3" BorderThickness="1"  Margin="2">
-                <graphx:ZoomControl x:Name="zoomControl" AllowDrop="True" Margin="0,0,0,106">
-                    <view:GraphArea AllowDrop="True" x:Name="scene" />
-                </graphx:ZoomControl>
-            </Border>
+            <scene:Scene x:Name="scene"  Grid.Row="1"/>
 
             <!-- GridSplitter for console -->
             <GridSplitter Grid.Row ="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5"/>
@@ -82,23 +81,21 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="0"/>
                     <RowDefinition Height="Auto" MinHeight="70"/>
+                    <RowDefinition Height="140"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="60"/>
-                    <RowDefinition Height="Auto" MinHeight="27"/>
-                    <RowDefinition Height="Auto" MinHeight="52"/>
-                    <RowDefinition Height="26"/>
-                    <RowDefinition Height="26"/>
-                    <RowDefinition Height="26"/>
-                    <RowDefinition Height="184"/>
+                    <RowDefinition Height="Auto" MinHeight="50"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
                 </Grid.RowDefinitions>
 
                 <palette:Palette x:Name="palette" Grid.Row="1"/>
 
-                <Label x:Name="elementsListLabel" Grid.Row="2" Content="Elements:" HorizontalAlignment="Stretch"/>
-                <ListBox x:Name="elementsListBox" Grid.Row="3"/>
-                <Label x:Name="selectedEntityLabel" Grid.Row="4" Content="Selected entity:" HorizontalAlignment="Stretch" />
+                <modelExplorer:ModelExplorer x:Name="modelExplorer" Grid.Row="2"/>
 
-                <DataGrid x:Name="attributesView" Grid.Row="5" ItemsSource="{Binding Attributes}" AutoGenerateColumns="False" CellEditEnding="AttributesViewCellEditEnding">
+                <Label x:Name="selectedEntityLabel" Grid.Row="3" Content="Selected entity:" HorizontalAlignment="Stretch" />
+
+                <DataGrid x:Name="attributesView" Grid.Row="4" ItemsSource="{Binding Attributes}" AutoGenerateColumns="False" CellEditEnding="AttributesViewCellEditEnding">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Name}"/>
                         <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Type}"/>
@@ -106,9 +103,24 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <Button Grid.Row="6" Content="Constraints" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="ConstraintsButtonClick"/>
-                <Button x:Name="executeButton" Grid.Row="7" Content="Execute" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="ExecuteButtonClick"/>
-                <Button x:Name="stopButton" Grid.Row="8" Content="Stop" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="StopButtonClick" Visibility="Hidden"/>
+                <Button 
+                    Grid.Row="5"
+                    Content="Constraints"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    Click="ConstraintsButtonClick" Height="26"/>
+                <Button x:Name="executeButton" 
+                    Grid.Row="6"
+                    Content="Execute"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    Click="ExecuteButtonClick" Height="26"/>
+                <Button x:Name="stopButton" 
+                    Grid.Row="7"
+                    Content="Stop"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    Click="StopButtonClick" Height="26" IsEnabled="False"/>
             </Grid>
 
         </DockPanel>

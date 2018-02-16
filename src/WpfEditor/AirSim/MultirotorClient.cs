@@ -30,7 +30,7 @@ namespace WpfEditor.AirSim
         public void CreateClient()
         {
             var substring = currentPath.Substring(0, currentPath.IndexOf(@"\bin", StringComparison.Ordinal)) +
-                            @"\Airsim\" + LibName;
+                            @"\AirSim\" + LibName;
             LoadLibrary(substring);
             this.client = CreateClientCPP();
         }

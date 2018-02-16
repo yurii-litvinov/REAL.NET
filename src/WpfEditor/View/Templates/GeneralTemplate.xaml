@@ -59,6 +59,9 @@
                     Stroke="Black" 
                     StrokeThickness="2" />
             </controls:DefaultEdgePointer>
+
+            <controls:EdgeLabelControl x:Name="PART_edgeLabel" Content="{Binding Text}" />
+
             <Path x:Name="PART_SelfLoopedEdge" 
                               Width="10" 
                               Height="10" 
@@ -67,14 +70,6 @@
                               IsHitTestVisible="True"
                               ToolTip="This vertex has some self looped edges!"
                               Data="F1 M 17.4167,32.25L 32.9107,32.25L 38,18L 43.0893,32.25L 58.5833,32.25L 45.6798,41.4944L 51.4583,56L 38,48.0833L 26.125,56L 30.5979,41.7104L 17.4167,32.25 Z "/>
-        </Grid>
-    </ControlTemplate>
-
-    <ControlTemplate x:Key="Text" TargetType="{x:Type controls:EdgeLabelControl}">
-        <Grid>
-            <Border Background="{TemplateBinding Background}">
-                <ContentPresenter/>
-            </Border>
         </Grid>
     </ControlTemplate>
 
@@ -89,7 +84,7 @@
             </controls:DefaultEdgePointer>
 
             <controls:EdgeLabelControl x:Name="PART_edgeLabel" Content="{Binding Text}" />
-            
+
             <Path x:Name="PART_SelfLoopedEdge" 
                 Width="10" 
                 Height="10" 
@@ -104,9 +99,9 @@
     <ControlTemplate x:Key="AttributeEdge" TargetType="{x:Type controls:EdgeControl}">
         <Grid>
             <Path Stroke="DarkRed" 
-                              StrokeThickness="1"
-                              ToolTip="{TemplateBinding ToolTip}" 
-                              x:Name="PART_edgePath"/>
+                StrokeThickness="1"
+                ToolTip="{TemplateBinding ToolTip}" 
+                x:Name="PART_edgePath"/>
             <controls:DefaultEdgePointer NeedRotation="true" x:Name="PART_EdgePointerForTarget" >
                 <Path Data="M0,0.5 L1,1 M1,0 L0,0.5" Stretch="Uniform" Width="15" Height="15" Stroke="Black" StrokeThickness="2"/>
             </controls:DefaultEdgePointer>

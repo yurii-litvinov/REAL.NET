@@ -12,18 +12,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-namespace WpfEditor.Controls.Console
+namespace WpfEditor.Controls.ModelExplorer
 {
+    using System.Windows;
     using System.Windows.Controls;
 
     /// <summary>
-    /// Application console --- centralized place where various messages and error reports shall be placed.
+    /// Template selector that selects data template for model explorer element list based on a type of an element
+    /// --- node or edge.
     /// </summary>
-    public partial class AppConsole : UserControl
+    internal class ModelElementTemplateSelector: DataTemplateSelector
     {
-        public AppConsole()
-        {
-            this.InitializeComponent();
-        }
+        public DataTemplate NodeTemplate { get; set; }
+        public DataTemplate EdgeTemplate { get; set; }
+
+        public override DataTemplate SelectTemplate(object item, DependencyObject container) 
+            => item is ModelExplorerNode ? this.NodeTemplate : this.EdgeTemplate;
     }
 }

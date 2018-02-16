@@ -12,18 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-namespace WpfEditor.Controls.Console
-{
-    using System.Windows.Controls;
+using GraphX.Controls;
+using QuickGraph;
+using WpfEditor.ViewModel;
 
+namespace WpfEditor.Controls.Scene
+{
     /// <summary>
-    /// Application console --- centralized place where various messages and error reports shall be placed.
+    /// Visual representation of a GraphX graph, supposed to be used with GraphX zoom control as a scene to draw
+    /// a diagram on.
     /// </summary>
-    public partial class AppConsole : UserControl
+    public class GraphArea : GraphArea<NodeViewModel, EdgeViewModel, BidirectionalGraph<NodeViewModel, EdgeViewModel>>
     {
-        public AppConsole()
-        {
-            this.InitializeComponent();
-        }
     }
 }

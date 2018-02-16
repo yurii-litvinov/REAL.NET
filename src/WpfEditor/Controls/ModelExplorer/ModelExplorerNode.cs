@@ -12,18 +12,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-namespace WpfEditor.Controls.Console
+namespace WpfEditor.Controls.ModelExplorer
 {
-    using System.Windows.Controls;
-
     /// <summary>
-    /// Application console --- centralized place where various messages and error reports shall be placed.
+    /// Model view for a node in model explorer.
     /// </summary>
-    public partial class AppConsole : UserControl
+    public class ModelExplorerNode : ModelExplorerElement
     {
-        public AppConsole()
+        public ModelExplorerNode(Repo.IElement element)
+            : base(element)
         {
-            this.InitializeComponent();
         }
+
+        public string Name => this.Element.Name;
+        public string Image => "pack://application:,,,/" + this.Element.Shape;
     }
 }

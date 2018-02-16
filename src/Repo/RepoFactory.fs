@@ -31,5 +31,4 @@ type RepoFactory =
         Metametamodels.AirSimMetamodelBuilder() |> build
         Metametamodels.AirSimModelBuilder() |> build
 
-
         new FacadeLayer.Repo(data) :> IRepo

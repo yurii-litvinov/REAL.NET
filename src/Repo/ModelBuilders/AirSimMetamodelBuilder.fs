@@ -68,7 +68,7 @@ type AirSimMetamodelBuilder() =
             let ifNode = +("IfNode", "View/Pictures/if.png", false)
             
             let link = abstractNode ---> (abstractNode, "target", "Link")
-            let ifLink = ifNode ---> (abstractNode, "ifTarget", "If Link")
+            let ifLink = abstractNode ---> (abstractNode, "ifTarget", "If Link")
             infrastructure.Element.AddAttribute ifLink "Value" "AttributeKind.Boolean" "true"
             
             infrastructure.Element.AddAttribute takeoff "delay" "AttributeKind.Int" "1"

@@ -1,16 +1,16 @@
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using GraphX.Measure;
 using GraphX.PCL.Common.Models;
-using Repo.DataLayer;
 
 namespace WpfEditor.ViewModel
 {
     public class EdgeViewModel : EdgeBase<NodeViewModel>, INotifyPropertyChanged
     {
         private EdgeTypeEnum edgeType = EdgeTypeEnum.Association;
-        private IList<Attribute> attributes = new List<Attribute>();
+        private IList<AttributeViewModel> attributes = new List<AttributeViewModel>();
+
+        private string text;
 
         public EdgeViewModel(NodeViewModel source, NodeViewModel target, double weight = 1)
             : base(source, target, weight)
@@ -40,17 +40,28 @@ namespace WpfEditor.ViewModel
 
         public override Point[] RoutingPoints { get; set; }
 
-        public string Text { get; set; }
+        public string Text
+        {
+            get => this.text;
 
-        public IList<Attribute> Attributes
+            set
+            {
+                this.text = value;
+                this.OnPropertyChanged(nameof(this.Text));
+            }
+        }
+
+        public IList<AttributeViewModel> Attributes
         {
             get => this.attributes;
+
             set
             {
                 this.attributes = value;
-                this.OnPropertyChanged(nameof(this.Attributes));
+                this.OnPropertyChanged();
             }
         }
+
         public string ToolTipText { get; set; }
 
         public EdgeTypeEnum EdgeType
@@ -64,20 +75,11 @@ namespace WpfEditor.ViewModel
             }
         }
 
-        public void OnPropertyChanged(string name)
+        public void OnPropertyChanged(string name = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
         public override string ToString() => this.Text;
-
-        public class Attribute
-        {
-            public string Name { get; set; }
-
-            public string Type { get; set; }
-
-            public string Value { get; set; }
-        }
     }
 }

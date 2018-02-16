@@ -21,7 +21,7 @@ namespace WpfEditor.Controls.Console
     /// ViewModel for errors and warnings window that is shown below the main scene.
     /// Allows to add new messages.
     /// </summary>
-    internal class AppConsoleViewModel : IConsole
+    public class AppConsoleViewModel : IConsole
     {
         public ObservableCollection<string> Messages { get; } = new ObservableCollection<string>();
 
