@@ -59,6 +59,9 @@
                     Stroke="Black" 
                     StrokeThickness="2" />
             </controls:DefaultEdgePointer>
+
+            <controls:EdgeLabelControl x:Name="PART_edgeLabel" Content="{Binding Text}" />
+
             <Path x:Name="PART_SelfLoopedEdge" 
                               Width="10" 
                               Height="10" 
@@ -79,6 +82,9 @@
             <controls:DefaultEdgePointer NeedRotation="true" x:Name="PART_EdgePointerForTarget" >
                 <Path Data="M0,0.5 L1,1 M1,0 L0,0.5" Stretch="Uniform" Width="15" Height="15" Stroke="Black" StrokeThickness="2"/>
             </controls:DefaultEdgePointer>
+
+            <controls:EdgeLabelControl x:Name="PART_edgeLabel" Content="{Binding Text}" />
+
             <Path x:Name="PART_SelfLoopedEdge" 
                 Width="10" 
                 Height="10" 
@@ -92,7 +98,7 @@
 
     <ControlTemplate x:Key="AttributeEdge" TargetType="{x:Type controls:EdgeControl}">
         <Grid>
-            <Path Stroke="Green" 
+            <Path Stroke="DarkRed" 
                 StrokeThickness="1"
                 ToolTip="{TemplateBinding ToolTip}" 
                 x:Name="PART_edgePath"/>
@@ -100,7 +106,7 @@
                 <Path Data="M0,0.5 L1,1 M1,0 L0,0.5" Stretch="Uniform" Width="15" Height="15" Stroke="Black" StrokeThickness="2"/>
             </controls:DefaultEdgePointer>
 
-            <controls:EdgeLabelControl x:Name="PART_edgeLabel" Content="&lt;&lt;attribute&gt;&gt;" />
+            <controls:EdgeLabelControl x:Name="PART_edgeLabel" Content="{Binding Text}" />
 
             <Path x:Name="PART_SelfLoopedEdge" 
                 Width="10" 
@@ -123,7 +129,7 @@
                 <Path Data="M0,0.5 L1,1 M1,0 L0,0.5" Stretch="Uniform" Width="15" Height="15" Stroke="Black" StrokeThickness="2"/>
             </controls:DefaultEdgePointer>
 
-            <controls:EdgeLabelControl x:Name="PART_edgeLabel" Content="&lt;&lt;type&gt;&gt;" />
+            <controls:EdgeLabelControl x:Name="PART_edgeLabel" Content="{Binding Text}" />
 
             <Path x:Name="PART_SelfLoopedEdge" 
                 Width="10" 

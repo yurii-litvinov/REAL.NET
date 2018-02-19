@@ -43,6 +43,7 @@
     <CodeAnalysisRuleSet>WpfEditor.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>
     </DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -93,6 +94,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AirSim\CodeExecution.cs" />
+    <Compile Include="AirSim\MultirotorClient.cs" />
     <Compile Include="Controller\Controller.cs" />
     <Compile Include="Controls\Console\AppConsole.xaml.cs">
       <DependentUpon>AppConsole.xaml</DependentUpon>
@@ -339,6 +342,15 @@
     <Analyzer Include="..\..\packages\StyleCop.Analyzers\analyzers\dotnet\cs\StyleCop.Analyzers.dll">
       <Paket>True</Paket>
     </Analyzer>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\hover.png" />
+    <Resource Include="View\Pictures\if.png" />
+    <Resource Include="View\Pictures\land.png" />
+    <Resource Include="View\Pictures\move.png" />
+    <Resource Include="View\Pictures\star1.png" />
+    <Resource Include="View\Pictures\star2.png" />
+    <Resource Include="View\Pictures\takeoff.png" />
   </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">

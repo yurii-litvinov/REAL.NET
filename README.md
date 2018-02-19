@@ -22,5 +22,9 @@ See [API Reference](https://yurii-litvinov.github.io/REAL.NET/reference) page fo
 * To build it from console, run `build.sh` or `build.cmd`
 * To build it from Visual Studio, you will need VisualStudio 2017 and extensions: Paket.VisualStudio and NUnit3TestAdapter (they are easily obtainable from inside Visual Studio, Extensions and Updates menu item).
 
+## AirSim
+
+First visual domain specific language made on REAL.NET is language for simulated by AirSim drones.
+You can download stand-alone app using [this link](https://drive.google.com/open?id=1FrQxmErz7r0Q8nWjjAsuYUslZ_PtQwtW) and test it.
 
 

@@ -32,7 +32,6 @@ namespace WpfEditor.Controls.Scene
     public partial class Scene : UserControl
     {
         private readonly EditorObjectManager editorManager;
-        private Graph graph;
         private VertexControl prevVer;
         private VertexControl ctrlVer;
         private EdgeControl ctrlEdg;
@@ -41,10 +40,12 @@ namespace WpfEditor.Controls.Scene
         private Model.Model model;
         private Controller.Controller controller;
         private IElementProvider elementProvider;
+        
+        public Graph Graph { get; set; }
 
         public event EventHandler<EventArgs> ElementUsed;
         public event EventHandler<NodeSelectedEventArgs> NodeSelected;
-
+        public event EventHandler<EdgeSelectedEventArgs> EdgeSelected;
         public event EventHandler<Graph.ElementAddedEventArgs> ElementAdded;
 
         public Scene()
@@ -67,7 +68,7 @@ namespace WpfEditor.Controls.Scene
             var logic =
                 new GXLogicCore<NodeViewModel, EdgeViewModel, BidirectionalGraph<NodeViewModel, EdgeViewModel>>
                 {
-                    Graph = this.graph.DataGraph,
+                    Graph = this.Graph.DataGraph,
                     DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.LinLog
                 };
 
@@ -89,30 +90,30 @@ namespace WpfEditor.Controls.Scene
             this.controller = controller;
             this.model = model;
             this.elementProvider = elementProvider;
-
-            this.graph = new Graph(model);
-            this.graph.DrawGraph += (sender, args) => this.DrawGraph();
-            this.graph.ElementAdded += (sender, args) => this.ElementAdded?.Invoke(this, args);
-            this.graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVert);
-            this.graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.EdgeViewModel);
+            
+            this.Graph = new Graph(model);
+            this.Graph.DrawGraph += (sender, args) => this.DrawGraph();
+            this.Graph.ElementAdded += (sender, args) => this.ElementAdded?.Invoke(this, args);
+            this.Graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVert);
+            this.Graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.EdgeViewModel);
 
             this.InitGraphXLogicCore();
         }
+        
+        public void Clear() => this.Graph.DataGraph.Clear();
 
-        public void Clear() => this.graph.DataGraph.Clear();
-
-        public void Reload() => this.graph.InitModel(this.model.ModelName);
+        public void Reload() => this.Graph.InitModel(this.model.ModelName);
 
         // TODO: Selecting shall be done on actual IElement reference.
         // TODO: It seems to be non-working anyway.
         public void SelectEdge(string source, string target)
         {
-            for (var i = 0; i < this.graph.DataGraph.Edges.Count(); i++)
+            for (var i = 0; i < this.Graph.DataGraph.Edges.Count(); i++)
             {
-                if (this.graph.DataGraph.Edges.ToList()[i].Source.Name == source &&
-                    this.graph.DataGraph.Edges.ToList()[i].Target.Name == target)
+                if (this.Graph.DataGraph.Edges.ToList()[i].Source.Name == source &&
+                    this.Graph.DataGraph.Edges.ToList()[i].Target.Name == target)
                 {
-                    var edge = this.graph.DataGraph.Edges.ToList()[i];
+                    var edge = this.Graph.DataGraph.Edges.ToList()[i];
                     foreach (var ed in this.scene.EdgesList)
                     {
                         if (ed.Key == edge)
@@ -129,11 +130,11 @@ namespace WpfEditor.Controls.Scene
 
         public void SelectNode(string name)
         {
-            for (var i = 0; i < this.graph.DataGraph.Vertices.Count(); i++)
+            for (var i = 0; i < this.Graph.DataGraph.Vertices.Count(); i++)
             {
-                if (this.graph.DataGraph.Vertices.ToList()[i].Name == name)
+                if (this.Graph.DataGraph.Vertices.ToList()[i].Name == name)
                 {
-                    var vertex = this.graph.DataGraph.Vertices.ToList()[i];
+                    var vertex = this.Graph.DataGraph.Vertices.ToList()[i];
                     this.NodeSelected?.Invoke(this, new NodeSelectedEventArgs {Node = vertex});
                     foreach (var ed in this.scene.VertexList)
                     {
@@ -145,6 +146,16 @@ namespace WpfEditor.Controls.Scene
 
                     break;
                 }
+            }
+        }   
+
+        public void ChangeEdgeLabel(string newLabel)
+        {
+            if (this.ctrlEdg != null)
+            {
+                var data = ctrlEdg.GetDataEdge<EdgeViewModel>();
+                data.Text = newLabel;
+                scene.GenerateAllEdges();
             }
         }
 
@@ -205,12 +216,16 @@ namespace WpfEditor.Controls.Scene
             }
         }
 
-        private void EdgeSelectedAction(object sender, EdgeSelectedEventArgs args)
+        private void EdgeSelectedAction(object sender, GraphX.Controls.Models.EdgeSelectedEventArgs args)
         {
             this.ctrlEdg = args.EdgeControl;
 
             this.ctrlEdg.PreviewMouseUp += this.OnEdgeMouseUp;
             this.zoomControl.MouseMove += this.OnEdgeMouseMove;
+
+            this.EdgeSelected?.Invoke(this,
+                new EdgeSelectedEventArgs { Edge = this.ctrlEdg.GetDataEdge<EdgeViewModel>() });
+
             if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
             {
                 args.EdgeControl.ContextMenu = new ContextMenu();
@@ -238,13 +253,13 @@ namespace WpfEditor.Controls.Scene
 
         private void MenuItemClickVert(object sender, EventArgs e)
         {
-            this.graph.DataGraph.RemoveVertex(this.ctrlVer.GetDataVertex<NodeViewModel>());
+            this.Graph.DataGraph.RemoveVertex(this.ctrlVer.GetDataVertex<NodeViewModel>());
             this.DrawGraph();
         }
 
         private void MenuItemClickEdge(object sender, EventArgs e)
         {
-            this.graph.DataGraph.RemoveEdge(this.ctrlEdg.GetDataEdge<EdgeViewModel>());
+            this.Graph.DataGraph.RemoveEdge(this.ctrlEdg.GetDataEdge<EdgeViewModel>());
             this.DrawGraph();
         }
 
@@ -256,7 +271,7 @@ namespace WpfEditor.Controls.Scene
 
         private void DrawGraph()
         {
-            this.scene.GenerateGraph(this.graph.DataGraph);
+            this.scene.GenerateGraph(this.Graph.DataGraph);
             this.zoomControl.ZoomToFill();
         }
 
@@ -312,6 +327,11 @@ namespace WpfEditor.Controls.Scene
         public class NodeSelectedEventArgs : EventArgs
         {
             public NodeViewModel Node { get; set; }
+        }
+
+        public class EdgeSelectedEventArgs : EventArgs
+        {
+            public EdgeViewModel Edge { get; set; }
         }
     }
 }
