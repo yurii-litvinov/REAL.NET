@@ -12,7 +12,7 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License. -->
-    
+
 <Window 
     x:Class="WpfEditor.View.MainWindow" 
     x:ClassModifier="internal"
@@ -29,7 +29,7 @@
     xmlns:modelExplorer="clr-namespace:WpfEditor.Controls.ModelExplorer"
     Title="REAL.NET"
     mc:Ignorable="d"
-    d:DataContext="{view:MainWindow}">
+    d:DataContext="{view:MainWindow}" Height="685" Width="936">
 
     <Grid>
         <Grid.Resources>
@@ -66,7 +66,7 @@
 
             <!-- GridSplitter for console -->
             <GridSplitter Grid.Row ="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5"/>
-            
+
             <!-- Console with error messages -->
             <console:AppConsole Grid.Row="3" DataContext="{Binding Console}"/>
 
@@ -81,10 +81,12 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="0"/>
                     <RowDefinition Height="Auto" MinHeight="70"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="140"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto" MinHeight="50"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
                 </Grid.RowDefinitions>
 
                 <palette:Palette x:Name="palette" Grid.Row="1"/>
@@ -93,7 +95,7 @@
 
                 <Label x:Name="selectedEntityLabel" Grid.Row="3" Content="Selected entity:" HorizontalAlignment="Stretch" />
 
-                <DataGrid x:Name="attributesView" Grid.Row="4" ItemsSource="{Binding Attributes}" AutoGenerateColumns="False">
+                <DataGrid x:Name="attributesView" Grid.Row="4" ItemsSource="{Binding Attributes}" AutoGenerateColumns="False" CellEditEnding="AttributesViewCellEditEnding">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Name}"/>
                         <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Type}"/>
@@ -105,8 +107,20 @@
                     Grid.Row="5"
                     Content="Constraints"
                     HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    Click="ConstraintsButtonClick"/>
+                    VerticalAlignment="Bottom"
+                    Click="ConstraintsButtonClick" Height="26"/>
+                <Button x:Name="executeButton" 
+                    Grid.Row="6"
+                    Content="Execute"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    Click="ExecuteButtonClick" Height="26"/>
+                <Button x:Name="stopButton" 
+                    Grid.Row="7"
+                    Content="Stop"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    Click="StopButtonClick" Height="26" IsEnabled="False"/>
             </Grid>
 
         </DockPanel>

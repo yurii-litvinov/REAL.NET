@@ -18,7 +18,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:xx="clr-namespace:WpfEditor.Controls.Scene"
     xmlns:controls="http://schemas.panthernet.ru/graphx/">
-
+  
     <Style x:Shared="False" TargetType="xx:StaticVertexConnectionPointForGH">
 
         <Setter Property="Shape" Value="Circle" />
@@ -36,90 +36,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-    <ControlTemplate x:Key="OperationVertex" TargetType="{x:Type controls:VertexControl}">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <StackPanel Name="PART_vcproot" Grid.Column="0">
-                <Border Margin="0,2,0,0" Padding="0">
-                    <controls:StaticVertexConnectionPoint Id="1"/>
-                </Border>
-            </StackPanel>
-            <StackPanel Grid.Column="1">
-                <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill"/>
-                <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" />
-            </StackPanel>
-            <StackPanel Grid.Column="2" Orientation="Vertical">
-                <Border Margin="0,30,0,0" Padding="0">
-                    <controls:StaticVertexConnectionPoint Id="2" />
-                </Border>
-            </StackPanel>
-        </Grid>
-    </ControlTemplate>
-
-    <ControlTemplate x:Key="SensorVertex" TargetType="{x:Type controls:VertexControl}">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0">
-                <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill"/>
-                <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" />
-            </StackPanel>
-            <StackPanel Grid.Column="1" Orientation="Vertical">
-                <Border Margin="0,4,0,0" Padding="0">
-                    <controls:StaticVertexConnectionPoint Id="2" />
-                </Border>
-            </StackPanel>
-        </Grid>
-    </ControlTemplate>
-
-    <ControlTemplate x:Key="ActuatorVertex" TargetType="{x:Type controls:VertexControl}">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0">
-                <Border Margin="0,4,0,0" Padding="0">
-                    <controls:StaticVertexConnectionPoint Id="1" />
-                </Border>
-            </StackPanel>
-            <StackPanel Grid.Column="1">
-                <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill"/>
-                <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" />
-            </StackPanel>
-        </Grid>
-    </ControlTemplate>
-
-    <ControlTemplate x:Key="IntervalVertex" TargetType="{x:Type controls:VertexControl}">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0">
-                <Border Margin="0,4,0,0" Padding="0">
-                    <controls:StaticVertexConnectionPoint Id="1" />
-                </Border>
-            </StackPanel>
-            <StackPanel Grid.Column="1">
-                <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill"/>
-                <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" />
-            </StackPanel>
-            <StackPanel Grid.Column="2">
-                <Border Margin="0,4,0,0" Padding="0">
-                    <controls:StaticVertexConnectionPoint Id="2" />
-                </Border>
-            </StackPanel>
-        </Grid>
-    </ControlTemplate>
 
     <ControlTemplate x:Key="OperationVertexGH" TargetType="{x:Type xx:VertexControlForGH}">
         <Grid>
@@ -210,38 +126,26 @@
         <Setter Property="Background" Value="{Binding Color}"/>
         <Setter Property="VertexShape" Value="None"/>
         <Setter Property= "ShowLabel" Value="True"/>
-        
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:VertexControl}">
+                    <Grid>
+                        <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill"/>
+                        <controls:VertexLabelControl 
+                            x:Name="PART_vertexLabel" 
+                            Content="{Binding Name}" 
+                            LabelPositionSide="Bottom" 
+                            FontFamily="Lucida Sans Regular" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
         <!-- VERTEX DRAGGING CONTROL -->
         <Setter Property="controls:DragBehaviour.IsDragEnabled" Value="True" />
         <Setter Property="controls:DragBehaviour.UpdateEdgesOnMove" Value="True" />
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding Name}" Value="aAndOperation">
-                <Setter Property="Template" Value="{StaticResource OperationVertex}"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Name}" Value="aOrOperation">
-                <Setter Property="Template" Value="{StaticResource OperationVertex}"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Name}" Value="aOpenWindow">
-                <Setter Property="Template" Value="{StaticResource ActuatorVertex}"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Name}" Value="aCloseWindow">
-                <Setter Property="Template" Value="{StaticResource ActuatorVertex}"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Name}" Value="aPourSoil">
-                <Setter Property="Template" Value="{StaticResource ActuatorVertex}"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Name}" Value="aAirTemperature">
-                <Setter Property="Template" Value="{StaticResource SensorVertex}"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Name}" Value="aSoilTemperature">
-                <Setter Property="Template" Value="{StaticResource SensorVertex}"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Name}" Value="aInterval">
-                <Setter Property="Template" Value="{StaticResource IntervalVertex}"/>
-            </DataTrigger>
-        </Style.Triggers>
     </Style>
-
+  
     <Style TargetType="{x:Type xx:VertexControlForGH}">
         <Setter Property="Background" Value="{Binding Color}"/>
         <Setter Property="VertexShape" Value="None"/>
@@ -295,6 +199,7 @@
         </Style.Triggers>
     </Style>
 
+
     <ControlTemplate x:Key="GeneralizationEdge" TargetType="{x:Type controls:EdgeControl}">
         <Grid>
             <Path Stroke="Black"
@@ -311,6 +216,9 @@
                     Stroke="Black" 
                     StrokeThickness="2" />
             </controls:DefaultEdgePointer>
+
+            <controls:EdgeLabelControl x:Name="PART_edgeLabel" Content="{Binding Text}" />
+
             <Path x:Name="PART_SelfLoopedEdge" 
                               Width="10" 
                               Height="10" 
@@ -331,6 +239,9 @@
             <controls:DefaultEdgePointer NeedRotation="true" x:Name="PART_EdgePointerForTarget" >
                 <Path Data="M0,0.5 L1,1 M1,0 L0,0.5" Stretch="Uniform" Width="15" Height="15" Stroke="Black" StrokeThickness="2"/>
             </controls:DefaultEdgePointer>
+
+            <controls:EdgeLabelControl x:Name="PART_edgeLabel" Content="{Binding Text}" />
+
             <Path x:Name="PART_SelfLoopedEdge" 
                 Width="10" 
                 Height="10" 
@@ -344,7 +255,7 @@
 
     <ControlTemplate x:Key="AttributeEdge" TargetType="{x:Type controls:EdgeControl}">
         <Grid>
-            <Path Stroke="Green" 
+            <Path Stroke="DarkRed" 
                 StrokeThickness="1"
                 ToolTip="{TemplateBinding ToolTip}" 
                 x:Name="PART_edgePath"/>
@@ -352,7 +263,7 @@
                 <Path Data="M0,0.5 L1,1 M1,0 L0,0.5" Stretch="Uniform" Width="15" Height="15" Stroke="Black" StrokeThickness="2"/>
             </controls:DefaultEdgePointer>
 
-            <controls:EdgeLabelControl x:Name="PART_edgeLabel" Content="&lt;&lt;attribute&gt;&gt;" />
+            <controls:EdgeLabelControl x:Name="PART_edgeLabel" Content="{Binding Text}" />
 
             <Path x:Name="PART_SelfLoopedEdge" 
                 Width="10" 
@@ -375,7 +286,7 @@
                 <Path Data="M0,0.5 L1,1 M1,0 L0,0.5" Stretch="Uniform" Width="15" Height="15" Stroke="Black" StrokeThickness="2"/>
             </controls:DefaultEdgePointer>
 
-            <controls:EdgeLabelControl x:Name="PART_edgeLabel" Content="&lt;&lt;type&gt;&gt;" />
+            <controls:EdgeLabelControl x:Name="PART_edgeLabel" Content="{Binding Text}" />
 
             <Path x:Name="PART_SelfLoopedEdge" 
                 Width="10" 

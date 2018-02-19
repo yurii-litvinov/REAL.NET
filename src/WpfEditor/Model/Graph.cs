@@ -14,6 +14,8 @@
 
 namespace WpfEditor.Model
 {
+    using System.Collections.Generic;
+    using GraphX.PCL.Common;
     using System;
     using System.Linq;
     using QuickGraph;
@@ -48,7 +50,7 @@ namespace WpfEditor.Model
 
         public event EventHandler<DataVertexArgs> AddNewVertexControl;
         public event EventHandler<DataEdgeArgs> AddNewEdgeControl;
-
+        
         public event EventHandler<DataEdgeArgs> AddNewEdgeControlWithoutVCP;
         public event EventHandler<DataVertexArgs> AddNewVertexControlWithoutPos;
         public BidirectionalGraph<NodeViewModel, EdgeViewModel> DataGraph { get; }
@@ -93,6 +95,20 @@ namespace WpfEditor.Model
                 {
                     EdgeType = EdgeViewModel.EdgeTypeEnum.Association
                 };
+
+                var attributeInfos = edge.Attributes.Select(x => new AttributeViewModel(x, x.Name, x.Kind.ToString())
+                {
+                    Value = x.StringValue
+                });
+                var attributes = attributeInfos as IList<AttributeViewModel> ?? attributeInfos.ToList();
+                attributes.ForEach(x => newEdge.Attributes.Add(x));
+                var value = attributes.SingleOrDefault(x => x.Name == "Value");
+                if (value != null)
+                {
+                    newEdge.EdgeType = EdgeViewModel.EdgeTypeEnum.Attribute;
+                    newEdge.Text = value.Value;
+                }
+
                 this.DataGraph.AddEdge(newEdge);
 
                 var args = new DataEdgeArgs
@@ -105,7 +121,10 @@ namespace WpfEditor.Model
             }
             this.RelayoutGraph?.Invoke(this, EventArgs.Empty);
             this.ZoomToFeel?.Invoke(this, EventArgs.Empty);
-            this.AddVertexConnectionPoints?.Invoke(this, EventArgs.Empty);
+            if (modelName == "GreenhouseTestModel")
+            {
+                this.AddVertexConnectionPoints?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public void SetTargetVCPId(EdgeViewModel edgeViewModel, int id)
@@ -126,7 +145,6 @@ namespace WpfEditor.Model
             }
 
             var newEdge = new EdgeViewModel(prevVer, ctrlVer, Convert.ToDouble(true));
-
             var args = new DataEdgeArgs
             {
                 EdgeViewModel = newEdge

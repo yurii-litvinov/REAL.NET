@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+using System.Collections.Generic;
+using System.ComponentModel;
 using GraphX.Measure;
 using GraphX.PCL.Common.Models;
 
@@ -7,6 +8,7 @@ namespace WpfEditor.ViewModel
     public class EdgeViewModel : EdgeBase<NodeViewModel>, INotifyPropertyChanged
     {
         private EdgeTypeEnum edgeType = EdgeTypeEnum.Association;
+        private IList<AttributeViewModel> attributes = new List<AttributeViewModel>();
 
         private string text;
 
@@ -48,7 +50,18 @@ namespace WpfEditor.ViewModel
                 this.OnPropertyChanged(nameof(this.Text));
             }
         }
+        
+        public IList<AttributeViewModel> Attributes
+        {
+            get => this.attributes;
 
+            set
+            {
+                this.attributes = value;
+                this.OnPropertyChanged();
+            }
+        }
+        
         public string ToolTipText { get; set; }
 
         public EdgeTypeEnum EdgeType
@@ -62,11 +75,11 @@ namespace WpfEditor.ViewModel
             }
         }
 
-        public void OnPropertyChanged(string name)
+        public void OnPropertyChanged(string name = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
-
+        
         public override string ToString() => this.Text;
     }
 }
