@@ -1,0 +1,118 @@
+﻿<!-- 
+* Copyright 2017-2018 REAL.NET group
+
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License. -->
+    
+<Window 
+    x:Class="WpfEditor.View.MainWindow" 
+    x:ClassModifier="internal"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:graphx="http://schemas.panthernet.ru/graphx/"
+    xmlns:view="clr-namespace:WpfEditor.View"
+    xmlns:console="clr-namespace:WpfEditor.Controls.Console"
+    xmlns:palette="clr-namespace:WpfEditor.Controls.Palette"
+    xmlns:modelSelector="clr-namespace:WpfEditor.Controls.ModelSelector"
+    xmlns:scene="clr-namespace:WpfEditor.Controls.Scene"
+    xmlns:modelExplorer="clr-namespace:WpfEditor.Controls.ModelExplorer"
+    Title="REAL.NET"
+    mc:Ignorable="d"
+    d:DataContext="{view:MainWindow}">
+
+    <Grid>
+        <Grid.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="/View/Templates/GeneralTemplate.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
+        </Grid.Resources>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="100"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Area and console -->
+        <Grid Grid.Column="0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" MinHeight="50"/>
+            </Grid.RowDefinitions>
+
+            <!-- ToolBar -->
+            <ToolBar Grid.Row="0">
+                <modelSelector:ModelSelector x:Name="modelSelector" ModelSelected="OnModelSelectionChanged"/>
+            </ToolBar>
+
+            <!-- Area -->
+            <scene:Scene x:Name="scene"  Grid.Row="1"/>
+
+            <!-- GridSplitter for console -->
+            <GridSplitter Grid.Row ="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5"/>
+            
+            <!-- Console with error messages -->
+            <console:AppConsole Grid.Row="3" DataContext="{Binding Console}"/>
+
+        </Grid>
+
+        <!-- GridSplitter for RightPanel-->
+        <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5"/>
+
+        <!-- RightPanel -->
+        <DockPanel Grid.Column="2">
+            <Grid x:Name="rightPanel">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0"/>
+                    <RowDefinition Height="Auto" MinHeight="70"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto" MinHeight="50"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <palette:Palette x:Name="palette" Grid.Row="1"/>
+
+                <modelExplorer:ModelExplorer x:Name="modelExplorer" Grid.Row="2"/>
+
+                <Label x:Name="selectedEntityLabel" Grid.Row="3" Content="Selected entity:" HorizontalAlignment="Stretch" />
+
+                <DataGrid x:Name="attributesView" Grid.Row="4" ItemsSource="{Binding Attributes}" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Name}"/>
+                        <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Type}"/>
+                        <DataGridTextColumn Header="Value" IsReadOnly="False" Binding="{Binding Value}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <Button 
+                    Grid.Row="5"
+                    Content="Constraints"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Click="ConstraintsButtonClick"/>
+            </Grid>
+
+        </DockPanel>
+
+    </Grid>
+</Window>
+
+
+

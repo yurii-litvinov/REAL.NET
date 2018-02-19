@@ -26,7 +26,11 @@ type RepoFactory =
         Metametamodels.CoreMetametamodelBuilder() |> build
         Metametamodels.LanguageMetamodelBuilder() |> build
         Metametamodels.InfrastructureMetamodelBuilder() |> build
+
+        /// Metametamodels.RobotsMetamodelBuilder() |> build
         Metametamodels.GreenhouseMetamodelBuilder() |> build
+
+        /// Metametamodels.RobotsTestModelBuilder() |> build
         Metametamodels.GreenhouseTestModelBuilder() |> build
 
         new FacadeLayer.Repo(data) :> IRepo

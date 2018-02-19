@@ -186,6 +186,7 @@ localpackages/
 paket-files
 *.orig
 .paket/paket.exe
+paket.exe
 docs/content/license.md
 docs/content/release-notes.md
 .fake
@@ -195,3 +196,6 @@ docs/tools/FSharp.Formatting.svclog
 # VisualParadigm-specific
 # ===================================================
 **/*.vpp.*
+
+# Line endings unifier plugin
+.leu
