@@ -46,6 +46,7 @@ namespace WpfEditor.Controls.Scene
         public event EventHandler<NodeSelectedEventArgs> NodeSelected;
         public event EventHandler<EdgeSelectedEventArgs> EdgeSelected;
         public event EventHandler<Graph.ElementAddedEventArgs> ElementAdded;
+        public event EventHandler AttributeViewCollapse;
 
         public Scene()
         {
@@ -106,7 +107,7 @@ namespace WpfEditor.Controls.Scene
         {
             foreach (var vertex in this.scene.VertexList)
             {
-                foreach (var edge in this.graph.DataGraph.Edges)
+                foreach (var edge in this.Graph.DataGraph.Edges)
                 {
                     if (edge.Target == vertex.Key)
                     {
@@ -347,7 +348,7 @@ namespace WpfEditor.Controls.Scene
 
                 if (targetVCP != null)
                 {
-                    this.graph.SetTargetVCPId(edgeViewModel, targetVCP.Id);
+                    this.Graph.SetTargetVCPId(edgeViewModel, targetVCP.Id);
                 }
                 else
                 {
@@ -363,7 +364,7 @@ namespace WpfEditor.Controls.Scene
                     { Margin = new Thickness(0, 2, 2, 0), Padding = new Thickness(0), Child = targetVCP };
                     ((VertexControlForGH)this.ctrlVer).VCPTargetRoot.Children.Add(ctrl);
                     this.ctrlVer.VertexConnectionPointsList.Add(targetVCP);
-                    this.graph.SetTargetVCPId(edgeViewModel, targetVCP.Id);
+                    this.Graph.SetTargetVCPId(edgeViewModel, targetVCP.Id);
                 }
 
                 StaticVertexConnectionPointForGH sourceVCP = null;
@@ -380,7 +381,7 @@ namespace WpfEditor.Controls.Scene
 
                 if (sourceVCP != null)
                 {
-                    this.graph.SetSourceVCPId(edgeViewModel, sourceVCP.Id);
+                    this.Graph.SetSourceVCPId(edgeViewModel, sourceVCP.Id);
                 }
                 else
                 {
@@ -391,7 +392,7 @@ namespace WpfEditor.Controls.Scene
                     { Margin = new Thickness(0, 2, 2, 0), Padding = new Thickness(0), Child = sourceVCP };
                     ((VertexControlForGH)this.prevVer).VCPSourceRoot.Children.Add(ctrl);
                     this.prevVer.VertexConnectionPointsList.Add(sourceVCP);
-                    this.graph.SetSourceVCPId(edgeViewModel, newId);
+                    this.Graph.SetSourceVCPId(edgeViewModel, newId);
                 }
             }
 
