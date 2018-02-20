@@ -298,7 +298,7 @@ namespace WpfEditor.Controls.Scene
                 args.VertexControl.ContextMenu.IsOpen = true;
             }
         }
-        
+
         private void EdgeSelectedAction(object sender, GraphX.Controls.Models.EdgeSelectedEventArgs args)
         {
             this.ctrlEdg = args.EdgeControl;

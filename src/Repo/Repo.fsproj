@@ -85,7 +85,6 @@
     <Compile Include="ModelBuilders\LanguageMetamodelBuilder.fs" />
     <Compile Include="ModelBuilders\RobotsMetamodelBuilder.fs" />
     <Compile Include="ModelBuilders\RobotsTestModelBuilder.fs" />
-    <Compile Include="ModelBuilders\CoreMetametamodelBuilder.fs" />
     <Compile Include="ModelBuilders\GreenhouseTestModelBuilder.fs" />
     <Compile Include="ModelBuilders\GreenhouseMetamodelBuilder.fs" />
     <Compile Include="ModelBuilders\AirSimMetamodelBuilder.fs" />
