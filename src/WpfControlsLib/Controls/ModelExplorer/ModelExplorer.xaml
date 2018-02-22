@@ -1,0 +1,73 @@
+﻿<!--
+* Copyright 2017-2018 REAL.NET group
+
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License. -->
+
+<UserControl x:Class="WpfControlsLib.Controls.ModelExplorer.ModelExplorer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:modelExplorer="clr-namespace:WpfControlsLib.Controls.ModelExplorer"
+             mc:Ignorable="d"
+             d:DataContext="{modelExplorer:ModelExplorer}">
+    <UserControl.Resources>
+        
+        <DataTemplate x:Key="NodeTemplate" DataType="{x:Type modelExplorer:ModelExplorerNode}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Image Grid.Column="0" Source="{Binding Image}"/>
+                <Label Grid.Column="1" VerticalAlignment="Center" Content="{Binding Name}"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="EdgeTemplate" DataType="{x:Type modelExplorer:ModelExplorerEdge}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Image Grid.Column="0" Source="pack://application:,,,/View/Pictures/edge.png"/>
+                <Label Grid.Column="1" VerticalAlignment="Center" Content="{Binding Source}"/>
+                <Label Grid.Column="2" VerticalAlignment="Center" Content="-" Margin="-5,0,-5,0"/>
+                <Label Grid.Column="3" VerticalAlignment="Center" Content="{Binding Target}"/>
+            </Grid>
+        </DataTemplate>
+        
+        <modelExplorer:ModelElementTemplateSelector x:Key="Selector" 
+                                            NodeTemplate="{StaticResource NodeTemplate}" 
+                                            EdgeTemplate="{StaticResource EdgeTemplate}"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Content="Elements:" HorizontalAlignment="Stretch"/>
+        <ListBox x:Name="elementsListBox"
+                 Grid.Row="1"
+                 ItemsSource="{Binding Elements}"
+                 SelectionChanged="ElementInBoxSelectedAction"
+                 ItemTemplateSelector="{StaticResource Selector}">
+        </ListBox>
+    </Grid>
+</UserControl>

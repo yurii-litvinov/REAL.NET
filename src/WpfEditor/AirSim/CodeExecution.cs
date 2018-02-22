@@ -17,10 +17,10 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Permissions;
-using WpfEditor.Model;
-using WpfEditor.ViewModel;
+using WpfControlsLib.Model;
+using WpfControlsLib.ViewModel;
 
-namespace WpfEditor.AirSim
+namespace WpfControlsLib.AirSim
 {
     /// <summary>
     /// Class for execution of visual program on AirSim
@@ -41,7 +41,7 @@ namespace WpfEditor.AirSim
             writeToMessageBox = writeToConsole;
             graph = programGraph;
 
-            NodeViewModel curNode = GetInitNode();
+            NodeViewModel curNode = this.GetInitNode();
             if (curNode == null)
                 return;
 

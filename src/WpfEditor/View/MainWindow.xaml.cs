@@ -1,26 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using EditorPluginInterfaces;
-using PluginManager;
-using Repo;
-using WpfEditor.AirSim;
-using WpfEditor.Controls.Console;
-using WpfEditor.Controls.ModelSelector;
-using WpfEditor.Controls.Palette;
-using WpfEditor.Controls.Scene;
+﻿/* Copyright 2017-2018 REAL.NET group
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. */
 
 namespace WpfEditor.View
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Windows;
+    using System.Windows.Controls;
+    using EditorPluginInterfaces;
+    using PluginManager;
+    using Repo;
+    using WpfControlsLib.AirSim;
+    using WpfControlsLib.Controls.Console;
+    using WpfControlsLib.Controls.ModelSelector;
+    using WpfControlsLib.Controls.Scene;
+    using Palette = WpfControlsLib.Controls.Palette.Palette;
+
     /// <summary>
     /// Main window of the application, launches on application startup.
     /// </summary>
-    internal partial class MainWindow : Window
+    internal partial class MainWindow
     {
-        private readonly Model.Model model;
+        private readonly WpfControlsLib.Model.Model model;
         public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();
         private CancellationToken ct;
         private CancellationTokenSource token;
@@ -31,11 +45,11 @@ namespace WpfEditor.View
             this.DataContext = this;
             this.InitializeComponent();
 
-            this.model = new Model.Model();
+            this.model = new WpfControlsLib.Model.Model();
 
             this.palette.SetModel(this.model);
 
-            var controller = new Controller.Controller(this.model);
+            var controller = new WpfControlsLib.Controller.Controller(this.model);
 
             this.Closed += this.CloseChildrenWindows;
 
@@ -81,9 +95,33 @@ namespace WpfEditor.View
 
         private void ConstraintsButtonClick(object sender, RoutedEventArgs e)
         {
-            //var constraints = new ConstraintsWindow(this.repo, this.repo.Model(this.modelName));
-            //constraints.ShowDialog();
+            // var constraints = new ConstraintsWindow(this.repo, this.repo.Model(this.modelName));
+            // constraints.ShowDialog();
         }
+
+        private async void ExecuteButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.stopButton.IsEnabled = true;
+            this.executeButton.IsEnabled = false;
+            this.token = new CancellationTokenSource();
+            this.ct = this.token.Token;
+            var codeExe = new CodeExecution();
+            void Action(string str) => this.Dispatcher.Invoke(() => this.Console.SendMessage(str));
+            await Task.Factory.StartNew(() => codeExe.Execute(this.scene.Graph, Action), this.ct);
+            this.stopButton.IsEnabled = false;
+            this.executeButton.IsEnabled = true;
+        }
+
+        private void StopButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.token.Cancel();
+            this.Console.SendMessage("Stop execution of code");
+            this.stopButton.IsEnabled = false;
+            this.executeButton.IsEnabled = true;
+        }
+
+        private void AttributesViewCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+            => this.scene.ChangeEdgeLabel(((TextBox)e.EditingElement).Text);
 
         private class PaletteAdapter : IElementProvider
         {
@@ -96,29 +134,5 @@ namespace WpfEditor.View
 
             public IElement Element => this.palette.SelectedElement;
         }
-
-        private async void ExecuteButtonClick(object sender, RoutedEventArgs e)
-        {
-            stopButton.IsEnabled = true;
-            executeButton.IsEnabled = false;
-            token = new CancellationTokenSource();
-            ct = token.Token;
-            var codeExe = new CodeExecution();
-            void Action(string str) => this.Dispatcher.Invoke(delegate { this.Console.SendMessage(str); });
-            await Task.Factory.StartNew(() => codeExe.Execute(scene.Graph, Action), ct);
-            stopButton.IsEnabled = false;
-            executeButton.IsEnabled = true;
-        }
-
-        private void StopButtonClick(object sender, RoutedEventArgs e)
-        {
-            token.Cancel();
-            this.Console.SendMessage("Stop execution of code");
-            stopButton.IsEnabled = false;
-            executeButton.IsEnabled = true;
-        }
-
-        private void AttributesViewCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
-            => scene.ChangeEdgeLabel(((TextBox)e.EditingElement).Text);
     }
 }

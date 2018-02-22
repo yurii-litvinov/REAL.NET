@@ -15,7 +15,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WpfEditor.AirSim
+namespace WpfControlsLib.AirSim
 {
     /// <summary>
     /// DLL library wrapper
@@ -53,7 +53,7 @@ namespace WpfEditor.AirSim
 
         public void Dispose()
         {
-            Land();
+            this.Land();
             DisposeClientCPP(this.client);
         }
 

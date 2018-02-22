@@ -1,9 +1,11 @@
 ﻿namespace WpfEditor
 {
+    using System.Windows;
+
     /// <summary>
-    /// Code-behind for starting point of an application.
+    /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App
+    public partial class App : Application
     {
     }
 }

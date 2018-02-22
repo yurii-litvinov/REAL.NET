@@ -101,9 +101,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WpfEditor\WpfEditor.csproj">
+    <ProjectReference Include="..\WpfControlsLib\WpfControlsLib.csproj">
       <Project>{1DCB1D77-AB11-404C-BCE4-8EB7BF8F549D}</Project>
-      <Name>WpfEditor</Name>
+      <Name>WpfControlsLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\Repo\Repo.fsproj">
       <Project>{9e7065a4-ba5e-4752-84bf-54d5c00db60c}</Project>
