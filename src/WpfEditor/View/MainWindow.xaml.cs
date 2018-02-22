@@ -12,6 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
+using WpfEditor.AirSim;
+
 namespace WpfEditor.View
 {
     using System;
@@ -23,7 +25,6 @@ namespace WpfEditor.View
     using EditorPluginInterfaces;
     using PluginManager;
     using Repo;
-    using WpfControlsLib.AirSim;
     using WpfControlsLib.Controls.Console;
     using WpfControlsLib.Controls.ModelSelector;
     using WpfControlsLib.Controls.Scene;

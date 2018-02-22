@@ -12,16 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-using System;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Permissions;
-using WpfControlsLib.Model;
-using WpfControlsLib.ViewModel;
-
-namespace WpfControlsLib.AirSim
+namespace WpfEditor.AirSim
 {
+    using System;
+    using System.CodeDom.Compiler;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security.Permissions;
+    using WpfControlsLib.Model;
+    using WpfControlsLib.ViewModel;
+
     /// <summary>
     /// Class for execution of visual program on AirSim
     /// </summary>
