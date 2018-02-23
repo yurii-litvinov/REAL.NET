@@ -27,8 +27,6 @@ namespace WpfEditor.AirSim
     /// </summary>
     internal class CodeExecution
     {
-        private static bool condition;
-
         /// <summary>
         /// Main execution method
         /// </summary>
@@ -87,7 +85,8 @@ namespace WpfEditor.AirSim
         {
             public abstract void ExecuteNode(NodeViewModel node, MultirotorClient client);
 
-            public virtual NodeViewModel GetNextNode(NodeViewModel node, MultirotorClient client, Graph graph, Action<string> writeToMessageBox)
+            public virtual NodeViewModel GetNextNode(NodeViewModel node, MultirotorClient client, Graph graph,
+                Action<string> writeToMessageBox)
             {
                 if (graph.DataGraph.OutEdges(node).Count() > 1)
                 {
@@ -153,8 +152,10 @@ namespace WpfEditor.AirSim
 
         private class IfNode : NodeExecution
         {
+            private bool condition;
+
             public override void ExecuteNode(NodeViewModel node, MultirotorClient client)
-                => condition = this.CheckCondition(client, node.Attributes[0].Value);
+                => this.condition = this.CheckCondition(client, node.Attributes[0].Value);
 
             private bool CheckCondition(MultirotorClient client, string conditionString)
             {
@@ -197,8 +198,7 @@ namespace WpfEditor.AirSim
                 }
 
                 output = "\rHouston, we have a problem at compile time!";
-                return results.Errors.Cast<CompilerError>().Aggregate(output, (current, ce) => current +
-                                                                                               $"\rline {ce.Line}: {ce.ErrorText}");
+                return results.Errors.Cast<CompilerError>().Aggregate(output, (current, ce) => current + $"\rline {ce.Line}: {ce.ErrorText}");
             }
 
             [FileIOPermission(SecurityAction.Assert, Unrestricted = true)]
@@ -256,7 +256,8 @@ namespace WpfEditor.AirSim
             public void ExecuteNode(NodeViewModel node, MultirotorClient client)
                 => strategies[node.Name].ExecuteNode(node, client);
 
-            public NodeViewModel GetNextNode(NodeViewModel node, MultirotorClient client, Graph graph, Action<string> writeToMessageBox)
+            public NodeViewModel GetNextNode(NodeViewModel node, MultirotorClient client, Graph graph,
+                Action<string> writeToMessageBox)
                 => strategies[node.Name].GetNextNode(node, client, graph, writeToMessageBox);
         }
 
