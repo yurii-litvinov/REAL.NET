@@ -27,8 +27,6 @@ namespace WpfEditor.AirSim
     /// </summary>
     internal class CodeExecution
     {
-        private static Action<string> writeToMessageBox;
-        private static Graph graph;
         private static bool condition;
 
         /// <summary>
@@ -38,29 +36,26 @@ namespace WpfEditor.AirSim
         /// <param name="writeToConsole"> Method to writing to console </param>
         public void Execute(Graph programGraph, Action<string> writeToConsole)
         {
-            writeToMessageBox = writeToConsole;
-            graph = programGraph;
-
-            NodeViewModel curNode = this.GetInitNode();
+            NodeViewModel curNode = this.GetInitNode(programGraph, writeToConsole);
             if (curNode == null)
                 return;
 
-            writeToMessageBox("Running your code");
+            writeToConsole("Running your code");
             var client = new MultirotorClient();
             while (curNode.Name != "aFinalNode")
             {
-                Execution.ExecuteNode(curNode, client);
-                curNode = Execution.GetNextNode(curNode, client);
+                Execution.Exec.ExecuteNode(curNode, client);
+                curNode = Execution.Exec.GetNextNode(curNode, client, programGraph, writeToConsole);
                 if (curNode == null)
                     return;
-                writeToMessageBox($"Node {curNode.Name} done");
+                writeToConsole($"Node {curNode.Name} done");
             }
             client.Land();
             client.Dispose();
-            writeToMessageBox("Program done");
+            writeToConsole("Program done");
         }
 
-        private NodeViewModel GetInitNode()
+        private NodeViewModel GetInitNode(Graph graph, Action<string> writeToMessageBox)
         {
             NodeViewModel initNode = null;
             var edges = graph.DataGraph.Edges.ToList();
@@ -82,58 +77,8 @@ namespace WpfEditor.AirSim
                 writeToMessageBox("");
                 return null;
             }
+
             return initNode;
-        }
-
-        private static bool CheckCondition(MultirotorClient client, string conditionString)
-        {
-            string sourceCode =
-                @"using System; 
-                using System.IO;
-                using WpfEditor.AirSim;
-                public class Code
-                { 
-                    public bool Exe(MultirotorClient client)
-                    {
-                        return " + conditionString + @";
-                    }
-                }";
-            return bool.Parse(EvalCode("Code", "Exe", sourceCode, new object[] { client }));
-        }
-
-        private static string EvalCode(string typeName, string methodName, string sourceCode, object[] args)
-        {
-            string output;
-            var compiler = CodeDomProvider.CreateProvider("CSharp");
-            var parameters = new CompilerParameters
-            {
-                CompilerOptions = "/t:library",
-                GenerateInMemory = true,
-                IncludeDebugInformation = true,
-                ReferencedAssemblies = { "WpfEditor.exe" }
-            };
-
-            var results = compiler.CompileAssemblyFromSource(parameters, sourceCode);
-
-            if (!results.Errors.HasErrors)
-            {
-                var assembly = results.CompiledAssembly;
-                var evaluatorType = assembly.GetType(typeName);
-                var evaluator = Activator.CreateInstance(evaluatorType);
-
-                output = InvokeMethod(evaluatorType, methodName, evaluator, args).ToString();
-                return output;
-            }
-
-            output = "\rHouston, we have a problem at compile time!";
-            return results.Errors.Cast<CompilerError>().Aggregate(output, (current, ce) => current +
-                                                                                           $"\rline {ce.Line}: {ce.ErrorText}");
-        }
-
-        [FileIOPermission(SecurityAction.Assert, Unrestricted = true)]
-        private static object InvokeMethod(Type evaluatorType, string methodName, object evaluator, object[] args)
-        {
-            return evaluatorType.InvokeMember(methodName, System.Reflection.BindingFlags.InvokeMethod, null, evaluator, args);
         }
 
         #region NodeFunctions
@@ -142,7 +87,7 @@ namespace WpfEditor.AirSim
         {
             public abstract void ExecuteNode(NodeViewModel node, MultirotorClient client);
 
-            public virtual NodeViewModel GetNextNode(NodeViewModel node, MultirotorClient client)
+            public virtual NodeViewModel GetNextNode(NodeViewModel node, MultirotorClient client, Graph graph, Action<string> writeToMessageBox)
             {
                 if (graph.DataGraph.OutEdges(node).Count() > 1)
                 {
@@ -150,6 +95,7 @@ namespace WpfEditor.AirSim
                     client.Dispose();
                     return null;
                 }
+
                 if (!graph.DataGraph.OutEdges(node).Any())
                 {
                     writeToMessageBox("Error: Node " + node.Name +
@@ -157,6 +103,7 @@ namespace WpfEditor.AirSim
                     client.Dispose();
                     return null;
                 }
+
                 return graph.DataGraph.OutEdges(node).ToList()[0].Target;
             }
         }
@@ -207,9 +154,60 @@ namespace WpfEditor.AirSim
         private class IfNode : NodeExecution
         {
             public override void ExecuteNode(NodeViewModel node, MultirotorClient client)
-                => condition = CheckCondition(client, node.Attributes[0].Value);
+                => condition = this.CheckCondition(client, node.Attributes[0].Value);
 
-            public override NodeViewModel GetNextNode(NodeViewModel node, MultirotorClient client)
+            private bool CheckCondition(MultirotorClient client, string conditionString)
+            {
+                string sourceCode =
+                    @"using System; 
+                using System.IO;
+                using WpfEditor.AirSim;
+                public class Code
+                { 
+                    public bool Exe(MultirotorClient client)
+                    {
+                        return " + conditionString + @";
+                    }
+                }";
+                return bool.Parse(this.EvalCode("Code", "Exe", sourceCode, new object[] { client }));
+            }
+
+            private string EvalCode(string typeName, string methodName, string sourceCode, object[] args)
+            {
+                string output;
+                var compiler = CodeDomProvider.CreateProvider("CSharp");
+                var parameters = new CompilerParameters
+                {
+                    CompilerOptions = "/t:library",
+                    GenerateInMemory = true,
+                    IncludeDebugInformation = true,
+                    ReferencedAssemblies = { "WpfEditor.exe" }
+                };
+
+                var results = compiler.CompileAssemblyFromSource(parameters, sourceCode);
+
+                if (!results.Errors.HasErrors)
+                {
+                    var assembly = results.CompiledAssembly;
+                    var evaluatorType = assembly.GetType(typeName);
+                    var evaluator = Activator.CreateInstance(evaluatorType);
+
+                    output = this.InvokeMethod(evaluatorType, methodName, evaluator, args).ToString();
+                    return output;
+                }
+
+                output = "\rHouston, we have a problem at compile time!";
+                return results.Errors.Cast<CompilerError>().Aggregate(output, (current, ce) => current +
+                                                                                               $"\rline {ce.Line}: {ce.ErrorText}");
+            }
+
+            [FileIOPermission(SecurityAction.Assert, Unrestricted = true)]
+            private object InvokeMethod(Type evaluatorType, string methodName, object evaluator, object[] args)
+            {
+                return evaluatorType.InvokeMember(methodName, System.Reflection.BindingFlags.InvokeMethod, null, evaluator, args);
+            }
+
+            public override NodeViewModel GetNextNode(NodeViewModel node, MultirotorClient client, Graph graph, Action<string> writeToMessageBox)
             {
                 if (graph.DataGraph.OutEdges(node).Count() != 2)
                 {
@@ -217,6 +215,7 @@ namespace WpfEditor.AirSim
                     client.Dispose();
                     return null;
                 }
+
                 if (condition)
                 {
                     EdgeViewModel edge = graph.DataGraph.OutEdges(node).ToList()[0];
@@ -234,12 +233,14 @@ namespace WpfEditor.AirSim
             }
         }
 
-        private static class Execution
+        private class Execution
         {
             private static readonly Dictionary<string, NodeExecution> strategies =
                 new Dictionary<string, NodeExecution>();
 
-            static Execution()
+            private static Execution instance;
+
+            private Execution()
             {
                 strategies.Add("aInitialNode", new InitNode());
                 strategies.Add("aTakeoff", new TakeoffNode());
@@ -250,11 +251,13 @@ namespace WpfEditor.AirSim
                 strategies.Add("aLand", new LandNode());
             }
 
-            public static void ExecuteNode(NodeViewModel node, MultirotorClient client)
+            public static Execution Exec => instance ?? (instance = new Execution());
+
+            public void ExecuteNode(NodeViewModel node, MultirotorClient client)
                 => strategies[node.Name].ExecuteNode(node, client);
 
-            public static NodeViewModel GetNextNode(NodeViewModel node, MultirotorClient client)
-                => strategies[node.Name].GetNextNode(node, client);
+            public NodeViewModel GetNextNode(NodeViewModel node, MultirotorClient client, Graph graph, Action<string> writeToMessageBox)
+                => strategies[node.Name].GetNextNode(node, client, graph, writeToMessageBox);
         }
 
         #endregion
