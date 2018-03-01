@@ -1,35 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1DCB1D77-AB11-404C-BCE4-8EB7BF8F549D}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WpfControlsLib</RootNamespace>
-    <AssemblyName>WpfControlsLib</AssemblyName>
+    <ProjectGuid>{757A3BAF-F8E1-4B54-96E7-B4D57B23251B}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>AirSim</RootNamespace>
+    <AssemblyName>AirSim</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <CodeAnalysisRuleSet>WpfEditor.ruleset</CodeAnalysisRuleSet>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -40,10 +23,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>
-    </CodeAnalysisRuleSet>
-    <DocumentationFile>
-    </DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -54,32 +33,17 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>
-    </CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Release\WpfControlsLib.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoRelease|AnyCPU'">
     <OutputPath>bin\MonoRelease\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>
-    </CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.Linq" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -94,83 +58,23 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controller\Controller.cs" />
-    <Compile Include="Controls\Console\AppConsole.xaml.cs">
-      <DependentUpon>AppConsole.xaml</DependentUpon>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="View\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ModelExplorer\ModelElementTemplateSelector.cs" />
-    <Compile Include="Controls\ModelExplorer\ModelExplorer.xaml.cs">
-      <DependentUpon>ModelExplorer.xaml</DependentUpon>
+    <Compile Include="AirSimLib\CodeExecution.cs" />
+    <Compile Include="AirSimLib\MultirotorClient.cs" />
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\ModelExplorer\ModelExplorerEdge.cs" />
-    <Compile Include="Controls\ModelExplorer\ModelExplorerElement.cs" />
-    <Compile Include="Controls\ModelExplorer\ModelExplorerNode.cs" />
-    <Compile Include="Controls\ModelSelector\ModelSelector.xaml.cs">
-      <DependentUpon>ModelSelector.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Palette\DragAndDropFeedback.xaml.cs">
-      <DependentUpon>DragAndDropFeedback.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Palette\DragAndDropHelper.cs" />
-    <Compile Include="Controls\Palette\Palette.xaml.cs">
-      <DependentUpon>Palette.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Palette\PaletteElement.cs" />
-    <Compile Include="Controls\Palette\PaletteViewModel.cs" />
-    <Compile Include="Controls\Scene\IElementProvider.cs" />
-    <Compile Include="Controls\Scene\Scene.xaml.cs">
-      <DependentUpon>Scene.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Toolbar\ToolbarView.xaml.cs">
-      <DependentUpon>ToolbarView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Model\Graph.cs" />
-    <Compile Include="Model\Model.cs" />
-    <Compile Include="Constraints\Constraints.cs" />
-    <Compile Include="Constraints\ConstraintsItem.cs" />
-    <Compile Include="Constraints\ConstraintsValues.cs" />
-    <Compile Include="Constraints\ConstraintsWindow.xaml.cs" />
-    <Compile Include="Controls\Console\AppConsoleViewModel.cs" />
-    <Compile Include="ViewModel\AttributeViewModel.cs" />
-    <Compile Include="Controls\Scene\EdgeBlueprint.cs" />
-    <Compile Include="Controls\Scene\EditorObjectManager.cs" />
-    <Compile Include="Controls\Toolbar\ToolbarViewModel.cs" />
-    <Compile Include="Constraints\RepoInfo.cs" />
-    <Page Include="Constraints\ConstraintsWindow.xaml">
+    <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Console\AppConsole.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\ModelExplorer\ModelExplorer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\ModelSelector\ModelSelector.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Palette\DragAndDropFeedback.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Palette\Palette.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Scene\Scene.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Toolbar\ToolbarView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="ViewModel\EdgeViewModel.cs" />
-    <Compile Include="ViewModel\NodeViewModel.cs" />
-    <Compile Include="Controls\Scene\GraphArea.cs" />
     <Page Include="View\Templates\EditorTemplate.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -203,10 +107,39 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\edge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\finalBlock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\hover.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\if.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\initialBlock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\land.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\move.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\takeoff.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\timerBlock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\vertex.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EditorPluginInterfaces\EditorPluginInterfaces.csproj">
@@ -221,72 +154,12 @@
       <Project>{9e7065a4-ba5e-4752-84bf-54d5c00db60c}</Project>
       <Name>Repo</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WpfControlsLib\WpfControlsLib.csproj">
+      <Project>{1dcb1d77-ab11-404c-bce4-8eb7bf8f549d}</Project>
+      <Name>WpfControlsLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 и x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\edge.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\enginesBackwardBlock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\enginesForwardBlock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\enginesStopBlock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\finalBlock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\hover.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\if.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\initialBlock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\land.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\move.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\star1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\star2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\takeoff.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\timerBlock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\vertex.png" />
-  </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">
       <ItemGroup>

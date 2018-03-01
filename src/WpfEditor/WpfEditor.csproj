@@ -25,6 +25,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -34,6 +35,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoRelease|AnyCPU'">
     <OutputPath>bin\MonoRelease\</OutputPath>
@@ -42,7 +44,8 @@
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
@@ -84,8 +87,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AirSim\CodeExecution.cs" />
-    <Compile Include="AirSim\MultirotorClient.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -154,19 +155,7 @@
     <Resource Include="View\Pictures\finalBlock.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="View\Pictures\hover.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="View\Pictures\if.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="View\Pictures\initialBlock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="View\Pictures\land.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="View\Pictures\move.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="View\Pictures\star1.png" />
@@ -175,13 +164,7 @@
     <Resource Include="View\Pictures\star2.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="View\Pictures\takeoff.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="View\Pictures\timerBlock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="View\Pictures\vertex.png" />
   </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">
@@ -217,9 +200,6 @@
         </Reference>
       </ItemGroup>
     </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'" />
   </Choose>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">

@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-namespace WpfEditor.AirSim
+namespace AirSim.AirSimLib
 {
     using System;
     using System.Runtime.InteropServices;

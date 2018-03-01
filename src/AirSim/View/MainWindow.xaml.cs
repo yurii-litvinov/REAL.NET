@@ -12,12 +12,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-namespace WpfEditor.View
+namespace AirSim.View
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
+    using AirSimLib;
     using EditorPluginInterfaces;
     using PluginManager;
     using Repo;
@@ -34,6 +37,9 @@ namespace WpfEditor.View
         private readonly WpfControlsLib.Model.Model model;
 
         public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();
+
+        private CancellationToken cancellationToken;
+        private CancellationTokenSource token;
 
         public MainWindow()
         {
@@ -56,7 +62,6 @@ namespace WpfEditor.View
 
             this.scene.Init(this.model, controller, new PaletteAdapter(this.palette));
             this.modelSelector.Init(this.model);
-            this.modelSelector.ChangeModel(2);
 
             this.InitAndLaunchPlugins();
         }
@@ -94,6 +99,27 @@ namespace WpfEditor.View
         {
             // var constraints = new ConstraintsWindow(this.repo, this.repo.Model(this.modelName));
             // constraints.ShowDialog();
+        }
+
+        private async void ExecuteButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.stopButton.IsEnabled = true;
+            this.executeButton.IsEnabled = false;
+            this.token = new CancellationTokenSource();
+            this.cancellationToken = this.token.Token;
+            var codeExe = new CodeExecution();
+            void Action(string str) => this.Dispatcher.Invoke(() => this.Console.SendMessage(str));
+            await Task.Factory.StartNew(() => codeExe.Execute(this.scene.Graph, Action), this.cancellationToken);
+            this.stopButton.IsEnabled = false;
+            this.executeButton.IsEnabled = true;
+        }
+
+        private void StopButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.token.Cancel();
+            this.Console.SendMessage("Stop execution of code");
+            this.stopButton.IsEnabled = false;
+            this.executeButton.IsEnabled = true;
         }
 
         private void AttributesViewCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)

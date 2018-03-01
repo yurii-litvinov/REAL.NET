@@ -77,6 +77,9 @@ namespace WpfControlsLib.Controls.ModelSelector
             this.modelsComboBox.SelectedIndex = 0;
         }
 
+        public void ChangeModel(int newModel)
+            => this.modelsComboBox.SelectedIndex = newModel;
+
         private void OnModelSelectionChanged(object sender, SelectionChangedEventArgs args)
             => this.ModelSelected?.Invoke(this,
                 new ModelSelectedEventArgs { ModelName = this.modelsComboBox.SelectedItem?.ToString() });

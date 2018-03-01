@@ -51,6 +51,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditorPluginInterfaces", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfEditor", "src\WpfEditor\WpfEditor.csproj", "{734861E8-17D4-43C4-BCFE-2B0C9434AD83}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirSim", "src\AirSim\AirSim.csproj", "{757A3BAF-F8E1-4B54-96E7-B4D57B23251B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -110,6 +112,11 @@ Global
 		{734861E8-17D4-43C4-BCFE-2B0C9434AD83}.MonoRelease|Any CPU.ActiveCfg = MonoRelease|Any CPU
 		{734861E8-17D4-43C4-BCFE-2B0C9434AD83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{734861E8-17D4-43C4-BCFE-2B0C9434AD83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{757A3BAF-F8E1-4B54-96E7-B4D57B23251B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{757A3BAF-F8E1-4B54-96E7-B4D57B23251B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{757A3BAF-F8E1-4B54-96E7-B4D57B23251B}.MonoRelease|Any CPU.ActiveCfg = MonoRelease|Any CPU
+		{757A3BAF-F8E1-4B54-96E7-B4D57B23251B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{757A3BAF-F8E1-4B54-96E7-B4D57B23251B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

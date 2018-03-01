@@ -48,7 +48,7 @@ let solutionFile  = "REAL.NET.sln"
 // Default target configuration
 #if MONO
 let configuration = "MonoRelease"
-let doNotCopyBinaries = ["WpfEditor"; "WpfControlsLib"]
+let doNotCopyBinaries = ["WpfEditor"; "WpfControlsLib"; "AirSim"]
 #else
 let configuration = "Release"
 let doNotCopyBinaries = []
