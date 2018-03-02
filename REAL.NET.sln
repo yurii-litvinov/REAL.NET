@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2024
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{63297B98-5CED-492C-A5B7-A5B4F73CF142}"
 	ProjectSection(SolutionItems) = preProject
@@ -33,7 +33,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{ED8079DD
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Repo.Tests", "tests\Repo.Tests\Repo.Tests.fsproj", "{CF713CDC-81BE-411B-98D7-08DBB3FB7DB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfEditor", "src\WpfEditor\WpfEditor.csproj", "{1DCB1D77-AB11-404C-BCE4-8EB7BF8F549D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfControlsLib", "src\WpfControlsLib\WpfControlsLib.csproj", "{1DCB1D77-AB11-404C-BCE4-8EB7BF8F549D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsAglWinFormsEditor", "src\MsAglWinFormsEditor\MsAglWinFormsEditor.csproj", "{3124748C-3750-4FFE-B793-51A95E7C7CCB}"
 EndProject
@@ -48,6 +48,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamplePlugin", "src\plugins\SamplePlugin\SamplePlugin.csproj", "{C57410A1-A86F-418B-9AC7-38249450C497}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditorPluginInterfaces", "src\EditorPluginInterfaces\EditorPluginInterfaces.csproj", "{6E5F1B5D-F165-4CEC-A240-8887EBD28E3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfEditor", "src\WpfEditor\WpfEditor.csproj", "{734861E8-17D4-43C4-BCFE-2B0C9434AD83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirSim", "src\AirSim\AirSim.csproj", "{757A3BAF-F8E1-4B54-96E7-B4D57B23251B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -103,6 +107,16 @@ Global
 		{6E5F1B5D-F165-4CEC-A240-8887EBD28E3B}.MonoRelease|Any CPU.Build.0 = MonoRelease|Any CPU
 		{6E5F1B5D-F165-4CEC-A240-8887EBD28E3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E5F1B5D-F165-4CEC-A240-8887EBD28E3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{734861E8-17D4-43C4-BCFE-2B0C9434AD83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{734861E8-17D4-43C4-BCFE-2B0C9434AD83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{734861E8-17D4-43C4-BCFE-2B0C9434AD83}.MonoRelease|Any CPU.ActiveCfg = MonoRelease|Any CPU
+		{734861E8-17D4-43C4-BCFE-2B0C9434AD83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{734861E8-17D4-43C4-BCFE-2B0C9434AD83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{757A3BAF-F8E1-4B54-96E7-B4D57B23251B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{757A3BAF-F8E1-4B54-96E7-B4D57B23251B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{757A3BAF-F8E1-4B54-96E7-B4D57B23251B}.MonoRelease|Any CPU.ActiveCfg = MonoRelease|Any CPU
+		{757A3BAF-F8E1-4B54-96E7-B4D57B23251B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{757A3BAF-F8E1-4B54-96E7-B4D57B23251B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

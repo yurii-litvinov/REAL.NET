@@ -20,17 +20,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:graphx="http://schemas.panthernet.ru/graphx/"
-    xmlns:view="clr-namespace:WpfEditor.View"
-    xmlns:console="clr-namespace:WpfEditor.Controls.Console"
-    xmlns:palette="clr-namespace:WpfEditor.Controls.Palette"
-    xmlns:modelSelector="clr-namespace:WpfEditor.Controls.ModelSelector"
-    xmlns:scene="clr-namespace:WpfEditor.Controls.Scene"
-    xmlns:modelExplorer="clr-namespace:WpfEditor.Controls.ModelExplorer"
+    xmlns:modelSelector="clr-namespace:WpfControlsLib.Controls.ModelSelector;assembly=WpfControlsLib"
+    xmlns:console1="clr-namespace:WpfControlsLib.Controls.Console;assembly=WpfControlsLib"
+    xmlns:scene="clr-namespace:WpfControlsLib.Controls.Scene;assembly=WpfControlsLib"
+    xmlns:modelExplorer="clr-namespace:WpfControlsLib.Controls.ModelExplorer;assembly=WpfControlsLib"
+    xmlns:palette="clr-namespace:WpfControlsLib.Controls.Palette;assembly=WpfControlsLib"
     Title="REAL.NET"
     mc:Ignorable="d"
-    d:DataContext="{view:MainWindow}" Height="685" Width="936">
-
+    Height="685" Width="936">
+    
     <Grid>
         <Grid.Resources>
             <ResourceDictionary>
@@ -68,7 +66,7 @@
             <GridSplitter Grid.Row ="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5"/>
 
             <!-- Console with error messages -->
-            <console:AppConsole Grid.Row="3" DataContext="{Binding Console}"/>
+            <console1:AppConsole Grid.Row="3" DataContext="{Binding Console}"/>
 
         </Grid>
 
@@ -84,8 +82,6 @@
                     <RowDefinition Height="140"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto" MinHeight="50"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
                 </Grid.RowDefinitions>
 
@@ -109,18 +105,6 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Bottom"
                     Click="ConstraintsButtonClick" Height="26"/>
-                <Button x:Name="executeButton" 
-                    Grid.Row="6"
-                    Content="Execute"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Bottom"
-                    Click="ExecuteButtonClick" Height="26"/>
-                <Button x:Name="stopButton" 
-                    Grid.Row="7"
-                    Content="Stop"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Bottom"
-                    Click="StopButtonClick" Height="26" IsEnabled="False"/>
             </Grid>
 
         </DockPanel>
