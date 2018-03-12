@@ -13,11 +13,12 @@ namespace WpfControlsLib.Constraints
     {
         private readonly RepoInfo info;
         private string objType;
+        private Boolean userChange = true;
 
-        public ConstraintsWindow(Repo.IRepo repo, Repo.IModel model)
+        public ConstraintsWindow(WpfControlsLib.Model.Model model)
         {
             this.InitializeComponent();
-            this.info = new RepoInfo(repo, model.Name);
+            this.info = new RepoInfo(model.Repo, model.ModelName);
         }
 
         public void ObjType_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -25,24 +26,30 @@ namespace WpfControlsLib.Constraints
             switch (((ComboBoxItem)this.ObjType.SelectedItem).Content.ToString())
             {
                 case "Node":
+                    this.userChange = false;
                     this.ElementType.ItemsSource = new List<ConstraintsValues>(this.info.GetNodeTypes().Select(x => new ConstraintsValues { ElementType = x }));
                     this.objType = "Node";
                     break;
                 case "EdgeViewModel":
+                    this.userChange = false;
                     this.ElementType.ItemsSource = new List<ConstraintsValues>(this.info.GetEdgeTypes().Select(x => new ConstraintsValues { ElementType = x }));
                     this.objType = "EdgeViewModel";
                     break;
             }
+            this.userChange = true;
         }
 
         private void ElementType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            switch (((ConstraintsValues)this.ElementType.SelectedItem).ElementType)
+            if (this.userChange)
             {
-                case "All":
-                    this.ammountButton.Visibility = Visibility.Visible;
-                    this.ammountBox.Visibility = Visibility.Visible;
-                    break;
+                switch (((ConstraintsValues)this.ElementType.SelectedItem).ElementType)
+                {
+                    case "All":
+                        this.ammountButton.Visibility = Visibility.Visible;
+                        this.ammountBox.Visibility = Visibility.Visible;
+                        break;
+                }
             }
         }
 

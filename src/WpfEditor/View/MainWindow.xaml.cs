@@ -21,6 +21,7 @@ namespace WpfEditor.View
     using EditorPluginInterfaces;
     using PluginManager;
     using Repo;
+    using WpfControlsLib.Constraints;
     using WpfControlsLib.Controls.Console;
     using WpfControlsLib.Controls.ModelSelector;
     using WpfControlsLib.Controls.Scene;
@@ -92,8 +93,8 @@ namespace WpfEditor.View
 
         private void ConstraintsButtonClick(object sender, RoutedEventArgs e)
         {
-            // var constraints = new ConstraintsWindow(this.repo, this.repo.Model(this.modelName));
-            // constraints.ShowDialog();
+            var constraints = new ConstraintsWindow(this.model);
+            constraints.ShowDialog();
         }
 
         private void AttributesViewCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
