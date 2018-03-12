@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace WpfControlsLib.Constraints
+﻿namespace WpfControlsLib.Constraints
 {
+    using System;
+    using System.Collections.Generic;
+
     public class RepoInfo
     {
         private readonly Repo.IRepo repo;

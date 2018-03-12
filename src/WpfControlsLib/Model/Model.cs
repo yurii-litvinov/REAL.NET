@@ -12,11 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-using System;
-using WpfControlsLib.ViewModel;
-
 namespace WpfControlsLib.Model
 {
+    using System;
+    using WpfControlsLib.Constraints;
+    using WpfControlsLib.ViewModel;
+
     /// <summary>
     /// Model in MVC architecture. Wraps repository, provides operations like adding or removing models, edges and 
     /// nodes (note that "model" is used with two different meanings around the project -- a visual model consisting 
@@ -29,11 +30,14 @@ namespace WpfControlsLib.Model
         public Model()
         {
             this.Repo = global::Repo.RepoFactory.CreateRepo();
+            this.Constraints = new WpfControlsLib.Constraints.Constraints();
         }
 
         public event EventHandler<VertexEventArgs> NewVertexInRepo;
 
         public event EventHandler<EdgeEventArgs> NewEdgeInRepo;
+
+        public WpfControlsLib.Constraints.Constraints Constraints { get; set; }
 
         public string ModelName { get; set; }
 
@@ -41,14 +45,17 @@ namespace WpfControlsLib.Model
 
         public void NewNode(Repo.IElement element, string modelName)
         {
-            var model = this.Repo.Model(modelName);
-            var newNode = model.CreateElement(element) as Repo.INode;
-            this.RaiseNewVertexInRepo(newNode);
+                var model = this.Repo.Model(modelName);
+                var newNode = model.CreateElement(element) as Repo.INode;
+                this.RaiseNewVertexInRepo(newNode);
         }
 
         public void NewEdge(Repo.IEdge edge, NodeViewModel prevVer, NodeViewModel ctrlVer)
         {
-            this.RaiseNewEdgeInRepo(edge, prevVer, ctrlVer);
+            if (this.Constraints.AllowCreateEdge(this.Repo.Model(this.ModelName).Edges, this.ModelName))
+            {
+                this.RaiseNewEdgeInRepo(edge, prevVer, ctrlVer);
+            }
         }
 
         private void RaiseNewVertexInRepo(Repo.INode node)

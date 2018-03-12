@@ -93,8 +93,8 @@ namespace WpfEditor.View
 
         private void ConstraintsButtonClick(object sender, RoutedEventArgs e)
         {
-            var constraints = new ConstraintsWindow(this.model);
-            constraints.ShowDialog();
+            var constraintsWindow = new ConstraintsWindow(this.model);
+            constraintsWindow.ShowDialog();
         }
 
         private void AttributesViewCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)

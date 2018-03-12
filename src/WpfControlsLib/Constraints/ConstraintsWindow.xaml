@@ -20,37 +20,40 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
             <TextBlock Text="Object Type:" Margin="10,7,0,0" Grid.ColumnSpan="2"/>
-        <ComboBox x:Name="ObjType"
+            <ComboBox x:Name="ObjType"
             HorizontalAlignment="Left"
             Margin="10,26,0,0"
             VerticalAlignment="Top"
             Width="147" SelectionChanged="ObjType_SelectionChanged" Grid.ColumnSpan="2">
-            <ComboBoxItem Name="edge">EdgeViewModel</ComboBoxItem>
-            <ComboBoxItem Name="node">Node</ComboBoxItem>
-        </ComboBox>
-        <TextBlock Text="Element Type:" Margin="10,53,0,97" Grid.ColumnSpan="2"/>
-        <ComboBox x:Name="ElementType"
+                <ComboBoxItem Name="edge">EdgeViewModel</ComboBoxItem>
+                <ComboBoxItem Name="node">Node</ComboBoxItem>
+            </ComboBox>
+            <TextBlock Text="Element Type:" Margin="10,53,0,97" Grid.ColumnSpan="2"/>
+            <ComboBox x:Name="ElementType"
             SelectionChanged="ElementType_SelectionChanged"
             HorizontalAlignment="Left"
             Margin="10,68,0,0"
             VerticalAlignment="Top"
             Width="147"
             ItemTemplate="{StaticResource TypeClass}" Grid.ColumnSpan="2"/>
-        <TextBlock x:Name="ammountButton" 
+            <TextBlock x:Name="ammountLabel" 
             Text="Количество:" 
             Margin="10,98,72,94" 
             Visibility="Hidden" Grid.ColumnSpan="2"/>
-        <TextBox x:Name="ammountBox" 
+            <TextBox x:Name="ammountBox" 
                  FontSize="12"
-                 Margin="87,95,135,148" 
+                 Margin="87,95,83,199" 
                  RenderTransformOrigin="0.381,-0.327" 
-                 Visibility="Hidden"
-                 Grid.ColumnSpan="2"/>
-        <Button x:Name="createConstraint"
+                 Visibility="Hidden"/>
+            <Button x:Name="createConstraint"
                 Content="Создать" 
-                Margin="10,124,135,116"
-                Click="CreateConstraint_Click" Grid.ColumnSpan="2"
+                Margin="10,138,135,134"
+                Click="CreateConstraint_Click"
                 />
+            <TextBlock x:Name="errorLabel" 
+            Text="Ошибка:" 
+            Margin="10,206,41,45" 
+            Visibility="Hidden"/>
         </Grid>
         <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3"
         HorizontalAlignment="Center" VerticalAlignment="Stretch" />
