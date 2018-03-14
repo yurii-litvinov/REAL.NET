@@ -30,6 +30,8 @@
         public void ObjType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.errorLabel.Visibility = Visibility.Hidden;
+            this.ammountLabel.Visibility = Visibility.Hidden;
+            this.ammountBox.Visibility = Visibility.Hidden;
             switch (((ComboBoxItem)this.ObjType.SelectedItem).Content.ToString())
             {
                 case "Node":
@@ -50,6 +52,8 @@
         private void ElementType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.errorLabel.Visibility = Visibility.Hidden;
+            this.ammountLabel.Visibility = Visibility.Hidden;
+            this.ammountBox.Visibility = Visibility.Hidden;
             if (this.userChange)
             {
                 switch (((ConstraintsValues)this.ElementType.SelectedItem).ElementType)

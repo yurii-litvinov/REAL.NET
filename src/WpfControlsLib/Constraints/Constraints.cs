@@ -21,14 +21,29 @@
 
         public int EdgesAmount { get; set; }
 
-        public bool AllowCreateEdge(IEnumerable<IEdge> edges, string modelName)
+        public bool AllowCreateEdge(IEnumerable<IEdge> edges)
         {
-            return edges.Count() < this.EdgesAmount;
+            return this.Check(edges.Count() + 1, this.EdgesAmount);
         }
 
-        public bool AllowCreateNode(Repo.IRepo repo, string modelName)
+        public bool AllowCreateNode(IEnumerable<INode> nodes)
         {
-            return repo.Model(modelName).Nodes.Count() < this.NodesAmount;
+            return this.Check(nodes.Count() + 1, this.NodesAmount);
+        }
+
+        public bool CheckEdges(IEnumerable<IEdge> edges)
+        {
+            return this.Check(edges.Count(), this.EdgesAmount);
+        }
+
+        public bool CheckNodes(IEnumerable<INode> nodes)
+        {
+            return this.Check(nodes.Count(), this.NodesAmount);
+        }
+
+        private bool Check(int a, int b)
+        {
+            return a < b;
         }
     }
 }

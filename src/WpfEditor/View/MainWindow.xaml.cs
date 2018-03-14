@@ -95,6 +95,11 @@ namespace WpfEditor.View
         {
             var constraintsWindow = new ConstraintsWindow(this.model);
             constraintsWindow.ShowDialog();
+
+            if (!this.model.ConstraintsCheck())
+            {
+                this.Console.ReportError(this.model.ErrorMsg);
+            }
         }
 
         private void AttributesViewCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
