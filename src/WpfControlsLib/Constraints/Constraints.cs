@@ -1,33 +1,49 @@
-﻿using System.Linq;
-
-namespace WpfControlsLib.Constraints
+﻿namespace WpfControlsLib.Constraints
 {
+    using Repo;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// Class for methods, working with constraint violations
     /// </summary>
     public class Constraints
     {
-        public static int NodesAmount { get; set; } = 100;
+        private string modelName;
 
-        public static int EdgesAmount { get; set; } = 100;
-
-        /// <summary>
-        /// Checking if edge is initialized with constraint violation
-        /// For now (02.04) checks if generalization is a one-side edge.
-        /// </summary>
-        public static bool CheckEdge(Repo.IEdge edge, Repo.IRepo repo, string modelName)
+        public Constraints()
         {
-            return true; // TODO
+            this.NodesAmount = 100;
+            this.EdgesAmount = 100;
         }
 
-        public static bool AllowCreateEdge(Repo.IRepo repo, string modelName)
+        public int NodesAmount { get; set; }
+
+        public int EdgesAmount { get; set; }
+
+        public bool AllowCreateEdge(IEnumerable<IEdge> edges)
         {
-            return repo.Model(modelName).Edges.Count() < EdgesAmount;
+            return this.Check(edges.Count() + 1, this.EdgesAmount);
         }
 
-        public static bool AllowCreateNode(Repo.IRepo repo, string modelName)
+        public bool AllowCreateNode(IEnumerable<INode> nodes)
         {
-            return repo.Model(modelName).Nodes.Count() < NodesAmount;
+            return this.Check(nodes.Count() + 1, this.NodesAmount);
+        }
+
+        public bool CheckEdges(IEnumerable<IEdge> edges)
+        {
+            return this.Check(edges.Count(), this.EdgesAmount);
+        }
+
+        public bool CheckNodes(IEnumerable<INode> nodes)
+        {
+            return this.Check(nodes.Count(), this.NodesAmount);
+        }
+
+        private bool Check(int a, int b)
+        {
+            return a < b;
         }
     }
 }

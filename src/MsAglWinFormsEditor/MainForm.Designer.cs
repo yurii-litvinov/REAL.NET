@@ -326,4 +326,3 @@ namespace MsAglWinFormsEditor
         private Label widthLabel;
     }
 }
-

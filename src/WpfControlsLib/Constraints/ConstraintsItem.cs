@@ -17,6 +17,8 @@ namespace WpfControlsLib.Constraints
 
         public string ObjectType { get; set; }
 
+        public int Ammount { get; set; }
+
         public void Initialize()
         {
             var gridCol1 = new ColumnDefinition();
@@ -58,9 +60,19 @@ namespace WpfControlsLib.Constraints
         private TextBlock Text()
         {
             var text = new TextBlock();
+            var sb = new System.Text.StringBuilder(string.Empty);
             text.Width = 500;
             text.Height = 70;
-            text.Text = this.ObjectType + "; " + this.ElementType + "; ";
+            sb.Append(this.ObjectType + "; " + this.ElementType + "; ");
+
+            if (this.Ammount > 0)
+            {
+                sb.Append(" ");
+                sb.Append(this.Ammount);
+                sb.Append(";");
+            }
+
+            text.Text = sb.ToString();
             return text;
         }
     }
