@@ -74,12 +74,16 @@ namespace WpfEditor.View
         private void InitAndLaunchPlugins()
         {
             var libs = new PluginLauncher<PluginConfig>();
-            const string folder = "../../../plugins/SamplePlugin/bin";
-            var dirs = new List<string>(System.IO.Directory.GetDirectories(folder));
-            var config = new PluginConfig(null, null, this.Console, null);
-            foreach (var dir in dirs)
+            const string folder = "../../../plugins";
+            var pluginDirs = new List<string>(System.IO.Directory.GetDirectories(folder));
+            foreach (var plugindir in pluginDirs)
             {
-                libs.LaunchPlugins(dir, config);
+                var dirs = new List<string>(System.IO.Directory.GetDirectories(plugindir + "/bin"));
+                var config = new PluginConfig(this.model, null, null, this.Console, null);
+                foreach (var dir in dirs)
+                {
+                    libs.LaunchPlugins(dir, config);
+                }
             }
         }
 

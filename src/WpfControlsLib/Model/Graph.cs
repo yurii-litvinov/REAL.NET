@@ -12,16 +12,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-using System.Collections.Generic;
-using GraphX.PCL.Common;
-using WpfControlsLib.ViewModel;
-
 namespace WpfControlsLib.Model
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using GraphX.PCL.Common;
     using QuickGraph;
     using Repo;
+    using ViewModel;
 
     /// <summary>
     /// Represents diagram as GraphX graph. Wraps <see cref="Model"/> and synchronizes changes in repo and in GraphX
@@ -33,14 +32,14 @@ namespace WpfControlsLib.Model
     /// </summary>
     public class Graph
     {
-        private readonly WpfControlsLib.Model.Model model;
+        private readonly Model model;
 
-        internal Graph(WpfControlsLib.Model.Model repoModel)
+        internal Graph(Model repoModel)
         {
             this.model = repoModel;
             this.DataGraph = new BidirectionalGraph<NodeViewModel, EdgeViewModel>();
-            this.model.NewVertexInRepo += (sender, args) => this.CreateNodeWithPos(args.Node);
-            this.model.NewEdgeInRepo += (sender, args) => this.CreateEdge(args.Edge, args.PrevVer, args.CtrlVer);
+            this.model.NewVertex += (sender, args) => this.CreateNodeWithPos(args.Node);
+            this.model.NewEdge += (sender, args) => this.CreateEdge(args.Edge, args.Source, args.Target);
         }
 
         public event EventHandler DrawGraph;
@@ -48,6 +47,7 @@ namespace WpfControlsLib.Model
         public event EventHandler<ElementAddedEventArgs> ElementAdded;
 
         public event EventHandler<DataVertexArgs> AddNewVertexControl;
+
         public event EventHandler<DataEdgeArgs> AddNewEdgeControl;
 
         public BidirectionalGraph<NodeViewModel, EdgeViewModel> DataGraph { get; }
@@ -112,14 +112,18 @@ namespace WpfControlsLib.Model
             this.DrawGraph?.Invoke(this, EventArgs.Empty);
         }
 
-        public void CreateEdge(IEdge edge, NodeViewModel prevVer, NodeViewModel ctrlVer)
+        public void CreateEdge(IEdge edge, IElement prevVer, IElement ctrlVer)
         {
-            if (prevVer == null || ctrlVer == null)
-            {
-                return;
-            }
+            _ = prevVer ?? throw new ArgumentNullException(nameof(prevVer));
+            _ = ctrlVer ?? throw new ArgumentNullException(nameof(prevVer));
 
-            var newEdge = new EdgeViewModel(prevVer, ctrlVer, Convert.ToDouble(true));
+            var sourceViewModel = this.DataGraph.Vertices.FirstOrDefault(x => x.Node == prevVer);
+            var targetViewModel = this.DataGraph.Vertices.FirstOrDefault(x => x.Node == ctrlVer);
+
+            _ = sourceViewModel ?? throw new InvalidOperationException();
+            _ = targetViewModel ?? throw new InvalidOperationException();
+
+            var newEdge = new EdgeViewModel(sourceViewModel, targetViewModel, Convert.ToDouble(true));
             var args = new DataEdgeArgs
             {
                 EdgeViewModel = newEdge

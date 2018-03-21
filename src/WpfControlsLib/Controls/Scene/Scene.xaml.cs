@@ -321,7 +321,7 @@ namespace WpfControlsLib.Controls.Scene
 
         private void CreateNewNode(Repo.IElement element)
         {
-            this.controller.NewNode(element, this.model.ModelName);
+            this.controller.NewNode(element);
         }
 
         public class NodeSelectedEventArgs : EventArgs

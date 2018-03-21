@@ -22,6 +22,11 @@ namespace EditorPluginInterfaces
     public class PluginConfig
     {
         /// <summary>
+        /// Model of the editor, allows to manipulate repository and keep consistence with editor.
+        /// </summary>
+        public IModel Model { get; }
+
+        /// <summary>
         /// Scene's reference that should be given to plugin
         /// </summary>
         public IScene Scene { get; }
@@ -44,12 +49,15 @@ namespace EditorPluginInterfaces
         /// <summary>
         /// Initializes a new instance of <see cref="PluginConfig"/> 
         /// </summary>
+        /// <param name="model">Model of the editor, allows to manipulate repository and keep consistence 
+        /// with editor.</param>
         /// <param name="scene">Scene</param>
         /// <param name="toolbar">Toolbar</param>
         /// <param name="console">Console</param>
         /// <param name="palette">Palette</param>
-        public PluginConfig(IScene scene, IToolbar toolbar, IConsole console, IPalette palette)
+        public PluginConfig(IModel model, IScene scene, IToolbar toolbar, IConsole console, IPalette palette)
         {
+            this.Model = model;
             this.Scene = scene;
             this.Toolbar = toolbar;
             this.Console = console;

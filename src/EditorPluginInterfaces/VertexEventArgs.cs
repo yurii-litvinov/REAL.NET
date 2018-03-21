@@ -12,15 +12,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-namespace WpfControlsLib.Constraints
+namespace EditorPluginInterfaces
 {
-    public class ConstraintsValues
-    {
-        public string ElementType { get; set; }
+    using System;
 
-        public string MakeString()
-        {
-            return this.ElementType.ToString();
-        }
+    /// <summary>
+    /// Arguments for new vertex event.
+    /// </summary>
+    public class VertexEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Newly created node.
+        /// </summary>
+        public Repo.INode Node { get; set; }
     }
 }

@@ -53,7 +53,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EdgeEventArgs.cs" />
     <Compile Include="IConsole.cs" />
+    <Compile Include="IModel.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="IPalette.cs" />
     <Compile Include="PluginConfig.cs" />
@@ -63,6 +65,13 @@
     <Compile Include="Toolbar\ICommand.cs" />
     <Compile Include="Toolbar\IMenu.cs" />
     <Compile Include="Toolbar\IToolbar.cs" />
+    <Compile Include="VertexEventArgs.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Repo\Repo.fsproj">
+      <Project>{9e7065a4-ba5e-4752-84bf-54d5c00db60c}</Project>
+      <Name>Repo</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
