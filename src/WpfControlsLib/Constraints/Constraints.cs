@@ -14,7 +14,6 @@
  
 namespace WpfControlsLib.Constraints
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Repo;
