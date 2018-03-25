@@ -43,7 +43,7 @@ namespace WpfEditor.Model
         }
         
         public event EventHandler RelayoutGraph;
-        public event EventHandler ZoomToFeel;
+        public event EventHandler ZoomToFill;
         public event EventHandler AddVertexConnectionPoints;
 
         public event EventHandler<ElementAddedEventArgs> ElementAdded;
@@ -120,7 +120,7 @@ namespace WpfEditor.Model
                 this.ElementAdded?.Invoke(this, new ElementAddedEventArgs {Element = edge});
             }
             this.RelayoutGraph?.Invoke(this, EventArgs.Empty);
-            this.ZoomToFeel?.Invoke(this, EventArgs.Empty);
+            this.ZoomToFill?.Invoke(this, EventArgs.Empty);
             if (modelName == "GreenhouseTestModel")
             {
                 this.AddVertexConnectionPoints?.Invoke(this, EventArgs.Empty);
