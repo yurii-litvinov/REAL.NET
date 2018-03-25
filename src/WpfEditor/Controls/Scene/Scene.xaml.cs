@@ -92,7 +92,7 @@ namespace WpfEditor.Controls.Scene
             this.elementProvider = elementProvider;
             this.Graph = new Graph(model);
             this.Graph.RelayoutGraph += (sender, args) => this.scene.RelayoutGraph(true);
-            this.Graph.ZoomToFeel += (sender, args) => this.zoomControl.ZoomToFill();
+            this.Graph.ZoomToFill += (sender, args) => this.zoomControl.ZoomToFill();
             this.Graph.AddVertexConnectionPoints += (sender, args) => this.AddVertexConnectionPoints();
             this.Graph.ElementAdded += (sender, args) => this.ElementAdded?.Invoke(this, args);
             this.Graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.NodeViewModel);
@@ -115,7 +115,7 @@ namespace WpfEditor.Controls.Scene
                         foreach (var x in vertex.Value.VertexConnectionPointsList)
                         {
                             var aVCPforGH = x as StaticVertexConnectionPointForGH;
-                            if (aVCPforGH != null && aVCPforGH.IsOccupied == false && aVCPforGH.IsSource == false)
+                            if (aVCPforGH != null && !aVCPforGH.IsOccupied && !aVCPforGH.IsSource)
                             {
                                 aVCPforGH.IsOccupied = true;
                                 targetVCP = aVCPforGH;
@@ -137,7 +137,12 @@ namespace WpfEditor.Controls.Scene
 
                             var newId = vertex.Value.VertexConnectionPointsList.Last().Id + 1;
                             var vcp = new StaticVertexConnectionPointForGH()
-                            { Id = newId, IsOccupied = true, IsSource = false };
+                            {
+                                Id = newId,
+                                IsOccupied = true,
+                                IsSource = false
+                            };
+
                             var ctrl = new Border
                             { Margin = new Thickness(0, 2, 2, 0), Padding = new Thickness(0), Child = vcp };
                             ((VertexControlForGH)vertex.Value).VCPTargetRoot.Children.Add(ctrl);
@@ -152,7 +157,7 @@ namespace WpfEditor.Controls.Scene
                         foreach (var x in vertex.Value.VertexConnectionPointsList)
                         {
                             var aVCPforGH = x as StaticVertexConnectionPointForGH;
-                            if (aVCPforGH != null && aVCPforGH.IsOccupied == false && aVCPforGH.IsSource == true)
+                            if (aVCPforGH != null && !aVCPforGH.IsOccupied && aVCPforGH.IsSource)
                             {
                                 aVCPforGH.IsOccupied = true;
                                 sourceVCP = aVCPforGH;

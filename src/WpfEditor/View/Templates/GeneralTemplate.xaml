@@ -44,7 +44,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <StackPanel Name="PART_target_vcproot" Grid.Column="0">
+            <StackPanel Name="Target_vcproot" Grid.Column="0">
                 <Border Margin="0,2,0,0" Padding="0">
                     <xx:StaticVertexConnectionPointForGH Id="1" IsOccupied="False" IsSource="False"/>
                 </Border>
@@ -53,7 +53,7 @@
                 <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill"/>
                 <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" />
             </StackPanel>
-            <StackPanel Name="PART_source_vcproot" Grid.Column="2">
+            <StackPanel Name="Source_vcproot" Grid.Column="2">
                 <Border Margin="0,30,0,0" Padding="0">
                     <xx:StaticVertexConnectionPointForGH Id="2" IsOccupied="False" IsSource="True"/>
                 </Border>
@@ -71,7 +71,7 @@
                 <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill"/>
                 <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" />
             </StackPanel>
-            <StackPanel Name="PART_source_vcproot" Grid.Column="1">
+            <StackPanel Name="Source_vcproot" Grid.Column="1">
                 <Border Margin="0,4,0,0" Padding="0">
                     <xx:StaticVertexConnectionPointForGH Id="1" IsOccupied="False" IsSource="True"/>
                 </Border>
@@ -85,7 +85,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <StackPanel Name="PART_target_vcproot" Grid.Column="0">
+            <StackPanel Name="Target_vcproot" Grid.Column="0">
                 <Border Margin="0,4,0,0" Padding="0">
                     <xx:StaticVertexConnectionPointForGH Id="1" IsOccupied="False" IsSource="False"/>
                 </Border>
@@ -104,7 +104,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <StackPanel Name="PART_target_vcproot" Grid.Column="0">
+            <StackPanel Name="Target_vcproot" Grid.Column="0">
                 <Border Margin="0,4,0,0" Padding="0">
                     <xx:StaticVertexConnectionPointForGH Id="1" IsOccupied="False" IsSource="False"/>
                 </Border>
@@ -113,7 +113,7 @@
                 <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill"/>
                 <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" />
             </StackPanel>
-            <StackPanel Name="PART_source_vcproot" Grid.Column="2">
+            <StackPanel Name="Source_vcproot" Grid.Column="2">
                 <Border Margin="0,4,0,0" Padding="0">
                     <xx:StaticVertexConnectionPointForGH Id="2" IsOccupied="False" IsSource="True"/>
                 </Border>

@@ -1,0 +1,189 @@
+﻿<#@ template language="C#" debug="True" #>
+<#@ output extension="cs" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ assembly name="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Core.dll" #>
+<#@ assembly name="src\Repo\bin\Debug\Repo.dll" #>
+namespace Generation
+{
+    using System;
+	using System.Linq;
+	using System.Reactive;
+    using System.Reactive.Linq;
+
+	public class GeneratedCode
+    {
+<#
+List<Repo.INode> modelNodes = new List<Repo.INode>();
+Repo.IRepo r = global::Repo.RepoFactory.CreateRepo();
+foreach (var x in r.Model("GreenhouseTestModel").Nodes) {
+	modelNodes.Add(x);
+}
+	
+foreach (var x in modelNodes) { #>
+		private static <#= classOfElement(x.Name) #> element<#= modelNodes.IndexOf(x)#>;
+<# } #>
+
+		private static void Main(string[] args)
+		{
+<# 
+foreach (var x in modelNodes) { #>
+
+			element<#= modelNodes.IndexOf(x)#> = new <#= classOfElement(x.Name) #>(<#= modelNodes.IndexOf(x)#>);
+	<# 
+	if (classOfElement(x.Name) == "Interval") {
+		var minEnum = x.Attributes.Where(y => y.Name == "min").AsEnumerable();
+		var maxEnum = x.Attributes.Where(y => y.Name == "max").AsEnumerable();
+        if (minEnum.Any() && maxEnum.Any())
+        {
+			string min = minEnum.First().StringValue ?? "null";
+			string max = maxEnum.First().StringValue ?? "null"; #>
+
+			element<#= modelNodes.IndexOf(x)#>.Min = <#= min #>;
+			element<#= modelNodes.IndexOf(x)#>.Max = <#= max #>;
+<#
+        }
+	}
+	
+	if (classOfElement(x.Name) == "Operation") { #>
+
+			element<#= modelNodes.IndexOf(x)#>.Kind = "<#= kindOfOperation(x.Name) #>";
+<# 	} 
+}#>
+
+<#
+bool[,] sourceOrTarget = new bool[modelNodes.Count, 2];
+
+foreach (var x in r.Model("GreenhouseTestModel").Edges) {
+    sourceOrTarget[modelNodes.IndexOf((Repo.INode)x.From), 0] = true;
+	sourceOrTarget[modelNodes.IndexOf((Repo.INode)x.To), 1] = true;
+	if (classOfElement(x.To.Name) == "Operation") { #>
+
+			element<#= modelNodes.IndexOf((Repo.INode)x.To)#>.IncomingValues.Add(<#= modelNodes.IndexOf((Repo.INode)x.From)#>, null);
+	<# }
+}
+#>
+// index of the element and index of the observer/observable which is made on it's basis are the same 
+<#
+foreach (int i in System.Linq.Enumerable.Range(0, modelNodes.Count))
+{ #>
+<#
+	if (sourceOrTarget[i, 1])
+	{ #>
+
+			var observer<#= i #> = Observer.Create<int>(x => element<#= i #>.Action(x));
+	<# } #>
+<# 
+	if (sourceOrTarget[i, 0])
+	{ #>
+
+			IObservable<int> observable<#= i #> =
+						Observable.FromEventPattern<EventHandler<int>, int>(
+							h => element<#= i #>.Event += h,
+							h => element<#= i #>.Event -= h)
+							.Select(e => e.EventArgs)
+							.Synchronize();
+<# 
+	} 
+} 
+
+int j = 0;
+foreach (var x in r.Model("GreenhouseTestModel").Edges) 
+{ 
+	var source = x.From as Repo.INode;
+	var target = x.To as Repo.INode; #>
+			var sub<#= j #> = observable<#= modelNodes.IndexOf(source) #>.Subscribe(observer<#= modelNodes.IndexOf(target) #>);
+<#
+	j++;
+} #>
+
+			ManualSimulator();
+        }
+		
+		private static void ManualSimulator()
+        {
+            while (true)
+            {
+
+                Console.Write("4 -- for sensor4;    5 -- for sensor5: ");
+                int value;
+                int num;
+                Sensor s = null;
+                if (int.TryParse(Console.ReadLine(), out num))
+                {
+                    if (num == 4)
+                    {
+                        s = element4;
+                    }
+                    else
+                    {
+                        s = element5;
+                    }
+
+                    Console.Write("enter sensor value: ");
+                    
+                    if (s != null && int.TryParse(Console.ReadLine(), out value))
+                    {
+                        s.Action(value);
+                    }
+                }  
+            }
+        }
+    }
+}
+
+<#+ 
+string classOfElement(string name)
+{
+	switch(name)
+	{
+		case "aOpenWindow":
+			return "Actuator";
+		case "aCloseWindow":
+			return "Actuator";
+		case "aPourSoil":
+			return "Actuator";
+		case "aAirTemperature":
+			return "Sensor";
+		case "aSoilTemperature":
+			return "Sensor";
+		case "aInterval":
+			return "Interval";
+		case "aAndOperation":
+			return "Operation";
+		case "aOrOperation":
+			return "Operation";
+		default:
+			return "Sensor";
+	}
+}
+#>
+
+<#+ 
+string kindOfOperation(string name)
+{
+	switch(name)
+	{
+		case "aAndOperation":
+			return "And";
+		case "aOrOperation":
+			return "Or";
+		default:
+			return "And";
+	}
+}
+#>
+
+<#+
+private int? ToNullableInt(string s)
+{
+	int i;
+	if (int.TryParse(s, out i))
+	{
+		return i;
+	}
+	return null;
+}
+#>
