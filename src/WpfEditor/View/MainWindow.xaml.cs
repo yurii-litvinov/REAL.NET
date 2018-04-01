@@ -102,7 +102,7 @@ namespace WpfEditor.View
 
             if (!this.model.ConstraintsCheck())
             {
-                this.Console.ReportError(this.model.ErrorMsg);
+                this.Console.ReportError(this.model.Constraints.ErrorMsg);
             }
         }
 

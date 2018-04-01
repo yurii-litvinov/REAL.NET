@@ -47,24 +47,14 @@ namespace WpfControlsLib.Model
         // TODO name
         public bool ConstraintsCheck()
         {
-            if (this.Constraints.CheckEdges(this.Repo.Model(this.ModelName).Edges))
-            {
-                this.ErrorMsg = "Number of edges exceeds allowed.";
-                return false;
-            }
-
-            if (this.Constraints.CheckNodes(this.Repo.Model(this.ModelName).Nodes))
-            {
-                this.ErrorMsg = "Number of nodes exceeds allowed.";
-                return false;
-            }
-
+            this.Constraints.Check(this.Repo.Model(this.ModelName).Edges, this.Repo.Model(this.ModelName).Nodes);
             return true;
+
         }
 
         public void CreateNode(Repo.IElement element)
         {
-            if (this.Constraints.AllowCreateNode(this.Repo.Model(this.ModelName).Nodes))
+            if (this.Constraints.AllowCreateOrExistNode(this.Repo.Model(this.ModelName).Nodes, "a" + element.Name.ToString())) // TODO something more pretty than +"a"
             {
                 var model = this.Repo.Model(this.ModelName);
                 var newNode = model.CreateElement(element) as Repo.INode;
@@ -72,19 +62,23 @@ namespace WpfControlsLib.Model
             }
             else
             {
+                this.ErrorMsg = "Can't create new node according to constraints.";
+
                 // TODO
             }
         }
 
         public void CreateEdge(Repo.IEdge edge, Repo.IElement prevVer, Repo.IElement ctrlVer)
         {
-            if (this.Constraints.AllowCreateEdge(this.Repo.Model(this.ModelName).Edges))
+            if (this.Constraints.AllowCreateOrExistEdge(this.Repo.Model(this.ModelName).Edges, prevVer.Name.ToString(), ctrlVer.Name.ToString()))
             {
                 // TODO: Well, actually create edge.
                 this.RaiseNewEdge(edge, prevVer, ctrlVer);
             }
             else
             {
+                this.ErrorMsg = "Can't create new edge according to constraints.";
+
                 // TODO
             }
         }

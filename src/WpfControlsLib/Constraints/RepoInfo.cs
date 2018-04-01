@@ -41,6 +41,7 @@ namespace WpfControlsLib.Constraints
         public List<string> GetNodeTypes()
         {
             var types = new List<string>();
+            types.Add(string.Empty);
             types.Add("All");
             foreach (var node in this.repo.Model(this.modelName).Nodes)
             {
@@ -57,6 +58,7 @@ namespace WpfControlsLib.Constraints
         public List<string> GetEdgeTypes()
         {
             var types = new List<string>();
+            types.Add(string.Empty);
             types.Add("All");
             foreach (var edge in this.repo.Model(this.modelName).Edges)
             {
