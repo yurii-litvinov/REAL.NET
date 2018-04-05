@@ -75,7 +75,7 @@
 
     <ControlTemplate x:Key="AssociationEdge" TargetType="{x:Type controls:EdgeControl}">
         <Grid>
-            <Path Stroke="Blue"
+            <Path Stroke="{Binding Color}"
                 StrokeThickness="2"
                 ToolTip="{TemplateBinding ToolTip}" 
                 x:Name="PART_edgePath"/>

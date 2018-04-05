@@ -1,17 +1,20 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using GraphX.Measure;
-using GraphX.PCL.Common.Interfaces;
-using GraphX.PCL.Common.Models;
-
-namespace WpfControlsLib.ViewModel
+﻿namespace WpfControlsLib.ViewModel
 {
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Windows.Media;
+    using GraphX.Measure;
+    using GraphX.PCL.Common.Interfaces;
+    using GraphX.PCL.Common.Models;
+
     public class EdgeViewModel : EdgeBase<NodeViewModel>, INotifyPropertyChanged, IGraphXEdge<NodeViewModel>
     {
         private EdgeTypeEnum edgeType = EdgeTypeEnum.Association;
         private IList<AttributeViewModel> attributes = new List<AttributeViewModel>();
 
         private string text;
+        private SolidColorBrush brush = new SolidColorBrush(Colors.Blue);
+        private bool isAllowed = true;
 
         public EdgeViewModel(NodeViewModel source, NodeViewModel target, double weight = 1)
             : base(source, target, weight)
@@ -49,6 +52,28 @@ namespace WpfControlsLib.ViewModel
             {
                 this.text = value;
                 this.OnPropertyChanged(nameof(this.Text));
+            }
+        }
+
+        public bool IsAllowed
+        {
+            get => this.isAllowed;
+
+            set
+            {
+                this.isAllowed = value;
+                this.Color = value ? new SolidColorBrush(Colors.Blue) : new SolidColorBrush(Colors.Red);
+            }
+        }
+
+        public SolidColorBrush Color
+        {
+            get => this.brush;
+
+            set
+            {
+                this.brush = value;
+                this.OnPropertyChanged(nameof(this.Color));
             }
         }
 
