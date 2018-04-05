@@ -10,7 +10,7 @@
         Title="ConstraintsWindow" Height="346" Width="670">
     <Window.Resources>
         <DataTemplate x:Key="TypeClass">
-            <TextBlock Text="{Binding ElementType}"/>
+            <TextBlock Text="{Binding Value}"/>
         </DataTemplate>
     </Window.Resources>
     <Grid>
@@ -24,18 +24,18 @@
                     Text="Object Type: " 
                     Margin="10,10,0,0" 
                     Height="Auto"/>
-                <ComboBox x:Name="ObjType1"
+            <ComboBox x:Name="ObjType"
                     Grid.Column="0"
                     HorizontalAlignment="Left"
                     Margin="10,3,0,0"
                     Height="Auto"
                     VerticalAlignment="Top"
                     Width="159" SelectionChanged="ObjType1_SelectionChanged" Grid.ColumnSpan="2">
-                    <ComboBoxItem x:Name="edge1" Content="EdgeViewModel"/>
-                    <ComboBoxItem x:Name="node1" Content="Node"/>
-                </ComboBox>
+                <ComboBoxItem x:Name="edge" Content="Edge"/>
+                <ComboBoxItem x:Name="node" Content="Node"/>
+            </ComboBox>
 
-                <Grid>
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
@@ -53,9 +53,7 @@
                         Margin="10,30,0,0"
                         Height="Auto"
                         VerticalAlignment="Top"
-                        Width="159"
-                        SelectedItem="{Binding Path=SelectedType1, Mode=TwoWay}"
-                        ItemTemplate="{StaticResource TypeClass}"/>
+                        Width="159"/>
 
                 <TextBlock x:Name="arrowLabel"
                         Grid.Column="1"
@@ -76,24 +74,76 @@
                         Margin="17,30,0,0"
                         Height="Auto"
                         VerticalAlignment="Top"
-                        Width="159"
-                        SelectedItem="{Binding Path=SelectedType2, Mode=TwoWay}"
-                        ItemTemplate="{StaticResource TypeClass}" Grid.ColumnSpan="2"/>
+                        Width="159" 
+                        Grid.ColumnSpan="2"/>
             </Grid>
 
-            <TextBlock x:Name="amountLabel" 
-                    Text="Max amount:" 
+            <TextBlock Text="Attribute:"
+                           Margin="10,10,0,0" 
+                           Height="Auto" Grid.Column="2"/>
+            <ComboBox x:Name="Attributes"
+                        Grid.Column = "2"
+                        SelectionChanged="Attributes_SelectionChanged"
+                        HorizontalAlignment="Left"
+                        Margin="10,0,0,0" 
+                        Height="Auto"
+                        VerticalAlignment="Top"
+                        Width="159"
+                        Grid.ColumnSpan="2"/>
+
+            <TextBlock x:Name="valueLabel" 
+                    Text="Value or amount range:" 
                     Margin="10,10,0,0" 
                     Height="Auto"
                     Visibility="Visible" Grid.ColumnSpan="2"/>
 
-            <TextBox x:Name="amountBox" 
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="fromBox" 
+                     Grid.Column="0"
                      FontSize="12"
                      Margin="10,0,0,0" 
                      Height="Auto"
-                     Width="147"
+                     Width="105"
                      HorizontalAlignment="Left"
                      Visibility="Visible"/>
+                <ComboBox x:Name="Values"
+                        Grid.Column="0"
+                        Visibility="Hidden"
+                        SelectionChanged="BooleanValues_SelectionChanged"
+                        HorizontalAlignment="Left"
+                        Margin="10,0,0,0" 
+                        Height="Auto"
+                        VerticalAlignment="Top"
+                        Width="159"
+                        Grid.ColumnSpan="2">
+                    <ComboBoxItem x:Name="true" Content="true"/>
+                    <ComboBoxItem x:Name="false" Content="false"/>
+                </ComboBox>
+                          
+                <TextBlock x:Name="rangeLabel"
+                        Text="⩽ x ⩽"
+                        FontSize="15"
+                        Visibility="Visible" Margin="119,0,42,0"/>
+                <TextBox x:Name="toBox"
+                     FontSize="12" 
+                     Height="Auto"
+                     Width="105"
+                     HorizontalAlignment="Left"
+                     Visibility="Visible" Grid.ColumnSpan="3" Margin="161,0,0,0"/>
+            </Grid>
+            <TextBox x:Name="stringBox" 
+                     Grid.Column="0"
+                     FontSize="12"
+                     Margin="10,-22,0,0" 
+                     Height="Auto"
+                     Width="300"
+                     HorizontalAlignment="Left"
+                     Visibility="Hidden"/>
             <Button x:Name="createConstraint"
                     Content="Create" 
                     Margin="10,10,0,0"
@@ -103,9 +153,10 @@
                     Click="CreateConstraint_Click"
                     />
             <TextBlock x:Name="errorLabel" 
+                    TextWrapping="WrapWithOverflow"
                     Text="Error:" 
-                    Margin="10,10,0,0" 
-                    Height="Auto"
+                    Margin="10,10,10,0" 
+                    Height="61"
                     Visibility="Hidden"/>
         </StackPanel>
         <GridSplitter Grid.Column="1" 
@@ -119,11 +170,12 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid Margin="10,0,10,5"
-                                  Height="60">
+                                  Height="75">
                                 <Border BorderBrush="SlateGray" BorderThickness="1">
-                                    <Grid Margin="0,0,0,0" 
-                                          Height="60"
-                                          Background="GhostWhite" >
+                                    <Grid x:Name="innerGrid" 
+                                          Margin="0,0,0,0" 
+                                          Height="75"
+                                          Background="GhostWhite">
                                         <TextBlock Text="{Binding Output}" 
                                                    Margin="5,0,0,0" 
                                                    VerticalAlignment="Center"/>

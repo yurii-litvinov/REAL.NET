@@ -68,8 +68,6 @@ namespace WpfControlsLib.Model
 
             foreach (var edge in model.Edges)
             {
-                /* var isViolation = Constraints.CheckEdge(edgeViewModel, this.repo, modelName); */
-
                 var sourceNode = edge.From as INode;
                 var targetNode = edge.To as INode;
                 if (sourceNode == null || targetNode == null)
@@ -92,12 +90,23 @@ namespace WpfControlsLib.Model
                 {
                     EdgeType = EdgeViewModel.EdgeTypeEnum.Association
                 };
+                this.model.EdgesList.Add(newEdge);
+
                 var attributeInfos = edge.Attributes.Select(x => new AttributeViewModel(x, x.Name, x.Kind.ToString())
                 {
                     Value = x.StringValue
                 });
+
                 var attributes = attributeInfos as IList<AttributeViewModel> ?? attributeInfos.ToList();
-                attributes.ForEach(x => newEdge.Attributes.Add(x));
+                foreach (var x in attributes)
+                {
+                    newEdge.Attributes.Add(x);
+                    x.OnAttributeChange += (sender, args) => 
+                    {
+                        this.model.OnEdgeAttributeChanged(newEdge, sender as AttributeViewModel, args.NewValue);
+                    };
+                }
+
                 var value = attributes.SingleOrDefault(x => x.Name == "Value");
                 if (value != null)
                 {
@@ -124,6 +133,8 @@ namespace WpfControlsLib.Model
             _ = targetViewModel ?? throw new InvalidOperationException();
 
             var newEdge = new EdgeViewModel(sourceViewModel, targetViewModel, Convert.ToDouble(true));
+            this.model.EdgesList.Add(newEdge);
+            newEdge.IsAllowed = this.model.EdgeIsAllowed(prevVer, ctrlVer);
             var args = new DataEdgeArgs
             {
                 EdgeViewModel = newEdge
@@ -139,13 +150,22 @@ namespace WpfControlsLib.Model
                 Node = node,
                 Picture = node.Class.Shape
             };
-
+            this.model.NodesList.Add(vertex);
+            vertex.IsAllowed = this.model.NodeIsAllowed(vertex.Name);
             var attributeInfos = node.Attributes.Select(x => new AttributeViewModel(x, x.Name, x.Kind.ToString())
             {
                 Value = x.StringValue
             });
 
-            attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
+            foreach (var x in attributeInfos.ToList())
+            {
+                vertex.Attributes.Add(x);
+                x.OnAttributeChange += (sender, args1) =>
+                {
+                    this.model.OnNodeAttributeChanged(vertex, sender as AttributeViewModel, args1.NewValue);
+                };
+            }
+
             var args = new DataVertexArgs
             {
                 DataVert = vertex
@@ -161,13 +181,22 @@ namespace WpfControlsLib.Model
                 Node = node,
                 Picture = node.Class.Shape
             };
-
+            this.model.NodesList.Add(vertex);
+            vertex.IsAllowed = this.model.NodeIsAllowed(vertex.Name);
             var attributeInfos = node.Attributes.Select(x => new AttributeViewModel(x, x.Name, x.Kind.ToString())
             {
                 Value = x.StringValue
             });
 
-            attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
+            foreach (var x in attributeInfos.ToList())
+            {
+                vertex.Attributes.Add(x);
+                x.OnAttributeChange += (sender, args) => 
+                {
+                    this.model.OnNodeAttributeChanged(vertex, sender as AttributeViewModel, args.NewValue);
+                };
+            }
+
             this.DataGraph.AddVertex(vertex);
             this.ElementAdded?.Invoke(this, new ElementAddedEventArgs { Element = node });
         }

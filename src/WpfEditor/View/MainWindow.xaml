@@ -28,7 +28,7 @@
     Title="REAL.NET"
     mc:Ignorable="d"
     Height="685" Width="936">
-    
+
     <Grid>
         <Grid.Resources>
             <ResourceDictionary>
@@ -93,10 +93,16 @@
 
                 <DataGrid x:Name="attributesView" Grid.Row="4" ItemsSource="{Binding Attributes}" AutoGenerateColumns="False" CellEditEnding="AttributesViewCellEditEnding">
                     <DataGrid.Columns>
+                        
                         <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Name}"/>
                         <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Type}"/>
                         <DataGridTextColumn Header="Value" IsReadOnly="False" Binding="{Binding Value}"/>
                     </DataGrid.Columns>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Foreground" Value="{Binding TextColor}"/>
+                        </Style>
+                    </DataGrid.RowStyle>
                 </DataGrid>
 
                 <Button 
@@ -104,7 +110,13 @@
                     Content="Constraints"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Bottom"
-                    Click="ConstraintsButtonClick" Height="26"/>
+                    Click="ConstraintsButtonClick" Height="20" Margin="0,0,0,-5"/>
+                <Button 
+                    Grid.Row="5"
+                    Content="Check"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    Click="CheckButtonClick" Height="20" Margin="0,0,0,-26"/>
             </Grid>
 
         </DockPanel>
