@@ -34,8 +34,6 @@ namespace WpfEditor.View
     {
         private readonly WpfControlsLib.Model.Model model;
 
-        public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();
-
         public MainWindow()
         {
             // TODO: Fix sequential coupling here.
@@ -61,6 +59,8 @@ namespace WpfEditor.View
 
             this.InitAndLaunchPlugins();
         }
+
+        public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();
 
         private void OnModelSelectionChanged(object sender, ModelSelector.ModelSelectedEventArgs args)
         {
@@ -98,11 +98,22 @@ namespace WpfEditor.View
         private void ConstraintsButtonClick(object sender, RoutedEventArgs e)
         {
             var constraintsWindow = new ConstraintsWindow(this.model);
+
             constraintsWindow.ShowDialog();
 
+            this.CheckButtonClick(sender, e);
+        }
+
+        private void CheckButtonClick(object sender, RoutedEventArgs e)
+        {
             if (!this.model.ConstraintsCheck())
             {
-                this.Console.ReportError(this.model.ErrorMsg);
+                this.Console.ReportError(this.model.Constraints.ErrorMsg);
+                this.Console.SendMessage("Constraints check failed, please, check the error console.");
+            }
+            else
+            {
+                this.Console.SendMessage("Constraints check was successful, no violations detected.");
             }
         }
 

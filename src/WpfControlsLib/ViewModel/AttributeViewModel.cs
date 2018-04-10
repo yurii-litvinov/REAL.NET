@@ -12,17 +12,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-using Repo;
-
 namespace WpfControlsLib.ViewModel
 {
+    using System.ComponentModel;
+    using System.Windows.Media;
+    using Repo;
+
     /// <summary>
     /// View model for an attribute to be displayed in property editor.
     /// </summary>
-    public class AttributeViewModel
+    public class AttributeViewModel : INotifyPropertyChanged
     {
-        private string value;
         private readonly IAttribute attribute;
+        private string value;
+        private bool hasAllowedValue = true;
+        private Brush textColor = Brushes.Black;
 
         public AttributeViewModel(IAttribute attribute, string name, string type)
         {
@@ -30,6 +34,10 @@ namespace WpfControlsLib.ViewModel
             this.Name = name;
             this.Type = type;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public event System.EventHandler<AttributeEventArgs> OnAttributeChange;
 
         public string Name { get; }
 
@@ -43,7 +51,39 @@ namespace WpfControlsLib.ViewModel
             {
                 this.attribute.StringValue = value;
                 this.value = value;
+                var args = new AttributeEventArgs
+                {
+                    NewValue = value
+                };
+                this.OnAttributeChange?.Invoke(this, args);
             }
+        }
+
+        public bool HasAllowedValue
+        {
+            get => this.hasAllowedValue;
+
+            set
+            {
+                this.hasAllowedValue = value;
+                this.TextColor = value ? Brushes.Black : Brushes.Red;
+            }
+        }
+
+        public Brush TextColor
+        {
+            get => this.textColor;
+
+            set
+            {
+                this.textColor = value;
+                this.OnPropertyChanged(nameof(this.TextColor));
+            }
+        }
+
+        public void OnPropertyChanged(string name = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }
