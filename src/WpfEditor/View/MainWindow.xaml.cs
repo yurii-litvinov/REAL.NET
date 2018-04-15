@@ -57,7 +57,9 @@ namespace WpfEditor.View
             var libs = new PluginLauncher<PluginConfig>();
             const string folder = "../../../plugins/SamplePlugin/bin";
             var dirs = new List<string>(System.IO.Directory.GetDirectories(folder));
-            var config = new PluginConfig(null, null, this.Console, null);
+            var name = this.model.ModelName;
+            var repoModel = this.model.Repo.Model(name);
+            var config = new PluginConfig(null, null, this.Console, null, repoModel);
             foreach (var dir in dirs)
             {
                 libs.LaunchPlugins(dir, config);

@@ -20,6 +20,7 @@ namespace PluginLibrary.Tests
     using NSubstitute;
     using NUnit.Framework;
     using PluginManager;
+    using Repo;
 
     [TestFixture]
     public class PluginLaunchTest
@@ -31,7 +32,11 @@ namespace PluginLibrary.Tests
             const string folder = "src/plugins/SamplePlugin/bin";
             var dirs = new List<string>(Directory.GetDirectories(folder));
             var console = Substitute.For<IConsole>();
-            var config = new PluginConfig(null, null, console, null);
+            var model = Substitute.For<IModel>();
+            var element = Substitute.For<IElement>();
+            element.Name.ReturnsForAnyArgs("SomeName");
+            model.Elements.ReturnsForAnyArgs(new List<IElement>{ element });
+            var config = new PluginConfig(null, null, console, null, model);
             foreach (var dir in dirs)
             {
                 libs.LaunchPlugins(dir, config);
