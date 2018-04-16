@@ -44,6 +44,7 @@ namespace AirSim.AirSimLib
             {
                 Execution.Exec.ExecuteNode(curNode, client);
                 curNode = Execution.Exec.GetNextNode(curNode, client, programGraph, writeToConsole);
+                client.GetImage();
                 if (curNode == null)
                     return;
                 writeToConsole($"Node {curNode.Name} done");
@@ -126,7 +127,12 @@ namespace AirSim.AirSimLib
         private class MoveNode : NodeExecution
         {
             public override void ExecuteNode(NodeViewModel node, MultirotorClient client)
-                => client.MoveByVelocityZ(float.Parse(node.Attributes[0].Value));
+            {
+                var x = client.GetDistance();
+                var y = client.GetDistanceByImage();
+                client.GetPos();
+                client.MoveByVelocityZ(float.Parse(node.Attributes[0].Value));
+            }
         }
 
         private class LandNode : NodeExecution
@@ -170,7 +176,12 @@ namespace AirSim.AirSimLib
                         return " + conditionString + @";
                     }
                 }";
-                return bool.Parse(this.EvalCode("Code", "Exe", sourceCode, new object[] { client }));
+                bool ans = false;
+                if (!bool.TryParse(this.EvalCode("Code", "Exe", sourceCode, new object[] { client }), out ans))
+                {
+                    return true;
+                }
+                return ans;
             }
 
             private string EvalCode(string typeName, string methodName, string sourceCode, object[] args)
