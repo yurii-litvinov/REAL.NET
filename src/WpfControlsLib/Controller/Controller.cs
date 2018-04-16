@@ -12,11 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-using GraphX.Controls;
-using WpfControlsLib.ViewModel;
-
 namespace WpfControlsLib.Controller
 {
+    using GraphX.Controls;
+    using ViewModel;
+
     /// <summary>
     /// Controller in MVC architecture. Supposed to be handling commands, but for now it modifies model
     /// by itself.
@@ -30,14 +30,17 @@ namespace WpfControlsLib.Controller
             this.model = model;
         }
 
-        public void NewNode(Repo.IElement node, string modelName)
+        public void NewNode(Repo.IElement node)
         {
-            this.model.NewNode(node, modelName);
+            this.model.CreateNode(node);
         }
 
         public void NewEdge(Repo.IElement edge, VertexControl prevVer, VertexControl ctrlVer)
         {
-            this.model.NewEdge(edge as Repo.IEdge, prevVer?.Vertex as NodeViewModel, ctrlVer?.Vertex as NodeViewModel);
+            this.model.CreateEdge(
+                edge as Repo.IEdge,
+                (prevVer?.Vertex as NodeViewModel)?.Node,
+                (ctrlVer?.Vertex as NodeViewModel)?.Node);
         }
     }
 }

@@ -15,7 +15,7 @@
 namespace WpfControlsLib.Model
 {
     using System;
-    using WpfControlsLib.ViewModel;
+    using EditorPluginInterfaces;
 
     /// <summary>
     /// Model in MVC architecture. Wraps repository, provides operations like adding or removing models, edges and
@@ -24,19 +24,19 @@ namespace WpfControlsLib.Model
     /// This class is a ground truth about visual model currently edited and is supposed to be used by all tools and
     /// parts of an editor who need to listen for visual model changes and/or modify visual model.
     /// </summary>
-    public class Model
+    public class Model : IModel
     {
         public Model()
         {
             this.Repo = global::Repo.RepoFactory.CreateRepo();
-            this.Constraints = new WpfControlsLib.Constraints.Constraints();
+            this.Constraints = new Constraints.Constraints();
         }
 
-        public event EventHandler<VertexEventArgs> NewVertexInRepo;
+        public event EventHandler<VertexEventArgs> NewVertex;
 
-        public event EventHandler<EdgeEventArgs> NewEdgeInRepo;
+        public event EventHandler<EdgeEventArgs> NewEdge;
 
-        public WpfControlsLib.Constraints.Constraints Constraints { get; set; }
+        public Constraints.Constraints Constraints { get; set; }
 
         public string ModelName { get; set; }
 
@@ -62,13 +62,13 @@ namespace WpfControlsLib.Model
             return true;
         }
 
-        public void NewNode(Repo.IElement element, string modelName)
+        public void CreateNode(Repo.IElement element)
         {
             if (this.Constraints.AllowCreateNode(this.Repo.Model(this.ModelName).Nodes))
             {
-                var model = this.Repo.Model(modelName);
+                var model = this.Repo.Model(this.ModelName);
                 var newNode = model.CreateElement(element) as Repo.INode;
-                this.RaiseNewVertexInRepo(newNode);
+                this.RaiseNewVertex(newNode);
             }
             else
             {
@@ -76,11 +76,12 @@ namespace WpfControlsLib.Model
             }
         }
 
-        public void NewEdge(Repo.IEdge edge, NodeViewModel prevVer, NodeViewModel ctrlVer)
+        public void CreateEdge(Repo.IEdge edge, Repo.IElement prevVer, Repo.IElement ctrlVer)
         {
             if (this.Constraints.AllowCreateEdge(this.Repo.Model(this.ModelName).Edges))
             {
-                this.RaiseNewEdgeInRepo(edge, prevVer, ctrlVer);
+                // TODO: Well, actually create edge.
+                this.RaiseNewEdge(edge, prevVer, ctrlVer);
             }
             else
             {
@@ -88,38 +89,24 @@ namespace WpfControlsLib.Model
             }
         }
 
-        private void RaiseNewVertexInRepo(Repo.INode node)
+        private void RaiseNewVertex(Repo.INode node)
         {
             var args = new VertexEventArgs
             {
                 Node = node
             };
-            this.NewVertexInRepo?.Invoke(this, args);
+            this.NewVertex?.Invoke(this, args);
         }
 
-        private void RaiseNewEdgeInRepo(Repo.IEdge edge, NodeViewModel prevVer, NodeViewModel ctrlVer)
+        private void RaiseNewEdge(Repo.IEdge edge, Repo.IElement prevVer, Repo.IElement ctrlVer)
         {
             var args = new EdgeEventArgs
             {
                 Edge = edge,
-                PrevVer = prevVer,
-                CtrlVer = ctrlVer
+                Source = prevVer,
+                Target = ctrlVer
             };
-            this.NewEdgeInRepo?.Invoke(this, args);
-        }
-
-        public class VertexEventArgs : EventArgs
-        {
-            public Repo.INode Node { get; set; }
-        }
-
-        public class EdgeEventArgs : EventArgs
-        {
-            public Repo.IEdge Edge { get; set; }
-
-            public NodeViewModel PrevVer { get; set; }
-
-            public NodeViewModel CtrlVer { get; set; }
+            this.NewEdge?.Invoke(this, args);
         }
     }
 }

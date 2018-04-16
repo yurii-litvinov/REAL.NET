@@ -80,7 +80,7 @@ namespace AirSim.View
             var libs = new PluginLauncher<PluginConfig>();
             const string folder = "../../../plugins/SamplePlugin/bin";
             var dirs = new List<string>(System.IO.Directory.GetDirectories(folder));
-            var config = new PluginConfig(null, null, this.Console, null);
+            var config = new PluginConfig(this.model, null, null, this.Console, null);
             foreach (var dir in dirs)
             {
                 libs.LaunchPlugins(dir, config);
