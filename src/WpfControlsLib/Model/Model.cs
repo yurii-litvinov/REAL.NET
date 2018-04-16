@@ -80,13 +80,22 @@ namespace WpfControlsLib.Model
         {
             if (this.Constraints.AllowCreateEdge(this.Repo.Model(this.ModelName).Edges))
             {
-                // TODO: Well, actually create edge.
-                this.RaiseNewEdge(edge, prevVer, ctrlVer);
+                var model = this.Repo.Model(this.ModelName);
+                var newEdge = model.CreateElement(edge as Repo.IElement) as Repo.IEdge;
+                newEdge.From = prevVer;
+                newEdge.To = ctrlVer;
+                this.RaiseNewEdge(newEdge, newEdge.From, newEdge.To);
             }
             else
             {
                 // TODO
             }
+        }
+
+        public void RemoveElement(Repo.IElement element)
+        {
+            var model = this.Repo.Model(this.ModelName);
+            model.DeleteElement(element);
         }
 
         private void RaiseNewVertex(Repo.INode node)

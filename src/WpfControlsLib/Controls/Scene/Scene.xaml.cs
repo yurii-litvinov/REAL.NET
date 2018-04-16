@@ -47,6 +47,7 @@ namespace WpfControlsLib.Controls.Scene
         public event EventHandler<NodeSelectedEventArgs> NodeSelected;
         public event EventHandler<EdgeSelectedEventArgs> EdgeSelected;
         public event EventHandler<Graph.ElementAddedEventArgs> ElementAdded;
+        public event EventHandler<Graph.ElementRemovedEventArgs> ElementRemoved;
 
         public Scene()
         {
@@ -253,13 +254,19 @@ namespace WpfControlsLib.Controls.Scene
 
         private void MenuItemClickVert(object sender, EventArgs e)
         {
-            this.Graph.DataGraph.RemoveVertex(this.ctrlVer.GetDataVertex<NodeViewModel>());
+            var vertex = this.ctrlVer.GetDataVertex<NodeViewModel>();
+            this.controller.RemoveElement(vertex.Node);
+            this.ElementRemoved?.Invoke(this, new Graph.ElementRemovedEventArgs { Element = vertex.Node as Repo.IElement });
+            this.Graph.DataGraph.RemoveVertex(vertex);
             this.DrawGraph();
         }
 
         private void MenuItemClickEdge(object sender, EventArgs e)
         {
-            this.Graph.DataGraph.RemoveEdge(this.ctrlEdg.GetDataEdge<EdgeViewModel>());
+            var edge = this.ctrlEdg.GetDataEdge<EdgeViewModel>();
+            this.controller.RemoveElement(edge.Edge);
+            this.ElementRemoved?.Invoke(this, new Graph.ElementRemovedEventArgs { Element = edge.Edge as Repo.IElement });
+            this.Graph.DataGraph.RemoveEdge(edge);
             this.DrawGraph();
         }
 

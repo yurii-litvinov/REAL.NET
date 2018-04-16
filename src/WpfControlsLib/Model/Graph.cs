@@ -90,6 +90,7 @@ namespace WpfControlsLib.Model
 
                 var newEdge = new EdgeViewModel(source, target, Convert.ToDouble(false))
                 {
+                    Edge = edge,
                     EdgeType = EdgeViewModel.EdgeTypeEnum.Association
                 };
                 var attributeInfos = edge.Attributes.Select(x => new AttributeViewModel(x, x.Name, x.Kind.ToString())
@@ -123,7 +124,10 @@ namespace WpfControlsLib.Model
             _ = sourceViewModel ?? throw new InvalidOperationException();
             _ = targetViewModel ?? throw new InvalidOperationException();
 
-            var newEdge = new EdgeViewModel(sourceViewModel, targetViewModel, Convert.ToDouble(true));
+            var newEdge = new EdgeViewModel(sourceViewModel, targetViewModel, Convert.ToDouble(true))
+            {
+                Edge = edge
+            };
             var args = new DataEdgeArgs
             {
                 EdgeViewModel = newEdge
@@ -183,6 +187,11 @@ namespace WpfControlsLib.Model
         }
 
         public class ElementAddedEventArgs : EventArgs
+        {
+            public IElement Element { get; set; }
+        }
+
+        public class ElementRemovedEventArgs : EventArgs
         {
             public IElement Element { get; set; }
         }

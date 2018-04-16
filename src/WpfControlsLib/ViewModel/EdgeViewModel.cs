@@ -3,6 +3,7 @@ using System.ComponentModel;
 using GraphX.Measure;
 using GraphX.PCL.Common.Interfaces;
 using GraphX.PCL.Common.Models;
+using Repo;
 
 namespace WpfControlsLib.ViewModel
 {
@@ -40,6 +41,8 @@ namespace WpfControlsLib.ViewModel
         public double Angle { get; set; }
 
         public override Point[] RoutingPoints { get; set; }
+
+        public IEdge Edge { get; set; }
 
         public string Text
         {
