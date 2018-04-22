@@ -86,6 +86,13 @@ namespace WpfEditor.View
                 this.Toolbar.AddButton(button);
                 this.Console.Messages.Add("Added new button");
             }
+
+            this.Console.Messages.Add("Available buttons:");
+            this.Console.Messages.Add(this.Toolbar.ButtonsToShow.Count.ToString());
+            foreach (var button in this.Toolbar.ButtonsToShow)
+            {
+                this.Console.Messages.Add(button.Image);
+            }
         }
 
         private void InitAndLaunchPlugins()

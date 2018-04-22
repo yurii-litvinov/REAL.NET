@@ -25,7 +25,7 @@
     xmlns:scene="clr-namespace:WpfControlsLib.Controls.Scene;assembly=WpfControlsLib"
     xmlns:modelExplorer="clr-namespace:WpfControlsLib.Controls.ModelExplorer;assembly=WpfControlsLib"
     xmlns:palette="clr-namespace:WpfControlsLib.Controls.Palette;assembly=WpfControlsLib"
-    xmlns:Toolbar="clr-namespace:WpfControlsLib.Controls.Toolbar;assembly=WpfControlsLib"
+    xmlns:toolbar="clr-namespace:WpfControlsLib.Controls.Toolbar;assembly=WpfControlsLib"
     Title="REAL.NET"
     mc:Ignorable="d"
     Height="685" Width="936">
@@ -57,7 +57,7 @@
             </Grid.RowDefinitions>
 
             <!-- Toolbar -->
-            <Toolbar:ToolbarView x:Name="toolBar" Grid.Row="0"/>
+            <toolbar:ToolbarView x:Name="toolBar" Grid.Row="0" DataContext="{Binding Toolbar}"/>
             
             <!-- ModelSelector -->
             <modelSelector:ModelSelector x:Name="modelSelector" ModelSelected="OnModelSelectionChanged" Grid.Row="1"/>
