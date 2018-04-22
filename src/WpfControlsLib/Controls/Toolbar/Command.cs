@@ -15,24 +15,44 @@
 namespace WpfControlsLib.Controls.Toolbar
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using EditorPluginInterfaces.Toolbar;
 
+    /// <summary>
+    /// Class that implements pattern Command
+    /// </summary>
     public class Command : ICommand
     {
+        /// <summary>
+        /// Action wrapped in command
+        /// </summary>
         private Action commandToExecute;
 
+        /// <summary>
+        /// Undo action of command
+        /// </summary>
         private Action commandToUndo;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Command"/> class.
+        /// </summary>
+        /// <param name="commandToExecute">Command to execute</param>
         public Command(Action commandToExecute)
             : this(commandToExecute, null, false) { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Command"/> class.
+        /// </summary>
+        /// <param name="commandToExecute">Command to execute></param>
+        /// <param name="commandToUndo">Command to execute to undo this command</param>
         public Command(Action commandToExecute, Action commandToUndo)
             : this(commandToExecute, commandToUndo, true) { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Command"/> class.
+        /// </summary>
+        /// <param name="commandToExecute">Command to execute></param>
+        /// <param name="commandToUndo">Command to execute to undo this command</param>
+        /// <param name="isUndoType">Can this command be undone</param>
         private Command(Action commandToExecute, Action commandToUndo, bool isUndoType)
         {
             this.IsUndoType = isUndoType;
@@ -40,10 +60,19 @@ namespace WpfControlsLib.Controls.Toolbar
             this.commandToUndo = commandToUndo;
         }
 
+        /// <summary>
+        /// Gets a value indicating whether can this command be undone
+        /// </summary>
         public bool IsUndoType { get; }
 
+        /// <summary>
+        /// Executes this command
+        /// </summary>
         public void Execute() => this.commandToExecute?.Invoke();
 
+        /// <summary>
+        /// Undo this command
+        /// </summary>
         public void Undo() => this.commandToUndo?.Invoke();
     }
 }

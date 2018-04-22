@@ -16,6 +16,7 @@ namespace WpfControlsLib.Controls.Toolbar
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using EditorPluginInterfaces.Toolbar;
 
     /// <summary>
@@ -24,26 +25,17 @@ namespace WpfControlsLib.Controls.Toolbar
     /// </summary>
     public class ToolbarViewModel : IToolbar
     {
-        public event EventHandler ButtonListChanged;
-
-        public event EventHandler MenuListChanged;
-
-        private void ThrowButtonsListChanged() => this.ButtonListChanged?.Invoke(this, EventArgs.Empty);
-
         /// <summary>
         /// Gets a list of buttons that should be presented on toolbar
         /// </summary>
-        public IList<IButton> Buttons { get; private set; } = new List<IButton>();
+        public IList<IButton> Buttons => this.ButtonsToShow as IList<IButton>;
 
-        public void AddButton(IButton button)
-        {
-            this.Buttons.Add(button);
-            this.ThrowButtonsListChanged();
-        }
+        public ObservableCollection<Button> ButtonsToShow => null;
 
-        public void AddMenu(IMenu menu)
-        {
-            throw new NotImplementedException();
-        }
+        public void AddButton(IButton button) => this.ButtonsToShow.Add(this.WrapIButton(button));
+
+        public void AddMenu(IMenu menu) => throw new NotImplementedException();
+
+        private Button WrapIButton(IButton button) => new Button(button.Command, button.Description, button.Image);
     }
 }
