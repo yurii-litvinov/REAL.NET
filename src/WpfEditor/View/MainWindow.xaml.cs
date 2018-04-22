@@ -64,6 +64,7 @@ namespace WpfEditor.View
             this.modelSelector.ChangeModel(2);
 
             this.InitAndLaunchPlugins();
+            this.InitToolbar();
         }
 
         private void OnModelSelectionChanged(object sender, ModelSelector.ModelSelectedEventArgs args)
@@ -77,6 +78,7 @@ namespace WpfEditor.View
 
         private void InitToolbar()
         {
+            this.Console.Messages.Add("Initing ToolBar");
             var sample = new WpfControlsLib.Controls.Toolbar.StandardButtonsAndMenus.SampleButtonsCollection(this.Console);
             var buttons = sample.SampleButtons;
             foreach (var button in buttons)

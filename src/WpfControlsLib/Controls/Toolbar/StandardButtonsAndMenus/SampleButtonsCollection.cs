@@ -13,10 +13,10 @@
         {
             Action action1 = () => { console.SendMessage("action binded to button1 executed"); };
             var command1 = new Command(action1);
-            var button1 = new Button(command1, "sample button", string.Empty);
+            var button1 = new Button(command1, "sample button", "pic1");
             Action action2 = () => { console.SendMessage("action binded to button2 executed"); };
             var command2 = new Command(action2);
-            var button2 = new Button(command2, "sample button", string.Empty);
+            var button2 = new Button(command2, "sample button", "pic2");
             this.SampleButtons.Add(button1);
             this.SampleButtons.Add(button2);
         }

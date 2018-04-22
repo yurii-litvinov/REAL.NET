@@ -56,7 +56,7 @@
                 <RowDefinition Height="Auto" MinHeight="50"/>
             </Grid.RowDefinitions>
 
-            <!-- ModelSelector -->
+            <!-- Toolbar -->
             <Toolbar:ToolbarView x:Name="toolBar" Grid.Row="0"/>
             
             <!-- ModelSelector -->

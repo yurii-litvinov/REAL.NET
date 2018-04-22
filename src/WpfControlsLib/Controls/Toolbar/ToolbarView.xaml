@@ -23,7 +23,7 @@
     d:DesignHeight="300"
     d:DesignWidth="300"
     mc:Ignorable="d"
-    d:DataContext="{local:ToolbarViewModel}">
+    d:DataContext="{Toolbar:ToolbarViewModel}">
 
     <Grid>
         <ToolBarTray>
@@ -34,12 +34,12 @@
                 <Separator/>
                 <Button>View</Button>
             </ToolBar>
-            <ToolBar x:Name="PicToolbar" Band="1">
-                <Button>Pic1</Button>
-                <Separator/>
-                <Button>Pic2</Button>
-                <Separator/>
-                <Button>Pic3</Button>
+            <ToolBar x:Name="PicToolbar" Band="1" ItemsSource="{Binding ButtonsToShow}">
+                <ToolBar.ItemTemplate>
+                    <DataTemplate>
+                        <Button ToolTip="{Binding Description}" Command="{Binding Command}" Content="{Binding Image}"></Button>
+                    </DataTemplate>
+                </ToolBar.ItemTemplate>
             </ToolBar>
         </ToolBarTray>
     </Grid>
