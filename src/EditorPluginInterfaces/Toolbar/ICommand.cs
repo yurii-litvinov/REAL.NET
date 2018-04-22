@@ -8,7 +8,7 @@
         /// <summary>
         /// True, if it can be undone
         /// </summary>
-        bool CanBeUndone { get; }
+        bool IsUndoType { get; }
 
         /// <summary>
         /// Execute this command

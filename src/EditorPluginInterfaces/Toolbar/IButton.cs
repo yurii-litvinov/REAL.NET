@@ -9,7 +9,7 @@
         /// Gets action executed by this command
         /// </summary>
         /// <returns>Command's action</returns>
-        ICommand GetAction();
+        ICommand Command { get; }
 
         /// <summary>
         /// Does action connected with this button
