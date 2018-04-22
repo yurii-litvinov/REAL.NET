@@ -123,6 +123,7 @@
     </Compile>
     <Compile Include="Controls\Toolbar\Button.cs" />
     <Compile Include="Controls\Toolbar\Command.cs" />
+    <Compile Include="Controls\Toolbar\StandardButtonsAndMenus\SampleButtonsCollection.cs" />
     <Compile Include="Controls\Toolbar\ToolbarView.xaml.cs">
       <DependentUpon>ToolbarView.xaml</DependentUpon>
     </Compile>
@@ -359,6 +360,7 @@
       <Paket>True</Paket>
     </Analyzer>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">
       <ItemGroup>

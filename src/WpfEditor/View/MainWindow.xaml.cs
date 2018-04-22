@@ -25,6 +25,7 @@ namespace WpfEditor.View
     using WpfControlsLib.Controls.Console;
     using WpfControlsLib.Controls.ModelSelector;
     using WpfControlsLib.Controls.Scene;
+    using WpfControlsLib.Controls.Toolbar;
     using Palette = WpfControlsLib.Controls.Palette.Palette;
 
     /// <summary>
@@ -35,6 +36,8 @@ namespace WpfEditor.View
         private readonly WpfControlsLib.Model.Model model;
 
         public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();
+
+        public ToolbarViewModel Toolbar { get; } = new ToolbarViewModel();
 
         public MainWindow()
         {
@@ -70,6 +73,16 @@ namespace WpfEditor.View
             this.model.ModelName = args.ModelName;
             this.palette.InitPalette(this.model.ModelName);
             this.scene.Reload();
+        }
+
+        private void InitToolbar()
+        {
+            var sample = new WpfControlsLib.Controls.Toolbar.StandardButtonsAndMenus.SampleButtonsCollection(this.Console);
+            var buttons = sample.SampleButtons;
+            foreach (var button in buttons)
+            {
+                this.Toolbar.AddButton(button);
+            }
         }
 
         private void InitAndLaunchPlugins()

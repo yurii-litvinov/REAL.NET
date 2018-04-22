@@ -16,8 +16,17 @@ namespace WpfControlsLib.Controls.Toolbar
 {
     using EditorPluginInterfaces.Toolbar;
 
+    /// <summary>
+    /// Class that implements IButton interface
+    /// </summary>
     public class Button : IButton
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Button"/> class.
+        /// </summary>
+        /// <param name="command">Command</param>
+        /// <param name="description">Description of command</param>
+        /// <param name="image">Image to attach</param>
         public Button(ICommand command, string description, string image)
         {
             this.Command = command;
@@ -25,12 +34,24 @@ namespace WpfControlsLib.Controls.Toolbar
             this.Image = image;
         }
 
+        /// <summary>
+        /// Gets description of command
+        /// </summary>
         public string Description { get; private set; }
 
+        /// <summary>
+        /// Gets attached image
+        /// </summary>
         public string Image { get; private set; }
 
+        /// <summary>
+        /// Gets command attached to button
+        /// </summary>
         public ICommand Command { get; private set; }
 
+        /// <summary>
+        /// Executes command attached to button
+        /// </summary>
         public void DoAction() => this.Command.Execute();
     }
 }
