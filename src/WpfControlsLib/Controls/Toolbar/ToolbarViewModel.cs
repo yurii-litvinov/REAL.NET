@@ -30,7 +30,7 @@ namespace WpfControlsLib.Controls.Toolbar
         /// </summary>
         public IList<IButton> Buttons => this.ButtonsToShow as IList<IButton>;
 
-        public ObservableCollection<Button> ButtonsToShow => null;
+        public ObservableCollection<Button> ButtonsToShow => new ObservableCollection<Button>();
 
         public void AddButton(IButton button) => this.ButtonsToShow.Add(this.WrapIButton(button));
 
