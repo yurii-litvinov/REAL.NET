@@ -21,49 +21,25 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="300"
     d:DesignWidth="300"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    d:DataContext="{local:ToolbarViewModel}">
 
-    <!--  Style for buttons. Move to another file with styles if necessary.  -->
-    <UserControl.Resources>
-        <Style TargetType="{x:Type Button}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border
-                            Margin="3"
-                            Background="LightGray"
-                            BorderBrush="Black"
-                            BorderThickness="1"
-                            CornerRadius="10">
-                            <ContentPresenter
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                ContentSource="Content"
-                                TextBlock.FontSize="13" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </UserControl.Resources>
-
-    <!--  Panel for plugin buttons  -->
-    <WrapPanel Height="auto" Orientation="Horizontal">
-        <Button
-            Width="70"
-            Height="30"
-            Content="Plugin 1" />
-        <Button
-            Width="70"
-            Height="30"
-            Content="Plugin 2" />
-        <Button
-            Width="70"
-            Height="30"
-            Content="Plugin 3" />
-        <Button
-            Width="70"
-            Height="30"
-            Content="Plugin 4" />
-    </WrapPanel>
+    <Grid>
+        <ToolBarTray>
+            <ToolBar x:Name="MainToolbar" Band="0">
+                <Button>File</Button>
+                <Separator/>
+                <Button>Edit</Button>
+                <Separator/>
+                <Button>View</Button>
+            </ToolBar>
+            <ToolBar x:Name="PicToolbar" Band="1">
+                <Button>Pic1</Button>
+                <Separator/>
+                <Button>Pic2</Button>
+                <Separator/>
+                <Button>Pic3</Button>
+            </ToolBar>
+        </ToolBarTray>
+    </Grid>
 </UserControl>
