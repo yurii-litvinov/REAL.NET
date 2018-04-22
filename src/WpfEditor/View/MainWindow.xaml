@@ -28,6 +28,7 @@
     xmlns:scene="clr-namespace:WpfEditor.Controls.Scene"
     xmlns:modelExplorer="clr-namespace:WpfEditor.Controls.ModelExplorer"
     xmlns:propertyEditor="clr-namespace:WpfEditor.Controls.PropertyEditor"
+    xmlns:ToolBarTray="clr-namespace:WpfEditor.Controls.Toolbar"
     Title="REAL.NET"
     mc:Ignorable="d"
     d:DataContext="{view:MainWindow}">
@@ -52,24 +53,26 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto" MinHeight="50"/>
             </Grid.RowDefinitions>
 
-            <!-- ToolBar -->
-            <ToolBar Grid.Row="0">
-                <modelSelector:ModelSelector x:Name="modelSelector" ModelSelected="OnModelSelectionChanged"/>
-            </ToolBar>
+            <!-- ModelSelector -->
+            <modelSelector:ModelSelector x:Name="modelSelector" ModelSelected="OnModelSelectionChanged" Grid.Row="0" />
+
+            <!-- Toolbar -->
+            <ToolBarTray:ToolbarView Grid.Row="1"/>
 
             <!-- Area -->
-            <scene:Scene x:Name="scene" Grid.Row="1"/>
+            <scene:Scene x:Name="scene" Grid.Row="2"/>
 
             <!-- GridSplitter for console -->
-            <GridSplitter Grid.Row ="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5"/>
+            <GridSplitter Grid.Row ="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5"/>
             
             <!-- Console with error messages -->
-            <console:AppConsole Grid.Row="3" DataContext="{Binding Console}"/>
+            <console:AppConsole Grid.Row="4" DataContext="{Binding Console}"/>
 
         </Grid>
 

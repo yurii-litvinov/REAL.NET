@@ -22,6 +22,6 @@
              mc:Ignorable="d" 
              d:DataContext="{local:ModelSelector}">
     <Grid>
-        <ComboBox x:Name="modelsComboBox" ItemsSource="{Binding ModelNames}"/>
+        <ComboBox x:Name="modelsComboBox" ItemsSource="{Binding ModelNames}" Width="200" HorizontalAlignment="Left"/>
     </Grid>
 </UserControl>
