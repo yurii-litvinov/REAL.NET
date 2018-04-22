@@ -19,11 +19,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:local="clr-namespace:WpfControlsLib.Controls.Toolbar"
+    xmlns:toolbar="clr-namespace:WpfControlsLib.Controls.Toolbar"
     d:DesignHeight="300"
     d:DesignWidth="300"
     mc:Ignorable="d"
-    d:DataContext="{Toolbar:ToolbarViewModel}">
+    d:DataContext="{toolbar:ToolbarViewModel}">
 
     <Grid>
         <ToolBarTray>
@@ -37,7 +37,7 @@
             <ToolBar x:Name="PicToolbar" Band="1" ItemsSource="{Binding ButtonsToShow}">
                 <ToolBar.ItemTemplate>
                     <DataTemplate>
-                        <Button ToolTip="{Binding Description}" Command="{Binding Command}" Content="{Binding Image}"></Button>
+                        <Button ToolTip="{Binding Description}" Command="{Binding Command}" Content="{Binding Image}"/>
                     </DataTemplate>
                 </ToolBar.ItemTemplate>
             </ToolBar>
