@@ -30,6 +30,7 @@ namespace WpfControlsLib.Controls.Toolbar
         public Button(ICommand command, string description, string image)
         {
             this.Command = command;
+            this.WrappedCommand = new CommandXAMLAdapter(this.Command);
             this.Description = description;
             this.Image = image;
         }
@@ -37,17 +38,23 @@ namespace WpfControlsLib.Controls.Toolbar
         /// <summary>
         /// Gets description of command
         /// </summary>
-        public string Description { get; private set; }
+        public string Description { get; }
 
         /// <summary>
         /// Gets attached image
         /// </summary>
-        public string Image { get; private set; }
+        public string Image { get; }
 
         /// <summary>
         /// Gets command attached to button
         /// </summary>
-        public ICommand Command { get; private set; }
+        public ICommand Command { get; }
+
+        /// <summary>
+        /// Gets System.Windows.Input.Command which is necessary for correct working with XAML
+        /// NOTICE: Added for compatibility with XAML
+        /// </summary>
+        public System.Windows.Input.ICommand WrappedCommand { get; }
 
         /// <summary>
         /// Executes command attached to button
