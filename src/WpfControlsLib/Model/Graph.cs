@@ -150,6 +150,7 @@ namespace WpfControlsLib.Model
             });
 
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
+            this.DataGraph.AddVertex(vertex);
             var args = new DataVertexArgs
             {
                 DataVert = vertex
