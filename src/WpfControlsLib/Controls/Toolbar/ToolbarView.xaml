@@ -37,7 +37,11 @@
             <ToolBar x:Name="PicToolbar" Band="1" ItemsSource="{Binding ButtonsToShow}">
                 <ToolBar.ItemTemplate>
                     <DataTemplate>
-                        <Button ToolTip="{Binding Description}" Command="{Binding WrappedCommand}" Content="{Binding Image}"/>
+                        <Button Width="16" Height="16" Margin="3" ToolTip="{Binding Description}" Command="{Binding WrappedCommand}">
+                            <Button.Background>
+                                <ImageBrush ImageSource="{Binding Image}"/>
+                            </Button.Background>
+                        </Button>
                     </DataTemplate>
                 </ToolBar.ItemTemplate>
             </ToolBar>
