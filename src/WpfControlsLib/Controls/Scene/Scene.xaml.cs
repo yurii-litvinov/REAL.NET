@@ -70,7 +70,8 @@ namespace WpfControlsLib.Controls.Scene
                 new GXLogicCore<NodeViewModel, EdgeViewModel, BidirectionalGraph<NodeViewModel, EdgeViewModel>>
                 {
                     Graph = this.Graph.DataGraph,
-                    DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.LinLog
+                    DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.LinLog,
+                    EdgeCurvingEnabled = false,
                 };
 
             this.scene.LogicCore = logic;
@@ -91,16 +92,14 @@ namespace WpfControlsLib.Controls.Scene
             this.controller = controller;
             this.model = model;
             this.elementProvider = elementProvider;
-            
             this.Graph = new Graph(model);
             this.Graph.DrawGraph += (sender, args) => this.DrawGraph();
             this.Graph.ElementAdded += (sender, args) => this.ElementAdded?.Invoke(this, args);
             this.Graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVert);
             this.Graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.EdgeViewModel);
-
             this.InitGraphXLogicCore();
         }
-        
+
         public void Clear() => this.Graph.DataGraph.Clear();
 
         public void Reload() => this.Graph.InitModel(this.model.ModelName);
@@ -234,6 +233,13 @@ namespace WpfControlsLib.Controls.Scene
                 mi.Click += this.MenuItemClickEdge;
                 args.EdgeControl.ContextMenu.Items.Add(mi);
                 args.EdgeControl.ContextMenu.IsOpen = true;
+            }
+            else if (args.MouseArgs.LeftButton == MouseButtonState.Pressed)
+            {
+                var data = args.EdgeControl.GetDataEdge<EdgeViewModel>();
+                var mousePosition = Mouse.GetPosition(this.scene);
+                data.RoutingPoints = new GraphX.Measure.Point[3];
+                data.RoutingPoints[1] = new GraphX.Measure.Point(mousePosition.X, mousePosition.Y);
             }
         }
 

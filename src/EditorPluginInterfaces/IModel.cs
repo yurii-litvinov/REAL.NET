@@ -39,7 +39,7 @@ namespace EditorPluginInterfaces
         /// <summary>
         /// Creates a new node in a model.
         /// </summary>
-        /// <param name="element">Metatype of createrd node.</param>
+        /// <param name="element">Metatype of created node.</param>
         void CreateNode(Repo.IElement element);
 
         /// <summary>
