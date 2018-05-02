@@ -234,13 +234,6 @@ namespace WpfControlsLib.Controls.Scene
                 args.EdgeControl.ContextMenu.Items.Add(mi);
                 args.EdgeControl.ContextMenu.IsOpen = true;
             }
-            else if (args.MouseArgs.LeftButton == MouseButtonState.Pressed)
-            {
-                var data = args.EdgeControl.GetDataEdge<EdgeViewModel>();
-                var mousePosition = Mouse.GetPosition(this.scene);
-                data.RoutingPoints = new GraphX.Measure.Point[3];
-                data.RoutingPoints[1] = new GraphX.Measure.Point(mousePosition.X, mousePosition.Y);
-            }
         }
 
         private void AddNewVertexControl(NodeViewModel vertex)
@@ -300,7 +293,6 @@ namespace WpfControlsLib.Controls.Scene
             {
                 dataEdge.RoutingPoints = new GraphX.Measure.Point[3];
             }
-
             dataEdge.RoutingPoints[0] = new GraphX.Measure.Point(100, 100);
             var mousePosition = Mouse.GetPosition(this.scene);
             dataEdge.RoutingPoints[1] = new GraphX.Measure.Point(mousePosition.X, mousePosition.Y);
