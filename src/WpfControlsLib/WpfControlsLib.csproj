@@ -125,6 +125,7 @@
     <Compile Include="Controls\Toolbar\Command.cs" />
     <Compile Include="Controls\Toolbar\CommandXAMLAdapter.cs" />
     <Compile Include="Controls\Toolbar\StandardButtonsAndMenus\SampleButtonsCollection.cs" />
+    <Compile Include="Controls\Toolbar\StandardButtonsAndMenus\SaveAndLoadButtons.cs" />
     <Compile Include="Controls\Toolbar\ToolbarView.xaml.cs">
       <DependentUpon>ToolbarView.xaml</DependentUpon>
     </Compile>
