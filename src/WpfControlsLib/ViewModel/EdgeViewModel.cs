@@ -42,6 +42,8 @@ namespace WpfControlsLib.ViewModel
 
         public override Point[] RoutingPoints { get; set; }
 
+        public int IndexOfInflectionPoint { get; set; }
+
         public IEdge Edge { get; set; }
 
         public string Text
