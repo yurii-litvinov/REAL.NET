@@ -20,7 +20,7 @@ type DataNode private (name: string, Function: Option<IElement>, ``class``: IEle
 
     let mutable name = name
     
-    let mutable isPrimary = Function
+    let mutable Function = Function
 
     new (name: string, funtion: Option<IElement>, model: IModel) = DataNode(name, funtion, None, model)
     new (name: string, ``class``: IElement, model: IModel) = DataNode(name, None, Some ``class``, model)
@@ -31,5 +31,5 @@ type DataNode private (name: string, Function: Option<IElement>, ``class``: IEle
             and set v = name <- v
 
         member __.Function
-            with get(): Option<IElement> = isPrimary
-            and set v = isPrimary <- v
+            with get(): Option<IElement> = Function
+            and set v = Function <- v

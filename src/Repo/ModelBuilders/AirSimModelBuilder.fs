@@ -89,17 +89,19 @@ type AirSimModelBuilder() =
                 aLink.Source <- Some src
                 aLink.Target <- Some dst
                 dst
-            
-            let newNode = +("FuncionNode", "View/Pictures/functionBlock.png", false, Some (metamodelInitialNode --> metamodelTakeoff --> metamodelFinalNode))
-            
-            let metamodelGeneralization = find "Generalization"
-            let (--|>) (source: IElement) target =
-               model.CreateGeneralization(metamodelGeneralization, source, target) |> ignore
-            newNode --|> metamodelAbstractNode
+            let ff = metamodelInitialNode --> metamodelTakeoff --> metamodelFinalNode :?> INode
+            let rec getStart (el: INode) = 
+                match Seq.toList el.IncomingEdges with
+                | [] -> el
+                | head::tail -> 
+                    match head.Source with
+                    | None -> el
+                    | Some s -> getStart(s :?> INode)
+            let newNode = +("FuncionNode", "View/Pictures/functionBlock.png", false, Some (getStart(ff) :> IElement))    
 
             let metamodelFunc = Model.findNode metamodel "FuncionNode"
-            let func = infrastructure.Instantiate model metamodelFunc
-            
+            let func = infrastructure.Instantiate model metamodelFunc :?> INode
+            func.Function <- Some (getStart(ff) :> IElement)
             initialNode --> ifNode -->> timer1 --> func --> timer2 --> move --> timer3 --> landing --> finalNode |> ignore
             ifNode -->>> finalNode2 |> ignore
             ()
