@@ -44,7 +44,7 @@ type AirSimModelBuilder() =
             let finalNode = infrastructure.Instantiate model metamodelFinalNode
             let finalNode2 = infrastructure.Instantiate model metamodelFinalNode
 
-            let takeoff = infrastructure.Instantiate model metamodelTakeoff
+            // let takeoff = infrastructure.Instantiate model metamodelTakeoff
             
             let landing = infrastructure.Instantiate model metamodelLand
             let move = infrastructure.Instantiate model metamodelMove
@@ -57,6 +57,18 @@ type AirSimModelBuilder() =
             infrastructure.Element.SetAttributeValue timer3 "delay" "1"
             
             let ifNode = infrastructure.Instantiate model metamodelIf
+            
+            let find name = Model.findNode infrastructureMetamodel name
+
+            let (~+) (name, shape, isAbstract, func) =
+                let node = infrastructure.Instantiate metamodel (find "Node") :?> INode
+                node.Name <- name
+                node.Function <- func
+                infrastructure.Element.SetAttributeValue node "shape" shape
+                infrastructure.Element.SetAttributeValue node "isAbstract" (if isAbstract then "true" else "false")
+                infrastructure.Element.SetAttributeValue node "instanceMetatype" "Metatype.Node"
+
+                node
 
             let (-->) (src: IElement) dst =
                 let aLink = infrastructure.Instantiate model link :?> IAssociation
@@ -77,7 +89,17 @@ type AirSimModelBuilder() =
                 aLink.Source <- Some src
                 aLink.Target <- Some dst
                 dst
+            
+            let newNode = +("FuncionNode", "View/Pictures/functionBlock.png", false, Some (metamodelInitialNode --> metamodelTakeoff --> metamodelFinalNode))
+            
+            let metamodelGeneralization = find "Generalization"
+            let (--|>) (source: IElement) target =
+               model.CreateGeneralization(metamodelGeneralization, source, target) |> ignore
+            newNode --|> metamodelAbstractNode
 
-            initialNode --> ifNode -->> timer1 --> takeoff --> timer2 --> move --> timer3 --> landing --> finalNode |> ignore
+            let metamodelFunc = Model.findNode metamodel "FuncionNode"
+            let func = infrastructure.Instantiate model metamodelFunc
+            
+            initialNode --> ifNode -->> timer1 --> func --> timer2 --> move --> timer3 --> landing --> finalNode |> ignore
             ifNode -->>> finalNode2 |> ignore
             ()

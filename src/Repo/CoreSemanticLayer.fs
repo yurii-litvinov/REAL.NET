@@ -133,7 +133,7 @@ module Element =
         (attribute element name).Name
 
     /// Adds a new attribute with a given value to an element.
-    let addAttribute element name ``class`` attributeAssociationClass value =
+    let addAttribute element name (``class``:IElement) attributeAssociationClass value =
         let model = containingModel element
         let attributeNode = model.CreateNode(value, ``class``)
         model.CreateAssociation(attributeAssociationClass, element, attributeNode, name) |> ignore

@@ -50,6 +50,8 @@ and INode =
 
         /// Name of a node, possibly not unique.
         abstract Name : string with get, set
+
+        abstract Function : Option<IElement> with get, set
     end
 
 /// Edge is a kind of element which can connect to everything.
@@ -93,7 +95,7 @@ and IModel =
         abstract CreateNode: name: string * ``class``: IElement -> INode
 
         /// Creates a node that is its own type (Node, for example, is an instance of Node).
-        abstract CreateNode: name: string -> INode
+        abstract CreateNode: name: string * func: Option<IElement> -> INode
 
         /// Creates new Generalization edge with given source and target.
         abstract CreateGeneralization: ``class``: IElement * source: IElement * target: IElement -> IGeneralization

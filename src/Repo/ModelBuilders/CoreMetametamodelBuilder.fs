@@ -22,7 +22,7 @@ type CoreMetametamodelBuilder() =
         member this.Build(repo: IRepo): unit =
             let model = repo.CreateModel "CoreMetametamodel"
 
-            let node = model.CreateNode "Node"
+            let node = model.CreateNode("Node", None)
 
             let (~+) name = model.CreateNode(name, node)
 

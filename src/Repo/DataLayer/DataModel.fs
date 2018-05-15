@@ -25,12 +25,12 @@ type DataModel private (name: string, metamodel: IModel option) =
     new(name: string, metamodel: IModel) = DataModel(name, Some metamodel)
 
     interface IModel with
-        member this.CreateNode name =
-            let node = DataNode(name, this) :> INode
+        member this.CreateNode(name, (func: Option<IElement>)) =
+            let node = DataNode(name, func, this) :> INode
             nodes <- node :: nodes
             node
 
-        member this.CreateNode(name, ``class``) =
+        member this.CreateNode(name, (``class``:IElement)) =
             let node = DataNode(name, ``class``, this) :> INode
             nodes <- node :: nodes
             node
