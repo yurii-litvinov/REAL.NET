@@ -19,8 +19,6 @@ namespace AirSim.AirSimLib
     using System.Collections.Generic;
     using System.Linq;
     using System.Security.Permissions;
-    using WpfControlsLib.Model;
-    using WpfControlsLib.ViewModel;
     using Repo;
 
     /// <summary>
@@ -28,6 +26,9 @@ namespace AirSim.AirSimLib
     /// </summary>
     internal class CodeExecution
     {
+        private static int recursionLevel = 0;
+        private static Stack<INode> recursionNodes = new Stack<INode>();
+
         /// <summary>
         /// Main execution method
         /// </summary>
@@ -35,20 +36,23 @@ namespace AirSim.AirSimLib
         /// <param name="writeToConsole"> Method to writing to console </param>
         public void Execute(IModel programGraph, Action<string> writeToConsole)
         {
-            var t = programGraph.Nodes.ToList();
             var curNode = this.GetInitNode(programGraph, writeToConsole);
             if (curNode == null)
+            {
                 return;
+            }
 
             writeToConsole("Running your code");
             var client = new MultirotorClient();
-            while (curNode.Name != "aFinalNode")
+            while (recursionLevel >= 0)
             {
-                Execution.Exec.ExecuteNode(curNode, client);
+                Execution.Exec.ExecuteNode(ref curNode, client, programGraph, writeToConsole);
                 curNode = Execution.Exec.GetNextNode(curNode, client, programGraph, writeToConsole);
-                client.GetImage();
                 if (curNode == null)
+                {
                     return;
+                }
+
                 writeToConsole($"Node {curNode.Name} done");
             }
 
@@ -60,13 +64,13 @@ namespace AirSim.AirSimLib
         private INode GetInitNode(IModel graph, Action<string> writeToMessageBox)
         {
             INode initNode = null;
-            var edges = graph.Edges.ToList();
+            var nodes = graph.Nodes.ToList();
             int cnt = 0;
-            foreach (var edge in edges)
+            foreach (var node in nodes)
             {
-                if (edge.From.Name == "aInitialNode")
+                if (node.Name == "aInitialNode")
                 {
-                    initNode = (Repo.INode)edge.To;
+                    initNode = node;
                     ++cnt;
                 }
             }
@@ -103,6 +107,11 @@ namespace AirSim.AirSimLib
 
                 if (outEdges.Count == 0)
                 {
+                    if (recursionNodes.Count > 0)
+                    {
+                        return recursionNodes.Pop();
+                    }
+
                     writeToMessageBox("Error: Node " + node.Name +
                                       " has no out edges and it is not the final node ");
                     client.Dispose();
@@ -117,9 +126,21 @@ namespace AirSim.AirSimLib
         {
             public override void ExecuteNode(INode node, MultirotorClient client)
             {
-                client.CreateClient();
-                client.ConfirmConnection();
-                client.EnableApiControl();
+                if (recursionLevel == 0)
+                {
+                    client.CreateClient();
+                    client.ConfirmConnection();
+                    client.EnableApiControl();
+                }
+            }
+        }
+
+        private class FinalNode : NodeExecution
+        {
+            public override void ExecuteNode(INode node, MultirotorClient client)
+            {
+                --recursionLevel;
+                //node = recursionNodes.Pop();
             }
         }
 
@@ -133,9 +154,8 @@ namespace AirSim.AirSimLib
         {
             public override void ExecuteNode(INode node, MultirotorClient client)
             {
-                var x = client.GetDistance();
-                var y = client.GetDistanceByImage();
-                client.GetPos();
+                var t = float.Parse(node.Attributes.ToList()[0].StringValue);
+                client.EnableApiControl();
                 client.MoveByVelocityZ(float.Parse(node.Attributes.ToList()[0].StringValue));
             }
         }
@@ -259,22 +279,50 @@ namespace AirSim.AirSimLib
             private Execution()
             {
                 strategies.Add("aInitialNode", new InitNode());
+                strategies.Add("aFinalNode", new FinalNode());
                 strategies.Add("aTakeoff", new TakeoffNode());
                 strategies.Add("aMove", new MoveNode());
                 strategies.Add("aTimer", new TimerNode());
                 strategies.Add("aHover", new HoverNode());
                 strategies.Add("aIfNode", new IfNode());
                 strategies.Add("aLand", new LandNode());
+
+                strategies.Add("InitialNode", new InitNode());
+                strategies.Add("FinalNode", new FinalNode());
+                strategies.Add("Takeoff", new TakeoffNode());
+                strategies.Add("Move", new MoveNode());
+                strategies.Add("Timer", new TimerNode());
+                strategies.Add("Hover", new HoverNode());
+                strategies.Add("IfNode", new IfNode());
+                strategies.Add("Land", new LandNode());
             }
 
             public static Execution Exec => instance ?? (instance = new Execution());
 
-            public void ExecuteNode(INode node, MultirotorClient client)
-                => strategies[node.Name].ExecuteNode(node, client);
+            public void ExecuteNode(ref INode node, MultirotorClient client, IModel graph, Action<string> writeToMessageBox)
+            {
+                if (!strategies.ContainsKey(node.Name))
+                {
+                    recursionNodes.Push(strategies["aInitialNode"].GetNextNode(node, client, graph, writeToMessageBox));
+                    node = (INode)node.Function;
+                    ++recursionLevel;
+                    this.ExecuteNode(ref node, client, graph, writeToMessageBox);
+                    return;
+                }
+
+                strategies[node.Name].ExecuteNode(node, client);
+            }
 
             public INode GetNextNode(INode node, MultirotorClient client, IModel graph,
                 Action<string> writeToMessageBox)
-                => strategies[node.Name].GetNextNode(node, client, graph, writeToMessageBox);
+            {
+                if (!strategies.ContainsKey(node.Name))
+                {
+                    return strategies["aInitialNode"].GetNextNode(node, client, graph, writeToMessageBox);
+                }
+
+                return strategies[node.Name].GetNextNode(node, client, graph, writeToMessageBox);
+            }
         }
 
         #endregion

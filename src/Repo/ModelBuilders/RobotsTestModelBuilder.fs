@@ -27,7 +27,7 @@ type RobotsTestModelBuilder() =
             let infrastructureMetamodel = infrastructure.Metamodel.Model
 
             let metamodelAbstractNode = Model.findNode metamodel "AbstractNode"
-            let metamodelInitialNode = Model.findNode metamodel "InitialNode"
+            //let metamodelInitialNode = Model.findNode metamodel "InitialNode"
             let metamodelFinalNode = Model.findNode metamodel "FinalNode"
             let metamodelMotorsForward = Model.findNode metamodel "MotorsForward"
             let metamodelTimer = Model.findNode metamodel "Timer"
@@ -36,7 +36,7 @@ type RobotsTestModelBuilder() =
 
             let model = repo.CreateModel("RobotsTestModel", metamodel)
 
-            let initialNode = infrastructure.Instantiate model metamodelInitialNode
+            //let initialNode = infrastructure.Instantiate model metamodelInitialNode
             let finalNode = infrastructure.Instantiate model metamodelFinalNode
 
             let motorsForward = infrastructure.Instantiate model metamodelMotorsForward
@@ -52,6 +52,7 @@ type RobotsTestModelBuilder() =
                 aLink.Target <- Some dst
                 dst
 
-            initialNode --> motorsForward --> timer --> finalNode |> ignore
+            //initialNode --> 
+            motorsForward --> timer --> finalNode |> ignore
 
             ()

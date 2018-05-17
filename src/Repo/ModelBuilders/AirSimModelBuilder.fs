@@ -44,7 +44,7 @@ type AirSimModelBuilder() =
             let finalNode = infrastructure.Instantiate model metamodelFinalNode
             let finalNode2 = infrastructure.Instantiate model metamodelFinalNode
 
-            // let takeoff = infrastructure.Instantiate model metamodelTakeoff
+            let takeoff = infrastructure.Instantiate model metamodelTakeoff
             
             let landing = infrastructure.Instantiate model metamodelLand
             let move = infrastructure.Instantiate model metamodelMove
@@ -89,19 +89,21 @@ type AirSimModelBuilder() =
                 aLink.Source <- Some src
                 aLink.Target <- Some dst
                 dst
-            let ff = metamodelInitialNode --> metamodelTakeoff --> metamodelFinalNode :?> INode
+            
+            let newFunc = metamodelInitialNode --> metamodelTakeoff --> metamodelFinalNode :?> INode
             let rec getStart (el: INode) = 
                 match Seq.toList el.IncomingEdges with
                 | [] -> el
-                | head::tail -> 
+                | head::_ -> 
                     match head.Source with
                     | None -> el
                     | Some s -> getStart(s :?> INode)
-            let newNode = +("FuncionNode", "View/Pictures/functionBlock.png", false, Some (getStart(ff) :> IElement))    
-
+            
+            +("FuncionNode", "View/Pictures/functionBlock.png", false, Some (getStart(newFunc) :> IElement)) |> ignore
+            
             let metamodelFunc = Model.findNode metamodel "FuncionNode"
             let func = infrastructure.Instantiate model metamodelFunc :?> INode
-            func.Function <- Some (getStart(ff) :> IElement)
-            initialNode --> ifNode -->> timer1 --> func --> timer2 --> move --> timer3 --> landing --> finalNode |> ignore
+            func.Function <- Some (getStart(newFunc) :> IElement)
+            initialNode --> ifNode-->> takeoff --> move --> timer3 --> landing --> finalNode |> ignore
             ifNode -->>> finalNode2 |> ignore
             ()
