@@ -94,8 +94,11 @@ namespace AirSim.AirSimLib
         {
             public abstract void ExecuteNode(INode node, MultirotorClient client);
 
-            public virtual INode GetNextNode(INode node, MultirotorClient client, IModel graph,
-                Action<string> writeToMessageBox)
+            public virtual INode GetNextNode(
+                                                INode node,
+                                                MultirotorClient client,
+                                                IModel graph,
+                                                Action<string> writeToMessageBox)
             {
                 var outEdges = graph.Edges.Where(x => x.From == node).ToList();
                 if (outEdges.Count > 1)
@@ -140,7 +143,6 @@ namespace AirSim.AirSimLib
             public override void ExecuteNode(INode node, MultirotorClient client)
             {
                 --recursionLevel;
-                //node = recursionNodes.Pop();
             }
         }
 
@@ -206,6 +208,7 @@ namespace AirSim.AirSimLib
                 {
                     return true;
                 }
+
                 return ans;
             }
 
@@ -313,8 +316,11 @@ namespace AirSim.AirSimLib
                 strategies[node.Name].ExecuteNode(node, client);
             }
 
-            public INode GetNextNode(INode node, MultirotorClient client, IModel graph,
-                Action<string> writeToMessageBox)
+            public INode GetNextNode(
+                                        INode node,
+                                        MultirotorClient client,
+                                        IModel graph,
+                                        Action<string> writeToMessageBox)
             {
                 if (!strategies.ContainsKey(node.Name))
                 {

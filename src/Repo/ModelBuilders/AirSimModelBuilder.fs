@@ -60,6 +60,7 @@ type AirSimModelBuilder() =
             
             let find name = Model.findNode infrastructureMetamodel name
 
+            // The same as in the metamodel but with functions
             let (~+) (name, shape, isAbstract, func) =
                 let node = infrastructure.Instantiate metamodel (find "Node") :?> INode
                 node.Name <- name
@@ -90,7 +91,10 @@ type AirSimModelBuilder() =
                 aLink.Target <- Some dst
                 dst
             
+            // Make some function
             let newFunc = metamodelInitialNode --> metamodelTakeoff --> metamodelFinalNode :?> INode
+            
+            // Get the start node of function
             let rec getStart (el: INode) = 
                 match Seq.toList el.IncomingEdges with
                 | [] -> el
@@ -99,11 +103,14 @@ type AirSimModelBuilder() =
                     | None -> el
                     | Some s -> getStart(s :?> INode)
             
+            // Add new node with function to metamodel
             +("FuncionNode", "View/Pictures/functionBlock.png", false, Some (getStart(newFunc) :> IElement)) |> ignore
             
+            // Make function node in the model
             let metamodelFunc = Model.findNode metamodel "FuncionNode"
             let func = infrastructure.Instantiate model metamodelFunc :?> INode
             func.Function <- Some (getStart(newFunc) :> IElement)
+
             initialNode --> ifNode-->> takeoff --> move --> timer3 --> landing --> finalNode |> ignore
             ifNode -->>> finalNode2 |> ignore
             ()

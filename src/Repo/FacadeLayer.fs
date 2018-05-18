@@ -117,6 +117,7 @@ type INode =
     interface
         inherit IElement
 
+        /// Function in the node
         abstract Function: IElement with get, set
     end
 
