@@ -25,6 +25,7 @@ namespace WpfControlsLib.Controls.ModelExplorer
         }
 
         public string Source => (this.Element as Repo.IEdge)?.From?.Name;
+
         public string Target => (this.Element as Repo.IEdge)?.To?.Name;
     }
 }

@@ -32,10 +32,10 @@ namespace WpfControlsLib.Controls.Scene
     public partial class Scene : UserControl
     {
         private readonly EditorObjectManager editorManager;
-        private VertexControl prevVer;
-        private VertexControl ctrlVer;
-        private EdgeControl ctrlEdg;
-        private Point pos;
+        private VertexControl previosVertex;
+        private VertexControl currentVertex;
+        private EdgeControl edgeControl;
+        private Point position;
 
         private WpfControlsLib.Model.Model model;
         private Controller.Controller controller;
@@ -95,7 +95,7 @@ namespace WpfControlsLib.Controls.Scene
             this.Graph = new Graph(model);
             this.Graph.DrawGraph += (sender, args) => this.DrawGraph();
             this.Graph.ElementAdded += (sender, args) => this.ElementAdded?.Invoke(this, args);
-            this.Graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVert);
+            this.Graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVertex);
             this.Graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.EdgeViewModel);
             this.InitGraphXLogicCore();
         }
@@ -147,13 +147,13 @@ namespace WpfControlsLib.Controls.Scene
                     break;
                 }
             }
-        }   
+        }
 
         public void ChangeEdgeLabel(string newLabel)
         {
-            if (this.ctrlEdg != null)
+            if (this.edgeControl != null)
             {
-                var data = ctrlEdg.GetDataEdge<EdgeViewModel>();
+                var data = edgeControl.GetDataEdge<EdgeViewModel>();
                 data.Text = newLabel;
                 scene.GenerateAllEdges();
             }
@@ -161,8 +161,8 @@ namespace WpfControlsLib.Controls.Scene
 
         private void ClearSelection(object sender, RoutedEventArgs e)
         {
-            this.prevVer = null;
-            this.ctrlVer = null;
+            this.previosVertex = null;
+            this.currentVertex = null;
             this.scene.GetAllVertexControls().ToList().ForEach(
                 x => x.GetDataVertex<NodeViewModel>().Color = Brushes.Green);
         }
@@ -170,24 +170,24 @@ namespace WpfControlsLib.Controls.Scene
         // Need for dropping.
         private void ZoomControl_Drop(object sender, DragEventArgs e)
         {
-            this.pos = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.scene);
+            this.position = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.scene);
             this.CreateNewNode((Repo.IElement)e.Data.GetData("REAL.NET palette element"));
             this.ElementUsed?.Invoke(this, EventArgs.Empty);
         }
 
         private void VertexSelectedAction(object sender, VertexSelectedEventArgs args)
         {
-            this.ctrlVer = args.VertexControl;
+            this.currentVertex = args.VertexControl;
             if (this.elementProvider.Element?.InstanceMetatype == Repo.Metatype.Edge)
             {
-                if (this.prevVer == null)
+                if (this.previosVertex == null)
                 {
-                    this.editorManager.CreateVirtualEdge(this.ctrlVer, this.ctrlVer.GetPosition());
-                    this.prevVer = this.ctrlVer;
+                    this.editorManager.CreateVirtualEdge(this.currentVertex, this.currentVertex.GetPosition());
+                    this.previosVertex = this.currentVertex;
                 }
                 else
                 {
-                    this.controller.NewEdge(this.elementProvider.Element, this.prevVer, this.ctrlVer);
+                    this.controller.NewEdge(this.elementProvider.Element, this.previosVertex, this.currentVertex);
                     this.ElementUsed?.Invoke(this, EventArgs.Empty);
                 }
 
@@ -195,15 +195,15 @@ namespace WpfControlsLib.Controls.Scene
             }
 
             this.NodeSelected?.Invoke(this,
-                new NodeSelectedEventArgs {Node = this.ctrlVer.GetDataVertex<NodeViewModel>()});
+                new NodeSelectedEventArgs {Node = this.currentVertex.GetDataVertex<NodeViewModel>()});
 
             this.scene.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<NodeViewModel>().
                 Color = Brushes.Green);
 
-            this.ctrlVer.GetDataVertex<NodeViewModel>().Color = Brushes.LightBlue;
-            if (this.prevVer != null)
+            this.currentVertex.GetDataVertex<NodeViewModel>().Color = Brushes.LightBlue;
+            if (this.previosVertex != null)
             {
-                this.prevVer.GetDataVertex<NodeViewModel>().Color = Brushes.Yellow;
+                this.previosVertex.GetDataVertex<NodeViewModel>().Color = Brushes.Yellow;
             }
 
             if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
@@ -218,15 +218,15 @@ namespace WpfControlsLib.Controls.Scene
 
         private void EdgeSelectedAction(object sender, GraphX.Controls.Models.EdgeSelectedEventArgs args)
         {
-            this.ctrlEdg = args.EdgeControl;
+            this.edgeControl = args.EdgeControl;
 
-            this.ctrlEdg.PreviewMouseUp += this.OnEdgeMouseUp;
+            this.edgeControl.PreviewMouseUp += this.OnEdgeMouseUp;
             this.zoomControl.MouseMove += this.OnEdgeMouseMove;
 
             this.EdgeSelected?.Invoke(this,
-                new EdgeSelectedEventArgs { Edge = this.ctrlEdg.GetDataEdge<EdgeViewModel>() });
+                new EdgeSelectedEventArgs { Edge = this.edgeControl.GetDataEdge<EdgeViewModel>() });
 
-            var dataEdge = this.ctrlEdg.GetDataEdge<EdgeViewModel>();
+            var dataEdge = this.edgeControl.GetDataEdge<EdgeViewModel>();
             var mousePosition = args.MouseArgs.GetPosition(this.scene).ToGraphX();
 
             // Adding new routing point.
@@ -265,8 +265,8 @@ namespace WpfControlsLib.Controls.Scene
         {
             if (edge.RoutingPoints == null)
             {
-                var sourcePos = this.ctrlEdg.Source.GetPosition().ToGraphX();
-                var targetPos = this.ctrlEdg.Target.GetPosition().ToGraphX();
+                var sourcePos = this.edgeControl.Source.GetPosition().ToGraphX();
+                var targetPos = this.edgeControl.Target.GetPosition().ToGraphX();
 
                 edge.RoutingPoints = new GraphX.Measure.Point[] { sourcePos, mousePosition, targetPos };
                 edge.IndexOfInflectionPoint = 1;
@@ -303,21 +303,21 @@ namespace WpfControlsLib.Controls.Scene
         private void AddNewVertexControl(NodeViewModel vertex)
         {
             var vc = new VertexControl(vertex);
-            vc.SetPosition(this.pos);
+            vc.SetPosition(this.position);
             this.scene.AddVertex(vertex, vc);
         }
 
         private void AddNewEdgeControl(EdgeViewModel edgeViewModel)
         {
-            var ec = new EdgeControl(this.prevVer, this.ctrlVer, edgeViewModel);
+            var ec = new EdgeControl(this.previosVertex, this.currentVertex, edgeViewModel);
             this.scene.InsertEdge(edgeViewModel, ec);
-            this.prevVer = null;
+            this.previosVertex = null;
             this.editorManager.DestroyVirtualEdge();
         }
 
         private void MenuItemClickRoutingPoint(object sender, EventArgs e)
         {
-            var edge = this.ctrlEdg.GetDataEdge<EdgeViewModel>();
+            var edge = this.edgeControl.GetDataEdge<EdgeViewModel>();
             var newRoutingPoints = edge.RoutingPoints.Where(element => element != (GraphX.Measure.Point)((MenuItem)sender).Tag).ToArray();
             edge.RoutingPoints = newRoutingPoints;
             this.scene.UpdateAllEdges();
@@ -325,7 +325,7 @@ namespace WpfControlsLib.Controls.Scene
 
         private void MenuItemClickVert(object sender, EventArgs e)
         {
-            var vertex = this.ctrlVer.GetDataVertex<NodeViewModel>();
+            var vertex = this.currentVertex.GetDataVertex<NodeViewModel>();
             this.controller.RemoveElement(vertex.Node);
             this.ElementRemoved?.Invoke(this, new Graph.ElementRemovedEventArgs { Element = vertex.Node as Repo.IElement });
             this.Graph.DataGraph.RemoveVertex(vertex);
@@ -334,7 +334,7 @@ namespace WpfControlsLib.Controls.Scene
 
         private void MenuItemClickEdge(object sender, EventArgs e)
         {
-            var edge = this.ctrlEdg.GetDataEdge<EdgeViewModel>();
+            var edge = this.edgeControl.GetDataEdge<EdgeViewModel>();
             this.controller.RemoveElement(edge.Edge);
             this.ElementRemoved?.Invoke(this, new Graph.ElementRemovedEventArgs { Element = edge.Edge as Repo.IElement });
             this.Graph.DataGraph.RemoveEdge(edge);
@@ -344,7 +344,7 @@ namespace WpfControlsLib.Controls.Scene
         private void OnEdgeMouseUp(object sender, MouseButtonEventArgs e)
         {
             this.zoomControl.MouseMove -= this.OnEdgeMouseMove;
-            this.ctrlEdg.PreviewMouseUp -= this.OnEdgeMouseUp;
+            this.edgeControl.PreviewMouseUp -= this.OnEdgeMouseUp;
         }
 
         private void DrawGraph()
@@ -355,7 +355,7 @@ namespace WpfControlsLib.Controls.Scene
 
         private void OnEdgeMouseMove(object sender, MouseEventArgs e)
         {
-            var dataEdge = this.ctrlEdg.GetDataEdge<EdgeViewModel>();
+            var dataEdge = this.edgeControl.GetDataEdge<EdgeViewModel>();
 
             if (dataEdge == null)
             {
@@ -375,16 +375,16 @@ namespace WpfControlsLib.Controls.Scene
                 var position = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.scene);
                 if (this.elementProvider.Element?.InstanceMetatype == Repo.Metatype.Node)
                 {
-                    this.pos = position;
+                    this.position = position;
                     this.CreateNewNode(this.elementProvider.Element);
                     this.ElementUsed?.Invoke(this, EventArgs.Empty);
                 }
 
                 if (this.elementProvider.Element?.InstanceMetatype == Repo.Metatype.Edge)
                 {
-                    if (this.prevVer != null)
+                    if (this.previosVertex != null)
                     {
-                        this.prevVer = null;
+                        this.previosVertex = null;
                         this.editorManager.DestroyVirtualEdge();
                         this.ElementUsed?.Invoke(this, EventArgs.Empty);
                     }

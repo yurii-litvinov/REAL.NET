@@ -37,7 +37,7 @@
             <ToolBar x:Name="PicToolbar" Band="1" ItemsSource="{Binding ButtonsToShow}">
                 <ToolBar.ItemTemplate>
                     <DataTemplate>
-                        <Button Width="16" Height="16" Margin="3" ToolTip="{Binding Description}" Command="{Binding WrappedCommand}" IsEnabled="{Binding IsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
+                        <Button Width="16" Height="16" Margin="3" ToolTip="{Binding Description}" Command="{Binding WinInputCommand}" IsEnabled="{Binding IsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
                             <Button.Background>
                                 <ImageBrush ImageSource="{Binding Image}"/>
                             </Button.Background>

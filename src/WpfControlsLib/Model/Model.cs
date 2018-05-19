@@ -32,15 +32,15 @@ namespace WpfControlsLib.Model
             this.Constraints = new Constraints.Constraints();
         }
 
-        public event EventHandler<VertexEventArgs> NewVertex;
+        public event EventHandler<VertexEventArgs> NewVertexAdded;
 
-        public event EventHandler<EdgeEventArgs> NewEdge;
+        public event EventHandler<EdgeEventArgs> NewEdgeAdded;
 
         public Constraints.Constraints Constraints { get; set; }
 
         public string ModelName { get; set; }
 
-        public string ErrorMsg { get; set; }
+        public string ErrorMessage { get; set; }
 
         public Repo.IRepo Repo { get; }
 
@@ -49,13 +49,13 @@ namespace WpfControlsLib.Model
         {
             if (this.Constraints.CheckEdges(this.Repo.Model(this.ModelName).Edges))
             {
-                this.ErrorMsg = "Number of edges exceeds allowed.";
+                this.ErrorMessage = "Number of edges exceeds allowed.";
                 return false;
             }
 
             if (this.Constraints.CheckNodes(this.Repo.Model(this.ModelName).Nodes))
             {
-                this.ErrorMsg = "Number of nodes exceeds allowed.";
+                this.ErrorMessage = "Number of nodes exceeds allowed.";
                 return false;
             }
 
@@ -104,7 +104,7 @@ namespace WpfControlsLib.Model
             {
                 Node = node
             };
-            this.NewVertex?.Invoke(this, args);
+            this.NewVertexAdded?.Invoke(this, args);
         }
 
         private void RaiseNewEdge(Repo.IEdge edge, Repo.IElement prevVer, Repo.IElement ctrlVer)
@@ -115,7 +115,7 @@ namespace WpfControlsLib.Model
                 Source = prevVer,
                 Target = ctrlVer
             };
-            this.NewEdge?.Invoke(this, args);
+            this.NewEdgeAdded?.Invoke(this, args);
         }
     }
 }

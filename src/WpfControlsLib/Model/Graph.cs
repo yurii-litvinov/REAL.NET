@@ -38,8 +38,8 @@ namespace WpfControlsLib.Model
         {
             this.model = repoModel;
             this.DataGraph = new BidirectionalGraph<NodeViewModel, EdgeViewModel>();
-            this.model.NewVertex += (sender, args) => this.CreateNodeWithPos(args.Node);
-            this.model.NewEdge += (sender, args) => this.CreateEdge(args.Edge, args.Source, args.Target);
+            this.model.NewVertexAdded += (sender, args) => this.CreateNodeWithPos(args.Node);
+            this.model.NewEdgeAdded += (sender, args) => this.CreateEdge(args.Edge, args.Source, args.Target);
         }
 
         public event EventHandler DrawGraph;
@@ -153,7 +153,7 @@ namespace WpfControlsLib.Model
             this.DataGraph.AddVertex(vertex);
             var args = new DataVertexArgs
             {
-                DataVert = vertex
+                DataVertex = vertex
             };
             this.AddNewVertexControl?.Invoke(this, args);
             this.ElementAdded?.Invoke(this, new ElementAddedEventArgs { Element = node });
@@ -179,7 +179,7 @@ namespace WpfControlsLib.Model
 
         public class DataVertexArgs : EventArgs
         {
-            public NodeViewModel DataVert { get; set; }
+            public NodeViewModel DataVertex { get; set; }
         }
 
         public class DataEdgeArgs : EventArgs
