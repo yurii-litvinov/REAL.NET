@@ -24,6 +24,16 @@ namespace EditorPluginInterfaces.Toolbar
         void DoAction();
 
         /// <summary>
+        /// Sets button enabled
+        /// </summary>
+        void SetEnabled();
+
+        /// <summary>
+        /// Sets button disabled
+        /// </summary>
+        void SetDisabled();
+
+        /// <summary>
         /// Gets description related to this button
         /// </summary>
         string Description { get; }

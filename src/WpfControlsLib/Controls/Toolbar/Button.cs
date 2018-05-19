@@ -15,13 +15,12 @@
 namespace WpfControlsLib.Controls.Toolbar
 {
     using System;
-    using System.ComponentModel;
     using EditorPluginInterfaces.Toolbar;
 
     /// <summary>
     /// Class that implements IButton interface
     /// </summary>
-    public class Button : IButton, INotifyPropertyChanged
+    public class Button : IButton
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Button"/> class.
@@ -33,7 +32,6 @@ namespace WpfControlsLib.Controls.Toolbar
         public Button(ICommand command, string description, string image, bool isEnabled)
         {
             this.Command = command;
-            this.WrappedCommand = new CommandXAMLAdapter(this.Command);
             this.Description = description;
             this.Image = image;
             this.IsEnabled = isEnabled;
@@ -55,14 +53,9 @@ namespace WpfControlsLib.Controls.Toolbar
         public event EventHandler ButtonEnabledChanged;
 
         /// <summary>
-        /// Throws when binded property changed
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
         /// Gets description of command
         /// </summary>
-        public string Description { get; private set; }
+        public string Description { get; }
 
         /// <summary>
         /// Gets attached image
@@ -75,37 +68,14 @@ namespace WpfControlsLib.Controls.Toolbar
         public ICommand Command { get; }
 
         /// <summary>
-        /// Gets System.Windows.Input.Command which is necessary for correct working with XAML
-        /// NOTICE: Added for compatibility with XAML
+        /// Gets a value indicating whether is this button enabled
         /// </summary>
-        public System.Windows.Input.ICommand WrappedCommand { get; }
+        public bool IsEnabled { get; private set; }
 
-        /// <summary>
-        /// Field helper
-        /// </summary>
-        private bool isEnabled;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether is this button enabled
-        /// </summary>
-        public bool IsEnabled
-        {
-            get
-            {
-                return this.isEnabled;
-            }
-
-            private set
-            {
-                this.isEnabled = value;
-                this.NotifyPropertyChanged("IsEnabled");
-            }
-        }
-
-/// <summary>
-/// Sets this button enabled
-/// </summary>
-public void SetEnabled()
+    /// <summary>
+    /// Sets this button enabled
+    /// </summary>
+    public void SetEnabled()
         {
             this.IsEnabled = true;
             this.ThrowButtonEnabledChanged();
@@ -129,11 +99,5 @@ public void SetEnabled()
         /// Throws event
         /// </summary>
         private void ThrowButtonEnabledChanged() => this.ButtonEnabledChanged?.Invoke(this, EventArgs.Empty);
-
-        /// <summary>
-        /// Notifies that propertyChanged
-        /// </summary>
-        /// <param name="propertyName">Property that changed</param>
-        private void NotifyPropertyChanged(string propertyName) => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

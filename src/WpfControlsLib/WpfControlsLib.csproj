@@ -122,6 +122,7 @@
       <DependentUpon>Scene.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Toolbar\Button.cs" />
+    <Compile Include="Controls\Toolbar\ButtonWrapper.cs" />
     <Compile Include="Controls\Toolbar\Command.cs" />
     <Compile Include="Controls\Toolbar\CommandXAMLAdapter.cs" />
     <Compile Include="Controls\Toolbar\StandardButtonsAndMenus\SampleButtonsCollection.cs" />
@@ -362,7 +363,6 @@
       <Paket>True</Paket>
     </Analyzer>
   </ItemGroup>
-  <ItemGroup />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">
       <ItemGroup>

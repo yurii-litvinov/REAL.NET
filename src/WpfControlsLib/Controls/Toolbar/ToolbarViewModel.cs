@@ -30,12 +30,12 @@ namespace WpfControlsLib.Controls.Toolbar
         /// </summary>
         public IList<IButton> Buttons => this.ButtonsToShow as IList<IButton>;
 
-        public ObservableCollection<Button> ButtonsToShow { get; } = new ObservableCollection<Button>();
+        public ObservableCollection<ButtonWrapper> ButtonsToShow { get; } = new ObservableCollection<ButtonWrapper>();
 
         public void AddButton(IButton button) => this.ButtonsToShow.Add(this.WrapIButton(button));
 
         public void AddMenu(IMenu menu) => throw new NotImplementedException();
 
-        private Button WrapIButton(IButton button) => new Button(button.Command, button.Description, button.Image, button.IsEnabled);
+        private ButtonWrapper WrapIButton(IButton button) => new ButtonWrapper(button);
     }
 }
