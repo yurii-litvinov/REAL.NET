@@ -13,6 +13,7 @@
             var command1 = new Command(action1);
             var image1 = "pack://application:,,,/" + "View/Pictures/Toolbar/undo.png";
             var button1 = new Button(command1, "Undo button", image1);
+            button1.SetDisabled();
             Action action2 = () => { console.SendMessage("Test redo button"); };
             var command2 = new Command(action2);
             var image2 = "pack://application:,,,/" + "View/Pictures/Toolbar/redo.png";

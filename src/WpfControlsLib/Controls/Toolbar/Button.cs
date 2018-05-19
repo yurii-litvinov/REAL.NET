@@ -14,26 +14,50 @@
 
 namespace WpfControlsLib.Controls.Toolbar
 {
+    using System;
+    using System.ComponentModel;
     using EditorPluginInterfaces.Toolbar;
 
     /// <summary>
     /// Class that implements IButton interface
     /// </summary>
-    public class Button : IButton
+    public class Button : IButton, INotifyPropertyChanged
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Button"/> class.
         /// </summary>
         /// <param name="command">Command</param>
         /// <param name="description">Description of command</param>
-        /// <param name="image">Image to attach</param>
-        public Button(ICommand command, string description, string image)
+        /// <param name="image">Image to attach</param
+        /// <param name="isEnabled">Is this button should be enabled</param>
+        public Button(ICommand command, string description, string image, bool isEnabled)
         {
             this.Command = command;
             this.WrappedCommand = new CommandXAMLAdapter(this.Command);
             this.Description = description;
             this.Image = image;
+            this.IsEnabled = isEnabled;
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Button"/> class.
+        /// Default : isEnabled = true
+        /// </summary>
+        /// <param name="command">Command</param>
+        /// <param name="description">Description of command</param>
+        /// <param name="image">Image to attach</param
+        public Button(ICommand command, string description, string image)
+            : this(command, description, image, true) { }
+
+        /// <summary>
+        /// Throws when button's visibility changed
+        /// </summary>
+        public event EventHandler ButtonEnabledChanged;
+
+        /// <summary>
+        /// Throws when binded property changed
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Gets description of command
@@ -57,8 +81,62 @@ namespace WpfControlsLib.Controls.Toolbar
         public System.Windows.Input.ICommand WrappedCommand { get; }
 
         /// <summary>
+        /// Field helper
+        /// </summary>
+        private bool isEnabled;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether is this button enabled
+        /// </summary>
+        public bool IsEnabled
+        {
+            get
+            {
+                return this.isEnabled;
+            }
+
+            set
+            {
+                this.isEnabled = value;
+                this.NotifyPropertyChanged("IsEnabled");
+            }
+        }
+
+/// <summary>
+/// Sets this button enabled
+/// </summary>
+public void SetEnabled()
+        {
+            this.IsEnabled = true;
+            this.ThrowButtonEnabledChanged();
+        }
+
+        /// <summary>
+        /// Sets this button disabled
+        /// </summary>
+        public void SetDisabled()
+        {
+            this.IsEnabled = false;
+            this.ThrowButtonEnabledChanged();
+        }
+
+        /// <summary>
         /// Executes command attached to button
         /// </summary>
         public void DoAction() => this.Command.Execute();
+
+        /// <summary>
+        /// Throws event
+        /// </summary>
+        private void ThrowButtonEnabledChanged()
+        {
+            this.ButtonEnabledChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Notifies that propertyChanged
+        /// </summary>
+        /// <param name="propertyName">Property that changed</param>
+        private void NotifyPropertyChanged(string propertyName) => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

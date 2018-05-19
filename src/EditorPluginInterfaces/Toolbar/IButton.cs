@@ -1,10 +1,17 @@
-﻿namespace EditorPluginInterfaces.Toolbar
+﻿using System;
+
+namespace EditorPluginInterfaces.Toolbar
 {
     /// <summary>
     /// Button on toolbar
     /// </summary>
     public interface IButton
     {
+        /// <summary>
+        /// Throws when button's visibility changed
+        /// </summary>
+        event EventHandler ButtonEnabledChanged;
+
         /// <summary>
         /// Gets action executed by this command
         /// </summary>
@@ -25,5 +32,10 @@
         /// Gets image to show on this button
         /// </summary>
         string Image { get; }
+
+        /// <summary>
+        /// Gets is this button enabled
+        /// </summary>
+        bool IsEnabled { get; }
     }
 }
