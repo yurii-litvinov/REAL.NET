@@ -62,7 +62,7 @@ namespace WpfControlsLib.Controls.Toolbar
         /// <summary>
         /// Gets description of command
         /// </summary>
-        public string Description { get; }
+        public string Description { get; private set; }
 
         /// <summary>
         /// Gets attached image
@@ -95,7 +95,7 @@ namespace WpfControlsLib.Controls.Toolbar
                 return this.isEnabled;
             }
 
-            set
+            private set
             {
                 this.isEnabled = value;
                 this.NotifyPropertyChanged("IsEnabled");
@@ -128,10 +128,7 @@ public void SetEnabled()
         /// <summary>
         /// Throws event
         /// </summary>
-        private void ThrowButtonEnabledChanged()
-        {
-            this.ButtonEnabledChanged?.Invoke(this, EventArgs.Empty);
-        }
+        private void ThrowButtonEnabledChanged() => this.ButtonEnabledChanged?.Invoke(this, EventArgs.Empty);
 
         /// <summary>
         /// Notifies that propertyChanged

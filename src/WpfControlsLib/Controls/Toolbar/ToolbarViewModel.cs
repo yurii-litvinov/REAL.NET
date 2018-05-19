@@ -36,6 +36,6 @@ namespace WpfControlsLib.Controls.Toolbar
 
         public void AddMenu(IMenu menu) => throw new NotImplementedException();
 
-        private Button WrapIButton(IButton button) => new Button(button.Command, button.Description, button.Image);
+        private Button WrapIButton(IButton button) => new Button(button.Command, button.Description, button.Image, button.IsEnabled);
     }
 }
