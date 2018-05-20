@@ -121,6 +121,7 @@
     <Compile Include="Controls\Scene\Scene.xaml.cs">
       <DependentUpon>Scene.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Scene\SceneCommands.cs" />
     <Compile Include="Controls\Toolbar\Button.cs" />
     <Compile Include="Controls\Toolbar\ButtonWrapper.cs" />
     <Compile Include="Controls\Toolbar\Command.cs" />
