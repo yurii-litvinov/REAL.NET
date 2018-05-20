@@ -137,6 +137,8 @@
     <Compile Include="Constraints\ConstraintsValues.cs" />
     <Compile Include="Constraints\ConstraintsWindow.xaml.cs" />
     <Compile Include="Controls\Console\AppConsoleViewModel.cs" />
+    <Compile Include="StackChangedArgs.cs" />
+    <Compile Include="UndoRedoStack.cs" />
     <Compile Include="ViewModel\AttributeViewModel.cs" />
     <Compile Include="Controls\Scene\EdgeBlueprint.cs" />
     <Compile Include="Controls\Scene\EditorObjectManager.cs" />
