@@ -66,6 +66,7 @@
     <Compile Include="Toolbar\ICommand.cs" />
     <Compile Include="Toolbar\IMenu.cs" />
     <Compile Include="Toolbar\IToolbar.cs" />
+    <Compile Include="UndoRedo\IUndoRedoStack.cs" />
     <Compile Include="VertexEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
