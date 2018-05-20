@@ -36,6 +36,8 @@ namespace WpfControlsLib.Model
 
         public event EventHandler<EdgeEventArgs> NewEdgeAdded;
 
+        public event EventHandler<ElementEventArgs> ElementRemoved;
+
         public Constraints.Constraints Constraints { get; set; }
 
         public string ModelName { get; set; }
@@ -96,6 +98,7 @@ namespace WpfControlsLib.Model
         {
             var model = this.Repo.Model(this.ModelName);
             model.DeleteElement(element);
+            this.RaiseElementRemoved(element);
         }
 
         private void RaiseNewVertex(Repo.INode node)
@@ -104,6 +107,7 @@ namespace WpfControlsLib.Model
             {
                 Node = node
             };
+
             this.NewVertexAdded?.Invoke(this, args);
         }
 
@@ -115,7 +119,18 @@ namespace WpfControlsLib.Model
                 Source = prevVer,
                 Target = ctrlVer
             };
+
             this.NewEdgeAdded?.Invoke(this, args);
+        }
+
+       private void RaiseElementRemoved(Repo.IElement element)
+        {
+            var args = new ElementEventArgs
+            {
+                Element = element
+            };
+
+            this.ElementRemoved?.Invoke(this, args);
         }
     }
 }

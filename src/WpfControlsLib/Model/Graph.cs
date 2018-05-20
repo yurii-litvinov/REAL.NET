@@ -40,6 +40,7 @@ namespace WpfControlsLib.Model
             this.DataGraph = new BidirectionalGraph<NodeViewModel, EdgeViewModel>();
             this.model.NewVertexAdded += (sender, args) => this.CreateNodeWithPos(args.Node);
             this.model.NewEdgeAdded += (sender, args) => this.CreateEdge(args.Edge, args.Source, args.Target);
+            this.model.ElementRemoved += (sender, args) => this.RemoveElement(args.Element);
         }
 
         public event EventHandler DrawGraph;
@@ -128,10 +129,14 @@ namespace WpfControlsLib.Model
             {
                 Edge = edge
             };
+
+            this.DataGraph.AddEdge(newEdge);
+
             var args = new DataEdgeArgs
             {
                 EdgeViewModel = newEdge
             };
+
             this.AddNewEdgeControl?.Invoke(this, args);
             this.ElementAdded?.Invoke(this, new ElementAddedEventArgs { Element = edge });
         }
@@ -175,6 +180,21 @@ namespace WpfControlsLib.Model
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
             this.DataGraph.AddVertex(vertex);
             this.ElementAdded?.Invoke(this, new ElementAddedEventArgs { Element = node });
+        }
+
+        private void RemoveElement(IElement element)
+        {
+            if (element.Metatype == Metatype.Edge)
+            {
+                var edgeViewModel = this.DataGraph.Edges.First(x => x.Edge == element);
+                this.DataGraph.RemoveEdge(edgeViewModel);
+            }
+
+            if (element.Metatype == Metatype.Node)
+            {
+                var nodeViewModel = this.DataGraph.Vertices.First(x => x.Node == element);
+                this.DataGraph.RemoveVertex(nodeViewModel);
+            }
         }
 
         public class DataVertexArgs : EventArgs

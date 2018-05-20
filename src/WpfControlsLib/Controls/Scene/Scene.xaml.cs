@@ -335,9 +335,19 @@ namespace WpfControlsLib.Controls.Scene
         private void MenuItemClickVert(object sender, EventArgs e)
         {
             var vertex = this.currentVertex.GetDataVertex<NodeViewModel>();
+            var edges = this.Graph.DataGraph.Edges.ToArray();
+
+            foreach (var edge in edges)
+            {
+                if (edge.Source == vertex || edge.Target == vertex)
+                {
+                    this.controller.RemoveElement(edge.Edge);
+                    this.ElementRemoved?.Invoke(this, new Graph.ElementRemovedEventArgs { Element = edge.Edge as Repo.IElement });
+                }
+            }
+
             this.controller.RemoveElement(vertex.Node);
             this.ElementRemoved?.Invoke(this, new Graph.ElementRemovedEventArgs { Element = vertex.Node as Repo.IElement });
-            this.Graph.DataGraph.RemoveVertex(vertex);
             this.DrawGraph();
         }
 
@@ -346,7 +356,6 @@ namespace WpfControlsLib.Controls.Scene
             var edge = this.edgeControl.GetDataEdge<EdgeViewModel>();
             this.controller.RemoveElement(edge.Edge);
             this.ElementRemoved?.Invoke(this, new Graph.ElementRemovedEventArgs { Element = edge.Edge as Repo.IElement });
-            this.Graph.DataGraph.RemoveEdge(edge);
             this.DrawGraph();
         }
 

@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EdgeEventArgs.cs" />
+    <Compile Include="ElementEventArgs.cs" />
     <Compile Include="IConsole.cs" />
     <Compile Include="IModel.cs" />
     <Compile Include="IPlugin.cs" />
