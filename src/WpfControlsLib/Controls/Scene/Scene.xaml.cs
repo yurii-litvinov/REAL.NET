@@ -40,14 +40,6 @@ namespace WpfControlsLib.Controls.Scene
         private WpfControlsLib.Model.Model model;
         private Controller.Controller controller;
         private IElementProvider elementProvider;
-        
-        public Graph Graph { get; set; }
-
-        public event EventHandler<EventArgs> ElementUsed;
-        public event EventHandler<NodeSelectedEventArgs> NodeSelected;
-        public event EventHandler<EdgeSelectedEventArgs> EdgeSelected;
-        public event EventHandler<Graph.ElementAddedEventArgs> ElementAdded;
-        public event EventHandler<Graph.ElementRemovedEventArgs> ElementRemoved;
 
         public Scene()
         {
@@ -63,6 +55,18 @@ namespace WpfControlsLib.Controls.Scene
             this.zoomControl.MouseDown += this.OnSceneMouseDown;
             this.zoomControl.Drop += this.ZoomControl_Drop;
         }
+
+        public event EventHandler<EventArgs> ElementUsed;
+
+        public event EventHandler<NodeSelectedEventArgs> NodeSelected;
+
+        public event EventHandler<EdgeSelectedEventArgs> EdgeSelected;
+
+        public event EventHandler<Graph.ElementAddedEventArgs> ElementAdded;
+
+        public event EventHandler<Graph.ElementRemovedEventArgs> ElementRemoved;
+
+        public Graph Graph { get; set; }
 
         private void InitGraphXLogicCore()
         {
@@ -237,11 +241,16 @@ namespace WpfControlsLib.Controls.Scene
 
             if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
             {
+                this.zoomControl.MouseMove -= this.OnEdgeMouseMove;
                 args.EdgeControl.ContextMenu = new ContextMenu();
                 var mi = new MenuItem { Header = "Delete item", Tag = args.EdgeControl };
                 mi.Click += this.MenuItemClickEdge;
                 args.EdgeControl.ContextMenu.Items.Add(mi);
                 args.EdgeControl.ContextMenu.IsOpen = true;
+                if (dataEdge.RoutingPoints == null)
+                {
+                    return;
+                }
 
                 var isRoutingPoint = dataEdge.RoutingPoints.Where(point => this.GetDistance(point, mousePosition).CompareTo(3) <= 0).ToArray().Length != 0;
 
