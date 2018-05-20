@@ -55,6 +55,7 @@
             {
                 throw new InvalidOperationException("there is no nodes like this");
             }
+
             var node1 = found1[0];
             var node2 = found2[0];
             var edgeData = new EdgeViewModel(node1.Key, node2.Key);
@@ -64,7 +65,14 @@
 
         private void DeleteEdgeFromScene(Repo.IEdge edge)
         {
+            var found = this.scene.SceneX.EdgesList.ToList().FindAll(x => x.Key.Edge == edge);
+            if (found.Count == 0)
+            {
+                throw new InvalidOperationException("there is no edge like this");
+            }
 
+            var edgePair = found[0];
+            this.scene.SceneX.RemoveEdge(edgePair.Key, true);
         }
     }
 }
