@@ -40,12 +40,14 @@ namespace WpfControlsLib.Controls.Scene
         private WpfControlsLib.Model.Model model;
         private Controller.Controller controller;
         private IElementProvider elementProvider;
+        private SceneCommands commands;
 
         public Scene()
         {
             this.InitializeComponent();
 
             this.editorManager = new EditorObjectManager(this.SceneX, this.zoomControl);
+            this.commands = new SceneCommands(this);
 
             ZoomControl.SetViewFinderVisibility(this.zoomControl, Visibility.Hidden);
 
@@ -157,9 +159,9 @@ namespace WpfControlsLib.Controls.Scene
         {
             if (this.edgeControl != null)
             {
-                var data = edgeControl.GetDataEdge<EdgeViewModel>();
+                var data = this.edgeControl.GetDataEdge<EdgeViewModel>();
                 data.Text = newLabel;
-                SceneX.GenerateAllEdges();
+                this.SceneX.GenerateAllEdges();
             }
         }
 

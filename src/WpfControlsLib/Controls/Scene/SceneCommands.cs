@@ -1,12 +1,12 @@
 ﻿namespace WpfControlsLib.Controls.Scene
 {
-    using GraphX.Controls;
     using System;
     using System.Collections.Generic;
-    using System.Windows;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Windows;
+    using GraphX.Controls;
     using WpfControlsLib.ViewModel;
     using static WpfControlsLib.Model.Graph;
 
@@ -14,12 +14,9 @@
     {
         private Scene scene;
 
-        private Repo.IModel model;
-
-        public SceneCommands(Scene scene, Repo.IModel model)
+        public SceneCommands(Scene scene)
         {
             this.scene = scene;
-            this.model = model;
         }
 
         public void AddVertexOnScene(Point position, Repo.INode node)
@@ -42,7 +39,18 @@
 
         public void DeleteVertexFromScene(Repo.INode node)
         {
-            // TODO : first removing edges, then vertex
+            this.scene.SceneX.EdgesList.ToList().Select(x => x.Key)
+                .Where(x => x.Edge.From == node || x.Edge.To == node).ToList()
+                .ForEach(x => this.scene.SceneX.RemoveEdge(x, true));
+            var found = this.scene.SceneX.VertexList.ToList()
+                .Where(x => x.Key.Node == node).ToList();
+            if (found.Count == 0)
+            {
+                throw new InvalidOperationException("can't find node like this");
+            }
+
+            var nodePair = found[0];
+            this.scene.SceneX.RemoveVertex(nodePair.Key, true);
         }
 
         public void AddEdgeOnScene(Repo.IEdge edge, Point[] routingPoints)
@@ -68,7 +76,7 @@
             var found = this.scene.SceneX.EdgesList.ToList().FindAll(x => x.Key.Edge == edge);
             if (found.Count == 0)
             {
-                throw new InvalidOperationException("there is no edge like this");
+                throw new InvalidOperationException("can't find edge like this");
             }
 
             var edgePair = found[0];
