@@ -25,7 +25,7 @@
     <Grid>
         <Border BorderThickness="1"  Margin="2">
             <graphx:ZoomControl x:Name="zoomControl" AllowDrop="True">
-                <scene:GraphArea AllowDrop="True" x:Name="Scene" />
+                <scene:GraphArea AllowDrop="True" x:Name="SceneX" />
             </graphx:ZoomControl>
         </Border>
     </Grid>

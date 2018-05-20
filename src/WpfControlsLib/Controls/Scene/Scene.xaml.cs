@@ -45,12 +45,12 @@ namespace WpfControlsLib.Controls.Scene
         {
             this.InitializeComponent();
 
-            this.editorManager = new EditorObjectManager(this.Scene, this.zoomControl);
+            this.editorManager = new EditorObjectManager(this.SceneX, this.zoomControl);
 
             ZoomControl.SetViewFinderVisibility(this.zoomControl, Visibility.Hidden);
 
-            this.Scene.VertexSelected += this.VertexSelectedAction;
-            this.Scene.EdgeSelected += this.EdgeSelectedAction;
+            this.SceneX.VertexSelected += this.VertexSelectedAction;
+            this.SceneX.EdgeSelected += this.EdgeSelectedAction;
             this.zoomControl.Click += this.ClearSelection;
             this.zoomControl.MouseDown += this.OnSceneMouseDown;
             this.zoomControl.Drop += this.ZoomControl_Drop;
@@ -77,7 +77,7 @@ namespace WpfControlsLib.Controls.Scene
                     DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.LinLog,
                 };
 
-            this.Scene.LogicCore = logic;
+            this.SceneX.LogicCore = logic;
 
             logic.DefaultLayoutAlgorithmParams =
                 logic.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.LinLog);
@@ -118,7 +118,7 @@ namespace WpfControlsLib.Controls.Scene
                     this.Graph.DataGraph.Edges.ToList()[i].Target.Name == target)
                 {
                     var edge = this.Graph.DataGraph.Edges.ToList()[i];
-                    foreach (var ed in this.Scene.EdgesList)
+                    foreach (var ed in this.SceneX.EdgesList)
                     {
                         if (ed.Key == edge)
                         {
@@ -140,7 +140,7 @@ namespace WpfControlsLib.Controls.Scene
                 {
                     var vertex = this.Graph.DataGraph.Vertices.ToList()[i];
                     this.NodeSelected?.Invoke(this, new NodeSelectedEventArgs {Node = vertex});
-                    foreach (var ed in this.Scene.VertexList)
+                    foreach (var ed in this.SceneX.VertexList)
                     {
                         if (ed.Key == vertex)
                         {
@@ -159,7 +159,7 @@ namespace WpfControlsLib.Controls.Scene
             {
                 var data = edgeControl.GetDataEdge<EdgeViewModel>();
                 data.Text = newLabel;
-                Scene.GenerateAllEdges();
+                SceneX.GenerateAllEdges();
             }
         }
 
@@ -167,14 +167,14 @@ namespace WpfControlsLib.Controls.Scene
         {
             this.previosVertex = null;
             this.currentVertex = null;
-            this.Scene.GetAllVertexControls().ToList().ForEach(
+            this.SceneX.GetAllVertexControls().ToList().ForEach(
                 x => x.GetDataVertex<NodeViewModel>().Color = Brushes.Green);
         }
 
         // Need for dropping.
         private void ZoomControl_Drop(object sender, DragEventArgs e)
         {
-            this.position = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.Scene);
+            this.position = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.SceneX);
             this.CreateNewNode((Repo.IElement)e.Data.GetData("REAL.NET palette element"));
             this.ElementUsed?.Invoke(this, EventArgs.Empty);
         }
@@ -201,7 +201,7 @@ namespace WpfControlsLib.Controls.Scene
             this.NodeSelected?.Invoke(this,
                 new NodeSelectedEventArgs {Node = this.currentVertex.GetDataVertex<NodeViewModel>()});
 
-            this.Scene.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<NodeViewModel>().
+            this.SceneX.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<NodeViewModel>().
                 Color = Brushes.Green);
 
             this.currentVertex.GetDataVertex<NodeViewModel>().Color = Brushes.LightBlue;
@@ -231,7 +231,7 @@ namespace WpfControlsLib.Controls.Scene
                 new EdgeSelectedEventArgs { Edge = this.edgeControl.GetDataEdge<EdgeViewModel>() });
 
             var dataEdge = this.edgeControl.GetDataEdge<EdgeViewModel>();
-            var mousePosition = args.MouseArgs.GetPosition(this.Scene).ToGraphX();
+            var mousePosition = args.MouseArgs.GetPosition(this.SceneX).ToGraphX();
 
             // Adding new routing point.
             if (args.MouseArgs.LeftButton == MouseButtonState.Pressed)
@@ -313,13 +313,13 @@ namespace WpfControlsLib.Controls.Scene
         {
             var vc = new VertexControl(vertex);
             vc.SetPosition(this.position);
-            this.Scene.AddVertex(vertex, vc);
+            this.SceneX.AddVertex(vertex, vc);
         }
 
         private void AddNewEdgeControl(EdgeViewModel edgeViewModel)
         {
             var ec = new EdgeControl(this.previosVertex, this.currentVertex, edgeViewModel);
-            this.Scene.InsertEdge(edgeViewModel, ec);
+            this.SceneX.InsertEdge(edgeViewModel, ec);
             this.previosVertex = null;
             this.editorManager.DestroyVirtualEdge();
         }
@@ -329,7 +329,7 @@ namespace WpfControlsLib.Controls.Scene
             var edge = this.edgeControl.GetDataEdge<EdgeViewModel>();
             var newRoutingPoints = edge.RoutingPoints.Where(element => element != (GraphX.Measure.Point)((MenuItem)sender).Tag).ToArray();
             edge.RoutingPoints = newRoutingPoints;
-            this.Scene.UpdateAllEdges();
+            this.SceneX.UpdateAllEdges();
         }
 
         private void MenuItemClickVert(object sender, EventArgs e)
@@ -367,7 +367,7 @@ namespace WpfControlsLib.Controls.Scene
 
         private void DrawGraph()
         {
-            this.Scene.GenerateGraph(this.Graph.DataGraph);
+            this.SceneX.GenerateGraph(this.Graph.DataGraph);
             this.zoomControl.ZoomToFill();
         }
 
@@ -380,17 +380,17 @@ namespace WpfControlsLib.Controls.Scene
                 return;
             }
 
-            var mousePosition = Mouse.GetPosition(this.Scene);
+            var mousePosition = Mouse.GetPosition(this.SceneX);
             var index = dataEdge.IndexOfInflectionPoint;
             dataEdge.RoutingPoints[index] = new GraphX.Measure.Point(mousePosition.X, mousePosition.Y);
-            this.Scene.UpdateAllEdges();
+            this.SceneX.UpdateAllEdges();
         }
 
         private void OnSceneMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                var position = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.Scene);
+                var position = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.SceneX);
                 if (this.elementProvider.Element?.InstanceMetatype == Repo.Metatype.Node)
                 {
                     this.position = position;

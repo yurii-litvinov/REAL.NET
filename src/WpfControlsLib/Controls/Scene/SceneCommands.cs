@@ -37,7 +37,7 @@
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
             var control = new VertexControl(vertex);
             control.SetPosition(position);
-            this.scene.Scene.AddVertex(vertex, control);
+            this.scene.SceneX.AddVertex(vertex, control);
         }
 
         public void DeleteVertexFromScene(Repo.INode node)
@@ -45,9 +45,21 @@
             // TODO : first removing edges, then vertex
         }
 
-        public void AddEdgeOnScene(Repo.INode node1, Repo.INode node2, Point[] routingPoints)
+        public void AddEdgeOnScene(Repo.IEdge edge, Point[] routingPoints)
         {
-
+            var from = edge.From;
+            var to = edge.To;
+            var found1 = this.scene.SceneX.VertexList.ToList().FindAll(x => x.Key.Node == from);
+            var found2 = this.scene.SceneX.VertexList.ToList().FindAll(x => x.Key.Node == to);
+            if (found1.Count == 0 || found2.Count == 0)
+            {
+                throw new InvalidOperationException("there is no nodes like this");
+            }
+            var node1 = found1[0];
+            var node2 = found2[0];
+            var edgeData = new EdgeViewModel(node1.Key, node2.Key);
+            var control = new EdgeControl(node1.Value, node2.Value, edgeData);
+            this.scene.SceneX.AddEdge(edgeData, control);
         }
 
         private void DeleteEdgeFromScene(Repo.IEdge edge)
