@@ -348,6 +348,7 @@ namespace WpfControlsLib.Controls.Scene
         {
             var ec = new EdgeControl(this.previosVertex, this.currentVertex, edgeViewModel);
             this.SceneX.InsertEdge(edgeViewModel, ec);
+            this.register.RegisterAddingEdge(edgeViewModel.Edge, this.ConvertIntoWinPoint(edgeViewModel.RoutingPoints));
             this.previosVertex = null;
             this.editorManager.DestroyVirtualEdge();
         }
@@ -387,6 +388,7 @@ namespace WpfControlsLib.Controls.Scene
         {
             var edge = this.edgeControl.GetDataEdge<EdgeViewModel>();
             this.controller.RemoveElement(edge.Edge);
+            this.register.RegisterDeletingEdge(edge.Edge);
             this.DrawGraph();
         }
 

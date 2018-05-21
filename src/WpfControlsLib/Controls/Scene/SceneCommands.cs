@@ -78,7 +78,7 @@
             this.scene.SceneX.InsertEdge(edgeData, control);
         }
 
-        private void DeleteEdgeFromScene(Repo.IEdge edge)
+        public void DeleteEdgeFromScene(Repo.IEdge edge)
         {
             var found = this.scene.SceneX.EdgesList.ToList().FindAll(x => x.Key.Edge == edge);
             if (found.Count == 0)
