@@ -61,7 +61,7 @@ namespace WpfControlsLib.Controls.Scene
             this.SceneX.EdgeSelected += this.EdgeSelectedAction;
             this.zoomControl.Click += this.ClearSelection;
             this.zoomControl.MouseDown += this.OnSceneMouseDown;
-            this.zoomControl.Drop += this.ZoomControl_Drop;
+            this.zoomControl.Drop += this.ZoomControlDrop;
         }
 
         public event EventHandler<EventArgs> ElementUsed;
@@ -187,12 +187,22 @@ namespace WpfControlsLib.Controls.Scene
                 x => x.GetDataVertex<NodeViewModel>().Color = Brushes.Green);
         }
 
-        // Need for dropping.
-        private void ZoomControl_Drop(object sender, DragEventArgs e)
+        /// <summary>
+        /// Handles drag and drop event.
+        /// Notice: drag and drop event does not work with edges yet.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Drag event arguments.</param>
+        private void ZoomControlDrop(object sender, DragEventArgs e)
         {
-            this.position = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.SceneX);
-            this.CreateNewNode((Repo.IElement)e.Data.GetData("REAL.NET palette element"));
-            this.ElementUsed?.Invoke(this, EventArgs.Empty);
+            var element = e.Data.GetData("REAL.NET palette element") as Repo.IElement;
+
+            if (element.Metatype == Repo.Metatype.Node)
+            {
+                this.position = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.SceneX);
+                this.CreateNewNode(element);
+                this.ElementUsed?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         private void VertexSelectedAction(object sender, VertexSelectedEventArgs args)
