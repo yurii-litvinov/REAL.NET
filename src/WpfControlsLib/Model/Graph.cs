@@ -47,6 +47,8 @@ namespace WpfControlsLib.Model
 
         public event EventHandler<ElementAddedEventArgs> ElementAdded;
 
+        public event EventHandler<ElementRemovedEventArgs> ElementRemoved;
+
         public event EventHandler<DataVertexArgs> AddNewVertexControl;
 
         public event EventHandler<DataEdgeArgs> AddNewEdgeControl;
@@ -195,6 +197,8 @@ namespace WpfControlsLib.Model
                 var nodeViewModel = this.DataGraph.Vertices.First(x => x.Node == element);
                 this.DataGraph.RemoveVertex(nodeViewModel);
             }
+
+            this.ElementRemoved?.Invoke(this, new ElementRemovedEventArgs { Element = element });
         }
 
         public class DataVertexArgs : EventArgs

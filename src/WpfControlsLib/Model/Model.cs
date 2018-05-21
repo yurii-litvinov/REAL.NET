@@ -123,7 +123,7 @@ namespace WpfControlsLib.Model
             this.NewEdgeAdded?.Invoke(this, args);
         }
 
-       private void RaiseElementRemoved(Repo.IElement element)
+        private void RaiseElementRemoved(Repo.IElement element)
         {
             var args = new ElementEventArgs
             {

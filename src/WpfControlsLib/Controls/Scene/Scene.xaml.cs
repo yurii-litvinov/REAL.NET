@@ -107,6 +107,7 @@ namespace WpfControlsLib.Controls.Scene
             this.Graph = new Graph(model);
             this.Graph.DrawGraph += (sender, args) => this.DrawGraph();
             this.Graph.ElementAdded += (sender, args) => this.ElementAdded?.Invoke(this, args);
+            this.Graph.ElementRemoved += (sender, args) => this.ElementRemoved?.Invoke(this, args);
             this.Graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVertex);
             this.Graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.EdgeViewModel);
             this.InitGraphXLogicCore();
@@ -358,13 +359,11 @@ namespace WpfControlsLib.Controls.Scene
                 if (edge.Source == vertex || edge.Target == vertex)
                 {
                     this.controller.RemoveElement(edge.Edge);
-                    this.ElementRemoved?.Invoke(this, new Graph.ElementRemovedEventArgs { Element = edge.Edge as Repo.IElement });
                 }
             }
 
             this.controller.RemoveElement(vertex.Node);
             this.register.RegisterDeletingVertex(vertex.Node);
-            this.ElementRemoved?.Invoke(this, new Graph.ElementRemovedEventArgs { Element = vertex.Node as Repo.IElement });
             this.DrawGraph();
         }
 
@@ -372,7 +371,6 @@ namespace WpfControlsLib.Controls.Scene
         {
             var edge = this.edgeControl.GetDataEdge<EdgeViewModel>();
             this.controller.RemoveElement(edge.Edge);
-            this.ElementRemoved?.Invoke(this, new Graph.ElementRemovedEventArgs { Element = edge.Edge as Repo.IElement });
             this.DrawGraph();
         }
 
