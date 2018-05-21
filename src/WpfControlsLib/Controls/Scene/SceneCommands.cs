@@ -68,7 +68,7 @@
             var node2 = found2[0];
             var edgeData = new EdgeViewModel(node1.Key, node2.Key);
             var control = new EdgeControl(node1.Value, node2.Value, edgeData);
-            this.scene.SceneX.AddEdge(edgeData, control);
+            this.scene.SceneX.InsertEdge(edgeData, control);
         }
 
         private void DeleteEdgeFromScene(Repo.IEdge edge)
