@@ -70,7 +70,8 @@
             var node2 = found2[0];
             var edgeData = new EdgeViewModel(node1.Key, node2.Key)
             {
-                Edge = edge
+                Edge = edge,
+                RoutingPoints = routingPoints.ToGraphX()
             };
             var control = new EdgeControl(node1.Value, node2.Value, edgeData);
             this.scene.Graph.DataGraph.AddEdge(edgeData);

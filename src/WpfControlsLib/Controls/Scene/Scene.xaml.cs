@@ -360,6 +360,8 @@ namespace WpfControlsLib.Controls.Scene
             this.SceneX.UpdateAllEdges();
         }
 
+        private Point[] ConvertIntoWinPoint(GraphX.Measure.Point[] points) => points?.Select(y => new Point(y.X, y.Y)).ToArray();
+
         private void MenuItemClickedOnVertex(object sender, EventArgs e)
         {
             var vertex = this.currentVertex.GetDataVertex<NodeViewModel>();
@@ -367,7 +369,7 @@ namespace WpfControlsLib.Controls.Scene
 
             var edgesToRestore = this.SceneX.EdgesList.ToList()
                 .Where(x => x.Key.Source == vertex || x.Key.Target == vertex)
-                .Select(x => Tuple.Create(x.Key.Edge, new Point[5]/*x.Key.RoutingPoints.Select(y => new Point(y.X, y.Y)).ToArray()*/));
+                .Select(x => Tuple.Create(x.Key.Edge, this.ConvertIntoWinPoint(x.Key.RoutingPoints)));
             foreach (var edge in edges)
             {
                 if (edge.Source == vertex || edge.Target == vertex)
