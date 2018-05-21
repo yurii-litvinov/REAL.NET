@@ -68,8 +68,6 @@ namespace WpfControlsLib.Controller.UndoRedo
         /// <param name="command">Command for handling.</param>
         public void AddCommand(ICommand command)
         {
-            command.Execute();
-
             if (command.IsUndoType)
             {
                 this.undoStack.Push(command);

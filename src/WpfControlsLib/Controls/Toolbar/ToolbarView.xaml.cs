@@ -39,6 +39,7 @@ namespace WpfControlsLib.Controls.Toolbar
                 // TODO: replace exception to writing to log
                 throw new ArgumentException("sender is incorrect type, expected : ToolbarViewModel");
             }
+
             // TODO : adding buttons on toolbar
         }
     }

@@ -34,6 +34,7 @@
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
             var control = new VertexControl(vertex);
             control.SetPosition(position);
+            this.scene.Graph.DataGraph.AddVertex(vertex);
             this.scene.SceneX.AddVertex(vertex, control);
         }
 
@@ -68,6 +69,7 @@
             var node2 = found2[0];
             var edgeData = new EdgeViewModel(node1.Key, node2.Key);
             var control = new EdgeControl(node1.Value, node2.Value, edgeData);
+            this.scene.Graph.DataGraph.AddEdge(edgeData);
             this.scene.SceneX.InsertEdge(edgeData, control);
         }
 

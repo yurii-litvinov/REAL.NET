@@ -229,7 +229,7 @@ namespace WpfControlsLib.Controls.Scene
             {
                 args.VertexControl.ContextMenu = new ContextMenu();
                 var mi = new MenuItem { Header = "Delete item", Tag = args.VertexControl };
-                mi.Click += this.MenuItemClickVert;
+                mi.Click += this.MenuItemClickedOnVertex;
                 args.VertexControl.ContextMenu.Items.Add(mi);
                 args.VertexControl.ContextMenu.IsOpen = true;
             }
@@ -329,6 +329,7 @@ namespace WpfControlsLib.Controls.Scene
             var vc = new VertexControl(vertex);
             vc.SetPosition(this.position);
             this.SceneX.AddVertex(vertex, vc);
+            this.register.RegisterAddingVertex(this.position, vertex.Node);
         }
 
         private void AddNewEdgeControl(EdgeViewModel edgeViewModel)
@@ -347,7 +348,7 @@ namespace WpfControlsLib.Controls.Scene
             this.SceneX.UpdateAllEdges();
         }
 
-        private void MenuItemClickVert(object sender, EventArgs e)
+        private void MenuItemClickedOnVertex(object sender, EventArgs e)
         {
             var vertex = this.currentVertex.GetDataVertex<NodeViewModel>();
             var edges = this.Graph.DataGraph.Edges.ToArray();
@@ -362,6 +363,7 @@ namespace WpfControlsLib.Controls.Scene
             }
 
             this.controller.RemoveElement(vertex.Node);
+            this.register.RegisterDeletingVertex(vertex.Node);
             this.ElementRemoved?.Invoke(this, new Graph.ElementRemovedEventArgs { Element = vertex.Node as Repo.IElement });
             this.DrawGraph();
         }
