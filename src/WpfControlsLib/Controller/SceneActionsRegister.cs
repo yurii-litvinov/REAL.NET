@@ -24,7 +24,7 @@
             this.commands = commands;
             this.undoRedoStack = undoStack;
         }
-
+        
         public void RegisterAddingVertex(Point position, Repo.INode node)
         {
             Action doAction = () => { this.commands.AddVertexOnScene(position, node); };
