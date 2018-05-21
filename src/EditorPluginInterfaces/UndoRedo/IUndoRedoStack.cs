@@ -15,12 +15,23 @@
 namespace EditorPluginInterfaces.UndoRedo
 {
     using EditorPluginInterfaces.Toolbar;
+    using System;
 
     /// <summary>
     /// Interface for stack of undo/redo commands.
     /// </summary>
     public interface IUndoRedoStack
     {
+        /// <summary>
+        /// Event is raised when undo stack is updated.
+        /// </summary>
+        event EventHandler<StackChangedArgs> UndoUpdated;
+
+        /// <summary>
+        /// Event is raised when redo stack is updated.
+        /// </summary>
+        event EventHandler<StackChangedArgs> RedoUpdated;
+
         /// <summary>
         /// Gets a value indicating whether undo stack is available.
         /// </summary>
@@ -32,10 +43,10 @@ namespace EditorPluginInterfaces.UndoRedo
         bool IsRedoAvailable { get; }
 
         /// <summary>
-        /// Handles a command.
+        /// Register a command.
         /// </summary>
-        /// <param name="command">Command for handling.</param>
-        void HandleCommand(ICommand command);
+        /// <param name="command">Command for register.</param>
+        void AddCommand(ICommand command);
 
         /// <summary>
         /// Undo a command.
@@ -46,5 +57,10 @@ namespace EditorPluginInterfaces.UndoRedo
         /// Redo a command.
         /// </summary>
         void Redo();
+
+        /// <summary>
+        /// Resets redo stack
+        /// </summary>
+        void ResetRedo();
     }
 }
