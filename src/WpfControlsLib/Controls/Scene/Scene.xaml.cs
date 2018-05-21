@@ -15,6 +15,7 @@
 namespace WpfControlsLib.Controls.Scene
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -353,6 +354,9 @@ namespace WpfControlsLib.Controls.Scene
             var vertex = this.currentVertex.GetDataVertex<NodeViewModel>();
             var edges = this.Graph.DataGraph.Edges.ToArray();
 
+            var edgesToRestore = this.SceneX.EdgesList.ToList()
+                .Where(x => x.Key.Source == vertex || x.Key.Target == vertex)
+                .Select(x => Tuple.Create(x.Key.Edge, new Point[5]/*x.Key.RoutingPoints.Select(y => new Point(y.X, y.Y)).ToArray()*/));
             foreach (var edge in edges)
             {
                 if (edge.Source == vertex || edge.Target == vertex)
@@ -363,7 +367,7 @@ namespace WpfControlsLib.Controls.Scene
             }
 
             this.controller.RemoveElement(vertex.Node);
-            this.register.RegisterDeletingVertex(vertex.Node);
+            this.register.RegisterDeletingVertex(vertex.Node, edgesToRestore);
             this.ElementRemoved?.Invoke(this, new Graph.ElementRemovedEventArgs { Element = vertex.Node as Repo.IElement });
             this.DrawGraph();
         }

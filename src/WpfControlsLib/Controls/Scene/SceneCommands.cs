@@ -58,8 +58,9 @@
         {
             var from = edge.From;
             var to = edge.To;
-            var found1 = this.scene.SceneX.VertexList.ToList().FindAll(x => x.Key.Node == from);
-            var found2 = this.scene.SceneX.VertexList.ToList().FindAll(x => x.Key.Node == to);
+            // hack need to be removed
+            var found1 = this.scene.SceneX.VertexList.ToList().FindAll(x => x.Key.Node == from as Repo.INode);
+            var found2 = this.scene.SceneX.VertexList.ToList().FindAll(x => x.Key.Node == to as Repo.INode);
             if (found1.Count == 0 || found2.Count == 0)
             {
                 throw new InvalidOperationException("there is no nodes like this");
@@ -67,7 +68,10 @@
 
             var node1 = found1[0];
             var node2 = found2[0];
-            var edgeData = new EdgeViewModel(node1.Key, node2.Key);
+            var edgeData = new EdgeViewModel(node1.Key, node2.Key)
+            {
+                Edge = edge
+            };
             var control = new EdgeControl(node1.Value, node2.Value, edgeData);
             this.scene.Graph.DataGraph.AddEdge(edgeData);
             this.scene.SceneX.InsertEdge(edgeData, control);
