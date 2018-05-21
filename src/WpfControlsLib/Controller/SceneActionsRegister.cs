@@ -50,7 +50,7 @@
             Action undoAction = () =>
             {
                 this.commands.AddVertexOnScene(position, node);
-                this.RestoreEdges(edgesFromNode);
+                //this.RestoreEdges(edgesFromNode);
             };
             var command = new Command(doAction, undoAction);
             this.undoRedoStack.AddCommand(command);
