@@ -20,12 +20,14 @@ namespace WpfControlsLib.Controls.Scene
     using System.Windows.Controls;
     using System.Windows.Input;
     using System.Windows.Media;
+    using EditorPluginInterfaces.UndoRedo;
     using GraphX.Controls;
     using GraphX.Controls.Models;
     using GraphX.PCL.Common.Enums;
     using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
     using GraphX.PCL.Logic.Models;
     using QuickGraph;
+    using WpfControlsLib.Controller.UndoRedo;
     using WpfControlsLib.Model;
     using WpfControlsLib.ViewModel;
 
@@ -41,6 +43,8 @@ namespace WpfControlsLib.Controls.Scene
         private Controller.Controller controller;
         private IElementProvider elementProvider;
         private SceneCommands commands;
+        private IUndoRedoStack undoStack;
+        private Controller.SceneActionsRegister register;
 
         public Scene()
         {
@@ -48,6 +52,8 @@ namespace WpfControlsLib.Controls.Scene
 
             this.editorManager = new EditorObjectManager(this.SceneX, this.zoomControl);
             this.commands = new SceneCommands(this);
+            this.undoStack = new UndoRedoStack();
+            this.register = new Controller.SceneActionsRegister(this.SceneX, this.commands, this.undoStack);
 
             ZoomControl.SetViewFinderVisibility(this.zoomControl, Visibility.Hidden);
 
@@ -93,7 +99,7 @@ namespace WpfControlsLib.Controls.Scene
             logic.EdgeCurvingEnabled = false;
         }
 
-        public void Init(WpfControlsLib.Model.Model model, Controller.Controller controller, IElementProvider elementProvider)
+        public void Init(WpfControlsLib.Model.Model model, Controller.Controller controller, IElementProvider elementProvider, IUndoRedoStack undoStack)
         {
             this.controller = controller;
             this.model = model;
@@ -104,6 +110,10 @@ namespace WpfControlsLib.Controls.Scene
             this.Graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVertex);
             this.Graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.EdgeViewModel);
             this.InitGraphXLogicCore();
+
+            // initializing undo operations
+            this.undoStack = undoStack;
+            this.register = new Controller.SceneActionsRegister(this.SceneX, this.commands, this.undoStack);
         }
 
         public void Clear() => this.Graph.DataGraph.Clear();

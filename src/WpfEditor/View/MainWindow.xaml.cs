@@ -19,6 +19,7 @@ namespace WpfEditor.View
     using System.Windows;
     using System.Windows.Controls;
     using EditorPluginInterfaces;
+    using EditorPluginInterfaces.UndoRedo;
     using PluginManager;
     using Repo;
     using WpfControlsLib.Constraints;
@@ -34,6 +35,7 @@ namespace WpfEditor.View
     internal partial class MainWindow
     {
         private readonly WpfControlsLib.Model.Model model;
+        private IUndoRedoStack undoStack;
 
         public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();
 
@@ -59,11 +61,12 @@ namespace WpfEditor.View
             this.scene.NodeSelected += (sender, args) => this.attributesView.DataContext = args.Node;
             this.scene.EdgeSelected += (sender, args) => this.attributesView.DataContext = args.Edge;
 
-            this.scene.Init(this.model, controller, new PaletteAdapter(this.palette));
+            this.scene.Init(this.model, controller, new PaletteAdapter(this.palette), undoStack);
             this.modelSelector.Init(this.model);
             this.modelSelector.ChangeModel(2);
 
             this.InitAndLaunchPlugins();
+            this.undoStack = new WpfControlsLib.Controller.UndoRedo.UndoRedoStack();
             this.InitToolbar();
         }
 
