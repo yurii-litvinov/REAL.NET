@@ -4,21 +4,21 @@
     using System.Collections.Generic;
     using EditorPluginInterfaces;
     using EditorPluginInterfaces.Toolbar;
+    using EditorPluginInterfaces.UndoRedo;
 
     public class SampleButtonsCollection
     {
-        public SampleButtonsCollection(IConsole console)
+        public SampleButtonsCollection(IConsole console, IUndoRedoStack undoRedoStack)
         {
-            Action action1 = () => { console.SendMessage("Test undo button"); };
-            var command1 = new Command(action1);
-            var image1 = "pack://application:,,,/" + "View/Pictures/Toolbar/undo.png";
-            var button1 = new Button(command1, "Undo button", image1);
-            Action action2 = () => { console.SendMessage("Test redo button"); };
-            var command2 = new Command(action2);
-            var image2 = "pack://application:,,,/" + "View/Pictures/Toolbar/redo.png";
-            var button2 = new Button(command2, "Redo button", image2);
-            this.SampleButtons.Add(button1);
-            this.SampleButtons.Add(button2);
+            var undoAction = new Command(() => { undoRedoStack.Undo(); });
+            var redoAction = new Command(() => { undoRedoStack.Redo(); });
+            var undoImage = "pack://application:,,,/" + "View/Pictures/Toolbar/undo.png";
+            var redoImage = "pack://application:,,,/" + "View/Pictures/Toolbar/redo.png";
+            var undoButton = new Button(undoAction, "Undo button", undoImage);
+            var redoButton = new Button(redoAction, "Redo Button", redoImage);
+
+            this.SampleButtons.Add(undoButton);
+            this.SampleButtons.Add(redoButton);
         }
 
         public IList<IButton> SampleButtons { get; private set; } = new List<IButton>();

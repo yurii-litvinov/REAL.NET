@@ -55,17 +55,17 @@ namespace WpfControlsLib.Controls.Toolbar
         /// <summary>
         /// Gets description of command
         /// </summary>
-        public string Description { get; }
+        public string Description { get; private set; }
 
         /// <summary>
         /// Gets attached image
         /// </summary>
-        public string Image { get; }
+        public string Image { get; private set; }
 
         /// <summary>
         /// Gets command attached to button
         /// </summary>
-        public ICommand Command { get; }
+        public ICommand Command { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether is this button enabled

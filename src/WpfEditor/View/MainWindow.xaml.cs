@@ -79,12 +79,12 @@ namespace WpfEditor.View
         private void InitToolbar()
         {
             this.Console.Messages.Add("Initializing ToolBar");
-            var sample = new WpfControlsLib.Controls.Toolbar.StandardButtonsAndMenus.SampleButtonsCollection(this.Console);
-            var buttons = sample.SampleButtons;
-            foreach (var button in buttons)
-            {
-                this.Toolbar.AddButton(button);
-            }
+            //var sample = new WpfControlsLib.Controls.Toolbar.StandardButtonsAndMenus.SampleButtonsCollection(this.Console);
+            //var buttons = sample.SampleButtons;
+            //foreach (var button in buttons)
+            //{
+            //    this.Toolbar.AddButton(button);
+            //}
         }
 
         private void InitAndLaunchPlugins()
