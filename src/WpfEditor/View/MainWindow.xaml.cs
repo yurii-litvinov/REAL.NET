@@ -61,12 +61,13 @@ namespace WpfEditor.View
             this.scene.NodeSelected += (sender, args) => this.attributesView.DataContext = args.Node;
             this.scene.EdgeSelected += (sender, args) => this.attributesView.DataContext = args.Edge;
 
-            this.scene.Init(this.model, controller, new PaletteAdapter(this.palette), undoStack);
+            this.scene.Init(this.model, controller, new PaletteAdapter(this.palette));
             this.modelSelector.Init(this.model);
             this.modelSelector.ChangeModel(2);
 
             this.InitAndLaunchPlugins();
             this.undoStack = new WpfControlsLib.Controller.UndoRedo.UndoRedoStack();
+            this.scene.InitUndo(this.undoStack);
             this.InitToolbar();
         }
 

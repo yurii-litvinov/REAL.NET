@@ -99,7 +99,7 @@ namespace WpfControlsLib.Controls.Scene
             logic.EdgeCurvingEnabled = false;
         }
 
-        public void Init(WpfControlsLib.Model.Model model, Controller.Controller controller, IElementProvider elementProvider, IUndoRedoStack undoStack)
+        public void Init(WpfControlsLib.Model.Model model, Controller.Controller controller, IElementProvider elementProvider)
         {
             this.controller = controller;
             this.model = model;
@@ -110,7 +110,10 @@ namespace WpfControlsLib.Controls.Scene
             this.Graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVertex);
             this.Graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.EdgeViewModel);
             this.InitGraphXLogicCore();
+        }
 
+        public void InitUndo(IUndoRedoStack undostack)
+        {
             // initializing undo operations
             this.undoStack = undoStack;
             this.register = new Controller.SceneActionsRegister(this.SceneX, this.commands, this.undoStack);
