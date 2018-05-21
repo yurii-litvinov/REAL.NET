@@ -12,17 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-namespace WpfControlsLib.Undo_redo_stack
+namespace WpfControlsLib.Controller.UndoRedo
 {
     using System;
     using System.Collections.Generic;
     using EditorPluginInterfaces.Toolbar;
-    using EditorPluginInterfaces.Undo_redo_functions;
+    using EditorPluginInterfaces.UndoRedo;
 
     /// <summary>
     /// Class for undo/redo commands.
     /// </summary>
-    public class UndoRedoStack : IStack
+    public class UndoRedoStack : IUndoRedoStack
     {
         /// <summary>
         /// Stack with undo commands.
@@ -66,7 +66,7 @@ namespace WpfControlsLib.Undo_redo_stack
         /// Handles a command.
         /// </summary>
         /// <param name="command">Command for handling.</param>
-        public void HandleCommand(ICommand command)
+        public void AddCommand(ICommand command)
         {
             command.Execute();
 
@@ -116,5 +116,11 @@ namespace WpfControlsLib.Undo_redo_stack
                 }
             }
         }
+
+        /// <summary>
+        /// Resets redo stack
+        /// </summary>
+        public void ResetRedo() => redoStack.Clear();
+
     }
 }
