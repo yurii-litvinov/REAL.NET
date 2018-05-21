@@ -21,6 +21,7 @@ namespace WpfControlsLib.Model
     using QuickGraph;
     using Repo;
     using ViewModel;
+    using WpfControlsLib.Controls.Scene.EventArguments;
 
     /// <summary>
     /// Represents diagram as GraphX graph. Wraps <see cref="Model"/> and synchronizes changes in repo and in GraphX
@@ -209,16 +210,6 @@ namespace WpfControlsLib.Model
         public class DataEdgeArgs : EventArgs
         {
             public EdgeViewModel EdgeViewModel { get; set; }
-        }
-
-        public class ElementAddedEventArgs : EventArgs
-        {
-            public IElement Element { get; set; }
-        }
-
-        public class ElementRemovedEventArgs : EventArgs
-        {
-            public IElement Element { get; set; }
         }
     }
 }

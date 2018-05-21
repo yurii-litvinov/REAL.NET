@@ -29,6 +29,7 @@ namespace WpfControlsLib.Controls.Scene
     using GraphX.PCL.Logic.Models;
     using QuickGraph;
     using WpfControlsLib.Controller.UndoRedo;
+    using WpfControlsLib.Controls.Scene.EventArguments;
     using WpfControlsLib.Model;
     using WpfControlsLib.ViewModel;
 
@@ -71,9 +72,9 @@ namespace WpfControlsLib.Controls.Scene
 
         public event EventHandler<EdgeSelectedEventArgs> EdgeSelected;
 
-        public event EventHandler<Graph.ElementAddedEventArgs> ElementAdded;
+        public event EventHandler<ElementAddedEventArgs> ElementAdded;
 
-        public event EventHandler<Graph.ElementRemovedEventArgs> ElementRemoved;
+        public event EventHandler<ElementRemovedEventArgs> ElementRemoved;
 
         public Graph Graph { get; set; }
 
@@ -105,6 +106,8 @@ namespace WpfControlsLib.Controls.Scene
             this.controller = controller;
             this.model = model;
             this.elementProvider = elementProvider;
+            this.commands.ElementAdded += (sender, args) => this.ElementAdded?.Invoke(this, args);
+            this.commands.ElementRemoved += (sender, args) => this.ElementRemoved?.Invoke(this, args);
             this.Graph = new Graph(model);
             this.Graph.DrawGraph += (sender, args) => this.DrawGraph();
             this.Graph.ElementAdded += (sender, args) => this.ElementAdded?.Invoke(this, args);
@@ -380,7 +383,7 @@ namespace WpfControlsLib.Controls.Scene
             }
 
             this.controller.RemoveElement(vertex.Node);
-            this.register.RegisterDeletingVertex(vertex.Node, edgesToRestore);
+            this.register.RegisterRemovingVertex(vertex.Node, edgesToRestore);
             this.DrawGraph();
         }
 
@@ -388,7 +391,7 @@ namespace WpfControlsLib.Controls.Scene
         {
             var edge = this.edgeControl.GetDataEdge<EdgeViewModel>();
             this.controller.RemoveElement(edge.Edge);
-            this.register.RegisterDeletingEdge(edge.Edge);
+            this.register.RegisterRemovingEdge(edge.Edge);
             this.DrawGraph();
         }
 
