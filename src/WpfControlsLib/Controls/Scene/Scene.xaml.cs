@@ -112,7 +112,7 @@ namespace WpfControlsLib.Controls.Scene
             this.InitGraphXLogicCore();
         }
 
-        public void InitUndo(IUndoRedoStack undostack)
+        public void InitUndo(IUndoRedoStack undoStack)
         {
             // initializing undo operations
             this.undoStack = undoStack;
