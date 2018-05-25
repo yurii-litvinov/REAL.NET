@@ -35,9 +35,9 @@ namespace WpfEditor.Controller
             this.model.NewNode(node, modelName);
         }
 
-        public void NewEdge(Repo.IElement edge, VertexControl prevVer, VertexControl ctrlVer)
+        public void NewEdge(Repo.IElement edge, VertexControl prevVer, VertexControl ctrlVer, string modelName)
         {
-            this.model.NewEdge(edge as Repo.IEdge, prevVer?.Vertex as NodeViewModel, ctrlVer?.Vertex as NodeViewModel);
+            this.model.NewEdge(edge as Repo.IEdge, prevVer?.Vertex as NodeViewModel, ctrlVer?.Vertex as NodeViewModel, modelName);
         }
     }
 }

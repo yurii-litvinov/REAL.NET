@@ -1,10 +1,15 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using EditorPluginInterfaces;
+using Generator;
+using Microsoft.CSharp;
 using PluginManager;
 using Repo;
 using WpfEditor.AirSim;
@@ -128,5 +133,25 @@ namespace WpfEditor.View
 
         private void AttributesViewCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
             => scene.ChangeEdgeLabel(((TextBox)e.EditingElement).Text);
+
+        private void GenerateButtonClick(object sender, RoutedEventArgs e)
+        {
+            var scenario = new Scenario { r = this.model.Repo };
+            string code = scenario.TransformText();
+
+            CompilerParameters parameters = new CompilerParameters();
+            parameters.GenerateExecutable = true;
+            parameters.OutputAssembly = "new/greenhouse.exe";
+            
+            parameters.ReferencedAssemblies.Add("System.Core.dll");
+            parameters.ReferencedAssemblies.Add("System.Reactive.Core.dll");
+            parameters.ReferencedAssemblies.Add("System.Reactive.Interfaces.dll");
+            parameters.ReferencedAssemblies.Add("System.Reactive.Linq.dll");
+            parameters.ReferencedAssemblies.Add("Trik.Core.dll");
+            parameters.ReferencedAssemblies.Add("RobotSimulation.dll");
+            parameters.ReferencedAssemblies.Add("Generator.dll");
+            
+            Process.Start("new/greenhouse.exe");
+        }
     }
 }

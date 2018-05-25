@@ -46,8 +46,12 @@ namespace WpfEditor.Model
             this.RaiseNewVertexInRepo(newNode);
         }
 
-        public void NewEdge(Repo.IEdge edge, NodeViewModel prevVer, NodeViewModel ctrlVer)
+        public void NewEdge(Repo.IEdge edge, NodeViewModel prevVer, NodeViewModel ctrlVer, string modelName)
         {
+            var model = this.Repo.Model(modelName);
+            var newEdge = model.CreateElement(edge);
+            (newEdge as Repo.IEdge).From = prevVer.Node;
+            (newEdge as Repo.IEdge).To = ctrlVer.Node;
             this.RaiseNewEdgeInRepo(edge, prevVer, ctrlVer);
         }
 

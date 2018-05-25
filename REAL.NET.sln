@@ -49,6 +49,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamplePlugin", "src\plugins
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditorPluginInterfaces", "src\EditorPluginInterfaces\EditorPluginInterfaces.csproj", "{6E5F1B5D-F165-4CEC-A240-8887EBD28E3B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobotSimulation", "src\RobotSimulation\RobotSimulation.csproj", "{55E6E940-3F24-477B-BD0A-C4E8DA904A19}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generator", "src\Generator\Generator.csproj", "{534E67E4-5CEB-4817-B0DB-9F692C90DD08}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

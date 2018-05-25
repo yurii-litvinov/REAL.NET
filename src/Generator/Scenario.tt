@@ -1,0 +1,208 @@
+﻿/* Copyright 2017-2018 REAL.NET group
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. */
+
+<#@ template language="C#" debug="True" #>
+<#@ output extension="cs" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+namespace Generator
+{
+	using System;
+	using System.Linq;
+	using System.Reactive;
+	using System.Reactive.Linq;
+	using System.Reactive.Subjects;
+	using RobotSimulation;
+	using Trik;
+
+	public class GeneratedCode
+    {
+<#
+List<Repo.INode> modelNodes = new List<Repo.INode>();
+foreach (var x in r.Model("GreenhouseTestModel").Nodes) {
+	modelNodes.Add(x);
+}
+	
+foreach (var x in modelNodes) { #>
+		private static <#= classOfElement(x.Name) #> element<#= modelNodes.IndexOf(x)#>;
+<# } #>
+
+		private static void Main(string[] args)
+		{
+<# 
+foreach (var x in modelNodes) { 
+		var index = modelNodes.IndexOf(x); #>
+
+			element<#= index#> = new <#= classOfElement(x.Name) #>(<#= index#>);
+	<# 
+	switch (classOfElement(x.Name)) 
+	{
+		case "Interval":
+			var minEnum = x.Attributes.Where(y => y.Name == "min").AsEnumerable();
+			var maxEnum = x.Attributes.Where(y => y.Name == "max").AsEnumerable();
+			if (minEnum.Any() && maxEnum.Any())
+			{
+				string min = minEnum.First().StringValue ?? "null";
+				string max = maxEnum.First().StringValue ?? "null"; #>
+
+			element<#= index#>.Min = <#= min #>;
+			element<#= index#>.Max = <#= max #>;
+			<#}
+			break;
+		case "Operation":
+		#>
+
+			element<#= index#>.Kind = "<#= kindOfOperation(x.Name)#>";
+			<#break;
+		case "Actuator":
+			var portActuator = x.Attributes.Where(y => y.Name == "port").AsEnumerable();
+			if (portActuator.Any())
+			{
+				string p = portActuator.First().StringValue; #>
+			element<#= index#>.Port = <#= p #>;
+			<#}
+			break;
+		case "Sensor":
+			var portSensor = x.Attributes.Where(y => y.Name == "port").AsEnumerable();
+			if (portSensor.Any())
+			{
+				string p = portSensor.First().StringValue; #>
+			element<#= index#>.Port = <#= p #>;
+			<#}
+			break;
+	}#>
+
+			IObservable<int> observable<#= index #> =
+						System.Reactive.Linq.Observable.FromEventPattern<int>(
+							h => element<#= index #>.Event += h,
+							h => element<#= index #>.Event -= h)
+							.Select(e => e.EventArgs)
+							.Synchronize().DistinctUntilChanged();
+			IObserver<int> observer<#= index#> = Observer.Create<int>(x => element<#= index#>.Action(x));
+			ISubject<int> reactElement<#= index#> = Subject.Create<int>(observer<#= index#>, observable<#= index#>);
+	    <#
+}#>
+
+<#
+//bool[,] sourceOrTarget = new bool[modelNodes.Count, 2];
+
+foreach (var x in r.Model("GreenhouseTestModel").Edges) {
+	if (classOfElement(x.To.Name) == "Operation") { #>
+
+			element<#= modelNodes.IndexOf((Repo.INode)x.To)#>.IncomingValues.Add(<#= modelNodes.IndexOf((Repo.INode)x.From)#>, null);
+	<# }
+}
+#>
+
+			// index of the element and index of the reactElement which is made on it's basis are the same 
+<#
+
+int j = 0;
+foreach (var x in r.Model("GreenhouseTestModel").Edges) 
+{ 
+	var source = x.From as Repo.INode;
+	var target = x.To as Repo.INode; #>
+			var sub<#= j #> = reactElement<#= modelNodes.IndexOf(source) #>.Subscribe(reactElement<#= modelNodes.IndexOf(target) #>);
+<#
+	j++;
+} #>
+
+			/*var robot = new Model();
+
+			var s4 = robot.AnalogSensors[Trik.Sensor.A1];
+			var s5 = robot.AnalogSensors[Trik.Sensor.A4];
+			var o4 = s4.ToObservable().DistinctUntilChanged();
+			var o5 = s5.ToObservable().DistinctUntilChanged();
+			o4.Subscribe(reactElement4);
+            o5.Subscribe(reactElement5);
+
+            Console.ReadLine();*/
+
+			RobotSimulator();
+        }
+		
+		private static void RobotSimulator()
+        {
+			<# foreach (var x in modelNodes) { 
+				if (classOfElement(x.Name) == "Sensor") { #>
+
+			SensorSim sensorSim<#= modelNodes.IndexOf(x) #> = new SensorSim();
+			sensorSim<#= modelNodes.IndexOf(x) #>.Index = <#= modelNodes.IndexOf(x) #>;
+			sensorSim<#= modelNodes.IndexOf(x) #>.NewSensorValue += (sender, args) => element<#= modelNodes.IndexOf(x) #>.Action(args.SensorValue);
+
+				<#}
+			}#>
+
+            Console.ReadLine();
+        }
+    }
+}
+
+<#+ 
+string classOfElement(string name)
+{
+	switch(name)
+	{
+		case "aOpenWindow":
+			return "Actuator";
+		case "aCloseWindow":
+			return "Actuator";
+		case "aPourSoil":
+			return "Actuator";
+		case "aAirTemperature":
+			return "Sensor";
+		case "aSoilTemperature":
+			return "Sensor";
+		case "aInterval":
+			return "Interval";
+		case "aAndOperation":
+			return "Operation";
+		case "aOrOperation":
+			return "Operation";
+		default:
+			return "Sensor";
+	}
+}
+#>
+
+<#+ 
+string kindOfOperation(string name)
+{
+	switch(name)
+	{
+		case "aAndOperation":
+			return "And";
+		case "aOrOperation":
+			return "Or";
+		default:
+			return "And";
+	}
+}
+#>
+
+<#+
+private int? ToNullableInt(string s)
+{
+	int i;
+	if (int.TryParse(s, out i))
+	{
+		return i;
+	}
+	return null;
+}
+#>
+<#+
+public Repo.IRepo r { get; set; }
+#>

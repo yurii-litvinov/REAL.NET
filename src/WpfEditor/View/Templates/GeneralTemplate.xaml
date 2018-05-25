@@ -45,7 +45,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <StackPanel Name="Target_vcproot" Grid.Column="0">
-                <Border Margin="0,2,0,0" Padding="0">
+                <Border Margin="3,4,0,0" Padding="0">
                     <xx:StaticVertexConnectionPointForGH Id="1" IsOccupied="False" IsSource="False"/>
                 </Border>
             </StackPanel>
@@ -54,7 +54,7 @@
                 <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" />
             </StackPanel>
             <StackPanel Name="Source_vcproot" Grid.Column="2">
-                <Border Margin="0,30,0,0" Padding="0">
+                <Border Margin="-1,4,0,0" Padding="0">
                     <xx:StaticVertexConnectionPointForGH Id="2" IsOccupied="False" IsSource="True"/>
                 </Border>
             </StackPanel>
@@ -72,7 +72,7 @@
                 <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" />
             </StackPanel>
             <StackPanel Name="Source_vcproot" Grid.Column="1">
-                <Border Margin="0,4,0,0" Padding="0">
+                <Border Margin="-5,4,0,0" Padding="0">
                     <xx:StaticVertexConnectionPointForGH Id="1" IsOccupied="False" IsSource="True"/>
                 </Border>
             </StackPanel>
@@ -114,7 +114,7 @@
                 <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" />
             </StackPanel>
             <StackPanel Name="Source_vcproot" Grid.Column="2">
-                <Border Margin="0,4,0,0" Padding="0">
+                <Border Margin="-1,4,0,0" Padding="0">
                     <xx:StaticVertexConnectionPointForGH Id="2" IsOccupied="False" IsSource="True"/>
                 </Border>
             </StackPanel>

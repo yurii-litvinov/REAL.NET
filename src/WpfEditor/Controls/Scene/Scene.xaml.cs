@@ -275,7 +275,7 @@ namespace WpfEditor.Controls.Scene
                 }
                 else
                 {
-                    this.controller.NewEdge(this.elementProvider.Element, this.prevVer, this.ctrlVer);
+                    this.controller.NewEdge(this.elementProvider.Element, this.prevVer, this.ctrlVer, this.model.ModelName);
                     this.ElementUsed?.Invoke(this, EventArgs.Empty);
                 }
 

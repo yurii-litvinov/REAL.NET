@@ -87,6 +87,7 @@
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
                 </Grid.RowDefinitions>
 
                 <palette:Palette x:Name="palette" Grid.Row="1"/>
@@ -121,6 +122,11 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Bottom"
                     Click="StopButtonClick" Height="26" IsEnabled="False"/>
+                <Button x:Name="generateButton" 
+                    Grid.Row="8"
+                    Content="Generate"
+                    HorizontalAlignment="Stretch"
+                    Click="GenerateButtonClick" Height="26" VerticalAlignment="Top"/>
             </Grid>
 
         </DockPanel>

@@ -18,6 +18,7 @@ open Repo
 open Repo.DataLayer
 open Repo.InfrastructureSemanticLayer
 
+/// Initializes repository with Greenhouse Metamodel
 type GreenhouseMetamodelBuilder() =
     interface IModelBuilder with
         member this.Build(repo: IRepo): unit =
@@ -78,7 +79,8 @@ type GreenhouseMetamodelBuilder() =
             infrastructure.Element.AddAttribute interval "min" "AttributeKind.Int" "null"
             infrastructure.Element.AddAttribute interval "max" "AttributeKind.Int" "null"
             
-            infrastructure.Element.AddAttribute abstractSensor "value" "AttributeKind.Int" "0"
+            infrastructure.Element.AddAttribute abstractSensor "port" "AttributeKind.Int" "0"
+            infrastructure.Element.AddAttribute abstractActuator "port" "AttributeKind.Int" "0"
 
             let link = abstractNode ---> (abstractNode, "target", "Link")
             infrastructure.Element.AddAttribute link "guard" "AttributeKind.String" ""

@@ -18,6 +18,7 @@ open Repo.DataLayer
 open Repo.CoreSemanticLayer
 open Repo.InfrastructureSemanticLayer
 
+/// Initializes repository with test model conforming to Greenhouse Metamodel, actual program that can be written by end-user.
 type GreenhouseTestModelBuilder() =
     interface IModelBuilder with
         member this.Build(repo: IRepo): unit =
@@ -35,8 +36,9 @@ type GreenhouseTestModelBuilder() =
             let link = Model.findAssociationWithSource metamodelAbstractNode "target"
 
             let model = repo.CreateModel("GreenhouseTestModel", metamodel)
-
-            let airTemperature = infrastructure.Instantiate model metamodelAirTemperature
+            
+            /// Example with "AND" operation
+            (*let airTemperature = infrastructure.Instantiate model metamodelAirTemperature
             let soilTemperature = infrastructure.Instantiate model metamodelSoilTemperature
             let interval1 = infrastructure.Instantiate model metamodelInterval
             let interval2 = infrastructure.Instantiate model metamodelInterval
@@ -51,6 +53,19 @@ type GreenhouseTestModelBuilder() =
 
             airTemperature --> interval1 --> andOperation|> ignore
             soilTemperature --> interval2 --> andOperation |> ignore
-            andOperation --> openWindow |> ignore
+            andOperation --> openWindow |> ignore*)
+
+            /// The smallest possible example (except of an empty example)
+            let airTemperature = infrastructure.Instantiate model metamodelAirTemperature
+            let interval1 = infrastructure.Instantiate model metamodelInterval
+            let openWindow = infrastructure.Instantiate model metamodelOpenWindow
+
+            let (-->) (src: IElement) dst =
+                let aLink = infrastructure.Instantiate model link :?> IAssociation
+                aLink.Source <- Some src
+                aLink.Target <- Some dst
+                dst
+
+            airTemperature --> interval1 --> openWindow |> ignore
 
             ()
