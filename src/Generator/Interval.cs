@@ -40,12 +40,12 @@ namespace Generator
             if ((!Min.HasValue || Min < value) &&
                 (!Max.HasValue || Max > value))
             {
-                Console.WriteLine("Interval{0} ({1}, {2}) TRUE", Num, this.Min, this.Max);
+                //Console.WriteLine("Interval{0} ({1}, {2}) TRUE", Num, this.Min, this.Max);
                 this.Event(this, this.Num + 1);
             }
             else
             {
-                Console.WriteLine("Interval{0} ({1}, {2}) FALSE", Num, this.Min, this.Max);
+                //Console.WriteLine("Interval{0} ({1}, {2}) FALSE", Num, this.Min, this.Max);
                 this.Event(this, -(this.Num + 1));
             }
         }

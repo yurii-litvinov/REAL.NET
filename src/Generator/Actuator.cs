@@ -22,7 +22,6 @@ namespace Generator
     public class Actuator
     {
         public int Num { get; }
-        public int Port { get; set; }
 
         public event EventHandler<int> Event;
 
@@ -35,12 +34,13 @@ namespace Generator
         {
             if (value > 0)
             {
-                Console.WriteLine("----- Actuator {0} -- TRUE -----", Num);
-                //this.Event(this, value);
+                Console.WriteLine("----- Actuator {0} TRUE!!! -----", Num);
+                this.Event(this, 1);
             }
             else
             {
-                Console.WriteLine("----- Actuator {0} -- FALSE -----", Num);
+                Console.WriteLine("----- Actuator {0} FALSE!!! -----", Num);
+                this.Event(this, 0);
             }
         }
     }

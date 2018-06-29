@@ -141,8 +141,9 @@ namespace WpfEditor.View
 
             CompilerParameters parameters = new CompilerParameters();
             parameters.GenerateExecutable = true;
-            parameters.OutputAssembly = "new/greenhouse.exe";
-            
+            parameters.GenerateInMemory = false;
+            parameters.OutputAssembly = "greenhouse.exe";
+
             parameters.ReferencedAssemblies.Add("System.Core.dll");
             parameters.ReferencedAssemblies.Add("System.Reactive.Core.dll");
             parameters.ReferencedAssemblies.Add("System.Reactive.Interfaces.dll");
@@ -150,8 +151,44 @@ namespace WpfEditor.View
             parameters.ReferencedAssemblies.Add("Trik.Core.dll");
             parameters.ReferencedAssemblies.Add("RobotSimulation.dll");
             parameters.ReferencedAssemblies.Add("Generator.dll");
+
+            var compiler = new CSharpCodeProvider();
+            var result = compiler.CompileAssemblyFromSource(parameters, code);
             
-            Process.Start("new/greenhouse.exe");
+            Process winscp = new Process();
+            winscp.StartInfo.FileName = @"C:\Program Files (x86)\WinSCP\winscp.com";
+            winscp.StartInfo.RedirectStandardInput = true;
+            winscp.StartInfo.UseShellExecute = false;
+            winscp.StartInfo.CreateNoWindow = false;
+            winscp.Start();
+
+            winscp.StandardInput.WriteLine("option batch abort");
+            winscp.StandardInput.WriteLine("option confirm off");
+
+            winscp.StandardInput.WriteLine("open scp://root:@192.168.77.1:22");
+            winscp.StandardInput.WriteLine(@"put greenhouse.exe /home/root/abc/"); 
+            winscp.StandardInput.WriteLine("exit");
+            
+            winscp.StandardInput.Close();
+            winscp.WaitForExit();
+
+            Process psi = new Process();
+            psi.StartInfo.FileName = @"C:\Windows\System32\cmd";
+            psi.StartInfo.RedirectStandardInput = true;
+            psi.StartInfo.RedirectStandardOutput = true;
+            psi.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+            psi.StartInfo.UseShellExecute = false;
+            psi.StartInfo.CreateNoWindow = false;
+            psi.Start();
+           
+            psi.StandardInput.WriteLine("plink root@192.168.77.1:22");
+            psi.StandardInput.WriteLine("cd abc");
+            psi.StandardInput.WriteLine("mono greenhouse.exe");
+            
+            while (true)
+            {
+                System.Console.WriteLine(psi.StandardOutput.ReadLine());
+            }
         }
     }
 }

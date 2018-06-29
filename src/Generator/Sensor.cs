@@ -23,7 +23,6 @@ namespace Generator
     public class Sensor
     {
         public int Num { get; }
-        public int Port { get; set; }
 
         public Sensor(int num)
         {
@@ -36,7 +35,7 @@ namespace Generator
 
         public void Action(int value)
         {
-            Console.WriteLine("Sensor {0} : {1}", Num, value);
+            //Console.WriteLine("Sensor {0} : {1}", Num, value);
             this.Event(this, value);
         }
     }

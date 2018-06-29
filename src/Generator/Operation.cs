@@ -84,12 +84,12 @@ namespace Generator
 
             if (result)
             {
-                Console.WriteLine("Operation {0} TRUE", Num);
+                //Console.WriteLine("Operation {0} TRUE", Num);
                 this.Event(this, this.Num + 1);
             }
             else
             {
-                Console.WriteLine("Operation {0} FALSE", Num);
+                //Console.WriteLine("Operation {0} FALSE", Num);
                 this.Event(this, -(this.Num + 1));
             }
         }

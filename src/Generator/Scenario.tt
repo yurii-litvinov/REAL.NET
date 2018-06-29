@@ -43,13 +43,12 @@ foreach (var x in modelNodes) { #>
 		{
 <# 
 foreach (var x in modelNodes) { 
-		var index = modelNodes.IndexOf(x); #>
+	var index = modelNodes.IndexOf(x); #>
 
 			element<#= index#> = new <#= classOfElement(x.Name) #>(<#= index#>);
 	<# 
-	switch (classOfElement(x.Name)) 
+	if (classOfElement(x.Name) == "Interval")
 	{
-		case "Interval":
 			var minEnum = x.Attributes.Where(y => y.Name == "min").AsEnumerable();
 			var maxEnum = x.Attributes.Where(y => y.Name == "max").AsEnumerable();
 			if (minEnum.Any() && maxEnum.Any())
@@ -60,29 +59,12 @@ foreach (var x in modelNodes) {
 			element<#= index#>.Min = <#= min #>;
 			element<#= index#>.Max = <#= max #>;
 			<#}
-			break;
-		case "Operation":
-		#>
+	}
+	if (classOfElement(x.Name) == "Operation")
+	{#>
 
 			element<#= index#>.Kind = "<#= kindOfOperation(x.Name)#>";
-			<#break;
-		case "Actuator":
-			var portActuator = x.Attributes.Where(y => y.Name == "port").AsEnumerable();
-			if (portActuator.Any())
-			{
-				string p = portActuator.First().StringValue; #>
-			element<#= index#>.Port = <#= p #>;
-			<#}
-			break;
-		case "Sensor":
-			var portSensor = x.Attributes.Where(y => y.Name == "port").AsEnumerable();
-			if (portSensor.Any())
-			{
-				string p = portSensor.First().StringValue; #>
-			element<#= index#>.Port = <#= p #>;
-			<#}
-			break;
-	}#>
+	<#}#>
 
 			IObservable<int> observable<#= index #> =
 						System.Reactive.Linq.Observable.FromEventPattern<int>(
@@ -119,18 +101,32 @@ foreach (var x in r.Model("GreenhouseTestModel").Edges)
 	j++;
 } #>
 
-			/*var robot = new Model();
+			var robot = new Model();
+			<# foreach (var x in modelNodes) { 
+				if (classOfElement(x.Name) == "Sensor") { 
+					var port = x.Attributes.Where(y => y.Name == "port").AsEnumerable();
+					if (port.Any())
+					{
+						string p = port.First().StringValue; #>
+			
+			var s<#= modelNodes.IndexOf(x) #> = robot.AnalogSensors[Trik.Sensor.A<#= p #>].ToObservable().DistinctUntilChanged();
+			s<#= modelNodes.IndexOf(x) #>.Subscribe(reactElement<#= modelNodes.IndexOf(x) #>);
+					<#}
+				}
+				if (classOfElement(x.Name) == "Actuator") { 
+					var port = x.Attributes.Where(y => y.Name == "port").AsEnumerable();
+					if (port.Any())
+					{
+						string p = port.First().StringValue; #>
+			
+			reactElement<#= modelNodes.IndexOf(x) #>.Subscribe(robot.Motors[Trik.Motor.M<#= p #>]);
+					<#}
+				}
+			}#>
 
-			var s4 = robot.AnalogSensors[Trik.Sensor.A1];
-			var s5 = robot.AnalogSensors[Trik.Sensor.A4];
-			var o4 = s4.ToObservable().DistinctUntilChanged();
-			var o5 = s5.ToObservable().DistinctUntilChanged();
-			o4.Subscribe(reactElement4);
-            o5.Subscribe(reactElement5);
+            Console.ReadLine();
 
-            Console.ReadLine();*/
-
-			RobotSimulator();
+			//RobotSimulator();
         }
 		
 		private static void RobotSimulator()
@@ -192,17 +188,6 @@ string kindOfOperation(string name)
 }
 #>
 
-<#+
-private int? ToNullableInt(string s)
-{
-	int i;
-	if (int.TryParse(s, out i))
-	{
-		return i;
-	}
-	return null;
-}
-#>
 <#+
 public Repo.IRepo r { get; set; }
 #>
