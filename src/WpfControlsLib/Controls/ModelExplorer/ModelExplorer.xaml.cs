@@ -15,6 +15,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
+using System.Linq;
 
 namespace WpfControlsLib.Controls.ModelExplorer
 {
@@ -62,6 +63,17 @@ namespace WpfControlsLib.Controls.ModelExplorer
             => this.Elements.Add(element.Metatype == Repo.Metatype.Node
                 ? (ModelExplorerElement) new ModelExplorerNode(element)
                 : new ModelExplorerEdge(element));
+
+        public void RemoveElement(Repo.IElement element)
+        {
+            foreach (var modelExplorerElement in this.Elements.ToArray())
+            {
+                if (modelExplorerElement.Element == element)
+                {
+                    this.Elements.Remove(modelExplorerElement);
+                }
+            }
+        }
 
         public class NodeSelectedEventArgs : EventArgs
         {

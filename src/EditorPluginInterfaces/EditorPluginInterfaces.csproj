@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EdgeEventArgs.cs" />
+    <Compile Include="ElementEventArgs.cs" />
     <Compile Include="IConsole.cs" />
     <Compile Include="IModel.cs" />
     <Compile Include="IPlugin.cs" />
@@ -65,6 +66,8 @@
     <Compile Include="Toolbar\ICommand.cs" />
     <Compile Include="Toolbar\IMenu.cs" />
     <Compile Include="Toolbar\IToolbar.cs" />
+    <Compile Include="UndoRedo\IUndoRedoStack.cs" />
+    <Compile Include="UndoRedo\StackChangedArgs.cs" />
     <Compile Include="VertexEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>

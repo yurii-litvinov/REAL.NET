@@ -14,6 +14,7 @@
 
 namespace PluginLibrary.Tests
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using EditorPluginInterfaces;
@@ -28,7 +29,10 @@ namespace PluginLibrary.Tests
         public void TestLaunchingSamplePlugin()
         {
             var libs = new PluginLauncher<PluginConfig>();
-            const string folder = "src/plugins/SamplePlugin/bin";
+            var folder = Path.Combine(
+                TestContext.CurrentContext.TestDirectory, 
+                "../../../../src/plugins/SamplePlugin/bin"
+                );
             var dirs = new List<string>(Directory.GetDirectories(folder));
             var console = Substitute.For<IConsole>();
             var model = Substitute.For<IModel>();

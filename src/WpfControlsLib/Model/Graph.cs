@@ -21,6 +21,7 @@ namespace WpfControlsLib.Model
     using QuickGraph;
     using Repo;
     using ViewModel;
+    using WpfControlsLib.Controls.Scene.EventArguments;
 
     /// <summary>
     /// Represents diagram as GraphX graph. Wraps <see cref="Model"/> and synchronizes changes in repo and in GraphX
@@ -38,13 +39,16 @@ namespace WpfControlsLib.Model
         {
             this.model = repoModel;
             this.DataGraph = new BidirectionalGraph<NodeViewModel, EdgeViewModel>();
-            this.model.NewVertex += (sender, args) => this.CreateNodeWithPos(args.Node);
-            this.model.NewEdge += (sender, args) => this.CreateEdge(args.Edge, args.Source, args.Target);
+            this.model.NewVertexAdded += (sender, args) => this.CreateNodeWithPos(args.Node);
+            this.model.NewEdgeAdded += (sender, args) => this.CreateEdge(args.Edge, args.Source, args.Target);
+            this.model.ElementRemoved += (sender, args) => this.RemoveElement(args.Element);
         }
 
         public event EventHandler DrawGraph;
 
         public event EventHandler<ElementAddedEventArgs> ElementAdded;
+
+        public event EventHandler<ElementRemovedEventArgs> ElementRemoved;
 
         public event EventHandler<DataVertexArgs> AddNewVertexControl;
 
@@ -90,6 +94,7 @@ namespace WpfControlsLib.Model
 
                 var newEdge = new EdgeViewModel(source, target, Convert.ToDouble(false))
                 {
+                    Edge = edge,
                     EdgeType = EdgeViewModel.EdgeTypeEnum.Association
                 };
                 var attributeInfos = edge.Attributes.Select(x => new AttributeViewModel(x, x.Name, x.Kind.ToString())
@@ -123,11 +128,18 @@ namespace WpfControlsLib.Model
             _ = sourceViewModel ?? throw new InvalidOperationException();
             _ = targetViewModel ?? throw new InvalidOperationException();
 
-            var newEdge = new EdgeViewModel(sourceViewModel, targetViewModel, Convert.ToDouble(true));
+            var newEdge = new EdgeViewModel(sourceViewModel, targetViewModel, Convert.ToDouble(true))
+            {
+                Edge = edge
+            };
+
+            this.DataGraph.AddEdge(newEdge);
+
             var args = new DataEdgeArgs
             {
                 EdgeViewModel = newEdge
             };
+
             this.AddNewEdgeControl?.Invoke(this, args);
             this.ElementAdded?.Invoke(this, new ElementAddedEventArgs { Element = edge });
         }
@@ -146,9 +158,10 @@ namespace WpfControlsLib.Model
             });
 
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
+            this.DataGraph.AddVertex(vertex);
             var args = new DataVertexArgs
             {
-                DataVert = vertex
+                DataVertex = vertex
             };
             this.AddNewVertexControl?.Invoke(this, args);
             this.ElementAdded?.Invoke(this, new ElementAddedEventArgs { Element = node });
@@ -172,19 +185,31 @@ namespace WpfControlsLib.Model
             this.ElementAdded?.Invoke(this, new ElementAddedEventArgs { Element = node });
         }
 
+        private void RemoveElement(IElement element)
+        {
+            if (element.Metatype == Metatype.Edge)
+            {
+                var edgeViewModel = this.DataGraph.Edges.First(x => x.Edge == element);
+                this.DataGraph.RemoveEdge(edgeViewModel);
+            }
+
+            if (element.Metatype == Metatype.Node)
+            {
+                var nodeViewModel = this.DataGraph.Vertices.First(x => x.Node == element);
+                this.DataGraph.RemoveVertex(nodeViewModel);
+            }
+
+            this.ElementRemoved?.Invoke(this, new ElementRemovedEventArgs { Element = element });
+        }
+
         public class DataVertexArgs : EventArgs
         {
-            public NodeViewModel DataVert { get; set; }
+            public NodeViewModel DataVertex { get; set; }
         }
 
         public class DataEdgeArgs : EventArgs
         {
             public EdgeViewModel EdgeViewModel { get; set; }
-        }
-
-        public class ElementAddedEventArgs : EventArgs
-        {
-            public IElement Element { get; set; }
         }
     }
 }

@@ -24,12 +24,12 @@ namespace EditorPluginInterfaces
         /// <summary>
         /// New vertex was added into a model.
         /// </summary>
-        event EventHandler<VertexEventArgs> NewVertex;
+        event EventHandler<VertexEventArgs> NewVertexAdded;
 
         /// <summary>
         /// New edge was added into a model.
         /// </summary>
-        event EventHandler<EdgeEventArgs> NewEdge;
+        event EventHandler<EdgeEventArgs> NewEdgeAdded;
 
         /// <summary>
         /// Repository. Can be used for queries, but shall not be used for direct manipulation of a model.
@@ -39,7 +39,7 @@ namespace EditorPluginInterfaces
         /// <summary>
         /// Creates a new node in a model.
         /// </summary>
-        /// <param name="element">Metatype of createrd node.</param>
+        /// <param name="element">Metatype of created node.</param>
         void CreateNode(Repo.IElement element);
 
         /// <summary>

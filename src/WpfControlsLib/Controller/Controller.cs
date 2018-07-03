@@ -42,5 +42,7 @@ namespace WpfControlsLib.Controller
                 (prevVer?.Vertex as NodeViewModel)?.Node,
                 (ctrlVer?.Vertex as NodeViewModel)?.Node);
         }
+
+        public void RemoveElement(Repo.IElement element) => this.model.RemoveElement(element);
     }
 }

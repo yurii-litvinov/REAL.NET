@@ -1,4 +1,4 @@
-﻿/* Copyright 2017-2018 REAL.NET group
+﻿/* Copyright 2018 REAL.NET group
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,20 +12,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-namespace WpfControlsLib.Controls.ModelExplorer
+namespace EditorPluginInterfaces
 {
+    using System;
+
     /// <summary>
-    /// View model for edge in model explorer.
+    /// Arguments for new element event.
     /// </summary>
-    public class ModelExplorerEdge : ModelExplorerElement
+    public class ElementEventArgs : EventArgs
     {
-        public ModelExplorerEdge(Repo.IElement element)
-            : base(element)
-        {
-        }
-
-        public string Source => (this.Element as Repo.IEdge)?.From?.Name;
-
-        public string Target => (this.Element as Repo.IEdge)?.To?.Name;
+        /// <summary>
+        /// Element.
+        /// </summary>
+        public Repo.IElement Element { get; set; }
     }
 }

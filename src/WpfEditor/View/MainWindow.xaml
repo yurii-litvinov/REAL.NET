@@ -25,6 +25,7 @@
     xmlns:scene="clr-namespace:WpfControlsLib.Controls.Scene;assembly=WpfControlsLib"
     xmlns:modelExplorer="clr-namespace:WpfControlsLib.Controls.ModelExplorer;assembly=WpfControlsLib"
     xmlns:palette="clr-namespace:WpfControlsLib.Controls.Palette;assembly=WpfControlsLib"
+    xmlns:toolbar="clr-namespace:WpfControlsLib.Controls.Toolbar;assembly=WpfControlsLib"
     Title="REAL.NET"
     mc:Ignorable="d"
     Height="685" Width="936">
@@ -49,24 +50,26 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto" MinHeight="50"/>
             </Grid.RowDefinitions>
 
-            <!-- ToolBar -->
-            <ToolBar Grid.Row="0">
-                <modelSelector:ModelSelector x:Name="modelSelector" ModelSelected="OnModelSelectionChanged"/>
-            </ToolBar>
+            <!-- Toolbar -->
+            <toolbar:ToolbarView x:Name="toolBar" Grid.Row="0" DataContext="{Binding Toolbar}"/>
+            
+            <!-- ModelSelector -->
+            <modelSelector:ModelSelector x:Name="modelSelector" ModelSelected="OnModelSelectionChanged" Grid.Row="1"/>
 
             <!-- Area -->
-            <scene:Scene x:Name="scene"  Grid.Row="1"/>
+            <scene:Scene x:Name="scene"  Grid.Row="2"/>
 
             <!-- GridSplitter for console -->
-            <GridSplitter Grid.Row ="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5"/>
+            <GridSplitter Grid.Row ="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5"/>
 
             <!-- Console with error messages -->
-            <console1:AppConsole Grid.Row="3" DataContext="{Binding Console}"/>
+            <console1:AppConsole Grid.Row="4" DataContext="{Binding Console}"/>
 
         </Grid>
 

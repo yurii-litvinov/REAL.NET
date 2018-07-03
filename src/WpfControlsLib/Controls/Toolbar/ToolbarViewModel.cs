@@ -12,28 +12,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-using System;
-using System.Collections.Generic;
-using EditorPluginInterfaces.Toolbar;
-
 namespace WpfControlsLib.Controls.Toolbar
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using EditorPluginInterfaces.Toolbar;
+
     /// <summary>
     /// ViewModel for toolbar control, allows to register some commands and show them as buttons. Can be used from
     /// plugins.
     /// </summary>
     public class ToolbarViewModel : IToolbar
     {
-        public IList<IButton> Buttons => throw new NotImplementedException();
+        /// <summary>
+        /// Gets a list of buttons that should be presented on toolbar
+        /// </summary>
+        public IList<IButton> Buttons => this.ButtonsToShow as IList<IButton>;
 
-        public void AddButton(ICommand command, string desription, string image)
-        {
-            throw new NotImplementedException();
-        }
+        public ObservableCollection<ButtonWrapper> ButtonsToShow { get; } = new ObservableCollection<ButtonWrapper>();
 
-        public void AddMenu(IMenu menu)
-        {
-            throw new NotImplementedException();
-        }
+        public void AddButton(IButton button) => this.ButtonsToShow.Add(this.WrapIButton(button));
+
+        public void AddMenu(IMenu menu) => throw new NotImplementedException();
+
+        private ButtonWrapper WrapIButton(IButton button) => new ButtonWrapper(button);
     }
 }

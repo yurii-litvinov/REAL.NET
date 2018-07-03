@@ -12,20 +12,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-namespace WpfControlsLib.Controls.ModelExplorer
+namespace EditorPluginInterfaces.UndoRedo
 {
+    using System;
+
     /// <summary>
-    /// View model for edge in model explorer.
+    /// Stack changed arguments class.
     /// </summary>
-    public class ModelExplorerEdge : ModelExplorerElement
+    public class StackChangedArgs : EventArgs
     {
-        public ModelExplorerEdge(Repo.IElement element)
-            : base(element)
-        {
-        }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StackChangedArgs"/> class.
+        /// </summary>
+        /// <param name="isStackAvailable">Availability of stack.</param>
+        public StackChangedArgs(bool isStackAvailable) => this.IsStackAvailable = isStackAvailable;
 
-        public string Source => (this.Element as Repo.IEdge)?.From?.Name;
-
-        public string Target => (this.Element as Repo.IEdge)?.To?.Name;
+        /// <summary>
+        /// Gets a value indicating whether stack is available.
+        /// </summary>
+        public bool IsStackAvailable { get; }
     }
 }

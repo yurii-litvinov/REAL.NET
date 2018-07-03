@@ -32,15 +32,17 @@ namespace WpfControlsLib.Model
             this.Constraints = new Constraints.Constraints();
         }
 
-        public event EventHandler<VertexEventArgs> NewVertex;
+        public event EventHandler<VertexEventArgs> NewVertexAdded;
 
-        public event EventHandler<EdgeEventArgs> NewEdge;
+        public event EventHandler<EdgeEventArgs> NewEdgeAdded;
+
+        public event EventHandler<ElementEventArgs> ElementRemoved;
 
         public Constraints.Constraints Constraints { get; set; }
 
         public string ModelName { get; set; }
 
-        public string ErrorMsg { get; set; }
+        public string ErrorMessage { get; set; }
 
         public Repo.IRepo Repo { get; }
 
@@ -62,7 +64,7 @@ namespace WpfControlsLib.Model
             }
             else
             {
-                this.ErrorMsg = "Can't create new node according to constraints.";
+                this.Constraints.ErrorMsg = "Can't create new node according to constraints.";
 
                 // TODO
             }
@@ -72,15 +74,26 @@ namespace WpfControlsLib.Model
         {
             if (this.Constraints.AllowCreateOrExistEdge(this.Repo.Model(this.ModelName).Edges, prevVer.Name.ToString(), ctrlVer.Name.ToString()))
             {
-                // TODO: Well, actually create edge.
-                this.RaiseNewEdge(edge, prevVer, ctrlVer);
+                var model = this.Repo.Model(this.ModelName);
+                var newEdge = model.CreateElement(edge as Repo.IElement) as Repo.IEdge;
+                newEdge.From = prevVer;
+                newEdge.To = ctrlVer;
+                this.RaiseNewEdge(newEdge, newEdge.From, newEdge.To);
             }
             else
             {
-                this.ErrorMsg = "Can't create new edge according to constraints.";
+                this.Constraints.ErrorMsg = "Can't create new edge according to constraints.";
 
                 // TODO
             }
+        }
+
+        public void RemoveElement(Repo.IElement element)
+        {
+            var model = this.Repo.Model(this.ModelName);
+            // add real delete after repo improvement
+            //model.DeleteElement(element);
+            this.RaiseElementRemoved(element);
         }
 
         private void RaiseNewVertex(Repo.INode node)
@@ -89,7 +102,8 @@ namespace WpfControlsLib.Model
             {
                 Node = node
             };
-            this.NewVertex?.Invoke(this, args);
+
+            this.NewVertexAdded?.Invoke(this, args);
         }
 
         private void RaiseNewEdge(Repo.IEdge edge, Repo.IElement prevVer, Repo.IElement ctrlVer)
@@ -100,7 +114,18 @@ namespace WpfControlsLib.Model
                 Source = prevVer,
                 Target = ctrlVer
             };
-            this.NewEdge?.Invoke(this, args);
+
+            this.NewEdgeAdded?.Invoke(this, args);
+        }
+
+        private void RaiseElementRemoved(Repo.IElement element)
+        {
+            var args = new ElementEventArgs
+            {
+                Element = element
+            };
+
+            this.ElementRemoved?.Invoke(this, args);
         }
     }
 }
