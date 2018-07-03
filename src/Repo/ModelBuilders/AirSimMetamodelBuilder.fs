@@ -36,6 +36,7 @@ type AirSimMetamodelBuilder() =
             let (~+) (name, shape, isAbstract) =
                 let node = infrastructure.Instantiate model metamodelNode :?> INode
                 node.Name <- name
+                node.Function <- None
                 infrastructure.Element.SetAttributeValue node "shape" shape
                 infrastructure.Element.SetAttributeValue node "isAbstract" (if isAbstract then "true" else "false")
                 infrastructure.Element.SetAttributeValue node "instanceMetatype" "Metatype.Node"

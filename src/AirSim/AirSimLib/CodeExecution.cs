@@ -19,53 +19,62 @@ namespace AirSim.AirSimLib
     using System.Collections.Generic;
     using System.Linq;
     using System.Security.Permissions;
-    using WpfControlsLib.Model;
-    using WpfControlsLib.ViewModel;
+    using Repo;
 
     /// <summary>
     /// Class for execution of visual program on AirSim
     /// </summary>
     internal class CodeExecution
     {
+        private static int recursionLevel = 0;
+        private static Stack<INode> recursionNodes = new Stack<INode>();
+
         /// <summary>
         /// Main execution method
         /// </summary>
         /// <param name="programGraph"> Visual program to execute </param>
         /// <param name="writeToConsole"> Method to writing to console </param>
-        public void Execute(Graph programGraph, Action<string> writeToConsole)
+        public void Execute(IModel programGraph, Action<string> writeToConsole)
         {
-            NodeViewModel curNode = this.GetInitNode(programGraph, writeToConsole);
+            var curNode = this.GetInitNode(programGraph, writeToConsole);
             if (curNode == null)
+            {
                 return;
+            }
 
             writeToConsole("Running your code");
             var client = new MultirotorClient();
-            while (curNode.Name != "aFinalNode")
+            while (recursionLevel >= 0)
             {
-                Execution.Exec.ExecuteNode(curNode, client);
+                Execution.Exec.ExecuteNode(ref curNode, client, programGraph, writeToConsole);
                 curNode = Execution.Exec.GetNextNode(curNode, client, programGraph, writeToConsole);
                 if (curNode == null)
+                {
                     return;
+                }
+
                 writeToConsole($"Node {curNode.Name} done");
             }
+
             client.Land();
             client.Dispose();
             writeToConsole("Program done");
         }
 
-        private NodeViewModel GetInitNode(Graph graph, Action<string> writeToMessageBox)
+        private INode GetInitNode(IModel graph, Action<string> writeToMessageBox)
         {
-            NodeViewModel initNode = null;
-            var edges = graph.DataGraph.Edges.ToList();
+            INode initNode = null;
+            var nodes = graph.Nodes.ToList();
             int cnt = 0;
-            foreach (var edge in edges)
+            foreach (var node in nodes)
             {
-                if (edge.Source.Name == "aInitialNode")
+                if (node.Name == "aInitialNode")
                 {
-                    initNode = edge.Source;
+                    initNode = node;
                     ++cnt;
                 }
             }
+
             if (initNode == null || cnt > 1)
             {
                 writeToMessageBox("Error: ");
@@ -83,67 +92,91 @@ namespace AirSim.AirSimLib
 
         private abstract class NodeExecution
         {
-            public abstract void ExecuteNode(NodeViewModel node, MultirotorClient client);
+            public abstract void ExecuteNode(INode node, MultirotorClient client);
 
-            public virtual NodeViewModel GetNextNode(NodeViewModel node, MultirotorClient client, Graph graph,
-                Action<string> writeToMessageBox)
+            public virtual INode GetNextNode(
+                                                INode node,
+                                                MultirotorClient client,
+                                                IModel graph,
+                                                Action<string> writeToMessageBox)
             {
-                if (graph.DataGraph.OutEdges(node).Count() > 1)
+                var outEdges = graph.Edges.Where(x => x.From == node).ToList();
+                if (outEdges.Count > 1)
                 {
                     writeToMessageBox("Error: Node " + node.Name + " has more than the 1 out edge ");
                     client.Dispose();
                     return null;
                 }
 
-                if (!graph.DataGraph.OutEdges(node).Any())
+                if (outEdges.Count == 0)
                 {
+                    if (recursionNodes.Count > 0)
+                    {
+                        return recursionNodes.Pop();
+                    }
+
                     writeToMessageBox("Error: Node " + node.Name +
                                       " has no out edges and it is not the final node ");
                     client.Dispose();
                     return null;
                 }
 
-                return graph.DataGraph.OutEdges(node).ToList()[0].Target;
+                return (INode)outEdges[0].To;
             }
         }
 
         private class InitNode : NodeExecution
         {
-            public override void ExecuteNode(NodeViewModel node, MultirotorClient client)
+            public override void ExecuteNode(INode node, MultirotorClient client)
             {
-                client.CreateClient();
-                client.ConfirmConnection();
-                client.EnableApiControl();
+                if (recursionLevel == 0)
+                {
+                    client.CreateClient();
+                    client.ConfirmConnection();
+                    client.EnableApiControl();
+                }
+            }
+        }
+
+        private class FinalNode : NodeExecution
+        {
+            public override void ExecuteNode(INode node, MultirotorClient client)
+            {
+                --recursionLevel;
             }
         }
 
         private class TakeoffNode : NodeExecution
         {
-            public override void ExecuteNode(NodeViewModel node, MultirotorClient client)
-                => client.Takeoff(float.Parse(node.Attributes[0].Value));
+            public override void ExecuteNode(INode node, MultirotorClient client)
+                => client.Takeoff(float.Parse(node.Attributes.ToList()[0].StringValue));
         }
 
         private class MoveNode : NodeExecution
         {
-            public override void ExecuteNode(NodeViewModel node, MultirotorClient client)
-                => client.MoveByVelocityZ(float.Parse(node.Attributes[0].Value));
+            public override void ExecuteNode(INode node, MultirotorClient client)
+            {
+                var t = float.Parse(node.Attributes.ToList()[0].StringValue);
+                client.EnableApiControl();
+                client.MoveByVelocityZ(float.Parse(node.Attributes.ToList()[0].StringValue));
+            }
         }
 
         private class LandNode : NodeExecution
         {
-            public override void ExecuteNode(NodeViewModel node, MultirotorClient client)
+            public override void ExecuteNode(INode node, MultirotorClient client)
                 => client.Land();
         }
 
         private class TimerNode : NodeExecution
         {
-            public override void ExecuteNode(NodeViewModel node, MultirotorClient client)
-                => client.Sleep(float.Parse(node.Attributes[0].Value));
+            public override void ExecuteNode(INode node, MultirotorClient client)
+                => client.Sleep(float.Parse(node.Attributes.ToList()[0].StringValue));
         }
 
         private class HoverNode : NodeExecution
         {
-            public override void ExecuteNode(NodeViewModel node, MultirotorClient client)
+            public override void ExecuteNode(INode node, MultirotorClient client)
             {
                 client.Hover();
                 client.EnableApiControl();
@@ -154,8 +187,8 @@ namespace AirSim.AirSimLib
         {
             private bool condition;
 
-            public override void ExecuteNode(NodeViewModel node, MultirotorClient client)
-                => this.condition = this.CheckCondition(client, node.Attributes[0].Value);
+            public override void ExecuteNode(INode node, MultirotorClient client)
+                => this.condition = this.CheckCondition(client, node.Attributes.ToList()[0].StringValue);
 
             private bool CheckCondition(MultirotorClient client, string conditionString)
             {
@@ -170,7 +203,13 @@ namespace AirSim.AirSimLib
                         return " + conditionString + @";
                     }
                 }";
-                return bool.Parse(this.EvalCode("Code", "Exe", sourceCode, new object[] { client }));
+                bool ans = false;
+                if (!bool.TryParse(this.EvalCode("Code", "Exe", sourceCode, new object[] { client }), out ans))
+                {
+                    return true;
+                }
+
+                return ans;
             }
 
             private string EvalCode(string typeName, string methodName, string sourceCode, object[] args)
@@ -207,28 +246,28 @@ namespace AirSim.AirSimLib
                 return evaluatorType.InvokeMember(methodName, System.Reflection.BindingFlags.InvokeMethod, null, evaluator, args);
             }
 
-            public override NodeViewModel GetNextNode(NodeViewModel node, MultirotorClient client, Graph graph, Action<string> writeToMessageBox)
+            public override INode GetNextNode(INode node, MultirotorClient client, IModel graph, Action<string> writeToMessageBox)
             {
-                if (graph.DataGraph.OutEdges(node).Count() != 2)
+                var outEdges = graph.Edges.Where(x => x.From == node).ToList();
+                if (outEdges.Count != 2)
                 {
                     writeToMessageBox("Error: ifNode out edges count is not equal 2 ");
                     client.Dispose();
                     return null;
                 }
 
-                if (condition)
+                IEdge edge = outEdges[0];
+                if (this.condition)
                 {
-                    EdgeViewModel edge = graph.DataGraph.OutEdges(node).ToList()[0];
-                    return edge.Attributes[0].Value == "true"
-                        ? edge.Target
-                        : graph.DataGraph.OutEdges(node).ToList()[1].Target;
+                    return (INode)(edge.Attributes.ToList()[0].StringValue == "true"
+                        ? edge.To
+                        : outEdges[1].To);
                 }
                 else
                 {
-                    EdgeViewModel edge = graph.DataGraph.OutEdges(node).ToList()[0];
-                    return edge.Attributes[0].Value == "false"
-                        ? edge.Target
-                        : graph.DataGraph.OutEdges(node).ToList()[1].Target;
+                    return (INode)(edge.Attributes.ToList()[0].StringValue == "false"
+                        ? edge.To
+                        : outEdges[1].To);
                 }
             }
         }
@@ -243,22 +282,53 @@ namespace AirSim.AirSimLib
             private Execution()
             {
                 strategies.Add("aInitialNode", new InitNode());
+                strategies.Add("aFinalNode", new FinalNode());
                 strategies.Add("aTakeoff", new TakeoffNode());
                 strategies.Add("aMove", new MoveNode());
                 strategies.Add("aTimer", new TimerNode());
                 strategies.Add("aHover", new HoverNode());
                 strategies.Add("aIfNode", new IfNode());
                 strategies.Add("aLand", new LandNode());
+
+                strategies.Add("InitialNode", new InitNode());
+                strategies.Add("FinalNode", new FinalNode());
+                strategies.Add("Takeoff", new TakeoffNode());
+                strategies.Add("Move", new MoveNode());
+                strategies.Add("Timer", new TimerNode());
+                strategies.Add("Hover", new HoverNode());
+                strategies.Add("IfNode", new IfNode());
+                strategies.Add("Land", new LandNode());
             }
 
             public static Execution Exec => instance ?? (instance = new Execution());
 
-            public void ExecuteNode(NodeViewModel node, MultirotorClient client)
-                => strategies[node.Name].ExecuteNode(node, client);
+            public void ExecuteNode(ref INode node, MultirotorClient client, IModel graph, Action<string> writeToMessageBox)
+            {
+                if (!strategies.ContainsKey(node.Name))
+                {
+                    recursionNodes.Push(strategies["aInitialNode"].GetNextNode(node, client, graph, writeToMessageBox));
+                    node = (INode)node.Function;
+                    ++recursionLevel;
+                    this.ExecuteNode(ref node, client, graph, writeToMessageBox);
+                    return;
+                }
 
-            public NodeViewModel GetNextNode(NodeViewModel node, MultirotorClient client, Graph graph,
-                Action<string> writeToMessageBox)
-                => strategies[node.Name].GetNextNode(node, client, graph, writeToMessageBox);
+                strategies[node.Name].ExecuteNode(node, client);
+            }
+
+            public INode GetNextNode(
+                                        INode node,
+                                        MultirotorClient client,
+                                        IModel graph,
+                                        Action<string> writeToMessageBox)
+            {
+                if (!strategies.ContainsKey(node.Name))
+                {
+                    return strategies["aInitialNode"].GetNextNode(node, client, graph, writeToMessageBox);
+                }
+
+                return strategies[node.Name].GetNextNode(node, client, graph, writeToMessageBox);
+            }
         }
 
         #endregion

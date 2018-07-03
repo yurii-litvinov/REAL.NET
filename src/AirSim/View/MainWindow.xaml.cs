@@ -108,8 +108,9 @@ namespace AirSim.View
             this.token = new CancellationTokenSource();
             this.cancellationToken = this.token.Token;
             var codeExe = new CodeExecution();
+            var t = this.model.Repo.Model("AirSimModel");
             void Action(string str) => this.Dispatcher.Invoke(() => this.Console.SendMessage(str));
-            await Task.Factory.StartNew(() => codeExe.Execute(this.scene.Graph, Action), this.cancellationToken);
+            await Task.Factory.StartNew(() => codeExe.Execute(t, Action), this.cancellationToken);
             this.stopButton.IsEnabled = false;
             this.executeButton.IsEnabled = true;
         }

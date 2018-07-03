@@ -15,7 +15,10 @@
 namespace AirSim.AirSimLib
 {
     using System;
+    using System.Drawing;
+    using System.IO;
     using System.Runtime.InteropServices;
+    using Microsoft.Win32.SafeHandles;
 
     /// <summary>
     /// DLL library wrapper
@@ -30,7 +33,7 @@ namespace AirSim.AirSimLib
         public void CreateClient()
         {
             var substring = currentPath.Substring(0, currentPath.IndexOf(@"\bin", StringComparison.Ordinal)) +
-                            @"\AirSim\" + LibName;
+                            @"\AirSimLib\" + LibName;
             LoadLibrary(substring);
             this.client = CreateClientCPP();
         }
@@ -51,6 +54,52 @@ namespace AirSim.AirSimLib
 
         public void Land() => LandCPP(this.client);
 
+        public int GetImage()
+        {
+            int[] ar = new int[20];
+            var t = GetImageCPP(this.client, ar);
+            return 0;
+        }
+
+        public double GetDistanceByImage()
+        {
+            float[] ar = new float[40000];
+            var t = GetDistanceImageCPP(this.client, ar);
+            int h = (int)ar[t + 1];
+            int w = (int)ar[t];
+            int[] bar = new int[t];
+            for (int i = 0; i < t; ++i)
+            {
+                if (ar[i] >= 1)
+                    bar[i] = 255;
+                else
+                    bar[i] = (int)(ar[i] * 256);
+            }
+            Bitmap bitmap = new Bitmap(w, h);
+            for (int j = 0; j < h; j++)
+            {
+                for (int i = 0; i < w; i++)
+                {
+                    Color newColor = Color.FromArgb(bar[i + (j * w)], bar[i + (j * w)], bar[i + (j * w)]);
+
+                    bitmap.SetPixel(i, j, newColor);
+                }
+            }
+
+            bitmap.Save("bbb.png");
+            return bar[w / 2 + (h * w) / 2];
+        }
+
+        public double GetDistance()
+            => GetDistanceCPP(this.client);
+
+        public (float x, float y, float z) GetPos()
+        {
+            float[] pos = new float[3];
+            GetPosCPP(this.client, pos);
+            return (pos[0], pos[1], pos[2]);
+        }
+
         public void Dispose()
         {
             this.Land();
@@ -65,6 +114,18 @@ namespace AirSim.AirSimLib
 
         [DllImport(LibName)]
         private static extern void DisposeClientCPP(IntPtr ptr);
+
+        [DllImport(LibName)]
+        private static extern int GetDistanceImageCPP(IntPtr ptr, float[] ar);
+
+        [DllImport(LibName)]
+        private static extern int GetImageCPP(IntPtr ptr, int[] ar);
+
+        [DllImport(LibName)]
+        private static extern float GetDistanceCPP(IntPtr ptr);
+
+        [DllImport(LibName)]
+        private static extern void GetPosCPP(IntPtr ptr, float[] ar);
 
         [DllImport(LibName)]
         private static extern void ConfirmConnectionCPP(IntPtr ptr);

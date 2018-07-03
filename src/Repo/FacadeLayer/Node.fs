@@ -15,6 +15,7 @@
 namespace Repo.FacadeLayer
 
 open Repo
+open System
 
 /// Implementation of a node in model.
 type Node
@@ -27,5 +28,12 @@ type Node
 
     inherit Element(infrastructure, element, elementRepository, attributeRepository)
 
-    interface INode
-
+    interface INode with
+        member this.Function
+            with get (): IElement = 
+                if element.Function.IsNone then
+                    null
+                else
+                    elementRepository.GetElement element.Function.Value
+            and set (v: IElement): unit = 
+                raise (Exception("You can't modify function (yet)"))

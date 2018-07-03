@@ -22,7 +22,7 @@ open Repo.DataLayer
 [<Test>]
 let ``DataElement shall have class and name`` () =
     let model = new DataModel("") :> IModel
-    let node = DataNode("node1", model) :> INode
+    let node = DataNode("node1", None, model) :> INode
     node.Name |> should equal "node1"
 
     node.Name <- "changedName"
