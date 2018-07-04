@@ -133,15 +133,12 @@ Target.create "Clean" (fun _ ->
 // --------------------------------------------------------------------------------------
 // Build project
 
-let buildMode = Environment.environVarOrDefault "buildMode" configuration
-
 let setParams (defaults:MSBuildParams) =
         { defaults with
-            Verbosity = Some(Quiet)
             Targets = ["Build"]
             Properties =
                 [
-                    "Configuration", buildMode
+                    "Configuration", configuration
                 ]
          }
 
