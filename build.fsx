@@ -49,21 +49,11 @@ let tags = "DSM visual-modeling visual-languages"
 let solutionFile  = "REAL.NET.sln"
 
 // Default target configuration
-#if MONO
-let configuration = "MonoRelease"
-let doNotCopyBinaries = ["WpfEditor"; "WpfControlsLib"; "AirSim"]
-printfn "Running on Mono"
-#else
-let configuration = "Release"
-let doNotCopyBinaries = []
-printfn "Running not on Mono"
-#endif
-
-#if __MonoCS__
-printfn "Mono detected"
-#else
-printfn "No luck with __MonoCS__"
-#endif
+let configuration, doNotCopyBinaries = 
+    if Runtime.InteropServices.RuntimeInformation.IsOSPlatform Runtime.InteropServices.OSPlatform.Linux then
+        "MonoRelease", ["WpfEditor"; "WpfControlsLib"; "AirSim"]
+    else
+        "Release", []
 
 // Pattern specifying assemblies to be tested using NUnit
 let testAssemblies = "tests/**/bin" </> configuration </> "*Tests*.dll"
