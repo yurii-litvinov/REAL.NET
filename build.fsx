@@ -52,9 +52,17 @@ let solutionFile  = "REAL.NET.sln"
 #if MONO
 let configuration = "MonoRelease"
 let doNotCopyBinaries = ["WpfEditor"; "WpfControlsLib"; "AirSim"]
+printfn "Running on Mono"
 #else
 let configuration = "Release"
 let doNotCopyBinaries = []
+printfn "Running not on Mono"
+#endif
+
+#if __MonoCS__
+printfn "Mono detected"
+#else
+printfn "No luck with __MonoCS__"
 #endif
 
 // Pattern specifying assemblies to be tested using NUnit
@@ -133,7 +141,7 @@ Target.create "Clean" (fun _ ->
 // --------------------------------------------------------------------------------------
 // Build project
 
-let setParams (defaults:MSBuildParams) =
+let setParams (defaults: MSBuildParams) =
         { defaults with
             Targets = ["Build"]
             Properties =
