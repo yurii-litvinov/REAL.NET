@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel;
+    using EditorPluginInterfaces;
     using EditorPluginInterfaces.Toolbar;
 
     public class ButtonWrapper : IButton, INotifyPropertyChanged

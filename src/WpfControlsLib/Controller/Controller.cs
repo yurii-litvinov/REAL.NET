@@ -14,21 +14,34 @@
 
 namespace WpfControlsLib.Controller
 {
+    using System;
+    using EditorPluginInterfaces;
     using GraphX.Controls;
-    using ViewModel;
+    using WpfControlsLib.ViewModel;
 
     /// <summary>
-    /// Controller in MVC architecture. Supposed to be handling commands, but for now it modifies model
-    /// by itself.
+    /// Controller in MVC architecture. Handles commands and manages undo-redo state. Model modification is only
+    /// possible via commands and all commands are executed only inside controller.
     /// </summary>
     public class Controller
     {
-        private readonly Model.Model model;
+        private readonly IModel model;
+        private readonly UndoRedo.UndoRedoStack undoStack = new UndoRedo.UndoRedoStack();
 
-        public Controller(Model.Model model)
+        public Controller(IModel model)
         {
             this.model = model;
         }
+
+        /// <summary>
+        /// Event is raised when undo operation becomes available or not available.
+        /// </summary>
+        public event EventHandler<UndoRedoAvailabilityChangedArgs> UndoAvailabilityChanged;
+
+        /// <summary>
+        /// Event is raised when redo operation becomes available or not available.
+        /// </summary>
+        public event EventHandler<UndoRedoAvailabilityChangedArgs> RedoAvailabilityChanged;
 
         public void NewNode(Repo.IElement node)
         {
@@ -44,5 +57,41 @@ namespace WpfControlsLib.Controller
         }
 
         public void RemoveElement(Repo.IElement element) => this.model.RemoveElement(element);
+
+        public void Execute(ICommand command)
+        {
+            this.DoAndCheckUndoRedoStatus(() =>
+            {
+                this.undoStack.AddCommand(command);
+                command.Execute();
+            }
+            );
+        }
+
+        public void Undo() => this.DoAndCheckUndoRedoStatus(this.undoStack.Undo);
+
+        public void Redo() => this.DoAndCheckUndoRedoStatus(this.undoStack.Redo);
+
+        private void DoAndCheckUndoRedoStatus(Action action)
+        {
+            var oldUndoAvailable = this.undoStack.IsUndoAvailable;
+            var oldRedoAvailable = this.undoStack.IsRedoAvailable;
+
+            action();
+
+            if (this.undoStack.IsUndoAvailable != oldUndoAvailable)
+            {
+                UndoAvailabilityChanged?.Invoke(
+                    this,
+                    new UndoRedoAvailabilityChangedArgs(this.undoStack.IsUndoAvailable));
+            }
+
+            if (this.undoStack.IsRedoAvailable != oldRedoAvailable)
+            {
+                RedoAvailabilityChanged?.Invoke(
+                    this,
+                    new UndoRedoAvailabilityChangedArgs(this.undoStack.IsRedoAvailable));
+            }
+        }
     }
 }

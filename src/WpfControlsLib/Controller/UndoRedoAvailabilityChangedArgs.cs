@@ -12,24 +12,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-namespace EditorPluginInterfaces.UndoRedo
+namespace WpfControlsLib.Controller
 {
     using System;
 
     /// <summary>
-    /// Stack changed arguments class.
+    /// Arguments for undo/redo availability change events.
     /// </summary>
-    public class StackChangedArgs : EventArgs
+    public class UndoRedoAvailabilityChangedArgs : EventArgs
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="StackChangedArgs"/> class.
+        /// Initializes a new instance of the <see cref="UndoRedoAvailabilityChangedArgs"/> class.
         /// </summary>
-        /// <param name="isStackAvailable">Availability of stack.</param>
-        public StackChangedArgs(bool isStackAvailable) => this.IsStackAvailable = isStackAvailable;
+        /// <param name="isAvailable">Availability of an operation.</param>
+        public UndoRedoAvailabilityChangedArgs(bool isAvailable) => this.IsAvailable = isAvailable;
 
         /// <summary>
-        /// Gets a value indicating whether stack is available.
+        /// Gets a value indicating whether operation is available.
         /// </summary>
-        public bool IsStackAvailable { get; }
+        public bool IsAvailable { get; }
     }
 }

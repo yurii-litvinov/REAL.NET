@@ -19,7 +19,6 @@ namespace WpfEditor.View
     using System.Windows;
     using System.Windows.Controls;
     using EditorPluginInterfaces;
-    using EditorPluginInterfaces.UndoRedo;
     using PluginManager;
     using Repo;
     using WpfControlsLib.Constraints;
@@ -35,7 +34,6 @@ namespace WpfEditor.View
     internal partial class MainWindow
     {
         private readonly WpfControlsLib.Model.Model model;
-        private IUndoRedoStack undoStack;
 
         public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();
 
@@ -66,8 +64,6 @@ namespace WpfEditor.View
             this.modelSelector.ChangeModel(2);
 
             this.InitAndLaunchPlugins();
-            this.undoStack = new WpfControlsLib.Controller.UndoRedo.UndoRedoStack();
-            this.scene.InitUndo(this.undoStack);
             this.InitToolbar();
         }
 
@@ -83,7 +79,7 @@ namespace WpfEditor.View
         private void InitToolbar()
         {
             this.Console.Messages.Add("Initializing ToolBar");
-            var sample = new WpfControlsLib.Controls.Toolbar.StandardButtonsAndMenus.SampleButtonsCollection(this.Console, this.undoStack);
+            var sample = new WpfControlsLib.Controls.Toolbar.StandardButtonsAndMenus.SampleButtonsCollection(this.Console);
             var buttons = sample.SampleButtons;
             foreach (var button in buttons)
             {

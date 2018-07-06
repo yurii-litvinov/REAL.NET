@@ -1,17 +1,16 @@
 ﻿namespace WpfControlsLib.Controls.Toolbar.StandardButtonsAndMenus
 {
-    using System;
     using System.Collections.Generic;
+    using Controller;
     using EditorPluginInterfaces;
     using EditorPluginInterfaces.Toolbar;
-    using EditorPluginInterfaces.UndoRedo;
 
     public class SampleButtonsCollection
     {
-        public SampleButtonsCollection(IConsole console, IUndoRedoStack undoRedoStack)
+        public SampleButtonsCollection(IConsole console, Controller controller)
         {
-            var undoAction = new Command(() => { undoRedoStack.Undo(); });
-            var redoAction = new Command(() => { undoRedoStack.Redo(); });
+            var undoAction = new Command(() => { controller.Undo(); });
+            var redoAction = new Command(() => { controller.Redo(); });
             var undoImage = "pack://application:,,,/" + "View/Pictures/Toolbar/undo.png";
             var redoImage = "pack://application:,,,/" + "View/Pictures/Toolbar/redo.png";
             var undoButton = new Button(undoAction, "Undo button", undoImage);

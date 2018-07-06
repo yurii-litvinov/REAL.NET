@@ -15,7 +15,7 @@
 namespace WpfControlsLib.Controls.Toolbar
 {
     using System;
-    using EditorPluginInterfaces.Toolbar;
+    using EditorPluginInterfaces;
 
     /// <summary>
     /// Class that implements pattern Command
@@ -52,10 +52,10 @@ namespace WpfControlsLib.Controls.Toolbar
         /// </summary>
         /// <param name="commandToExecute">Command to execute></param>
         /// <param name="commandToUndo">Command to execute to undo this command</param>
-        /// <param name="isUndoType">Can this command be undone</param>
-        private Command(Action commandToExecute, Action commandToUndo, bool isUndoType)
+        /// <param name="canBeUndone">Can this command be undone</param>
+        private Command(Action commandToExecute, Action commandToUndo, bool canBeUndone)
         {
-            this.IsUndoType = isUndoType;
+            this.CanBeUndone = canBeUndone;
             this.commandToExecute = commandToExecute;
             this.commandToUndo = commandToUndo;
         }
@@ -63,7 +63,7 @@ namespace WpfControlsLib.Controls.Toolbar
         /// <summary>
         /// Gets a value indicating whether can this command be undone
         /// </summary>
-        public bool IsUndoType { get; }
+        public bool CanBeUndone { get; }
 
         /// <summary>
         /// Executes this command

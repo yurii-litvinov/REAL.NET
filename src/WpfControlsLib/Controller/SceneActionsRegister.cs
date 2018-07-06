@@ -18,7 +18,7 @@ namespace WpfControlsLib.Controller
     using System.Collections.Generic;
     using System.Linq;
     using System.Windows;
-    using EditorPluginInterfaces.UndoRedo;
+    using WpfControlsLib.Controller.UndoRedo;
     using WpfControlsLib.Controls.Scene;
     using WpfControlsLib.Controls.Toolbar;
 
@@ -30,7 +30,7 @@ namespace WpfControlsLib.Controller
     {
         private GraphArea scene;
         private SceneCommands commands;
-        private IUndoRedoStack undoRedoStack;
+        private Controller controller;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneActionsRegister"/> class.
@@ -38,11 +38,11 @@ namespace WpfControlsLib.Controller
         /// <param name="scene">Scene.</param>
         /// <param name="commands">Command of scene.</param>
         /// <param name="undoRedoStack">UndoRedo stack.</param>
-        public SceneActionsRegister(GraphArea scene, SceneCommands commands, IUndoRedoStack undoRedoStack)
+        public SceneActionsRegister(GraphArea scene, SceneCommands commands, Controller undoRedoStack)
         {
             this.scene = scene;
             this.commands = commands;
-            this.undoRedoStack = undoRedoStack;
+            this.controller = undoRedoStack;
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace WpfControlsLib.Controller
             Action doAction = () => { this.commands.AddVertexOnScene(position, node); };
             Action undoAction = () => { this.commands.RemoveVertexFromScene(node); };
             var command = new Command(doAction, undoAction);
-            this.undoRedoStack.AddCommand(command);
+            this.controller.Execute(command);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace WpfControlsLib.Controller
                 this.RestoreEdges(edgesFromNode);
             };
             var command = new Command(doAction, undoAction);
-            this.undoRedoStack.AddCommand(command);
+            this.controller.Execute(command);
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace WpfControlsLib.Controller
             Action doAction = () => { this.commands.AddEdgeOnScene(edge, points); };
             Action undoAction = () => { this.commands.RemoveEdgeFromScene(edge); };
             var command = new Command(doAction, undoAction);
-            this.undoRedoStack.AddCommand(command);
+            this.controller.Execute(command);
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace WpfControlsLib.Controller
             Action doAction = () => { this.commands.RemoveEdgeFromScene(edge); };
             Action undoAction = () => { this.commands.AddEdgeOnScene(edge, points); };
             var command = new Command(doAction, undoAction);
-            this.undoRedoStack.AddCommand(command);
+            this.controller.Execute(command);
         }
 
         /// <summary>

@@ -15,6 +15,7 @@
 namespace WpfControlsLib.Controls.Toolbar
 {
     using System;
+    using EditorPluginInterfaces;
     using EditorPluginInterfaces.Toolbar;
 
     /// <summary>

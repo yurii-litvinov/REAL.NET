@@ -15,13 +15,11 @@
 namespace WpfControlsLib.Controls.Scene
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
     using System.Windows.Media;
-    using EditorPluginInterfaces.UndoRedo;
     using GraphX.Controls;
     using GraphX.Controls.Models;
     using GraphX.PCL.Common.Enums;
@@ -33,6 +31,9 @@ namespace WpfControlsLib.Controls.Scene
     using WpfControlsLib.Model;
     using WpfControlsLib.ViewModel;
 
+    /// <summary>
+    /// Visualizes  model graph and makes it possible for a user to interact with it.
+    /// </summary>
     public partial class Scene : UserControl
     {
         private readonly EditorObjectManager editorManager;
@@ -45,7 +46,6 @@ namespace WpfControlsLib.Controls.Scene
         private Controller.Controller controller;
         private IElementProvider elementProvider;
         private SceneCommands commands;
-        private IUndoRedoStack undoStack;
         private Controller.SceneActionsRegister register;
 
         public Scene()
@@ -54,8 +54,7 @@ namespace WpfControlsLib.Controls.Scene
 
             this.editorManager = new EditorObjectManager(this.SceneX, this.zoomControl);
             this.commands = new SceneCommands(this);
-            this.undoStack = new UndoRedoStack();
-            this.register = new Controller.SceneActionsRegister(this.SceneX, this.commands, this.undoStack);
+            this.register = new Controller.SceneActionsRegister(this.SceneX, this.commands, this.controller);
 
             ZoomControl.SetViewFinderVisibility(this.zoomControl, Visibility.Hidden);
 
@@ -115,13 +114,6 @@ namespace WpfControlsLib.Controls.Scene
             this.Graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVertex);
             this.Graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.EdgeViewModel);
             this.InitGraphXLogicCore();
-        }
-
-        public void InitUndo(IUndoRedoStack undoStack)
-        {
-            // initializing undo operations
-            this.undoStack = undoStack;
-            this.register = new Controller.SceneActionsRegister(this.SceneX, this.commands, this.undoStack);
         }
 
         public void Clear() => this.Graph.DataGraph.Clear();
@@ -228,8 +220,9 @@ namespace WpfControlsLib.Controls.Scene
                 return;
             }
 
-            this.NodeSelected?.Invoke(this,
-                new NodeSelectedEventArgs {Node = this.currentVertex.GetDataVertex<NodeViewModel>()});
+            this.NodeSelected?.Invoke(
+                this,
+                new NodeSelectedEventArgs { Node = this.currentVertex.GetDataVertex<NodeViewModel>() });
 
             this.SceneX.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<NodeViewModel>().
                 Color = Brushes.Green);
