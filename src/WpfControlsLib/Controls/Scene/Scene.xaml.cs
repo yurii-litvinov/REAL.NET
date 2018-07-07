@@ -26,7 +26,8 @@ namespace WpfControlsLib.Controls.Scene
     using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
     using GraphX.PCL.Logic.Models;
     using QuickGraph;
-    using WpfControlsLib.Controller.UndoRedo;
+    using WpfControlsLib.Controller;
+    using WpfControlsLib.Controls.Scene.Commands;
     using WpfControlsLib.Controls.Scene.EventArguments;
     using WpfControlsLib.Model;
     using WpfControlsLib.ViewModel;
@@ -42,11 +43,10 @@ namespace WpfControlsLib.Controls.Scene
         private EdgeControl edgeControl;
         private Point position;
 
-        private WpfControlsLib.Model.Model model;
-        private Controller.Controller controller;
+        private Model model;
+        private Controller controller;
         private IElementProvider elementProvider;
         private SceneCommands commands;
-        private Controller.SceneActionsRegister register;
 
         public Scene()
         {
@@ -54,7 +54,6 @@ namespace WpfControlsLib.Controls.Scene
 
             this.editorManager = new EditorObjectManager(this.SceneX, this.zoomControl);
             this.commands = new SceneCommands(this);
-            this.register = new Controller.SceneActionsRegister(this.SceneX, this.commands, this.controller);
 
             ZoomControl.SetViewFinderVisibility(this.zoomControl, Visibility.Hidden);
 
@@ -100,7 +99,7 @@ namespace WpfControlsLib.Controls.Scene
             logic.EdgeCurvingEnabled = false;
         }
 
-        public void Init(WpfControlsLib.Model.Model model, Controller.Controller controller, IElementProvider elementProvider)
+        public void Init(WpfControlsLib.Model.Model model, Controller controller, IElementProvider elementProvider)
         {
             this.controller = controller;
             this.model = model;
@@ -213,7 +212,12 @@ namespace WpfControlsLib.Controls.Scene
                 }
                 else
                 {
-                    this.controller.NewEdge(this.elementProvider.Element, this.previosVertex, this.currentVertex);
+                    var command = new Commands.CreateEdgeCommand(
+                        this.model,
+                        this.elementProvider.Element,
+                        (this.previosVertex?.Vertex as NodeViewModel)?.Node,
+                        (this.currentVertex?.Vertex as NodeViewModel)?.Node);
+                    this.controller.Execute(command);
                     this.ElementUsed?.Invoke(this, EventArgs.Empty);
                 }
 
@@ -275,12 +279,12 @@ namespace WpfControlsLib.Controls.Scene
                     return;
                 }
 
-                var isRoutingPoint = dataEdge.RoutingPoints.Where(point => this.GetDistance(point, mousePosition).CompareTo(3) <= 0).ToArray().Length != 0;
+                var isRoutingPoint = dataEdge.RoutingPoints.Where(point => Geometry.GetDistance(point, mousePosition).CompareTo(3) <= 0).ToArray().Length != 0;
 
                 // Adding MenuItem to routing point in order to delete it.
                 if (isRoutingPoint)
                 {
-                    var routingPoint = Array.Find(dataEdge.RoutingPoints, point => this.GetDistance(point, mousePosition).CompareTo(3) <= 0);
+                    var routingPoint = Array.Find(dataEdge.RoutingPoints, point => Geometry.GetDistance(point, mousePosition).CompareTo(3) <= 0);
                     var mi2 = new MenuItem { Header = "Delete routing point", Tag = routingPoint };
                     mi2.Click += this.MenuItemClickRoutingPoint;
                     args.EdgeControl.ContextMenu.Items.Add(mi2);
@@ -305,11 +309,11 @@ namespace WpfControlsLib.Controls.Scene
                 return;
             }
 
-            var isRoutingPoint = edge.RoutingPoints.Where(point => this.GetDistance(point, mousePosition).CompareTo(3) <= 0).ToArray().Length != 0;
+            var isRoutingPoint = edge.RoutingPoints.Where(point => Geometry.GetDistance(point, mousePosition).CompareTo(3) <= 0).ToArray().Length != 0;
 
             if (isRoutingPoint)
             {
-                edge.IndexOfInflectionPoint = Array.FindIndex(edge.RoutingPoints, point => this.GetDistance(point, mousePosition).CompareTo(3) <= 0);
+                edge.IndexOfInflectionPoint = Array.FindIndex(edge.RoutingPoints, point => Geometry.GetDistance(point, mousePosition).CompareTo(3) <= 0);
             }
             else
             {
@@ -317,7 +321,7 @@ namespace WpfControlsLib.Controls.Scene
 
                 for (var i = 0; i < numberOfRoutingPoints - 1; ++i)
                 {
-                    if (this.IsBelongToLine(edge.RoutingPoints[i], edge.RoutingPoints[i + 1], mousePosition))
+                    if (Geometry.BelongsToLine(edge.RoutingPoints[i], edge.RoutingPoints[i + 1], mousePosition))
                     {
                         edge.IndexOfInflectionPoint = i + 1;
                         var oldRoutingPoints = edge.RoutingPoints;
@@ -337,14 +341,12 @@ namespace WpfControlsLib.Controls.Scene
             var vc = new VertexControl(vertex);
             vc.SetPosition(this.position);
             this.SceneX.AddVertex(vertex, vc);
-            this.register.RegisterAddingVertex(this.position, vertex.Node);
         }
 
         private void AddNewEdgeControl(EdgeViewModel edgeViewModel)
         {
             var ec = new EdgeControl(this.previosVertex, this.currentVertex, edgeViewModel);
             this.SceneX.InsertEdge(edgeViewModel, ec);
-            this.register.RegisterAddingEdge(edgeViewModel.Edge, this.ConvertIntoWinPoint(edgeViewModel.RoutingPoints));
             this.previosVertex = null;
             this.editorManager.DestroyVirtualEdge();
         }
@@ -367,24 +369,27 @@ namespace WpfControlsLib.Controls.Scene
             var edgesToRestore = this.SceneX.EdgesList.ToList()
                 .Where(x => x.Key.Source == vertex || x.Key.Target == vertex)
                 .Select(x => Tuple.Create(x.Key.Edge, this.ConvertIntoWinPoint(x.Key.RoutingPoints)));
+
+            var command = new CompositeCommand();
+
             foreach (var edge in edges)
             {
                 if (edge.Source == vertex || edge.Target == vertex)
                 {
-                    this.controller.RemoveElement(edge.Edge);
+                    command.Add(new RemoveEdgeCommand(this.model, edge.Edge));
                 }
             }
 
-            this.controller.RemoveElement(vertex.Node);
-            this.register.RegisterRemovingVertex(vertex.Node, edgesToRestore);
+            command.Add(new RemoveNodeCommand(this.model, vertex.Node));
+            this.controller.Execute(command);
             this.DrawGraph();
         }
 
         private void MenuItemClickEdge(object sender, EventArgs e)
         {
             var edge = this.edgeControl.GetDataEdge<EdgeViewModel>();
-            this.controller.RemoveElement(edge.Edge);
-            this.register.RegisterRemovingEdge(edge.Edge);
+            var command = new RemoveEdgeCommand(this.model, edge.Edge);
+            this.controller.Execute(command);
             this.DrawGraph();
         }
 
@@ -439,40 +444,10 @@ namespace WpfControlsLib.Controls.Scene
             }
         }
 
-        /// <summary>
-        /// Checking whether point belongs to line.
-        /// </summary>
-        /// <param name="lp1">First line point.</param>
-        /// <param name="lp2">Second line point.</param>
-        /// <param name="p">Point for checking.</param>
-        /// <returns>True if belongs, otherwise false.</returns>
-        private bool IsBelongToLine(GraphX.Measure.Point lp1, GraphX.Measure.Point lp2, GraphX.Measure.Point p)
-        {
-            var vec1 = new Point(p.X - lp1.X, p.Y - lp1.Y);
-            var vec2 = new Point(lp2.X - lp1.X, lp2.Y - lp1.Y);
-
-            var val1 = Math.Pow(vec2.X, 2) + Math.Pow(vec2.Y, 2);
-            var val2 = (vec1.X * vec2.X) + (vec1.Y * vec2.Y);
-
-            var t = val2 / val1;
-
-            var x = lp1.X + (vec2.X * t);
-            var y = lp1.Y + (vec2.Y * t);
-
-            return Math.Sqrt(Math.Pow(p.X - x, 2) + Math.Pow(p.Y - y, 2)).CompareTo(3) <= 0;
-        }
-
-        /// <summary>
-        /// Getting distance between two points.
-        /// </summary>
-        /// <param name="p1">First point.</param>
-        /// <param name="p2">Second point.</param>
-        /// <returns>Distance between two points.</returns>
-        private double GetDistance(GraphX.Measure.Point p1, GraphX.Measure.Point p2) => (p1 - p2).Length;
-
         private void CreateNewNode(Repo.IElement element)
         {
-            this.controller.NewNode(element);
+            var command = new CreateNodeCommand(this.model, element);
+            this.controller.Execute(command);
         }
 
         public class NodeSelectedEventArgs : EventArgs

@@ -34,6 +34,7 @@ namespace WpfEditor.View
     internal partial class MainWindow
     {
         private readonly WpfControlsLib.Model.Model model;
+        private readonly WpfControlsLib.Controller.Controller controller;
 
         public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();
 
@@ -49,7 +50,7 @@ namespace WpfEditor.View
 
             this.palette.SetModel(this.model);
 
-            var controller = new WpfControlsLib.Controller.Controller(this.model);
+            this.controller = new WpfControlsLib.Controller.Controller();
 
             this.Closed += this.CloseChildrenWindows;
 
@@ -59,7 +60,7 @@ namespace WpfEditor.View
             this.scene.NodeSelected += (sender, args) => this.attributesView.DataContext = args.Node;
             this.scene.EdgeSelected += (sender, args) => this.attributesView.DataContext = args.Edge;
 
-            this.scene.Init(this.model, controller, new PaletteAdapter(this.palette));
+            this.scene.Init(this.model, this.controller, new PaletteAdapter(this.palette));
             this.modelSelector.Init(this.model);
             this.modelSelector.ChangeModel(2);
 
@@ -79,7 +80,7 @@ namespace WpfEditor.View
         private void InitToolbar()
         {
             this.Console.Messages.Add("Initializing ToolBar");
-            var sample = new WpfControlsLib.Controls.Toolbar.StandardButtonsAndMenus.SampleButtonsCollection(this.Console);
+            var sample = new WpfControlsLib.Controls.Toolbar.StandardButtonsAndMenus.SampleButtonsCollection(this.Console, this.controller);
             var buttons = sample.SampleButtons;
             foreach (var button in buttons)
             {

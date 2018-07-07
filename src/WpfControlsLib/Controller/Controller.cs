@@ -16,8 +16,6 @@ namespace WpfControlsLib.Controller
 {
     using System;
     using EditorPluginInterfaces;
-    using GraphX.Controls;
-    using WpfControlsLib.ViewModel;
 
     /// <summary>
     /// Controller in MVC architecture. Handles commands and manages undo-redo state. Model modification is only
@@ -25,13 +23,7 @@ namespace WpfControlsLib.Controller
     /// </summary>
     public class Controller
     {
-        private readonly IModel model;
         private readonly UndoRedo.UndoRedoStack undoStack = new UndoRedo.UndoRedoStack();
-
-        public Controller(IModel model)
-        {
-            this.model = model;
-        }
 
         /// <summary>
         /// Event is raised when undo operation becomes available or not available.
@@ -43,21 +35,11 @@ namespace WpfControlsLib.Controller
         /// </summary>
         public event EventHandler<UndoRedoAvailabilityChangedArgs> RedoAvailabilityChanged;
 
-        public void NewNode(Repo.IElement node)
-        {
-            this.model.CreateNode(node);
-        }
-
-        public void NewEdge(Repo.IElement edge, VertexControl prevVer, VertexControl ctrlVer)
-        {
-            this.model.CreateEdge(
-                edge as Repo.IEdge,
-                (prevVer?.Vertex as NodeViewModel)?.Node,
-                (ctrlVer?.Vertex as NodeViewModel)?.Node);
-        }
-
-        public void RemoveElement(Repo.IElement element) => this.model.RemoveElement(element);
-
+        /// <summary>
+        /// Executes given command and adds it into undo stack. May raise events related to undo-redo availability
+        /// after the command is executed. Clears redo stack.
+        /// </summary>
+        /// <param name="command">Command to execute.</param>
         public void Execute(ICommand command)
         {
             this.DoAndCheckUndoRedoStatus(() =>
@@ -68,8 +50,16 @@ namespace WpfControlsLib.Controller
             );
         }
 
+        /// <summary>
+        /// Undoes last command, modifies undo-redo stack and raises related events after the undo action will 
+        /// be executed.
+        /// </summary>
         public void Undo() => this.DoAndCheckUndoRedoStatus(this.undoStack.Undo);
 
+        /// <summary>
+        /// Redoes last undone command, modifies undo-redo stack and raises related events after the command will 
+        /// be executed.
+        /// </summary>
         public void Redo() => this.DoAndCheckUndoRedoStatus(this.undoStack.Redo);
 
         private void DoAndCheckUndoRedoStatus(Action action)

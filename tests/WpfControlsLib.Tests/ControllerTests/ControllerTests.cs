@@ -4,10 +4,9 @@
     using NUnit.Framework;
     using EditorPluginInterfaces;
     using WpfControlsLib.Controller;
-    using NSubstitute;
 
     [TestFixture]
-    public class TestClass
+    public class ControllerTests
     {
         /// <summary>
         /// Helper class that allows to create commands on demand.
@@ -46,8 +45,7 @@
         {
             var executed = false;
             var testCommand = new AdHocCommand(() => executed = true);
-            var model = Substitute.For<IModel>();
-            var controller = new Controller(model);
+            var controller = new Controller();
 
             controller.Execute(testCommand);
 
@@ -60,8 +58,7 @@
             var executed = false;
             var undone = false;
             var testCommand = new AdHocCommand(() => executed = true, () => undone = true);
-            var model = Substitute.For<IModel>();
-            var controller = new Controller(model);
+            var controller = new Controller();
 
             controller.Execute(testCommand);
 
@@ -80,8 +77,7 @@
             var executed = 0;
             var undone = false;
             var testCommand = new AdHocCommand(() => ++executed, () => undone = true);
-            var model = Substitute.For<IModel>();
-            var controller = new Controller(model);
+            var controller = new Controller();
 
             controller.Execute(testCommand);
 
@@ -102,8 +98,7 @@
         public void ControllerShouldReportUndoRedoStatus()
         {
             var testCommand = new AdHocCommand(() => { }, () => { });
-            var model = Substitute.For<IModel>();
-            var controller = new Controller(model);
+            var controller = new Controller();
 
             var undoAvailable = false;
             var redoAvailable = false;
@@ -130,8 +125,7 @@
         public void ControllerShouldClearRedoStackOnNewCommand()
         {
             var testCommand = new AdHocCommand(() => { }, () => { });
-            var model = Substitute.For<IModel>();
-            var controller = new Controller(model);
+            var controller = new Controller();
 
             var undoAvailable = false;
             var redoAvailable = false;
