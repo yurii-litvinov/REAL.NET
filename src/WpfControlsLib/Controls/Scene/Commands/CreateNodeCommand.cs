@@ -37,7 +37,7 @@ namespace WpfControlsLib.Controls.Scene.Commands
 
         bool ICommand.CanBeUndone => true;
 
-        void ICommand.Execute() => this.model.CreateNode(this.type as Repo.IEdge);
+        void ICommand.Execute() => this.model.CreateNode(this.type as Repo.INode);
 
         // TODO: This shall also trigger the deletion of connected edges.
         void ICommand.Undo() => this.model.RemoveElement(this.type);

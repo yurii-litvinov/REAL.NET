@@ -56,9 +56,17 @@ namespace WpfControlsLib.Model
 
         public void CreateNode(Repo.IElement element)
         {
-            if (this.Constraints.AllowCreateOrExistNode(this.Repo.Model(this.ModelName).Nodes, "a" + element.Name.ToString())) // TODO something more pretty than +"a"
+            if (string.IsNullOrEmpty(this.ModelName))
             {
-                var model = this.Repo.Model(this.ModelName);
+                throw new InvalidOperationException("Current model name is not set");
+            }
+
+            var _ = element ?? throw new ArgumentNullException(nameof(element));
+
+            var model = this.Repo.Model(this.ModelName);
+
+            if (this.Constraints.AllowCreateOrExistNode(model.Nodes, "a" + element.Name.ToString())) // TODO something more pretty than +"a"
+            {
                 var newNode = model.CreateElement(element) as Repo.INode;
                 this.RaiseNewVertex(newNode);
             }
@@ -70,14 +78,18 @@ namespace WpfControlsLib.Model
             }
         }
 
-        public void CreateEdge(Repo.IEdge edge, Repo.IElement prevVer, Repo.IElement ctrlVer)
+        public void CreateEdge(Repo.IEdge edge, Repo.IElement source, Repo.IElement destination)
         {
-            if (this.Constraints.AllowCreateOrExistEdge(this.Repo.Model(this.ModelName).Edges, prevVer.Name.ToString(), ctrlVer.Name.ToString()))
+            if (this.Constraints.AllowCreateOrExistEdge(
+                    this.Repo.Model(this.ModelName).Edges, 
+                    source.Name, 
+                    destination.Name))
             {
                 var model = this.Repo.Model(this.ModelName);
                 var newEdge = model.CreateElement(edge as Repo.IElement) as Repo.IEdge;
-                newEdge.From = prevVer;
-                newEdge.To = ctrlVer;
+                newEdge.Name = "a" + edge.Name;
+                newEdge.From = source;
+                newEdge.To = destination;
                 this.RaiseNewEdge(newEdge, newEdge.From, newEdge.To);
             }
             else

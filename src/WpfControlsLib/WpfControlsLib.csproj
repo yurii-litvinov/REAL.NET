@@ -149,6 +149,7 @@
     <Compile Include="Constraints\ConstraintsWindow.xaml.cs" />
     <Compile Include="Controls\Console\AppConsoleViewModel.cs" />
     <Compile Include="Controller\UndoRedo\UndoRedoStack.cs" />
+    <Compile Include="Properties\AssemblyInternalsVisibleTo.cs" />
     <Compile Include="ViewModel\AttributeViewModel.cs" />
     <Compile Include="Controls\Scene\EdgeBlueprint.cs" />
     <Compile Include="Controls\Scene\EditorObjectManager.cs" />

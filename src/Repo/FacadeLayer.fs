@@ -84,7 +84,7 @@ type IAttribute =
 /// Element is a general term for nodes or edges.
 and [<AllowNullLiteral>] IElement =
     interface
-        /// Name of an element, to be displayed on a scene and in various menus.
+        /// Name of an element, to be displayed on a scene and in various menus. Does not need to be unique.
         abstract Name: string with get, set
 
         /// Returns type of the element.
@@ -162,6 +162,10 @@ type IModel =
 
         /// Deletes given element from a model.
         abstract DeleteElement: element: IElement -> unit
+
+        /// Searches for an element with given name in a model. Throws if there is no such element or there is 
+        /// more than one.
+        abstract FindElement: name: string -> IElement
     end
 
 /// Repository is a collection of models.
@@ -177,6 +181,10 @@ type IRepo =
 
         /// Creates a new model with given name based on a given metamodel.
         abstract CreateModel: name: string * metamodel: IModel -> IModel
+
+        /// Creates a new model with given name based on a metamodel with given name, throws if such metamodel 
+        /// does not exist.
+        abstract CreateModel: name: string * metamodelName: string -> IModel
 
         /// Deletes given model. Throws if repo contains models dependent on this model.
         /// Throws DeletingUsedModel if there are other models dependent on this.
