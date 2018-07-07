@@ -75,7 +75,7 @@ namespace WpfControlsLib.Tests.ControlsTests.SceneTests
         }
 
         [Test]
-        public void RemovingEdgeOnSceneShouldResultInRemovingFromInRepo()
+        public void RemovingEdgeOnSceneShouldResultInRemovingFromRepo()
         {
             var node1 = testModel.CreateElement(testNodeType);
             var node2 = testModel.CreateElement(testNodeType);

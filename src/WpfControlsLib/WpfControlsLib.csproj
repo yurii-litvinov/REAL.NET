@@ -125,14 +125,15 @@
     <Compile Include="Controls\Scene\Commands\RemoveNodeCommand.cs" />
     <Compile Include="Controls\Scene\Commands\RemoveEdgeCommand.cs" />
     <Compile Include="Controls\Scene\Commands\CreateEdgeCommand.cs" />
+    <Compile Include="Controls\Scene\EventArguments\EdgeSelectedEventArgs.cs" />
     <Compile Include="Controls\Scene\EventArguments\ElementAddedEventArgs.cs" />
     <Compile Include="Controls\Scene\EventArguments\ElementRemovedEventArgs.cs" />
     <Compile Include="Controls\Scene\Geometry.cs" />
     <Compile Include="Controls\Scene\IElementProvider.cs" />
+    <Compile Include="Controls\Scene\EventArguments\NodeSelectedEventArgs.cs" />
     <Compile Include="Controls\Scene\Scene.xaml.cs">
       <DependentUpon>Scene.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Scene\SceneCommands.cs" />
     <Compile Include="Controls\Toolbar\Button.cs" />
     <Compile Include="Controls\Toolbar\ButtonWrapper.cs" />
     <Compile Include="Controls\Toolbar\Command.cs" />

@@ -54,7 +54,7 @@ namespace WpfEditor.View
 
             this.Closed += this.CloseChildrenWindows;
 
-            this.scene.ElementUsed += (sender, args) => this.palette.ClearSelection();
+            this.scene.ElementManipulationDone += (sender, args) => this.palette.ClearSelection();
             this.scene.ElementAdded += (sender, args) => this.modelExplorer.NewElement(args.Element);
             this.scene.ElementRemoved += (sender, args) => this.modelExplorer.RemoveElement(args.Element);
             this.scene.NodeSelected += (sender, args) => this.attributesView.DataContext = args.Node;
