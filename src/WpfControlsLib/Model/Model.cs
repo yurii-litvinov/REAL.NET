@@ -103,8 +103,7 @@ namespace WpfControlsLib.Model
         public void RemoveElement(Repo.IElement element)
         {
             var model = this.Repo.Model(this.ModelName);
-            // add real delete after repo improvement
-            //model.DeleteElement(element);
+            model.DeleteElement(element);
             this.RaiseElementRemoved(element);
         }
 

@@ -62,5 +62,32 @@ namespace WpfControlsLib.Tests.ControlsTests.SceneTests
             Assert.AreEqual(1, testModel.Edges.Count());
             Assert.AreEqual("aLink", testModel.Edges.First().Name);
         }
+
+        [Test]
+        public void RemovingNodeOnSceneShouldResultInRemovingFromInRepo()
+        {
+            var node = testModel.CreateElement(testNodeType);
+            ICommand command = new RemoveNodeCommand(model, node);
+
+            command.Execute();
+
+            Assert.Zero(testModel.Nodes.Count());
+        }
+
+        [Test]
+        public void RemovingEdgeOnSceneShouldResultInRemovingFromInRepo()
+        {
+            var node1 = testModel.CreateElement(testNodeType);
+            var node2 = testModel.CreateElement(testNodeType);
+            var edge = testModel.CreateElement(testEdgeType) as Repo.IEdge;
+            edge.From = node1;
+            edge.To = node2;
+            ICommand command = new RemoveEdgeCommand(model, edge);
+
+            command.Execute();
+
+            Assert.Zero(testModel.Edges.Count());
+            Assert.AreEqual(2, testModel.Nodes.Count());
+        }
     }
 }
