@@ -19,7 +19,6 @@ namespace WpfEditor.View
     using System.Windows;
     using System.Windows.Controls;
     using EditorPluginInterfaces;
-    using EditorPluginInterfaces.UndoRedo;
     using PluginManager;
     using Repo;
     using WpfControlsLib.Constraints;
@@ -35,7 +34,7 @@ namespace WpfEditor.View
     internal partial class MainWindow
     {
         private readonly WpfControlsLib.Model.Model model;
-        private IUndoRedoStack undoStack;
+        private readonly WpfControlsLib.Controller.Controller controller;
 
         public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();
 
@@ -51,23 +50,21 @@ namespace WpfEditor.View
 
             this.palette.SetModel(this.model);
 
-            var controller = new WpfControlsLib.Controller.Controller(this.model);
+            this.controller = new WpfControlsLib.Controller.Controller();
 
             this.Closed += this.CloseChildrenWindows;
 
-            this.scene.ElementUsed += (sender, args) => this.palette.ClearSelection();
+            this.scene.ElementManipulationDone += (sender, args) => this.palette.ClearSelection();
             this.scene.ElementAdded += (sender, args) => this.modelExplorer.NewElement(args.Element);
             this.scene.ElementRemoved += (sender, args) => this.modelExplorer.RemoveElement(args.Element);
             this.scene.NodeSelected += (sender, args) => this.attributesView.DataContext = args.Node;
             this.scene.EdgeSelected += (sender, args) => this.attributesView.DataContext = args.Edge;
 
-            this.scene.Init(this.model, controller, new PaletteAdapter(this.palette));
+            this.scene.Init(this.model, this.controller, new PaletteAdapter(this.palette));
             this.modelSelector.Init(this.model);
             this.modelSelector.ChangeModel(2);
 
             this.InitAndLaunchPlugins();
-            this.undoStack = new WpfControlsLib.Controller.UndoRedo.UndoRedoStack();
-            this.scene.InitUndo(this.undoStack);
             this.InitToolbar();
         }
 
@@ -83,7 +80,7 @@ namespace WpfEditor.View
         private void InitToolbar()
         {
             this.Console.Messages.Add("Initializing ToolBar");
-            var sample = new WpfControlsLib.Controls.Toolbar.StandardButtonsAndMenus.SampleButtonsCollection(this.Console, this.undoStack);
+            var sample = new WpfControlsLib.Controls.Toolbar.StandardButtonsAndMenus.SampleButtonsCollection(this.Console, this.controller);
             var buttons = sample.SampleButtons;
             foreach (var button in buttons)
             {

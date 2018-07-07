@@ -58,6 +58,17 @@ and Model
             model.DeleteElement unwrappedElement
             elementRepository.DeleteElement unwrappedElement
 
+        member this.FindElement name =
+            let matchingElements =
+                (this :> IModel).Elements
+                |> Seq.filter (fun e -> e.Name = name)
+                |> Seq.toList
+
+            match matchingElements with
+            | [e] -> e
+            | [] -> raise (ElementNotFoundException name)
+            | _ -> raise (MultipleElementsException name)
+
         member this.Nodes =
             model.Nodes
             |> Seq.filter infrastructure.Metamodel.IsNode

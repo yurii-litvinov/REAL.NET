@@ -15,24 +15,26 @@
 namespace WpfControlsLib.Controls.Scene
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
     using System.Windows.Media;
-    using EditorPluginInterfaces.UndoRedo;
     using GraphX.Controls;
     using GraphX.Controls.Models;
     using GraphX.PCL.Common.Enums;
     using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
     using GraphX.PCL.Logic.Models;
     using QuickGraph;
-    using WpfControlsLib.Controller.UndoRedo;
+    using WpfControlsLib.Controller;
+    using WpfControlsLib.Controls.Scene.Commands;
     using WpfControlsLib.Controls.Scene.EventArguments;
     using WpfControlsLib.Model;
     using WpfControlsLib.ViewModel;
 
+    /// <summary>
+    /// Visualizes  model graph and makes it possible for a user to interact with it.
+    /// </summary>
     public partial class Scene : UserControl
     {
         private readonly EditorObjectManager editorManager;
@@ -41,36 +43,30 @@ namespace WpfControlsLib.Controls.Scene
         private EdgeControl edgeControl;
         private Point position;
 
-        private WpfControlsLib.Model.Model model;
-        private Controller.Controller controller;
+        private Model model;
+        private Controller controller;
         private IElementProvider elementProvider;
-        private SceneCommands commands;
-        private IUndoRedoStack undoStack;
-        private Controller.SceneActionsRegister register;
 
         public Scene()
         {
             this.InitializeComponent();
 
-            this.editorManager = new EditorObjectManager(this.SceneX, this.zoomControl);
-            this.commands = new SceneCommands(this);
-            this.undoStack = new UndoRedoStack();
-            this.register = new Controller.SceneActionsRegister(this.SceneX, this.commands, this.undoStack);
+            this.editorManager = new EditorObjectManager(this.graphArea, this.zoomControl);
 
             ZoomControl.SetViewFinderVisibility(this.zoomControl, Visibility.Hidden);
 
-            this.SceneX.VertexSelected += this.VertexSelectedAction;
-            this.SceneX.EdgeSelected += this.EdgeSelectedAction;
+            this.graphArea.VertexSelected += this.VertexSelectedAction;
+            this.graphArea.EdgeSelected += this.EdgeSelectedAction;
             this.zoomControl.Click += this.ClearSelection;
             this.zoomControl.MouseDown += this.OnSceneMouseDown;
             this.zoomControl.Drop += this.ZoomControlDrop;
         }
 
-        public event EventHandler<EventArgs> ElementUsed;
+        public event EventHandler<EventArgs> ElementManipulationDone;
 
         public event EventHandler<NodeSelectedEventArgs> NodeSelected;
 
-        public event EventHandler<EdgeSelectedEventArgs> EdgeSelected;
+        public event EventHandler<EventArguments.EdgeSelectedEventArgs> EdgeSelected;
 
         public event EventHandler<ElementAddedEventArgs> ElementAdded;
 
@@ -87,7 +83,7 @@ namespace WpfControlsLib.Controls.Scene
                     DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.LinLog,
                 };
 
-            this.SceneX.LogicCore = logic;
+            this.graphArea.LogicCore = logic;
 
             logic.DefaultLayoutAlgorithmParams =
                 logic.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.LinLog);
@@ -101,13 +97,11 @@ namespace WpfControlsLib.Controls.Scene
             logic.EdgeCurvingEnabled = false;
         }
 
-        public void Init(WpfControlsLib.Model.Model model, Controller.Controller controller, IElementProvider elementProvider)
+        public void Init(Model model, Controller controller, IElementProvider elementProvider)
         {
             this.controller = controller;
             this.model = model;
             this.elementProvider = elementProvider;
-            this.commands.ElementAdded += (sender, args) => this.ElementAdded?.Invoke(this, args);
-            this.commands.ElementRemoved += (sender, args) => this.ElementRemoved?.Invoke(this, args);
             this.Graph = new Graph(model);
             this.Graph.DrawGraph += (sender, args) => this.DrawGraph();
             this.Graph.ElementAdded += (sender, args) => this.ElementAdded?.Invoke(this, args);
@@ -115,13 +109,6 @@ namespace WpfControlsLib.Controls.Scene
             this.Graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVertex);
             this.Graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.EdgeViewModel);
             this.InitGraphXLogicCore();
-        }
-
-        public void InitUndo(IUndoRedoStack undoStack)
-        {
-            // initializing undo operations
-            this.undoStack = undoStack;
-            this.register = new Controller.SceneActionsRegister(this.SceneX, this.commands, this.undoStack);
         }
 
         public void Clear() => this.Graph.DataGraph.Clear();
@@ -138,7 +125,7 @@ namespace WpfControlsLib.Controls.Scene
                     this.Graph.DataGraph.Edges.ToList()[i].Target.Name == target)
                 {
                     var edge = this.Graph.DataGraph.Edges.ToList()[i];
-                    foreach (var ed in this.SceneX.EdgesList)
+                    foreach (var ed in this.graphArea.EdgesList)
                     {
                         if (ed.Key == edge)
                         {
@@ -160,7 +147,7 @@ namespace WpfControlsLib.Controls.Scene
                 {
                     var vertex = this.Graph.DataGraph.Vertices.ToList()[i];
                     this.NodeSelected?.Invoke(this, new NodeSelectedEventArgs {Node = vertex});
-                    foreach (var ed in this.SceneX.VertexList)
+                    foreach (var ed in this.graphArea.VertexList)
                     {
                         if (ed.Key == vertex)
                         {
@@ -179,7 +166,7 @@ namespace WpfControlsLib.Controls.Scene
             {
                 var data = this.edgeControl.GetDataEdge<EdgeViewModel>();
                 data.Text = newLabel;
-                this.SceneX.GenerateAllEdges();
+                this.graphArea.GenerateAllEdges();
             }
         }
 
@@ -187,7 +174,7 @@ namespace WpfControlsLib.Controls.Scene
         {
             this.previosVertex = null;
             this.currentVertex = null;
-            this.SceneX.GetAllVertexControls().ToList().ForEach(
+            this.graphArea.GetAllVertexControls().ToList().ForEach(
                 x => x.GetDataVertex<NodeViewModel>().Color = Brushes.Green);
         }
 
@@ -203,9 +190,9 @@ namespace WpfControlsLib.Controls.Scene
 
             if (element.Metatype == Repo.Metatype.Node)
             {
-                this.position = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.SceneX);
+                this.position = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.graphArea);
                 this.CreateNewNode(element);
-                this.ElementUsed?.Invoke(this, EventArgs.Empty);
+                this.ElementManipulationDone?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -221,17 +208,23 @@ namespace WpfControlsLib.Controls.Scene
                 }
                 else
                 {
-                    this.controller.NewEdge(this.elementProvider.Element, this.previosVertex, this.currentVertex);
-                    this.ElementUsed?.Invoke(this, EventArgs.Empty);
+                    var command = new Commands.CreateEdgeCommand(
+                        this.model,
+                        this.elementProvider.Element,
+                        (this.previosVertex?.Vertex as NodeViewModel)?.Node,
+                        (this.currentVertex?.Vertex as NodeViewModel)?.Node);
+                    this.controller.Execute(command);
+                    this.ElementManipulationDone?.Invoke(this, EventArgs.Empty);
                 }
 
                 return;
             }
 
-            this.NodeSelected?.Invoke(this,
-                new NodeSelectedEventArgs {Node = this.currentVertex.GetDataVertex<NodeViewModel>()});
+            this.NodeSelected?.Invoke(
+                this,
+                new NodeSelectedEventArgs { Node = this.currentVertex.GetDataVertex<NodeViewModel>() });
 
-            this.SceneX.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<NodeViewModel>().
+            this.graphArea.GetAllVertexControls().ToList().ForEach(x => x.GetDataVertex<NodeViewModel>().
                 Color = Brushes.Green);
 
             this.currentVertex.GetDataVertex<NodeViewModel>().Color = Brushes.LightBlue;
@@ -258,10 +251,10 @@ namespace WpfControlsLib.Controls.Scene
             this.zoomControl.MouseMove += this.OnEdgeMouseMove;
 
             this.EdgeSelected?.Invoke(this,
-                new EdgeSelectedEventArgs { Edge = this.edgeControl.GetDataEdge<EdgeViewModel>() });
+                new EventArguments.EdgeSelectedEventArgs { Edge = this.edgeControl.GetDataEdge<EdgeViewModel>() });
 
             var dataEdge = this.edgeControl.GetDataEdge<EdgeViewModel>();
-            var mousePosition = args.MouseArgs.GetPosition(this.SceneX).ToGraphX();
+            var mousePosition = args.MouseArgs.GetPosition(this.graphArea).ToGraphX();
 
             // Adding new routing point.
             if (args.MouseArgs.LeftButton == MouseButtonState.Pressed)
@@ -282,12 +275,12 @@ namespace WpfControlsLib.Controls.Scene
                     return;
                 }
 
-                var isRoutingPoint = dataEdge.RoutingPoints.Where(point => this.GetDistance(point, mousePosition).CompareTo(3) <= 0).ToArray().Length != 0;
+                var isRoutingPoint = dataEdge.RoutingPoints.Where(point => Geometry.GetDistance(point, mousePosition).CompareTo(3) <= 0).ToArray().Length != 0;
 
                 // Adding MenuItem to routing point in order to delete it.
                 if (isRoutingPoint)
                 {
-                    var routingPoint = Array.Find(dataEdge.RoutingPoints, point => this.GetDistance(point, mousePosition).CompareTo(3) <= 0);
+                    var routingPoint = Array.Find(dataEdge.RoutingPoints, point => Geometry.GetDistance(point, mousePosition).CompareTo(3) <= 0);
                     var mi2 = new MenuItem { Header = "Delete routing point", Tag = routingPoint };
                     mi2.Click += this.MenuItemClickRoutingPoint;
                     args.EdgeControl.ContextMenu.Items.Add(mi2);
@@ -312,11 +305,11 @@ namespace WpfControlsLib.Controls.Scene
                 return;
             }
 
-            var isRoutingPoint = edge.RoutingPoints.Where(point => this.GetDistance(point, mousePosition).CompareTo(3) <= 0).ToArray().Length != 0;
+            var isRoutingPoint = edge.RoutingPoints.Where(point => Geometry.GetDistance(point, mousePosition).CompareTo(3) <= 0).ToArray().Length != 0;
 
             if (isRoutingPoint)
             {
-                edge.IndexOfInflectionPoint = Array.FindIndex(edge.RoutingPoints, point => this.GetDistance(point, mousePosition).CompareTo(3) <= 0);
+                edge.IndexOfInflectionPoint = Array.FindIndex(edge.RoutingPoints, point => Geometry.GetDistance(point, mousePosition).CompareTo(3) <= 0);
             }
             else
             {
@@ -324,7 +317,7 @@ namespace WpfControlsLib.Controls.Scene
 
                 for (var i = 0; i < numberOfRoutingPoints - 1; ++i)
                 {
-                    if (this.IsBelongToLine(edge.RoutingPoints[i], edge.RoutingPoints[i + 1], mousePosition))
+                    if (Geometry.BelongsToLine(edge.RoutingPoints[i], edge.RoutingPoints[i + 1], mousePosition))
                     {
                         edge.IndexOfInflectionPoint = i + 1;
                         var oldRoutingPoints = edge.RoutingPoints;
@@ -343,15 +336,13 @@ namespace WpfControlsLib.Controls.Scene
         {
             var vc = new VertexControl(vertex);
             vc.SetPosition(this.position);
-            this.SceneX.AddVertex(vertex, vc);
-            this.register.RegisterAddingVertex(this.position, vertex.Node);
+            this.graphArea.AddVertex(vertex, vc);
         }
 
         private void AddNewEdgeControl(EdgeViewModel edgeViewModel)
         {
             var ec = new EdgeControl(this.previosVertex, this.currentVertex, edgeViewModel);
-            this.SceneX.InsertEdge(edgeViewModel, ec);
-            this.register.RegisterAddingEdge(edgeViewModel.Edge, this.ConvertIntoWinPoint(edgeViewModel.RoutingPoints));
+            this.graphArea.InsertEdge(edgeViewModel, ec);
             this.previosVertex = null;
             this.editorManager.DestroyVirtualEdge();
         }
@@ -361,7 +352,7 @@ namespace WpfControlsLib.Controls.Scene
             var edge = this.edgeControl.GetDataEdge<EdgeViewModel>();
             var newRoutingPoints = edge.RoutingPoints.Where(element => element != (GraphX.Measure.Point)((MenuItem)sender).Tag).ToArray();
             edge.RoutingPoints = newRoutingPoints;
-            this.SceneX.UpdateAllEdges();
+            this.graphArea.UpdateAllEdges();
         }
 
         private Point[] ConvertIntoWinPoint(GraphX.Measure.Point[] points) => points?.Select(y => new Point(y.X, y.Y)).ToArray();
@@ -371,27 +362,30 @@ namespace WpfControlsLib.Controls.Scene
             var vertex = this.currentVertex.GetDataVertex<NodeViewModel>();
             var edges = this.Graph.DataGraph.Edges.ToArray();
 
-            var edgesToRestore = this.SceneX.EdgesList.ToList()
+            var edgesToRestore = this.graphArea.EdgesList.ToList()
                 .Where(x => x.Key.Source == vertex || x.Key.Target == vertex)
                 .Select(x => Tuple.Create(x.Key.Edge, this.ConvertIntoWinPoint(x.Key.RoutingPoints)));
+
+            var command = new CompositeCommand();
+
             foreach (var edge in edges)
             {
                 if (edge.Source == vertex || edge.Target == vertex)
                 {
-                    this.controller.RemoveElement(edge.Edge);
+                    command.Add(new RemoveEdgeCommand(this.model, edge.Edge));
                 }
             }
 
-            this.controller.RemoveElement(vertex.Node);
-            this.register.RegisterRemovingVertex(vertex.Node, edgesToRestore);
+            command.Add(new RemoveNodeCommand(this.model, vertex.Node));
+            this.controller.Execute(command);
             this.DrawGraph();
         }
 
         private void MenuItemClickEdge(object sender, EventArgs e)
         {
             var edge = this.edgeControl.GetDataEdge<EdgeViewModel>();
-            this.controller.RemoveElement(edge.Edge);
-            this.register.RegisterRemovingEdge(edge.Edge);
+            var command = new RemoveEdgeCommand(this.model, edge.Edge);
+            this.controller.Execute(command);
             this.DrawGraph();
         }
 
@@ -403,7 +397,7 @@ namespace WpfControlsLib.Controls.Scene
 
         private void DrawGraph()
         {
-            this.SceneX.GenerateGraph(this.Graph.DataGraph);
+            this.graphArea.GenerateGraph(this.Graph.DataGraph);
             this.zoomControl.ZoomToFill();
         }
 
@@ -416,22 +410,22 @@ namespace WpfControlsLib.Controls.Scene
                 return;
             }
 
-            var mousePosition = Mouse.GetPosition(this.SceneX);
+            var mousePosition = Mouse.GetPosition(this.graphArea);
             var index = dataEdge.IndexOfInflectionPoint;
             dataEdge.RoutingPoints[index] = new GraphX.Measure.Point(mousePosition.X, mousePosition.Y);
-            this.SceneX.UpdateAllEdges();
+            this.graphArea.UpdateAllEdges();
         }
 
         private void OnSceneMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                var position = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.SceneX);
+                var position = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.graphArea);
                 if (this.elementProvider.Element?.InstanceMetatype == Repo.Metatype.Node)
                 {
                     this.position = position;
                     this.CreateNewNode(this.elementProvider.Element);
-                    this.ElementUsed?.Invoke(this, EventArgs.Empty);
+                    this.ElementManipulationDone?.Invoke(this, EventArgs.Empty);
                 }
 
                 if (this.elementProvider.Element?.InstanceMetatype == Repo.Metatype.Edge)
@@ -440,56 +434,16 @@ namespace WpfControlsLib.Controls.Scene
                     {
                         this.previosVertex = null;
                         this.editorManager.DestroyVirtualEdge();
-                        this.ElementUsed?.Invoke(this, EventArgs.Empty);
+                        this.ElementManipulationDone?.Invoke(this, EventArgs.Empty);
                     }
                 }
             }
         }
 
-        /// <summary>
-        /// Checking whether point belongs to line.
-        /// </summary>
-        /// <param name="lp1">First line point.</param>
-        /// <param name="lp2">Second line point.</param>
-        /// <param name="p">Point for checking.</param>
-        /// <returns>True if belongs, otherwise false.</returns>
-        private bool IsBelongToLine(GraphX.Measure.Point lp1, GraphX.Measure.Point lp2, GraphX.Measure.Point p)
-        {
-            var vec1 = new Point(p.X - lp1.X, p.Y - lp1.Y);
-            var vec2 = new Point(lp2.X - lp1.X, lp2.Y - lp1.Y);
-
-            var val1 = Math.Pow(vec2.X, 2) + Math.Pow(vec2.Y, 2);
-            var val2 = (vec1.X * vec2.X) + (vec1.Y * vec2.Y);
-
-            var t = val2 / val1;
-
-            var x = lp1.X + (vec2.X * t);
-            var y = lp1.Y + (vec2.Y * t);
-
-            return Math.Sqrt(Math.Pow(p.X - x, 2) + Math.Pow(p.Y - y, 2)).CompareTo(3) <= 0;
-        }
-
-        /// <summary>
-        /// Getting distance between two points.
-        /// </summary>
-        /// <param name="p1">First point.</param>
-        /// <param name="p2">Second point.</param>
-        /// <returns>Distance between two points.</returns>
-        private double GetDistance(GraphX.Measure.Point p1, GraphX.Measure.Point p2) => (p1 - p2).Length;
-
         private void CreateNewNode(Repo.IElement element)
         {
-            this.controller.NewNode(element);
-        }
-
-        public class NodeSelectedEventArgs : EventArgs
-        {
-            public NodeViewModel Node { get; set; }
-        }
-
-        public class EdgeSelectedEventArgs : EventArgs
-        {
-            public EdgeViewModel Edge { get; set; }
+            var command = new CreateNodeCommand(this.model, element);
+            this.controller.Execute(command);
         }
     }
 }

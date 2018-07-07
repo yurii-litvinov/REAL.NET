@@ -12,24 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-namespace EditorPluginInterfaces.UndoRedo
+namespace WpfControlsLib.Controls.Scene.EventArguments
 {
     using System;
+    using WpfControlsLib.ViewModel;
 
     /// <summary>
-    /// Stack changed arguments class.
+    /// Arguments for selection of a node event.
     /// </summary>
-    public class StackChangedArgs : EventArgs
+    public class NodeSelectedEventArgs : EventArgs
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StackChangedArgs"/> class.
-        /// </summary>
-        /// <param name="isStackAvailable">Availability of stack.</param>
-        public StackChangedArgs(bool isStackAvailable) => this.IsStackAvailable = isStackAvailable;
-
-        /// <summary>
-        /// Gets a value indicating whether stack is available.
-        /// </summary>
-        public bool IsStackAvailable { get; }
+        public NodeViewModel Node { get; set; }
     }
 }

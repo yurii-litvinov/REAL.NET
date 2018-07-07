@@ -34,7 +34,8 @@ namespace AirSim.View
     /// </summary>
     internal partial class MainWindow
     {
-        private readonly WpfControlsLib.Model.Model model;
+        private readonly WpfControlsLib.Model.Model model = new WpfControlsLib.Model.Model();
+        private readonly WpfControlsLib.Controller.Controller controller = new WpfControlsLib.Controller.Controller();
 
         public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();
 
@@ -47,20 +48,16 @@ namespace AirSim.View
             this.DataContext = this;
             this.InitializeComponent();
 
-            this.model = new WpfControlsLib.Model.Model();
-
             this.palette.SetModel(this.model);
-
-            var controller = new WpfControlsLib.Controller.Controller(this.model);
 
             this.Closed += this.CloseChildrenWindows;
 
-            this.scene.ElementUsed += (sender, args) => this.palette.ClearSelection();
+            this.scene.ElementManipulationDone += (sender, args) => this.palette.ClearSelection();
             this.scene.ElementAdded += (sender, args) => this.modelExplorer.NewElement(args.Element);
             this.scene.NodeSelected += (sender, args) => this.attributesView.DataContext = args.Node;
             this.scene.EdgeSelected += (sender, args) => this.attributesView.DataContext = args.Edge;
 
-            this.scene.Init(this.model, controller, new PaletteAdapter(this.palette));
+            this.scene.Init(this.model, this.controller, new PaletteAdapter(this.palette));
             this.modelSelector.Init(this.model);
 
             this.InitAndLaunchPlugins();

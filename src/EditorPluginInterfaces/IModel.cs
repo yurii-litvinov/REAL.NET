@@ -49,5 +49,11 @@ namespace EditorPluginInterfaces
         /// <param name="source">Node that will be a source of an edge.</param>
         /// <param name="destination">Node that will be destination of an edge.</param>
         void CreateEdge(Repo.IEdge edge, Repo.IElement source, Repo.IElement destination);
+
+        /// <summary>
+        /// Removes an adge or node from a model.
+        /// </summary>
+        /// <param name="element">Element to remove from model.</param>
+        void RemoveElement(Repo.IElement element);
     }
 }

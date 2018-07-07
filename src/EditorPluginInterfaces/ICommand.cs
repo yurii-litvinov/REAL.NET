@@ -1,14 +1,14 @@
-﻿namespace EditorPluginInterfaces.Toolbar
+﻿namespace EditorPluginInterfaces
 {
     /// <summary>
-    /// Pattern command
+    /// Command interface, like in "Command" pattern.
     /// </summary>
     public interface ICommand
     {
         /// <summary>
         /// True, if it can be undone
         /// </summary>
-        bool IsUndoType { get; }
+        bool CanBeUndone { get; }
 
         /// <summary>
         /// Execute this command

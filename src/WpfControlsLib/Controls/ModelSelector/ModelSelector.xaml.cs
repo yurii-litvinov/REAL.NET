@@ -19,7 +19,7 @@ using System.Windows.Controls;
 namespace WpfControlsLib.Controls.ModelSelector
 {
     /// <summary>
-    /// Lists all models in a repository and provides mens to select currently edited model.
+    /// Lists all models in a repository and provides means to select a model for editing.
     /// </summary>
     public partial class ModelSelector : UserControl
     {

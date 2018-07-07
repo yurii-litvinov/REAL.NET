@@ -14,15 +14,13 @@
 
 namespace WpfControlsLib.Controller.UndoRedo
 {
-    using System;
     using System.Collections.Generic;
-    using EditorPluginInterfaces.Toolbar;
-    using EditorPluginInterfaces.UndoRedo;
+    using EditorPluginInterfaces;
 
     /// <summary>
     /// Class for undo/redo commands.
     /// </summary>
-    public class UndoRedoStack : IUndoRedoStack
+    public class UndoRedoStack
     {
         /// <summary>
         /// Stack with undo commands.
@@ -33,24 +31,6 @@ namespace WpfControlsLib.Controller.UndoRedo
         /// Stack with redo commands.
         /// </summary>
         private readonly Stack<ICommand> redoStack = new Stack<ICommand>();
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UndoRedoStack"/> class.
-        /// </summary>
-        public UndoRedoStack()
-        {
-            // TODO.
-        }
-
-        /// <summary>
-        /// Event is raised when undo stack is updated.
-        /// </summary>
-        public event EventHandler<StackChangedArgs> UndoUpdated;
-
-        /// <summary>
-        /// Event is raised when redo stack is updated.
-        /// </summary>
-        public event EventHandler<StackChangedArgs> RedoUpdated;
 
         /// <summary>
         /// Gets a value indicating whether undo stack is available.
@@ -68,12 +48,10 @@ namespace WpfControlsLib.Controller.UndoRedo
         /// <param name="command">Command for handling.</param>
         public void AddCommand(ICommand command)
         {
-            if (command.IsUndoType)
+            if (command.CanBeUndone)
             {
                 this.undoStack.Push(command);
-                this.UndoUpdated?.Invoke(this, new StackChangedArgs(true));
                 this.redoStack.Clear();
-                this.UndoUpdated?.Invoke(this, new StackChangedArgs(false));
             }
         }
 
@@ -87,12 +65,6 @@ namespace WpfControlsLib.Controller.UndoRedo
                 var command = this.redoStack.Pop();
                 command.Execute();
                 this.undoStack.Push(command);
-                this.UndoUpdated?.Invoke(this, new StackChangedArgs(true));
-
-                if (!this.IsRedoAvailable)
-                {
-                    this.RedoUpdated?.Invoke(this, new StackChangedArgs(false));
-                }
             }
         }
 
@@ -106,19 +78,12 @@ namespace WpfControlsLib.Controller.UndoRedo
                 var command = this.undoStack.Pop();
                 command.Undo();
                 this.redoStack.Push(command);
-                this.RedoUpdated?.Invoke(this, new StackChangedArgs(true));
-
-                if (!this.IsUndoAvailable)
-                {
-                    this.UndoUpdated?.Invoke(this, new StackChangedArgs(false));
-                }
             }
         }
 
         /// <summary>
-        /// Resets redo stack
+        /// Resets redo stack.
         /// </summary>
-        public void ResetRedo() => redoStack.Clear();
-
+        public void ResetRedo() => this.redoStack.Clear();
     }
 }

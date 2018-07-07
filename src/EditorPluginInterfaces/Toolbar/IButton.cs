@@ -8,7 +8,7 @@ namespace EditorPluginInterfaces.Toolbar
     public interface IButton
     {
         /// <summary>
-        /// Throws when button's visibility changed
+        /// Raised when button's visibility changed
         /// </summary>
         event EventHandler ButtonEnabledChanged;
 

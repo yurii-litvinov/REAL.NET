@@ -14,35 +14,74 @@
 
 namespace WpfControlsLib.Controller
 {
-    using GraphX.Controls;
-    using ViewModel;
+    using System;
+    using EditorPluginInterfaces;
 
     /// <summary>
-    /// Controller in MVC architecture. Supposed to be handling commands, but for now it modifies model
-    /// by itself.
+    /// Controller in MVC architecture. Handles commands and manages undo-redo state. Model modification is only
+    /// possible via commands and all commands are executed only inside controller.
     /// </summary>
     public class Controller
     {
-        private readonly Model.Model model;
+        private readonly UndoRedo.UndoRedoStack undoStack = new UndoRedo.UndoRedoStack();
 
-        public Controller(Model.Model model)
+        /// <summary>
+        /// Event is raised when undo operation becomes available or not available.
+        /// </summary>
+        public event EventHandler<UndoRedoAvailabilityChangedArgs> UndoAvailabilityChanged;
+
+        /// <summary>
+        /// Event is raised when redo operation becomes available or not available.
+        /// </summary>
+        public event EventHandler<UndoRedoAvailabilityChangedArgs> RedoAvailabilityChanged;
+
+        /// <summary>
+        /// Executes given command and adds it into undo stack. May raise events related to undo-redo availability
+        /// after the command is executed. Clears redo stack.
+        /// </summary>
+        /// <param name="command">Command to execute.</param>
+        public void Execute(ICommand command)
         {
-            this.model = model;
+            this.DoAndCheckUndoRedoStatus(() =>
+            {
+                this.undoStack.AddCommand(command);
+                command.Execute();
+            }
+            );
         }
 
-        public void NewNode(Repo.IElement node)
-        {
-            this.model.CreateNode(node);
-        }
+        /// <summary>
+        /// Undoes last command, modifies undo-redo stack and raises related events after the undo action will 
+        /// be executed.
+        /// </summary>
+        public void Undo() => this.DoAndCheckUndoRedoStatus(this.undoStack.Undo);
 
-        public void NewEdge(Repo.IElement edge, VertexControl prevVer, VertexControl ctrlVer)
-        {
-            this.model.CreateEdge(
-                edge as Repo.IEdge,
-                (prevVer?.Vertex as NodeViewModel)?.Node,
-                (ctrlVer?.Vertex as NodeViewModel)?.Node);
-        }
+        /// <summary>
+        /// Redoes last undone command, modifies undo-redo stack and raises related events after the command will 
+        /// be executed.
+        /// </summary>
+        public void Redo() => this.DoAndCheckUndoRedoStatus(this.undoStack.Redo);
 
-        public void RemoveElement(Repo.IElement element) => this.model.RemoveElement(element);
+        private void DoAndCheckUndoRedoStatus(Action action)
+        {
+            var oldUndoAvailable = this.undoStack.IsUndoAvailable;
+            var oldRedoAvailable = this.undoStack.IsRedoAvailable;
+
+            action();
+
+            if (this.undoStack.IsUndoAvailable != oldUndoAvailable)
+            {
+                UndoAvailabilityChanged?.Invoke(
+                    this,
+                    new UndoRedoAvailabilityChangedArgs(this.undoStack.IsUndoAvailable));
+            }
+
+            if (this.undoStack.IsRedoAvailable != oldRedoAvailable)
+            {
+                RedoAvailabilityChanged?.Invoke(
+                    this,
+                    new UndoRedoAvailabilityChangedArgs(this.undoStack.IsRedoAvailable));
+            }
+        }
     }
 }
