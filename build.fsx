@@ -5,6 +5,7 @@
 #load "./.fake/build.fsx/intellisense.fsx"
 
 open System
+open System.Runtime.InteropServices
 open Fake.Core
 open Fake.Core.TargetOperators
 open Fake.DotNet
@@ -50,7 +51,7 @@ let solutionFile  = "REAL.NET.sln"
 
 // Default target configuration
 let configuration, doNotCopyBinaries = 
-    if Runtime.InteropServices.RuntimeInformation.IsOSPlatform Runtime.InteropServices.OSPlatform.Linux then
+    if RuntimeInformation.IsOSPlatform OSPlatform.Linux then
         "MonoRelease", ["WpfEditor"; "WpfControlsLib"; "AirSim"]
     else
         "Release", []
