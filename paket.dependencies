@@ -1,6 +1,5 @@
 framework: net46
 source https://api.nuget.org/v3/index.json
-storage: none
 
 clitool dotnet-fake
 
@@ -17,8 +16,8 @@ nuget Newtonsoft.Json
 
 group Tests
 
+framework: net46
 source https://api.nuget.org/v3/index.json
-storage: none
 
 nuget NSubstitute
 nuget NUnit redirects: force
@@ -28,6 +27,7 @@ nuget FsUnit
 
 group TestRunners
 
+framework: net46
 source https://api.nuget.org/v3/index.json
 
 nuget NUnit.Console
@@ -35,6 +35,7 @@ nuget NUnit.Console
 
 group FakeBuild
 
+framework: netstandard2.0
 source https://api.nuget.org/v3/index.json
 storage: none
 

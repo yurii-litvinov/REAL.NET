@@ -311,7 +311,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
       <ItemGroup>
         <Reference Include="FSharp.Core">
-          <HintPath>..\..\..\..\Users\yurii\.nuget\packages\fsharp.core\4.5.0\lib\net45\FSharp.Core.dll</HintPath>
+          <HintPath>..\..\packages\FSharp.Core\lib\net45\FSharp.Core.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -325,17 +325,17 @@
           <Paket>True</Paket>
         </Reference>
         <Reference Include="GraphX.PCL.Common">
-          <HintPath>..\..\..\..\Users\yurii\.nuget\packages\graphx\2.3.6\lib\net40-client\GraphX.PCL.Common.dll</HintPath>
+          <HintPath>..\..\packages\GraphX\lib\net40-client\GraphX.PCL.Common.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
         <Reference Include="GraphX.PCL.Logic">
-          <HintPath>..\..\..\..\Users\yurii\.nuget\packages\graphx\2.3.6\lib\net40-client\GraphX.PCL.Logic.dll</HintPath>
+          <HintPath>..\..\packages\GraphX\lib\net40-client\GraphX.PCL.Logic.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
         <Reference Include="GraphX.WPF.Controls">
-          <HintPath>..\..\..\..\Users\yurii\.nuget\packages\graphx\2.3.6\lib\net40-client\GraphX.WPF.Controls.dll</HintPath>
+          <HintPath>..\..\packages\GraphX\lib\net40-client\GraphX.WPF.Controls.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -346,22 +346,22 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
       <ItemGroup>
         <Reference Include="QuickGraph">
-          <HintPath>..\..\..\..\Users\yurii\.nuget\packages\quickgraphpcl\3.6.61114.2\lib\net40-client\QuickGraph.dll</HintPath>
+          <HintPath>..\..\packages\QuickGraphPCL\lib\net40-client\QuickGraph.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
         <Reference Include="QuickGraph.Data">
-          <HintPath>..\..\..\..\Users\yurii\.nuget\packages\quickgraphpcl\3.6.61114.2\lib\net40-client\QuickGraph.Data.dll</HintPath>
+          <HintPath>..\..\packages\QuickGraphPCL\lib\net40-client\QuickGraph.Data.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
         <Reference Include="QuickGraph.Graphviz">
-          <HintPath>..\..\..\..\Users\yurii\.nuget\packages\quickgraphpcl\3.6.61114.2\lib\net40-client\QuickGraph.Graphviz.dll</HintPath>
+          <HintPath>..\..\packages\QuickGraphPCL\lib\net40-client\QuickGraph.Graphviz.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
         <Reference Include="QuickGraph.Serialization">
-          <HintPath>..\..\..\..\Users\yurii\.nuget\packages\quickgraphpcl\3.6.61114.2\lib\net40-client\QuickGraph.Serialization.dll</HintPath>
+          <HintPath>..\..\packages\QuickGraphPCL\lib\net40-client\QuickGraph.Serialization.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -369,10 +369,10 @@
     </When>
   </Choose>
   <ItemGroup>
-    <Analyzer Include="..\..\..\..\Users\yurii\.nuget\packages\stylecop.analyzers\1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll">
+    <Analyzer Include="..\..\packages\StyleCop.Analyzers\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll">
       <Paket>True</Paket>
     </Analyzer>
-    <Analyzer Include="..\..\..\..\Users\yurii\.nuget\packages\stylecop.analyzers\1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.dll">
+    <Analyzer Include="..\..\packages\StyleCop.Analyzers\analyzers\dotnet\cs\StyleCop.Analyzers.dll">
       <Paket>True</Paket>
     </Analyzer>
   </ItemGroup>
@@ -380,7 +380,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
       <ItemGroup>
         <Reference Include="System.ValueTuple">
-          <HintPath>..\..\..\..\Users\yurii\.nuget\packages\system.valuetuple\4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+          <HintPath>..\..\packages\System.ValueTuple\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
