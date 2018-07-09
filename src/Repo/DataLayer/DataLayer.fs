@@ -49,10 +49,10 @@ and INode =
         inherit IElement
 
         /// Name of a node, possibly not unique.
-        abstract Name : string with get, set
+        abstract Name: string with get, set
         
         /// Funtion in the node
-        abstract Function : Option<IElement> with get, set
+        abstract Function: Option<IElement> with get, set
     end
 
 /// Edge is a kind of element which can connect to everything.
@@ -60,10 +60,10 @@ and IEdge =
     interface
         inherit IElement
         /// Element at the beginning of an edge, may be None if edge is not connected.
-        abstract Source : IElement option with get, set
+        abstract Source: IElement option with get, set
 
         /// Element at the ending of an edge, may be None if edge is not connected.
-        abstract Target : IElement option with get, set
+        abstract Target: IElement option with get, set
     end
 
 /// Generalization is a kind of edge which has special semantic in metamodel (allows to inherit associations).
@@ -79,13 +79,13 @@ and IAssociation =
 
         /// String describing a target of an association. For example, field name in UML can be written on association
         /// next to target (type of the field).
-        abstract TargetName : string with get, set
+        abstract TargetName: string with get, set
     end
 
 /// Model is a set of nodes and edges, corresponds to one diagram (or one palette) in editor.
 and IModel =
     interface
-        /// Model can have descriptive name (possibly not unique).
+        /// Model can have descriptive name (must be unique).
         abstract Name: string with get, set
 
         /// Metamodel is a model whose elements are types of elements for this model. Model can be a metamodel
@@ -121,16 +121,16 @@ and IModel =
                 -> IAssociation
 
         /// Returns all elements in a model.
-        abstract Elements : IElement seq with get
+        abstract Elements: IElement seq with get
 
         /// Returns all nodes in a model.
-        abstract Nodes : INode seq with get
+        abstract Nodes: INode seq with get
 
         /// Returns all edges in a model.
-        abstract Edges : IEdge seq with get
+        abstract Edges: IEdge seq with get
 
         /// Deletes element from a model and unconnects related elements if needed.
-        abstract DeleteElement : element : IElement -> unit
+        abstract DeleteElement: element : IElement -> unit
     end
 
 /// Repository is a collection of models.
@@ -146,5 +146,5 @@ type IRepo =
         abstract CreateModel: name: string * metamodel: IModel -> IModel
 
         /// Deletes given model from repository.
-        abstract DeleteModel : model : IModel -> unit
+        abstract DeleteModel: model : IModel -> unit
     end

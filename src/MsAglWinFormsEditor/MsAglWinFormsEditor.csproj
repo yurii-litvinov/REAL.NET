@@ -127,7 +127,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
       <ItemGroup>
         <Reference Include="Microsoft.Msagl">
-          <HintPath>..\..\packages\Microsoft.Msagl\lib\net40\Microsoft.Msagl.dll</HintPath>
+          <HintPath>..\..\..\..\Users\yurii\.nuget\packages\microsoft.msagl\1.0.2\lib\net40\Microsoft.Msagl.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -138,7 +138,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
       <ItemGroup>
         <Reference Include="Microsoft.Msagl.Drawing">
-          <HintPath>..\..\packages\Microsoft.Msagl.Drawing\lib\net40\Microsoft.Msagl.Drawing.dll</HintPath>
+          <HintPath>..\..\..\..\Users\yurii\.nuget\packages\microsoft.msagl.drawing\1.0.2\lib\net40\Microsoft.Msagl.Drawing.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -149,7 +149,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
       <ItemGroup>
         <Reference Include="Microsoft.Msagl.GraphViewerGdi">
-          <HintPath>..\..\packages\Microsoft.Msagl.GraphViewerGDI\lib\net40\Microsoft.Msagl.GraphViewerGdi.dll</HintPath>
+          <HintPath>..\..\..\..\Users\yurii\.nuget\packages\microsoft.msagl.graphviewergdi\1.0.2\lib\net40\Microsoft.Msagl.GraphViewerGdi.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

@@ -79,6 +79,7 @@
     <Compile Include="DataLayer\DataNode.fs" />
     <Compile Include="DataLayer\DataModel.fs" />
     <Compile Include="DataLayer\DataRepo.fs" />
+    <Compile Include="Serializer\Serializer.fs" />
     <Compile Include="CoreSemanticLayer.fs" />
     <Compile Include="InfrastructureSemanticLayer.fs" />
     <Compile Include="ModelBuilders\IModelBuilder.fs" />
@@ -104,13 +105,25 @@
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
       <ItemGroup>
         <Reference Include="FSharp.Core">
-          <HintPath>..\..\packages\FSharp.Core\lib\net45\FSharp.Core.dll</HintPath>
+          <HintPath>..\..\..\..\Users\yurii\.nuget\packages\fsharp.core\4.5.0\lib\net45\FSharp.Core.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
+      <ItemGroup>
+        <Reference Include="Newtonsoft.Json">
+          <HintPath>..\..\..\..\Users\yurii\.nuget\packages\newtonsoft.json\11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

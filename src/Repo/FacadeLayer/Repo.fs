@@ -15,6 +15,7 @@
 namespace Repo.FacadeLayer
 
 open Repo
+open Repo.Serializer
 
 /// Wrapper around repository from data layer. Maintains a repository of models and creates new models if needed.
 type Repo(repo: DataLayer.IRepo) =
@@ -55,3 +56,9 @@ type Repo(repo: DataLayer.IRepo) =
             repo.DeleteModel (unwrap model)
             // TODO: Remove all elements from this model too.
             modelRepository.DeleteModel model
+
+        member this.Save fileName =
+            Serializer.save fileName repo
+
+        member this.Load fileName =
+            Serializer.load fileName repo

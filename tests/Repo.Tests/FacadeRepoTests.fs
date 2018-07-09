@@ -18,6 +18,7 @@ open NUnit.Framework
 open FsUnit
 
 open Repo
+open System.IO
 
 [<Test>]
 let ``Repository shall contain at least core metamodel`` () =
@@ -62,3 +63,14 @@ let ``Repository shall not allow to delete a model that is needed`` () =
     repo.CreateModel("TestModel", coreMetamodel) |> ignore
 
     (fun () -> repo.DeleteModel coreMetamodel) |> should throw typeof<DeletingUsedModel>
+
+[<Test>]
+let ``Repository shall be able to save into a file`` () =
+    let repo = RepoFactory.CreateRepo ()
+    repo.Save "test.rns"
+    File.Exists "test.rns" |> should be True
+
+[<Test>]
+let ``Repository shall be able to load from file`` () =
+    let repo = RepoFactory.CreateRepo ()
+    (fun () -> repo.Load "test.rns") |> should not' (throw typeof<System.Exception>) 

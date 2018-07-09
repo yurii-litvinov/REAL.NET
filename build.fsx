@@ -153,7 +153,7 @@ Target.create "RunTests" (fun _ ->
     !! testAssemblies
     |> NUnit3.run (fun p ->
         { p with
-            ToolPath = "packages/NUnit.ConsoleRunner/tools/nunit3-console.exe"
+            ToolPath = "packages/testrunners/NUnit.ConsoleRunner/tools/nunit3-console.exe"
             TimeOut = TimeSpan.FromMinutes 20.
         })
 )

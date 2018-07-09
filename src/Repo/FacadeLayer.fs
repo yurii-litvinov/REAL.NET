@@ -189,4 +189,10 @@ type IRepo =
         /// Deletes given model. Throws if repo contains models dependent on this model.
         /// Throws DeletingUsedModel if there are other models dependent on this.
         abstract DeleteModel: model: IModel -> unit
+
+        /// Saves repository content into a file.
+        abstract Save: fileName: string -> unit
+
+        /// Loads save from a file to a repository.
+        abstract Load: fileName: string -> unit
     end
