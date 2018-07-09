@@ -73,4 +73,4 @@ let ``Repository shall be able to save into a file`` () =
 [<Test>]
 let ``Repository shall be able to load from file`` () =
     let repo = RepoFactory.CreateRepo ()
-    (fun () -> repo.Load "test.rns") |> should not' (throw typeof<System.Exception>) 
+    repo.Load (Path.Combine(TestContext.CurrentContext.TestDirectory, "Data/test.rns"))

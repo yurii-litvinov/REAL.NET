@@ -73,6 +73,9 @@
     <None Include="App.config" />
     <Compile Include="AssemblyInfo.fs" />
     <None Include="paket.references" />
+    <Content Include="Data\test.rns">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Compile Include="DataModelTests.fs" />
     <Compile Include="DataRepoTest.fs" />
     <Compile Include="DataElementTests.fs" />

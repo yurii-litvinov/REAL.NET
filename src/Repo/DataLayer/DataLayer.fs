@@ -147,4 +147,7 @@ type IRepo =
 
         /// Deletes given model from repository.
         abstract DeleteModel: model : IModel -> unit
+
+        /// Clears repository contents.
+        abstract Clear : unit -> unit
     end

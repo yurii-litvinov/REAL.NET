@@ -36,3 +36,6 @@ type DataRepo() =
 
         member this.Models: seq<IModel> =
             Seq.ofList models |> Seq.cast
+
+        member this.Clear () =
+            models <- []
