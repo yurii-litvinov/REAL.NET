@@ -36,5 +36,5 @@ type RepoFactory =
     /// Method that returns a new repository populated from a save file.
     static member Load fileName =
         let data = new DataLayer.DataRepo() :> DataLayer.IRepo
-        Serializer.Serializer.load fileName data
+        Serializer.Deserializer.load fileName data
         new FacadeLayer.Repo(data) :> IRepo

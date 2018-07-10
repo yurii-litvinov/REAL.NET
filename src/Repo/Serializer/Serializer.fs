@@ -20,99 +20,23 @@ open System.Collections.Generic
 open Newtonsoft.Json
 open Repo.DataLayer
 
-/// Serializes/deserializes repository contents into a file.
+/// Serializes repository contents into a file.
 module Serializer =
     /// Internal switch that allows to turn compression on and off. By default it is on, but turning it off greatly
     /// helps debugging.
-    let private useCompression = false
-
-    /// Helper class for element serialization. Allows null value, denoting the absense of value in serialized file.
-    /// Null as a Class is a special value denoting that this element is a class for itself 
-    /// (so it is CoreMetametamodel Node). All other elements must have actual classes, so can not be null.
-    [<JsonObject>]
-    [<AllowNullLiteral>]
-    type WrappedElement(isSerializing: bool, element: IElement, wrap: IElement option -> WrappedElement) =
-        let mutable deserializedClass: WrappedElement = null
-
-        member this.Class
-            with get () =
-                if isSerializing then
-                    if element.Class = element then
-                        null
-                    else
-                        wrap(Some element.Class)
-                else
-                    deserializedClass
-            and set source =
-                deserializedClass <- source
-
-    /// Helper class for edge serialization.
-    [<JsonObject>]
-    type WrappedEdge(isSerializing: bool, edge: IEdge, wrap: IElement option -> WrappedElement) =
-        inherit WrappedElement(isSerializing, edge, wrap)
-        let mutable deserializedSource: WrappedElement = null
-        let mutable deserializedTarget: WrappedElement = null
-
-        member this.Source
-            with get () =
-                if isSerializing then
-                    wrap(edge.Source)
-                else
-                    deserializedSource
-            and set source =
-                deserializedSource <- source
-
-        member this.Target
-            with get () =
-                if isSerializing then
-                    wrap(edge.Target)
-                else
-                    deserializedTarget
-            and set target =
-                deserializedTarget <- target
-
-    /// Helper class for association serialization.
-    [<JsonObject>]
-    type WrappedAssociation(isSerializing: bool, association: IAssociation, wrap: IElement option -> WrappedElement) =
-        inherit WrappedEdge(isSerializing, association, wrap)
-        let mutable deserializedTargetName = ""
-        member this.TargetName 
-            with get () =
-                if isSerializing then
-                    association.TargetName
-                else
-                    deserializedTargetName
-            and set name =
-                deserializedTargetName <- name
-
-    /// Helper class for generalization serialization.
-    [<JsonObject>]
-    type WrappedGeneralization(isSerializing: bool, generalization: IGeneralization, wrap: IElement option -> WrappedElement) =
-        inherit WrappedEdge(isSerializing, generalization, wrap)
-
-    /// Helper class for node serialization.
-    [<JsonObject>]
-    type WrappedNode(isSerializing: bool, node: INode, wrap: IElement option -> WrappedElement) =
-        inherit WrappedElement(isSerializing, node, wrap)
-        let mutable deserializedName = ""
-        member this.Name 
-            with get () =
-                if isSerializing then
-                    node.Name
-                else
-                    deserializedName
-            and set name =
-                deserializedName <- name
+    let useCompression = false
 
     /// Repository of objects to be serialized. Needs to be maintained for correct reference serialization.
     let private wrappedElements = Dictionary<IElement, WrappedElement>()
 
+    /// Helper function that registers new element in a repository.
+    let private register key value =
+        wrappedElements.Add(key, value)
+        value
+
     /// Function that wraps element from repository to its corresponding wrapper object for serialization.
     /// Maintains a repository of wrapped objects, so if this object was seen already, does not create a new object.
     let rec private wrap (element: IElement option) =
-        let register key value =
-            wrappedElements.Add(key, value)
-            value
         match element with
         | None -> null
         | Some e -> 
@@ -120,186 +44,98 @@ module Serializer =
                 wrappedElements.[e]
             else
                 match e with
-                | :? INode as n -> 
-                    register n (WrappedNode(true, n, wrap) :> WrappedElement)
-                | :? IAssociation as a -> 
-                    register a (WrappedAssociation(true, a, wrap) :> WrappedElement)
-                | :? IGeneralization as g -> 
-                    register g (WrappedGeneralization(true, g, wrap) :> WrappedElement)
+                | :? INode as n -> wrapNode n :> WrappedElement
+                | :? IAssociation as a -> wrapAssociation a :> WrappedElement
+                | :? IGeneralization as g -> wrapGeneralization g :> WrappedElement
                 | _ -> failwith "Unknown element type in data repo, can not serialize"
 
-    /// Repository of already deserialized objects. Needs to be maintained for correct reference deserialization.
-    let private unwrappedElements = Dictionary<WrappedElement, IElement>()
-
-    /// Function that creates actual object in repository from the data saved in serialized wrapper object.
-    /// Maintains a repository of unwrapped objects, so if this object was seen already, does not create a new object.
-    let rec private unwrap (element: WrappedElement) (model: IModel) =
-        let register key value =
-            unwrappedElements.Add(key, value)
-            value
-        if unwrappedElements.ContainsKey element then
-            unwrappedElements.[element]
+    /// Function that adds IElement-specific to already constructed data object.
+    and private wrapElement (wrappedElement: WrappedElement) (element: IElement) =
+        if element.Class = element then 
+            wrappedElement.Class <- null
         else
-            let (!) e = unwrap e model
-            let (!!) e = if e = null then None else Some(unwrap e model)
-            match element with
-            | :? WrappedNode as n -> 
-                if n.Class = null then
-                    register n (model.CreateNode(n.Name, None)) :> IElement
-                else
-                    register n (model.CreateNode(n.Name, !n.Class)) :> IElement
-            | :? WrappedAssociation as a -> 
-                register a (model.CreateAssociation(!a.Class, !!a.Source, !!a.Target, a.TargetName) :> IElement)
-            | :? WrappedGeneralization as g -> 
-                register g (model.CreateGeneralization(!g.Class, !!g.Source, !!g.Target) :> IElement)
-            | _ -> failwith "Unknown element type in serialized file, can not deserialize"
+            wrappedElement.Class <- wrap (Some element.Class)
 
-    /// Helper class for model serialization.
-    /// Note the "rev" calls in implementation. JSON serialization library does not topologically sort serialized
-    /// objects, so we must structure them in a right order --- from first added to model to last.
-    /// Luckily, now models are specified by hand in F# code, so newer elements refer to older elements, and they
-    /// are added to a model in reverse order (because adding something to head of a list is much faster than to 
-    /// a tail).
-    [<JsonObject>]
-    type SerializedModel(isSerializing: bool, model: IModel) =
-        let wrap element = element :> IElement |> Some |> wrap
-        let mutable deserializedNodes: WrappedElement [] = [||]
-        let mutable deserializedGeneralizations: WrappedElement [] = [||]
-        let mutable deserializedAssociations: WrappedElement [] = [||]
-        let mutable deserializedName = ""
-        let mutable deserializedMetamodelName = ""
+    /// Function that adds IEdge-specific to already constructed data object.
+    and private wrapEdge (wrappedEdge: WrappedEdge) (edge: IEdge) =
+        wrapElement wrappedEdge edge
+        wrappedEdge.Source <- wrap edge.Source
+        wrappedEdge.Target <- wrap edge.Target
 
-        member this.Name 
-            with get () =
-                if isSerializing then
-                    model.Name
-                else
-                    deserializedName
-            and set name =
-                deserializedName <- name
+    /// Function that wraps INode from a repository into data object, registers it if needed and returns wrapped 
+    /// object. If this INode was seen already, returns old object from repository.
+    and private wrapNode (node: INode) =
+        if wrappedElements.ContainsKey node then
+            wrappedElements.[node] :?> WrappedNode
+        else
+            let wrappedNode = WrappedNode()
+            wrapElement wrappedNode node
+            wrappedNode.Name <- node.Name
+            register node wrappedNode
 
-        member this.MetamodelName
-            with get () =
-                if isSerializing then
-                    model.Metamodel.Name
-                else
-                    deserializedMetamodelName
-            and set name =
-                deserializedMetamodelName <- name
+    /// Function that wraps IAssociation from a repository into data object, registers it if needed and returns wrapped
+    /// object. If this IAssociation was seen already, returns old object from repository.
+    and private wrapAssociation (association: IAssociation) =
+        if wrappedElements.ContainsKey association then
+            wrappedElements.[association] :?> WrappedAssociation
+        else
+            let wrappedAssociation = WrappedAssociation()
+            wrapEdge wrappedAssociation association
+            wrappedAssociation.TargetName <- association.TargetName
+            register association wrappedAssociation
 
-        member this.Nodes
-            with get () =
-                if isSerializing then
-                    model.Nodes |> Seq.rev |> Seq.map wrap |> Seq.toArray
-                else
-                    deserializedNodes
-            and set nodes =
-                deserializedNodes <- nodes
+    /// Function that wraps IGeneralization from a repository into data object, registers it if needed and returns 
+    /// wrapped object. If this IGeneralization was seen already, returns old object from repository.
+    and private wrapGeneralization (generalization: IGeneralization) =
+        if wrappedElements.ContainsKey generalization then
+            wrappedElements.[generalization] :?> WrappedGeneralization
+        else
+            let wrappedGeneralization = WrappedGeneralization()
+            wrapEdge wrappedGeneralization generalization
+            register generalization wrappedGeneralization
 
-        member this.Associations 
-            with get () =
-                if isSerializing then
-                    let associations (e: IEdge) =
-                        match e with
-                        | :? IAssociation as a -> Some a
-                        | _ -> None
-                    model.Edges |> Seq.rev |> Seq.choose associations |> Seq.map wrap |> Seq.toArray
-                else
-                    deserializedAssociations
-            and set associations = 
-                deserializedAssociations <- associations
+    /// Function that wraps a model and all its contents into data object.
+    let private wrapModel (model: IModel) =
+        let wrappedModel = WrappedModel ()
+        wrappedModel.Name <- model.Name
+        wrappedModel.MetamodelName <- model.Metamodel.Name
+        wrappedModel.Nodes <- model.Nodes |> Seq.rev |> Seq.map wrapNode |> Seq.toArray
 
-        member this.Generalizations
-            with get () =
-                if isSerializing then
-                    let generalizations (e: IEdge) =
-                        match e with
-                        | :? IGeneralization as g -> Some g
-                        | _ -> None
-                    model.Edges |> Seq.rev |> Seq.choose generalizations |> Seq.map wrap |> Seq.toArray
-                else 
-                    deserializedGeneralizations 
-            and set generalizations = 
-                deserializedGeneralizations <- generalizations
+        let associations (e: IEdge) =
+            match e with
+            | :? IAssociation as a -> Some a
+            | _ -> None
+        wrappedModel.Associations <- model.Edges |> Seq.rev |> Seq.choose associations |> Seq.map wrapAssociation |> Seq.toArray
 
-        member this.Populate (model: IModel) =
-            for node in this.Nodes do
-                unwrap node model |> ignore
-            for association in this.Associations do
-                unwrap association model |> ignore
-            for generalization in this.Generalizations do
-                unwrap generalization model |> ignore
+        let generalizations (e: IEdge) =
+            match e with
+            | :? IGeneralization as a -> Some a
+            | _ -> None
+        wrappedModel.Generalizations <- model.Edges |> Seq.rev |> Seq.choose generalizations |> Seq.map wrapGeneralization |> Seq.toArray
 
-    /// Helper class for repository serialization.
-    [<JsonObject>]
-    type SerializedRepo(isSerializing: bool, repo: IRepo) =
-        
-        let mutable deserializedModels: SerializedModel [] = [||]
-        
-        member this.Models 
-            with get () =
-                if isSerializing then
-                    let serializeModel m = SerializedModel(true, m)
-                    repo.Models |> Seq.rev |> Seq.map serializeModel |> Seq.toArray
-                else
-                    deserializedModels
-            and set models =
-                deserializedModels <- models
+        wrappedModel
 
-        member this.Populate (repo: IRepo) =
-            for model in this.Models do
-                let metamodel = repo.Models |> Seq.tryFind (fun m -> m.Name = model.MetamodelName)
-                let restoredModel = 
-                    match metamodel with
-                    | None -> repo.CreateModel model.Name
-                    | Some m -> repo.CreateModel(model.Name, m)
-                model.Populate restoredModel
-
-    /// Helper class that represents the entire save file.
-    [<JsonObject>]
-    type Save(isSerializing: bool, repo: IRepo) =
-        member val Version = "0.1" with get, set
-        member val Extensions = Dictionary<string, obj>() with get, set
-        member val Contents = SerializedRepo(isSerializing, repo) with get, set
-        member this.Populate (repo: IRepo) =
-            this.Contents.Populate repo
+    /// Function that wraps entire repository into data object.
+    let private wrapRepo (repo: IRepo) =
+        let save = Save ()
+        save.Contents.Models <- repo.Models |> Seq.rev |> Seq.map wrapModel |> Seq.toArray
+        save
 
     /// Saves given repository contents into a given file name.
     let save fileName repo =
-        let save = Save(true, repo)
-        let serializedRepo = 
-            JsonConvert.SerializeObject(
-                save, 
-                Formatting.Indented, 
-                JsonSerializerSettings(
-                    PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-                    TypeNameHandling = TypeNameHandling.Auto
-                    ))
-        if useCompression then
-            use saveFileStream = File.Create fileName
-            use compressionStream = new GZipStream(saveFileStream, CompressionMode.Compress)
-            use writer = new StreamWriter(compressionStream)
-            writer.Write serializedRepo
-        else
-            File.WriteAllText(fileName, serializedRepo)
-        wrappedElements.Clear()
+        let save = wrapRepo repo
 
-    /// Loads given file contents into a given repository.
-    let load fileName (repo: IRepo) =
-        let serializedContents = 
+        use saveFileStream = File.Create fileName
+        use saveFileStream = 
             if useCompression then
-                use saveFileStream = File.Open(fileName, FileMode.Open)
-                use compressionStream = new GZipStream(saveFileStream, CompressionMode.Decompress)
-                use reader = new StreamReader(compressionStream)
-                reader.ReadToEnd()
+                new GZipStream(saveFileStream, CompressionMode.Compress) :> Stream
             else
-                File.ReadAllText fileName
-        let deserializedRepo = 
-            JsonConvert.DeserializeObject<Save>(
-                serializedContents,
-                JsonSerializerSettings(
-                        TypeNameHandling = TypeNameHandling.Auto
-                        ))
-        repo.Clear()
-        deserializedRepo.Populate repo
-        unwrappedElements.Clear()
+                saveFileStream :> Stream
+
+        use writer = new JsonTextWriter(new StreamWriter(saveFileStream))
+        let serializer = new JsonSerializer();
+        serializer.Formatting <- Formatting.Indented
+        serializer.PreserveReferencesHandling <- PreserveReferencesHandling.Objects
+        serializer.Serialize(writer, save)
+
+        wrappedElements.Clear()

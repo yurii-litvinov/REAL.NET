@@ -79,7 +79,9 @@
     <Compile Include="DataLayer\DataNode.fs" />
     <Compile Include="DataLayer\DataModel.fs" />
     <Compile Include="DataLayer\DataRepo.fs" />
+    <Compile Include="Serializer\DataObjects.fs" />
     <Compile Include="Serializer\Serializer.fs" />
+    <Compile Include="Serializer\Deserializer.fs" />
     <Compile Include="CoreSemanticLayer.fs" />
     <Compile Include="InfrastructureSemanticLayer.fs" />
     <Compile Include="ModelBuilders\IModelBuilder.fs" />

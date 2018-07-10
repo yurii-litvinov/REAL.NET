@@ -61,4 +61,4 @@ type Repo(repo: DataLayer.IRepo) =
             Serializer.save fileName repo
 
         member this.Load fileName =
-            Serializer.load fileName repo
+            Deserializer.load fileName repo
