@@ -46,10 +46,14 @@ and Model
     member this.UnderlyingModel = model
 
     interface IModel with
-        member this.CreateElement ``type`` =
+        member this.CreateElement (``type``: IElement) =
             let unwrappedType = (``type`` :?> Element).UnderlyingElement
             let element = infrastructure.Instantiate model unwrappedType
             elementRepository.GetElement element
+
+        member this.CreateElement (typeName: string) =
+            let ``type`` = (repository.GetModel <| this.UnderlyingModel.Metamodel).FindElement typeName
+            (this :> IModel).CreateElement ``type``
 
         member this.DeleteElement element =
             // TODO: Clean up the memory and check correctness (for example, check for "class" relations)

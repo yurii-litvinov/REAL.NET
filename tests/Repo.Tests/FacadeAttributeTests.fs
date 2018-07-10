@@ -21,7 +21,7 @@ open Repo
 open Repo.FacadeLayer
 
 let getAttributeType nodeName name =
-    let repo = RepoFactory.CreateRepo ()
+    let repo = RepoFactory.Create ()
     let underlyingRepo = (repo :?> Repo).UnderlyingRepo
     let model = repo.Model "RobotsMetamodel"
     let attributeRepository = AttributeRepository()
@@ -34,7 +34,7 @@ let getAttributeType nodeName name =
     attributeRepository.GetAttribute dataLayerAttribute
 
 let getAttributeInstance nodeName name =
-    let repo = RepoFactory.CreateRepo ()
+    let repo = RepoFactory.Create ()
     let underlyingRepo = (repo :?> Repo).UnderlyingRepo
     let model = repo.Models |> Seq.find (fun m -> m.Name = "RobotsTestModel")
     let metamodel = model.Metamodel

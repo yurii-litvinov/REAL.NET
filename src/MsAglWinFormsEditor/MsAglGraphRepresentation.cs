@@ -13,7 +13,7 @@ namespace MsAglWinFormsEditor
     {
 
         public Graph Graph { get; }
-        private readonly IRepo repo = RepoFactory.CreateRepo();
+        private readonly IRepo repo = RepoFactory.Create();
 
         private const string modelName = "RobotsTestModel";
         private readonly IModel currentModel;

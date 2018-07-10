@@ -160,6 +160,10 @@ type IModel =
         /// Metamodel for this model.
         abstract CreateElement: ``type``: IElement -> IElement
 
+        /// Helper method that instantiates element by a type name. Type is looked up in a metamodel and if no such 
+        /// element found, exception will be thrown.
+        abstract CreateElement: typeName: string -> IElement
+
         /// Deletes given element from a model.
         abstract DeleteElement: element: IElement -> unit
 

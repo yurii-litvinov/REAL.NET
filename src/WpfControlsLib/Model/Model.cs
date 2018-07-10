@@ -28,7 +28,7 @@ namespace WpfControlsLib.Model
     {
         public Model()
         {
-            this.Repo = global::Repo.RepoFactory.CreateRepo();
+            this.Repo = global::Repo.RepoFactory.Create();
             this.Constraints = new Constraints.Constraints();
         }
 

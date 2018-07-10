@@ -20,7 +20,7 @@ open FsUnit
 open Repo
 
 let init () =
-    RepoFactory.CreateRepo ()
+    RepoFactory.Create ()
 
 [<Test>]
 let ``Generalizations shall be listed as edges in metamodel`` () =

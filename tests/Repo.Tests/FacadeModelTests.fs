@@ -66,7 +66,7 @@ let ``Model shall allow to create nodes`` () =
 
 [<Test>]
 let ``Model shall allow to list its nodes`` () =
-    let repo = RepoFactory.CreateRepo ()
+    let repo = RepoFactory.Create ()
 
     let model = repo.Models |> Seq.find (fun m -> m.Name = "RobotsTestModel")
 

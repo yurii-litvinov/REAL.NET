@@ -18,7 +18,7 @@ namespace Repo
 [<AbstractClass; Sealed>]
 type RepoFactory =
     /// Method that returns initialized repository.
-    static member CreateRepo() = 
+    static member Create() = 
         let data = new DataLayer.DataRepo() :> DataLayer.IRepo
         let build (builder: Metametamodels.IModelBuilder) =
             builder.Build data
@@ -31,4 +31,10 @@ type RepoFactory =
         Metametamodels.AirSimMetamodelBuilder() |> build
         Metametamodels.AirSimModelBuilder() |> build
 
+        new FacadeLayer.Repo(data) :> IRepo
+
+    /// Method that returns a new repository populated from a save file.
+    static member Load fileName =
+        let data = new DataLayer.DataRepo() :> DataLayer.IRepo
+        Serializer.Serializer.load fileName data
         new FacadeLayer.Repo(data) :> IRepo
