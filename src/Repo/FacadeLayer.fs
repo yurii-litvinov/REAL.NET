@@ -196,7 +196,4 @@ type IRepo =
 
         /// Saves repository content into a file.
         abstract Save: fileName: string -> unit
-
-        /// Loads save from a file to a repository.
-        abstract Load: fileName: string -> unit
     end

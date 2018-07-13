@@ -48,6 +48,8 @@ namespace WpfEditor.View
 
             this.model = new WpfControlsLib.Model.Model();
 
+            this.model.Reinit += this.Reinit;
+
             this.palette.SetModel(this.model);
 
             this.controller = new WpfControlsLib.Controller.Controller();
@@ -61,6 +63,7 @@ namespace WpfEditor.View
             this.scene.EdgeSelected += (sender, args) => this.attributesView.DataContext = args.Edge;
 
             this.scene.Init(this.model, this.controller, new PaletteAdapter(this.palette));
+
             this.modelSelector.Init(this.model);
             this.modelSelector.ChangeModel(2);
 
@@ -68,11 +71,21 @@ namespace WpfEditor.View
             this.InitToolbar();
         }
 
+        private void Reinit(object sender, EventArgs e)
+        {
+            this.SelectModel(this.modelSelector.ModelNames[2]);
+        }
+
         private void OnModelSelectionChanged(object sender, ModelSelector.ModelSelectedEventArgs args)
+        {
+            SelectModel(args.ModelName);
+        }
+
+        private void SelectModel(string modelName)
         {
             this.scene.Clear();
             this.modelExplorer.Clear();
-            this.model.ModelName = args.ModelName;
+            this.model.ModelName = modelName;
             this.palette.InitPalette(this.model.ModelName);
             this.scene.Reload();
         }
@@ -136,6 +149,74 @@ namespace WpfEditor.View
             }
 
             public IElement Element => this.palette.SelectedElement;
+        }
+
+        private void OnCanExecuteForAlwaysExecutable(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void OnNewExecuted(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+        {
+            this.model.New();
+            this.controller.ClearHistory();
+        }
+
+        private void OnOpenExecuted(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                DefaultExt = ".rns",
+                Filter = "Real.NET Saves (.rns)|*.rns"
+            };
+
+            var result = dialog.ShowDialog();
+
+            // Get the selected file name and display in a TextBox
+            if (result == true)
+            {
+                model.Open(dialog.FileName);
+                this.controller.ClearHistory();
+            }
+        }
+
+        private void OnSaveExecuted(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+        {
+            if (this.model.CurrentFileName == string.Empty)
+            {
+                this.SaveAs();
+            }
+            else
+            {
+                this.model.Save();
+            }
+        }
+
+        private void OnSaveAsExecuted(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+        {
+            SaveAs();
+        }
+
+        private void OnQuitExecuted(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void SaveAs()
+        {
+            var dialog = new Microsoft.Win32.SaveFileDialog
+            {
+                DefaultExt = ".rns",
+                Filter = "Real.NET Saves|*.rns"
+            };
+
+            var result = dialog.ShowDialog();
+
+            // Get the selected file name and display in a TextBox
+            if (result == true)
+            {
+                model.SaveAs(dialog.FileName);
+            }
         }
     }
 }

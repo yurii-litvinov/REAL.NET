@@ -14,13 +14,14 @@
 
 namespace WpfControlsLib.Controller.UndoRedo
 {
+    using System;
     using System.Collections.Generic;
     using EditorPluginInterfaces;
 
     /// <summary>
     /// Class for undo/redo commands.
     /// </summary>
-    public class UndoRedoStack
+    internal class UndoRedoStack
     {
         /// <summary>
         /// Stack with undo commands.
@@ -85,5 +86,14 @@ namespace WpfControlsLib.Controller.UndoRedo
         /// Resets redo stack.
         /// </summary>
         public void ResetRedo() => this.redoStack.Clear();
+
+        /// <summary>
+        /// Resets undo and redo stacks, losing all undo/redo history.
+        /// </summary>
+        public void Clear()
+        {
+            this.undoStack.Clear();
+            this.redoStack.Clear();
+        }
     }
 }

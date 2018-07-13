@@ -29,6 +29,14 @@
     Title="REAL.NET"
     mc:Ignorable="d"
     Height="685" Width="936">
+
+    <Window.CommandBindings>
+        <CommandBinding Command="New" CanExecute="OnCanExecuteForAlwaysExecutable" Executed="OnNewExecuted" />
+        <CommandBinding Command="Open" CanExecute="OnCanExecuteForAlwaysExecutable" Executed="OnOpenExecuted" />
+        <CommandBinding Command="Save" CanExecute="OnCanExecuteForAlwaysExecutable" Executed="OnSaveExecuted" />
+        <CommandBinding Command="SaveAs" CanExecute="OnCanExecuteForAlwaysExecutable" Executed="OnSaveAsExecuted" />
+        <CommandBinding Command="Close" CanExecute="OnCanExecuteForAlwaysExecutable" Executed="OnQuitExecuted" />
+    </Window.CommandBindings>
     
     <Grid>
         <Grid.Resources>
@@ -39,17 +47,33 @@
             </ResourceDictionary>
         </Grid.Resources>
 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" MinWidth="100"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
+        <!-- Main menu -->
+        <Menu Grid.Row="0" Grid.ColumnSpan="3" IsMainMenu="True">
+            <MenuItem Header="_File" >
+                <MenuItem Header="_New" Command="New"/>
+                <MenuItem Header="Open..." Command="Open"/>
+                <MenuItem Header="_Save" Command="Save"/>
+                <MenuItem Header="_Save as..." Command="SaveAs"/>
+                <Separator/>
+                <MenuItem Header="_Quit" Command="Close"/>
+            </MenuItem>
+        </Menu>
+
         <!-- Area and console -->
-        <Grid Grid.Column="0">
+        <Grid Grid.Row="1" Grid.Column="0">
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
@@ -58,35 +82,35 @@
 
             <!-- Toolbar -->
             <toolbar:ToolbarView x:Name="toolBar" Grid.Row="0" DataContext="{Binding Toolbar}"/>
-            
-            <!-- ModelSelector -->
-            <modelSelector:ModelSelector x:Name="modelSelector" ModelSelected="OnModelSelectionChanged" Grid.Row="1"/>
 
-            <!-- Area -->
-            <scene:Scene x:Name="scene"  Grid.Row="2"/>
+            <!-- Scene area -->
+            <scene:Scene Grid.Row="1" x:Name="scene"/>
 
             <!-- GridSplitter for console -->
-            <GridSplitter Grid.Row ="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5"/>
+            <GridSplitter Grid.Row ="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5"/>
 
             <!-- Console with error messages -->
-            <console1:AppConsole Grid.Row="4" DataContext="{Binding Console}"/>
+            <console1:AppConsole Grid.Row="3" DataContext="{Binding Console}"/>
 
         </Grid>
 
         <!-- GridSplitter for RightPanel-->
-        <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5"/>
+        <GridSplitter Grid.Row="1" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5"/>
 
         <!-- RightPanel -->
-        <DockPanel Grid.Column="2">
+        <DockPanel Grid.Row="1" Grid.Column="2">
             <Grid x:Name="rightPanel">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="0"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto" MinHeight="70"/>
                     <RowDefinition Height="140"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto" MinHeight="50"/>
                     <RowDefinition Height="25"/>
                 </Grid.RowDefinitions>
+
+                <!-- Model selector -->
+                <modelSelector:ModelSelector Grid.Row="0" x:Name="modelSelector" ModelSelected="OnModelSelectionChanged" HorizontalAlignment="Stretch" Margin="1,1,1,5"/>
 
                 <palette:Palette x:Name="palette" Grid.Row="1"/>
 
@@ -114,6 +138,3 @@
 
     </Grid>
 </Window>
-
-
-

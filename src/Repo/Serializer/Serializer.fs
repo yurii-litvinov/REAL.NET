@@ -105,13 +105,23 @@ module Serializer =
             match e with
             | :? IAssociation as a -> Some a
             | _ -> None
-        wrappedModel.Associations <- model.Edges |> Seq.rev |> Seq.choose associations |> Seq.map wrapAssociation |> Seq.toArray
+        wrappedModel.Associations <- 
+            model.Edges 
+            |> Seq.rev 
+            |> Seq.choose associations 
+            |> Seq.map wrapAssociation 
+            |> Seq.toArray
 
         let generalizations (e: IEdge) =
             match e with
             | :? IGeneralization as a -> Some a
             | _ -> None
-        wrappedModel.Generalizations <- model.Edges |> Seq.rev |> Seq.choose generalizations |> Seq.map wrapGeneralization |> Seq.toArray
+        wrappedModel.Generalizations <- 
+            model.Edges 
+            |> Seq.rev 
+            |> Seq.choose generalizations 
+            |> Seq.map wrapGeneralization 
+            |> Seq.toArray
 
         wrappedModel
 

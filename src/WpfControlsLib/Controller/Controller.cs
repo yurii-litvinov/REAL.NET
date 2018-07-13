@@ -62,6 +62,14 @@ namespace WpfControlsLib.Controller
         /// </summary>
         public void Redo() => this.DoAndCheckUndoRedoStatus(this.undoStack.Redo);
 
+        /// <summary>
+        /// Clears undo/redo history completely. Useful, for example, when new file is loaded.
+        /// </summary>
+        public void ClearHistory()
+        {
+            this.undoStack.Clear();
+        }
+
         private void DoAndCheckUndoRedoStatus(Action action)
         {
             var oldUndoAvailable = this.undoStack.IsUndoAvailable;

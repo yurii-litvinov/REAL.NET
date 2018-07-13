@@ -38,13 +38,79 @@ namespace WpfControlsLib.Model
 
         public event EventHandler<ElementEventArgs> ElementRemoved;
 
+        /// <summary>
+        /// Notifies all views that there are changes so massive that the model shall be completely reloaded 
+        /// (for example, when creating new or opening existing file).
+        /// </summary>
+        public event EventHandler<EventArgs> Reinit;
+
         public Constraints.Constraints Constraints { get; set; }
 
         public string ModelName { get; set; }
 
         public string ErrorMessage { get; set; }
 
-        public Repo.IRepo Repo { get; }
+        public Repo.IRepo Repo { get; private set; }
+
+        /// <summary>
+        /// Name of a file with which we are working now. Empty if we just created a new model and did not saved it 
+        /// yet.
+        /// </summary>
+        public string CurrentFileName { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// Flag that is true if current file contains unsaved changes.
+        /// </summary>
+        public bool HasUnsavedChanges { get; private set; }
+
+        /// <summary>
+        /// Clears the contents of current repository and creates new empty one. Things like "Do you want to save 
+        /// changes?" dialog or even new model selection are not supported yet.
+        /// </summary>
+        public void New()
+        {
+            this.Repo = global::Repo.RepoFactory.Create();
+            this.CurrentFileName = "";
+            this.HasUnsavedChanges = false;
+            this.Reinit?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        ///  Opens a given save file and reinitializes a repository with it.
+        /// </summary>
+        /// <param name="fileName">Name of the save to open.</param>
+        public void Open(string fileName)
+        {
+            this.Repo = global::Repo.RepoFactory.Load(fileName);
+            this.CurrentFileName = fileName;
+            this.HasUnsavedChanges = false;
+            this.Reinit?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Saves current repository into current file. Current file name must be set before this operation is called.
+        /// </summary>
+        public void Save()
+        {
+            if (this.CurrentFileName == string.Empty)
+            {
+                throw new InvalidOperationException("Current file name is not set in the model, saving not possible");
+            }
+
+            this.Repo.Save(CurrentFileName);
+            this.HasUnsavedChanges = false;
+        }
+
+        /// <summary>
+        /// Saves current repository into a given file, changes current file.
+        /// </summary>
+        /// <param name="fileName">File to save repository to (with path, absolute or relative to a working directory).
+        /// </param>
+        public void SaveAs(string fileName)
+        {
+            this.CurrentFileName = fileName;
+            this.Save();
+        }
 
         // TODO name
         public bool ConstraintsCheck()

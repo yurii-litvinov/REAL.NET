@@ -139,7 +139,6 @@
     <Compile Include="Controls\Toolbar\Command.cs" />
     <Compile Include="Controls\Toolbar\CommandXAMLAdapter.cs" />
     <Compile Include="Controls\Toolbar\StandardButtonsAndMenus\SampleButtonsCollection.cs" />
-    <Compile Include="Controls\Toolbar\StandardButtonsAndMenus\SaveAndLoadButtons.cs" />
     <Compile Include="Controls\Toolbar\ToolbarView.xaml.cs">
       <DependentUpon>ToolbarView.xaml</DependentUpon>
     </Compile>
@@ -368,14 +367,6 @@
       </ItemGroup>
     </When>
   </Choose>
-  <ItemGroup>
-    <Analyzer Include="..\..\packages\StyleCop.Analyzers\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll">
-      <Paket>True</Paket>
-    </Analyzer>
-    <Analyzer Include="..\..\packages\StyleCop.Analyzers\analyzers\dotnet\cs\StyleCop.Analyzers.dll">
-      <Paket>True</Paket>
-    </Analyzer>
-  </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
       <ItemGroup>
