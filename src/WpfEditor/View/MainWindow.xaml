@@ -26,7 +26,7 @@
     xmlns:modelExplorer="clr-namespace:WpfControlsLib.Controls.ModelExplorer;assembly=WpfControlsLib"
     xmlns:palette="clr-namespace:WpfControlsLib.Controls.Palette;assembly=WpfControlsLib"
     xmlns:toolbar="clr-namespace:WpfControlsLib.Controls.Toolbar;assembly=WpfControlsLib"
-    Title="REAL.NET"
+    Title="{Binding WindowTitle}"
     mc:Ignorable="d"
     Height="685" Width="936">
 
