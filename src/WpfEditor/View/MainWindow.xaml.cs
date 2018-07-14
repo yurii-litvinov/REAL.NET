@@ -16,6 +16,7 @@ namespace WpfEditor.View
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
     using EditorPluginInterfaces;
@@ -31,14 +32,28 @@ namespace WpfEditor.View
     /// <summary>
     /// Main window of the application, launches on application startup.
     /// </summary>
-    internal partial class MainWindow
+    internal partial class MainWindow : INotifyPropertyChanged
     {
         private readonly WpfControlsLib.Model.Model model;
         private readonly WpfControlsLib.Controller.Controller controller;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();
 
         public ToolbarViewModel Toolbar { get; } = new ToolbarViewModel();
+
+        public string WindowTitle
+        {
+            get
+            {
+                var fileName = (model == null || model.CurrentFileName == "")
+                    ? "(unsaved)"
+                    : model.CurrentFileName;
+                var unsavedChanges = model?.HasUnsavedChanges == true ? "*" : "";
+                return $"REAL.NET {fileName} {unsavedChanges}";
+            }
+        }
 
         public MainWindow()
         {
@@ -49,6 +64,12 @@ namespace WpfEditor.View
             this.model = new WpfControlsLib.Model.Model();
 
             this.model.Reinit += this.Reinit;
+
+            this.model.FileSaved += (_, __) => NotifyTitleChanged();
+            this.model.UnsavedChanges += (_, __) => NotifyTitleChanged();
+
+            // Notifying window first time, to initialize title.
+            NotifyTitleChanged();
 
             this.palette.SetModel(this.model);
 
@@ -67,8 +88,8 @@ namespace WpfEditor.View
             this.modelSelector.Init(this.model);
             this.modelSelector.ChangeModel(2);
 
-            this.InitAndLaunchPlugins();
             this.InitToolbar();
+            this.InitAndLaunchPlugins();
         }
 
         private void Reinit(object sender, EventArgs e)
@@ -109,7 +130,8 @@ namespace WpfEditor.View
             foreach (var plugindir in pluginDirs)
             {
                 var dirs = new List<string>(System.IO.Directory.GetDirectories(plugindir + "/bin"));
-                var config = new PluginConfig(this.model, null, null, this.Console, null);
+                var config = new PluginConfig(this.model, null, this.Toolbar, this.Console, null);
+                
                 foreach (var dir in dirs)
                 {
                     libs.LaunchPlugins(dir, config);
@@ -151,6 +173,11 @@ namespace WpfEditor.View
             public IElement Element => this.palette.SelectedElement;
         }
 
+        private void NotifyTitleChanged() => this.PropertyChanged?.Invoke(
+            this,
+            new PropertyChangedEventArgs(nameof(this.WindowTitle))
+            );
+
         private void OnCanExecuteForAlwaysExecutable(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
@@ -160,6 +187,7 @@ namespace WpfEditor.View
         {
             this.model.New();
             this.controller.ClearHistory();
+            NotifyTitleChanged();
         }
 
         private void OnOpenExecuted(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
@@ -177,6 +205,7 @@ namespace WpfEditor.View
             {
                 model.Open(dialog.FileName);
                 this.controller.ClearHistory();
+                NotifyTitleChanged();
             }
         }
 

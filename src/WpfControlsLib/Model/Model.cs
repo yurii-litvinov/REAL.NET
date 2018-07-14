@@ -26,6 +26,8 @@ namespace WpfControlsLib.Model
     /// </summary>
     public class Model : IModel
     {
+        private bool hasUnsavedChanges = false;
+
         public Model()
         {
             this.Repo = global::Repo.RepoFactory.Create();
@@ -37,6 +39,10 @@ namespace WpfControlsLib.Model
         public event EventHandler<EdgeEventArgs> NewEdgeAdded;
 
         public event EventHandler<ElementEventArgs> ElementRemoved;
+
+        public event EventHandler<EventArgs> FileSaved;
+
+        public event EventHandler<EventArgs> UnsavedChanges;
 
         /// <summary>
         /// Notifies all views that there are changes so massive that the model shall be completely reloaded 
@@ -61,7 +67,23 @@ namespace WpfControlsLib.Model
         /// <summary>
         /// Flag that is true if current file contains unsaved changes.
         /// </summary>
-        public bool HasUnsavedChanges { get; private set; }
+        public bool HasUnsavedChanges
+        {
+            get => hasUnsavedChanges;
+
+            private set {
+                if (hasUnsavedChanges && !value)
+                {
+                    hasUnsavedChanges = value;
+                    FileSaved?.Invoke(this, EventArgs.Empty);
+                }
+                else if (!hasUnsavedChanges && value)
+                {
+                    hasUnsavedChanges = value;
+                    UnsavedChanges?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
 
         /// <summary>
         /// Clears the contents of current repository and creates new empty one. Things like "Do you want to save 
@@ -134,6 +156,7 @@ namespace WpfControlsLib.Model
             if (this.Constraints.AllowCreateOrExistNode(model.Nodes, "a" + element.Name.ToString())) // TODO something more pretty than +"a"
             {
                 var newNode = model.CreateElement(element) as Repo.INode;
+                HasUnsavedChanges = true;
                 this.RaiseNewVertex(newNode);
             }
             else
@@ -156,6 +179,7 @@ namespace WpfControlsLib.Model
                 newEdge.Name = "a" + edge.Name;
                 newEdge.From = source;
                 newEdge.To = destination;
+                HasUnsavedChanges = true;
                 this.RaiseNewEdge(newEdge, newEdge.From, newEdge.To);
             }
             else
@@ -170,6 +194,7 @@ namespace WpfControlsLib.Model
         {
             var model = this.Repo.Model(this.ModelName);
             model.DeleteElement(element);
+            HasUnsavedChanges = true;
             this.RaiseElementRemoved(element);
         }
 
