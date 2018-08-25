@@ -46,7 +46,7 @@ let ``Data model shall allow changing name`` () =
 [<Test>]
 let ``Data model shall allow creating nodes`` () =
     let model = DataModel("model") :> IModel
-    let node = model.CreateNode "node1"
+    let node = model.CreateNode("node1", None)
     model.Nodes |> should contain node
 
     let node2 = model.CreateNode("node2", node)
@@ -57,11 +57,11 @@ let ``Data model shall allow creating nodes`` () =
 [<Test>]
 let ``Data model shall allow creating edges`` () =
     let model = DataModel("model") :> IModel
-    let node1 = model.CreateNode "node1"
-    let node2 = model.CreateNode "node2"
+    let node1 = model.CreateNode("node1", None)
+    let node2 = model.CreateNode("node2", None)
 
-    let generalizationClass = model.CreateNode "generalization"
-    let associationClass = model.CreateNode "association"
+    let generalizationClass = model.CreateNode("generalization", None)
+    let associationClass = model.CreateNode("association", None)
 
     let generalization = model.CreateGeneralization(generalizationClass, node1, node2)
     model.Edges |> should contain generalization
@@ -76,10 +76,10 @@ let ``Data model shall allow creating edges`` () =
 [<Test>]
 let ``Data model shall allow creating unconnected associations`` () =
     let model = DataModel("model") :> IModel
-    let node1 = model.CreateNode "node1" :> IElement
-    let node2 = model.CreateNode "node2" :> IElement
+    let node1 = model.CreateNode("node1", None) :> IElement
+    let node2 = model.CreateNode("node2", None) :> IElement
 
-    let associationClass = model.CreateNode "association"
+    let associationClass = model.CreateNode("association", None)
 
     let association1 = model.CreateAssociation(associationClass, Some node1, None, "association1end")
     let association2 = model.CreateAssociation(associationClass, None, Some node2, "association2end")
@@ -94,10 +94,10 @@ let ``Data model shall allow creating unconnected associations`` () =
 [<Test>]
 let ``Data model shall allow creating unconnected generalizations`` () =
     let model = DataModel("model") :> IModel
-    let node1 = model.CreateNode "node1" :> IElement
-    let node2 = model.CreateNode "node2" :> IElement
+    let node1 = model.CreateNode("node1", None) :> IElement
+    let node2 = model.CreateNode("node2", None) :> IElement
 
-    let generalizationClass = model.CreateNode "generalization"
+    let generalizationClass = model.CreateNode("generalization", None)
 
     let generalization1 = model.CreateGeneralization(generalizationClass, Some node1, None)
     let generalization2 = model.CreateGeneralization(generalizationClass, None, Some node2)
@@ -112,13 +112,13 @@ let ``Data model shall allow creating unconnected generalizations`` () =
 [<Test>]
 let ``Data model shall allow deleting elements`` () =
     let model = DataModel("model") :> IModel
-    let node1 = model.CreateNode "node1"
+    let node1 = model.CreateNode("node1", None)
     model.Nodes |> should contain node1
 
     let node2 = model.CreateNode("node2", node1)
     model.Nodes |> should contain node2
 
-    let generalizationClass = model.CreateNode "generalization"
+    let generalizationClass = model.CreateNode("generalization", None)
 
     let generalization = model.CreateGeneralization(generalizationClass, node1, node2)
     model.Edges |> should contain generalization
@@ -136,10 +136,10 @@ let ``Data model shall allow deleting elements`` () =
 [<Test>]
 let ``Data model shall disconnect edges on removing source or target`` () =
     let model = DataModel("model") :> IModel
-    let node1 = model.CreateNode "node1"
+    let node1 = model.CreateNode("node1", None)
     let node2 = model.CreateNode("node2", node1)
 
-    let generalizationClass = model.CreateNode "generalization"
+    let generalizationClass = model.CreateNode("generalization", None)
     let generalization = model.CreateGeneralization(generalizationClass, node1, node2)
     model.Edges |> should contain generalization
     generalization.Source |> should equal (Some (node1 :> IElement))
@@ -158,7 +158,7 @@ let ``Data model shall disconnect edges on removing source or target`` () =
 [<Test>]
 let ``Data model shall disconnect edges on removing source or target edges`` () =
     let model = DataModel("model") :> IModel
-    let generalizationClass = model.CreateNode "generalization"
+    let generalizationClass = model.CreateNode("generalization", None)
 
     let edge1 = model.CreateGeneralization(generalizationClass, None, None)
     let edge2 = model.CreateGeneralization(generalizationClass, Some (edge1 :> IElement), None)

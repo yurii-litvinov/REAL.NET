@@ -15,6 +15,7 @@
 namespace Repo.FacadeLayer
 
 open Repo
+open Repo.Serializer
 
 /// Wrapper around repository from data layer. Maintains a repository of models and creates new models if needed.
 type Repo(repo: DataLayer.IRepo) =
@@ -43,11 +44,18 @@ type Repo(repo: DataLayer.IRepo) =
             else
                 Seq.head models
 
-        member this.CreateModel(name, metamodel) =
-            let underlyingModel = repo.CreateModel(name, unwrap metamodel)
+        member this.CreateModel (name, metamodel) =
+            let underlyingModel = repo.CreateModel (name, unwrap metamodel)
             modelRepository.GetModel underlyingModel
+
+        member this.CreateModel (name, metamodelName) =
+            let metamodel = (this :> IRepo).Model metamodelName
+            (this :> IRepo).CreateModel (name, metamodel)
 
         member this.DeleteModel model =
             repo.DeleteModel (unwrap model)
             // TODO: Remove all elements from this model too.
             modelRepository.DeleteModel model
+
+        member this.Save fileName =
+            Serializer.save fileName repo

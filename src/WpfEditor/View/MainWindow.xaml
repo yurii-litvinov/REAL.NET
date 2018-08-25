@@ -20,17 +20,24 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:graphx="http://schemas.panthernet.ru/graphx/"
-    xmlns:view="clr-namespace:WpfEditor.View"
-    xmlns:console="clr-namespace:WpfEditor.Controls.Console"
-    xmlns:palette="clr-namespace:WpfEditor.Controls.Palette"
-    xmlns:modelSelector="clr-namespace:WpfEditor.Controls.ModelSelector"
-    xmlns:scene="clr-namespace:WpfEditor.Controls.Scene"
-    xmlns:modelExplorer="clr-namespace:WpfEditor.Controls.ModelExplorer"
-    Title="REAL.NET"
+    xmlns:modelSelector="clr-namespace:WpfControlsLib.Controls.ModelSelector;assembly=WpfControlsLib"
+    xmlns:console1="clr-namespace:WpfControlsLib.Controls.Console;assembly=WpfControlsLib"
+    xmlns:scene="clr-namespace:WpfControlsLib.Controls.Scene;assembly=WpfControlsLib"
+    xmlns:modelExplorer="clr-namespace:WpfControlsLib.Controls.ModelExplorer;assembly=WpfControlsLib"
+    xmlns:palette="clr-namespace:WpfControlsLib.Controls.Palette;assembly=WpfControlsLib"
+    xmlns:toolbar="clr-namespace:WpfControlsLib.Controls.Toolbar;assembly=WpfControlsLib"
+    Title="{Binding WindowTitle}"
     mc:Ignorable="d"
-    d:DataContext="{view:MainWindow}" Height="685" Width="936">
+    Height="685" Width="936">
 
+    <Window.CommandBindings>
+        <CommandBinding Command="New" CanExecute="OnCanExecuteForAlwaysExecutable" Executed="OnNewExecuted" />
+        <CommandBinding Command="Open" CanExecute="OnCanExecuteForAlwaysExecutable" Executed="OnOpenExecuted" />
+        <CommandBinding Command="Save" CanExecute="OnCanExecuteForAlwaysExecutable" Executed="OnSaveExecuted" />
+        <CommandBinding Command="SaveAs" CanExecute="OnCanExecuteForAlwaysExecutable" Executed="OnSaveAsExecuted" />
+        <CommandBinding Command="Close" CanExecute="OnCanExecuteForAlwaysExecutable" Executed="OnQuitExecuted" />
+    </Window.CommandBindings>
+    
     <Grid>
         <Grid.Resources>
             <ResourceDictionary>
@@ -40,14 +47,31 @@
             </ResourceDictionary>
         </Grid.Resources>
 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" MinWidth="100"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
+        <!-- Main menu -->
+        <Menu Grid.Row="0" Grid.ColumnSpan="3" IsMainMenu="True">
+            <MenuItem Header="_File" >
+                <MenuItem Header="_New" Command="New"/>
+                <MenuItem Header="Open..." Command="Open"/>
+                <MenuItem Header="_Save" Command="Save"/>
+                <MenuItem Header="_Save as..." Command="SaveAs"/>
+                <Separator/>
+                <MenuItem Header="_Quit" Command="Close"/>
+            </MenuItem>
+        </Menu>
+
         <!-- Area and console -->
-        <Grid Grid.Column="0">
+        <Grid Grid.Row="1" Grid.Column="0">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -56,39 +80,37 @@
                 <RowDefinition Height="Auto" MinHeight="50"/>
             </Grid.RowDefinitions>
 
-            <!-- ToolBar -->
-            <ToolBar Grid.Row="0">
-                <modelSelector:ModelSelector x:Name="modelSelector" ModelSelected="OnModelSelectionChanged"/>
-            </ToolBar>
+            <!-- Toolbar -->
+            <toolbar:ToolbarView x:Name="toolBar" Grid.Row="0" DataContext="{Binding Toolbar}"/>
 
-            <!-- Area -->
-            <scene:Scene x:Name="scene"  Grid.Row="1"/>
+            <!-- Scene area -->
+            <scene:Scene Grid.Row="1" x:Name="scene"/>
 
             <!-- GridSplitter for console -->
             <GridSplitter Grid.Row ="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5"/>
 
             <!-- Console with error messages -->
-            <console:AppConsole Grid.Row="3" DataContext="{Binding Console}"/>
+            <console1:AppConsole Grid.Row="3" DataContext="{Binding Console}"/>
 
         </Grid>
 
         <!-- GridSplitter for RightPanel-->
-        <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5"/>
+        <GridSplitter Grid.Row="1" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5"/>
 
         <!-- RightPanel -->
-        <DockPanel Grid.Column="2">
+        <DockPanel Grid.Row="1" Grid.Column="2">
             <Grid x:Name="rightPanel">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="0"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto" MinHeight="70"/>
                     <RowDefinition Height="140"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto" MinHeight="50"/>
                     <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
                 </Grid.RowDefinitions>
+
+                <!-- Model selector -->
+                <modelSelector:ModelSelector Grid.Row="0" x:Name="modelSelector" ModelSelected="OnModelSelectionChanged" HorizontalAlignment="Stretch" Margin="1,1,1,5"/>
 
                 <palette:Palette x:Name="palette" Grid.Row="1"/>
 
@@ -110,29 +132,9 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Bottom"
                     Click="ConstraintsButtonClick" Height="26"/>
-                <Button x:Name="executeButton" 
-                    Grid.Row="6"
-                    Content="Execute"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Bottom"
-                    Click="ExecuteButtonClick" Height="26"/>
-                <Button x:Name="stopButton" 
-                    Grid.Row="7"
-                    Content="Stop"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Bottom"
-                    Click="StopButtonClick" Height="26" IsEnabled="False"/>
-                <Button x:Name="generateButton" 
-                    Grid.Row="8"
-                    Content="Generate"
-                    HorizontalAlignment="Stretch"
-                    Click="GenerateButtonClick" Height="26" VerticalAlignment="Top"/>
             </Grid>
 
         </DockPanel>
 
     </Grid>
 </Window>
-
-
-

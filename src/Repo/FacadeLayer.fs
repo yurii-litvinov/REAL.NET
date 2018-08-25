@@ -84,7 +84,7 @@ type IAttribute =
 /// Element is a general term for nodes or edges.
 and [<AllowNullLiteral>] IElement =
     interface
-        /// Name of an element, to be displayed on a scene and in various menus.
+        /// Name of an element, to be displayed on a scene and in various menus. Does not need to be unique.
         abstract Name: string with get, set
 
         /// Returns type of the element.
@@ -116,6 +116,9 @@ and [<AllowNullLiteral>] IElement =
 type INode =
     interface
         inherit IElement
+
+        /// Function in the node
+        abstract Function: IElement with get, set
     end
 
 /// Edge --- an edge in a model. Note that here it can connect not only nodes, but edges too. It is needed to model
@@ -157,8 +160,16 @@ type IModel =
         /// Metamodel for this model.
         abstract CreateElement: ``type``: IElement -> IElement
 
+        /// Helper method that instantiates element by a type name. Type is looked up in a metamodel and if no such 
+        /// element found, exception will be thrown.
+        abstract CreateElement: typeName: string -> IElement
+
         /// Deletes given element from a model.
         abstract DeleteElement: element: IElement -> unit
+
+        /// Searches for an element with given name in a model. Throws if there is no such element or there is 
+        /// more than one.
+        abstract FindElement: name: string -> IElement
     end
 
 /// Repository is a collection of models.
@@ -175,7 +186,14 @@ type IRepo =
         /// Creates a new model with given name based on a given metamodel.
         abstract CreateModel: name: string * metamodel: IModel -> IModel
 
+        /// Creates a new model with given name based on a metamodel with given name, throws if such metamodel 
+        /// does not exist.
+        abstract CreateModel: name: string * metamodelName: string -> IModel
+
         /// Deletes given model. Throws if repo contains models dependent on this model.
         /// Throws DeletingUsedModel if there are other models dependent on this.
         abstract DeleteModel: model: IModel -> unit
+
+        /// Saves repository content into a file.
+        abstract Save: fileName: string -> unit
     end

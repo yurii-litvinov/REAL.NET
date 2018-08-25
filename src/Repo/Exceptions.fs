@@ -25,6 +25,12 @@ exception ModelNotFoundException of modelName: string
 /// enumerate repo.Models instead.
 exception MultipleModelsException of modelName: string
 
+/// Thrown when someone tries to do something with non-existent element.
+exception ElementNotFoundException of elementName: string
+
+/// Thrown when there is more than one element with given name.
+exception MultipleElementsException of elementName: string
+
 /// Thrown when someone tries to do something with non-existent attribute. Most likely this means internal error in
 /// repository.
 exception AttributeNotFoundException of attributeName: string

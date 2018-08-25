@@ -46,10 +46,14 @@ and Model
     member this.UnderlyingModel = model
 
     interface IModel with
-        member this.CreateElement ``type`` =
+        member this.CreateElement (``type``: IElement) =
             let unwrappedType = (``type`` :?> Element).UnderlyingElement
             let element = infrastructure.Instantiate model unwrappedType
             elementRepository.GetElement element
+
+        member this.CreateElement (typeName: string) =
+            let ``type`` = (repository.GetModel <| this.UnderlyingModel.Metamodel).FindElement typeName
+            (this :> IModel).CreateElement ``type``
 
         member this.DeleteElement element =
             // TODO: Clean up the memory and check correctness (for example, check for "class" relations)
@@ -57,6 +61,17 @@ and Model
             /// TODO: Delete all attributes.
             model.DeleteElement unwrappedElement
             elementRepository.DeleteElement unwrappedElement
+
+        member this.FindElement name =
+            let matchingElements =
+                (this :> IModel).Elements
+                |> Seq.filter (fun e -> e.Name = name)
+                |> Seq.toList
+
+            match matchingElements with
+            | [e] -> e
+            | [] -> raise (ElementNotFoundException name)
+            | _ -> raise (MultipleElementsException name)
 
         member this.Nodes =
             model.Nodes

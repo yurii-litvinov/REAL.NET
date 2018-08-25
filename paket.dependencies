@@ -1,25 +1,47 @@
-framework: net452
+framework: net46
+source https://api.nuget.org/v3/index.json
 
-source https://nuget.org/api/v2
+clitool dotnet-fake
 
 nuget FSharp.Core redirects: force
 nuget GraphX
-nuget NSubstitute
 nuget QuickGraphPCL 3.6.61114.2
 nuget Microsoft.Msagl 1.0.2
 nuget Microsoft.Msagl.Drawing 1.0.2
 nuget Microsoft.Msagl.GraphViewerGDI 1.0.2
 nuget StyleCop.Analyzers
-nuget NUnit redirects: force
-nuget NUnit.Runners
-nuget FsUnit
 nuget System.ValueTuple
+nuget Newtonsoft.Json
 
-group build 
-  source https://nuget.org/api/v2
-  
-  nuget SourceLink.Fake
-  nuget FAKE
-  nuget FSharp.Formatting
 
-  github fsharp/FAKE modules/Octokit/Octokit.fsx
+group Tests
+
+framework: net46
+source https://api.nuget.org/v3/index.json
+
+nuget NSubstitute
+nuget NUnit redirects: force
+nuget NUnit3TestAdapter
+nuget FsUnit
+
+
+group TestRunners
+
+framework: net46
+source https://api.nuget.org/v3/index.json
+
+nuget NUnit.Console
+
+
+group FakeBuild
+
+framework: netstandard2.0
+source https://api.nuget.org/v3/index.json
+storage: none
+
+nuget Fake.Core.Target
+nuget Fake.Core.ReleaseNotes 
+nuget Fake.DotNet.AssemblyInfoFile
+nuget Fake.DotNet.MsBuild
+nuget Fake.DotNet.Testing.NUnit
+nuget Fake.IO.FileSystem

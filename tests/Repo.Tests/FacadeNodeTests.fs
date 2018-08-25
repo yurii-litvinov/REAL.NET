@@ -22,7 +22,7 @@ open Repo.FacadeLayer
 
 [<Test>]
 let ``Node in a model shall have metatype`` () =
-    let repo = RepoFactory.CreateRepo ()
+    let repo = RepoFactory.Create ()
     let underlyingRepo = (repo :?> Repo).UnderlyingRepo
 
     let model = repo.Models |> Seq.find (fun m -> m.Name = "RobotsTestModel")
@@ -45,7 +45,7 @@ let ``Node in a model shall have metatype`` () =
 
 [<Test>]
 let ``Timer block shall have a picture`` () =
-    let repo = RepoFactory.CreateRepo ()
+    let repo = RepoFactory.Create ()
     let underlyingRepo = (repo :?> Repo).UnderlyingRepo
 
     let model = repo.Models |> Seq.find (fun m -> m.Name = "RobotsTestModel")

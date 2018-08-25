@@ -28,10 +28,14 @@ namespace PluginLibrary.Tests
         public void TestLaunchingSamplePlugin()
         {
             var libs = new PluginLauncher<PluginConfig>();
-            const string folder = "src/plugins/SamplePlugin/bin";
+            var folder = Path.Combine(
+                TestContext.CurrentContext.TestDirectory, 
+                "../../../../src/plugins/SamplePlugin/bin"
+                );
             var dirs = new List<string>(Directory.GetDirectories(folder));
             var console = Substitute.For<IConsole>();
-            var config = new PluginConfig(null, null, console, null);
+            var model = Substitute.For<IModel>();
+            var config = new PluginConfig(model, null, null, console, null);
             foreach (var dir in dirs)
             {
                 libs.LaunchPlugins(dir, config);

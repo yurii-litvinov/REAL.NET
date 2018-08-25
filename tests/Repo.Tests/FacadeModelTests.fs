@@ -66,12 +66,12 @@ let ``Model shall allow to create nodes`` () =
 
 [<Test>]
 let ``Model shall allow to list its nodes`` () =
-    let repo = RepoFactory.CreateRepo ()
+    let repo = RepoFactory.Create ()
 
     let model = repo.Models |> Seq.find (fun m -> m.Name = "RobotsTestModel")
 
     let underlyingModel = (model :?> Model).UnderlyingModel
-    let initialNode = CoreSemanticLayer.Model.findNode underlyingModel "aInitialNode"
+    let initialNode = CoreSemanticLayer.Model.findNode underlyingModel "aFinalNode"
 
     model.Nodes |> should not' (be Empty)
-    model.Nodes |> Seq.filter (fun n -> n.Name = "aInitialNode") |> should not' (be Empty)
+    model.Nodes |> Seq.filter (fun n -> n.Name = "aFinalNode") |> should not' (be Empty)

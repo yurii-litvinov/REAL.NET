@@ -15,10 +15,8 @@ namespace EditorPluginInterfaces.Toolbar
         /// <summary>
         /// Add button on toolbar
         /// </summary>
-        /// <param name="command">Command which will be executed on click</param>
-        /// <param name="desription">Summary description</param>
-        /// <param name="image">Image which will be shown on this button</param>
-        void AddButton(ICommand command, string desription, string image);
+        /// <param name="button">Button to add</param>
+        void AddButton(IButton button);
 
         /// <summary>
         /// Add menu on toolbar
