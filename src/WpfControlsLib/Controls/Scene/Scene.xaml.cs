@@ -199,7 +199,11 @@ namespace WpfControlsLib.Controls.Scene
             }
         }
 
-        public void Clear() => this.Graph.DataGraph.Clear();
+        public void Clear()
+        {
+            this.Graph.DataGraph.Clear();
+            this.graphArea.ClearLayout();
+        }
 
         public void Reload() => this.Graph.InitModel(this.model.ModelName);
 
@@ -296,6 +300,11 @@ namespace WpfControlsLib.Controls.Scene
                 }
                 else
                 {
+                    if (((VertexControlWithVCP)currentVertex).VCPTargetRoot == null)
+                    {
+                        this.editorManager.DestroyVirtualEdge();
+                        return;
+                    }
                     var command = new Commands.CreateEdgeCommand(
                         this.model,
                         this.elementProvider.Element,
@@ -321,14 +330,14 @@ namespace WpfControlsLib.Controls.Scene
                 this.previosVertex.GetDataVertex<NodeViewModel>().Color = Brushes.Yellow;
             }
 
-            if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
+            /*if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
             {
                 args.VertexControl.ContextMenu = new ContextMenu();
                 var mi = new MenuItem { Header = "Delete item", Tag = args.VertexControl };
                 mi.Click += this.MenuItemClickedOnVertex;
                 args.VertexControl.ContextMenu.Items.Add(mi);
                 args.VertexControl.ContextMenu.IsOpen = true;
-            }
+            }*/
         }
 
         private void EdgeSelectedAction(object sender, GraphX.Controls.Models.EdgeSelectedEventArgs args)
@@ -350,7 +359,7 @@ namespace WpfControlsLib.Controls.Scene
                 this.HandleRoutingPoints(dataEdge, mousePosition);
             }
 
-            if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
+            /*if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
             {
                 this.zoomControl.MouseMove -= this.OnEdgeMouseMove;
                 args.EdgeControl.ContextMenu = new ContextMenu();
@@ -373,7 +382,7 @@ namespace WpfControlsLib.Controls.Scene
                     mi2.Click += this.MenuItemClickRoutingPoint;
                     args.EdgeControl.ContextMenu.Items.Add(mi2);
                 }
-            }
+            }*/
         }
 
         /// <summary>
@@ -457,6 +466,7 @@ namespace WpfControlsLib.Controls.Scene
                 {
                     if (ctrlVerVertex.Node.Name == "aInterval")
                     {
+                        this.editorManager.DestroyVirtualEdge();
                         return;
                     }
 

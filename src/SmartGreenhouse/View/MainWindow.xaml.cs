@@ -15,6 +15,7 @@
 namespace SmartGreenhouse.View
 {
     using System;
+    using System.IO;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Windows;
@@ -45,7 +46,7 @@ namespace SmartGreenhouse.View
 
         public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();
 
-        public ToolbarViewModel Toolbar { get; } = new ToolbarViewModel();
+        //public ToolbarViewModel Toolbar { get; } = new ToolbarViewModel();
 
         public string WindowTitle
         {
@@ -88,16 +89,19 @@ namespace SmartGreenhouse.View
 
             this.scene.Init(this.model, this.controller, new PaletteAdapter(this.palette));
 
-            this.modelSelector.Init(this.model);
-            this.modelSelector.ChangeModel(0);
+            /*this.modelSelector.Init(this.model);
+            this.modelSelector.ChangeModel(0);*/
+
+            this.SelectModel("GreenhouseTestModel");
 
             this.InitAndLaunchPlugins();
-            this.InitToolbar();
+            //this.InitToolbar();
         }
 
         private void Reinit(object sender, EventArgs e)
         {
-            this.SelectModel(this.modelSelector.ModelNames[0]);
+            //this.SelectModel(this.modelSelector.ModelNames[0]);
+            this.SelectModel("GreenhouseTestModel");
         }
 
         private void OnModelSelectionChanged(object sender, ModelSelector.ModelSelectedEventArgs args)
@@ -114,7 +118,7 @@ namespace SmartGreenhouse.View
             this.scene.Reload();
         }
 
-        private void InitToolbar()
+        /*private void InitToolbar()
         {
             this.Console.Messages.Add("Initializing ToolBar");
             var sample = new WpfControlsLib.Controls.Toolbar.StandardButtonsAndMenus.SampleButtonsCollection(this.Console, this.controller);
@@ -123,7 +127,7 @@ namespace SmartGreenhouse.View
             {
                 this.Toolbar.AddButton(button);
             }
-        }
+        }*/
 
         private void InitAndLaunchPlugins()
         {
@@ -192,28 +196,50 @@ namespace SmartGreenhouse.View
             NotifyTitleChanged();
         }
 
-        private void GenerateButtonClick(object sender, RoutedEventArgs e)
+        private void CleanButtonClick(object sender, RoutedEventArgs e)
+        {
+            //this.SelectModel("GreenhouseTestModel");
+            this.scene.Clear();
+        }
+
+            private void GenerateButtonClick(object sender, RoutedEventArgs e)
         {
             var scenario = new Scenario { r = this.model.Repo };
             string code = scenario.TransformText();
+            File.WriteAllText(@"C:\Users\User\Desktop\a.txt", code);
 
             CompilerParameters parameters = new CompilerParameters();
             parameters.GenerateExecutable = true;
-            parameters.GenerateInMemory = false;
+            //parameters.GenerateInMemory = true;
             parameters.OutputAssembly = "greenhouse.exe";
 
             parameters.ReferencedAssemblies.Add("System.Core.dll");
-            parameters.ReferencedAssemblies.Add("System.Reactive.Core.dll");
-            parameters.ReferencedAssemblies.Add("System.Reactive.Interfaces.dll");
-            parameters.ReferencedAssemblies.Add("System.Reactive.Linq.dll");
+            parameters.ReferencedAssemblies.Add("System.Reactive.dll");
             parameters.ReferencedAssemblies.Add("Trik.Core.dll");
             parameters.ReferencedAssemblies.Add("RobotSimulation.dll");
             parameters.ReferencedAssemblies.Add("Generator.dll");
 
             var compiler = new CSharpCodeProvider();
-            var result = compiler.CompileAssemblyFromSource(parameters, code);
+            var results = compiler.CompileAssemblyFromSource(parameters, code);
 
-            Process winscp = new Process();
+            Process.Start("greenhouse.exe");
+
+            /*if (results.Errors.Count > 0)
+            {
+                foreach (CompilerError CompErr in results.Errors)
+                {
+                    System.Console.WriteLine("Line number " + CompErr.Line +
+                                ", Error Number: " + CompErr.ErrorNumber +
+                                ", '" + CompErr.ErrorText + ";" +
+                                Environment.NewLine + Environment.NewLine);
+                }
+            }
+            else
+            {
+                Process.Start("greenhouse.exe");
+            }*/
+
+            /*Process winscp = new Process();
             winscp.StartInfo.FileName = @"C:\Program Files (x86)\WinSCP\winscp.com";
             winscp.StartInfo.RedirectStandardInput = true;
             winscp.StartInfo.UseShellExecute = false;
@@ -246,7 +272,7 @@ namespace SmartGreenhouse.View
             while (true)
             {
                 System.Console.WriteLine(psi.StandardOutput.ReadLine());
-            }
+            }*/
         }
 
         private void OnOpenExecuted(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)

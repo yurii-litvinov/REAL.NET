@@ -25,13 +25,15 @@ namespace RobotSimulation
         private Timer timer;
         private Random rnd = new Random(unchecked((int)(DateTime.Now.Ticks)));
 
-        public event EventHandler<SensorEventArgs> NewSensorValue;
+        public event EventHandler<int> Event;
         public int Index { get; set; }
+        public int Port { get; set; }
 
-        public SensorSim()
+        public SensorSim(int port)
         {
             int period = rnd.Next(0, 10);
             this.timer = new Timer(NewValue, null, period * 1000, period * 1000);
+            this.Port = port;
         }
 
         private void NewValue(object o)
@@ -44,9 +46,9 @@ namespace RobotSimulation
                 SensorValue = value
             };
             Console.WriteLine();
-            Console.WriteLine("New SensorSim{0} value : {1}", this.Index, value);
+            Console.WriteLine("New SensorSim{0} at port {1} value : {2}", this.Index, this.Port, value);
 
-            this.NewSensorValue?.Invoke(this, args);
+            this.Event?.Invoke(this, value);
 
             timer.Change(period * 1000, period * 1000);
 

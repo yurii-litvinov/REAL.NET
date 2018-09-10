@@ -59,7 +59,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- Main menu -->
-        <Menu Grid.Row="0" Grid.ColumnSpan="3" IsMainMenu="True">
+        <!--Menu Grid.Row="0" Grid.ColumnSpan="3" IsMainMenu="True">
             <MenuItem Header="_File" >
                 <MenuItem Header="_New" Command="New"/>
                 <MenuItem Header="Open..." Command="Open"/>
@@ -68,7 +68,7 @@
                 <Separator/>
                 <MenuItem Header="_Quit" Command="Close"/>
             </MenuItem>
-        </Menu>
+        </-->
 
         <!-- Area and console -->
         <Grid Grid.Row="1" Grid.Column="0">
@@ -81,7 +81,7 @@
             </Grid.RowDefinitions>
 
             <!-- Toolbar -->
-            <toolbar:ToolbarView x:Name="toolBar" Grid.Row="0" DataContext="{Binding Toolbar}"/>
+            <!--toolbar:ToolbarView x:Name="toolBar" Grid.Row="0" DataContext="{Binding Toolbar}"/-->
 
             <!-- Scene area -->
             <scene:Scene Grid.Row="1" x:Name="scene"/>
@@ -111,7 +111,7 @@
                 </Grid.RowDefinitions>
 
                 <!-- Model selector -->
-                <modelSelector:ModelSelector Grid.Row="0" x:Name="modelSelector" ModelSelected="OnModelSelectionChanged" HorizontalAlignment="Stretch" Margin="1,1,1,5"/>
+                <!--modelSelector:ModelSelector Grid.Row="0" x:Name="modelSelector" ModelSelected="OnModelSelectionChanged" HorizontalAlignment="Stretch" Margin="1,1,1,5"/-->
 
                 <palette:Palette x:Name="palette" Grid.Row="1"/>
 
@@ -127,17 +127,22 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <Button 
+                <!--Button 
                     Grid.Row="5"
                     Content="Constraints"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Bottom"
-                    Click="ConstraintsButtonClick" Height="26"/>
+                    Click="ConstraintsButtonClick" Height="26"/-->
                 <Button x:Name="generateButton" 
-                    Grid.Row="8"
+                    Grid.Row="5"
                     Content="Generate"
                     HorizontalAlignment="Stretch"
                     Click="GenerateButtonClick" Height="26" VerticalAlignment="Top"/>
+                <Button x:Name="cleanButton" 
+                    Grid.Row="6"
+                    Content="Clean"
+                    HorizontalAlignment="Stretch"
+                    Click="CleanButtonClick" Height="26" VerticalAlignment="Top"/>
             </Grid>
 
         </DockPanel>
