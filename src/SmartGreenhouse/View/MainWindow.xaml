@@ -28,7 +28,7 @@
     xmlns:toolbar="clr-namespace:WpfControlsLib.Controls.Toolbar;assembly=WpfControlsLib"
     Title="{Binding WindowTitle}"
     mc:Ignorable="d"
-    Height="685" Width="936">
+    Height="650" Width="936">
 
     <Window.CommandBindings>
         <CommandBinding Command="New" CanExecute="OnCanExecuteForAlwaysExecutable" Executed="OnNewExecuted" />
@@ -77,7 +77,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto" MinHeight="50"/>
+                <!--RowDefinition Height="Auto" MinHeight="50"/-->
             </Grid.RowDefinitions>
 
             <!-- Toolbar -->
@@ -87,10 +87,10 @@
             <scene:Scene Grid.Row="1" x:Name="scene"/>
 
             <!-- GridSplitter for console -->
-            <GridSplitter Grid.Row ="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5"/>
+            <!--GridSplitter Grid.Row ="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5"/-->
 
             <!-- Console with error messages -->
-            <console1:AppConsole Grid.Row="3" DataContext="{Binding Console}"/>
+            <!--console1:AppConsole Grid.Row="3" DataContext="{Binding Console}"/-->
 
         </Grid>
 
@@ -99,7 +99,7 @@
 
         <!-- RightPanel -->
         <DockPanel Grid.Row="1" Grid.Column="2">
-            <Grid x:Name="rightPanel">
+            <Grid x:Name="rightPanel" MinWidth="230" MaxWidth="230">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto" MinHeight="70"/>
@@ -121,9 +121,9 @@
 
                 <DataGrid x:Name="attributesView" Grid.Row="4" ItemsSource="{Binding Attributes}" AutoGenerateColumns="False" CellEditEnding="AttributesViewCellEditEnding">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Name}"/>
-                        <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Type}"/>
-                        <DataGridTextColumn Header="Value" IsReadOnly="False" Binding="{Binding Value}"/>
+                        <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Name}" MaxWidth="80"/>
+                        <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Type}" MaxWidth="70"/>
+                        <DataGridTextColumn Header="Value" IsReadOnly="False" Binding="{Binding Value}" MaxWidth="80"/>
                     </DataGrid.Columns>
                 </DataGrid>
 
@@ -140,7 +140,7 @@
                     Click="GenerateButtonClick" Height="26" VerticalAlignment="Top"/>
                 <Button x:Name="cleanButton" 
                     Grid.Row="6"
-                    Content="Clean"
+                    Content="Clear"
                     HorizontalAlignment="Stretch"
                     Click="CleanButtonClick" Height="26" VerticalAlignment="Top"/>
             </Grid>

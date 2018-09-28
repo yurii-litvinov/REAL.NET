@@ -16,7 +16,6 @@ namespace Repo.Metametamodels
 
 open Repo
 open Repo.DataLayer
-open Repo.InfrastructureSemanticLayer
 
 /// Initializes repository with Greenhouse Metamodel
 type GreenhouseMetamodelBuilder() =

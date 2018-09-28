@@ -46,7 +46,7 @@ namespace RobotSimulation
                 SensorValue = value
             };
             Console.WriteLine();
-            Console.WriteLine("New SensorSim{0} at port {1} value : {2}", this.Index, this.Port, value);
+            Console.WriteLine("Sensor{0} at port {1} new value : {2}", this.Index, this.Port, value);
 
             this.Event?.Invoke(this, value);
 

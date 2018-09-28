@@ -17,8 +17,8 @@ namespace WpfControlsLib.Controls.Scene
     using GraphX.Controls;
 
     /// <summary>
-    /// Сontrol for the vertex connection point. It can be of two types: 
-    /// for incoming edges and for outgoing.
+    /// Сontrol for the vertex connection point(VCP). The property IsSource shows whether 
+    /// this VCP is intended for outgoing edge (otherwise -- for incoming)
     /// </summary>
     public class VertexConnectionPoint : StaticVertexConnectionPoint
     {
@@ -27,10 +27,8 @@ namespace WpfControlsLib.Controls.Scene
         {
         }
 
-        public bool IsSource
-        { get; set; }
+        public bool IsSource { get; set; }
 
-        public bool IsOccupied
-        { get; set; }
+        public bool IsOccupied { get; set; }
     }
 }

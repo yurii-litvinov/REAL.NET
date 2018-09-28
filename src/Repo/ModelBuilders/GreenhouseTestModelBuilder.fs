@@ -38,7 +38,7 @@ type GreenhouseTestModelBuilder() =
             let model = repo.CreateModel("GreenhouseTestModel", metamodel)
             
             /// Example with "AND" operation
-            (*let airTemperature = infrastructure.Instantiate model metamodelAirTemperature
+            let airTemperature = infrastructure.Instantiate model metamodelAirTemperature
             let soilTemperature = infrastructure.Instantiate model metamodelSoilTemperature
             let interval1 = infrastructure.Instantiate model metamodelInterval
             let interval2 = infrastructure.Instantiate model metamodelInterval
@@ -53,10 +53,10 @@ type GreenhouseTestModelBuilder() =
 
             airTemperature --> interval1 --> andOperation|> ignore
             soilTemperature --> interval2 --> andOperation |> ignore
-            andOperation --> openWindow |> ignore*)
+            andOperation --> openWindow |> ignore
 
             /// The smallest possible example (except of an empty example)
-            let airTemperature = infrastructure.Instantiate model metamodelAirTemperature
+            (*let airTemperature = infrastructure.Instantiate model metamodelAirTemperature
             let interval1 = infrastructure.Instantiate model metamodelInterval
             let openWindow = infrastructure.Instantiate model metamodelOpenWindow
 
@@ -66,6 +66,6 @@ type GreenhouseTestModelBuilder() =
                 aLink.Target <- Some dst
                 dst
 
-            airTemperature --> interval1 --> openWindow |> ignore
+            airTemperature --> interval1 --> openWindow |> ignore*)
 
             ()

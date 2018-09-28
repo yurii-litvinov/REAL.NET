@@ -16,22 +16,22 @@ namespace SmartGreenhouse.View
 {
     using System;
     using System.IO;
-    using System.Collections.Generic;
+    //using System.Collections.Generic;
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
     using System.CodeDom.Compiler;
     using System.Diagnostics;
     using Microsoft.CSharp;
-    using EditorPluginInterfaces;
-    using PluginManager;
+    //using EditorPluginInterfaces;
+    //using PluginManager;
     using Repo;
     using Generator;
-    using WpfControlsLib.Constraints;
-    using WpfControlsLib.Controls.Console;
+    //using WpfControlsLib.Constraints;
+    //using WpfControlsLib.Controls.Console;
     using WpfControlsLib.Controls.ModelSelector;
     using WpfControlsLib.Controls.Scene;
-    using WpfControlsLib.Controls.Toolbar;
+    //using WpfControlsLib.Controls.Toolbar;
     using Palette = WpfControlsLib.Controls.Palette.Palette;
     
     /// <summary>
@@ -44,7 +44,7 @@ namespace SmartGreenhouse.View
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();
+        //public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();
 
         //public ToolbarViewModel Toolbar { get; } = new ToolbarViewModel();
 
@@ -52,11 +52,11 @@ namespace SmartGreenhouse.View
         {
             get
             {
-                var fileName = (model == null || model.CurrentFileName == "")
+                /*var fileName = (model == null || model.CurrentFileName == "")
                     ? "(unsaved)"
                     : model.CurrentFileName;
-                var unsavedChanges = model?.HasUnsavedChanges == true ? "*" : "";
-                return $"REAL.NET {fileName} {unsavedChanges}";
+                var unsavedChanges = model?.HasUnsavedChanges == true ? "*" : "";*/
+                return $"REAL.NET"; //{fileName} {unsavedChanges}";
             }
         }
 
@@ -94,7 +94,7 @@ namespace SmartGreenhouse.View
 
             this.SelectModel("GreenhouseTestModel");
 
-            this.InitAndLaunchPlugins();
+            //this.InitAndLaunchPlugins();
             //this.InitToolbar();
         }
 
@@ -129,7 +129,7 @@ namespace SmartGreenhouse.View
             }
         }*/
 
-        private void InitAndLaunchPlugins()
+        /*private void InitAndLaunchPlugins()
         {
             var libs = new PluginLauncher<PluginConfig>();
             const string folder = "../../../plugins";
@@ -143,7 +143,7 @@ namespace SmartGreenhouse.View
                     libs.LaunchPlugins(dir, config);
                 }
             }
-        }
+        }*/
 
         private void CloseChildrenWindows(object sender, EventArgs e)
         {
@@ -153,7 +153,7 @@ namespace SmartGreenhouse.View
             }
         }
 
-        private void ConstraintsButtonClick(object sender, RoutedEventArgs e)
+        /*private void ConstraintsButtonClick(object sender, RoutedEventArgs e)
         {
             var constraintsWindow = new ConstraintsWindow(this.model);
             constraintsWindow.ShowDialog();
@@ -162,7 +162,7 @@ namespace SmartGreenhouse.View
             {
                 this.Console.ReportError(this.model.Constraints.ErrorMsg);
             }
-        }
+        }*/
 
         private void AttributesViewCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
             => this.scene.ChangeEdgeLabel(((TextBox)e.EditingElement).Text);
@@ -198,31 +198,32 @@ namespace SmartGreenhouse.View
 
         private void CleanButtonClick(object sender, RoutedEventArgs e)
         {
-            //this.SelectModel("GreenhouseTestModel");
+            this.scene.ClearButtonClicked();
             this.scene.Clear();
         }
 
-            private void GenerateButtonClick(object sender, RoutedEventArgs e)
+        private void GenerateButtonClick(object sender, RoutedEventArgs e)
         {
             var scenario = new Scenario { r = this.model.Repo };
             string code = scenario.TransformText();
-            File.WriteAllText(@"C:\Users\User\Desktop\a.txt", code);
 
             CompilerParameters parameters = new CompilerParameters();
             parameters.GenerateExecutable = true;
-            //parameters.GenerateInMemory = true;
-            parameters.OutputAssembly = "greenhouse.exe";
+
+            // Save the assembly as a physical file
+            parameters.GenerateInMemory = true;
+            parameters.OutputAssembly = "scenario.exe";
 
             parameters.ReferencedAssemblies.Add("System.Core.dll");
             parameters.ReferencedAssemblies.Add("System.Reactive.dll");
-            parameters.ReferencedAssemblies.Add("Trik.Core.dll");
+            //parameters.ReferencedAssemblies.Add("Trik.Core.dll");
             parameters.ReferencedAssemblies.Add("RobotSimulation.dll");
             parameters.ReferencedAssemblies.Add("Generator.dll");
 
             var compiler = new CSharpCodeProvider();
             var results = compiler.CompileAssemblyFromSource(parameters, code);
 
-            Process.Start("greenhouse.exe");
+            Process.Start("scenario.exe");
 
             /*if (results.Errors.Count > 0)
             {

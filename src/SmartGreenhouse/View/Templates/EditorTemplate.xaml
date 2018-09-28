@@ -42,7 +42,7 @@
     <!-- VERTEX CONTROL -->
     <Style TargetType="{x:Type controls:VertexControl}">
         <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="ShowLabel" Value="True"/>
+        <Setter Property="ShowLabel" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:VertexControl}">

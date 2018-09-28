@@ -25,7 +25,7 @@ namespace Generator
 	using System.Reactive.Linq;
 	using System.Reactive.Subjects;
 	using RobotSimulation;
-	using Trik;
+	//using Trik;
 
 	public class GeneratedCode
     {
@@ -41,6 +41,7 @@ foreach (var x in modelNodes) { #>
 
 		private static void Main(string[] args)
 		{
+            Console.WriteLine("Initial values:");
 <# 
 foreach (var x in modelNodes) { 
 	var index = modelNodes.IndexOf(x); #>
@@ -58,6 +59,7 @@ foreach (var x in modelNodes) {
 
 			element<#= index#>.Min = <#= min #>;
 			element<#= index#>.Max = <#= max #>;
+            Console.WriteLine("Interval {0}: min -- {1}, max -- {2}", <#= index#>, <#= min #>, <#= max #>);
 			<#}
 	}
 	if (classOfElement(x.Name) == "Operation")
@@ -111,6 +113,7 @@ foreach (var x in r.Model("GreenhouseTestModel").Edges)
 			
             SensorSim sensorSim<#= modelNodes.IndexOf(x) #> = new SensorSim(<#= p #>);
 			sensorSim<#= modelNodes.IndexOf(x) #>.Index = <#= modelNodes.IndexOf(x) #>;
+            Console.WriteLine("Sensor{0}: sensor at port {1}", <#= modelNodes.IndexOf(x) #>, <#= p #>);
 			//sensorSim<\#= modelNodes.IndexOf(x) \#>.Event += (sender, args) => 
                 //element<\#= modelNodes.IndexOf(x) \#>.Action(args);
 
@@ -133,6 +136,7 @@ foreach (var x in r.Model("GreenhouseTestModel").Edges)
 					{
 						string p = port.First().StringValue; #>
 			
+            Console.WriteLine("Actuator{0}: actuator at port {1}", <#= modelNodes.IndexOf(x) #>, <#= p #>);
 			IObserver<int> observerForSimulation<#= modelNodes.IndexOf(x) #> = Observer.Create<int>(x => Console.WriteLine("----- Actuator at port {0} -- {1}  -----", <#= p #>, x));
 			reactElement<#= modelNodes.IndexOf(x) #>.Subscribe(observerForSimulation<#= modelNodes.IndexOf(x) #>);
             

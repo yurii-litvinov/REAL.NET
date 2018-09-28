@@ -330,14 +330,14 @@ namespace WpfControlsLib.Controls.Scene
                 this.previosVertex.GetDataVertex<NodeViewModel>().Color = Brushes.Yellow;
             }
 
-            /*if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
+            if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
             {
                 args.VertexControl.ContextMenu = new ContextMenu();
                 var mi = new MenuItem { Header = "Delete item", Tag = args.VertexControl };
                 mi.Click += this.MenuItemClickedOnVertex;
                 args.VertexControl.ContextMenu.Items.Add(mi);
                 args.VertexControl.ContextMenu.IsOpen = true;
-            }*/
+            }
         }
 
         private void EdgeSelectedAction(object sender, GraphX.Controls.Models.EdgeSelectedEventArgs args)
@@ -573,6 +573,21 @@ namespace WpfControlsLib.Controls.Scene
             var command = new RemoveEdgeCommand(this.model, edge.Edge);
             this.controller.Execute(command);
             this.DrawGraph();
+        }
+
+        public void ClearButtonClicked()
+        {
+            foreach (var edge in this.graphArea.EdgesList.Keys)
+            {
+                var command = new RemoveEdgeCommand(this.model, edge.Edge);
+                this.controller.Execute(command);
+            }
+
+            foreach (var node in this.graphArea.VertexList.Keys)
+            {
+                var command = new RemoveNodeCommand(this.model, node.Node);
+                this.controller.Execute(command);
+            }
         }
 
         private void OnEdgeMouseUp(object sender, MouseButtonEventArgs e)

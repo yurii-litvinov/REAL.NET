@@ -50,8 +50,8 @@
                 </Border>
             </StackPanel>
             <StackPanel Grid.Column="1">
-                <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill"/>
-                <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" />
+                <Image Source="{Binding Picture}" Margin="0" Width="40" Stretch="UniformToFill"/>
+                <!--controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" /-->
             </StackPanel>
             <StackPanel Name="Source_vcproot" Grid.Column="2">
                 <Border Margin="-1,4,0,0" Padding="0">
@@ -69,10 +69,10 @@
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0">
                 <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill"/>
-                <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" />
+                <!--controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" /-->
             </StackPanel>
             <StackPanel Name="Source_vcproot" Grid.Column="1">
-                <Border Margin="-5,4,0,0" Padding="0">
+                <Border Margin="-1,4,0,0" Padding="0">
                     <xx:VertexConnectionPoint Id="1" IsOccupied="False" IsSource="True"/>
                 </Border>
             </StackPanel>
@@ -92,7 +92,7 @@
             </StackPanel>
             <StackPanel Grid.Column="1">
                 <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill"/>
-                <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" />
+                <!--controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" /-->
             </StackPanel>
         </Grid>
     </ControlTemplate>
@@ -111,7 +111,7 @@
             </StackPanel>
             <StackPanel Grid.Column="1">
                 <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill"/>
-                <controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" />
+                <!--controls:VertexLabelControl x:Name="PART_vertexLabel" Content="{Binding Name}" LabelPositionSide="Bottom" FontFamily="Lucida Sans Regular" /-->
             </StackPanel>
             <StackPanel Name="Source_vcproot" Grid.Column="2">
                 <Border Margin="-1,4,0,0" Padding="0">
@@ -125,7 +125,7 @@
     <Style TargetType="{x:Type controls:VertexControl}">
         <Setter Property="Background" Value="{Binding Color}"/>
         <Setter Property="VertexShape" Value="None"/>
-        <Setter Property= "ShowLabel" Value="True"/>
+        <Setter Property= "ShowLabel" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:VertexControl}">
