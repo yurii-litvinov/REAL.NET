@@ -60,9 +60,6 @@
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Threading.Tasks.Extensions.4.5.1\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
-    </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -73,9 +70,6 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="Trik.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\trik-sharp.0.6.1\lib\Trik.Core.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -93,6 +87,10 @@
     <ProjectReference Include="..\Repo\Repo.fsproj">
       <Project>{9e7065a4-ba5e-4752-84bf-54d5c00db60c}</Project>
       <Name>Repo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RobotSimulation\RobotSimulation.csproj">
+      <Project>{55e6e940-3f24-477b-bd0a-c4e8da904a19}</Project>
+      <Name>RobotSimulation</Name>
     </ProjectReference>
     <ProjectReference Include="..\WpfControlsLib\WpfControlsLib.csproj">
       <Project>{1dcb1d77-ab11-404c-bce4-8eb7bf8f549d}</Project>
@@ -134,7 +132,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="paket.references" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -200,39 +197,10 @@
     <Resource Include="View\Pictures\Toolbar\undo.png" />
   </ItemGroup>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
-      <ItemGroup>
-        <Reference Include="FSharp.Core">
-          <HintPath>..\..\packages\FSharp.Core\lib\net45\FSharp.Core.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'" />
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
-      <ItemGroup>
-        <Reference Include="Quickgraph">
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="GraphX.PCL.Common">
-          <HintPath>..\..\packages\GraphX\lib\net40-client\GraphX.PCL.Common.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="GraphX.PCL.Logic">
-          <HintPath>..\..\packages\GraphX\lib\net40-client\GraphX.PCL.Logic.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="GraphX.WPF.Controls">
-          <HintPath>..\..\packages\GraphX\lib\net40-client\GraphX.WPF.Controls.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'" />
   </Choose>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
@@ -242,22 +210,6 @@
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
-        <Reference Include="QuickGraph.Data">
-          <HintPath>..\..\packages\QuickGraphPCL\lib\net40-client\QuickGraph.Data.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="QuickGraph.Graphviz">
-          <HintPath>..\..\packages\QuickGraphPCL\lib\net40-client\QuickGraph.Graphviz.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="QuickGraph.Serialization">
-          <HintPath>..\..\packages\QuickGraphPCL\lib\net40-client\QuickGraph.Serialization.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-
       </ItemGroup>
     </When>
   </Choose>
@@ -280,6 +232,23 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="View\Pictures\Greenhouse\edge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FSharp.Core">
+      <Version>4.5.0</Version>
+    </PackageReference>
+    <PackageReference Include="GraphX">
+      <Version>2.3.6</Version>
+    </PackageReference>
+    <PackageReference Include="QuickGraphPCL">
+      <Version>3.6.61114.2</Version>
+    </PackageReference>
+    <PackageReference Include="System.ValueTuple">
+      <Version>4.5.0</Version>
+    </PackageReference>
+    <PackageReference Include="trik-sharp">
+      <Version>0.6.1</Version>
+    </PackageReference>
   </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">
