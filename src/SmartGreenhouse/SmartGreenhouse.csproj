@@ -187,16 +187,6 @@
   <ItemGroup>
     <Resource Include="View\Pictures\Toolbar\undo.png" />
   </ItemGroup>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'" />
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'" />
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'" />
-  </Choose>
-  <Import Project="..\..\packages\NETStandard.Library\build\NETStandard.Library.targets" Condition="Exists('..\..\packages\NETStandard.Library\build\NETStandard.Library.targets')" Label="Paket" />
   <ItemGroup>
     <Resource Include="View\Pictures\Greenhouse\airTemperature.png" />
     <Resource Include="View\Pictures\Greenhouse\andOperation.png" />
@@ -242,18 +232,4 @@
       <Version>0.6.1</Version>
     </PackageReference>
   </ItemGroup>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">
-      <ItemGroup>
-        <Reference Include="System.Runtime.InteropServices.RuntimeInformation">
-          <HintPath>..\..\packages\System.Runtime.InteropServices.RuntimeInformation\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'" />
-  </Choose>
 </Project>
