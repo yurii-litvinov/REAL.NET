@@ -197,9 +197,7 @@ string classOfElement(string name)
 			return "Sensor";
 	}
 }
-#>
 
-<#+ 
 string kindOfOperation(string name)
 {
 	switch(name)
@@ -212,8 +210,6 @@ string kindOfOperation(string name)
 			return "And";
 	}
 }
-#>
 
-<#+
 public Repo.IRepo r { get; set; }
 #>
