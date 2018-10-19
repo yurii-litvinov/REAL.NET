@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirSim", "src\AirSim\AirSim
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfControlsLib.Tests", "tests\WpfControlsLib.Tests\WpfControlsLib.Tests.csproj", "{8EDF4429-251A-416D-BB68-93F227191BCF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleDrivePlugin", "src\plugins\GoogleDrivePlugin\GoogleDrivePlugin.csproj", "{3BE5D2DE-0C5C-4199-8D6D-4F79FF5BE107}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -193,6 +195,18 @@ Global
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|x64.ActiveCfg = Release|Any CPU
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|x64.Build.0 = Release|Any CPU
+		{3BE5D2DE-0C5C-4199-8D6D-4F79FF5BE107}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BE5D2DE-0C5C-4199-8D6D-4F79FF5BE107}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BE5D2DE-0C5C-4199-8D6D-4F79FF5BE107}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3BE5D2DE-0C5C-4199-8D6D-4F79FF5BE107}.Debug|x64.Build.0 = Debug|Any CPU
+		{3BE5D2DE-0C5C-4199-8D6D-4F79FF5BE107}.MonoRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{3BE5D2DE-0C5C-4199-8D6D-4F79FF5BE107}.MonoRelease|Any CPU.Build.0 = Release|Any CPU
+		{3BE5D2DE-0C5C-4199-8D6D-4F79FF5BE107}.MonoRelease|x64.ActiveCfg = Release|Any CPU
+		{3BE5D2DE-0C5C-4199-8D6D-4F79FF5BE107}.MonoRelease|x64.Build.0 = Release|Any CPU
+		{3BE5D2DE-0C5C-4199-8D6D-4F79FF5BE107}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BE5D2DE-0C5C-4199-8D6D-4F79FF5BE107}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BE5D2DE-0C5C-4199-8D6D-4F79FF5BE107}.Release|x64.ActiveCfg = Release|Any CPU
+		{3BE5D2DE-0C5C-4199-8D6D-4F79FF5BE107}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -204,6 +218,7 @@ Global
 		{A0056C25-4EF7-4AF9-99E4-C13B937A3343} = {ED8079DD-2B06-4030-9F0F-DC548F98E1C4}
 		{C57410A1-A86F-418B-9AC7-38249450C497} = {F12CD406-E1CD-43B7-B4BC-E2991723C56E}
 		{8EDF4429-251A-416D-BB68-93F227191BCF} = {ED8079DD-2B06-4030-9F0F-DC548F98E1C4}
+		{3BE5D2DE-0C5C-4199-8D6D-4F79FF5BE107} = {F12CD406-E1CD-43B7-B4BC-E2991723C56E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D0B60BC3-B119-4CD6-8FC4-CD8FA1429BE4}

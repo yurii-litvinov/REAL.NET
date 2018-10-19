@@ -116,6 +116,7 @@ namespace WpfEditor.View
             this.Console.Messages.Add("Initializing ToolBar");
             var sample = new WpfControlsLib.Controls.Toolbar.StandardButtonsAndMenus.SampleButtonsCollection(this.Console, this.controller);
             var buttons = sample.SampleButtons;
+
             foreach (var button in buttons)
             {
                 this.Toolbar.AddButton(button);
