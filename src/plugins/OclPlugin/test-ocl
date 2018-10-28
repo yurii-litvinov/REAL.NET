@@ -1,0 +1,5 @@
+﻿package P
+context A
+inv:
+sel.power = 100
+endpackage
