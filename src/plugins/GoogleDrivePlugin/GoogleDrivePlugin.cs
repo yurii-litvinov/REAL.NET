@@ -5,6 +5,10 @@
     using EditorPluginInterfaces.Toolbar;
     using WpfControlsLib.Controls.Toolbar;
 
+    using Model;
+    using Controller;
+    using View;
+
     /// <summary>
     /// Plugin for uploading models to and downloading them from Google Drive
     /// </summary>
@@ -18,12 +22,20 @@
         /// <summary>
         /// Current opened model
         /// </summary>
-        private IModel model;
+        private IModel mainModel;
 
         /// <summary>
         /// Editor console
         /// </summary>
         private IConsole console;
+
+        private GoogleDriveModel pluginModel;
+
+        private GoogleDriveController pluginController;
+
+        private ExportView exportView;
+
+        private ImportView importView;
 
         /// <summary>
         /// Gets name of plugin
@@ -42,8 +54,18 @@
             }
 
             this.toolbar = config.Toolbar;
-            this.model = config.Model;
+            this.mainModel = config.Model;
             this.console = config.Console;
+
+            // MVC initialization
+            this.pluginModel = new GoogleDriveModel();
+            this.pluginController = new GoogleDriveController(this.pluginModel);
+            this.importView = new ImportView(
+                    this.pluginModel, 
+                    new ImportDialog(this.pluginController));
+            this.exportView = new ExportView(
+                    this.pluginModel,
+                    new ExportDialog(this.pluginController));
 
             this.PlaceButtonsOnToolbar();
 
@@ -52,12 +74,15 @@
 
         private void PlaceButtonsOnToolbar()
         {
+            var uploadCommand = new Command(this.pluginController.RequestExportWindow);
+            var downloadCommand = new Command(this.pluginController.RequestImportWindow);
+
             var uploadButton = new Button(
-                null,
+                uploadCommand,
                 "Upload Model To Google Drive",
                 "pack://application:,,,/" + "GoogleDrivePlugin;component/ToolbarIcons/CloudUpload.png");
             var downloadButton = new Button(
-                null,
+                downloadCommand,
                 "Download Model From Google Drive",
                 "pack://application:,,,/" + "GoogleDrivePlugin;component/ToolbarIcons/CloudDownload.png");
 

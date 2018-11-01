@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace GoogleDrivePlugin.View
+namespace GoogleDrivePlugin.Controls.LogoutControls
 {
     /// <summary>
-    /// Логика взаимодействия для ImportDialog.xaml
+    /// Логика взаимодействия для LogoutBox.xaml
     /// </summary>
-    public partial class ImportDialog : Window
+    public partial class LogoutBox : UserControl
     {
-        public ImportDialog()
+        public LogoutBox()
         {
             InitializeComponent();
         }
