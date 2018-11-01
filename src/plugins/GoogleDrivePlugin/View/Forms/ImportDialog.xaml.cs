@@ -12,6 +12,8 @@
 
         public ImportDialog(Controller.GoogleDriveController controller)
         {
+            InitializeComponent();
+
             this.CancelButton.Click += (sender, args) =>
                 controller.RequestImportWindowHidind();
             this.OpenButton.Click += (sender, args) =>
@@ -20,8 +22,6 @@
             this.LogoutBox.LogoutButton.Click += (sender, args) => controller.RequestLoggingOut();
 
             // TODO: add integration with model
-
-            InitializeComponent();
         }
 
         protected string GetNewItemName(string itemType)

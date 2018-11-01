@@ -1,7 +1,10 @@
 ﻿namespace GoogleDrivePlugin.View
 {
     using System;
+    using System.Windows;
+
     using Model;
+    using Controller;
 
     public class ExportView : ImportExportViewBase
     {
@@ -9,23 +12,28 @@
 
         private GoogleDriveModel model;
 
+        private GoogleDriveController controller;
+
         private string username;
 
-        public ExportView(GoogleDriveModel model, ExportDialog dialog)
-            : base(model, dialog)
+        public ExportView(GoogleDriveModel model, GoogleDriveController controller)
+            : base(model)
         {
             this.model = model;
-            this.dialogWindow = dialog;
+            this.controller = controller;
 
             model.ShowExportWindow += (sender, args) =>
             {
                 username = args.Username;
-                this.ShowWindow();
+                this.dialogWindow = (ExportDialog)this.ShowWindow(this.dialogWindow);
             };
-            model.HideExportWindow += (sender, args) => this.HideWindow();
+            model.HideExportWindow += (sender, args) => this.HideWindow(this.dialogWindow);
 
             model.FileListReceived += (sender, args) => this.HandleReceivedFileList(args);
         }
+
+        protected override Window CreateNewWindowInstance() 
+            => new ExportDialog(this.controller);
 
         protected override void HandleReceivedFileList(FileListArgs args)
         {

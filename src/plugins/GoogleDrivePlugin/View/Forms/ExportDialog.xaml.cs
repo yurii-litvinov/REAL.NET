@@ -12,6 +12,8 @@
         
         public ExportDialog(Controller.GoogleDriveController controller)
         {
+            InitializeComponent();
+
             this.CancelButton.Click += (sender, args) => 
                 controller.RequestExportWindowHiding();
             this.SaveButton.Click += (sender, args) =>
@@ -24,10 +26,9 @@
 
             this.LogoutBox.LogoutButton.Click += (sender, args) =>
                 controller.RequestLoggingOut();
+           
 
             // TODO: Handle actions with FileExplorer
-
-            InitializeComponent();
         }
 
         private void HideWindow() => this.Hide();

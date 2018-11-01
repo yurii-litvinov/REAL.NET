@@ -3,37 +3,42 @@
     using System;
     using System.Windows;
     using Model;
+    using Controller;
 
     public abstract class ImportExportViewBase 
     {
-        private Window dialogWindow;
-
         private GoogleDriveModel model;
 
-        public ImportExportViewBase(GoogleDriveModel model, Window dialog)
+        public ImportExportViewBase(GoogleDriveModel model)
         {
-            this.dialogWindow = dialog;
-            this.dialogWindow.Visibility = Visibility.Hidden;
-
             model.FileListReceived += (sender, args) => this.HandleReceivedFileList(args);
         }
         
-        protected void ShowWindow()
+        protected Window ShowWindow(Window window)
         {
-            if (this.dialogWindow.Visibility == Visibility.Hidden)
+            if (window == null || !window.IsLoaded)
             {
-                this.dialogWindow.Show();
+                window = this.CreateNewWindowInstance();
+                
             }
             else
             {
-                this.dialogWindow.Focus();
+                window.Focus();
+            }
+
+            window.Show();
+            return window;
+        }
+
+        protected void HideWindow(Window window)
+        {
+            if (window != null)
+            {
+                window.Close();
             }
         }
 
-        protected void HideWindow()
-        {
-            this.dialogWindow.Hide();
-        }
+        protected abstract Window CreateNewWindowInstance();
 
         protected abstract void HandleReceivedFileList(FileListArgs args);
     }

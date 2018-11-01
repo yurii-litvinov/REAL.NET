@@ -12,7 +12,7 @@
     /// <summary>
     /// Plugin for uploading models to and downloading them from Google Drive
     /// </summary>
-    class GoogleDrivePlugin : IPlugin<PluginConfig>
+    class GoogleDrivePluginCore : IPlugin<PluginConfig>
     {
         /// <summary>
         /// Toolbar in the top of the windows
@@ -62,10 +62,10 @@
             this.pluginController = new GoogleDriveController(this.pluginModel);
             this.importView = new ImportView(
                     this.pluginModel, 
-                    new ImportDialog(this.pluginController));
+                    this.pluginController);
             this.exportView = new ExportView(
                     this.pluginModel,
-                    new ExportDialog(this.pluginController));
+                    this.pluginController);
 
             this.PlaceButtonsOnToolbar();
 

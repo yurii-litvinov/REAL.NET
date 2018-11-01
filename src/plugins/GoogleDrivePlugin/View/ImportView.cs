@@ -2,6 +2,8 @@
 {
     using System;
     using Model;
+    using Controller;
+    using System.Windows;
 
     public class ImportView : ImportExportViewBase
     {
@@ -9,21 +11,26 @@
 
         private GoogleDriveModel model;
 
+        private GoogleDriveController controller;
+
         private string username;
 
-        public ImportView(GoogleDriveModel model, ImportDialog dialog)
-            : base(model, dialog)
+        public ImportView(GoogleDriveModel model, GoogleDriveController controller)
+            : base(model)
         {
             this.model = model;
-            this.dialogWindow = dialog;
+            this.controller = controller;
 
             model.ShowImportWindow += (sender, args) =>
             {
                 username = args.Username;
-                this.ShowWindow();
+                this.dialogWindow = (ImportDialog)this.ShowWindow(this.dialogWindow);
             };
-            model.HideImportWindow += (sender, args) => this.HideWindow();
+            model.HideImportWindow += (sender, args) => this.HideWindow(this.dialogWindow);
         }
+
+        protected override Window CreateNewWindowInstance() => 
+            new ImportDialog(this.controller);
 
         protected override void HandleReceivedFileList(FileListArgs args)
         {

@@ -74,7 +74,7 @@
     <Compile Include="Controls\LogoutControls\LogoutBox.xaml.cs">
       <DependentUpon>LogoutBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GoogleDrivePlugin.cs" />
+    <Compile Include="GoogleDrivePluginCore.cs" />
     <Compile Include="Model\EventArguments\FileListArgs.cs" />
     <Compile Include="Model\EventArguments\FileMetaInfo.cs" />
     <Compile Include="Model\GoogleDriveModel.cs" />

@@ -28,7 +28,7 @@ namespace GoogleDrivePlugin.Model
 
         public void RequestUpload()
         {
-
+            this.ShowExportWindow?.Invoke(this, new UserInfoArgs("TSTibalashov24"));
         }
 
         public void RequestUploadHide()
@@ -38,7 +38,7 @@ namespace GoogleDrivePlugin.Model
 
         public void RequestDownload()
         {
-
+            this.ShowImportWindow?.Invoke(this, new UserInfoArgs("TSTibalashov24"));
         }
         
         public void RequestDownloadHide()
