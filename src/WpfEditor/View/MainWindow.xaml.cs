@@ -54,7 +54,7 @@ namespace WpfEditor.View
                 return $"REAL.NET {fileName} {unsavedChanges}";
             }
         }
-
+        
         public MainWindow()
         {
             // TODO: Fix sequential coupling here.
