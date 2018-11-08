@@ -7,15 +7,27 @@
              mc:Ignorable="d">
     <Grid>
         <ListView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                  Margin="0" ScrollViewer.CanContentScroll="True">
+                  Margin="0" ScrollViewer.CanContentScroll="True"
+                  x:Name="ItemList" AllowDrop="True" SelectionMode="Single">
+            <ListView.Resources>
+                <ContextMenu x:Key="ItemContextMenu">
+                    <MenuItem x:Name="DeleteItemContextButton" Click="DeleteItem"
+                              Header="Delete" />
+                </ContextMenu>
+            </ListView.Resources>
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
+                </Style>
+            </ListView.ItemContainerStyle>
+
             <ListView.View>
-                <GridView>
-                    <GridViewColumn x:Name="NameColumn" Width="100">
-                        <GridViewColumnHeader>Name</GridViewColumnHeader>
-                    </GridViewColumn>
-                    <GridViewColumn x:Name="SizeColumn" Width="100">
-                        <GridViewColumnHeader>Size</GridViewColumnHeader>
-                    </GridViewColumn>
+                <GridView AllowsColumnReorder="False">
+                    <GridViewColumn x:Name="NameColumn" Width="300" 
+                                    DisplayMemberBinding="{Binding Name}" Header="Name" />
+                    <GridViewColumn x:Name="SizeColumn" Width="100"
+                                    DisplayMemberBinding="{Binding Size}" Header="Size" />
                 </GridView>
             </ListView.View>
         </ListView>

@@ -71,6 +71,7 @@
     <Compile Include="Controls\FileExplorer\FileExplorer.xaml.cs">
       <DependentUpon>FileExplorer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\FileExplorer\ItemInfo.cs" />
     <Compile Include="Controls\LogoutControls\LogoutBox.xaml.cs">
       <DependentUpon>LogoutBox.xaml</DependentUpon>
     </Compile>
