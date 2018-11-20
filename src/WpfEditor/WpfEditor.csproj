@@ -93,7 +93,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="View\Converters\BoolConverter.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
