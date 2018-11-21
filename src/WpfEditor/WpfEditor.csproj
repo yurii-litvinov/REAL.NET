@@ -91,6 +91,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="View\Validators\IntValidation.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="View\MainWindow.xaml.cs">
@@ -172,6 +173,7 @@
   <ItemGroup>
     <Resource Include="View\Pictures\Toolbar\undo.png" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
       <ItemGroup>

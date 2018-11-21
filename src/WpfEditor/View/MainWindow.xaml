@@ -26,6 +26,7 @@
     xmlns:modelExplorer="clr-namespace:WpfControlsLib.Controls.ModelExplorer;assembly=WpfControlsLib"
     xmlns:palette="clr-namespace:WpfControlsLib.Controls.Palette;assembly=WpfControlsLib"
     xmlns:toolbar="clr-namespace:WpfControlsLib.Controls.Toolbar;assembly=WpfControlsLib"
+    xmlns:validators="clr-namespace:WpfEditor.View.Validators"
     Title="{Binding WindowTitle}"
     mc:Ignorable="d"
     Height="685" Width="936">
@@ -149,7 +150,11 @@
                                                                                 <Binding.Path>DataContext.Value</Binding.Path>
                                                                                 <Binding.RelativeSource>
                                                                                     <RelativeSource AncestorType="DataGridCell"/>
-                                                                                </Binding.RelativeSource>       
+                                                                                </Binding.RelativeSource>
+                                                                                <Binding.ValidationRules>
+                                                                                    <validators:IntValidation/>
+                                                                                    <ExceptionValidationRule/>
+                                                                                </Binding.ValidationRules>
                                                                             </Binding>
                                                                             </TextBox.Text>
                                                                     </TextBox>
