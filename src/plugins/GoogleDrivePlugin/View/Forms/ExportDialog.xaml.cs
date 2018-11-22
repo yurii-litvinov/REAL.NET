@@ -14,37 +14,31 @@
             this.CancelButton.Click += (sender, args) => 
                 controller.RequestExportWindowHiding();
             this.SaveButton.Click += (sender, args) =>
-                controller.RequestModelExport(
-                    this.FileExplorer.CurrentPath, 
-                    this.FileExplorer.SelectedItem.Name);
+                controller.RequestModelExport(this.FileExplorer.SelectedItem.ID);
 
             this.NewFileButton.Click += (sender, args) =>
                 controller.RequestNewFileСreation(
-                    this.FileExplorer.CurrentPath,
+                    this.FileExplorer.CurrentDirectoryID,
                     this.GetNewItemName("file"));
 
             this.NewFolderButton.Click += (sender, args) =>
                 controller.RequestNewFolderCreation(
-                    this.FileExplorer.CurrentPath, 
+                    this.FileExplorer.CurrentDirectoryID, 
                     this.GetNewItemName("folder"));
 
-            this.LogoutBox.LogoutButton.Click += (sender, args) =>
-                controller.RequestLoggingOut();
+            this.LogoutBox.LogoutButton.Click += async (sender, args) =>
+                await controller.RequestLoggingOut();
 
             this.FileExplorer.ItemSelected += (sender, fileInfo) =>
-                controller.RequestModelExport(this.FileExplorer.CurrentPath, fileInfo.Name);
+                controller.RequestModelExport(fileInfo.ID);
             this.FileExplorer.ItemDeletionRequested += (sender, itemInfo) =>
-                controller.RequestFileDeletion(this.FileExplorer.CurrentPath, itemInfo.Name);
-
+                controller.RequestFileDeletion(itemInfo.ID);
             this.FileExplorer.ItemMovementRequested += (sender, sourceInfo, destInfo) =>
-                controller.RequestFileMovement(
-                    this.FileExplorer.CurrentPath, 
-                    sourceInfo.Name, 
-                    destInfo.Name);
+                controller.RequestFileMovement(sourceInfo.ID, destInfo.ID);
+
+            this.Loaded += (sender, args) => controller.RequestDirectoryContent(null);
         }
-
-        private void HideWindow() => this.Hide();
-
+        
         protected string GetNewItemName(string itemType)
         {
             // It is only for development time :)

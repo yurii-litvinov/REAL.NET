@@ -8,15 +8,15 @@ namespace GoogleDrivePlugin.Model
         /// <summary>
         /// Initializes new instance of FileListArgs
         /// </summary>
-        /// <param name="path">Path to data in the Drive</param>
+        /// <param name="parentID">Path to data in the Drive</param>
         /// <param name="itemInfo">Pair [itemName, isDirectory flag] </param>
-        public FileListArgs(string path, List<FileMetaInfo> itemInfo)
+        public FileListArgs(string parentID, List<FileMetaInfo> itemInfo)
         {
-            this.FolderPath = path;
+            this.FolderID = parentID;
             this.FileList = itemInfo;
         }
 
-        public string FolderPath { get; }
+        public string FolderID { get; }
 
         public List<FileMetaInfo> FileList { get; }
     }

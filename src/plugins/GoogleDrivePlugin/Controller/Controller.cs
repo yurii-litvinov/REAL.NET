@@ -2,6 +2,8 @@
 
 namespace GoogleDrivePlugin.Controller
 {
+    using System.Threading.Tasks;
+
     public class GoogleDriveController
     {
         private Model.GoogleDriveModel model;
@@ -11,35 +13,36 @@ namespace GoogleDrivePlugin.Controller
             this.model = model;
         }
 
-        public void RequestImportWindow() => this.model.RequestUpload();
+        public async Task RequestImportWindow() => await this.model.RequestUpload();
 
-        public void RequestExportWindow() => this.model.RequestDownload();
+        public async Task RequestExportWindow() => await this.model.RequestDownload();
 
         public void RequestImportWindowHidind() => this.model.RequestUploadHide();
 
         public void RequestExportWindowHiding() => this.model.RequestDownloadHide();
 
-        public void RequestDirectoryContent(string path, string folderName) =>
-            this.model.RequestFolderContent(path, folderName);
+        // folderID == null means root directory
+        public async void RequestDirectoryContent(string folderID) =>
+            await this.model.RequestFolderContent(folderID);
 
-        public void RequestFileImport(string path, string fileName) =>
-            this.model.LoadModelFrom(path, fileName);
+        public void RequestFileImport(string fileID) =>
+            this.model.LoadModelFrom(fileID);
 
-        public void RequestModelExport(string path, string destinationFileName) =>
-            this.model.SaveCurrentModelTo(path, destinationFileName);
+        public void RequestModelExport(string destFileID) =>
+            this.model.SaveCurrentModelTo(destFileID);
 
-        public void RequestNewFileСreation(string path, string fileName) =>
-            this.model.CreateNewFile(path, fileName);
+        public void RequestNewFileСreation(string parentID, string newFileName) =>
+            this.model.CreateNewFile(parentID, newFileName);
 
-        public void RequestNewFolderCreation(string path, string folderName) =>
-            this.model.CreateNewFolder(path, folderName);
+        public void RequestNewFolderCreation(string parentID, string newFolderName) =>
+            this.model.CreateNewFolder(parentID, newFolderName);
 
-        public void RequestLoggingOut() => this.model.LogUserOut();
+        public async Task RequestLoggingOut() => await this.model.LogUserOut();
 
-        public void RequestFileDeletion(string path, string item) =>
-            this.model.DeleteElement(path, item);
+        public void RequestFileDeletion(string itemID) =>
+            this.model.DeleteElement(itemID);
 
-        public void RequestFileMovement(string sourcePath, string fileName, string destPath) =>
-            this.model.MoveElement(sourcePath, fileName, destPath);
+        public void RequestFileMovement(string sourceID, string destID) =>
+            this.model.MoveElement(sourceID, destID);
     }
 }

@@ -20,14 +20,12 @@
             if (window == null || !window.IsLoaded)
             {
                 window = this.CreateNewWindowInstance();
-                
             }
-            else
-            {
-                window.Focus();
-            }
-
+            
+            window.Topmost = true;
             window.Show();
+            window.Focus();
+
             return window;
         }
 
@@ -42,28 +40,21 @@
         protected virtual void HandleReceivedFileList(FileExplorer fileExplorer,  FileListArgs args)
         {
             if (fileExplorer == null ||
-                args.FolderPath != fileExplorer.RequestedPath)
+                args.FolderID != fileExplorer.RequestedDirectoryID)
             {
                 return;
             }
 
+            fileExplorer.ClearList();
             foreach (var item in args.FileList)
             {
-                fileExplorer.ClearList();
                 fileExplorer.AddItemToList(item.Name, item.Size, item.IsDirectory);
             }
 
-            fileExplorer.CurrentPath = fileExplorer.RequestedPath;
-            fileExplorer.RequestedPath = null;
+            fileExplorer.CurrentDirectoryID = fileExplorer.RequestedDirectoryID;
+            fileExplorer.RequestedDirectoryID = null;
         }
 
         protected abstract Window CreateNewWindowInstance();
-
-        //protected abstract void HandleReceivedFileList(FileListArgs args);
-
-        /*protected void HandleReceivedFileList(FileListArgs args)
-        {
-
-        }*/
     }
 }

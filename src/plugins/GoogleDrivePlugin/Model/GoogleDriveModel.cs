@@ -1,5 +1,6 @@
 ﻿namespace GoogleDrivePlugin.Model
 {
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -20,6 +21,7 @@
         public delegate void FileListHandler(object sender, FileListArgs args);
         public event FileListHandler FileListReceived;
 
+        private DriveService drive;
         private UserCredential userCredentials;
         private string username;
 
@@ -27,10 +29,9 @@
 
         public GoogleDriveModel()
         {
-
         }
 
-        public async void LogUserOut()
+        public async Task LogUserOut()
         {
             this.HideExportWindow?.Invoke(this, new UserInfoArgs(this.userCredentials.UserId));
             this.HideImportWindow?.Invoke(this, new UserInfoArgs(this.userCredentials.UserId));
@@ -39,12 +40,18 @@
             this.userCredentials = null;
         }
 
-        public async void RequestUpload()
+        public async Task RequestUpload()
         {
             if (this.userCredentials == null)
             {
-                this.userCredentials = await AuthorizeUser();
-                this.username = await GetUserInfo(this.userCredentials);
+                try
+                {
+                    await this.InitiateNewSessionWithDrive();
+                }
+                catch (Google.Apis.Auth.OAuth2.Responses.TokenResponseException)
+                {
+                    return;
+                }
             }
 
             this.ShowExportWindow?.Invoke(this, new UserInfoArgs(this.username));
@@ -52,15 +59,21 @@
 
         public void RequestUploadHide()
         {
-
+            this.HideExportWindow?.Invoke(this, new UserInfoArgs(this.username));
         }
 
-        public async void RequestDownload()
+        public async Task RequestDownload()
         {
             if (this.userCredentials == null)
             {
-                this.userCredentials = await AuthorizeUser();
-                this.username = await GetUserInfo(this.userCredentials);
+                try
+                {
+                    await this.InitiateNewSessionWithDrive();
+                }
+                catch (Google.Apis.Auth.OAuth2.Responses.TokenResponseException)
+                {
+                    return;
+                }
             }
 
             this.ShowImportWindow?.Invoke(this, new UserInfoArgs(this.username));
@@ -68,49 +81,73 @@
         
         public void RequestDownloadHide()
         {
-
+            this.HideImportWindow?.Invoke(this, new UserInfoArgs(this.username));
         }
 
-        public void CreateNewFile(string path, string newFileName)
+        public void CreateNewFile(string parentID, string fileName)
         {
 
         }
 
-        public void CreateNewFolder(string path, string newFolderName)
+        public void CreateNewFolder(string parentID, string folderName)
         {
 
         }
 
-        public void DeleteElement(string path, string elementName)
+        public void DeleteElement(string itemID)
         {
 
         }
 
-        public void MoveElement(string currentPath, string elementName, string destPath)
+        public void MoveElement(string sourceID, string destID)
         {
 
         }
 
-        public void SaveCurrentModelTo(string path, string fileName)
+        public void SaveCurrentModelTo(string fileID)
         {
 
         }
 
-        public void LoadModelFrom(string path, string fileName)
+        public void LoadModelFrom(string fileID)
         {
 
+        }   
+
+        public async Task RequestFolderContent(string parentID)
+        {
+            var request = this.drive.Files.List();
+
+            request.Spaces = "drive";
+            request.Fields = "files(id, name, size, mimeType)";
+            request.OrderBy = "folder";
+
+            // If null then the file is in root directory
+            if (parentID != null)
+            {
+                request.Q = $"{parentID} in parents";
+            }
+
+            var response = await request.ExecuteAsync();
+
+            var itemList = new List<FileMetaInfo>();
+            foreach (var item in response.Files)
+            {
+                var isFolder = item.MimeType == "application/vnd.google-apps.folder";
+                var itemSize = isFolder ? null : $"{item.Size}B";
+                var fileInfo = new FileMetaInfo(item.Id, item.Name, itemSize, isFolder);
+
+                itemList.Add(fileInfo);
+            }
+
+            this.FileListReceived?.Invoke(this, new FileListArgs(parentID, itemList));
         }
 
-        public void RequestFolderContent(string path, string folderName)
+        private async Task InitiateNewSessionWithDrive()
         {
-
-        }
-
-        public void InitiateNewSessionWithDrive()
-        {
-            // Logging in
-
-            // Request Drive content
+            this.userCredentials = await AuthorizeUser();
+            this.username = await GetUserInfo(this.userCredentials);
+            this.drive = InitDriveService(this.userCredentials);
         }
 
         private static async Task<UserCredential> AuthorizeUser()
@@ -129,7 +166,7 @@
                     ClientSecret = ClientSecretParams.ClientSecret
                 },
                 scopes,
-                "user3",
+                "PluginUser",
                 CancellationToken.None);
         }
 
@@ -144,6 +181,16 @@
 
             var info = await service.Userinfo.Get().ExecuteAsync();
             return info.Email;
+        }
+
+        private static DriveService InitDriveService(UserCredential credential)
+        {
+            return new DriveService(
+                new Google.Apis.Services.BaseClientService.Initializer()
+                {
+                    HttpClientInitializer = credential,
+                    ApplicationName = ApplicationName
+                });
         }
     }
 }

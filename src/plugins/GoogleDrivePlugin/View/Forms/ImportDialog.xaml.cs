@@ -14,21 +14,19 @@
             this.CancelButton.Click += (sender, args) =>
                 controller.RequestImportWindowHidind();
             this.OpenButton.Click += (sender, args) =>
-                controller.RequestFileImport(
-                    this.FileExplorer.CurrentPath, 
-                    this.FileExplorer.SelectedItem.Name);
+                controller.RequestFileImport(this.FileExplorer.SelectedItem.ID);
 
-            this.LogoutBox.LogoutButton.Click += (sender, args) => controller.RequestLoggingOut();
+            this.LogoutBox.LogoutButton.Click += async (sender, args) =>
+                await controller.RequestLoggingOut();
 
             this.FileExplorer.ItemSelected += (sender, fileInfo) =>
-                controller.RequestModelExport(this.FileExplorer.CurrentPath, fileInfo.Name);
+                controller.RequestModelExport(fileInfo.ID);
             this.FileExplorer.ItemDeletionRequested += (sender, itemInfo) =>
-                controller.RequestFileDeletion(this.FileExplorer.CurrentPath, itemInfo.Name);
+                controller.RequestFileDeletion(itemInfo.ID);
             this.FileExplorer.ItemMovementRequested += (sender, sourceInfo, destInfo) =>
-                controller.RequestFileMovement(
-                    this.FileExplorer.CurrentPath, 
-                    sourceInfo.Name, 
-                    destInfo.Name);
+                controller.RequestFileMovement(sourceInfo.ID, destInfo.ID);
+
+            this.Loaded += (sender, args) => controller.RequestDirectoryContent(null);
         }
 
         protected string GetNewItemName(string itemType)

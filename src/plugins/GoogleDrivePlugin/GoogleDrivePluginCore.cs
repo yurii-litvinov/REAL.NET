@@ -74,8 +74,10 @@
 
         private void PlaceButtonsOnToolbar()
         {
-            var uploadCommand = new Command(this.pluginController.RequestExportWindow);
-            var downloadCommand = new Command(this.pluginController.RequestImportWindow);
+            var uploadCommand = new Command(
+                async () => await this.pluginController.RequestExportWindow());
+            var downloadCommand = new Command(
+                async () => await this.pluginController.RequestImportWindow());
 
             var uploadButton = new Button(
                 uploadCommand,

@@ -20,20 +20,20 @@ namespace GoogleDrivePlugin.Controls.FileExplorer
         public delegate void MoveEventHandler<T>(object sender, T source, T destination);
         public event MoveEventHandler<ItemInfo> ItemMovementRequested;
 
-        public string CurrentPath { get; set; }
+        public string CurrentDirectoryID { get; set; }
 
-        public string RequestedPath { get; set; }
+        public string RequestedDirectoryID { get; set; }
 
         public FileExplorer()
         {
             InitializeComponent();
 
-            this.AddItemToList("testmodel.file", "154KB", false);
+            /*this.AddItemToList("testmodel.file", "154KB", false);
             this.AddItemToList("dfdfdf.txt", "100TB", true);
             for (int i = 0; i < 10; ++i)
             {
                 this.AddItemToList($"la{i}", $"{352 * i}KB", false);
-            }
+            }*/
 
             this.ItemList.PreviewMouseDoubleClick += this.HandleChosenItem;
 
@@ -63,7 +63,7 @@ namespace GoogleDrivePlugin.Controls.FileExplorer
 
             if (this.SelectedItem.IsDirectory)
             {
-                this.RequestedPath = $"{this.CurrentPath}/{this.SelectedItem.Name}";
+                this.RequestedDirectoryID = $"{this.CurrentDirectoryID}/{this.SelectedItem.Name}";
             }
 
             this.ItemSelected?.Invoke(this, this.SelectedItem);
