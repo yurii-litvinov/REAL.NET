@@ -26,18 +26,20 @@
             {
                 username = args.Username;
                 this.dialogWindow = (ExportDialog)this.ShowWindow(this.dialogWindow);
+                this.dialogWindow.LogoutBox.UsernameLabel.Content = username;
             };
             model.HideExportWindow += (sender, args) => this.HideWindow(this.dialogWindow);
 
-            model.FileListReceived += (sender, args) => this.HandleReceivedFileList(args);
+            model.FileListReceived += (sender, args) =>
+            {
+                if (this.dialogWindow != null)
+                {
+                    this.HandleReceivedFileList(this.dialogWindow.FileExplorer, args);
+                }
+            };
         }
 
         protected override Window CreateNewWindowInstance() 
             => new ExportDialog(this.controller);
-
-        protected override void HandleReceivedFileList(FileListArgs args)
-        {
-
-        }
     }
 }

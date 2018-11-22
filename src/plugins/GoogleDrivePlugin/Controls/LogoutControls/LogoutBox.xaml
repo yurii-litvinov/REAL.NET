@@ -21,7 +21,7 @@
 
             <Label Grid.Column="0" Grid.Row="0" Margin="2" Padding="0,1,0,0" Content="Username:"  
                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center"/>
-            <Label Grid.Column="0" Grid.Row="1" Margin="2" Padding="0,0,0,1" x:Name="UsernameLabel" Content="TST_ibalashov24"  
+            <Label Grid.Column="0" Grid.Row="1" Margin="2" Padding="0,0,0,1" x:Name="UsernameLabel" Content="&#xD;&#xA;"  
                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Top"/>
             <Button Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Margin="2" x:Name="LogoutButton" Content="Log Out"  
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />

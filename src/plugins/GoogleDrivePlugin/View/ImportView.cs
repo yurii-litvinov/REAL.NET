@@ -25,16 +25,21 @@
             {
                 username = args.Username;
                 this.dialogWindow = (ImportDialog)this.ShowWindow(this.dialogWindow);
+                this.dialogWindow.LogoutBox.UsernameLabel.Content = username;
             };
             model.HideImportWindow += (sender, args) => this.HideWindow(this.dialogWindow);
+
+            model.FileListReceived += (sender, args) =>
+            {
+                if (this.dialogWindow != null)
+                {
+                    this.HandleReceivedFileList(this.dialogWindow.FileExplorer, args);
+                }
+            };
+                    
         }
 
         protected override Window CreateNewWindowInstance() => 
             new ImportDialog(this.controller);
-
-        protected override void HandleReceivedFileList(FileListArgs args)
-        {
-
-        }
     }
 }

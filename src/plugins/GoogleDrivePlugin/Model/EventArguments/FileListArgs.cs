@@ -10,7 +10,7 @@ namespace GoogleDrivePlugin.Model
         /// </summary>
         /// <param name="path">Path to data in the Drive</param>
         /// <param name="itemInfo">Pair [itemName, isDirectory flag] </param>
-        public FileListArgs(string path, List<UserInfoArgs> itemInfo)
+        public FileListArgs(string path, List<FileMetaInfo> itemInfo)
         {
             this.FolderPath = path;
             this.FileList = itemInfo;
@@ -18,6 +18,6 @@ namespace GoogleDrivePlugin.Model
 
         public string FolderPath { get; }
 
-        public List<UserInfoArgs> FileList { get; }
+        public List<FileMetaInfo> FileList { get; }
     }
 }

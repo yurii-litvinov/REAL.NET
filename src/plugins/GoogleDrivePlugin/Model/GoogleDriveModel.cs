@@ -1,11 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GoogleDrivePlugin.Model
+﻿namespace GoogleDrivePlugin.Model
 {
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    using Google.Apis.Oauth2.v2;
+    using Google.Apis.Auth.OAuth2;
+    using Google.Apis.Drive.v3;
+
+    using Model.ClientSecret;
+
     public class GoogleDriveModel
     {
         public delegate void UserInfoHandler(object sender, UserInfoArgs info);
@@ -17,18 +20,34 @@ namespace GoogleDrivePlugin.Model
         public delegate void FileListHandler(object sender, FileListArgs args);
         public event FileListHandler FileListReceived;
 
+        private UserCredential userCredentials;
+        private string username;
+
+        private const string ApplicationName = "REALNET-GoogleDrivePlugin";
+
         public GoogleDriveModel()
         {
-        }
-
-        public void LogUserOut()
-        {
 
         }
 
-        public void RequestUpload()
+        public async void LogUserOut()
         {
-            this.ShowExportWindow?.Invoke(this, new UserInfoArgs("TSTibalashov24"));
+            this.HideExportWindow?.Invoke(this, new UserInfoArgs(this.userCredentials.UserId));
+            this.HideImportWindow?.Invoke(this, new UserInfoArgs(this.userCredentials.UserId));
+
+            await this.userCredentials.RevokeTokenAsync(CancellationToken.None);
+            this.userCredentials = null;
+        }
+
+        public async void RequestUpload()
+        {
+            if (this.userCredentials == null)
+            {
+                this.userCredentials = await AuthorizeUser();
+                this.username = await GetUserInfo(this.userCredentials);
+            }
+
+            this.ShowExportWindow?.Invoke(this, new UserInfoArgs(this.username));
         }
 
         public void RequestUploadHide()
@@ -36,9 +55,15 @@ namespace GoogleDrivePlugin.Model
 
         }
 
-        public void RequestDownload()
+        public async void RequestDownload()
         {
-            this.ShowImportWindow?.Invoke(this, new UserInfoArgs("TSTibalashov24"));
+            if (this.userCredentials == null)
+            {
+                this.userCredentials = await AuthorizeUser();
+                this.username = await GetUserInfo(this.userCredentials);
+            }
+
+            this.ShowImportWindow?.Invoke(this, new UserInfoArgs(this.username));
         }
         
         public void RequestDownloadHide()
@@ -86,6 +111,39 @@ namespace GoogleDrivePlugin.Model
             // Logging in
 
             // Request Drive content
+        }
+
+        private static async Task<UserCredential> AuthorizeUser()
+        {
+            var scopes = new[] 
+            {
+                Oauth2Service.Scope.UserinfoProfile,
+                Oauth2Service.Scope.UserinfoEmail,
+                DriveService.Scope.Drive
+            };
+
+            return await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                new ClientSecrets
+                {
+                    ClientId = ClientSecretParams.ClientID,
+                    ClientSecret = ClientSecretParams.ClientSecret
+                },
+                scopes,
+                "user3",
+                CancellationToken.None);
+        }
+
+        private static async Task<string> GetUserInfo(UserCredential credential)
+        {
+            var service = new Oauth2Service(
+                new Google.Apis.Services.BaseClientService.Initializer()
+                {
+                    HttpClientInitializer = credential,
+                    ApplicationName = ApplicationName
+                });
+
+            var info = await service.Userinfo.Get().ExecuteAsync();
+            return info.Email;
         }
     }
 }

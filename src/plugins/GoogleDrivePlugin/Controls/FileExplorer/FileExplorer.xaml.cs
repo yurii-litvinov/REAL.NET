@@ -20,6 +20,10 @@ namespace GoogleDrivePlugin.Controls.FileExplorer
         public delegate void MoveEventHandler<T>(object sender, T source, T destination);
         public event MoveEventHandler<ItemInfo> ItemMovementRequested;
 
+        public string CurrentPath { get; set; }
+
+        public string RequestedPath { get; set; }
+
         public FileExplorer()
         {
             InitializeComponent();
@@ -57,6 +61,11 @@ namespace GoogleDrivePlugin.Controls.FileExplorer
                 return;
             }
 
+            if (this.SelectedItem.IsDirectory)
+            {
+                this.RequestedPath = $"{this.CurrentPath}/{this.SelectedItem.Name}";
+            }
+
             this.ItemSelected?.Invoke(this, this.SelectedItem);
         }
 
@@ -81,7 +90,6 @@ namespace GoogleDrivePlugin.Controls.FileExplorer
                     this.ItemList.ItemContainerGenerator.ItemFromContainer(item),
                     DragDropEffects.Copy | DragDropEffects.Move);
             }
-
         }
 
         private void EndDragDropOperation(object sender, DragEventArgs args)

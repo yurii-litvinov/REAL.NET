@@ -7,8 +7,6 @@
     /// </summary>
     public partial class ExportDialog : Window 
     {
-        private string currentPath;
-        
         public ExportDialog(Controller.GoogleDriveController controller)
         {
             InitializeComponent();
@@ -16,22 +14,33 @@
             this.CancelButton.Click += (sender, args) => 
                 controller.RequestExportWindowHiding();
             this.SaveButton.Click += (sender, args) =>
-                controller.RequestModelExport(currentPath, this.FileExplorer.SelectedItem.Name);
+                controller.RequestModelExport(
+                    this.FileExplorer.CurrentPath, 
+                    this.FileExplorer.SelectedItem.Name);
 
             this.NewFileButton.Click += (sender, args) =>
-                controller.RequestNewFileСreation(currentPath, this.GetNewItemName("file"));
+                controller.RequestNewFileСreation(
+                    this.FileExplorer.CurrentPath,
+                    this.GetNewItemName("file"));
+
             this.NewFolderButton.Click += (sender, args) =>
-                controller.RequestNewFolderCreation(currentPath, this.GetNewItemName("folder"));
+                controller.RequestNewFolderCreation(
+                    this.FileExplorer.CurrentPath, 
+                    this.GetNewItemName("folder"));
 
             this.LogoutBox.LogoutButton.Click += (sender, args) =>
                 controller.RequestLoggingOut();
 
             this.FileExplorer.ItemSelected += (sender, fileInfo) =>
-                controller.RequestModelExport(currentPath, fileInfo.Name);
+                controller.RequestModelExport(this.FileExplorer.CurrentPath, fileInfo.Name);
             this.FileExplorer.ItemDeletionRequested += (sender, itemInfo) =>
-                controller.RequestFileDeletion(currentPath, itemInfo.Name);
+                controller.RequestFileDeletion(this.FileExplorer.CurrentPath, itemInfo.Name);
+
             this.FileExplorer.ItemMovementRequested += (sender, sourceInfo, destInfo) =>
-                controller.RequestFileMovement(currentPath, sourceInfo.Name, destInfo.Name);
+                controller.RequestFileMovement(
+                    this.FileExplorer.CurrentPath, 
+                    sourceInfo.Name, 
+                    destInfo.Name);
         }
 
         private void HideWindow() => this.Hide();

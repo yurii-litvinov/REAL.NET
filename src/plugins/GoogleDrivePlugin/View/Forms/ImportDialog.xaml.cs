@@ -7,8 +7,6 @@
     /// </summary>
     public partial class ImportDialog : Window
     {
-        private string currentPath;
-
         public ImportDialog(Controller.GoogleDriveController controller)
         {
             InitializeComponent();
@@ -17,17 +15,20 @@
                 controller.RequestImportWindowHidind();
             this.OpenButton.Click += (sender, args) =>
                 controller.RequestFileImport(
-                    this.currentPath, 
+                    this.FileExplorer.CurrentPath, 
                     this.FileExplorer.SelectedItem.Name);
 
             this.LogoutBox.LogoutButton.Click += (sender, args) => controller.RequestLoggingOut();
 
             this.FileExplorer.ItemSelected += (sender, fileInfo) =>
-                controller.RequestModelExport(currentPath, fileInfo.Name);
+                controller.RequestModelExport(this.FileExplorer.CurrentPath, fileInfo.Name);
             this.FileExplorer.ItemDeletionRequested += (sender, itemInfo) =>
-                controller.RequestFileDeletion(currentPath, itemInfo.Name);
+                controller.RequestFileDeletion(this.FileExplorer.CurrentPath, itemInfo.Name);
             this.FileExplorer.ItemMovementRequested += (sender, sourceInfo, destInfo) =>
-                controller.RequestFileMovement(currentPath, sourceInfo.Name, destInfo.Name);
+                controller.RequestFileMovement(
+                    this.FileExplorer.CurrentPath, 
+                    sourceInfo.Name, 
+                    destInfo.Name);
         }
 
         protected string GetNewItemName(string itemType)
