@@ -22,14 +22,34 @@ namespace GoogleDrivePlugin.Controller
         public void RequestExportWindowHiding() => this.model.RequestDownloadHide();
 
         // folderID == null means root directory
-        public async void RequestDirectoryContent(string folderID) =>
-            await this.model.RequestFolderContent(folderID);
+        public async void RequestDirectoryContent(string folderID, string parentID = null) =>
+            await this.model.RequestFolderContent(folderID, parentID);
 
-        public void RequestFileImport(string fileID) =>
-            this.model.LoadModelFrom(fileID);
+        public async Task RequestFileImport(
+            string fileID, bool isDirectory = false, string parentID = null)
+        {
+            if (isDirectory)
+            {
+                await this.model.RequestFolderContent(fileID, parentID);
+            }
+            else
+            {
+                this.model.LoadModelFrom(fileID);
+            }
+        }
 
-        public void RequestModelExport(string destFileID) =>
-            this.model.SaveCurrentModelTo(destFileID);
+        public async Task RequestModelExport(
+            string destFileID, bool isDirectory = false, string parentID = null)
+        {
+            if (isDirectory)
+            {
+                await this.model.RequestFolderContent(destFileID, parentID);
+            }
+            else
+            {
+                this.model.SaveCurrentModelTo(destFileID);
+            }
+        }
 
         public void RequestNewFileСreation(string parentID, string newFileName) =>
             this.model.CreateNewFile(parentID, newFileName);

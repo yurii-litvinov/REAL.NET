@@ -13,8 +13,11 @@
 
             this.CancelButton.Click += (sender, args) => 
                 controller.RequestExportWindowHiding();
-            this.SaveButton.Click += (sender, args) =>
-                controller.RequestModelExport(this.FileExplorer.SelectedItem.ID);
+            this.SaveButton.Click += async (sender, args) =>
+                await controller.RequestModelExport(
+                    this.FileExplorer.SelectedItem.ID,
+                    this.FileExplorer.SelectedItem.IsDirectory,
+                    this.FileExplorer.CurrentDirectoryID);
 
             this.NewFileButton.Click += (sender, args) =>
                 controller.RequestNewFileСreation(
@@ -29,8 +32,8 @@
             this.LogoutBox.LogoutButton.Click += async (sender, args) =>
                 await controller.RequestLoggingOut();
 
-            this.FileExplorer.ItemSelected += (sender, fileInfo) =>
-                controller.RequestModelExport(fileInfo.ID);
+            this.FileExplorer.ItemSelected += async (sender, fileInfo) =>
+                await controller.RequestModelExport(fileInfo.ID, fileInfo.IsDirectory);
             this.FileExplorer.ItemDeletionRequested += (sender, itemInfo) =>
                 controller.RequestFileDeletion(itemInfo.ID);
             this.FileExplorer.ItemMovementRequested += (sender, sourceInfo, destInfo) =>

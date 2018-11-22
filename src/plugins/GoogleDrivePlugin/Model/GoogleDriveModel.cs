@@ -114,7 +114,7 @@
 
         }   
 
-        public async Task RequestFolderContent(string parentID)
+        public async Task RequestFolderContent(string folderID, string parentID)
         {
             var request = this.drive.Files.List();
 
@@ -123,14 +123,20 @@
             request.OrderBy = "folder";
 
             // If null then the file is in root directory
-            if (parentID != null)
+            if (folderID != null)
             {
-                request.Q = $"{parentID} in parents";
+                request.Q = $"'{folderID}' in parents";
             }
 
             var response = await request.ExecuteAsync();
 
             var itemList = new List<FileMetaInfo>();
+            if (folderID != null)
+            {
+                // Level up folder
+                itemList.Add(new FileMetaInfo(parentID, "...", null, true));
+            }
+
             foreach (var item in response.Files)
             {
                 var isFolder = item.MimeType == "application/vnd.google-apps.folder";
@@ -140,7 +146,7 @@
                 itemList.Add(fileInfo);
             }
 
-            this.FileListReceived?.Invoke(this, new FileListArgs(parentID, itemList));
+            this.FileListReceived?.Invoke(this, new FileListArgs(folderID, itemList));
         }
 
         private async Task InitiateNewSessionWithDrive()

@@ -48,7 +48,12 @@
             fileExplorer.ClearList();
             foreach (var item in args.FileList)
             {
-                fileExplorer.AddItemToList(item.Name, item.Size, item.IsDirectory);
+                fileExplorer.AddItemToList(new ItemInfo()
+                {   ID = item.ID,
+                    Name = item.Name,
+                    Size = item.Size,
+                    IsDirectory = item.IsDirectory
+                });
             }
 
             fileExplorer.CurrentDirectoryID = fileExplorer.RequestedDirectoryID;

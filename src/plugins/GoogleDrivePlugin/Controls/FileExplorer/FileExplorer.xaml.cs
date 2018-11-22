@@ -43,10 +43,9 @@ namespace GoogleDrivePlugin.Controls.FileExplorer
             this.ItemList.DragLeave += this.DeHighlightCurrentTarget;
         }
 
-        public void AddItemToList(string itemName, string itemSize, bool isDirectory)
+        public void AddItemToList(ItemInfo newItem)
         {
-            this.ItemList.Items.Add(
-                new ItemInfo { Name = itemName, Size = itemSize, IsDirectory = isDirectory });   
+            this.ItemList.Items.Add(newItem);
         }
 
         public void ClearList()
@@ -63,7 +62,7 @@ namespace GoogleDrivePlugin.Controls.FileExplorer
 
             if (this.SelectedItem.IsDirectory)
             {
-                this.RequestedDirectoryID = $"{this.CurrentDirectoryID}/{this.SelectedItem.Name}";
+                this.RequestedDirectoryID = this.SelectedItem.ID;
             }
 
             this.ItemSelected?.Invoke(this, this.SelectedItem);
