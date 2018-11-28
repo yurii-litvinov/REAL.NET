@@ -25,9 +25,33 @@
             <ListView.View>
                 <GridView AllowsColumnReorder="False">
                     <GridViewColumn x:Name="NameColumn" Width="300" 
-                                    DisplayMemberBinding="{Binding Name}" Header="Name" />
+                                    Header="Name">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="16"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <Image x:Name="ItemTypeIcon" Grid.Column="0" Height="16" Width="16" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Name}" Margin="5,0,0,0" />
+                                </Grid>
+
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding IsDirectory}" Value="True">
+                                        <Setter Property="Image.Source" TargetName="ItemTypeIcon" Value="pack://application:,,,/GoogleDrivePlugin;component/Controls/FileExplorer/ItemTypeIcons/ItemFolder.png" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsDirectory}" Value="False">
+                                        <Setter Property="Image.Source" TargetName="ItemTypeIcon" Value="pack://application:,,,/GoogleDrivePlugin;component/Controls/FileExplorer/ItemTypeIcons/ItemFile.png" />
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    
                     <GridViewColumn x:Name="SizeColumn" Width="100"
-                                    DisplayMemberBinding="{Binding Size}" Header="Size" />
+                                    Header="Size" DisplayMemberBinding="{Binding Size}"/>
                 </GridView>
             </ListView.View>
         </ListView>

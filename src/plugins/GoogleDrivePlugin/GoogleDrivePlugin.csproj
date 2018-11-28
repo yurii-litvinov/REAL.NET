@@ -144,6 +144,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
+    <Resource Include="Controls\FileExplorer\ItemTypeIcons\ItemFile.png" />
+    <Resource Include="Controls\FileExplorer\ItemTypeIcons\ItemFolder.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\EditorPluginInterfaces\EditorPluginInterfaces.csproj">
@@ -158,5 +160,6 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
