@@ -2,15 +2,16 @@
 {
     using System;
     using System.Windows;
+    using System.Collections.Generic;
+
     using Model;
-    using Controller;
     using Controls.FileExplorer;
 
     public abstract class ImportExportViewBase 
     {
         private GoogleDriveModel model;
 
-        private string parentID = null;
+        private Stack<string> parents = new Stack<string>();
 
         public ImportExportViewBase(GoogleDriveModel model)
         {
@@ -48,9 +49,17 @@
                 return;
             }
 
+            if (this.parents.Contains(args.FolderID))
+            {
+                while (this.parents.Pop() != args.FolderID) ;
+            }
+            else if (args.FolderID != fileExplorer.CurrentDirectoryID)
+            {
+                this.parents.Push(fileExplorer.CurrentDirectoryID);
+            }
+
             if (args.FolderID != fileExplorer.CurrentDirectoryID)
             {
-                this.parentID = fileExplorer.CurrentDirectoryID;
                 fileExplorer.CurrentDirectoryID = fileExplorer.RequestedDirectoryID;
                 fileExplorer.RequestedDirectoryID = null;
             }
@@ -62,7 +71,7 @@
                 // Button to move to upper level
                 fileExplorer.AddItemToList(new ItemInfo()
                 {
-                    ID = this.parentID,
+                    ID = this.parents.Peek(),
                     Name = "...",
                     IsDirectory = true
                 });

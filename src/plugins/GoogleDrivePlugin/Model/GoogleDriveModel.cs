@@ -84,25 +84,29 @@
             this.HideImportWindow?.Invoke(this, new UserInfoArgs(this.username));
         }
 
-        public async void CreateNewFile(string folderID, string fileName)
+        public async void CreateNewFile(string parentID, string fileName, string mimeType = null)
         {
             var newEmptyFile = new Google.Apis.Drive.v3.Data.File();
             newEmptyFile.Name = fileName;
-
-            if (folderID != null)
+            if (mimeType != null)
             {
-                newEmptyFile.Parents = new List<string>() { folderID };
+                newEmptyFile.MimeType = mimeType;
+            }
+
+            if (parentID != null)
+            {
+                newEmptyFile.Parents = new List<string>() { parentID };
             }
 
             var request = this.drive.Files.Create(newEmptyFile);
             await request.ExecuteAsync();
 
-            await this.RequestFolderContent(folderID);
+            await this.RequestFolderContent(parentID);
         }
 
         public void CreateNewFolder(string parentID, string folderName)
         {
-
+            this.CreateNewFile(parentID, folderName, "application/vnd.google-apps.folder");
         }
 
         public void DeleteElement(string itemID)
