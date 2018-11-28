@@ -10,6 +10,8 @@
     {
         private GoogleDriveModel model;
 
+        private string parentID = null;
+
         public ImportExportViewBase(GoogleDriveModel model)
         {
             //model.FileListReceived += (sender, args) => this.HandleReceivedFileList(args);
@@ -22,7 +24,7 @@
                 window = this.CreateNewWindowInstance();
             }
             
-            window.Topmost = true;
+            //window.Topmost = true;
             window.Show();
             window.Focus();
 
@@ -40,24 +42,42 @@
         protected virtual void HandleReceivedFileList(FileExplorer fileExplorer,  FileListArgs args)
         {
             if (fileExplorer == null ||
-                args.FolderID != fileExplorer.RequestedDirectoryID)
+                args.FolderID != fileExplorer.RequestedDirectoryID &&
+                args.FolderID != fileExplorer.CurrentDirectoryID)
             {
                 return;
             }
 
+            if (args.FolderID != fileExplorer.CurrentDirectoryID)
+            {
+                this.parentID = fileExplorer.CurrentDirectoryID;
+                fileExplorer.CurrentDirectoryID = fileExplorer.RequestedDirectoryID;
+                fileExplorer.RequestedDirectoryID = null;
+            }
+
             fileExplorer.ClearList();
+
+            if (fileExplorer.CurrentDirectoryID != null)
+            {
+                // Button to move to upper level
+                fileExplorer.AddItemToList(new ItemInfo()
+                {
+                    ID = this.parentID,
+                    Name = "...",
+                    IsDirectory = true
+                });
+            }
+
             foreach (var item in args.FileList)
             {
                 fileExplorer.AddItemToList(new ItemInfo()
-                {   ID = item.ID,
+                {
+                    ID = item.ID,
                     Name = item.Name,
                     Size = item.Size,
                     IsDirectory = item.IsDirectory
                 });
             }
-
-            fileExplorer.CurrentDirectoryID = fileExplorer.RequestedDirectoryID;
-            fileExplorer.RequestedDirectoryID = null;
         }
 
         protected abstract Window CreateNewWindowInstance();

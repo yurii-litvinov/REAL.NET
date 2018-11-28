@@ -84,9 +84,20 @@
             this.HideImportWindow?.Invoke(this, new UserInfoArgs(this.username));
         }
 
-        public void CreateNewFile(string parentID, string fileName)
+        public async void CreateNewFile(string folderID, string fileName)
         {
+            var newEmptyFile = new Google.Apis.Drive.v3.Data.File();
+            newEmptyFile.Name = fileName;
 
+            if (folderID != null)
+            {
+                newEmptyFile.Parents = new List<string>() { folderID };
+            }
+
+            var request = this.drive.Files.Create(newEmptyFile);
+            await request.ExecuteAsync();
+
+            await this.RequestFolderContent(folderID);
         }
 
         public void CreateNewFolder(string parentID, string folderName)
@@ -114,28 +125,23 @@
 
         }   
 
-        public async Task RequestFolderContent(string folderID, string parentID)
+        public async Task RequestFolderContent(string folderID)
         {
             var request = this.drive.Files.List();
 
             request.Spaces = "drive";
             request.Fields = "files(id, name, size, mimeType)";
             request.OrderBy = "folder";
-
-            // If null then the file is in root directory
-            if (folderID != null)
-            {
-                request.Q = $"'{folderID}' in parents";
-            }
+            request.Q = $"'{(folderID == null ? "root" : folderID)}' in parents";
 
             var response = await request.ExecuteAsync();
 
             var itemList = new List<FileMetaInfo>();
-            if (folderID != null)
+           /* if (folderID != null)
             {
                 // Level up folder
                 itemList.Add(new FileMetaInfo(parentID, "...", null, true));
-            }
+            }*/
 
             foreach (var item in response.Files)
             {

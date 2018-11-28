@@ -16,8 +16,7 @@
             this.OpenButton.Click += async (sender, args) =>
                 await controller.RequestFileImport(
                     this.FileExplorer.SelectedItem.ID, 
-                    this.FileExplorer.SelectedItem.IsDirectory,
-                    this.FileExplorer.CurrentDirectoryID);
+                    this.FileExplorer.SelectedItem.IsDirectory);
 
             this.LogoutBox.LogoutButton.Click += async (sender, args) =>
                 await controller.RequestLoggingOut();
