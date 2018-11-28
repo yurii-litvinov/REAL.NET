@@ -20,7 +20,7 @@ namespace GoogleDrivePlugin.Controls.FileExplorer
         public delegate void MoveEventHandler<T>(object sender, T source, T destination);
         public event MoveEventHandler<ItemInfo> ItemMovementRequested;
 
-        public string CurrentDirectoryID { get; set; }
+        public string CurrentDirectoryID { get; set; } = Model.GoogleDriveModel.RootFolderName;
 
         public string RequestedDirectoryID { get; set; }
 

@@ -12,6 +12,8 @@
 
     public class GoogleDriveModel
     {
+        public static string RootFolderName = "root";
+
         public delegate void UserInfoHandler(object sender, UserInfoArgs info);
         public event UserInfoHandler ShowImportWindow;
         public event UserInfoHandler ShowExportWindow;
@@ -93,7 +95,7 @@
                 newEmptyFile.MimeType = mimeType;
             }
 
-            if (parentID != null)
+            if (parentID != RootFolderName)
             {
                 newEmptyFile.Parents = new List<string>() { parentID };
             }
@@ -109,14 +111,26 @@
             this.CreateNewFile(parentID, folderName, "application/vnd.google-apps.folder");
         }
 
-        public void DeleteElement(string itemID)
+        public async void DeleteElement(string parentID, string itemID)
         {
+            var deleteRequest = this.drive.Files.Delete(itemID);
+            await deleteRequest.ExecuteAsync();
 
+            await this.RequestFolderContent(parentID);
         }
 
-        public void MoveElement(string sourceID, string destID)
+        public async void MoveElement(string sourceFolderID, string itemID, string destFolderID)
         {
+            var movementRequest = 
+                this.drive.Files.Update(new Google.Apis.Drive.v3.Data.File(), itemID);
 
+            movementRequest.Fields = "id, parents";
+            movementRequest.AddParents = destFolderID;
+            movementRequest.RemoveParents = sourceFolderID;
+
+            await movementRequest.ExecuteAsync();
+
+            await this.RequestFolderContent(sourceFolderID);
         }
 
         public void SaveCurrentModelTo(string fileID)
@@ -136,7 +150,7 @@
             request.Spaces = "drive";
             request.Fields = "files(id, name, size, mimeType)";
             request.OrderBy = "folder";
-            request.Q = $"'{(folderID == null ? "root" : folderID)}' in parents";
+            request.Q = $"'{(folderID == RootFolderName ? "root" : folderID)}' in parents";
 
             var response = await request.ExecuteAsync();
 

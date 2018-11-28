@@ -9,7 +9,7 @@
 
     public abstract class ImportExportViewBase 
     {
-        private GoogleDriveModel model;
+        //private GoogleDriveModel model;
 
         private Stack<string> parents = new Stack<string>();
 
@@ -66,7 +66,7 @@
 
             fileExplorer.ClearList();
 
-            if (fileExplorer.CurrentDirectoryID != null)
+            if (fileExplorer.CurrentDirectoryID != GoogleDriveModel.RootFolderName)
             {
                 // Button to move to upper level
                 fileExplorer.AddItemToList(new ItemInfo()

@@ -21,7 +21,6 @@ namespace GoogleDrivePlugin.Controller
 
         public void RequestExportWindowHiding() => this.model.RequestDownloadHide();
 
-        // folderID == null means root directory
         public async void RequestDirectoryContent(string folderID) =>
             await this.model.RequestFolderContent(folderID);
 
@@ -59,10 +58,10 @@ namespace GoogleDrivePlugin.Controller
 
         public async Task RequestLoggingOut() => await this.model.LogUserOut();
 
-        public void RequestFileDeletion(string itemID) =>
-            this.model.DeleteElement(itemID);
+        public void RequestFileDeletion(string parentID, string itemID) =>
+            this.model.DeleteElement(parentID, itemID);
 
-        public void RequestFileMovement(string sourceID, string destID) =>
-            this.model.MoveElement(sourceID, destID);
+        public void RequestFileMovement(string sourceFolderID, string sourceFileID, string destFolderID) =>
+            this.model.MoveElement(sourceFolderID, sourceFileID, destFolderID);
     }
 }

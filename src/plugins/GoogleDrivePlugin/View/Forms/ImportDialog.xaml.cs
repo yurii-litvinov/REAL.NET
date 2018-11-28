@@ -24,11 +24,12 @@
             this.FileExplorer.ItemSelected += async (sender, fileInfo) =>
                 await controller.RequestModelExport(fileInfo.ID, fileInfo.IsDirectory);
             this.FileExplorer.ItemDeletionRequested += (sender, itemInfo) =>
-                controller.RequestFileDeletion(itemInfo.ID);
+                controller.RequestFileDeletion(this.FileExplorer.CurrentDirectoryID, itemInfo.ID);
             this.FileExplorer.ItemMovementRequested += (sender, sourceInfo, destInfo) =>
-                controller.RequestFileMovement(sourceInfo.ID, destInfo.ID);
+                controller.RequestFileMovement(this.FileExplorer.CurrentDirectoryID, sourceInfo.ID, destInfo.ID);
 
-            this.Loaded += (sender, args) => controller.RequestDirectoryContent(null);
+            this.Loaded += (sender, args) => 
+                controller.RequestDirectoryContent(Model.GoogleDriveModel.RootFolderName);
         }
 
         protected string GetNewItemName(string itemType)
