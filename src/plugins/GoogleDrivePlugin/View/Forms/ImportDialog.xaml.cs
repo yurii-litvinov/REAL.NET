@@ -15,9 +15,15 @@
                 controller.RequestImportWindowHidind();
 
             this.OpenButton.Click += async (sender, args) =>
-                await controller.RequestModelImport(
-                    this.FileExplorer.SelectedItem.ID, 
-                    this.FileExplorer.SelectedItem.IsDirectory);
+            {
+                if (this.FileExplorer.SelectedItem != null)
+                {
+                    await controller.RequestModelExport(
+                        this.FileExplorer.CurrentDirectoryID,
+                        this.FileExplorer.SelectedItem.ID,
+                        this.FileExplorer.SelectedItem.IsDirectory);
+                }
+            };
 
             this.LogoutBox.LogoutButton.Click += async (sender, args) =>
                 await controller.RequestLoggingOut();

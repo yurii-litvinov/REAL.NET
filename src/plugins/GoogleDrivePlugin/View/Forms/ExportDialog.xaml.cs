@@ -14,10 +14,15 @@
             this.CancelButton.Click += (sender, args) => 
                 controller.RequestExportWindowHiding();
             this.SaveButton.Click += async (sender, args) =>
-                await controller.RequestModelExport(
-                    this.FileExplorer.CurrentDirectoryID,
-                    this.FileExplorer.SelectedItem.ID,
-                    this.FileExplorer.SelectedItem.IsDirectory);
+            {
+                if (this.FileExplorer.SelectedItem != null)
+                {
+                    await controller.RequestModelExport(
+                        this.FileExplorer.CurrentDirectoryID,
+                        this.FileExplorer.SelectedItem.ID,
+                        this.FileExplorer.SelectedItem.IsDirectory);
+                }
+            };
 
             this.NewFileButton.Click += (sender, args) =>
                 controller.RequestNewFileСreation(
