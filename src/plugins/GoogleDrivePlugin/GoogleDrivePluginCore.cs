@@ -58,7 +58,7 @@
             this.console = config.Console;
 
             // MVC initialization
-            this.pluginModel = new GoogleDriveModel();
+            this.pluginModel = new GoogleDriveModel(this.mainModel);
             this.pluginController = new GoogleDriveController(this.pluginModel);
             this.importView = new ImportView(
                     this.pluginModel, 

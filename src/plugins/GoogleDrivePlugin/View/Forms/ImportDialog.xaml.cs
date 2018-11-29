@@ -13,8 +13,9 @@
 
             this.CancelButton.Click += (sender, args) =>
                 controller.RequestImportWindowHidind();
+
             this.OpenButton.Click += async (sender, args) =>
-                await controller.RequestFileImport(
+                await controller.RequestModelImport(
                     this.FileExplorer.SelectedItem.ID, 
                     this.FileExplorer.SelectedItem.IsDirectory);
 
@@ -22,9 +23,13 @@
                 await controller.RequestLoggingOut();
 
             this.FileExplorer.ItemSelected += async (sender, fileInfo) =>
-                await controller.RequestModelExport(fileInfo.ID, fileInfo.IsDirectory);
+                await controller.RequestModelImport(
+                    fileInfo.ID, 
+                    fileInfo.IsDirectory);
+
             this.FileExplorer.ItemDeletionRequested += (sender, itemInfo) =>
                 controller.RequestFileDeletion(this.FileExplorer.CurrentDirectoryID, itemInfo.ID);
+
             this.FileExplorer.ItemMovementRequested += (sender, sourceInfo, destInfo) =>
                 controller.RequestFileMovement(this.FileExplorer.CurrentDirectoryID, sourceInfo.ID, destInfo.ID);
 

@@ -24,7 +24,7 @@ namespace GoogleDrivePlugin.Controller
         public async void RequestDirectoryContent(string folderID) =>
             await this.model.RequestFolderContent(folderID);
 
-        public async Task RequestFileImport(
+        public async Task RequestModelImport(
             string fileID, bool isDirectory = false)
         {
             if (isDirectory)
@@ -38,7 +38,9 @@ namespace GoogleDrivePlugin.Controller
         }
 
         public async Task RequestModelExport(
-            string destFileID, bool isDirectory = false)
+            string parentID, 
+            string destFileID, 
+            bool isDirectory = false)
         {
             if (isDirectory)
             {
@@ -46,7 +48,7 @@ namespace GoogleDrivePlugin.Controller
             }
             else
             {
-                this.model.SaveCurrentModelTo(destFileID);
+                this.model.SaveCurrentModelTo(parentID, destFileID);
             }
         }
 

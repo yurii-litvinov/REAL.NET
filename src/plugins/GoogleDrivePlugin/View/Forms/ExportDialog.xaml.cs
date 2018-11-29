@@ -15,6 +15,7 @@
                 controller.RequestExportWindowHiding();
             this.SaveButton.Click += async (sender, args) =>
                 await controller.RequestModelExport(
+                    this.FileExplorer.CurrentDirectoryID,
                     this.FileExplorer.SelectedItem.ID,
                     this.FileExplorer.SelectedItem.IsDirectory);
 
@@ -32,7 +33,10 @@
                 await controller.RequestLoggingOut();
 
             this.FileExplorer.ItemSelected += async (sender, fileInfo) =>
-                await controller.RequestModelExport(fileInfo.ID, fileInfo.IsDirectory);
+                await controller.RequestModelExport(
+                    this.FileExplorer.CurrentDirectoryID, 
+                    fileInfo.ID, 
+                    fileInfo.IsDirectory);
 
             this.FileExplorer.ItemDeletionRequested += (sender, itemInfo) =>
                 controller.RequestFileDeletion(

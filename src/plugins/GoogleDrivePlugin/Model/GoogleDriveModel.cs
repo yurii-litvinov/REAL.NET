@@ -1,6 +1,7 @@
 ﻿namespace GoogleDrivePlugin.Model
 {
     using System.Collections.Generic;
+    using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -9,6 +10,8 @@
     using Google.Apis.Drive.v3;
 
     using Model.ClientSecret;
+
+    using EditorPluginInterfaces;
 
     public class GoogleDriveModel
     {
@@ -27,10 +30,13 @@
         private UserCredential userCredentials;
         private string username;
 
+        private IModel editorModel;
+
         private const string ApplicationName = "REALNET-GoogleDrivePlugin";
 
-        public GoogleDriveModel()
+        public GoogleDriveModel(IModel editorModel)
         {
+            this.editorModel = editorModel;
         }
 
         public async Task LogUserOut()
@@ -133,15 +139,41 @@
             await this.RequestFolderContent(sourceFolderID);
         }
 
-        public void SaveCurrentModelTo(string fileID)
+        public async void SaveCurrentModelTo(string parentID, string fileID)
         {
+            var tempFilePath = Path.GetTempFileName();
+            this.editorModel.Repo.Save(tempFilePath);
 
+            using (var stream = File.OpenRead(tempFilePath))
+            {
+                //var t = this.drive.Files.Update()
+                var uploadRequest = this.drive.Files.Update(
+                    new Google.Apis.Drive.v3.Data.File(),
+                    fileID,
+                    stream,
+                    "application/json");
+
+                await uploadRequest.UploadAsync();
+            }
+
+            this.RequestUploadHide();
+            await this.RequestFolderContent(parentID);
         }
 
-        public void LoadModelFrom(string fileID)
+        public async void LoadModelFrom(string fileID)
         {
+            var tempFilePath = Path.GetTempFileName();
 
-        }   
+            using (var stream = new FileStream(tempFilePath, FileMode.Open))
+            {
+                var downloadRequest = this.drive.Files.Get(fileID);
+                await downloadRequest.DownloadAsync(stream);
+            }
+
+
+
+            this.RequestDownloadHide();
+        }
 
         public async Task RequestFolderContent(string folderID)
         {
@@ -155,12 +187,6 @@
             var response = await request.ExecuteAsync();
 
             var itemList = new List<FileMetaInfo>();
-           /* if (folderID != null)
-            {
-                // Level up folder
-                itemList.Add(new FileMetaInfo(parentID, "...", null, true));
-            }*/
-
             foreach (var item in response.Files)
             {
                 var isFolder = item.MimeType == "application/vnd.google-apps.folder";
@@ -179,7 +205,7 @@
             this.username = await GetUserInfo(this.userCredentials);
             this.drive = InitDriveService(this.userCredentials);
         }
-
+        
         private static async Task<UserCredential> AuthorizeUser()
         {
             var scopes = new[] 
