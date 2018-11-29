@@ -170,7 +170,7 @@
                 await downloadRequest.DownloadAsync(stream);
             }
 
-
+            this.editorModel.Open(tempFilePath);
 
             this.RequestDownloadHide();
         }
