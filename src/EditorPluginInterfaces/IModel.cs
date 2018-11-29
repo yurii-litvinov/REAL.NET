@@ -37,6 +37,12 @@ namespace EditorPluginInterfaces
         Repo.IRepo Repo { get; }
 
         /// <summary>
+        /// Opens a given save file and reinitializes a repository with it.
+        /// </summary>
+        /// <param name="fileName">Name</param>
+        void Open(string fileName);
+
+        /// <summary>
         /// Creates a new node in a model.
         /// </summary>
         /// <param name="element">Metatype of created node.</param>
