@@ -2,13 +2,21 @@
 
 namespace GoogleDrivePlugin.Model
 {
-    public class UserInfoArgs : EventArgs
+    public enum OperationType {OpenWindow, CloseWindow, Progress, Error}
+
+    public class OperationProgressArgs : EventArgs
     {
-        public UserInfoArgs(string username)
+        public OperationProgressArgs(OperationType operationType, string info, int progress = 0)
         {
-            this.Username = username;
+            this.OperationType = operationType;
+            this.Info = info;
+            this.Progress = progress;
         }
 
-        public string Username { get; }
+        public OperationType OperationType { get; }
+
+        public string Info { get; }
+
+        public int Progress { get; }
     }
 }

@@ -22,13 +22,22 @@
             this.model = model;
             this.controller = controller;
 
-            model.ShowExportWindow += (sender, args) =>
+            model.ExportWindowStatusChanged += (sender, args) =>
             {
-                username = args.Username;
-                this.dialogWindow = (ExportDialog)this.ShowWindow(this.dialogWindow);
-                this.dialogWindow.LogoutBox.UsernameLabel.Content = username;
+                if (args.OperationType == OperationType.OpenWindow)
+                {
+                    username = args.Info;
+                    this.dialogWindow = (ExportDialog)this.ShowWindow(this.dialogWindow);
+                    this.dialogWindow.LogoutBox.UsernameLabel.Content = username;
+                }
             };
-            model.HideExportWindow += (sender, args) => this.HideWindow(this.dialogWindow);
+            model.ExportWindowStatusChanged += (sender, args) =>
+            {
+                if (args.OperationType == OperationType.CloseWindow)
+                {
+                    this.HideWindow(this.dialogWindow);
+                }
+            };
 
             model.FileListReceived += (sender, args) =>
             {

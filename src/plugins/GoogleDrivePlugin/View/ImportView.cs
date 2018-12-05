@@ -21,13 +21,22 @@
             this.model = model;
             this.controller = controller;
 
-            model.ShowImportWindow += (sender, args) =>
+            model.ImportWindowStatusChanged += (sender, args) =>
             {
-                username = args.Username;
-                this.dialogWindow = (ImportDialog)this.ShowWindow(this.dialogWindow);
-                this.dialogWindow.LogoutBox.UsernameLabel.Content = username;
+                if (args.OperationType == OperationType.OpenWindow)
+                {
+                    username = args.Info;
+                    this.dialogWindow = (ImportDialog)this.ShowWindow(this.dialogWindow);
+                    this.dialogWindow.LogoutBox.UsernameLabel.Content = username;
+                }
             };
-            model.HideImportWindow += (sender, args) => this.HideWindow(this.dialogWindow);
+            model.ImportWindowStatusChanged += (sender, args) =>
+            {
+                if (args.OperationType == OperationType.CloseWindow)
+                {
+                    this.HideWindow(this.dialogWindow);
+                }
+            };
 
             model.FileListReceived += (sender, args) =>
             {

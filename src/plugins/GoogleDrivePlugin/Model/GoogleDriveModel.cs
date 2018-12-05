@@ -17,11 +17,9 @@
     {
         public static string RootFolderName = "root";
 
-        public delegate void UserInfoHandler(object sender, UserInfoArgs info);
-        public event UserInfoHandler ShowImportWindow;
-        public event UserInfoHandler ShowExportWindow;
-        public event UserInfoHandler HideImportWindow;
-        public event UserInfoHandler HideExportWindow;
+        public delegate void OperationHandler(object sender, OperationProgressArgs info);
+        public event OperationHandler ImportWindowStatusChanged;
+        public event OperationHandler ExportWindowStatusChanged;
 
         public delegate void FileListHandler(object sender, FileListArgs args);
         public event FileListHandler FileListReceived;
@@ -41,8 +39,8 @@
 
         public async Task LogUserOut()
         {
-            this.HideExportWindow?.Invoke(this, new UserInfoArgs(this.userCredentials.UserId));
-            this.HideImportWindow?.Invoke(this, new UserInfoArgs(this.userCredentials.UserId));
+            this.RequestDownloadHide();
+            this.RequestUploadHide();
 
             await this.userCredentials.RevokeTokenAsync(CancellationToken.None);
             this.userCredentials = null;
@@ -62,12 +60,16 @@
                 }
             }
 
-            this.ShowExportWindow?.Invoke(this, new UserInfoArgs(this.username));
+            this.ExportWindowStatusChanged?.Invoke(
+                this, 
+                new OperationProgressArgs(OperationType.OpenWindow, this.username));
         }
 
         public void RequestUploadHide()
         {
-            this.HideExportWindow?.Invoke(this, new UserInfoArgs(this.username));
+            this.ExportWindowStatusChanged?.Invoke(
+                this, 
+                new OperationProgressArgs(OperationType.CloseWindow, this.username));
         }
 
         public async Task RequestDownload()
@@ -84,12 +86,16 @@
                 }
             }
 
-            this.ShowImportWindow?.Invoke(this, new UserInfoArgs(this.username));
+            this.ImportWindowStatusChanged?.Invoke(
+                this, 
+                new OperationProgressArgs(OperationType.OpenWindow, this.username));
         }
         
         public void RequestDownloadHide()
         {
-            this.HideImportWindow?.Invoke(this, new UserInfoArgs(this.username));
+            this.ImportWindowStatusChanged?.Invoke(
+                this, 
+                new OperationProgressArgs(OperationType.CloseWindow, this.username));
         }
 
         public async void CreateNewFile(string parentID, string fileName, string mimeType = null)
