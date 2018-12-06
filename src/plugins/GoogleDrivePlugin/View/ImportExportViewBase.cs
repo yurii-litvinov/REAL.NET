@@ -9,7 +9,7 @@
 
     public abstract class ImportExportViewBase 
     {
-        //private GoogleDriveModel model;
+//        private GoogleDriveModel model;
 
         private Stack<string> parents = new Stack<string>();
 
@@ -86,6 +86,16 @@
                     Size = item.Size,
                     IsDirectory = item.IsDirectory
                 });
+            }
+        }
+
+        protected void HandleError(object sender, OperationProgressArgs args)
+        {
+            if (args.OperationType == OperationType.Error)
+            {
+                MessageBox.Show(
+                    args.Info, "Operation error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

@@ -152,6 +152,7 @@
             var tempFilePath = Path.GetTempFileName();
             this.editorModel.Repo.Save(tempFilePath);
 
+            Google.Apis.Upload.IUploadProgress progress;
             using (var stream = File.OpenRead(tempFilePath))
             {
                 var uploadRequest = this.drive.Files.Update(
@@ -160,10 +161,22 @@
                     stream,
                     "application/json");
 
-                await uploadRequest.UploadAsync();
+                progress = await uploadRequest.UploadAsync();
             }
 
-            this.RequestUploadHide();
+            if (progress.Status == Google.Apis.Upload.UploadStatus.Failed)
+            {
+                this.ExportWindowStatusChanged?.Invoke(
+                    this,
+                    new OperationProgressArgs(
+                        OperationType.Error, 
+                        $"Failed to upload model: { progress.Exception.Message }"));
+            }
+            else
+            {
+                this.RequestUploadHide();
+            }
+            
             await this.RequestFolderContent(parentID);
         }
 
@@ -171,10 +184,21 @@
         {
             var tempFilePath = Path.GetTempFileName();
 
+            Google.Apis.Download.IDownloadProgress progress;
             using (var stream = new FileStream(tempFilePath, FileMode.Open))
             {
                 var downloadRequest = this.drive.Files.Get(fileID);
-                var progress = await downloadRequest.DownloadAsync(stream);
+                progress = await downloadRequest.DownloadAsync(stream);
+            }
+
+            if (progress.Status == Google.Apis.Download.DownloadStatus.Failed)
+            {
+                this.ImportWindowStatusChanged?.Invoke(
+                    this,
+                    new OperationProgressArgs(
+                        OperationType.Error,
+                        $"Failed to download model: { progress.Exception.Message }"));
+                return;
             }
 
             try

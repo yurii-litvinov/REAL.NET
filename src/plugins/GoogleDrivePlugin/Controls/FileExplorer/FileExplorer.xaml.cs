@@ -28,13 +28,6 @@ namespace GoogleDrivePlugin.Controls.FileExplorer
         {
             InitializeComponent();
 
-            /*this.AddItemToList("testmodel.file", "154KB", false);
-            this.AddItemToList("dfdfdf.txt", "100TB", true);
-            for (int i = 0; i < 10; ++i)
-            {
-                this.AddItemToList($"la{i}", $"{352 * i}KB", false);
-            }*/
-
             this.ItemList.PreviewMouseDoubleClick += this.HandleChosenItem;
 
             this.ItemList.MouseMove += this.InitializeDragDropForItem;

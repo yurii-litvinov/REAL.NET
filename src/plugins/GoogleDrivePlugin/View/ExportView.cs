@@ -22,7 +22,7 @@
             this.model = model;
             this.controller = controller;
 
-            model.ExportWindowStatusChanged += (sender, args) =>
+            this.model.ExportWindowStatusChanged += (sender, args) =>
             {
                 if (args.OperationType == OperationType.OpenWindow)
                 {
@@ -31,7 +31,8 @@
                     this.dialogWindow.LogoutBox.UsernameLabel.Content = username;
                 }
             };
-            model.ExportWindowStatusChanged += (sender, args) =>
+
+            this.model.ExportWindowStatusChanged += (sender, args) =>
             {
                 if (args.OperationType == OperationType.CloseWindow)
                 {
@@ -39,13 +40,15 @@
                 }
             };
 
-            model.FileListReceived += (sender, args) =>
+            this.model.FileListReceived += (sender, args) =>
             {
                 if (this.dialogWindow != null)
                 {
                     this.HandleReceivedFileList(this.dialogWindow.FileExplorer, args);
                 }
             };
+
+            this.model.ExportWindowStatusChanged += this.HandleError;
         }
 
         protected override Window CreateNewWindowInstance() 

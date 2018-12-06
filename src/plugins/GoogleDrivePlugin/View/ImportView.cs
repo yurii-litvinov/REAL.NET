@@ -21,7 +21,7 @@
             this.model = model;
             this.controller = controller;
 
-            model.ImportWindowStatusChanged += (sender, args) =>
+            this.model.ImportWindowStatusChanged += (sender, args) =>
             {
                 if (args.OperationType == OperationType.OpenWindow)
                 {
@@ -31,7 +31,7 @@
                 }
             };
 
-            model.ImportWindowStatusChanged += (sender, args) =>
+            this.model.ImportWindowStatusChanged += (sender, args) =>
             {
                 if (args.OperationType == OperationType.CloseWindow)
                 {
@@ -39,7 +39,7 @@
                 }
             };
 
-            model.FileListReceived += (sender, args) =>
+            this.model.FileListReceived += (sender, args) =>
             {
                 if (this.dialogWindow != null)
                 {
@@ -47,15 +47,7 @@
                 }
             };
 
-            model.ImportWindowStatusChanged += (sender, args) =>
-            {
-                if (args.OperationType == OperationType.Error)
-                {
-                    MessageBox.Show(
-                        this.dialogWindow, args.Info, "Import error",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            };
+            this.model.ImportWindowStatusChanged += this.HandleError;
         }
 
         protected override Window CreateNewWindowInstance() => 

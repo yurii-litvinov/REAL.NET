@@ -24,7 +24,7 @@
 
             <ListView.View>
                 <GridView AllowsColumnReorder="False">
-                    <GridViewColumn x:Name="NameColumn" Width="300" 
+                    <GridViewColumn x:Name="NameColumn" Width="250" 
                                     Header="Name">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
