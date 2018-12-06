@@ -34,9 +34,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core, Version=4.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Google.Apis.Drive.v3, Version=1.36.1.1407, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Google.Apis.Drive.v3.1.36.1.1407\lib\net45\Google.Apis.Drive.v3.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -195,8 +192,8 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
       <ItemGroup>
-        <Reference Include="Google.Apis.Drive.v2">
-          <HintPath>..\..\..\packages\Google.Apis.Drive\lib\Google.Apis.Drive.v2.dll</HintPath>
+        <Reference Include="Google.Apis.Drive.v3">
+          <HintPath>..\..\..\packages\Google.Apis.Drive.v3\lib\net45\Google.Apis.Drive.v3.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

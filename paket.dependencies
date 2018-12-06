@@ -13,7 +13,7 @@ nuget StyleCop.Analyzers
 nuget System.ValueTuple
 nuget Newtonsoft.Json
 nuget Google.Apis
-nuget Google.Apis.Drive
+nuget Google.Apis.Drive.v3
 nuget Google.Apis.Oauth2.v2
 
 group Tests

@@ -1,5 +1,5 @@
 ﻿Google.Apis
-Google.Apis.Drive
+Google.Apis.Drive.v3
 Google.Apis.Oauth2.v2
 Newtonsoft.Json
 FSharp.Core
