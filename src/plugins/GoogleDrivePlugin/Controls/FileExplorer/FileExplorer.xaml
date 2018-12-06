@@ -1,0 +1,59 @@
+﻿<UserControl x:Class="GoogleDrivePlugin.Controls.FileExplorer.FileExplorer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GoogleDrivePlugin.Controls.FileExplorer"
+             mc:Ignorable="d">
+    <Grid>
+        <ListView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                  Margin="0" ScrollViewer.CanContentScroll="True"
+                  x:Name="ItemList" AllowDrop="True" SelectionMode="Single">
+            <ListView.Resources>
+                <ContextMenu x:Key="ItemContextMenu">
+                    <MenuItem x:Name="DeleteItemContextButton" Click="DeleteItem"
+                              Header="Delete" />
+                </ContextMenu>
+            </ListView.Resources>
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
+                </Style>
+            </ListView.ItemContainerStyle>
+
+            <ListView.View>
+                <GridView AllowsColumnReorder="False">
+                    <GridViewColumn x:Name="NameColumn" Width="250" 
+                                    Header="Name">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="16"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <Image x:Name="ItemTypeIcon" Grid.Column="0" Height="16" Width="16" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Name}" Margin="5,0,0,0" />
+                                </Grid>
+
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding IsDirectory}" Value="True">
+                                        <Setter Property="Image.Source" TargetName="ItemTypeIcon" Value="pack://application:,,,/GoogleDrivePlugin;component/Controls/FileExplorer/ItemTypeIcons/ItemFolder.png" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsDirectory}" Value="False">
+                                        <Setter Property="Image.Source" TargetName="ItemTypeIcon" Value="pack://application:,,,/GoogleDrivePlugin;component/Controls/FileExplorer/ItemTypeIcons/ItemFile.png" />
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    
+                    <GridViewColumn x:Name="SizeColumn" Width="100"
+                                    Header="Size" DisplayMemberBinding="{Binding Size}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</UserControl>
