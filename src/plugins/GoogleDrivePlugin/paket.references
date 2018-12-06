@@ -4,3 +4,4 @@ Google.Apis.Core
 Google.Apis.Drive
 Google.Apis.Oauth
 Newtonsoft.Json
+FSharp.Core
