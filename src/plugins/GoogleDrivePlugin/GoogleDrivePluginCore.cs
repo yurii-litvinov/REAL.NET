@@ -29,12 +29,24 @@
         /// </summary>
         private IConsole console;
 
+        /// <summary>
+        /// Plugin model
+        /// </summary>
         private GoogleDriveModel pluginModel;
 
+        /// <summary>
+        /// Plugin controller
+        /// </summary>
         private GoogleDriveController pluginController;
 
+        /// <summary>
+        /// Export dialog view
+        /// </summary>
         private ExportView exportView;
 
+        /// <summary>
+        /// Import dialog view
+        /// </summary>
         private ImportView importView;
 
         /// <summary>
@@ -72,6 +84,9 @@
             this.console.SendMessage("Google Drive Plugin Successfully Launched");
         }
 
+        /// <summary>
+        /// Places plugin buttons to editor toolbar
+        /// </summary>
         private void PlaceButtonsOnToolbar()
         {
             var uploadCommand = new Command(

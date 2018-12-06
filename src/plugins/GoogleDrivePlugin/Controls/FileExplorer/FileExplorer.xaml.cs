@@ -7,23 +7,52 @@ using System.Windows.Media;
 namespace GoogleDrivePlugin.Controls.FileExplorer
 {
     /// <summary>
-    /// Логика взаимодействия для FileExplorer.xaml
+    /// Interaction logic for FileExplorer.xaml
     /// </summary>
     public partial class FileExplorer : UserControl
     {
+        /// <summary>
+        /// The item that is currently selected
+        /// </summary>
         public ItemInfo SelectedItem => (ItemInfo)this.ItemList.SelectedItem;
 
+        /// <summary>
+        /// User changed his selection of item
+        /// </summary>
         public event EventHandler<ItemInfo> ItemSelected;
 
+        /// <summary>
+        /// User requested deletion of selected item
+        /// </summary>
         public event EventHandler<ItemInfo> ItemDeletionRequested;
 
+        /// <summary>
+        /// Handles events connected with item movement
+        /// </summary>
+        /// <typeparam name="T">Type of item info</typeparam>
+        /// <param name="sender">Event sender</param>
+        /// <param name="source">Info about source item</param>
+        /// <param name="destination">Info about destination item</param>
         public delegate void MoveEventHandler<T>(object sender, T source, T destination);
+
+        /// <summary>
+        /// User requested movement of one item to another
+        /// </summary>
         public event MoveEventHandler<ItemInfo> ItemMovementRequested;
 
+        /// <summary>
+        /// ID of directory in which user currently is
+        /// </summary>
         public string CurrentDirectoryID { get; set; } = Model.GoogleDriveModel.RootFolderName;
 
+        /// <summary>
+        /// ID of directory which was requested by user in the last request
+        /// </summary>
         public string RequestedDirectoryID { get; set; }
 
+        /// <summary>
+        /// Initializes new instance of FileExplorer
+        /// </summary>
         public FileExplorer()
         {
             InitializeComponent();
@@ -36,16 +65,28 @@ namespace GoogleDrivePlugin.Controls.FileExplorer
             this.ItemList.DragLeave += this.DeHighlightCurrentTarget;
         }
 
+        /// <summary>
+        /// Adds new item to item list
+        /// </summary>
+        /// <param name="newItem">New item info</param>
         public void AddItemToList(ItemInfo newItem)
         {
             this.ItemList.Items.Add(newItem);
         }
 
+        /// <summary>
+        /// Clears file list
+        /// </summary>
         public void ClearList()
         {
             this.ItemList.Items.Clear();
         }
 
+        /// <summary>
+        /// Handles item which was selected by user
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="args">Some unused info</param>
         private void HandleChosenItem(object sender, EventArgs args)
         {
             if (this.SelectedItem == null)
@@ -61,6 +102,11 @@ namespace GoogleDrivePlugin.Controls.FileExplorer
             this.ItemSelected?.Invoke(this, this.SelectedItem);
         }
 
+        /// <summary>
+        /// Handles deletion request
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="args">Some unused info</param>
         private void DeleteItem(object sender, EventArgs args)
         {
             if (this.SelectedItem == null)
@@ -71,6 +117,11 @@ namespace GoogleDrivePlugin.Controls.FileExplorer
             this.ItemDeletionRequested?.Invoke(this, this.SelectedItem);
         }
 
+        /// <summary>
+        /// Initialized drag'n'drop process for selected item
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="args">Info about selection</param>
         private void InitializeDragDropForItem(object sender, MouseEventArgs args)
         {
             var item = this.FindClickedItem((DependencyObject)args.OriginalSource);
@@ -84,6 +135,11 @@ namespace GoogleDrivePlugin.Controls.FileExplorer
             }
         }
 
+        /// <summary>
+        /// Finishes drag'n'drop process
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="args">Info about movement target</param>
         private void EndDragDropOperation(object sender, DragEventArgs args)
         {
             var destItem = this.FindClickedItem((DependencyObject)args.OriginalSource);
@@ -99,6 +155,11 @@ namespace GoogleDrivePlugin.Controls.FileExplorer
             this.DeHighlightCurrentTarget(sender, args);
         }
 
+        /// <summary>
+        /// Highlights the item the user is aiming at
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="args">Info about target</param>
         private void HighlightCurrentTarget(object sender, DragEventArgs args)
         {
             var target = this.FindClickedItem((DependencyObject)args.OriginalSource);
@@ -108,6 +169,12 @@ namespace GoogleDrivePlugin.Controls.FileExplorer
                 target.Background = Brushes.AliceBlue;
             }
         }
+
+        /// <summary>
+        /// Dehighlights the item the user is aiming at
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="args">Info about target</param>
         private void DeHighlightCurrentTarget(object sender, DragEventArgs args)
         {
             var target = this.FindClickedItem((DependencyObject)args.OriginalSource);
@@ -118,6 +185,11 @@ namespace GoogleDrivePlugin.Controls.FileExplorer
             }
         }
 
+        /// <summary>
+        /// Find selected item in visual tree
+        /// </summary>
+        /// <param name="current">Item to find</param>
+        /// <returns></returns>
         private ListViewItem FindClickedItem(DependencyObject current) 
         {
             if (current == null)

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace GoogleDrivePlugin.Model
 {
+    /// <summary>
+    /// Contains file list of some folder on Drive
+    /// </summary>
     public class FileListArgs : EventArgs
     {
         /// <summary>
@@ -10,14 +13,20 @@ namespace GoogleDrivePlugin.Model
         /// </summary>
         /// <param name="parentID">Path to data in the Drive</param>
         /// <param name="itemInfo">Pair [itemName, isDirectory flag] </param>
-        public FileListArgs(string parentID, List<FileMetaInfo> itemInfo)
+        public FileListArgs(string parentID, List<ItemMetaInfo> itemInfo)
         {
             this.FolderID = parentID;
             this.FileList = itemInfo;
         }
 
+        /// <summary>
+        /// Google Drive ID of folder
+        /// </summary>
         public string FolderID { get; }
 
-        public List<FileMetaInfo> FileList { get; }
+        /// <summary>
+        /// List of files in folder with FolderID
+        /// </summary>
+        public List<ItemMetaInfo> FileList { get; }
     }
 }

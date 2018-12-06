@@ -3,10 +3,14 @@
     using System.Windows;
 
     /// <summary>
-    /// Логика взаимодействия для ExportDialog.xaml
+    /// Interaction logic for ExportDialog.xaml
     /// </summary>
     public partial class ExportDialog : Window 
     {
+        /// <summary>
+        /// Initializes new instance of ExportDialog
+        /// </summary>
+        /// <param name="controller">Plugin controller</param>
         public ExportDialog(Controller.GoogleDriveController controller)
         {
             InitializeComponent();
@@ -66,6 +70,11 @@
                 controller.RequestDirectoryContent(Model.GoogleDriveModel.RootFolderName);
         }
         
+        /// <summary>
+        /// Gets new item name from user
+        /// </summary>
+        /// <param name="itemType">Type of item (folder, file, etc)</param>
+        /// <returns>Item name</returns>
         protected string GetNewItemName(string itemType)
         {
             // It is only for development time :)

@@ -3,10 +3,14 @@
     using System.Windows;
 
     /// <summary>
-    /// Логика взаимодействия для ImportDialog.xaml
+    /// Interaction login for ImportDialog.xaml
     /// </summary>
     public partial class ImportDialog : Window
     {
+        /// <summary>
+        /// Initializes new instance of ImportDialog
+        /// </summary>
+        /// <param name="controller">Plugin controller</param>
         public ImportDialog(Controller.GoogleDriveController controller)
         {
             InitializeComponent();
@@ -54,6 +58,11 @@
                 controller.RequestDirectoryContent(Model.GoogleDriveModel.RootFolderName);
         }
 
+        /// <summary>
+        /// Gets new item name from user
+        /// </summary>
+        /// <param name="itemType">Type of item (folder, file, etc)</param>
+        /// <returns>Item name</returns>
         protected string GetNewItemName(string itemType)
         {
             // It is only for development time :)

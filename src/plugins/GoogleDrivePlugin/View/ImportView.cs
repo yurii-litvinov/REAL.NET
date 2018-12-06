@@ -1,20 +1,40 @@
 ﻿namespace GoogleDrivePlugin.View
 {
-    using System;
     using Model;
     using Controller;
+
     using System.Windows;
 
+    /// <summary>
+    /// View (MVC) of import dialog
+    /// </summary>
     public class ImportView : ImportExportViewBase
     {
+        /// <summary>
+        /// Connected dialog
+        /// </summary>
         private ImportDialog dialogWindow;
 
+        /// <summary>
+        /// Plugin model
+        /// </summary>
         private GoogleDriveModel model;
 
+        /// <summary>
+        /// Plugin controller
+        /// </summary>
         private GoogleDriveController controller;
 
+        /// <summary>
+        /// User's nickname
+        /// </summary>
         private string username;
 
+        /// <summary>
+        /// Initializes new instance of ImportView
+        /// </summary>
+        /// <param name="model">Plugin model</param>
+        /// <param name="controller">Plugin controller</param>
         public ImportView(GoogleDriveModel model, GoogleDriveController controller)
             : base(model)
         {
@@ -50,6 +70,10 @@
             this.model.ImportWindowStatusChanged += this.HandleError;
         }
 
+        /// <summary>
+        /// Creates new import dialog
+        /// </summary>
+        /// <returns>New dialog</returns>
         protected override Window CreateNewWindowInstance() => 
             new ImportDialog(this.controller);
     }

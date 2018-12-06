@@ -1,23 +1,33 @@
 ﻿namespace GoogleDrivePlugin.View
 {
-    using System;
     using System.Windows;
     using System.Collections.Generic;
 
     using Model;
     using Controls.FileExplorer;
 
+    /// <summary>
+    /// Base of import and export views
+    /// </summary>
     public abstract class ImportExportViewBase 
     {
-//        private GoogleDriveModel model;
-
+        /// <summary>
+        /// Chain of parents of current folder
+        /// </summary>
         private Stack<string> parents = new Stack<string>();
 
+        /// <summary>
+        /// Initializes new instance of ImportExportViewBase
+        /// </summary>
+        /// <param name="model"></param>
         public ImportExportViewBase(GoogleDriveModel model)
-        {
-            //model.FileListReceived += (sender, args) => this.HandleReceivedFileList(args);
-        }
+        {}
         
+        /// <summary>
+        /// Makes given window visible
+        /// </summary>
+        /// <param name="window">Window to show</param>
+        /// <returns></returns>
         protected Window ShowWindow(Window window)
         {
             if (window == null || !window.IsLoaded)
@@ -32,6 +42,10 @@
             return window;
         }
 
+        /// <summary>
+        /// Hides give window
+        /// </summary>
+        /// <param name="window">Window to hide</param>
         protected void HideWindow(Window window)
         {
             if (window != null)
@@ -40,6 +54,11 @@
             }
         }
 
+        /// <summary>
+        /// Adds received files to file list
+        /// </summary>
+        /// <param name="fileExplorer">List to add files to</param>
+        /// <param name="args">Files to add</param>
         protected virtual void HandleReceivedFileList(FileExplorer fileExplorer,  FileListArgs args)
         {
             if (fileExplorer == null ||
@@ -89,6 +108,11 @@
             }
         }
 
+        /// <summary>
+        /// Shows error message
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="args">Error info</param>
         protected void HandleError(object sender, OperationProgressArgs args)
         {
             if (args.OperationType == OperationType.Error)
@@ -99,6 +123,10 @@
             }
         }
 
+        /// <summary>
+        /// Creates new instance of import/export window
+        /// </summary>
+        /// <returns>New window</returns>
         protected abstract Window CreateNewWindowInstance();
     }
 }
