@@ -205,6 +205,7 @@
             {
                 this.editorModel.Open(tempFilePath);
             }
+            // Because we do not know exactly which exception should be caught
             catch (Exception)
             {
                 this.ImportWindowStatusChanged?.Invoke(
@@ -233,7 +234,7 @@
             foreach (var item in response.Files)
             {
                 var isFolder = item.MimeType == "application/vnd.google-apps.folder";
-                var itemSize = isFolder ? null : $"{item.Size}B";
+                var itemSize = isFolder ? null : GetPrettySize((long)item.Size);
                 var fileInfo = new FileMetaInfo(item.Id, item.Name, itemSize, isFolder);
 
                 itemList.Add(fileInfo);
@@ -290,6 +291,38 @@
                     HttpClientInitializer = credential,
                     ApplicationName = ApplicationName
                 });
+        }
+
+        private static string GetPrettySize(long sizeInBytes)
+        {
+            if (sizeInBytes >= 0x1000000000000000)
+            {
+                return $"{(sizeInBytes >> 60)}EB";
+            }
+            else if (sizeInBytes >= 0x4000000000000)
+            {
+                return $"{(sizeInBytes >> 50)}PB";
+            }
+            else if (sizeInBytes >= 0x10000000000)
+            {
+                return $"{(sizeInBytes >> 40)}TB";
+            }
+            else if (sizeInBytes >= 0x40000000)
+            {
+                return $"{(sizeInBytes >> 30)}GB";
+            }
+            else if (sizeInBytes >= 0x100000)
+            {
+                return $"{(sizeInBytes >> 20)}MB";
+            }
+            else if (sizeInBytes >= 0x400) 
+            {
+                return $"{(sizeInBytes >> 10)}KB";
+            }
+            else
+            {
+                return $"{sizeInBytes}B";
+            }
         }
     }
 }
