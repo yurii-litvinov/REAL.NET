@@ -30,6 +30,7 @@
                     this.dialogWindow.LogoutBox.UsernameLabel.Content = username;
                 }
             };
+
             model.ImportWindowStatusChanged += (sender, args) =>
             {
                 if (args.OperationType == OperationType.CloseWindow)
@@ -45,7 +46,16 @@
                     this.HandleReceivedFileList(this.dialogWindow.FileExplorer, args);
                 }
             };
-                    
+
+            model.ImportWindowStatusChanged += (sender, args) =>
+            {
+                if (args.OperationType == OperationType.Error)
+                {
+                    MessageBox.Show(
+                        this.dialogWindow, args.Info, "Import error",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            };
         }
 
         protected override Window CreateNewWindowInstance() => 

@@ -1,5 +1,7 @@
 ﻿namespace GoogleDrivePlugin.Model
 {
+    using System;
+
     using System.Collections.Generic;
     using System.IO;
     using System.Threading;
@@ -152,7 +154,6 @@
 
             using (var stream = File.OpenRead(tempFilePath))
             {
-                //var t = this.drive.Files.Update()
                 var uploadRequest = this.drive.Files.Update(
                     new Google.Apis.Drive.v3.Data.File(),
                     fileID,
@@ -173,10 +174,22 @@
             using (var stream = new FileStream(tempFilePath, FileMode.Open))
             {
                 var downloadRequest = this.drive.Files.Get(fileID);
-                await downloadRequest.DownloadAsync(stream);
+                var progress = await downloadRequest.DownloadAsync(stream);
             }
 
-            this.editorModel.Open(tempFilePath);
+            try
+            {
+                this.editorModel.Open(tempFilePath);
+            }
+            catch (Exception)
+            {
+                this.ImportWindowStatusChanged?.Invoke(
+                    this,
+                    new OperationProgressArgs(
+                        OperationType.Error, 
+                        "Selected file contains corrupted model"));
+                return;
+            }
 
             this.RequestDownloadHide();
         }

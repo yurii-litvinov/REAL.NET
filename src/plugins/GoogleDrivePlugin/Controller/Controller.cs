@@ -17,9 +17,9 @@ namespace GoogleDrivePlugin.Controller
 
         public async Task RequestExportWindow() => await this.model.RequestUpload();
 
-        public void RequestImportWindowHidind() => this.model.RequestDownloadHide();
+        public void RequestImportWindowHide() => this.model.RequestDownloadHide();
 
-        public void RequestExportWindowHiding() => this.model.RequestUploadHide();
+        public void RequestExportWindowHide() => this.model.RequestUploadHide();
 
         public async void RequestDirectoryContent(string folderID) =>
             await this.model.RequestFolderContent(folderID);

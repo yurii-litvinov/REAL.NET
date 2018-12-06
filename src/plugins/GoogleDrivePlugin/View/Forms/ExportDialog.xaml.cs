@@ -12,7 +12,7 @@
             InitializeComponent();
 
             this.CancelButton.Click += (sender, args) => 
-                controller.RequestExportWindowHiding();
+                controller.RequestExportWindowHide();
             this.SaveButton.Click += async (sender, args) =>
             {
                 if (this.FileExplorer.SelectedItem != null)
@@ -44,9 +44,20 @@
                     fileInfo.IsDirectory);
 
             this.FileExplorer.ItemDeletionRequested += (sender, itemInfo) =>
-                controller.RequestFileDeletion(
-                    this.FileExplorer.CurrentDirectoryID, itemInfo.ID);
+            {
+                var confirmation = System.Windows.MessageBox.Show(
+                    this,
+                    $"Are you sure to delete {itemInfo.Name}?", "Item deletion",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
 
+                if (confirmation == MessageBoxResult.Yes)
+                {
+                    controller.RequestFileDeletion(
+                        this.FileExplorer.CurrentDirectoryID, itemInfo.ID);
+                }
+            };
+              
             this.FileExplorer.ItemMovementRequested += (sender, sourceInfo, destInfo) =>
                 controller.RequestFileMovement(
                     this.FileExplorer.CurrentDirectoryID, sourceInfo.ID, destInfo.ID);
