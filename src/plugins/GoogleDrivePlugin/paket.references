@@ -1,0 +1,6 @@
+﻿Google.Apis
+Google.Apis.Auth
+Google.Apis.Core
+Google.Apis.Drive
+Google.Apis.Oauth
+Newtonsoft.Json
