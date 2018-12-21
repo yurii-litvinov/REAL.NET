@@ -24,19 +24,46 @@ namespace OclPlugin
       this.console = console;
       this.repository = repo;
     }
+
+    public override bool VisitConstraint([NotNull] HelloParser.ConstraintContext context)
+    {
+      VisitContextDeclaration(context.contextDeclaration());
+      for(int i = 0; i < context.oclExpression().Length; i++)
+      {
+        calc.Depth = context.number()[i];
+        VisitOclExpression(context.oclExpression()[i]);
+        calc.Depth = 0;
+      }
+      return base.VisitConstraint(context);
+    }
+
     public override bool VisitOclExpression([NotNull] HelloParser.OclExpressionContext context)
     {
       for(int i = 0; i < context.letExpression().Length; i++)
       {
         VisitLetExpression(context.letExpression()[i]);
       }
-      if (!VisitExpression(context.expression()))
+      if (calc.Depth > 0)
       {
-        console.SendMessage("err");
-      }
-      else
-      {
-        console.SendMessage("ok");
+        foreach(Repo.IElement elem in model.Elements) {
+          Repo.IElement el = elem;
+          for (int i = 0; i < calc.Depth; i++)
+          {
+            el = el.Class;
+          }
+          if (el == curElement)
+          {
+            curElement = elem;
+            if (!VisitExpression(context.expression()))
+            {
+              console.SendMessage("err");
+            }
+            else
+            {
+              console.SendMessage("ok");
+            }
+          }
+        }
       }
       return true;
     }
@@ -76,6 +103,8 @@ namespace OclPlugin
       IRepo repository = null;
       IElement element = null;
       IConsole console = null;
+      Repo.IModel model = null;
+      public int Depth = 0;
       public HelloCalc(ArrayList<Dictionary<string, string>> vars, Dictionary<string, FunctionDef> funcs, HelloPrinter hp, IRepo repo, IConsole cons)
       {
         this.vars = vars;
@@ -83,7 +112,7 @@ namespace OclPlugin
         this.hp = hp;
         this.repository = repo;
         this.console = cons;
-        var model = repository.Model("RobotsTestModel");
+        model = repository.Model("RobotsTestModel");
         element = model.FindElement("aMotorsForward");
       }
       public override double VisitAdditiveExpression([NotNull] HelloParser.AdditiveExpressionContext context)
@@ -194,9 +223,20 @@ namespace OclPlugin
           vars.RemoveAt(vars.Count - 1);
           return res;
         }
-        else if (context.Parent is HelloParser.PostfixExpressionContext 
-          && ((HelloParser.PostfixExpressionContext) context.Parent).primaryExpression().GetText() == "self")
+        else if (context.Parent is HelloParser.PostfixExpressionContext)
         {
+          string elem = ((HelloParser.PostfixExpressionContext)context.Parent).primaryExpression().GetText();
+          element = model.FindElement(elem);
+          
+          if(context.number() != null)
+          {
+            IElement par = element;
+            for(int i = 0; i < Depth - Int32.Parse(context.number().GetText()); i++)
+            {
+              par = par.Class;
+            }
+            element = par;            
+          }
           return Double.Parse(element.Attributes.First(x => x.Name == context.pathName().GetText()).StringValue);
         }
         return VisitPathName(context.pathName());
