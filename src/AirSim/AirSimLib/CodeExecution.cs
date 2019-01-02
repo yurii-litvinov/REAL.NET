@@ -306,8 +306,8 @@ namespace AirSim.AirSimLib
             {
                 if (!strategies.ContainsKey(node.Name))
                 {
+                    // TODO: Functions were removed from repo, so this code does not work now.
                     recursionNodes.Push(strategies["aInitialNode"].GetNextNode(node, client, graph, writeToMessageBox));
-                    node = (INode)node.Function;
                     ++recursionLevel;
                     this.ExecuteNode(ref node, client, graph, writeToMessageBox);
                     return;

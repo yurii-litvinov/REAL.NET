@@ -61,10 +61,9 @@ type AirSimModelBuilder() =
             let find name = Model.findNode infrastructureMetamodel name
 
             // The same as in the metamodel but with functions
-            let (~+) (name, shape, isAbstract, func) =
+            let (~+) (name, shape, isAbstract) =
                 let node = infrastructure.Instantiate metamodel (find "Node") :?> INode
                 node.Name <- name
-                node.Function <- func
                 infrastructure.Element.SetAttributeValue node "shape" shape
                 infrastructure.Element.SetAttributeValue node "isAbstract" (if isAbstract then "true" else "false")
                 infrastructure.Element.SetAttributeValue node "instanceMetatype" "Metatype.Node"
@@ -104,13 +103,8 @@ type AirSimModelBuilder() =
                     | Some s -> getStart(s :?> INode)
             
             // Add new node with function to metamodel
-            +("FuncionNode", "View/Pictures/functionBlock.png", false, Some (getStart(newFunc) :> IElement)) |> ignore
+            +("FuncionNode", "View/Pictures/functionBlock.png", false) |> ignore
             
-            // Make function node in the model
-            let metamodelFunc = Model.findNode metamodel "FuncionNode"
-            let func = infrastructure.Instantiate model metamodelFunc :?> INode
-            func.Function <- Some (getStart(newFunc) :> IElement)
-
             initialNode --> ifNode-->> takeoff --> move --> timer3 --> landing --> finalNode |> ignore
             ifNode -->>> finalNode2 |> ignore
             ()

@@ -50,9 +50,6 @@ and INode =
 
         /// Name of a node, possibly not unique.
         abstract Name: string with get, set
-        
-        /// Funtion in the node
-        abstract Function: Option<IElement> with get, set
     end
 
 /// Edge is a kind of element which can connect to everything.

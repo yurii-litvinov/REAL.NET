@@ -116,9 +116,6 @@ and [<AllowNullLiteral>] IElement =
 type INode =
     interface
         inherit IElement
-
-        /// Function in the node
-        abstract Function: IElement with get, set
     end
 
 /// Edge --- an edge in a model. Note that here it can connect not only nodes, but edges too. It is needed to model
