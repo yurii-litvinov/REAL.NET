@@ -23,7 +23,7 @@ namespace RobotSimulation
     public class SensorSim
     {
         private Timer timer;
-        private Random rnd = new Random(unchecked((int)(DateTime.Now.Ticks)));
+        private Random rnd = new Random();
 
         public event EventHandler<int> Event;
         public int Index { get; set; }

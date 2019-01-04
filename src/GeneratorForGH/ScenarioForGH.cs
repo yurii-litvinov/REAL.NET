@@ -7,7 +7,7 @@
 //     повторного создания кода.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace Generator
+namespace GeneratorForGH
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -17,12 +17,9 @@ namespace Generator
     /// <summary>
     /// Class to produce the template output
     /// </summary>
-    
-    #line 1 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "15.0.0.0")]
-    public partial class Scenario : ScenarioBase
+    public partial class ScenarioForGH : ScenarioForGHBase
     {
-#line hidden
         /// <summary>
         /// Create the template output
         /// </summary>
@@ -43,76 +40,38 @@ namespace Generator
  * limitations under the License. */
 
 ");
-            this.Write("namespace Generator\r\n{\r\n\tusing System;\r\n\tusing System.Linq;\r\n\tusing System.Reacti" +
-                    "ve;\r\n\tusing System.Reactive.Linq;\r\n\tusing System.Reactive.Subjects;\r\n\tusing Robo" +
-                    "tSimulation;\r\n\t//using Trik;\r\n\r\n\tpublic class GeneratedCode\r\n    {\r\n");
-            
-            #line 32 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write("\n");
+            this.Write("\n");
+            this.Write("\n");
+            this.Write("\n");
+            this.Write("\nnamespace GeneratorForGH\n{\n\tusing System;\n\tusing System.Linq;\n\tusing System.Reac" +
+                    "tive;\n\tusing System.Reactive.Linq;\n\tusing System.Reactive.Subjects;\n\tusing Robot" +
+                    "Simulation;\n\tusing Trik;\n\n\tpublic class GeneratedCode\n    {\n");
 
 List<Repo.INode> modelNodes = new List<Repo.INode>();
-foreach (var x in r.Model("GreenhouseTestModel").Nodes) {
+foreach (var x in Repository.Model("GreenhouseTestModel").Nodes) {
 	modelNodes.Add(x);
 }
 	
 foreach (var x in modelNodes) { 
-            
-            #line default
-            #line hidden
-            this.Write("\t\tprivate static ");
-            
-            #line 39 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write("\n\t\tprivate static ");
             this.Write(this.ToStringHelper.ToStringWithCulture(classOfElement(x.Name)));
-            
-            #line default
-            #line hidden
             this.Write(" element");
-            
-            #line 39 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(modelNodes.IndexOf(x)));
-            
-            #line default
-            #line hidden
-            this.Write(";\r\n");
-            
-            #line 40 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write(";\n");
  } 
-            
-            #line default
-            #line hidden
-            this.Write("\r\n\t\tprivate static void Main(string[] args)\r\n\t\t{\r\n            Console.WriteLine(\"" +
-                    "Initial values:\");\r\n");
-            
-            #line 45 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write("\n\n\t\tprivate static void Main(string[] args)\n\t\t{\n            Console.WriteLine(\"In" +
+                    "itial values:\");\n");
  
 foreach (var x in modelNodes) { 
 	var index = modelNodes.IndexOf(x); 
-            
-            #line default
-            #line hidden
-            this.Write("\r\n\t\t\telement");
-            
-            #line 49 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write("\n\n\t\t\telement");
             this.Write(this.ToStringHelper.ToStringWithCulture(index));
-            
-            #line default
-            #line hidden
             this.Write(" = new ");
-            
-            #line 49 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(classOfElement(x.Name)));
-            
-            #line default
-            #line hidden
             this.Write("(");
-            
-            #line 49 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(index));
-            
-            #line default
-            #line hidden
-            this.Write(");\r\n\t");
-            
-            #line 50 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write(");\n\t");
  
 	if (classOfElement(x.Name) == "Interval")
 	{
@@ -122,469 +81,161 @@ foreach (var x in modelNodes) {
 			{
 				string min = minEnum.First().StringValue ?? "null";
 				string max = maxEnum.First().StringValue ?? "null"; 
-            
-            #line default
-            #line hidden
-            this.Write("\r\n\t\t\telement");
-            
-            #line 60 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write("\n\n\t\t\telement");
             this.Write(this.ToStringHelper.ToStringWithCulture(index));
-            
-            #line default
-            #line hidden
             this.Write(".Min = ");
-            
-            #line 60 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(min));
-            
-            #line default
-            #line hidden
-            this.Write(";\r\n\t\t\telement");
-            
-            #line 61 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write(";\n\t\t\telement");
             this.Write(this.ToStringHelper.ToStringWithCulture(index));
-            
-            #line default
-            #line hidden
             this.Write(".Max = ");
-            
-            #line 61 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(max));
-            
-            #line default
-            #line hidden
-            this.Write(";\r\n            Console.WriteLine(\"Interval {0}: min -- {1}, max -- {2}\", ");
-            
-            #line 62 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write(";\n            Console.WriteLine(\"Interval {0}: min -- {1}, max -- {2}\", ");
             this.Write(this.ToStringHelper.ToStringWithCulture(index));
-            
-            #line default
-            #line hidden
             this.Write(", ");
-            
-            #line 62 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(min));
-            
-            #line default
-            #line hidden
             this.Write(", ");
-            
-            #line 62 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(max));
-            
-            #line default
-            #line hidden
-            this.Write(");\r\n\t\t\t");
-            
-            #line 63 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write(");\n\t\t\t");
 }
 	}
 	if (classOfElement(x.Name) == "Operation")
 	{
-            
-            #line default
-            #line hidden
-            this.Write("\r\n\t\t\telement");
-            
-            #line 68 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write("\n\n\t\t\telement");
             this.Write(this.ToStringHelper.ToStringWithCulture(index));
-            
-            #line default
-            #line hidden
             this.Write(".Kind = \"");
-            
-            #line 68 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(kindOfOperation(x.Name)));
-            
-            #line default
-            #line hidden
-            this.Write("\";\r\n\t");
-            
-            #line 69 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write("\";\n\t");
 }
-            
-            #line default
-            #line hidden
-            this.Write("\r\n\t\t\tIObservable<int> observable");
-            
-            #line 71 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write("\n\n\t\t\tIObservable<int> observable");
             this.Write(this.ToStringHelper.ToStringWithCulture(index));
-            
-            #line default
-            #line hidden
-            this.Write(" =\r\n\t\t\t\t\t\tSystem.Reactive.Linq.Observable.FromEventPattern<int>(\r\n\t\t\t\t\t\t\th => ele" +
-                    "ment");
-            
-            #line 73 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write(" =\n\t\t\t\t\t\tSystem.Reactive.Linq.Observable.FromEventPattern<int>(\n\t\t\t\t\t\t\th => eleme" +
+                    "nt");
             this.Write(this.ToStringHelper.ToStringWithCulture(index));
-            
-            #line default
-            #line hidden
-            this.Write(".Event += h,\r\n\t\t\t\t\t\t\th => element");
-            
-            #line 74 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write(".Event += h,\n\t\t\t\t\t\t\th => element");
             this.Write(this.ToStringHelper.ToStringWithCulture(index));
-            
-            #line default
-            #line hidden
-            this.Write(".Event -= h)\r\n\t\t\t\t\t\t\t.Select(e => e.EventArgs)\r\n\t\t\t\t\t\t\t.Synchronize().DistinctUnt" +
-                    "ilChanged();\r\n\t\t\tIObserver<int> observer");
-            
-            #line 77 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write(".Event -= h)\n\t\t\t\t\t\t\t.Select(e => e.EventArgs)\n\t\t\t\t\t\t\t.Synchronize().DistinctUntil" +
+                    "Changed();\n\t\t\tIObserver<int> observer");
             this.Write(this.ToStringHelper.ToStringWithCulture(index));
-            
-            #line default
-            #line hidden
             this.Write(" = Observer.Create<int>(x => element");
-            
-            #line 77 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(index));
-            
-            #line default
-            #line hidden
-            this.Write(".Action(x));\r\n\t\t\tISubject<int> reactElement");
-            
-            #line 78 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write(".Action(x));\n\t\t\tISubject<int> reactElement");
             this.Write(this.ToStringHelper.ToStringWithCulture(index));
-            
-            #line default
-            #line hidden
             this.Write(" = Subject.Create<int>(observer");
-            
-            #line 78 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(index));
-            
-            #line default
-            #line hidden
             this.Write(", observable");
-            
-            #line 78 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(index));
-            
-            #line default
-            #line hidden
-            this.Write(");\r\n\t    ");
-            
-            #line 79 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write(");\n\t    ");
 
 }
-            
-            #line default
-            #line hidden
-            this.Write("\r\n");
-            
-            #line 82 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write("\n\n");
 
-//bool[,] sourceOrTarget = new bool[modelNodes.Count, 2];
 
-foreach (var x in r.Model("GreenhouseTestModel").Edges) {
+foreach (var x in Repository.Model("GreenhouseTestModel").Edges) {
 	if (classOfElement(x.To.Name) == "Operation") { 
-            
-            #line default
-            #line hidden
-            this.Write("\r\n\t\t\telement");
-            
-            #line 88 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write("\n\n\t\t\telement");
             this.Write(this.ToStringHelper.ToStringWithCulture(modelNodes.IndexOf((Repo.INode)x.To)));
-            
-            #line default
-            #line hidden
             this.Write(".IncomingValues.Add(");
-            
-            #line 88 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(modelNodes.IndexOf((Repo.INode)x.From)));
-            
-            #line default
-            #line hidden
-            this.Write(", null);\r\n\t");
-            
-            #line 89 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write(", null);\n\t");
  }
 }
 
-            
-            #line default
-            #line hidden
-            this.Write("\r\n\t\t\t// index of the element and index of the reactElement which is made on it\'s " +
-                    "basis are the same \r\n");
-            
-            #line 94 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write("\n\n\t\t\t// index of the element and index of the reactElement which is made on it\'s " +
+                    "basis are the same \n");
 
 
 int j = 0;
-foreach (var x in r.Model("GreenhouseTestModel").Edges) 
+foreach (var x in Repository.Model("GreenhouseTestModel").Edges) 
 { 
 	var source = x.From as Repo.INode;
 	var target = x.To as Repo.INode; 
-            
-            #line default
-            #line hidden
-            this.Write("\t\t\tvar sub");
-            
-            #line 101 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write("\n\t\t\tvar sub");
             this.Write(this.ToStringHelper.ToStringWithCulture(j));
-            
-            #line default
-            #line hidden
             this.Write(" = reactElement");
-            
-            #line 101 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(modelNodes.IndexOf(source)));
-            
-            #line default
-            #line hidden
             this.Write(".Subscribe(reactElement");
-            
-            #line 101 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(modelNodes.IndexOf(target)));
-            
-            #line default
-            #line hidden
-            this.Write(");\r\n");
-            
-            #line 102 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write(");\n");
 
 	j++;
 } 
-            
-            #line default
-            #line hidden
-            this.Write("\r\n\t\t\t//var robot = new Model();\r\n\t\t\t");
-            
-            #line 107 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
- foreach (var x in modelNodes) { 
+            if (!TestWithRobotSimulation) { 
+            this.Write("\n\t\t\tvar robot = new Model();\n            ");
+ }
+
+            // defining ports for sensors, actuators and connecting them with real(or RobotSimulation) sensors/actuators 
+			foreach (var x in modelNodes) { 
 				if (classOfElement(x.Name) == "Sensor") { 
 					var port = x.Attributes.Where(y => y.Name == "port").AsEnumerable();
 					if (port.Any())
 					{
 						string p = port.First().StringValue; 
-            
-            #line default
-            #line hidden
-            this.Write("\t\t\t\r\n            SensorSim sensorSim");
-            
-            #line 114 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+                        if (TestWithRobotSimulation) { 
+            this.Write("\n            SensorSim sensorSim");
             this.Write(this.ToStringHelper.ToStringWithCulture(modelNodes.IndexOf(x)));
-            
-            #line default
-            #line hidden
             this.Write(" = new SensorSim(");
-            
-            #line 114 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(p));
-            
-            #line default
-            #line hidden
-            this.Write(");\r\n\t\t\tsensorSim");
-            
-            #line 115 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write(");\n\t\t\tsensorSim");
             this.Write(this.ToStringHelper.ToStringWithCulture(modelNodes.IndexOf(x)));
-            
-            #line default
-            #line hidden
             this.Write(".Index = ");
-            
-            #line 115 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(modelNodes.IndexOf(x)));
-            
-            #line default
-            #line hidden
-            this.Write(";\r\n            Console.WriteLine(\"Sensor{0}: sensor at port {1}\", ");
-            
-            #line 116 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write(";\n            Console.WriteLine(\"Sensor{0}: sensor at port {1}\", ");
             this.Write(this.ToStringHelper.ToStringWithCulture(modelNodes.IndexOf(x)));
-            
-            #line default
-            #line hidden
             this.Write(", ");
-            
-            #line 116 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(p));
-            
-            #line default
-            #line hidden
-            this.Write(");\r\n\t\t\t//sensorSim<\\#= modelNodes.IndexOf(x) #>.Event += (sender, args) => \r\n    " +
-                    "            //element<\\#= modelNodes.IndexOf(x) #>.Action(args);\r\n\r\n            " +
-                    "IObservable<int> observableForSimulation");
-            
-            #line 120 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write(");\n\n            IObservable<int> observableForSimulation");
             this.Write(this.ToStringHelper.ToStringWithCulture(modelNodes.IndexOf(x)));
-            
-            #line default
-            #line hidden
-            this.Write(" =\r\n\t\t\t\t\t\tSystem.Reactive.Linq.Observable.FromEventPattern<int>(\r\n\t\t\t\t\t\t\th => sen" +
-                    "sorSim");
-            
-            #line 122 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write(" =\n\t\t\t\t\t\tSystem.Reactive.Linq.Observable.FromEventPattern<int>(\n\t\t\t\t\t\t\th => senso" +
+                    "rSim");
             this.Write(this.ToStringHelper.ToStringWithCulture(modelNodes.IndexOf(x)));
-            
-            #line default
-            #line hidden
-            this.Write(".Event += h,\r\n\t\t\t\t\t\t\th => sensorSim");
-            
-            #line 123 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write(".Event += h,\n\t\t\t\t\t\t\th => sensorSim");
             this.Write(this.ToStringHelper.ToStringWithCulture(modelNodes.IndexOf(x)));
-            
-            #line default
-            #line hidden
-            this.Write(".Event -= h)\r\n\t\t\t\t\t\t\t.Select(e => e.EventArgs)\r\n\t\t\t\t\t\t\t.Synchronize().DistinctUnt" +
-                    "ilChanged();\r\n\r\n            observableForSimulation");
-            
-            #line 127 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write(".Event -= h)\n\t\t\t\t\t\t\t.Select(e => e.EventArgs)\n\t\t\t\t\t\t\t.Synchronize().DistinctUntil" +
+                    "Changed();\n\n            observableForSimulation");
             this.Write(this.ToStringHelper.ToStringWithCulture(modelNodes.IndexOf(x)));
-            
-            #line default
-            #line hidden
             this.Write(".Subscribe(reactElement");
-            
-            #line 127 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(modelNodes.IndexOf(x)));
-            
-            #line default
-            #line hidden
-            this.Write(");\r\n\r\n\t\t\t//var s<#= modelNodes.IndexOf(x) #> = robot.AnalogSensors[Trik.Sensor.A<" +
-                    "#= p #>].ToObservable().DistinctUntilChanged();\r\n\t\t\t//s<#= modelNodes.IndexOf(x)" +
-                    " #>.Subscribe(reactElement<#= modelNodes.IndexOf(x) #>);\r\n\t\t\t\t\t");
-            
-            #line 131 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
-}
+            this.Write(");\n                        ");
+ }
+                        else { 
+            this.Write("\n\n\t\t\tvar s<#= modelNodes.IndexOf(x) #> = robot.AnalogSensors[Trik.Sensor.A<#= p #" +
+                    ">].ToObservable().DistinctUntilChanged();\n\t\t\ts<#= modelNodes.IndexOf(x) #>.Subsc" +
+                    "ribe(reactElement<#= modelNodes.IndexOf(x) #>);\n                        ");
+ }
+                     }
 				}
 				if (classOfElement(x.Name) == "Actuator") { 
 					var port = x.Attributes.Where(y => y.Name == "port").AsEnumerable();
 					if (port.Any())
 					{
 						string p = port.First().StringValue; 
-            
-            #line default
-            #line hidden
-            this.Write("\t\t\t\r\n            Console.WriteLine(\"Actuator{0}: actuator at port {1}\", ");
-            
-            #line 139 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write("\n\t\t\t\n            Console.WriteLine(\"Actuator{0}: actuator at port {1}\", ");
             this.Write(this.ToStringHelper.ToStringWithCulture(modelNodes.IndexOf(x)));
-            
-            #line default
-            #line hidden
             this.Write(", ");
-            
-            #line 139 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(p));
-            
-            #line default
-            #line hidden
-            this.Write(");\r\n\t\t\tIObserver<int> observerForSimulation");
-            
-            #line 140 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write(");\n\n                        ");
+ if (TestWithRobotSimulation) { 
+            this.Write("\n\t\t\tIObserver<int> observerForSimulation");
             this.Write(this.ToStringHelper.ToStringWithCulture(modelNodes.IndexOf(x)));
-            
-            #line default
-            #line hidden
             this.Write(" = Observer.Create<int>(x => Console.WriteLine(\"----- Actuator at port {0} -- {1}" +
                     "  -----\", ");
-            
-            #line 140 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(p));
-            
-            #line default
-            #line hidden
-            this.Write(", x));\r\n\t\t\treactElement");
-            
-            #line 141 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+            this.Write(", x));\n\t\t\treactElement");
             this.Write(this.ToStringHelper.ToStringWithCulture(modelNodes.IndexOf(x)));
-            
-            #line default
-            #line hidden
             this.Write(".Subscribe(observerForSimulation");
-            
-            #line 141 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(modelNodes.IndexOf(x)));
-            
-            #line default
-            #line hidden
-            this.Write(");\r\n            \r\n            //reactElement<#= modelNodes.IndexOf(x) #>.Subscrib" +
-                    "e(robot.Motors[Trik.Motor.M<#= p #>]);\r\n\t\t\t\t\t");
-            
-            #line 144 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
-}
+            this.Write(");\n                        ");
+ }
+                        else { 
+            this.Write("\n            reactElement<#= modelNodes.IndexOf(x) #>.Subscribe(robot.Motors[Trik" +
+                    ".Motor.M<#= p #>]);\n                        ");
+ }
+					}
 				}
-			}
-            
-            #line default
-            #line hidden
-            this.Write("\r\n            Console.ReadLine();\r\n\r\n\t\t\t//RobotSimulator();\r\n        }\r\n\t\t\r\n\t\tpri" +
-                    "vate static void RobotSimulator()\r\n        {\r\n\t\t\t");
-            
-            #line 155 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
- foreach (var x in modelNodes) { 
-				if (classOfElement(x.Name) == "Sensor") { 
-                    var port = x.Attributes.Where(y => y.Name == "port").AsEnumerable();
-					    if (port.Any())
-					    {
-						    string p = port.First().StringValue; 
-            
-            #line default
-            #line hidden
-            this.Write("\r\n\t\t\tSensorSim sensorSim");
-            
-            #line 162 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(modelNodes.IndexOf(x)));
-            
-            #line default
-            #line hidden
-            this.Write(" = new SensorSim(");
-            
-            #line 162 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(p));
-            
-            #line default
-            #line hidden
-            this.Write(");\r\n\t\t\tsensorSim");
-            
-            #line 163 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(modelNodes.IndexOf(x)));
-            
-            #line default
-            #line hidden
-            this.Write(".Index = ");
-            
-            #line 163 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(modelNodes.IndexOf(x)));
-            
-            #line default
-            #line hidden
-            this.Write(";\r\n\t\t\tsensorSim");
-            
-            #line 164 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(modelNodes.IndexOf(x)));
-            
-            #line default
-            #line hidden
-            this.Write(".Event += (sender, args) => \r\n                element");
-            
-            #line 165 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(modelNodes.IndexOf(x)));
-            
-            #line default
-            #line hidden
-            this.Write(".Action(args);\r\n                        ");
-            
-            #line 166 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
-}
-            
-            #line default
-            #line hidden
-            this.Write("\t\t\t\t");
-            
-            #line 167 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
-}
-			}
-            
-            #line default
-            #line hidden
-            this.Write("\r\n            Console.ReadLine();\r\n        }\r\n    }\r\n}\r\n\r\n");
+			} 
+            this.Write("\n\n            Console.ReadLine();\n        }\n    }\n}\n\n");
             return this.GenerationEnvironment.ToString();
         }
-        
-        #line 175 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
  
 string classOfElement(string name)
 {
@@ -611,12 +262,6 @@ string classOfElement(string name)
 	}
 }
 
-        
-        #line default
-        #line hidden
-        
-        #line 202 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
- 
 string kindOfOperation(string name)
 {
 	switch(name)
@@ -630,27 +275,16 @@ string kindOfOperation(string name)
 	}
 }
 
-        
-        #line default
-        #line hidden
-        
-        #line 217 "C:\Users\User\Documents\GitHub\REAL.NET\src\Generator\Scenario.tt"
+public Repo.IRepo Repository { get; set; }
+public bool TestWithRobotSimulation { get; set; }
 
-public Repo.IRepo r { get; set; }
-
-        
-        #line default
-        #line hidden
     }
-    
-    #line default
-    #line hidden
     #region Base class
     /// <summary>
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "15.0.0.0")]
-    public class ScenarioBase
+    public class ScenarioForGHBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

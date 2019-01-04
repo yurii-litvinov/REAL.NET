@@ -12,43 +12,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-using System;
-
-namespace Generator
+namespace GeneratorForGH
 {
+    using System;
+
     /// <summary>
-    /// Open interval (Min, Max). Helps to represent intervals from model in repo.
+    /// Helps to represent actuators from model in repo.
     /// </summary>
-    /// Interval gets int as the input and if this value falls within a given interval (Min, Max)
-    /// then it publishes the event with positive number (Num + 1) -- so as not to fall into zero,
-    /// otherwise -- the event with negative number -(Num + 1).
-    public class Interval
+    public class Actuator
     {
         public int Num { get; }
-        public int? Min { get; set; }
-        public int? Max { get; set; }
 
         public event EventHandler<int> Event;
 
-        public Interval(int num)
+        public Actuator(int num)
         {
             this.Num = num;
         }
 
         public void Action(int value)
         {
-            if ((!Min.HasValue || Min < value) &&
-                (!Max.HasValue || Max > value))
+            if (value > 0)
             {
-                //Console.WriteLine("Interval{0} ({1}, {2}) TRUE", Num, this.Min, this.Max);
-                this.Event(this, this.Num + 1);
+                Console.WriteLine($"----- Actuator {Num} TRUE!!! -----");
+                this.Event?.Invoke(this, 1);
             }
             else
             {
-                //Console.WriteLine("Interval{0} ({1}, {2}) FALSE", Num, this.Min, this.Max);
-                this.Event(this, -(this.Num + 1));
+                Console.WriteLine($"----- Actuator {Num} FALSE!!! -----");
+                this.Event?.Invoke(this, 0);
             }
         }
     }
 }
-

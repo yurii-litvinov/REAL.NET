@@ -54,18 +54,3 @@ type GreenhouseTestModelBuilder() =
             airTemperature --> interval1 --> andOperation|> ignore
             soilTemperature --> interval2 --> andOperation |> ignore
             andOperation --> openWindow |> ignore
-
-            /// The smallest possible example (except of an empty example)
-            (*let airTemperature = infrastructure.Instantiate model metamodelAirTemperature
-            let interval1 = infrastructure.Instantiate model metamodelInterval
-            let openWindow = infrastructure.Instantiate model metamodelOpenWindow
-
-            let (-->) (src: IElement) dst =
-                let aLink = infrastructure.Instantiate model link :?> IAssociation
-                aLink.Source <- Some src
-                aLink.Target <- Some dst
-                dst
-
-            airTemperature --> interval1 --> openWindow |> ignore*)
-
-            ()

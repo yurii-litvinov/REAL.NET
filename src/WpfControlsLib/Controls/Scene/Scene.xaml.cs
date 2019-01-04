@@ -442,10 +442,10 @@ namespace WpfControlsLib.Controls.Scene
 
         private void AddNewEdgeControl(EdgeViewModel edgeViewModel)
         {
-            if (this.model.ModelName == "GreenhouseTestModel")
-            {
-                var prevVerVertex = this.previosVertex?.Vertex as NodeViewModel;
-                var ctrlVerVertex = this.currentVertex?.Vertex as NodeViewModel;
+            var prevVerVertex = this.previosVertex?.Vertex as NodeViewModel;
+            var ctrlVerVertex = this.currentVertex?.Vertex as NodeViewModel;
+            if (this.currentVertex is VertexControlWithVCP && this.previosVertex is VertexControlWithVCP)
+            { 
                 VertexConnectionPoint targetVCP = null;
                 foreach (var x in this.currentVertex.VertexConnectionPointsList)
                 {

@@ -16,22 +16,22 @@ namespace SmartGreenhouse.View
 {
     using System;
     using System.IO;
-    //using System.Collections.Generic;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
     using System.CodeDom.Compiler;
     using System.Diagnostics;
     using Microsoft.CSharp;
-    //using EditorPluginInterfaces;
-    //using PluginManager;
+    using EditorPluginInterfaces;
+    using PluginManager;
     using Repo;
-    using Generator;
-    //using WpfControlsLib.Constraints;
-    //using WpfControlsLib.Controls.Console;
+    using GeneratorForGH;
+    using WpfControlsLib.Constraints;
+    using WpfControlsLib.Controls.Console;
     using WpfControlsLib.Controls.ModelSelector;
     using WpfControlsLib.Controls.Scene;
-    //using WpfControlsLib.Controls.Toolbar;
+    using WpfControlsLib.Controls.Toolbar;
     using Palette = WpfControlsLib.Controls.Palette.Palette;
     
     /// <summary>
@@ -41,22 +41,15 @@ namespace SmartGreenhouse.View
     {
         private readonly WpfControlsLib.Model.Model model;
         private readonly WpfControlsLib.Controller.Controller controller;
+        private readonly bool testWithRobotSimulation;
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        //public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();
-
-        //public ToolbarViewModel Toolbar { get; } = new ToolbarViewModel();
 
         public string WindowTitle
         {
             get
             {
-                /*var fileName = (model == null || model.CurrentFileName == "")
-                    ? "(unsaved)"
-                    : model.CurrentFileName;
-                var unsavedChanges = model?.HasUnsavedChanges == true ? "*" : "";*/
-                return $"REAL.NET"; //{fileName} {unsavedChanges}";
+                return $"REAL.NET";
             }
         }
 
@@ -89,18 +82,12 @@ namespace SmartGreenhouse.View
 
             this.scene.Init(this.model, this.controller, new PaletteAdapter(this.palette));
 
-            /*this.modelSelector.Init(this.model);
-            this.modelSelector.ChangeModel(0);*/
-
             this.SelectModel("GreenhouseTestModel");
-
-            //this.InitAndLaunchPlugins();
-            //this.InitToolbar();
+            this.testWithRobotSimulation = true;
         }
 
         private void Reinit(object sender, EventArgs e)
         {
-            //this.SelectModel(this.modelSelector.ModelNames[0]);
             this.SelectModel("GreenhouseTestModel");
         }
 
@@ -118,33 +105,6 @@ namespace SmartGreenhouse.View
             this.scene.Reload();
         }
 
-        /*private void InitToolbar()
-        {
-            this.Console.Messages.Add("Initializing ToolBar");
-            var sample = new WpfControlsLib.Controls.Toolbar.StandardButtonsAndMenus.SampleButtonsCollection(this.Console, this.controller);
-            var buttons = sample.SampleButtons;
-            foreach (var button in buttons)
-            {
-                this.Toolbar.AddButton(button);
-            }
-        }*/
-
-        /*private void InitAndLaunchPlugins()
-        {
-            var libs = new PluginLauncher<PluginConfig>();
-            const string folder = "../../../plugins";
-            var pluginDirs = new List<string>(System.IO.Directory.GetDirectories(folder));
-            foreach (var plugindir in pluginDirs)
-            {
-                var dirs = new List<string>(System.IO.Directory.GetDirectories(plugindir + "/bin"));
-                var config = new PluginConfig(this.model, null, null, this.Console, null);
-                foreach (var dir in dirs)
-                {
-                    libs.LaunchPlugins(dir, config);
-                }
-            }
-        }*/
-
         private void CloseChildrenWindows(object sender, EventArgs e)
         {
             foreach (Window w in Application.Current.Windows)
@@ -152,17 +112,6 @@ namespace SmartGreenhouse.View
                 w.Close();
             }
         }
-
-        /*private void ConstraintsButtonClick(object sender, RoutedEventArgs e)
-        {
-            var constraintsWindow = new ConstraintsWindow(this.model);
-            constraintsWindow.ShowDialog();
-
-            if (!this.model.ConstraintsCheck())
-            {
-                this.Console.ReportError(this.model.Constraints.ErrorMsg);
-            }
-        }*/
 
         private void AttributesViewCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
             => this.scene.ChangeEdgeLabel(((TextBox)e.EditingElement).Text);
@@ -204,7 +153,10 @@ namespace SmartGreenhouse.View
 
         private void GenerateButtonClick(object sender, RoutedEventArgs e)
         {
-            var scenario = new Scenario { r = this.model.Repo };
+            var scenario = new ScenarioForGH {
+                Repository = this.model.Repo,
+                TestWithRobotSimulation = testWithRobotSimulation
+            };
             string code = scenario.TransformText();
 
             CompilerParameters parameters = new CompilerParameters();
@@ -216,64 +168,73 @@ namespace SmartGreenhouse.View
 
             parameters.ReferencedAssemblies.Add("System.Core.dll");
             parameters.ReferencedAssemblies.Add("System.Reactive.dll");
-            //parameters.ReferencedAssemblies.Add("Trik.Core.dll");
             parameters.ReferencedAssemblies.Add("RobotSimulation.dll");
-            parameters.ReferencedAssemblies.Add("Generator.dll");
+            parameters.ReferencedAssemblies.Add("GeneratorForGH.dll");
+            parameters.ReferencedAssemblies.Add("Trik.Core.dll");
+
+            if (!this.testWithRobotSimulation)
+            {
+            }
 
             var compiler = new CSharpCodeProvider();
             var results = compiler.CompileAssemblyFromSource(parameters, code);
 
-            Process.Start("scenario.exe");
-
-            /*if (results.Errors.Count > 0)
+            if (this.testWithRobotSimulation)
             {
-                foreach (CompilerError CompErr in results.Errors)
+                if (results.Errors.Count > 0)
                 {
-                    System.Console.WriteLine("Line number " + CompErr.Line +
-                                ", Error Number: " + CompErr.ErrorNumber +
-                                ", '" + CompErr.ErrorText + ";" +
-                                Environment.NewLine + Environment.NewLine);
+                    foreach (CompilerError CompErr in results.Errors)
+                    {
+                        Console.WriteLine("Line number " + CompErr.Line +
+                                    ", Error Number: " + CompErr.ErrorNumber +
+                                    ", '" + CompErr.ErrorText + ";" +
+                                    Environment.NewLine + Environment.NewLine);
+                    }
+                }
+                else
+                {
+                    Process.Start("scenario.exe");
                 }
             }
             else
             {
-                Process.Start("greenhouse.exe");
-            }*/
 
-            /*Process winscp = new Process();
-            winscp.StartInfo.FileName = @"C:\Program Files (x86)\WinSCP\winscp.com";
-            winscp.StartInfo.RedirectStandardInput = true;
-            winscp.StartInfo.UseShellExecute = false;
-            winscp.StartInfo.CreateNoWindow = false;
-            winscp.Start();
 
-            winscp.StandardInput.WriteLine("option batch abort");
-            winscp.StandardInput.WriteLine("option confirm off");
+                Process winscp = new Process();
+                winscp.StartInfo.FileName = @"C:\Program Files (x86)\WinSCP\winscp.com";
+                winscp.StartInfo.RedirectStandardInput = true;
+                winscp.StartInfo.UseShellExecute = false;
+                winscp.StartInfo.CreateNoWindow = false;
+                winscp.Start();
 
-            winscp.StandardInput.WriteLine("open scp://root:@192.168.77.1:22");
-            winscp.StandardInput.WriteLine(@"put greenhouse.exe /home/root/abc/");
-            winscp.StandardInput.WriteLine("exit");
+                winscp.StandardInput.WriteLine("option batch abort");
+                winscp.StandardInput.WriteLine("option confirm off");
 
-            winscp.StandardInput.Close();
-            winscp.WaitForExit();
+                winscp.StandardInput.WriteLine("open scp://root:@192.168.77.1:22");
+                winscp.StandardInput.WriteLine(@"put scenario.exe /home/root/abc/");
+                winscp.StandardInput.WriteLine("exit");
 
-            Process psi = new Process();
-            psi.StartInfo.FileName = @"C:\Windows\System32\cmd";
-            psi.StartInfo.RedirectStandardInput = true;
-            psi.StartInfo.RedirectStandardOutput = true;
-            psi.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-            psi.StartInfo.UseShellExecute = false;
-            psi.StartInfo.CreateNoWindow = false;
-            psi.Start();
+                winscp.StandardInput.Close();
+                winscp.WaitForExit();
 
-            psi.StandardInput.WriteLine("plink root@192.168.77.1:22");
-            psi.StandardInput.WriteLine("cd abc");
-            psi.StandardInput.WriteLine("mono greenhouse.exe");
+                Process psi = new Process();
+                psi.StartInfo.FileName = @"C:\Windows\System32\cmd";
+                psi.StartInfo.RedirectStandardInput = true;
+                psi.StartInfo.RedirectStandardOutput = true;
+                psi.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                psi.StartInfo.UseShellExecute = false;
+                psi.StartInfo.CreateNoWindow = false;
+                psi.Start();
 
-            while (true)
-            {
-                System.Console.WriteLine(psi.StandardOutput.ReadLine());
-            }*/
+                psi.StandardInput.WriteLine("plink root@192.168.77.1:22");
+                psi.StandardInput.WriteLine("cd abc");
+                psi.StandardInput.WriteLine("mono scenario.exe");
+
+                while (true)
+                {
+                    System.Console.WriteLine(psi.StandardOutput.ReadLine());
+                }
+            }
         }
 
         private void OnOpenExecuted(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)

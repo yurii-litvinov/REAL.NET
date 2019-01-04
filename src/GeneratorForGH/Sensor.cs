@@ -12,14 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-using System;
-
-namespace Generator
+namespace GeneratorForGH
 {
+    using System;
+
     /// <summary>
     /// Helps to represent sensors from model in repo.
     /// </summary>
-
     public class Sensor
     {
         public int Num { get; }
@@ -36,7 +35,7 @@ namespace Generator
         public void Action(int value)
         {
             //Console.WriteLine("Sensor {0} : {1}", Num, value);
-            this.Event(this, value);
+            this.Event?.Invoke(this, value);
         }
     }
 }

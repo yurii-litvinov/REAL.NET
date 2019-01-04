@@ -12,11 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-using System;
-using System.Collections.Generic;
-
-namespace Generator
+namespace GeneratorForGH
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Logical operation class. Helps to represent operations from model in repo.
     /// Operation gets int as the input. Positive numbers are recognized as true, negative -- as false.
@@ -84,13 +84,11 @@ namespace Generator
 
             if (result)
             {
-                //Console.WriteLine("Operation {0} TRUE", Num);
-                this.Event(this, this.Num + 1);
+                this.Event?.Invoke(this, this.Num + 1);
             }
             else
             {
-                //Console.WriteLine("Operation {0} FALSE", Num);
-                this.Event(this, -(this.Num + 1));
+                this.Event?.Invoke(this, -(this.Num + 1));
             }
         }
     }
