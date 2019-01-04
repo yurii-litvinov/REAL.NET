@@ -52,7 +52,7 @@ let solutionFile  = "REAL.NET.sln"
 // Default target configuration
 let configuration, doNotCopyBinaries = 
     if RuntimeInformation.IsOSPlatform OSPlatform.Linux then
-        "MonoRelease", ["WpfEditor"; "WpfControlsLib"; "AirSim"]
+        "MonoRelease", ["WpfEditor"; "WpfControlsLib"; "AirSim"; "SmartGreenhouse"]
     else
         "Release", []
 

@@ -14,10 +14,10 @@
 
 namespace WpfControlsLib.Model
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
     using GraphX.PCL.Common;
+    using System;
+    using System.Linq;
     using QuickGraph;
     using Repo;
     using ViewModel;
@@ -44,8 +44,6 @@ namespace WpfControlsLib.Model
             this.model.ElementRemoved += (sender, args) => this.RemoveElement(args.Element);
         }
 
-        public event EventHandler DrawGraph;
-
         public event EventHandler<ElementAddedEventArgs> ElementAdded;
 
         public event EventHandler<ElementRemovedEventArgs> ElementRemoved;
@@ -53,6 +51,16 @@ namespace WpfControlsLib.Model
         public event EventHandler<DataVertexArgs> AddNewVertexControl;
 
         public event EventHandler<DataEdgeArgs> AddNewEdgeControl;
+        
+        public event EventHandler<DataEdgeArgs> AddNewEdgeControlWithoutVCP;
+
+        public event EventHandler<DataVertexArgs> AddNewVertexControlWithoutPos;
+
+        public event EventHandler RelayoutGraph;
+
+        public event EventHandler ZoomToFill;
+
+        public event EventHandler AddVertexConnectionPoints;
 
         public BidirectionalGraph<NodeViewModel, EdgeViewModel> DataGraph { get; }
 
@@ -111,10 +119,32 @@ namespace WpfControlsLib.Model
                 }
 
                 this.DataGraph.AddEdge(newEdge);
+
+                var args = new DataEdgeArgs
+                {
+                    EdgeViewModel = newEdge
+                };
+                this.AddNewEdgeControlWithoutVCP?.Invoke(this, args);
+
                 this.ElementAdded?.Invoke(this, new ElementAddedEventArgs {Element = edge});
             }
 
-            this.DrawGraph?.Invoke(this, EventArgs.Empty);
+            this.RelayoutGraph?.Invoke(this, EventArgs.Empty);
+            this.ZoomToFill?.Invoke(this, EventArgs.Empty);
+            if (modelName == "GreenhouseTestModel")
+            {
+                this.AddVertexConnectionPoints?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        public void SetTargetVCPId(EdgeViewModel edgeViewModel, int id)
+        {
+            edgeViewModel.TargetConnectionPointId = id;
+        }
+
+        public void SetSourceVCPId(EdgeViewModel edgeViewModel, int id)
+        {
+            edgeViewModel.SourceConnectionPointId = id;
         }
 
         public void CreateEdge(IEdge edge, IElement prevVer, IElement ctrlVer)
@@ -183,6 +213,12 @@ namespace WpfControlsLib.Model
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
             this.DataGraph.AddVertex(vertex);
             this.ElementAdded?.Invoke(this, new ElementAddedEventArgs { Element = node });
+
+            var args = new DataVertexArgs
+            {
+                DataVertex = vertex
+            };
+            this.AddNewVertexControlWithoutPos?.Invoke(this, args);
         }
 
         private void RemoveElement(IElement element)

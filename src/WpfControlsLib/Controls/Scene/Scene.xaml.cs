@@ -80,7 +80,7 @@ namespace WpfControlsLib.Controls.Scene
                 new GXLogicCore<NodeViewModel, EdgeViewModel, BidirectionalGraph<NodeViewModel, EdgeViewModel>>
                 {
                     Graph = this.Graph.DataGraph,
-                    DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.LinLog,
+                    DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.LinLog
                 };
 
             this.graphArea.LogicCore = logic;
@@ -103,15 +103,107 @@ namespace WpfControlsLib.Controls.Scene
             this.model = model;
             this.elementProvider = elementProvider;
             this.Graph = new Graph(model);
-            this.Graph.DrawGraph += (sender, args) => this.DrawGraph();
+            this.Graph.RelayoutGraph += (sender, args) => this.graphArea.RelayoutGraph(true);
+            this.Graph.ZoomToFill += (sender, args) => this.zoomControl.ZoomToFill();
+            this.Graph.AddVertexConnectionPoints += (sender, args) => this.AddVertexConnectionPoints();
             this.Graph.ElementAdded += (sender, args) => this.ElementAdded?.Invoke(this, args);
             this.Graph.ElementRemoved += (sender, args) => this.ElementRemoved?.Invoke(this, args);
             this.Graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVertex);
             this.Graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.EdgeViewModel);
+            this.Graph.AddNewEdgeControlWithoutVCP += (sender, args) => this.AddNewEdgeControlWithoutVCP(args.EdgeViewModel);
+            this.Graph.AddNewVertexControlWithoutPos += (sender, args) => this.AddNewVertexControlWithoutPos(args.DataVertex);
             this.InitGraphXLogicCore();
         }
 
-        public void Clear() => this.Graph.DataGraph.Clear();
+        public void AddVertexConnectionPoints()
+        {
+            foreach (var vertex in this.graphArea.VertexList)
+            {
+                foreach (var edge in this.Graph.DataGraph.Edges)
+                {
+                    if (edge.Target == vertex.Key)
+                    {
+                        VertexConnectionPoint targetVCP = null;
+                        foreach (var x in vertex.Value.VertexConnectionPointsList)
+                        {
+                            var aVCPforGH = x as VertexConnectionPoint;
+                            if (aVCPforGH != null && !aVCPforGH.IsOccupied && !aVCPforGH.IsSource)
+                            {
+                                aVCPforGH.IsOccupied = true;
+                                targetVCP = aVCPforGH;
+                                break;
+                            }
+                        }
+
+                        if (targetVCP != null)
+                        {
+                            edge.TargetConnectionPointId = targetVCP.Id;
+                        }
+                        else
+                        {
+                            // if the model is initially incorrect
+                            if (vertex.Key.Node.Name == "aInterval")
+                            {
+                                return;
+                            }
+
+                            var newId = vertex.Value.VertexConnectionPointsList.Last().Id + 1;
+                            var vcp = new VertexConnectionPoint()
+                            {
+                                Id = newId,
+                                IsOccupied = true,
+                                IsSource = false
+                            };
+
+                            var ctrl = new Border
+                            { Margin = new Thickness(0, 2, 2, 0), Padding = new Thickness(0), Child = vcp };
+                            ((VertexControlWithVCP)vertex.Value).VCPTargetRoot.Children.Add(ctrl);
+                            vertex.Value.VertexConnectionPointsList.Add(vcp);
+                            edge.TargetConnectionPointId = newId;
+                        }
+                    }
+
+                    if (edge.Source == vertex.Key)
+                    {
+                        VertexConnectionPoint sourceVCP = null;
+                        foreach (var x in vertex.Value.VertexConnectionPointsList)
+                        {
+                            var aVCPforGH = x as VertexConnectionPoint;
+                            if (aVCPforGH != null && !aVCPforGH.IsOccupied && aVCPforGH.IsSource)
+                            {
+                                aVCPforGH.IsOccupied = true;
+                                sourceVCP = aVCPforGH;
+                                break;
+                            }
+                        }
+
+                        if (sourceVCP != null)
+                        {
+                            edge.SourceConnectionPointId = sourceVCP.Id;
+                        }
+                        else
+                        {
+                            var newId = vertex.Value.VertexConnectionPointsList.Last().Id + 1;
+                            sourceVCP = new VertexConnectionPoint()
+                            { Id = newId, IsOccupied = true, IsSource = true };
+                            var ctrl = new Border
+                            { Margin = new Thickness(0, 2, 2, 0), Padding = new Thickness(0), Child = sourceVCP };
+                            ((VertexControlWithVCP)vertex.Value).VCPSourceRoot.Children.Add(ctrl);
+                            vertex.Value.VertexConnectionPointsList.Add(sourceVCP);
+                            edge.SourceConnectionPointId = newId;
+                        }
+                    }
+
+                    this.graphArea.EdgesList[edge].UpdateEdge();
+                }
+            }
+        }
+
+        public void Clear()
+        {
+            this.Graph.DataGraph.Clear();
+            this.graphArea.ClearLayout();
+        }
 
         public void Reload() => this.Graph.InitModel(this.model.ModelName);
 
@@ -146,7 +238,7 @@ namespace WpfControlsLib.Controls.Scene
                 if (this.Graph.DataGraph.Vertices.ToList()[i].Name == name)
                 {
                     var vertex = this.Graph.DataGraph.Vertices.ToList()[i];
-                    this.NodeSelected?.Invoke(this, new NodeSelectedEventArgs {Node = vertex});
+                    this.NodeSelected?.Invoke(this, new NodeSelectedEventArgs { Node = vertex });
                     foreach (var ed in this.graphArea.VertexList)
                     {
                         if (ed.Key == vertex)
@@ -164,9 +256,9 @@ namespace WpfControlsLib.Controls.Scene
         {
             if (this.edgeControl != null)
             {
-                var data = this.edgeControl.GetDataEdge<EdgeViewModel>();
+                var data = edgeControl.GetDataEdge<EdgeViewModel>();
                 data.Text = newLabel;
-                this.graphArea.GenerateAllEdges();
+                graphArea.GenerateAllEdges();
             }
         }
 
@@ -208,6 +300,11 @@ namespace WpfControlsLib.Controls.Scene
                 }
                 else
                 {
+                    if (((VertexControlWithVCP)currentVertex).VCPTargetRoot == null)
+                    {
+                        this.editorManager.DestroyVirtualEdge();
+                        return;
+                    }
                     var command = new Commands.CreateEdgeCommand(
                         this.model,
                         this.elementProvider.Element,
@@ -262,7 +359,7 @@ namespace WpfControlsLib.Controls.Scene
                 this.HandleRoutingPoints(dataEdge, mousePosition);
             }
 
-            if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
+            /*if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
             {
                 this.zoomControl.MouseMove -= this.OnEdgeMouseMove;
                 args.EdgeControl.ContextMenu = new ContextMenu();
@@ -285,7 +382,7 @@ namespace WpfControlsLib.Controls.Scene
                     mi2.Click += this.MenuItemClickRoutingPoint;
                     args.EdgeControl.ContextMenu.Items.Add(mi2);
                 }
-            }
+            }*/
         }
 
         /// <summary>
@@ -335,16 +432,105 @@ namespace WpfControlsLib.Controls.Scene
         private void AddNewVertexControl(NodeViewModel vertex)
         {
             var vc = new VertexControl(vertex);
+            if (this.model.ModelName == "GreenhouseTestModel")
+            {
+                vc = new VertexControlWithVCP(vertex);
+            }
             vc.SetPosition(this.position);
             this.graphArea.AddVertex(vertex, vc);
         }
 
         private void AddNewEdgeControl(EdgeViewModel edgeViewModel)
         {
+            var prevVerVertex = this.previosVertex?.Vertex as NodeViewModel;
+            var ctrlVerVertex = this.currentVertex?.Vertex as NodeViewModel;
+            if (this.currentVertex is VertexControlWithVCP && this.previosVertex is VertexControlWithVCP)
+            { 
+                VertexConnectionPoint targetVCP = null;
+                foreach (var x in this.currentVertex.VertexConnectionPointsList)
+                {
+                    var aVCPforGH = x as VertexConnectionPoint;
+                    if (aVCPforGH != null && aVCPforGH.IsOccupied == false && aVCPforGH.IsSource == false)
+                    {
+                        aVCPforGH.IsOccupied = true;
+                        targetVCP = aVCPforGH;
+                        break;
+                    }
+                }
+
+                if (targetVCP != null)
+                {
+                    this.Graph.SetTargetVCPId(edgeViewModel, targetVCP.Id);
+                }
+                else
+                {
+                    if (ctrlVerVertex.Node.Name == "aInterval")
+                    {
+                        this.editorManager.DestroyVirtualEdge();
+                        return;
+                    }
+
+                    var newId = this.currentVertex.VertexConnectionPointsList.Last().Id + 1;
+                    targetVCP = new VertexConnectionPoint()
+                    { Id = newId, IsOccupied = true, IsSource = false };
+                    var ctrl = new Border
+                    { Margin = new Thickness(0, 2, 2, 0), Padding = new Thickness(0), Child = targetVCP };
+                    ((VertexControlWithVCP)this.currentVertex).VCPTargetRoot.Children.Add(ctrl);
+                    this.currentVertex.VertexConnectionPointsList.Add(targetVCP);
+                    this.Graph.SetTargetVCPId(edgeViewModel, targetVCP.Id);
+                }
+
+                VertexConnectionPoint sourceVCP = null;
+                foreach (var x in this.previosVertex.VertexConnectionPointsList)
+                {
+                    var aVCPforGH = x as VertexConnectionPoint;
+                    if (aVCPforGH != null && aVCPforGH.IsOccupied == false && aVCPforGH.IsSource == true)
+                    {
+                        aVCPforGH.IsOccupied = true;
+                        sourceVCP = aVCPforGH;
+                        break;
+                    }
+                }
+
+                if (sourceVCP != null)
+                {
+                    this.Graph.SetSourceVCPId(edgeViewModel, sourceVCP.Id);
+                }
+                else
+                {
+                    var newId = this.previosVertex.VertexConnectionPointsList.Last().Id + 1;
+                    sourceVCP = new VertexConnectionPoint()
+                    { Id = newId, IsOccupied = true, IsSource = true };
+                    var ctrl = new Border
+                    { Margin = new Thickness(0, 2, 2, 0), Padding = new Thickness(0), Child = sourceVCP };
+                    ((VertexControlWithVCP)this.previosVertex).VCPSourceRoot.Children.Add(ctrl);
+                    this.previosVertex.VertexConnectionPointsList.Add(sourceVCP);
+                    this.Graph.SetSourceVCPId(edgeViewModel, newId);
+                }
+            }
+
             var ec = new EdgeControl(this.previosVertex, this.currentVertex, edgeViewModel);
-            this.graphArea.InsertEdge(edgeViewModel, ec);
             this.previosVertex = null;
             this.editorManager.DestroyVirtualEdge();
+            this.graphArea.InsertEdge(edgeViewModel, ec);
+        }
+
+        private void AddNewEdgeControlWithoutVCP(EdgeViewModel edgeViewModel)
+        {
+            var previousVertex = this.graphArea.VertexList.First(vc => vc.Key == edgeViewModel.Source).Value;
+            var currentVertex = this.graphArea.VertexList.First(vc => vc.Key == edgeViewModel.Target).Value;
+            var ec = new EdgeControl(previousVertex, currentVertex, edgeViewModel);
+            this.graphArea.InsertEdge(edgeViewModel, ec);
+        }
+
+        private void AddNewVertexControlWithoutPos(NodeViewModel nodeViewModel)
+        {
+            var vc = new VertexControl(nodeViewModel);
+            if (this.model.ModelName == "GreenhouseTestModel")
+            {
+                vc = new VertexControlWithVCP(nodeViewModel);
+            }
+            this.graphArea.AddVertex(nodeViewModel, vc);
         }
 
         private void MenuItemClickRoutingPoint(object sender, EventArgs e)
@@ -387,6 +573,21 @@ namespace WpfControlsLib.Controls.Scene
             var command = new RemoveEdgeCommand(this.model, edge.Edge);
             this.controller.Execute(command);
             this.DrawGraph();
+        }
+
+        public void ClearButtonClicked()
+        {
+            foreach (var edge in this.graphArea.EdgesList.Keys)
+            {
+                var command = new RemoveEdgeCommand(this.model, edge.Edge);
+                this.controller.Execute(command);
+            }
+
+            foreach (var node in this.graphArea.VertexList.Keys)
+            {
+                var command = new RemoveNodeCommand(this.model, node.Node);
+                this.controller.Execute(command);
+            }
         }
 
         private void OnEdgeMouseUp(object sender, MouseButtonEventArgs e)

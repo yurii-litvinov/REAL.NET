@@ -1,4 +1,4 @@
-﻿(* Copyright 2017 Yurii Litvinov
+(* Copyright 2017 Yurii Litvinov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,8 @@ type RepoFactory =
         Metametamodels.RobotsTestModelBuilder() |> build
         Metametamodels.AirSimMetamodelBuilder() |> build
         Metametamodels.AirSimModelBuilder() |> build
+        Metametamodels.GreenhouseMetamodelBuilder() |> build
+        Metametamodels.GreenhouseTestModelBuilder() |> build
 
         new FacadeLayer.Repo(data) :> IRepo
 

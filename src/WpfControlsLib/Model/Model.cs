@@ -18,8 +18,8 @@ namespace WpfControlsLib.Model
     using EditorPluginInterfaces;
 
     /// <summary>
-    /// Model in MVC architecture. Wraps repository, provides operations like adding or removing models, edges and
-    /// nodes (note that "model" is used with two different meanings around the project -- a visual model consisting
+    /// Model in MVC architecture. Wraps repository, provides operations like adding or removing models, edges and 
+    /// nodes (note that "model" is used with two different meanings around the project -- a visual model consisting 
     /// of nodes and edges and a model in MVC sense) and notifications for all concerned tools about changes in repo.
     /// This class is a ground truth about visual model currently edited and is supposed to be used by all tools and
     /// parts of an editor who need to listen for visual model changes and/or modify visual model.
@@ -170,8 +170,8 @@ namespace WpfControlsLib.Model
         public void CreateEdge(Repo.IEdge edge, Repo.IElement source, Repo.IElement destination)
         {
             if (this.Constraints.AllowCreateOrExistEdge(
-                    this.Repo.Model(this.ModelName).Edges, 
-                    source.Name, 
+                    this.Repo.Model(this.ModelName).Edges,
+                    source.Name,
                     destination.Name))
             {
                 var model = this.Repo.Model(this.ModelName);

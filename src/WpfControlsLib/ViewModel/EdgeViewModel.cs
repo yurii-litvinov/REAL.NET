@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel;
 using GraphX.Measure;
 using GraphX.PCL.Common.Interfaces;
@@ -56,7 +56,7 @@ namespace WpfControlsLib.ViewModel
                 this.OnPropertyChanged(nameof(this.Text));
             }
         }
-
+        
         public IList<AttributeViewModel> Attributes
         {
             get => this.attributes;
@@ -67,7 +67,7 @@ namespace WpfControlsLib.ViewModel
                 this.OnPropertyChanged();
             }
         }
-
+        
         public string ToolTipText { get; set; }
 
         public EdgeTypeEnum EdgeType
@@ -85,7 +85,7 @@ namespace WpfControlsLib.ViewModel
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
-
+        
         public override string ToString() => this.Text;
     }
 }
