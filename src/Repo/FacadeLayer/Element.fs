@@ -66,7 +66,7 @@ and [<AbstractClass>] Element
         member this.Attributes =
             infrastructureSemantic.Element.Attributes element |> Seq.map attributeRepository.GetAttribute
 
-        member this.Class =
+        member this.LinguisticType =
             repository.GetElement element.Class
 
         member this.IsAbstract =

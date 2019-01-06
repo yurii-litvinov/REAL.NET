@@ -25,10 +25,10 @@ let ``Node in a model shall have metatype`` () =
     let repo = RepoFactory.Create ()
     let underlyingRepo = (repo :?> Repo).UnderlyingRepo
 
-    let model = repo.Models |> Seq.find (fun m -> m.Name = "RobotsTestModel")
+    let model = repo.Model "RobotsTestModel"
     let dataLayerModel = (model :?> Model).UnderlyingModel
 
-    let metamodel = repo.Models |> Seq.find (fun m -> m.Name = "RobotsMetamodel")
+    let metamodel = repo.Model "RobotsMetamodel"
     let dataLayerMetamodel = (metamodel :?> Model).UnderlyingModel
 
     let dataLayerClass = dataLayerMetamodel.Nodes |> Seq.find (fun n -> n.Name = "MotorsForward") :> DataLayer.IElement
@@ -48,10 +48,10 @@ let ``Timer block shall have a picture`` () =
     let repo = RepoFactory.Create ()
     let underlyingRepo = (repo :?> Repo).UnderlyingRepo
 
-    let model = repo.Models |> Seq.find (fun m -> m.Name = "RobotsTestModel")
+    let model = repo.Model "RobotsTestModel"
     let dataLayerModel = (model :?> Model).UnderlyingModel
 
-    let metamodel = repo.Models |> Seq.find (fun m -> m.Name = "RobotsMetamodel")
+    let metamodel = repo.Model "RobotsMetamodel"
     let dataLayerMetamodel = (metamodel :?> Model).UnderlyingModel
 
     let dataLayerClass = dataLayerMetamodel.Nodes |> Seq.find (fun n -> n.Name = "Timer") :> DataLayer.IElement
@@ -64,4 +64,4 @@ let ``Timer block shall have a picture`` () =
 
     let timer = elementRepository.GetElement dataLayerElement
 
-    timer.Class.Shape |> should equal "View/Pictures/timerBlock.png"
+    timer.LinguisticType.Shape |> should equal "View/Pictures/timerBlock.png"

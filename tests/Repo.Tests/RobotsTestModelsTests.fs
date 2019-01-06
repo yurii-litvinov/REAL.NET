@@ -46,6 +46,6 @@ let ``Generalizations shall be listed as edges in metamodel`` () =
         |> Seq.find
             (fun e -> (e :?> FacadeLayer.Edge).UnderlyingElement = (someRawGeneralization :> DataLayer.IElement))
 
-    someWrappedGeneralization.Class |> should sameAs generalization
+    someWrappedGeneralization.LinguisticType |> should sameAs generalization
 
-    model.Edges |> Seq.filter (fun e -> e.Class = (generalization :> IElement)) |> should not' (be Empty)
+    model.Edges |> Seq.filter (fun e -> e.LinguisticType = (generalization :> IElement)) |> should not' (be Empty)

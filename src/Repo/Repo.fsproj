@@ -87,11 +87,11 @@
     <Compile Include="ModelBuilders\IModelBuilder.fs" />
     <Compile Include="ModelBuilders\InfrastructureMetamodelBuilder.fs" />
     <Compile Include="ModelBuilders\LanguageMetamodelBuilder.fs" />
-    <Compile Include="ModelBuilders\RobotsMetamodelBuilder.fs" />
     <Compile Include="ModelBuilders\RobotsTestModelBuilder.fs" />
     <Compile Include="ModelBuilders\AirSimMetamodelBuilder.fs" />
     <Compile Include="ModelBuilders\AirSimModelBuilder.fs" />
     <Compile Include="ModelBuilders\CoreMetametamodelBuilder.fs" />
+    <Compile Include="ModelBuilders\Copy of RobotsMetamodelBuilder.fs" />
     <Compile Include="FacadeLayer.fs" />
     <Compile Include="FacadeLayer\Attribute.fs" />
     <Compile Include="FacadeLayer\Element.fs" />

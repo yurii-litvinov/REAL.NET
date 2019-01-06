@@ -148,12 +148,7 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel) =
 
     /// Returns all attributes of this element, including attributes of parents in generalization hierarchy.
     let allAttributes element =
-        let parentsAttributes =
-            CoreSemanticLayer.Element.parents element
-            |> Seq.map thisElementAttributes
-            |> Seq.concat
-
-        Seq.append (thisElementAttributes element) parentsAttributes
+        Seq.append (thisElementAttributes element) (parentsAttributes element) |> Seq.distinctBy (fun attr -> attr.Name)
 
     /// Searches and returns node of an attribute (with respect to generalization hierarchy). Last overload of an
     /// attribute is returned.
@@ -310,7 +305,7 @@ module private Operations =
             copySimpleAttribute elementHelper attributeNode attributeClass "kind"
             copySimpleAttribute elementHelper attributeNode attributeClass "isInstantiable"
 
-    /// Creates a new instance of a given class in a givn model, with default values for attributes.
+    /// Creates a new instance of a given class in a given model, with default values for attributes.
     let instantiate (elementHelper: ElementHelper) (model: IModel) (``class``: IElement) =
         if elementHelper.AttributeValue ``class`` "isAbstract" <> "false" then
             raise (InvalidSemanticOperationException "Trying to instantiate abstract node")
@@ -336,7 +331,7 @@ module private Operations =
 
         newElement
 
-/// Helper class that provides low-level operations with a model conforming to Infrastructure Metmodel.
+/// Helper class that provides low-level operations with a model conforming to Infrastructure Metamodel.
 type InfrastructureSemantic(repo: IRepo) =
     let infrastructureMetamodel = InfrastructureMetamodel(repo)
     let elementHelper = ElementHelper(infrastructureMetamodel)

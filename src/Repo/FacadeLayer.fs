@@ -87,10 +87,14 @@ and [<AllowNullLiteral>] IElement =
         /// Name of an element, to be displayed on a scene and in various menus. Does not need to be unique.
         abstract Name: string with get, set
 
-        /// Returns type of the element.
-        abstract Class: IElement with get
+        /// Returns linguistic type of the element (i.e. is it node, edge, what kind of edge). Linguistic type is always present.
+        abstract LinguisticType: IElement with get
 
-        /// A list of all logical attributes for that element.
+        /// Returns ontological type of the element (i.e. is it dog, street). Can be null if there is no ontological type for this element.
+        /// Can be equal to LinguisticType.
+        abstract OntologicalType: IElement with get
+
+        /// A list of all ontological attributes for that element.
         abstract Attributes: IAttribute seq with get
 
         /// True when this element can not be a type of other elements, so it shall not be shown in palette.
