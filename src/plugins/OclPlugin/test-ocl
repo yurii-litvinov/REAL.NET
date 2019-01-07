@@ -1,5 +1,5 @@
-﻿package P
-context A
-inv:
-sel.power = 100
+﻿package RobotsTestModel
+context motor
+inv@0:
+self.power = 100
 endpackage

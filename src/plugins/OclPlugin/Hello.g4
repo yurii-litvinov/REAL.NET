@@ -1,0 +1,53 @@
+grammar Hello;
+
+oclFile : ( 'package' packageName
+oclExpressions
+'endpackage'
+)+;
+packageName : pathName;
+oclExpressions : ( constraint )*;
+constraint : contextDeclaration ( Stereotype '@' number name? ':' oclExpression)+;
+contextDeclaration : 'context' ( operationContext | classifierContext );
+classifierContext : ( name ':' name ) | name;
+operationContext : name '::' operationName '(' formalParameterList ')' ( ':' returnType )?;
+Stereotype : ( 'pre' | 'post' | 'inv' );
+operationName : name | '=' | '+' | '-' | '<' | '<=' | '>=' | '>' | '/' | '*' | '<>' | 'implies' | 'not' | 'xor' | 'and';
+formalParameterList : ( name ':' typeSpecifier (',' name ':' typeSpecifier )*)?;
+typeSpecifier : simpleTypeSpecifier | collectionType;
+collectionType : collectionKind '(' simpleTypeSpecifier ')';
+oclExpression : ( letExpression )* expression;
+returnType : typeSpecifier;
+expression : logicalExpression;
+letExpression : 'let' name ( '(' formalParameterList ')' )? ( ':' typeSpecifier )? '=' expression ';';
+ifExpression : 'if' expression 'then' expression 'else' expression 'endif';
+logicalExpression : relationalExpression ( logicalOperator relationalExpression)*;
+relationalExpression : additiveExpression (relationalOperator additiveExpression)?;
+additiveExpression : multiplicativeExpression ( addOperator multiplicativeExpression)*;
+multiplicativeExpression : unaryExpression ( multiplyOperator unaryExpression)*;
+unaryExpression : ( unaryOperator postfixExpression) | postfixExpression;
+postfixExpression : primaryExpression ( ('.' | '->')propertyCall )*;
+primaryExpression : literalCollection | literal | propertyCall | '(' expression ')' | ifExpression;
+propertyCallParameters : '(' ( declarator )? ( actualParameterList )? ')';
+literal : number | enumLiteral;
+enumLiteral : name '::' name ( '::' name )*;
+simpleTypeSpecifier : pathName;
+literalCollection : collectionKind '{' ( collectionItem (',' collectionItem )*)? '}';
+collectionItem : expression ('..' expression )?;
+propertyCall : pathName ('@' number)? ( timeExpression )? ( qualifiers )? ( propertyCallParameters )?;
+qualifiers : '[' actualParameterList ']';
+declarator : name ( ',' name )* ( ':' simpleTypeSpecifier )? ( ';' name ':' typeSpecifier '=' expression )? '|';
+pathName : name ( '::' name )*;
+timeExpression : '@' 'pre';
+actualParameterList : expression (',' expression)*;
+logicalOperator : 'and' | 'xor' | 'implies';
+collectionKind : 'Set' | 'Bag' | 'Sequence' | 'Collection';
+relationalOperator : '=' | '>' | '<' | '>=' | '<=' | '<>';
+addOperator : '+' | '-';
+multiplyOperator : '*' | '/';
+unaryOperator : '-' | 'not';
+LOWERCASE  : 'a'..'z' ;
+UPPERCASE  : 'A'..'Z' ;
+DIGITS  : '0'..'9' ;
+name : (LOWERCASE | UPPERCASE | '_') ( LOWERCASE | UPPERCASE | DIGITS | '_' )* ;
+number : DIGITS (DIGITS)* ( '.' DIGITS (DIGITS)* )?;
+WS : [ \t\r\n]+ -> skip ;

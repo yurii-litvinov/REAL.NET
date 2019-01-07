@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>OclPlugin</RootNamespace>
     <AssemblyName>OclPlugin</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -56,10 +56,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FunctionDef.cs" />
-    <Compile Include="HelloBaseListener.cs" />
     <Compile Include="HelloBaseVisitor.cs" />
     <Compile Include="HelloLexer.cs" />
-    <Compile Include="HelloListener.cs" />
     <Compile Include="HelloParser.cs" />
     <Compile Include="HelloPrinter.cs" />
     <Compile Include="HelloVisitor.cs" />

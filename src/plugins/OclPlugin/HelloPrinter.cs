@@ -16,6 +16,9 @@ namespace OclPlugin
     Dictionary<string, FunctionDef> funcs;
     IConsole console;
     IRepo repository;
+    Repo.IModel model;
+    IElement curElement;
+
     public HelloPrinter(IConsole console, IRepo repo) {
       vars = new ArrayList<Dictionary<string, string>>();
       vars.Add(new Dictionary<string, string>());
@@ -25,12 +28,20 @@ namespace OclPlugin
       this.repository = repo;
     }
 
+    public override bool VisitPackageName([NotNull] HelloParser.PackageNameContext context)
+    {
+        model = repository.Model(context.pathName().GetText());
+        return base.VisitPathName(context.pathName());
+    }
+
     public override bool VisitConstraint([NotNull] HelloParser.ConstraintContext context)
     {
       VisitContextDeclaration(context.contextDeclaration());
+      string text = context.contextDeclaration().classifierContext().GetText();
+      curElement = model.FindElement(text);
       for(int i = 0; i < context.oclExpression().Length; i++)
       {
-        calc.Depth = context.number()[i];
+        calc.Depth = context.number()[i].getAltNumber();
         VisitOclExpression(context.oclExpression()[i]);
         calc.Depth = 0;
       }
