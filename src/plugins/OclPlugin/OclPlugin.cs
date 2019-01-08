@@ -34,7 +34,7 @@ namespace OclPlugin
             IParseTree tree = parser.oclFile();
             HelloPrinter printer = new HelloPrinter(this.console, repo);
             //ParseTreeWalker.Default.Walk(printer, tree);
-            
+            Console.WriteLine(tree.ToStringTree(parser));
             tree.Accept(printer);
 
         }

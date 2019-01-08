@@ -1,5 +1,5 @@
 ﻿package RobotsTestModel
-context motor
-inv@0:
+context aMotorsForward
+inv@9:
 self.power = 100
 endpackage

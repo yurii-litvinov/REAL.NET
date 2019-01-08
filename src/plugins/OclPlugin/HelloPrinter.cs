@@ -76,6 +76,17 @@ namespace OclPlugin
           }
         }
       }
+      else
+        {
+            if (!VisitExpression(context.expression()))
+            {
+                console.SendMessage("err");
+            }
+            else
+            {
+                console.SendMessage("ok");
+            }
+        }
       return true;
     }
     public override bool VisitLetExpression([NotNull] HelloParser.LetExpressionContext context)

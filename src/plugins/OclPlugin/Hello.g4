@@ -47,7 +47,7 @@ multiplyOperator : '*' | '/';
 unaryOperator : '-' | 'not';
 LOWERCASE  : 'a'..'z' ;
 UPPERCASE  : 'A'..'Z' ;
-DIGITS  : '0'..'9' ;
+fragment DIGITS  : '0'..'9' ;
 NAME : (LOWERCASE | UPPERCASE | '_') ( LOWERCASE | UPPERCASE | DIGITS | '_' )* ;
 NUMBER : DIGITS (DIGITS)* ( '.' DIGITS (DIGITS)* )?;
 WS : [ \t\r\n]+ -> skip ;
