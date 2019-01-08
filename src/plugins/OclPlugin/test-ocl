@@ -1,5 +1,5 @@
 ﻿package RobotsTestModel
 context aMotorsForward
 inv@0:
-Set{1, 2, 3}->size() = 3
+aFinalNode.allInstances()->size() = 0
 endpackage

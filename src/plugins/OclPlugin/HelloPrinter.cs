@@ -114,7 +114,7 @@ namespace OclPlugin
                     case "<":
                         return (double) calc.VisitAdditiveExpression(context.additiveExpression()[0]) < (double) calc.VisitAdditiveExpression(context.additiveExpression()[1]);
                     case ">":
-                        return (double) calc.VisitAdditiveExpression(context.additiveExpression()[0]) > (double) calc.VisitAdditiveExpression(context.additiveExpression()[1]);
+                        return (int) calc.VisitAdditiveExpression(context.additiveExpression()[0]) > (double) calc.VisitAdditiveExpression(context.additiveExpression()[1]);
 
                 }
             }
@@ -250,6 +250,12 @@ namespace OclPlugin
                 {
                     case "Set":
                         return new HashSet<object>(context.collectionItem());
+                    case "OrderedSet":
+                        return new SortedSet<object>(context.collectionItem());
+                    case "Bag":
+                        return new LinkedList<object>(context.collectionItem());
+                    case "Sequence":
+                        return new LinkedList<object>(context.collectionItem());
                 }
                 return new HashSet<object>();
             }
@@ -260,10 +266,12 @@ namespace OclPlugin
                 {
                     if(context.pathName().GetText() == "size")
                     {
-                        if(res != null)
-                        {
-                            return ((ICollection<object>)res).Count;
-                        }
+                        return ((ICollection<object>)res).Count;
+                    }
+                    else if(context.pathName().GetText() == "allInstances")
+                    {
+                        IElement elem = Model.FindElement(res.ToString());
+                        return Model.Elements.Where(x => x.Class == elem).ToList<object>();
                     }
                     Dictionary<string, string> stack = new Dictionary<string, string>();
                     List<string> names = funcs[context.pathName().GetText()].param;
@@ -306,7 +314,7 @@ namespace OclPlugin
                         return Double.Parse(vars[i][context.NAME()[0].GetText()]);
                     }
                 }
-                return 0;
+                return context.NAME()[0].GetText();
             }
             public override object VisitIfExpression([NotNull] HelloParser.IfExpressionContext context)
             {
