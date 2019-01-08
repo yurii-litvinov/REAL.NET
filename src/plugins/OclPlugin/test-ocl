@@ -1,5 +1,5 @@
 ﻿package RobotsTestModel
 context aMotorsForward
-inv@9:
-self.power = 100
+inv@0:
+Set{1, 2, 3}->size() = 3
 endpackage
