@@ -41,7 +41,7 @@ namespace OclPlugin
       curElement = model.FindElement(text);
       for(int i = 0; i < context.oclExpression().Length; i++)
       {
-        calc.Depth = context.number()[i].getAltNumber();
+        calc.Depth = Int32.Parse(context.NUMBER()[i].GetText());
         VisitOclExpression(context.oclExpression()[i]);
         calc.Depth = 0;
       }
@@ -81,9 +81,9 @@ namespace OclPlugin
     public override bool VisitLetExpression([NotNull] HelloParser.LetExpressionContext context)
     {
       if(context.formalParameterList() != null)
-        funcs[context.name().GetText()] = new FunctionDef { param = context.formalParameterList().name().Select(x => x.GetText()).ToList(), context = context.expression() };
+        funcs[context.NAME().GetText()] = new FunctionDef { param = context.formalParameterList().NAME().Select(x => x.GetText()).ToList(), context = context.expression() };
       else
-        vars[vars.Count - 1][context.name().GetText()] = context.expression().GetText();
+        vars[vars.Count - 1][context.NAME().GetText()] = context.expression().GetText();
       
       return true;
     }
@@ -210,9 +210,9 @@ namespace OclPlugin
       public override double VisitLiteral([NotNull] HelloParser.LiteralContext context)
       {
         double num = 0;
-        if (context.number() != null)
+        if (context.NUMBER() != null)
         {
-          num = Double.Parse(context.number().GetText());
+          num = Double.Parse(context.NUMBER().GetText());
         }
 
         return num;
@@ -239,10 +239,10 @@ namespace OclPlugin
           string elem = ((HelloParser.PostfixExpressionContext)context.Parent).primaryExpression().GetText();
           element = model.FindElement(elem);
           
-          if(context.number() != null)
+          if(context.NUMBER() != null)
           {
             IElement par = element;
-            for(int i = 0; i < Depth - Int32.Parse(context.number().GetText()); i++)
+            for(int i = 0; i < Depth - Int32.Parse(context.NUMBER().GetText()); i++)
             {
               par = par.Class;
             }
@@ -256,9 +256,9 @@ namespace OclPlugin
       {
         for(int i = vars.Count - 1; i >= 0; i--)
         {
-          if(vars[i].ContainsKey(context.name()[0].GetText()))
+          if(vars[i].ContainsKey(context.NAME()[0].GetText()))
           {
-            return Double.Parse(vars[i][context.name()[0].GetText()]);
+            return Double.Parse(vars[i][context.NAME()[0].GetText()]);
           }
         }
         return 0;

@@ -277,16 +277,4 @@ public interface IHelloVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitUnaryOperator([NotNull] HelloParser.UnaryOperatorContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.name"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitName([NotNull] HelloParser.NameContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.number"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitNumber([NotNull] HelloParser.NumberContext context);
 }
