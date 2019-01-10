@@ -103,16 +103,6 @@ namespace OclPlugin
             return true;
         }
 
-        public override bool VisitExpression([NotNull] HelloParser.ExpressionContext context)
-        {
-            return VisitLogicalExpression(context.logicalExpression());
-        }
-
-        public override bool VisitLogicalExpression([NotNull] HelloParser.LogicalExpressionContext context)
-        {
-            bool result = VisitRelationalExpression(context.relationalExpression()[0]);
-            return result;
-        }
 
         public override bool VisitRelationalExpression([NotNull] HelloParser.RelationalExpressionContext context)
         {

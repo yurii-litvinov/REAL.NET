@@ -128,11 +128,23 @@ public interface IHelloVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitIfExpression([NotNull] HelloParser.IfExpressionContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.logicalExpression"/>.
+	/// Visit a parse tree produced by <see cref="HelloParser.implExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitLogicalExpression([NotNull] HelloParser.LogicalExpressionContext context);
+	Result VisitImplExpression([NotNull] HelloParser.ImplExpressionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="HelloParser.orExpression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitOrExpression([NotNull] HelloParser.OrExpressionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="HelloParser.andExpression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitAndExpression([NotNull] HelloParser.AndExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="HelloParser.relationalExpression"/>.
 	/// </summary>
