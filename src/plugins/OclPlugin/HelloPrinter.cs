@@ -103,6 +103,17 @@ namespace OclPlugin
             return true;
         }
 
+        public override bool VisitExpression([NotNull] HelloParser.ExpressionContext context)
+        {
+            return VisitLogicalExpression(context.logicalExpression());
+        }
+
+        public override bool VisitLogicalExpression([NotNull] HelloParser.LogicalExpressionContext context)
+        {
+            bool result = VisitRelationalExpression(context.relationalExpression()[0]);
+            return result;
+        }
+
         public override bool VisitRelationalExpression([NotNull] HelloParser.RelationalExpressionContext context)
         {
             if (context.relationalOperator() != null)
@@ -141,9 +152,9 @@ namespace OclPlugin
                     case "=":
                         return left == right;
                     case "<":
-                        return (double) calc.VisitAdditiveExpression(context.additiveExpression()[0]) < (double) calc.VisitAdditiveExpression(context.additiveExpression()[1]);
+                        return left < right;
                     case ">":
-                        return (int) calc.VisitAdditiveExpression(context.additiveExpression()[0]) > (double) calc.VisitAdditiveExpression(context.additiveExpression()[1]);
+                        return left > right;
 
                 }
             }
@@ -264,13 +275,16 @@ namespace OclPlugin
 
             public override object VisitLiteral([NotNull] HelloParser.LiteralContext context)
             {
-                double num = 0;
                 if (context.NUMBER() != null)
                 {
-                    num = Double.Parse(context.NUMBER().GetText());
+                    return Double.Parse(context.NUMBER().GetText());
+                }
+                else if(context.stringLiteral() != null)
+                {
+                    return context.stringLiteral().NAME().GetText();
                 }
 
-                return num;
+                return null;
             }
 
             public override object VisitLiteralCollection([NotNull] HelloParser.LiteralCollectionContext context)

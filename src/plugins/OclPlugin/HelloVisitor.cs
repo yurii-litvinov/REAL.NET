@@ -182,6 +182,12 @@ public interface IHelloVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitLiteral([NotNull] HelloParser.LiteralContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="HelloParser.stringLiteral"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitStringLiteral([NotNull] HelloParser.StringLiteralContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="HelloParser.enumLiteral"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
