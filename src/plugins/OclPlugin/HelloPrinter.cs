@@ -107,10 +107,39 @@ namespace OclPlugin
         {
             if (context.relationalOperator() != null)
             {
+                dynamic left = 0, right = 0;
+                object leftObj = calc.VisitAdditiveExpression(context.additiveExpression()[0]);
+                object rightObj = calc.VisitAdditiveExpression(context.additiveExpression()[1]);
+
+                if(leftObj is int)
+                {
+                    left = (int)leftObj;
+                }
+                else if(leftObj is double)
+                {
+                    left = (double)leftObj;
+                }
+                else if(leftObj is string)
+                {
+                    left = (string)leftObj;
+                }
+
+                if (rightObj is int)
+                {
+                    right = (int)rightObj;
+                }
+                else if (rightObj is double)
+                {
+                    right = (double)rightObj;
+                }
+                else if (rightObj is string)
+                {
+                    right = (string)rightObj;
+                }
                 switch (context.relationalOperator().Start.Text)
                 {
                     case "=":
-                        return (int) calc.VisitAdditiveExpression(context.additiveExpression()[0]) == (double) calc.VisitAdditiveExpression(context.additiveExpression()[1]);
+                        return left == right;
                     case "<":
                         return (double) calc.VisitAdditiveExpression(context.additiveExpression()[0]) < (double) calc.VisitAdditiveExpression(context.additiveExpression()[1]);
                     case ">":
@@ -266,7 +295,14 @@ namespace OclPlugin
                 {
                     if(context.pathName().GetText() == "size")
                     {
-                        return ((ICollection<object>)res).Count;
+                        if (res is ICollection<object>)
+                        {
+                            return ((ICollection<object>) res).Count;
+                        }
+                        else if (res is string)
+                        {
+                            return ((string) res).Length;
+                        }
                     }
                     else if(context.pathName().GetText() == "allInstances")
                     {
