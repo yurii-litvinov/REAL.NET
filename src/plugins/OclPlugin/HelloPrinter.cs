@@ -11,7 +11,7 @@ namespace OclPlugin
 {
     class HelloPrinter : HelloBaseVisitor<bool>
     {
-        ArrayList<Dictionary<string, string>> vars;
+        ArrayList<Dictionary<string, object>> vars;
         HelloCalc calc;
         Dictionary<string, FunctionDef> funcs;
         IConsole console;
@@ -21,8 +21,8 @@ namespace OclPlugin
 
         public HelloPrinter(IConsole console, IRepo repo)
         {
-            vars = new ArrayList<Dictionary<string, string>>();
-            vars.Add(new Dictionary<string, string>());
+            vars = new ArrayList<Dictionary<string, object>>();
+            vars.Add(new Dictionary<string, object>());
             funcs = new Dictionary<string, FunctionDef>();
             calc = new HelloCalc(vars, funcs, this, repo, console);
             this.console = console;
@@ -153,7 +153,7 @@ namespace OclPlugin
 
         class HelloCalc : HelloBaseVisitor<object>
         {
-            ArrayList<Dictionary<string, string>> vars = null;
+            ArrayList<Dictionary<string, object>> vars = null;
             Dictionary<string, FunctionDef> funcs = null;
             HelloPrinter hp = null;
             IRepo repository = null;
@@ -164,7 +164,7 @@ namespace OclPlugin
             public IElement Element { get; set; } = null;
             object res = null;
 
-            public HelloCalc(ArrayList<Dictionary<string, string>> vars, Dictionary<string, FunctionDef> funcs, HelloPrinter hp, IRepo repo, IConsole cons)
+            public HelloCalc(ArrayList<Dictionary<string, object>> vars, Dictionary<string, FunctionDef> funcs, HelloPrinter hp, IRepo repo, IConsole cons)
             {
                 this.vars = vars;
                 this.funcs = funcs;
@@ -282,13 +282,13 @@ namespace OclPlugin
                 switch (context.collectionKind().GetText())
                 {
                     case "Set":
-                        return new HashSet<object>(context.collectionItem());
+                        return new HashSet<object>(context.collectionItem().Select(x => VisitExpression(x.expression()[0])));
                     case "OrderedSet":
-                        return new SortedSet<object>(context.collectionItem());
+                        return new SortedSet<object>(context.collectionItem().Select(x => VisitExpression(x.expression()[0])));
                     case "Bag":
-                        return new LinkedList<object>(context.collectionItem());
+                        return new LinkedList<object>(context.collectionItem().Select(x => VisitExpression(x.expression()[0])));
                     case "Sequence":
-                        return new LinkedList<object>(context.collectionItem());
+                        return new LinkedList<object>(context.collectionItem().Select(x => VisitExpression(x.expression()[0])));
                 }
                 return new HashSet<object>();
             }
@@ -313,12 +313,29 @@ namespace OclPlugin
                         IElement elem = Model.FindElement(res.ToString());
                         return Model.Elements.Where(x => x.Class == elem).ToList<object>();
                     }
-                    Dictionary<string, string> stack = new Dictionary<string, string>();
+                    else if(context.pathName().GetText() == "any")
+                    {
+                        Dictionary<string, object> st = new Dictionary<string, object>();
+                        vars.Add(st);
+                        object ret = null;
+                        foreach (object val in (ICollection<object>)res)
+                        {
+                            st["self"] = val;
+                            if(hp.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
+                            {
+                                ret = val;
+                                break;
+                            }
+                        }
+                        vars.RemoveAt(vars.Count - 1);
+                        return ret;
+                    }
+                    Dictionary<string, object> stack = new Dictionary<string, object>();
                     List<string> names = funcs[context.pathName().GetText()].param;
                     HelloParser.ExpressionContext contextFunc = funcs[context.pathName().GetText()].context;
                     for (int i = 0; i < names.Count; i++)
                     {
-                        stack[names[i]] = VisitExpression(context.propertyCallParameters().actualParameterList().expression()[i]).ToString();
+                        stack[names[i]] = VisitExpression(context.propertyCallParameters().actualParameterList().expression()[i]);
                     }
                     vars.Add(stack);
                     object ress = VisitExpression(contextFunc);
@@ -351,7 +368,7 @@ namespace OclPlugin
                 {
                     if (vars[i].ContainsKey(context.NAME()[0].GetText()))
                     {
-                        return Double.Parse(vars[i][context.NAME()[0].GetText()]);
+                        return vars[i][context.NAME()[0].GetText()];
                     }
                 }
                 return context.NAME()[0].GetText();

@@ -1,5 +1,5 @@
 ﻿package RobotsTestModel
 context aMotorsForward
 inv@0:
-"ab"->size() = 2
+Bag{1,2,3}->any(self-1 > 1) == 3
 endpackage
