@@ -295,4 +295,10 @@ public interface IHelloVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitUnaryOperator([NotNull] HelloParser.UnaryOperatorContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="HelloParser.booleanLiteral"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitBooleanLiteral([NotNull] HelloParser.BooleanLiteralContext context);
 }

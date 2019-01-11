@@ -124,6 +124,10 @@ namespace OclPlugin
                 {
                     left = (string)leftObj;
                 }
+                else if (leftObj is bool)
+                {
+                    left = (bool)leftObj;
+                }
 
                 if (rightObj is int)
                 {
@@ -137,6 +141,10 @@ namespace OclPlugin
                 {
                     right = (string)rightObj;
                 }
+                else if (rightObj is bool)
+                {
+                    right = (bool)rightObj;
+                }
                 switch (context.relationalOperator().Start.Text)
                 {
                     case "=":
@@ -148,7 +156,7 @@ namespace OclPlugin
 
                 }
             }
-            return true;
+            return (bool) calc.VisitAdditiveExpression(context.additiveExpression()[0]);
         }
 
         class HelloCalc : HelloBaseVisitor<object>
@@ -273,6 +281,10 @@ namespace OclPlugin
                 {
                     return context.stringLiteral().NAME().GetText();
                 }
+                else if(context.booleanLiteral() != null)
+                {
+                    return context.booleanLiteral().GetText() == "true";
+                }
 
                 return null;
             }
@@ -329,6 +341,21 @@ namespace OclPlugin
                         }
                         vars.RemoveAt(vars.Count - 1);
                         return ret;
+                    }
+                    else if(context.pathName().GetText() == "forAll")
+                    {
+                        Dictionary<string, object> st = new Dictionary<string, object>();
+                        vars.Add(st);
+                        foreach (object val in (ICollection<object>)res)
+                        {
+                            st["self"] = val;
+                            if (!hp.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
+                            {
+                                return false;
+                            }
+                        }
+                        vars.RemoveAt(vars.Count - 1);
+                        return true;
                     }
                     Dictionary<string, object> stack = new Dictionary<string, object>();
                     List<string> names = funcs[context.pathName().GetText()].param;
