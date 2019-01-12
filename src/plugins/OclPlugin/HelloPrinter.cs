@@ -45,7 +45,21 @@ namespace OclPlugin
             for (int i = 0; i < context.oclExpression().Length; i++)
             {
                 calc.Depth = Int32.Parse(context.NUMBER()[i].GetText());
-                VisitOclExpression(context.oclExpression()[i]);
+                foreach(IElement el in model.Elements)
+                {
+                    IElement par = el;
+                    for(int j = 0; j < calc.Depth; j++)
+                    {
+                        par = par.Class;
+                    }
+                    if(par == curElement)
+                    {
+                        IElement tcur = curElement;
+                        curElement = par;
+                        VisitOclExpression(context.oclExpression()[i]);
+                        curElement = tcur;
+                    }
+                }
                 calc.Depth = 0;
             }
             return base.VisitConstraint(context);
@@ -57,40 +71,16 @@ namespace OclPlugin
             {
                 VisitLetExpression(context.letExpression()[i]);
             }
-            if (calc.Depth > 0)
+            
+            if (!VisitExpression(context.expression()))
             {
-                foreach (Repo.IElement elem in model.Elements)
-                {
-                    Repo.IElement el = elem;
-                    for (int i = 0; i < calc.Depth; i++)
-                    {
-                        el = el.Class;
-                    }
-                    if (el == curElement)
-                    {
-                        curElement = elem;
-                        if (!VisitExpression(context.expression()))
-                        {
-                            console.SendMessage("err");
-                        }
-                        else
-                        {
-                            console.SendMessage("ok");
-                        }
-                    }
-                }
+                console.SendMessage("err");
             }
             else
             {
-                if (!VisitExpression(context.expression()))
-                {
-                    console.SendMessage("err");
-                }
-                else
-                {
-                    console.SendMessage("ok");
-                }
+                console.SendMessage("ok");
             }
+            
             return true;
         }
         public override bool VisitLetExpression([NotNull] HelloParser.LetExpressionContext context)
@@ -385,7 +375,7 @@ namespace OclPlugin
                         }
                         Element = par;
                     }
-                    return Double.Parse(Element.Attributes.First(x => x.Name == context.pathName().GetText()).StringValue);
+                    return Element.Attributes.First(x => x.Name == context.pathName().GetText()).StringValue;
                 }
                 return VisitPathName(context.pathName());
             }
