@@ -356,12 +356,52 @@ namespace OclPlugin
                     }
                     else if (context.pathName().GetText() == "collect")
                     {
-                        ArrayList<object> ar = new ArrayList<object>();
+                        ICollection<object> ar = null;
+                        if (res is HashSet<object>)
+                        {
+                            ar = new HashSet<object>();
+                        }
+                        else if (res is SortedSet<object>)
+                        {
+                            ar = new SortedSet<object>();
+                        }
+                        else if (res is LinkedList<object>)
+                        {
+                            ar = new LinkedList<object>();
+                        }
                         foreach (object val in (ICollection<object>)res)
                         {
                             res = val;
                             ar.Add(VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]));
                         }
+                        return ar;
+                    }
+                    else if (context.pathName().GetText() == "select")
+                    {
+                        ICollection<object> ar = null;
+                        if (res is HashSet<object>)
+                        {
+                            ar = new HashSet<object>();
+                        }
+                        else if (res is SortedSet<object>)
+                        {
+                            ar = new SortedSet<object>();
+                        }
+                        else if (res is LinkedList<object>)
+                        {
+                            ar = new LinkedList<object>();
+                        }
+                        Dictionary<string, object> st = new Dictionary<string, object>();
+                        vars.Add(st);
+                        foreach (object val in (ICollection<object>)res)
+                        {
+                            st["self"] = val;
+                            if (hp.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
+                            {
+                                ar.Add(val);
+                            }
+                        }
+                        vars.RemoveAt(vars.Count - 1);
                         return ar;
                     }
                     Dictionary<string, object> stack = new Dictionary<string, object>();

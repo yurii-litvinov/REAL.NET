@@ -1,5 +1,5 @@
 ﻿package RobotsTestModel
 context aMotorsForward
 inv@0:
-Bag{"a", "bb", "ccc"}->collect(size())->forAll(self > 0)
+Bag{"a", "bb", "ccc"}->select(self->size() = 2)->size() = 0
 endpackage
