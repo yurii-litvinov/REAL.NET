@@ -31,7 +31,7 @@ postfixExpression : primaryExpression ( ('.' | '->')propertyCall )*;
 primaryExpression : literalCollection | literal | propertyCall | '(' expression ')' | ifExpression;
 propertyCallParameters : '(' ( declarator )? ( actualParameterList )? ')';
 literal : NUMBER | enumLiteral | stringLiteral | booleanLiteral;
-stringLiteral : '"' NAME '"' ;
+stringLiteral : '"' (NAME)? '"';
 enumLiteral : NAME '::' NAME ( '::' NAME )*;
 simpleTypeSpecifier : pathName;
 literalCollection : collectionKind '{' ( collectionItem (',' collectionItem )*)? '}';

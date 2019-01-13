@@ -269,7 +269,14 @@ namespace OclPlugin
                 }
                 else if(context.stringLiteral() != null)
                 {
-                    return context.stringLiteral().NAME().GetText();
+                    if (context.stringLiteral().NAME() != null)
+                    {
+                        return context.stringLiteral().NAME().GetText();
+                    }
+                    else
+                    {
+                        return "";
+                    }
                 }
                 else if(context.booleanLiteral() != null)
                 {
@@ -299,23 +306,23 @@ namespace OclPlugin
             {
                 if (context.propertyCallParameters() != null)
                 {
-                    if(context.pathName().GetText() == "size")
+                    if (context.pathName().GetText() == "size")
                     {
                         if (res is ICollection<object>)
                         {
-                            return ((ICollection<object>) res).Count;
+                            return ((ICollection<object>)res).Count;
                         }
                         else if (res is string)
                         {
-                            return ((string) res).Length;
+                            return ((string)res).Length;
                         }
                     }
-                    else if(context.pathName().GetText() == "allInstances")
+                    else if (context.pathName().GetText() == "allInstances")
                     {
                         IElement elem = Model.FindElement(res.ToString());
                         return Model.Elements.Where(x => x.Class == elem).ToList<object>();
                     }
-                    else if(context.pathName().GetText() == "any")
+                    else if (context.pathName().GetText() == "any")
                     {
                         Dictionary<string, object> st = new Dictionary<string, object>();
                         vars.Add(st);
@@ -323,7 +330,7 @@ namespace OclPlugin
                         foreach (object val in (ICollection<object>)res)
                         {
                             st["self"] = val;
-                            if(hp.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
+                            if (hp.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
                             {
                                 ret = val;
                                 break;
@@ -332,7 +339,7 @@ namespace OclPlugin
                         vars.RemoveAt(vars.Count - 1);
                         return ret;
                     }
-                    else if(context.pathName().GetText() == "forAll")
+                    else if (context.pathName().GetText() == "forAll")
                     {
                         Dictionary<string, object> st = new Dictionary<string, object>();
                         vars.Add(st);
@@ -346,6 +353,16 @@ namespace OclPlugin
                         }
                         vars.RemoveAt(vars.Count - 1);
                         return true;
+                    }
+                    else if (context.pathName().GetText() == "collect")
+                    {
+                        ArrayList<object> ar = new ArrayList<object>();
+                        foreach (object val in (ICollection<object>)res)
+                        {
+                            res = val;
+                            ar.Add(VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]));
+                        }
+                        return ar;
                     }
                     Dictionary<string, object> stack = new Dictionary<string, object>();
                     List<string> names = funcs[context.pathName().GetText()].param;
