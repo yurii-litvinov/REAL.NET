@@ -1,66 +1,70 @@
-﻿using Antlr4.Runtime.Misc;
-using EditorPluginInterfaces;
-using Repo;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OclPlugin
+﻿namespace OclPlugin
 {
-    class HelloPrinter : HelloBaseVisitor<bool>
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Antlr4.Runtime.Misc;
+    using EditorPluginInterfaces;
+    using Repo;
+
+    internal class HelloPrinter : HelloBaseVisitor<bool>
     {
-        ArrayList<Dictionary<string, object>> vars;
-        HelloCalc calc;
-        Dictionary<string, FunctionDef> funcs;
-        IConsole console;
-        IRepo repository;
-        Repo.IModel model;
-        IElement curElement;
+        private readonly ArrayList<Dictionary<string, object>> vars;
+        private readonly HelloCalc calc;
+        private readonly Dictionary<string, FunctionDef> funcs;
+        private readonly IConsole console;
+        private readonly IRepo repository;
+        private Repo.IModel model;
+        private IElement curElement;
 
         public HelloPrinter(IConsole console, IRepo repo)
         {
-            vars = new ArrayList<Dictionary<string, object>>();
-            vars.Add(new Dictionary<string, object>());
-            funcs = new Dictionary<string, FunctionDef>();
-            calc = new HelloCalc(vars, funcs, this, repo, console);
+            this.vars = new ArrayList<Dictionary<string, object>>
+            {
+                new Dictionary<string, object>()
+            };
+            this.funcs = new Dictionary<string, FunctionDef>();
+            this.calc = new HelloCalc(this.vars, this.funcs, this, repo, console);
             this.console = console;
             this.repository = repo;
         }
 
         public override bool VisitPackageName([NotNull] HelloParser.PackageNameContext context)
         {
-            model = repository.Model(context.pathName().GetText());
-            calc.Model = model;
-            return base.VisitPathName(context.pathName());
+            this.model = this.repository.Model(context.pathName().GetText());
+            this.calc.Model = this.model;
+            return this.VisitPathName(context.pathName());
         }
 
         public override bool VisitConstraint([NotNull] HelloParser.ConstraintContext context)
         {
             VisitContextDeclaration(context.contextDeclaration());
             string text = context.contextDeclaration().classifierContext().GetText();
-            curElement = model.FindElement(text);
-            calc.Element = curElement;
+            this.curElement = this.model.FindElement(text);
+            this.calc.Element = this.curElement;
             for (int i = 0; i < context.oclExpression().Length; i++)
             {
-                calc.Depth = Int32.Parse(context.NUMBER()[i].GetText());
-                foreach(IElement el in model.Elements)
+                this.calc.depth = int.Parse(context.NUMBER()[i].GetText());
+                foreach (IElement el in this.model.Elements)
                 {
                     IElement par = el;
-                    for(int j = 0; j < calc.Depth; j++)
+                    for (int j = 0; j < this.calc.depth; j++)
                     {
                         par = par.Class;
                     }
-                    if(par == curElement)
+
+                    if (par == this.curElement)
                     {
-                        IElement tcur = curElement;
-                        curElement = par;
-                        VisitOclExpression(context.oclExpression()[i]);
-                        curElement = tcur;
+                        IElement tcur = this.curElement;
+                        this.curElement = par;
+                        this.VisitOclExpression(context.oclExpression()[i]);
+                        this.curElement = tcur;
                     }
                 }
-                calc.Depth = 0;
+
+                this.calc.depth = 0;
             }
             return base.VisitConstraint(context);
         }
@@ -69,26 +73,31 @@ namespace OclPlugin
         {
             for (int i = 0; i < context.letExpression().Length; i++)
             {
-                VisitLetExpression(context.letExpression()[i]);
+                this.VisitLetExpression(context.letExpression()[i]);
             }
-            
-            if (!VisitExpression(context.expression()))
+
+            if (!this.VisitExpression(context.expression()))
             {
-                console.SendMessage("err");
+                this.console.SendMessage("err");
             }
             else
             {
-                console.SendMessage("ok");
+                this.console.SendMessage("ok");
             }
-            
+
             return true;
         }
+
         public override bool VisitLetExpression([NotNull] HelloParser.LetExpressionContext context)
         {
             if (context.formalParameterList() != null)
-                funcs[context.NAME().GetText()] = new FunctionDef { param = context.formalParameterList().NAME().Select(x => x.GetText()).ToList(), context = context.expression() };
+            {
+                this.funcs[context.NAME().GetText()] = new FunctionDef { param = context.formalParameterList().NAME().Select(x => x.GetText()).ToList(), context = context.expression() };
+            }
             else
-                vars[vars.Count - 1][context.NAME().GetText()] = context.expression().GetText();
+            {
+                this.vars[this.vars.Count - 1][context.NAME().GetText()] = context.expression().GetText();
+            }
 
             return true;
         }
@@ -99,42 +108,43 @@ namespace OclPlugin
             if (context.relationalOperator() != null)
             {
                 dynamic left = 0, right = 0;
-                object leftObj = calc.VisitAdditiveExpression(context.additiveExpression()[0]);
-                object rightObj = calc.VisitAdditiveExpression(context.additiveExpression()[1]);
+                var leftObj = this.calc.VisitAdditiveExpression(context.additiveExpression()[0]);
+                var rightObj = this.calc.VisitAdditiveExpression(context.additiveExpression()[1]);
 
-                if(leftObj is int)
+                if (leftObj is int i)
                 {
-                    left = (int)leftObj;
+                    left = i;
                 }
-                else if(leftObj is double)
+                else if (leftObj is double d)
                 {
-                    left = (double)leftObj;
+                    left = d;
                 }
-                else if(leftObj is string)
+                else if (leftObj is string s)
                 {
-                    left = (string)leftObj;
+                    left = s;
                 }
-                else if (leftObj is bool)
+                else if (leftObj is bool obj)
                 {
-                    left = (bool)leftObj;
+                    left = obj;
                 }
 
-                if (rightObj is int)
+                if (rightObj is int obj1)
                 {
-                    right = (int)rightObj;
+                    right = obj1;
                 }
-                else if (rightObj is double)
+                else if (rightObj is double obj)
                 {
-                    right = (double)rightObj;
+                    right = obj;
                 }
-                else if (rightObj is string)
+                else if (rightObj is string s)
                 {
-                    right = (string)rightObj;
+                    right = s;
                 }
-                else if (rightObj is bool)
+                else if (rightObj is bool b)
                 {
-                    right = (bool)rightObj;
+                    right = b;
                 }
+
                 switch (context.relationalOperator().Start.Text)
                 {
                     case "=":
@@ -143,24 +153,24 @@ namespace OclPlugin
                         return left < right;
                     case ">":
                         return left > right;
-
                 }
             }
-            return (bool) calc.VisitAdditiveExpression(context.additiveExpression()[0]);
+
+            return (bool) this.calc.VisitAdditiveExpression(context.additiveExpression()[0]);
         }
 
-        class HelloCalc : HelloBaseVisitor<object>
+        private class HelloCalc : HelloBaseVisitor<object>
         {
-            ArrayList<Dictionary<string, object>> vars = null;
-            Dictionary<string, FunctionDef> funcs = null;
-            HelloPrinter hp = null;
-            IRepo repository = null;
-            IConsole console = null;
-            public int Depth = 0;
+            private readonly ArrayList<Dictionary<string, object>> vars = null;
+            private readonly Dictionary<string, FunctionDef> funcs = null;
+            private readonly HelloPrinter hp = null;
+            private readonly IRepo repository = null;
+            private readonly IConsole console = null;
+            private readonly int depth = 0;
 
-            public Repo.IModel Model { get; set; } = null;
-            public IElement Element { get; set; } = null;
-            object res = null;
+            public Repo.IModel Model { private get; set; } = null;
+            public IElement Element { private get; set; } = null;
+            private object res = null;
 
             public HelloCalc(ArrayList<Dictionary<string, object>> vars, Dictionary<string, FunctionDef> funcs, HelloPrinter hp, IRepo repo, IConsole cons)
             {
@@ -170,44 +180,48 @@ namespace OclPlugin
                 this.repository = repo;
                 this.console = cons;
             }
+
             public override object VisitAdditiveExpression([NotNull] HelloParser.AdditiveExpressionContext context)
             {
                 if (context.addOperator() == null || context.addOperator().Length == 0)
                 {
-                    return VisitMultiplicativeExpression(context.multiplicativeExpression()[0]);
+                    return this.VisitMultiplicativeExpression(context.multiplicativeExpression()[0]);
                 }
-                double startAdd = (double) VisitMultiplicativeExpression(context.multiplicativeExpression()[0]);
+
+                var startAdd = (double)this.VisitMultiplicativeExpression(context.multiplicativeExpression()[0]);
                 for (int i = 1; i < context.multiplicativeExpression().Length; i++)
                 {
                     switch (context.addOperator()[i - 1].Start.Text)
                     {
                         case "+":
-                            startAdd += (double) VisitMultiplicativeExpression(context.multiplicativeExpression()[i]);
+                            startAdd += (double)this.VisitMultiplicativeExpression(context.multiplicativeExpression()[i]);
                             break;
                         case "-":
-                            startAdd -= (double) VisitMultiplicativeExpression(context.multiplicativeExpression()[i]);
+                            startAdd -= (double)this.VisitMultiplicativeExpression(context.multiplicativeExpression()[i]);
                             break;
                     }
                 }
+
                 return startAdd;
             }
 
             public override object VisitMultiplicativeExpression([NotNull] HelloParser.MultiplicativeExpressionContext context)
             {
-                if(context.multiplyOperator() == null || context.multiplyOperator().Length == 0)
+                if (context.multiplyOperator() == null || context.multiplyOperator().Length == 0)
                 {
-                    return VisitUnaryExpression(context.unaryExpression()[0]);
+                    return this.VisitUnaryExpression(context.unaryExpression()[0]);
                 }
-                double startMul = (double) VisitUnaryExpression(context.unaryExpression()[0]);
+
+                double startMul = (double) this.VisitUnaryExpression(context.unaryExpression()[0]);
                 for (int i = 1; i < context.unaryExpression().Length; i++)
                 {
                     switch (context.multiplyOperator()[i - 1].Start.Text)
                     {
                         case "*":
-                            startMul *= (double) VisitUnaryExpression(context.unaryExpression()[i]);
+                            startMul *= (double)this.VisitUnaryExpression(context.unaryExpression()[i]);
                             break;
                         case "/":
-                            startMul /= (double) VisitUnaryExpression(context.unaryExpression()[i]);
+                            startMul /= (double)this.VisitUnaryExpression(context.unaryExpression()[i]);
                             break;
                     }
                 }
@@ -216,69 +230,48 @@ namespace OclPlugin
 
             public override object VisitUnaryExpression([NotNull] HelloParser.UnaryExpressionContext context)
             {
-                object postfix = VisitPostfixExpression(context.postfixExpression());
+                object postfix = this.VisitPostfixExpression(context.postfixExpression());
                 if (context.unaryOperator() != null)
                 {
                     switch (context.unaryOperator().Start.Text)
                     {
                         case "-":
-                            return -(double) postfix;
+                            return -(double)postfix;
                     }
                 }
+
                 return postfix;
             }
 
             public override object VisitPostfixExpression([NotNull] HelloParser.PostfixExpressionContext context)
             {
                 if (context.propertyCall() == null || context.propertyCall().Length == 0)
-                    res = VisitPrimaryExpression(context.primaryExpression());
-                else {
-                    res = VisitPrimaryExpression(context.primaryExpression());
-                    for (int i = 0; i < context.propertyCall().Length; i++) {
-                        res = VisitPropertyCall(context.propertyCall()[i]);
+                {
+                    this.res = this.VisitPrimaryExpression(context.primaryExpression());
+                }
+                else
+                {
+                    this.res = this.VisitPrimaryExpression(context.primaryExpression());
+                    for (int i = 0; i < context.propertyCall().Length; i++)
+                    {
+                        this.res = this.VisitPropertyCall(context.propertyCall()[i]);
                     }
                 }
 
-                return res;
+                return this.res;
             }
-
-            /**public override double VisitPrimaryExpression([NotNull] HelloParser.PrimaryExpressionContext context)
-            {
-                double res = 0;
-                if (context.literal() != null)
-                {
-                    res = VisitLiteral(context.literal());
-                }
-                else if (context.propertyCall() != null)
-                {
-                    res = VisitPropertyCall(context.propertyCall());
-                }
-                else if (context.ifExpression() != null)
-                {
-                    res = VisitIfExpression(context.ifExpression());
-                }
-
-                return res;
-            }**/
 
             public override object VisitLiteral([NotNull] HelloParser.LiteralContext context)
             {
                 if (context.NUMBER() != null)
                 {
-                    return Double.Parse(context.NUMBER().GetText());
+                    return double.Parse(context.NUMBER().GetText());
                 }
-                else if(context.stringLiteral() != null)
+                else if (context.stringLiteral() != null)
                 {
-                    if (context.stringLiteral().NAME() != null)
-                    {
-                        return context.stringLiteral().NAME().GetText();
-                    }
-                    else
-                    {
-                        return "";
-                    }
+                    return context.stringLiteral().NAME() != null ? context.stringLiteral().NAME().GetText() : string.Empty;
                 }
-                else if(context.booleanLiteral() != null)
+                else if (context.booleanLiteral() != null)
                 {
                     return context.booleanLiteral().GetText() == "true";
                 }
@@ -291,14 +284,15 @@ namespace OclPlugin
                 switch (context.collectionKind().GetText())
                 {
                     case "Set":
-                        return new HashSet<object>(context.collectionItem().Select(x => VisitExpression(x.expression()[0])));
+                        return new HashSet<object>(context.collectionItem().Select(x => this.VisitExpression(x.expression()[0])));
                     case "OrderedSet":
-                        return new SortedSet<object>(context.collectionItem().Select(x => VisitExpression(x.expression()[0])));
+                        return new SortedSet<object>(context.collectionItem().Select(x => this.VisitExpression(x.expression()[0])));
                     case "Bag":
-                        return new LinkedList<object>(context.collectionItem().Select(x => VisitExpression(x.expression()[0])));
+                        return new LinkedList<object>(context.collectionItem().Select(x => this.VisitExpression(x.expression()[0])));
                     case "Sequence":
-                        return new LinkedList<object>(context.collectionItem().Select(x => VisitExpression(x.expression()[0])));
+                        return new LinkedList<object>(context.collectionItem().Select(x => this.VisitExpression(x.expression()[0])));
                 }
+
                 return new HashSet<object>();
             }
 
@@ -308,154 +302,169 @@ namespace OclPlugin
                 {
                     if (context.pathName().GetText() == "size")
                     {
-                        if (res is ICollection<object>)
+                        if (this.res is ICollection<object> objects)
                         {
-                            return ((ICollection<object>)res).Count;
+                            return objects.Count;
                         }
-                        else if (res is string)
+                        else if (this.res is string s)
                         {
-                            return ((string)res).Length;
+                            return s.Length;
                         }
                     }
                     else if (context.pathName().GetText() == "allInstances")
                     {
-                        IElement elem = Model.FindElement(res.ToString());
-                        return Model.Elements.Where(x => x.Class == elem).ToList<object>();
+                        IElement elem = this.Model.FindElement(this.res.ToString());
+                        return this.Model.Elements.Where(x => x.Class == elem).ToList<object>();
                     }
                     else if (context.pathName().GetText() == "any")
                     {
                         Dictionary<string, object> st = new Dictionary<string, object>();
-                        vars.Add(st);
+                        this.vars.Add(st);
                         object ret = null;
-                        foreach (object val in (ICollection<object>)res)
+                        foreach (object val in (ICollection<object>)this.res)
                         {
                             st["self"] = val;
-                            if (hp.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
+                            if (this.hp.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
                             {
                                 ret = val;
                                 break;
                             }
                         }
-                        vars.RemoveAt(vars.Count - 1);
+
+                        this.vars.RemoveAt(this.vars.Count - 1);
                         return ret;
                     }
                     else if (context.pathName().GetText() == "forAll")
                     {
                         Dictionary<string, object> st = new Dictionary<string, object>();
-                        vars.Add(st);
-                        foreach (object val in (ICollection<object>)res)
+                        this.vars.Add(st);
+                        foreach (object val in (ICollection<object>)this.res)
                         {
                             st["self"] = val;
-                            if (!hp.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
+                            if (!this.hp.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
                             {
                                 return false;
                             }
                         }
-                        vars.RemoveAt(vars.Count - 1);
+
+                        this.vars.RemoveAt(this.vars.Count - 1);
                         return true;
                     }
                     else if (context.pathName().GetText() == "collect")
                     {
                         ICollection<object> ar = null;
-                        if (res is HashSet<object>)
+                        if (this.res is HashSet<object>)
                         {
                             ar = new HashSet<object>();
                         }
-                        else if (res is SortedSet<object>)
+                        else if (this.res is SortedSet<object>)
                         {
                             ar = new SortedSet<object>();
                         }
-                        else if (res is LinkedList<object>)
+                        else if (this.res is LinkedList<object>)
                         {
                             ar = new LinkedList<object>();
                         }
-                        foreach (object val in (ICollection<object>)res)
+
+                        foreach (object val in (ICollection<object>)this.res)
                         {
-                            res = val;
-                            ar.Add(VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]));
+                            this.res = val;
+                            ar.Add(this.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]));
                         }
+
                         return ar;
                     }
                     else if (context.pathName().GetText() == "select")
                     {
                         ICollection<object> ar = null;
-                        if (res is HashSet<object>)
+                        if (this.res is HashSet<object>)
                         {
                             ar = new HashSet<object>();
                         }
-                        else if (res is SortedSet<object>)
+                        else if (this.res is SortedSet<object>)
                         {
                             ar = new SortedSet<object>();
                         }
-                        else if (res is LinkedList<object>)
+                        else if (this.res is LinkedList<object>)
                         {
                             ar = new LinkedList<object>();
                         }
+
                         Dictionary<string, object> st = new Dictionary<string, object>();
-                        vars.Add(st);
-                        foreach (object val in (ICollection<object>)res)
+                        this.vars.Add(st);
+                        foreach (object val in (ICollection<object>)this.res)
                         {
                             st["self"] = val;
-                            if (hp.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
+                            if (this.hp.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
                             {
                                 ar.Add(val);
                             }
                         }
-                        vars.RemoveAt(vars.Count - 1);
+
+                        this.vars.RemoveAt(this.vars.Count - 1);
                         return ar;
                     }
+
                     Dictionary<string, object> stack = new Dictionary<string, object>();
-                    List<string> names = funcs[context.pathName().GetText()].param;
-                    HelloParser.ExpressionContext contextFunc = funcs[context.pathName().GetText()].context;
+                    List<string> names = this.funcs[context.pathName().GetText()].param;
+                    HelloParser.ExpressionContext contextFunc = this.funcs[context.pathName().GetText()].context;
                     for (int i = 0; i < names.Count; i++)
                     {
-                        stack[names[i]] = VisitExpression(context.propertyCallParameters().actualParameterList().expression()[i]);
+                        stack[names[i]] = this.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[i]);
                     }
-                    vars.Add(stack);
-                    object ress = VisitExpression(contextFunc);
-                    vars.RemoveAt(vars.Count - 1);
+
+                    this.vars.Add(stack);
+                    object ress = this.VisitExpression(contextFunc);
+                    this.vars.RemoveAt(this.vars.Count - 1);
                     return ress;
                 }
-                else if (context.Parent is HelloParser.PostfixExpressionContext)
+                else if (context.Parent is HelloParser.PostfixExpressionContext expressionContext)
                 {
-                    string elem = ((HelloParser.PostfixExpressionContext)context.Parent).primaryExpression().GetText();
+                    string elem = expressionContext.primaryExpression().GetText();
                     if (elem != "self")
                     {
-                        Element = Model.FindElement(elem);
+                        this.Element = this.Model.FindElement(elem);
                     }
+
                     if (context.NUMBER() != null)
                     {
-                        IElement par = Element;
-                        for (int i = 0; i < Depth - Int32.Parse(context.NUMBER().GetText()); i++)
+                        IElement par = this.Element;
+                        for (int i = 0; i < this.depth - int.Parse(context.NUMBER().GetText()); i++)
                         {
                             par = par.Class;
                         }
-                        Element = par;
+
+                        this.Element = par;
                     }
-                    return Element.Attributes.First(x => x.Name == context.pathName().GetText()).StringValue;
+
+                    return this.Element.Attributes.First(x => x.Name == context.pathName().GetText()).StringValue;
                 }
-                return VisitPathName(context.pathName());
+
+                return this.VisitPathName(context.pathName());
             }
+
             public override object VisitPathName([NotNull] HelloParser.PathNameContext context)
             {
-                for (int i = vars.Count - 1; i >= 0; i--)
+                for (int i = this.vars.Count - 1; i >= 0; i--)
                 {
-                    if (vars[i].ContainsKey(context.NAME()[0].GetText()))
+                    if (this.vars[i].ContainsKey(context.NAME()[0].GetText()))
                     {
-                        return vars[i][context.NAME()[0].GetText()];
+                        return this.vars[i][context.NAME()[0].GetText()];
                     }
                 }
+
                 return context.NAME()[0].GetText();
             }
+
             public override object VisitIfExpression([NotNull] HelloParser.IfExpressionContext context)
             {
                 if (hp.VisitExpression(context.expression()[0]))
                 {
-                    return VisitExpression(context.expression()[1]);
+                    return this.VisitExpression(context.expression()[1]);
                 }
                 else
                 {
-                    return VisitExpression(context.expression()[2]);
+                    return this.VisitExpression(context.expression()[2]);
                 }
             }
         }
