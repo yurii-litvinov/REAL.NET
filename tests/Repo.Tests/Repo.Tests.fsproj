@@ -77,10 +77,11 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Compile Include="InstantiationSemanticsTests\DualInstantiationTests.fs" />
+    <Compile Include="InstantiationSemanticsTests\CoreLayerInstantiationTests.fs" />
     <Compile Include="DataModelTests.fs" />
     <Compile Include="DataRepoTest.fs" />
     <Compile Include="DataElementTests.fs" />
-    <Compile Include="CoreMetametamodelBuilderTests.fs" />
+    <Compile Include="CoreModelTests.fs" />
     <Compile Include="CoreSemanticLayerTests.fs" />
     <Compile Include="InfrastructureSemanticLayerTests.fs" />
     <Compile Include="RobotsTestModelsTests.fs" />

@@ -21,8 +21,8 @@ open Repo.InfrastructureSemanticLayer
 
 ///Model repository. Holds all already created wrappers for data models, creates them as needed.
 type ModelRepository(infrastructure: InfrastructureSemantic, elementRepository: IElementRepository) =
-    let models = Dictionary<DataLayer.IModel, Model>()
-    member this.GetModel (data: DataLayer.IModel) =
+    let models = Dictionary<DataLayer.IDataModel, Model>()
+    member this.GetModel (data: DataLayer.IDataModel) =
         if models.ContainsKey data then
             models.[data] :> IModel
         else
@@ -37,7 +37,7 @@ type ModelRepository(infrastructure: InfrastructureSemantic, elementRepository: 
 and Model
     (
         infrastructure: InfrastructureSemantic,
-        model: DataLayer.IModel,
+        model: DataLayer.IDataModel,
         elementRepository: IElementRepository,
         repository: ModelRepository
     ) =

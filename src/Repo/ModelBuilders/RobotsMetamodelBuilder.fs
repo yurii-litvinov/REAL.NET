@@ -21,12 +21,12 @@ open Repo.InfrastructureSemanticLayer
 /// Initializes repository with Robots Metamodel, first testing metamodel of a real language.
 type RobotsMetamodelBuilder() =
     interface IModelBuilder with
-        member this.Build(repo: IRepo): unit =
+        member this.Build(repo: IDataRepository): unit =
             let infrastructure = InfrastructureSemanticLayer.InfrastructureSemantic(repo)
             let metamodel = infrastructure.Metamodel.Model
 
-            let find name = CoreSemanticLayer.Model.findNode metamodel name
-            let findAssociation node name = CoreSemanticLayer.Model.findAssociationWithSource node name
+            let find name = CoreModel.Model.findNode metamodel name
+            let findAssociation node name = CoreModel.Model.findAssociationWithSource node name
 
             let metamodelElement = find "Element"
             let metamodelNode = find "Node"
@@ -53,7 +53,7 @@ type RobotsMetamodelBuilder() =
             let model = repo.CreateModel("RobotsMetamodel", metamodel)
 
             let (~+) (name, shape, isAbstract) =
-                let node = infrastructure.Instantiate model metamodelNode :?> INode
+                let node = infrastructure.Instantiate model metamodelNode :?> IDataNode
                 node.Name <- name
                 infrastructure.Element.SetAttributeValue node "shape" shape
                 infrastructure.Element.SetAttributeValue node "isAbstract" (if isAbstract then "true" else "false")
@@ -61,11 +61,11 @@ type RobotsMetamodelBuilder() =
 
                 node
 
-            let (--|>) (source: IElement) target =
+            let (--|>) (source: IDataElement) target =
                 model.CreateGeneralization(metamodelGeneralization, source, target) |> ignore
 
-            let (--->) (source: IElement) (target, targetName, linkName) =
-                let edge = infrastructure.Instantiate model metamodelAssociation :?> IAssociation
+            let (--->) (source: IDataElement) (target, targetName, linkName) =
+                let edge = infrastructure.Instantiate model metamodelAssociation :?> IDataAssociation
                 edge.Source <- Some source
                 edge.Target <- Some target
                 edge.TargetName <- targetName

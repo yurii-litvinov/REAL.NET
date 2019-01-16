@@ -27,9 +27,9 @@ let getAttributeType nodeName name =
     let attributeRepository = AttributeRepository()
 
     let dataLayerModel = (model :?> Model).UnderlyingModel
-    let dataLayerElement = dataLayerModel.Nodes |> Seq.find (fun n -> n.Name = nodeName) :> DataLayer.IElement
+    let dataLayerElement = dataLayerModel.Nodes |> Seq.find (fun n -> n.Name = nodeName) :> DataLayer.IDataElement
 
-    let dataLayerAttribute = CoreSemanticLayer.Element.attribute dataLayerElement name
+    let dataLayerAttribute = CoreModel.Element.attribute dataLayerElement name
 
     attributeRepository.GetAttribute dataLayerAttribute
 
@@ -43,11 +43,11 @@ let getAttributeInstance nodeName name =
     let dataLayerModel = (model :?> Model).UnderlyingModel
     let dataLayerMetamodel = (model.Metamodel :?> Model).UnderlyingModel
 
-    let dataLayerClass = dataLayerMetamodel.Nodes |> Seq.find (fun n -> n.Name = nodeName) :> DataLayer.IElement
-    let dataLayerElement = dataLayerModel.Nodes |> Seq.find (fun n -> n.Class = dataLayerClass) :> DataLayer.IElement
+    let dataLayerClass = dataLayerMetamodel.Nodes |> Seq.find (fun n -> n.Name = nodeName) :> DataLayer.IDataElement
+    let dataLayerElement = dataLayerModel.Nodes |> Seq.find (fun n -> n.Class = dataLayerClass) :> DataLayer.IDataElement
 
     let dataLayerAttribute =
-        CoreSemanticLayer.Element.attribute dataLayerElement name
+        CoreModel.Element.attribute dataLayerElement name
 
     attributeRepository.GetAttribute dataLayerAttribute
 

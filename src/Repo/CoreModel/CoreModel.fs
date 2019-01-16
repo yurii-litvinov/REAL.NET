@@ -12,17 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace Repo.Metametamodels
+namespace Repo.CoreModel
 
 open Repo.DataLayer
 
-/// Initializes repository with Core Metametamodel.
-type CoreMetametamodelBuilder() =
+/// Initializes repository with Core model.
+type CoreModel() =
     interface IModelBuilder with
-        member this.Build(repo: IRepo): unit =
-            let model = repo.CreateModel "CoreMetametamodel"
+        member this.Build(repo: IDataRepository): unit =
+            let model = repo.CreateModel "CoreModel"
 
-            let node = model.CreateNode("Node", None)
+            let node = model.CreateNode "Node"
 
             let (~+) name = model.CreateNode(name, node)
 
@@ -32,7 +32,7 @@ type CoreMetametamodelBuilder() =
             let association = +"Association"
             let stringNode = +"String"
 
-            let (--|>) (source: IElement) target =
+            let (--|>) (source: IDataElement) target =
                 model.CreateGeneralization(generalization, source, target) |> ignore
 
             node --|> element
@@ -40,7 +40,7 @@ type CoreMetametamodelBuilder() =
             generalization --|> edge
             association --|> edge
 
-            let (--->) (source: IElement) (target, name) =
+            let (--->) (source: IDataElement) (target, name) =
                 model.CreateAssociation(association, source, target, name) |> ignore
 
             element ---> (element, "class")

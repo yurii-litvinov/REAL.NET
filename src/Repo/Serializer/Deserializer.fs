@@ -24,11 +24,11 @@ open Repo.DataLayer
 module Deserializer =
 
     /// Repository of already deserialized objects. Needs to be maintained for correct reference deserialization.
-    let private unwrappedElements = Dictionary<WrappedElement, IElement>()
+    let private unwrappedElements = Dictionary<WrappedElement, IDataElement>()
 
     /// Function that creates actual object in repository from the data saved in serialized wrapper object.
     /// Maintains a repository of unwrapped objects, so if this object was seen already, does not create a new object.
-    let rec private unwrap (element: WrappedElement) (model: IModel) =
+    let rec private unwrap (element: WrappedElement) (model: IDataModel) =
         let register key value =
             unwrappedElements.Add(key, value)
             value
@@ -40,21 +40,21 @@ module Deserializer =
             match element with
             | :? WrappedNode as n -> 
                 if n.Class = null then
-                    register n (model.CreateNode(n.Name, None)) :> IElement
+                    register n (model.CreateNode n.Name) :> IDataElement
                 else
-                    register n (model.CreateNode(n.Name, !n.Class)) :> IElement
+                    register n (model.CreateNode(n.Name, !n.Class)) :> IDataElement
             | :? WrappedAssociation as a -> 
-                register a (model.CreateAssociation(!a.Class, !!a.Source, !!a.Target, a.TargetName) :> IElement)
+                register a (model.CreateAssociation(!a.Class, !!a.Source, !!a.Target, a.TargetName) :> IDataElement)
             | :? WrappedGeneralization as g -> 
-                register g (model.CreateGeneralization(!g.Class, !!g.Source, !!g.Target) :> IElement)
+                register g (model.CreateGeneralization(!g.Class, !!g.Source, !!g.Target) :> IDataElement)
             | _ -> failwith "Unknown element type in serialized file, can not deserialize"
 
     /// Visitor that takes care of adding new elements and models to a repo, assuming that they are provided in 
     /// correct order.
-    type private DeserializingVisitor(repo: IRepo) =
+    type private DeserializingVisitor(repo: IDataRepository) =
 
         [<DefaultValue>]
-        val mutable currentModel: IModel
+        val mutable currentModel: IDataModel
 
         interface Visitor with
             member this.Visit (association: WrappedAssociation) =
@@ -80,7 +80,7 @@ module Deserializer =
                 ()
 
     /// Loads given file contents into a given repository. Clears repository contents.
-    let load fileName (repo: IRepo) =
+    let load fileName (repo: IDataRepository) =
         use saveFileStream = File.Open(fileName, FileMode.Open)
         use saveFileStream = 
             if Serializer.useCompression then

@@ -15,14 +15,14 @@
 namespace Repo.Metametamodels
 
 open Repo.DataLayer
-open Repo.CoreSemanticLayer
+open Repo.CoreModel
 
 /// Initializes repository with Infrastructure Metamodel, which is used to define all other metamodels
 /// and closely coupled with editor capabilities.
 type InfrastructureMetamodelBuilder() =
     interface IModelBuilder with
-        member this.Build(repo: IRepo): unit =
-            let metamodel = Repo.findModel repo "LanguageMetamodel"
+        member this.Build(repo: IDataRepository): unit =
+            let metamodel = repo.Model "LanguageMetamodel"
 
             let find name = Model.findNode metamodel name
 
@@ -36,7 +36,7 @@ type InfrastructureMetamodelBuilder() =
             let model = repo.CreateModel("InfrastructureMetamodel", metamodel)
 
             let (~+) name = model.CreateNode(name, metamodelNode)
-            let (--|>) (source: IElement) target =
+            let (--|>) (source: IDataElement) target =
                 model.CreateGeneralization(metamodelGeneralization, source, target) |> ignore
 
             let createEnum name = model.CreateNode(name, metamodelEnum)
@@ -59,7 +59,7 @@ type InfrastructureMetamodelBuilder() =
             let metatype = createEnum "Metatype"
             let attributeKind = createEnum "AttributeKind"
 
-            let createAttribute node (``type``: IElement) name value =
+            let createAttribute node (``type``: IDataElement) name value =
                 let typeNodeToKind = function
                 | t when t = stringNode -> "AttributeKind.String"
                 | t when t = booleanNode -> "AttributeKind.Boolean"
@@ -72,7 +72,7 @@ type InfrastructureMetamodelBuilder() =
                 let attributeNode = +name
                 model.CreateAssociation(metamodelAssociation, node, attributeNode, name) |> ignore
 
-                let kindNode = Model.findNode model (typeNodeToKind (``type`` :?> INode))
+                let kindNode = Model.findNode model (typeNodeToKind (``type`` :?> IDataNode))
                 model.CreateAssociation(metamodelAssociation, attributeNode, kindNode, "kind") |> ignore
 
                 let valueNode = Model.tryFindNode model value
@@ -92,7 +92,7 @@ type InfrastructureMetamodelBuilder() =
 
                 model.CreateAssociation(metamodelAssociation, attributeNode, trueNode, "isInstantiable") |> ignore
 
-            let (--->) (source: IElement) (target, name, isAbstract) =
+            let (--->) (source: IDataElement) (target, name, isAbstract) =
                 let association = model.CreateAssociation(metamodelAssociation, source, target, name)
                 createAttribute association stringNode "shape" "View/Pictures/edge.png"
                 createAttribute association booleanNode "isAbstract" (if isAbstract then "true" else "false")

@@ -20,7 +20,7 @@ open Repo
 type Edge
     (
         infrastructure: InfrastructureSemanticLayer.InfrastructureSemantic,
-        element: DataLayer.IEdge,
+        element: DataLayer.IDataEdge,
         elementRepository: IElementRepository,
         attributeRepository: AttributeRepository
     ) =

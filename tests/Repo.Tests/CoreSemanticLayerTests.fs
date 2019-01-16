@@ -19,48 +19,48 @@ open FsUnit
 
 open Repo.Metametamodels
 open Repo.DataLayer
-open Repo.CoreSemanticLayer
+open Repo.CoreModel
 
 let init () =
-    let repo = DataRepo() :> IRepo
+    let repo = DataRepo() :> IDataRepository
     let build (builder: IModelBuilder) =
         builder.Build repo
 
-    CoreMetametamodelBuilder() |> build
+    CoreModel() |> build
 
     repo
 
 [<Test>]
-let ``Repo is able to find Core Metametamodel`` () =
+let ``Repo is able to find Core Model`` () =
     let repo = init()
-    (Repo.coreMetamodel repo).Name |> should equal "CoreMetametamodel"
+    (repo.Model "CoreModel").Name |> should equal "CoreModel"
 
 [<Test>]
 let ``Repo is able to find any model`` () =
     let repo = init()
     let model1 = repo.CreateModel("TestModel1")
     let model2 = repo.CreateModel("TestModel2", model1)
-    Repo.findModel repo "TestModel1" |> should sameAs model1
-    Repo.findModel repo "TestModel2" |> should sameAs model2
+    repo.Model "TestModel1" |> should sameAs model1
+    repo.Model "TestModel2" |> should sameAs model2
 
 [<Test>]
 let ``Repo shall throw if no model found`` () =
     let repo = init()
-    (fun () -> Repo.findModel repo "TestModel" |> ignore) |> should throw typeof<Repo.ModelNotFoundException>
+    (fun () -> repo.Model "TestModel" |> ignore) |> should throw typeof<Repo.ModelNotFoundException>
 
 [<Test>]
 let ``Repo shall throw if searching two models with the same name`` () =
     let repo = init()
     let model1 = repo.CreateModel("TestModel")
     let model2 = repo.CreateModel("TestModel", model1)
-    (fun () -> Repo.findModel repo "TestModel" |> ignore)
+    (fun () -> repo.Model "TestModel" |> ignore)
             |> should throw typeof<Repo.MultipleModelsException>
 
 [<Test>]
 let ``isInstanceOf shall work for long instantiation chains`` () =
     let repo = init()
     let model1 = repo.CreateModel("TestModel")
-    let coreMetamodel = Repo.findModel repo "CoreMetametamodel"
+    let coreMetamodel = repo.Model "CoreModel"
     let node = Model.findNode coreMetamodel "Node"
 
     let element = model1.CreateNode("Element", node)
@@ -76,7 +76,7 @@ let ``isInstanceOf shall work for long instantiation chains`` () =
 let ``isInstanceOf shall respect generalization`` () =
     let repo = init()
     let model1 = repo.CreateModel("TestModel")
-    let coreMetamodel = Repo.findModel repo "CoreMetametamodel"
+    let coreMetamodel = repo.Model "CoreModel"
     let node = Model.findNode coreMetamodel "Node"
     let generalization = Model.findNode coreMetamodel "Generalization"
 
@@ -97,7 +97,7 @@ let ``isInstanceOf shall respect generalization`` () =
 let ``Setting attribute value in descendant shall not affect parent nor siblings`` () =
     let repo = init()
     let model1 = repo.CreateModel("TestModel")
-    let coreMetamodel = Repo.findModel repo "CoreMetametamodel"
+    let coreMetamodel = repo.Model "CoreModel"
     let node = Model.findNode coreMetamodel "Node"
     let string = Model.findNode coreMetamodel "String"
     let association = Model.findNode coreMetamodel "Association"

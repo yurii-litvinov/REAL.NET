@@ -21,7 +21,7 @@ open System
 type Node
     (
         infrastructure: InfrastructureSemanticLayer.InfrastructureSemantic,
-        element: DataLayer.INode,
+        element: DataLayer.IDataNode,
         elementRepository: IElementRepository,
         attributeRepository: AttributeRepository
     ) =

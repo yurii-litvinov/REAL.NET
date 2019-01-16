@@ -21,14 +21,14 @@ open Repo.DataLayer
 
 [<Test>]
 let ``Repo shall be able to create a model`` () =
-    let repo = DataRepo() :> IRepo
+    let repo = DataRepo() :> IDataRepository
     let model = repo.CreateModel "model"
 
     repo.Models |> should contain model
 
 [<Test>]
 let ``Repo shall be able to delete a model`` () =
-    let repo = DataRepo() :> IRepo
+    let repo = DataRepo() :> IDataRepository
     let model = repo.CreateModel "model"
 
     repo.Models |> should contain model
@@ -39,7 +39,7 @@ let ``Repo shall be able to delete a model`` () =
 
 [<Test>]
 let ``Repo shall throw if deleting model in use`` () =
-    let repo = DataRepo() :> IRepo
+    let repo = DataRepo() :> IDataRepository
     let metamodel = repo.CreateModel "metamodel"
     let model = repo.CreateModel("model", metamodel)
 

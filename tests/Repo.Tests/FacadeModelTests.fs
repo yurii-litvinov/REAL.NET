@@ -23,10 +23,10 @@ open Repo.FacadeLayer
 let init () =
     let repo = new DataLayer.DataRepo()
 
-    let build (builder: Metametamodels.IModelBuilder) =
+    let build (builder: DataLayer.IModelBuilder) =
         builder.Build repo
 
-    Metametamodels.CoreMetametamodelBuilder() |> build
+    CoreModel.CoreModel() |> build
     Metametamodels.LanguageMetamodelBuilder() |> build
     Metametamodels.InfrastructureMetamodelBuilder() |> build
 
@@ -38,7 +38,7 @@ let init () =
 
     let infrastructureMetamodel = infrastructure.Metamodel.Model
 
-    let underlyingModel = (repo :> DataLayer.IRepo).CreateModel("Model", infrastructureMetamodel)
+    let underlyingModel = (repo :> DataLayer.IDataRepository).CreateModel("Model", infrastructureMetamodel)
     let model = Model(infrastructure, underlyingModel, elementRepository, modelRepository)
 
     model :> IModel
@@ -71,7 +71,7 @@ let ``Model shall allow to list its nodes`` () =
     let model = repo.Models |> Seq.find (fun m -> m.Name = "RobotsTestModel")
 
     let underlyingModel = (model :?> Model).UnderlyingModel
-    let initialNode = CoreSemanticLayer.Model.findNode underlyingModel "aFinalNode"
+    let initialNode = CoreModel.Model.findNode underlyingModel "aFinalNode"
 
     model.Nodes |> should not' (be Empty)
     model.Nodes |> Seq.filter (fun n -> n.Name = "aFinalNode") |> should not' (be Empty)

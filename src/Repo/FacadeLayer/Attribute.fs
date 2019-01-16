@@ -17,13 +17,13 @@ namespace Repo.FacadeLayer
 open System.Collections.Generic
 
 open Repo
-open Repo.CoreSemanticLayer
+open Repo.CoreModel
 
 /// Repository for attribute wrappers. Contains already created wrappers and creates new wrappers if needed.
 /// Holds references to attribute wrappers and elements.
 type AttributeRepository() =
     let attributes = Dictionary<_, _>()
-    member this.GetAttribute (attributeNode: DataLayer.INode) =
+    member this.GetAttribute (attributeNode: DataLayer.IDataNode) =
         if attributes.ContainsKey attributeNode then
             attributes.[attributeNode] :> IAttribute
         else
@@ -31,12 +31,12 @@ type AttributeRepository() =
             attributes.Add(attributeNode, newAttribute)
             newAttribute :> IAttribute
 
-    member this.DeleteAttribute (node: DataLayer.INode) =
+    member this.DeleteAttribute (node: DataLayer.IDataNode) =
         if attributes.ContainsKey node then
             attributes.Remove(node) |> ignore
 
 /// Implements attribute wrapper.
-and Attribute(attributeNode: DataLayer.INode) =
+and Attribute(attributeNode: DataLayer.IDataNode) =
     interface IAttribute with
         member this.Kind =
             let kindNode = Element.attribute attributeNode "kind"

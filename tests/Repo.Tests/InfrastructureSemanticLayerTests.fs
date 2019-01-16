@@ -17,17 +17,17 @@ module InfrastructureSemanticLayerTests
 open NUnit.Framework
 open FsUnit
 
-open Repo
+open Repo.CoreModel
 open Repo.Metametamodels
 open Repo.DataLayer
 open Repo.InfrastructureSemanticLayer
 
 let init () =
-    let repo = DataRepo() :> IRepo
+    let repo = DataRepo() :> IDataRepository
     let build (builder: IModelBuilder) =
         builder.Build repo
 
-    CoreMetametamodelBuilder() |> build
+    CoreModel() |> build
     LanguageMetamodelBuilder() |> build
     InfrastructureMetamodelBuilder() |> build
 
@@ -54,8 +54,8 @@ let initForModel () =
 let ``Instantiation shall preserve linguistic attributes`` () =
     let repo, infrastructure, model, _, element = initForModel ()
 
-    let outgoingAssociations = CoreSemanticLayer.Element.outgoingAssociations element
-    outgoingAssociations |> Seq.map (fun a -> (a.Target.Value :?> INode).Name) |> should contain "shape"
+    let outgoingAssociations = Element.outgoingAssociations element
+    outgoingAssociations |> Seq.map (fun a -> (a.Target.Value :?> IDataNode).Name) |> should contain "shape"
     let attributes = infrastructure.Element.Attributes element
     attributes |> should not' (be Empty)
     infrastructure.Element.AttributeValue element "shape" |> should equal "View/Pictures/vertex.png"
@@ -66,7 +66,7 @@ let ``Double instantiation shall result in correct instantiation chain`` () =
 
     let attribites =
         infrastructure.Element.Attributes element
-        |> Seq.map (fun attr -> CoreSemanticLayer.Element.attributeValue attr "stringValue")
+        |> Seq.map (fun attr -> Element.attributeValue attr "stringValue")
 
     let elementInstance = infrastructure.Instantiate model element
 
@@ -98,12 +98,12 @@ let ``Instantiation shall create attributes from class's parents`` () =
     let repo, infrastructure, metamodel, model, node, parent = initForMetamodel ()
     let generalization = infrastructure.Metamodel.Generalization
 
-    CoreSemanticLayer.Node.setName "Parent" parent
+    Node.setName "Parent" parent
     infrastructure.Element.AddAttribute parent "parentAttribute" "AttributeKind.String" "parent attribute"
 
     let descendant = infrastructure.Instantiate metamodel node
     metamodel.CreateGeneralization(generalization, descendant, parent) |> ignore
-    CoreSemanticLayer.Node.setName "Descendant" descendant
+    Node.setName "Descendant" descendant
     infrastructure.Element.AddAttribute descendant "descendantAttribute" "AttributeKind.String" "descendant attribute"
 
     let instance = infrastructure.Instantiate model descendant
@@ -115,7 +115,7 @@ let ``Instantiation shall create attributes from class's parents`` () =
 let ``Changing attribute in instance should not affect class or other instances`` () =
     let repo, infrastructure, metamodel, model, node, ``class`` = initForMetamodel ()
 
-    CoreSemanticLayer.Node.setName "Class" ``class``
+    Node.setName "Class" ``class``
     infrastructure.Element.AddAttribute ``class`` "classAttribute" "AttributeKind.String" "class value"
 
     let instance1 = infrastructure.Instantiate model ``class``

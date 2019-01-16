@@ -16,15 +16,15 @@ namespace Repo.DataLayer
 
 /// Implementation of Element.
 [<AbstractClass>]
-type DataElement(``class``: IElement option, model: IModel) =
+type DataElement(``class``: IDataElement option, model: IDataModel) =
     let mutable outgoingEdges = []
     let mutable incomingEdges = []
 
-    interface IElement with
-        member this.Class: IElement =
+    interface IDataElement with
+        member this.Class: IDataElement =
             match ``class`` with
             | Some v -> v
-            | None -> this :> IElement
+            | None -> this :> IDataElement
 
         member this.OutgoingEdges =
             Seq.ofList outgoingEdges

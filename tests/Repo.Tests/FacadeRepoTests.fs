@@ -35,13 +35,13 @@ let teardown () =
     ()
 
 [<Test>]
-let ``Repository shall contain at least core metamodel`` () =
+let ``Repository shall contain at least core model`` () =
     let repo = RepoFactory.Create ()
 
     repo.Models |> should not' (be Empty)
 
     // Should throw if not found.
-    repo.Models |> Seq.find (fun m -> m.Name = "CoreMetametamodel") |> ignore
+    repo.Models |> Seq.find (fun m -> m.Name = "CoreModel") |> ignore
 
 [<Test>]
 let ``Repository shall allow to add a model`` () =

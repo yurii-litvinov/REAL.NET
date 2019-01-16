@@ -31,7 +31,7 @@ let ``Node in a model shall have metatype`` () =
     let metamodel = repo.Model "RobotsMetamodel"
     let dataLayerMetamodel = (metamodel :?> Model).UnderlyingModel
 
-    let dataLayerClass = dataLayerMetamodel.Nodes |> Seq.find (fun n -> n.Name = "MotorsForward") :> DataLayer.IElement
+    let dataLayerClass = dataLayerMetamodel.Nodes |> Seq.find (fun n -> n.Name = "MotorsForward") :> DataLayer.IDataElement
     let dataLayerElement = dataLayerModel.Nodes |> Seq.find (fun n -> n.Class = dataLayerClass)
 
     let infrastructure = InfrastructureSemanticLayer.InfrastructureSemantic(underlyingRepo)
@@ -54,7 +54,7 @@ let ``Timer block shall have a picture`` () =
     let metamodel = repo.Model "RobotsMetamodel"
     let dataLayerMetamodel = (metamodel :?> Model).UnderlyingModel
 
-    let dataLayerClass = dataLayerMetamodel.Nodes |> Seq.find (fun n -> n.Name = "Timer") :> DataLayer.IElement
+    let dataLayerClass = dataLayerMetamodel.Nodes |> Seq.find (fun n -> n.Name = "Timer") :> DataLayer.IDataElement
     let dataLayerElement = dataLayerModel.Nodes |> Seq.find (fun n -> n.Class = dataLayerClass)
 
     let infrastructure = InfrastructureSemanticLayer.InfrastructureSemantic(underlyingRepo)

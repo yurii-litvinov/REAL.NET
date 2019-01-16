@@ -23,7 +23,7 @@ open Repo.InfrastructureSemanticLayer
 type ElementRepository(infrastructure: InfrastructureSemantic, attributeRepository: AttributeRepository) =
     let elements = Dictionary<_, _>()
 
-    let findMetatype (element : DataLayer.IElement) =
+    let findMetatype (element : DataLayer.IDataElement) =
         if infrastructure.Metamodel.IsNode element then
             Metatype.Node
         elif infrastructure.Metamodel.IsEdge element then
@@ -33,14 +33,14 @@ type ElementRepository(infrastructure: InfrastructureSemantic, attributeReposito
                 "Trying to get a metatype of an element that is not instance of the Element. Model is malformed.")
 
     interface IElementRepository with
-        member this.GetElement (element: DataLayer.IElement) =
+        member this.GetElement (element: DataLayer.IDataElement) =
             if elements.ContainsKey element then
                 elements.[element]
             else
                 let newElement =
                     match findMetatype element with
                     | Metatype.Edge ->
-                        if not <| element :? DataLayer.IEdge then
+                        if not <| element :? DataLayer.IDataEdge then
                             raise (InvalidSemanticOperationException
                                 "Element is an instance of the Edge, but is not an edge in internal \
                                 representation. Nodes can not be instances of Edge.")
@@ -48,12 +48,12 @@ type ElementRepository(infrastructure: InfrastructureSemantic, attributeReposito
                             Edge
                                 (
                                     infrastructure,
-                                    element :?> DataLayer.IEdge,
+                                    element :?> DataLayer.IDataEdge,
                                     this :> IElementRepository,
                                     attributeRepository
                                 ) :> IElement
                     | Metatype.Node ->
-                        if not <| element :? DataLayer.INode then
+                        if not <| element :? DataLayer.IDataNode then
                             raise (InvalidSemanticOperationException
                                 "Element is an instance of Node, but is not a node in internal representation. \
                                 Theoretically it is possible (when its ontological metatype is node, but linguistic \
@@ -62,7 +62,7 @@ type ElementRepository(infrastructure: InfrastructureSemantic, attributeReposito
                             Node
                                 (
                                     infrastructure,
-                                    element :?> DataLayer.INode,
+                                    element :?> DataLayer.IDataNode,
                                     this :> IElementRepository,
                                     attributeRepository
                                 ) :> IElement
@@ -70,7 +70,7 @@ type ElementRepository(infrastructure: InfrastructureSemantic, attributeReposito
                 elements.Add(element, newElement)
                 newElement
 
-        member this.DeleteElement (element: DataLayer.IElement) =
+        member this.DeleteElement (element: DataLayer.IDataElement) =
             if elements.ContainsKey element then
                 // TODO: Who will delete attributes?
                 elements.Remove(element) |> ignore

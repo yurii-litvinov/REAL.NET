@@ -18,7 +18,7 @@ open Repo
 open Repo.Serializer
 
 /// Wrapper around repository from data layer. Maintains a repository of models and creates new models if needed.
-type Repo(repo: DataLayer.IRepo) =
+type Repo(repo: DataLayer.IDataRepository) =
     let infrastructure = InfrastructureSemanticLayer.InfrastructureSemantic(repo)
 
     let attributeRepository = AttributeRepository()

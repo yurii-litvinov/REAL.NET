@@ -19,7 +19,7 @@ open System.Collections.Generic
 
 /// Helper class for element serialization. Allows null value, denoting the absense of value in serialized file.
 /// Null as a Class is a special value denoting that this element is a class for itself 
-/// (so it is CoreMetametamodel Node). All other elements must have actual classes, so can not be null.
+/// (so it is Core model Node). All other elements must have actual classes, so can not be null.
 [<JsonObject>]
 [<AllowNullLiteral>]
 [<AbstractClass>]

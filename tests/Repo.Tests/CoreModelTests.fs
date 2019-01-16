@@ -12,17 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-module CoreMetametamodelBuilderTests
+module CoreModelTests
 
 open FsUnit
 open NUnit.Framework
 
-open Repo.Metametamodels
+open Repo.CoreModel
 open Repo.DataLayer
 
 let init () =
-    let repo = DataRepo() :> IRepo
-    let builder = CoreMetametamodelBuilder() :> IModelBuilder
+    let repo = DataRepo() :> IDataRepository
+    let builder = CoreModel() :> IModelBuilder
     builder.Build repo
     repo
 
@@ -32,7 +32,7 @@ let ``Builder shall be able to create model in repo`` () =
 
     Seq.length repo.Models |> should equal 1
 
-    (Seq.head repo.Models).Name |> should equal "CoreMetametamodel"
+    (Seq.head repo.Models).Name |> should equal "CoreModel"
 
 [<Test>]
 let ``Every model element shall have correct type`` () =
@@ -41,9 +41,9 @@ let ``Every model element shall have correct type`` () =
     Seq.length repo.Models |> should equal 1
 
     let model = repo.Models |> Seq.head
-    let node = model.Nodes |> Seq.find (fun n -> n.Name = "Node") :> IElement
-    let generalization = model.Nodes |> Seq.find (fun n -> n.Name = "Generalization") :> IElement
-    let association = model.Nodes |> Seq.find (fun n -> n.Name = "Association") :> IElement
+    let node = model.Nodes |> Seq.find (fun n -> n.Name = "Node") :> IDataElement
+    let generalization = model.Nodes |> Seq.find (fun n -> n.Name = "Generalization") :> IDataElement
+    let association = model.Nodes |> Seq.find (fun n -> n.Name = "Association") :> IDataElement
 
     model |> (fun m -> m.Nodes) |> Seq.iter (fun e -> e.Class |> should equal node)
     model |> (fun m -> m.Edges) |> Seq.iter (fun e -> (e.Class = generalization || e.Class = association) |> should be True)

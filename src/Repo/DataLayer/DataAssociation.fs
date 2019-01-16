@@ -17,13 +17,13 @@ namespace Repo.DataLayer
 /// Implementation of Association edge.
 type DataAssociation
     (
-        ``class``: IElement
-        , source: IElement option
-        , target: IElement option
+        ``class``: IDataElement
+        , source: IDataElement option
+        , target: IDataElement option
         , nameTarget: string
-        , model: IModel
+        , model: IDataModel
         ) =
     inherit DataEdge(Some ``class``, source, target, model)
 
-    interface IAssociation with
+    interface IDataAssociation with
         member val TargetName: string = nameTarget with get, set

@@ -15,15 +15,15 @@
 namespace Repo.Metametamodels
 
 open Repo.DataLayer
-open Repo.CoreSemanticLayer
+open Repo.CoreModel
 open Repo.InfrastructureSemanticLayer
 
 /// Initializes repository with test model conforming to AirSim Metamodel, actual program that can be written by end-user.
 type AirSimModelBuilder() =
     interface IModelBuilder with
-        member this.Build(repo: IRepo): unit =
+        member this.Build(repo: IDataRepository): unit =
             let infrastructure = InfrastructureSemantic(repo)
-            let metamodel = Repo.findModel repo "AirSimMetamodel"
+            let metamodel = repo.Model "AirSimMetamodel"
             let infrastructureMetamodel = infrastructure.Metamodel.Model
 
             let metamodelAbstractNode = Model.findNode metamodel "AbstractNode"
@@ -62,7 +62,7 @@ type AirSimModelBuilder() =
 
             // The same as in the metamodel but with functions
             let (~+) (name, shape, isAbstract) =
-                let node = infrastructure.Instantiate metamodel (find "Node") :?> INode
+                let node = infrastructure.Instantiate metamodel (find "Node") :?> IDataNode
                 node.Name <- name
                 infrastructure.Element.SetAttributeValue node "shape" shape
                 infrastructure.Element.SetAttributeValue node "isAbstract" (if isAbstract then "true" else "false")
@@ -70,37 +70,37 @@ type AirSimModelBuilder() =
 
                 node
 
-            let (-->) (src: IElement) dst =
-                let aLink = infrastructure.Instantiate model link :?> IAssociation
+            let (-->) (src: IDataElement) dst =
+                let aLink = infrastructure.Instantiate model link :?> IDataAssociation
                 aLink.Source <- Some src
                 aLink.Target <- Some dst
                 dst
             
-            let (-->>) (src: IElement) dst =
-                let aLink = infrastructure.Instantiate model ifLink :?> IAssociation
+            let (-->>) (src: IDataElement) dst =
+                let aLink = infrastructure.Instantiate model ifLink :?> IDataAssociation
                 infrastructure.Element.SetAttributeValue aLink "Value" "true"
                 aLink.Source <- Some src
                 aLink.Target <- Some dst
                 dst
             
-            let (-->>>) (src: IElement) dst =
-                let aLink = infrastructure.Instantiate model ifLink :?> IAssociation
+            let (-->>>) (src: IDataElement) dst =
+                let aLink = infrastructure.Instantiate model ifLink :?> IDataAssociation
                 infrastructure.Element.SetAttributeValue aLink "Value" "false"
                 aLink.Source <- Some src
                 aLink.Target <- Some dst
                 dst
             
             // Make some function
-            let newFunc = metamodelInitialNode --> metamodelTakeoff --> metamodelFinalNode :?> INode
+            let newFunc = metamodelInitialNode --> metamodelTakeoff --> metamodelFinalNode :?> IDataNode
             
             // Get the start node of function
-            let rec getStart (el: INode) = 
+            let rec getStart (el: IDataNode) = 
                 match Seq.toList el.IncomingEdges with
                 | [] -> el
                 | head::_ -> 
                     match head.Source with
                     | None -> el
-                    | Some s -> getStart(s :?> INode)
+                    | Some s -> getStart(s :?> IDataNode)
             
             // Add new node with function to metamodel
             +("FuncionNode", "View/Pictures/functionBlock.png", false) |> ignore

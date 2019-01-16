@@ -27,7 +27,7 @@ module Serializer =
     let useCompression = false
 
     /// Repository of objects to be serialized. Needs to be maintained for correct reference serialization.
-    let private wrappedElements = Dictionary<IElement, WrappedElement>()
+    let private wrappedElements = Dictionary<IDataElement, WrappedElement>()
 
     /// Helper function that registers new element in a repository.
     let private register key value =
@@ -36,7 +36,7 @@ module Serializer =
 
     /// Function that wraps element from repository to its corresponding wrapper object for serialization.
     /// Maintains a repository of wrapped objects, so if this object was seen already, does not create a new object.
-    let rec private wrap (element: IElement option) =
+    let rec private wrap (element: IDataElement option) =
         match element with
         | None -> null
         | Some e -> 
@@ -44,27 +44,27 @@ module Serializer =
                 wrappedElements.[e]
             else
                 match e with
-                | :? INode as n -> wrapNode n :> WrappedElement
-                | :? IAssociation as a -> wrapAssociation a :> WrappedElement
-                | :? IGeneralization as g -> wrapGeneralization g :> WrappedElement
+                | :? IDataNode as n -> wrapNode n :> WrappedElement
+                | :? IDataAssociation as a -> wrapAssociation a :> WrappedElement
+                | :? IDataGeneralization as g -> wrapGeneralization g :> WrappedElement
                 | _ -> failwith "Unknown element type in data repo, can not serialize"
 
     /// Function that adds IElement-specific to already constructed data object.
-    and private wrapElement (wrappedElement: WrappedElement) (element: IElement) =
+    and private wrapElement (wrappedElement: WrappedElement) (element: IDataElement) =
         if element.Class = element then 
             wrappedElement.Class <- null
         else
             wrappedElement.Class <- wrap (Some element.Class)
 
     /// Function that adds IEdge-specific to already constructed data object.
-    and private wrapEdge (wrappedEdge: WrappedEdge) (edge: IEdge) =
+    and private wrapEdge (wrappedEdge: WrappedEdge) (edge: IDataEdge) =
         wrapElement wrappedEdge edge
         wrappedEdge.Source <- wrap edge.Source
         wrappedEdge.Target <- wrap edge.Target
 
     /// Function that wraps INode from a repository into data object, registers it if needed and returns wrapped 
     /// object. If this INode was seen already, returns old object from repository.
-    and private wrapNode (node: INode) =
+    and private wrapNode (node: IDataNode) =
         if wrappedElements.ContainsKey node then
             wrappedElements.[node] :?> WrappedNode
         else
@@ -75,7 +75,7 @@ module Serializer =
 
     /// Function that wraps IAssociation from a repository into data object, registers it if needed and returns wrapped
     /// object. If this IAssociation was seen already, returns old object from repository.
-    and private wrapAssociation (association: IAssociation) =
+    and private wrapAssociation (association: IDataAssociation) =
         if wrappedElements.ContainsKey association then
             wrappedElements.[association] :?> WrappedAssociation
         else
@@ -86,7 +86,7 @@ module Serializer =
 
     /// Function that wraps IGeneralization from a repository into data object, registers it if needed and returns 
     /// wrapped object. If this IGeneralization was seen already, returns old object from repository.
-    and private wrapGeneralization (generalization: IGeneralization) =
+    and private wrapGeneralization (generalization: IDataGeneralization) =
         if wrappedElements.ContainsKey generalization then
             wrappedElements.[generalization] :?> WrappedGeneralization
         else
@@ -95,15 +95,15 @@ module Serializer =
             register generalization wrappedGeneralization
 
     /// Function that wraps a model and all its contents into data object.
-    let private wrapModel (model: IModel) =
+    let private wrapModel (model: IDataModel) =
         let wrappedModel = WrappedModel ()
         wrappedModel.Name <- model.Name
         wrappedModel.MetamodelName <- model.Metamodel.Name
         wrappedModel.Nodes <- model.Nodes |> Seq.rev |> Seq.map wrapNode |> Seq.toArray
 
-        let associations (e: IEdge) =
+        let associations (e: IDataEdge) =
             match e with
-            | :? IAssociation as a -> Some a
+            | :? IDataAssociation as a -> Some a
             | _ -> None
         wrappedModel.Associations <- 
             model.Edges 
@@ -112,9 +112,9 @@ module Serializer =
             |> Seq.map wrapAssociation 
             |> Seq.toArray
 
-        let generalizations (e: IEdge) =
+        let generalizations (e: IDataEdge) =
             match e with
-            | :? IGeneralization as a -> Some a
+            | :? IDataGeneralization as a -> Some a
             | _ -> None
         wrappedModel.Generalizations <- 
             model.Edges 
@@ -126,7 +126,7 @@ module Serializer =
         wrappedModel
 
     /// Function that wraps entire repository into data object.
-    let private wrapRepo (repo: IRepo) =
+    let private wrapRepo (repo: IDataRepository) =
         let save = Save ()
         save.Contents.Models <- repo.Models |> Seq.rev |> Seq.map wrapModel |> Seq.toArray
         save

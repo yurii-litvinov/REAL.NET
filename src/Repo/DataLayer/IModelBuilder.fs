@@ -1,4 +1,4 @@
-﻿(* Copyright 2017 Yurii Litvinov
+﻿(* Copyright 2017-2019 Yurii Litvinov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,13 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace Repo.Metametamodels
-
-open Repo.DataLayer
+namespace Repo.DataLayer
 
 /// Interface that can create a model in a given repo.
 type IModelBuilder =
     interface
         /// Builds a model inside given repository.
-        abstract Build: repo: IRepo -> unit
+        abstract Build: repo: IDataRepository -> unit
     end

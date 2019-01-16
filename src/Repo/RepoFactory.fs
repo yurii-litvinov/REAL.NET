@@ -19,11 +19,11 @@ namespace Repo
 type RepoFactory =
     /// Method that returns initialized repository.
     static member Create() = 
-        let data = new DataLayer.DataRepo() :> DataLayer.IRepo
-        let build (builder: Metametamodels.IModelBuilder) =
+        let data = new DataLayer.DataRepo() :> DataLayer.IDataRepository
+        let build (builder: DataLayer.IModelBuilder) =
             builder.Build data
 
-        Metametamodels.CoreMetametamodelBuilder() |> build
+        CoreModel.CoreModel() |> build
         Metametamodels.LanguageMetamodelBuilder() |> build
         Metametamodels.InfrastructureMetamodelBuilder() |> build
         Metametamodels.RobotsMetamodelBuilder() |> build
@@ -35,6 +35,18 @@ type RepoFactory =
 
     /// Method that returns a new repository populated from a save file.
     static member Load fileName =
-        let data = new DataLayer.DataRepo() :> DataLayer.IRepo
+        let data = new DataLayer.DataRepo() :> DataLayer.IDataRepository
         Serializer.Deserializer.load fileName data
+        new FacadeLayer.Repo(data) :> IRepo
+
+    /// Method that returns repository with infrastructure metamodel only.
+    static member CreateEmpty () =
+        let data = new DataLayer.DataRepo() :> DataLayer.IDataRepository
+        let build (builder: DataLayer.IModelBuilder) =
+            builder.Build data
+
+        CoreModel.CoreModel() |> build
+        Metametamodels.LanguageMetamodelBuilder() |> build
+        Metametamodels.InfrastructureMetamodelBuilder() |> build
+
         new FacadeLayer.Repo(data) :> IRepo
