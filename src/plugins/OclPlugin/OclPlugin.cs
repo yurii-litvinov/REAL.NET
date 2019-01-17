@@ -1,25 +1,23 @@
-﻿using Antlr4.Runtime;
-using Antlr4.Runtime.Tree;
-using EditorPluginInterfaces;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OclPlugin
+﻿namespace OclPlugin
 {
+    using System;
+    using Antlr4.Runtime;
+    using Antlr4.Runtime.Tree;
+    using EditorPluginInterfaces;
+
     public class OclPlugin : IPlugin<PluginConfig>
     {
         public string Name => "OCL";
+
         private IConsole console;
+
         public void SetConfig(PluginConfig config)
         {
             if (config == null)
             {
                 throw new ArgumentException("This is not correct type of configuration");
             }
+
             this.console = config.Console;
             this.console.SendMessage("OCL add-on successfully launched");
 
@@ -27,13 +25,14 @@ namespace OclPlugin
             var repo = model.Repo;
 
             ICharStream stream = CharStreams.fromPath("E:\\OUR DISK\\NIKITA\\REAL.NET\\src\\plugins\\OclPlugin\\test-ocl");
-            ITokenSource lexer = new HelloLexer(stream);
+            ITokenSource lexer = new OclLexer(stream);
             ITokenStream tokens = new CommonTokenStream(lexer);
-            HelloParser parser = new HelloParser(tokens);
-            parser.BuildParseTree = true;
+            OclParser parser = new OclParser(tokens)
+            {
+                BuildParseTree = true
+            };
             IParseTree tree = parser.oclFile();
-            HelloPrinter printer = new HelloPrinter(this.console, repo);
-            //ParseTreeWalker.Default.Walk(printer, tree);
+            OclPrinter printer = new OclPrinter(this.console, repo);
             Console.WriteLine(tree.ToStringTree(parser));
             tree.Accept(printer);
 

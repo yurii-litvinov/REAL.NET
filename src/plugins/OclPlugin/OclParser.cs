@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from Hello.g4 by ANTLR 4.7.2
+// Generated from Ocl.g4 by ANTLR 4.7.2
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -32,7 +32,7 @@ using DFA = Antlr4.Runtime.Dfa.DFA;
 
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.7.2")]
 [System.CLSCompliant(false)]
-public partial class HelloParser : Parser {
+public partial class OclParser : Parser {
 	protected static DFA[] decisionToDFA;
 	protected static PredictionContextCache sharedContextCache = new PredictionContextCache();
 	public const int
@@ -99,22 +99,22 @@ public partial class HelloParser : Parser {
 		}
 	}
 
-	public override string GrammarFileName { get { return "Hello.g4"; } }
+	public override string GrammarFileName { get { return "Ocl.g4"; } }
 
 	public override string[] RuleNames { get { return ruleNames; } }
 
 	public override string SerializedAtn { get { return new string(_serializedATN); } }
 
-	static HelloParser() {
+	static OclParser() {
 		decisionToDFA = new DFA[_ATN.NumberOfDecisions];
 		for (int i = 0; i < _ATN.NumberOfDecisions; i++) {
 			decisionToDFA[i] = new DFA(_ATN.GetDecisionState(i), i);
 		}
 	}
 
-		public HelloParser(ITokenStream input) : this(input, Console.Out, Console.Error) { }
+		public OclParser(ITokenStream input) : this(input, Console.Out, Console.Error) { }
 
-		public HelloParser(ITokenStream input, TextWriter output, TextWriter errorOutput)
+		public OclParser(ITokenStream input, TextWriter output, TextWriter errorOutput)
 		: base(input, output, errorOutput)
 	{
 		Interpreter = new ParserATNSimulator(this, _ATN, decisionToDFA, sharedContextCache);
@@ -139,7 +139,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_oclFile; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitOclFile(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -192,7 +192,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_packageName; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitPackageName(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -232,7 +232,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_oclExpressions; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitOclExpressions(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -276,13 +276,13 @@ public partial class HelloParser : Parser {
 		public ContextDeclarationContext contextDeclaration() {
 			return GetRuleContext<ContextDeclarationContext>(0);
 		}
-		public ITerminalNode[] Stereotype() { return GetTokens(HelloParser.Stereotype); }
+		public ITerminalNode[] Stereotype() { return GetTokens(OclParser.Stereotype); }
 		public ITerminalNode Stereotype(int i) {
-			return GetToken(HelloParser.Stereotype, i);
+			return GetToken(OclParser.Stereotype, i);
 		}
-		public ITerminalNode[] NUMBER() { return GetTokens(HelloParser.NUMBER); }
+		public ITerminalNode[] NUMBER() { return GetTokens(OclParser.NUMBER); }
 		public ITerminalNode NUMBER(int i) {
-			return GetToken(HelloParser.NUMBER, i);
+			return GetToken(OclParser.NUMBER, i);
 		}
 		public OclExpressionContext[] oclExpression() {
 			return GetRuleContexts<OclExpressionContext>();
@@ -290,9 +290,9 @@ public partial class HelloParser : Parser {
 		public OclExpressionContext oclExpression(int i) {
 			return GetRuleContext<OclExpressionContext>(i);
 		}
-		public ITerminalNode[] NAME() { return GetTokens(HelloParser.NAME); }
+		public ITerminalNode[] NAME() { return GetTokens(OclParser.NAME); }
 		public ITerminalNode NAME(int i) {
-			return GetToken(HelloParser.NAME, i);
+			return GetToken(OclParser.NAME, i);
 		}
 		public ConstraintContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -300,7 +300,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_constraint; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitConstraint(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -367,7 +367,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_contextDeclaration; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitContextDeclaration(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -409,9 +409,9 @@ public partial class HelloParser : Parser {
 	}
 
 	public partial class ClassifierContextContext : ParserRuleContext {
-		public ITerminalNode[] NAME() { return GetTokens(HelloParser.NAME); }
+		public ITerminalNode[] NAME() { return GetTokens(OclParser.NAME); }
 		public ITerminalNode NAME(int i) {
-			return GetToken(HelloParser.NAME, i);
+			return GetToken(OclParser.NAME, i);
 		}
 		public ClassifierContextContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -419,7 +419,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_classifierContext; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitClassifierContext(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -463,7 +463,7 @@ public partial class HelloParser : Parser {
 	}
 
 	public partial class OperationContextContext : ParserRuleContext {
-		public ITerminalNode NAME() { return GetToken(HelloParser.NAME, 0); }
+		public ITerminalNode NAME() { return GetToken(OclParser.NAME, 0); }
 		public OperationNameContext operationName() {
 			return GetRuleContext<OperationNameContext>(0);
 		}
@@ -479,7 +479,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_operationContext; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitOperationContext(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -523,14 +523,14 @@ public partial class HelloParser : Parser {
 	}
 
 	public partial class OperationNameContext : ParserRuleContext {
-		public ITerminalNode NAME() { return GetToken(HelloParser.NAME, 0); }
+		public ITerminalNode NAME() { return GetToken(OclParser.NAME, 0); }
 		public OperationNameContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
 		public override int RuleIndex { get { return RULE_operationName; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitOperationName(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -567,9 +567,9 @@ public partial class HelloParser : Parser {
 	}
 
 	public partial class FormalParameterListContext : ParserRuleContext {
-		public ITerminalNode[] NAME() { return GetTokens(HelloParser.NAME); }
+		public ITerminalNode[] NAME() { return GetTokens(OclParser.NAME); }
 		public ITerminalNode NAME(int i) {
-			return GetToken(HelloParser.NAME, i);
+			return GetToken(OclParser.NAME, i);
 		}
 		public TypeSpecifierContext[] typeSpecifier() {
 			return GetRuleContexts<TypeSpecifierContext>();
@@ -583,7 +583,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_formalParameterList; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitFormalParameterList(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -650,7 +650,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_typeSpecifier; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitTypeSpecifier(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -707,7 +707,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_collectionType; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitCollectionType(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -753,7 +753,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_oclExpression; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitOclExpression(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -804,7 +804,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_returnType; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitReturnType(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -841,7 +841,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_expression; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitExpression(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -869,7 +869,7 @@ public partial class HelloParser : Parser {
 	}
 
 	public partial class LetExpressionContext : ParserRuleContext {
-		public ITerminalNode NAME() { return GetToken(HelloParser.NAME, 0); }
+		public ITerminalNode NAME() { return GetToken(OclParser.NAME, 0); }
 		public ExpressionContext expression() {
 			return GetRuleContext<ExpressionContext>(0);
 		}
@@ -885,7 +885,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_letExpression; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitLetExpression(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -951,7 +951,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_ifExpression; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitIfExpression(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -997,7 +997,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_implExpression; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitImplExpression(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1052,7 +1052,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_orExpression; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitOrExpression(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1115,7 +1115,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_andExpression; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitAndExpression(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1173,7 +1173,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_relationalExpression; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitRelationalExpression(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1230,7 +1230,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_additiveExpression; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitAdditiveExpression(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1291,7 +1291,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_multiplicativeExpression; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitMultiplicativeExpression(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1346,7 +1346,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_unaryExpression; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitUnaryExpression(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1417,7 +1417,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_postfixExpression; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitPostfixExpression(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1489,7 +1489,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_primaryExpression; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitPrimaryExpression(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1561,7 +1561,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_propertyCallParameters; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitPropertyCallParameters(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1609,7 +1609,7 @@ public partial class HelloParser : Parser {
 	}
 
 	public partial class LiteralContext : ParserRuleContext {
-		public ITerminalNode NUMBER() { return GetToken(HelloParser.NUMBER, 0); }
+		public ITerminalNode NUMBER() { return GetToken(OclParser.NUMBER, 0); }
 		public EnumLiteralContext enumLiteral() {
 			return GetRuleContext<EnumLiteralContext>(0);
 		}
@@ -1625,7 +1625,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_literal; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitLiteral(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1680,14 +1680,14 @@ public partial class HelloParser : Parser {
 	}
 
 	public partial class StringLiteralContext : ParserRuleContext {
-		public ITerminalNode NAME() { return GetToken(HelloParser.NAME, 0); }
+		public ITerminalNode NAME() { return GetToken(OclParser.NAME, 0); }
 		public StringLiteralContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
 		public override int RuleIndex { get { return RULE_stringLiteral; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitStringLiteral(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1726,9 +1726,9 @@ public partial class HelloParser : Parser {
 	}
 
 	public partial class EnumLiteralContext : ParserRuleContext {
-		public ITerminalNode[] NAME() { return GetTokens(HelloParser.NAME); }
+		public ITerminalNode[] NAME() { return GetTokens(OclParser.NAME); }
 		public ITerminalNode NAME(int i) {
-			return GetToken(HelloParser.NAME, i);
+			return GetToken(OclParser.NAME, i);
 		}
 		public EnumLiteralContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -1736,7 +1736,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_enumLiteral; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitEnumLiteral(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1790,7 +1790,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_simpleTypeSpecifier; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitSimpleTypeSpecifier(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1833,7 +1833,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_literalCollection; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitLiteralCollection(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1899,7 +1899,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_collectionItem; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitCollectionItem(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -1941,7 +1941,7 @@ public partial class HelloParser : Parser {
 		public PathNameContext pathName() {
 			return GetRuleContext<PathNameContext>(0);
 		}
-		public ITerminalNode NUMBER() { return GetToken(HelloParser.NUMBER, 0); }
+		public ITerminalNode NUMBER() { return GetToken(OclParser.NUMBER, 0); }
 		public TimeExpressionContext timeExpression() {
 			return GetRuleContext<TimeExpressionContext>(0);
 		}
@@ -1957,7 +1957,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_propertyCall; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitPropertyCall(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -2032,7 +2032,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_qualifiers; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitQualifiers(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -2062,9 +2062,9 @@ public partial class HelloParser : Parser {
 	}
 
 	public partial class DeclaratorContext : ParserRuleContext {
-		public ITerminalNode[] NAME() { return GetTokens(HelloParser.NAME); }
+		public ITerminalNode[] NAME() { return GetTokens(OclParser.NAME); }
 		public ITerminalNode NAME(int i) {
-			return GetToken(HelloParser.NAME, i);
+			return GetToken(OclParser.NAME, i);
 		}
 		public SimpleTypeSpecifierContext simpleTypeSpecifier() {
 			return GetRuleContext<SimpleTypeSpecifierContext>(0);
@@ -2081,7 +2081,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_declarator; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitDeclarator(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -2149,9 +2149,9 @@ public partial class HelloParser : Parser {
 	}
 
 	public partial class PathNameContext : ParserRuleContext {
-		public ITerminalNode[] NAME() { return GetTokens(HelloParser.NAME); }
+		public ITerminalNode[] NAME() { return GetTokens(OclParser.NAME); }
 		public ITerminalNode NAME(int i) {
-			return GetToken(HelloParser.NAME, i);
+			return GetToken(OclParser.NAME, i);
 		}
 		public PathNameContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -2159,7 +2159,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_pathName; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitPathName(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -2208,7 +2208,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_timeExpression; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitTimeExpression(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -2249,7 +2249,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_actualParameterList; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitActualParameterList(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -2298,7 +2298,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_logicalOperator; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitLogicalOperator(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -2341,7 +2341,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_collectionKind; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitCollectionKind(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -2384,7 +2384,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_relationalOperator; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitRelationalOperator(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -2427,7 +2427,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_addOperator; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitAddOperator(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -2470,7 +2470,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_multiplyOperator; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitMultiplyOperator(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -2513,7 +2513,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_unaryOperator; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitUnaryOperator(this);
 			else return visitor.VisitChildren(this);
 		}
@@ -2556,7 +2556,7 @@ public partial class HelloParser : Parser {
 		}
 		public override int RuleIndex { get { return RULE_booleanLiteral; } }
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IHelloVisitor<TResult> typedVisitor = visitor as IHelloVisitor<TResult>;
+			IOclVisitor<TResult> typedVisitor = visitor as IOclVisitor<TResult>;
 			if (typedVisitor != null) return typedVisitor.VisitBooleanLiteral(this);
 			else return visitor.VisitChildren(this);
 		}

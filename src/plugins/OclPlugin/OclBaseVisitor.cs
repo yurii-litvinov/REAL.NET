@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from Hello.g4 by ANTLR 4.7.2
+// Generated from Ocl.g4 by ANTLR 4.7.2
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -25,16 +25,16 @@ using IToken = Antlr4.Runtime.IToken;
 using ParserRuleContext = Antlr4.Runtime.ParserRuleContext;
 
 /// <summary>
-/// This class provides an empty implementation of <see cref="IHelloVisitor{Result}"/>,
+/// This class provides an empty implementation of <see cref="IOclVisitor{Result}"/>,
 /// which can be extended to create a visitor which only needs to handle a subset
 /// of the available methods.
 /// </summary>
 /// <typeparam name="Result">The return type of the visit operation.</typeparam>
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.7.2")]
 [System.CLSCompliant(false)]
-public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, IHelloVisitor<Result> {
+public partial class OclBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, IOclVisitor<Result> {
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.oclFile"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.oclFile"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -42,9 +42,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitOclFile([NotNull] HelloParser.OclFileContext context) { return VisitChildren(context); }
+	public virtual Result VisitOclFile([NotNull] OclParser.OclFileContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.packageName"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.packageName"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -52,9 +52,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitPackageName([NotNull] HelloParser.PackageNameContext context) { return VisitChildren(context); }
+	public virtual Result VisitPackageName([NotNull] OclParser.PackageNameContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.oclExpressions"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.oclExpressions"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -62,9 +62,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitOclExpressions([NotNull] HelloParser.OclExpressionsContext context) { return VisitChildren(context); }
+	public virtual Result VisitOclExpressions([NotNull] OclParser.OclExpressionsContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.constraint"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.constraint"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -72,9 +72,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitConstraint([NotNull] HelloParser.ConstraintContext context) { return VisitChildren(context); }
+	public virtual Result VisitConstraint([NotNull] OclParser.ConstraintContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.contextDeclaration"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.contextDeclaration"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -82,9 +82,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitContextDeclaration([NotNull] HelloParser.ContextDeclarationContext context) { return VisitChildren(context); }
+	public virtual Result VisitContextDeclaration([NotNull] OclParser.ContextDeclarationContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.classifierContext"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.classifierContext"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -92,9 +92,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitClassifierContext([NotNull] HelloParser.ClassifierContextContext context) { return VisitChildren(context); }
+	public virtual Result VisitClassifierContext([NotNull] OclParser.ClassifierContextContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.operationContext"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.operationContext"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -102,9 +102,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitOperationContext([NotNull] HelloParser.OperationContextContext context) { return VisitChildren(context); }
+	public virtual Result VisitOperationContext([NotNull] OclParser.OperationContextContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.operationName"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.operationName"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -112,9 +112,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitOperationName([NotNull] HelloParser.OperationNameContext context) { return VisitChildren(context); }
+	public virtual Result VisitOperationName([NotNull] OclParser.OperationNameContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.formalParameterList"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.formalParameterList"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -122,9 +122,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitFormalParameterList([NotNull] HelloParser.FormalParameterListContext context) { return VisitChildren(context); }
+	public virtual Result VisitFormalParameterList([NotNull] OclParser.FormalParameterListContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.typeSpecifier"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.typeSpecifier"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -132,9 +132,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitTypeSpecifier([NotNull] HelloParser.TypeSpecifierContext context) { return VisitChildren(context); }
+	public virtual Result VisitTypeSpecifier([NotNull] OclParser.TypeSpecifierContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.collectionType"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.collectionType"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -142,9 +142,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitCollectionType([NotNull] HelloParser.CollectionTypeContext context) { return VisitChildren(context); }
+	public virtual Result VisitCollectionType([NotNull] OclParser.CollectionTypeContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.oclExpression"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.oclExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -152,9 +152,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitOclExpression([NotNull] HelloParser.OclExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitOclExpression([NotNull] OclParser.OclExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.returnType"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.returnType"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -162,9 +162,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitReturnType([NotNull] HelloParser.ReturnTypeContext context) { return VisitChildren(context); }
+	public virtual Result VisitReturnType([NotNull] OclParser.ReturnTypeContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.expression"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.expression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -172,9 +172,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitExpression([NotNull] HelloParser.ExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitExpression([NotNull] OclParser.ExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.letExpression"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.letExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -182,9 +182,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitLetExpression([NotNull] HelloParser.LetExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitLetExpression([NotNull] OclParser.LetExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.ifExpression"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.ifExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -192,9 +192,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitIfExpression([NotNull] HelloParser.IfExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitIfExpression([NotNull] OclParser.IfExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.implExpression"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.implExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -202,9 +202,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitImplExpression([NotNull] HelloParser.ImplExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitImplExpression([NotNull] OclParser.ImplExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.orExpression"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.orExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -212,9 +212,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitOrExpression([NotNull] HelloParser.OrExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitOrExpression([NotNull] OclParser.OrExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.andExpression"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.andExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -222,9 +222,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitAndExpression([NotNull] HelloParser.AndExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitAndExpression([NotNull] OclParser.AndExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.relationalExpression"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.relationalExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -232,9 +232,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitRelationalExpression([NotNull] HelloParser.RelationalExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitRelationalExpression([NotNull] OclParser.RelationalExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.additiveExpression"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.additiveExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -242,9 +242,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitAdditiveExpression([NotNull] HelloParser.AdditiveExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitAdditiveExpression([NotNull] OclParser.AdditiveExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.multiplicativeExpression"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.multiplicativeExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -252,9 +252,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitMultiplicativeExpression([NotNull] HelloParser.MultiplicativeExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitMultiplicativeExpression([NotNull] OclParser.MultiplicativeExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.unaryExpression"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.unaryExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -262,9 +262,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitUnaryExpression([NotNull] HelloParser.UnaryExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitUnaryExpression([NotNull] OclParser.UnaryExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.postfixExpression"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.postfixExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -272,9 +272,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitPostfixExpression([NotNull] HelloParser.PostfixExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitPostfixExpression([NotNull] OclParser.PostfixExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.primaryExpression"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.primaryExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -282,9 +282,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitPrimaryExpression([NotNull] HelloParser.PrimaryExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitPrimaryExpression([NotNull] OclParser.PrimaryExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.propertyCallParameters"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.propertyCallParameters"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -292,9 +292,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitPropertyCallParameters([NotNull] HelloParser.PropertyCallParametersContext context) { return VisitChildren(context); }
+	public virtual Result VisitPropertyCallParameters([NotNull] OclParser.PropertyCallParametersContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.literal"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.literal"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -302,9 +302,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitLiteral([NotNull] HelloParser.LiteralContext context) { return VisitChildren(context); }
+	public virtual Result VisitLiteral([NotNull] OclParser.LiteralContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.stringLiteral"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.stringLiteral"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -312,9 +312,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitStringLiteral([NotNull] HelloParser.StringLiteralContext context) { return VisitChildren(context); }
+	public virtual Result VisitStringLiteral([NotNull] OclParser.StringLiteralContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.enumLiteral"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.enumLiteral"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -322,9 +322,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitEnumLiteral([NotNull] HelloParser.EnumLiteralContext context) { return VisitChildren(context); }
+	public virtual Result VisitEnumLiteral([NotNull] OclParser.EnumLiteralContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.simpleTypeSpecifier"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.simpleTypeSpecifier"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -332,9 +332,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitSimpleTypeSpecifier([NotNull] HelloParser.SimpleTypeSpecifierContext context) { return VisitChildren(context); }
+	public virtual Result VisitSimpleTypeSpecifier([NotNull] OclParser.SimpleTypeSpecifierContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.literalCollection"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.literalCollection"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -342,9 +342,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitLiteralCollection([NotNull] HelloParser.LiteralCollectionContext context) { return VisitChildren(context); }
+	public virtual Result VisitLiteralCollection([NotNull] OclParser.LiteralCollectionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.collectionItem"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.collectionItem"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -352,9 +352,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitCollectionItem([NotNull] HelloParser.CollectionItemContext context) { return VisitChildren(context); }
+	public virtual Result VisitCollectionItem([NotNull] OclParser.CollectionItemContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.propertyCall"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.propertyCall"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -362,9 +362,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitPropertyCall([NotNull] HelloParser.PropertyCallContext context) { return VisitChildren(context); }
+	public virtual Result VisitPropertyCall([NotNull] OclParser.PropertyCallContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.qualifiers"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.qualifiers"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -372,9 +372,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitQualifiers([NotNull] HelloParser.QualifiersContext context) { return VisitChildren(context); }
+	public virtual Result VisitQualifiers([NotNull] OclParser.QualifiersContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.declarator"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.declarator"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -382,9 +382,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitDeclarator([NotNull] HelloParser.DeclaratorContext context) { return VisitChildren(context); }
+	public virtual Result VisitDeclarator([NotNull] OclParser.DeclaratorContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.pathName"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.pathName"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -392,9 +392,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitPathName([NotNull] HelloParser.PathNameContext context) { return VisitChildren(context); }
+	public virtual Result VisitPathName([NotNull] OclParser.PathNameContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.timeExpression"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.timeExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -402,9 +402,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitTimeExpression([NotNull] HelloParser.TimeExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitTimeExpression([NotNull] OclParser.TimeExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.actualParameterList"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.actualParameterList"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -412,9 +412,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitActualParameterList([NotNull] HelloParser.ActualParameterListContext context) { return VisitChildren(context); }
+	public virtual Result VisitActualParameterList([NotNull] OclParser.ActualParameterListContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.logicalOperator"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.logicalOperator"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -422,9 +422,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitLogicalOperator([NotNull] HelloParser.LogicalOperatorContext context) { return VisitChildren(context); }
+	public virtual Result VisitLogicalOperator([NotNull] OclParser.LogicalOperatorContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.collectionKind"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.collectionKind"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -432,9 +432,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitCollectionKind([NotNull] HelloParser.CollectionKindContext context) { return VisitChildren(context); }
+	public virtual Result VisitCollectionKind([NotNull] OclParser.CollectionKindContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.relationalOperator"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.relationalOperator"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -442,9 +442,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitRelationalOperator([NotNull] HelloParser.RelationalOperatorContext context) { return VisitChildren(context); }
+	public virtual Result VisitRelationalOperator([NotNull] OclParser.RelationalOperatorContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.addOperator"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.addOperator"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -452,9 +452,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitAddOperator([NotNull] HelloParser.AddOperatorContext context) { return VisitChildren(context); }
+	public virtual Result VisitAddOperator([NotNull] OclParser.AddOperatorContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.multiplyOperator"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.multiplyOperator"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -462,9 +462,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitMultiplyOperator([NotNull] HelloParser.MultiplyOperatorContext context) { return VisitChildren(context); }
+	public virtual Result VisitMultiplyOperator([NotNull] OclParser.MultiplyOperatorContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.unaryOperator"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.unaryOperator"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -472,9 +472,9 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitUnaryOperator([NotNull] HelloParser.UnaryOperatorContext context) { return VisitChildren(context); }
+	public virtual Result VisitUnaryOperator([NotNull] OclParser.UnaryOperatorContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="HelloParser.booleanLiteral"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.booleanLiteral"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -482,5 +482,5 @@ public partial class HelloBaseVisitor<Result> : AbstractParseTreeVisitor<Result>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitBooleanLiteral([NotNull] HelloParser.BooleanLiteralContext context) { return VisitChildren(context); }
+	public virtual Result VisitBooleanLiteral([NotNull] OclParser.BooleanLiteralContext context) { return VisitChildren(context); }
 }

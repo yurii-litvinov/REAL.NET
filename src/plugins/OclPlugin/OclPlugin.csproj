@@ -56,12 +56,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FunctionDef.cs" />
-    <Compile Include="HelloBaseVisitor.cs" />
-    <Compile Include="HelloLexer.cs" />
-    <Compile Include="HelloParser.cs" />
-    <Compile Include="HelloPrinter.cs" />
-    <Compile Include="HelloVisitor.cs" />
+    <Compile Include="OclBaseVisitor.cs" />
+    <Compile Include="OclLexer.cs" />
+    <Compile Include="OclParser.cs" />
+    <Compile Include="OclPrinter.cs" />
     <Compile Include="OclPlugin.cs" />
+    <Compile Include="OclVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from Hello.g4 by ANTLR 4.7.2
+// Generated from Ocl.g4 by ANTLR 4.7.2
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -29,7 +29,7 @@ using DFA = Antlr4.Runtime.Dfa.DFA;
 
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.7.2")]
 [System.CLSCompliant(false)]
-public partial class HelloLexer : Lexer {
+public partial class OclLexer : Lexer {
 	protected static DFA[] decisionToDFA;
 	protected static PredictionContextCache sharedContextCache = new PredictionContextCache();
 	public const int
@@ -59,10 +59,10 @@ public partial class HelloLexer : Lexer {
 	};
 
 
-	public HelloLexer(ICharStream input)
+	public OclLexer(ICharStream input)
 	: this(input, Console.Out, Console.Error) { }
 
-	public HelloLexer(ICharStream input, TextWriter output, TextWriter errorOutput)
+	public OclLexer(ICharStream input, TextWriter output, TextWriter errorOutput)
 	: base(input, output, errorOutput)
 	{
 		Interpreter = new LexerATNSimulator(this, _ATN, decisionToDFA, sharedContextCache);
@@ -94,7 +94,7 @@ public partial class HelloLexer : Lexer {
 		}
 	}
 
-	public override string GrammarFileName { get { return "Hello.g4"; } }
+	public override string GrammarFileName { get { return "Ocl.g4"; } }
 
 	public override string[] RuleNames { get { return ruleNames; } }
 
@@ -104,7 +104,7 @@ public partial class HelloLexer : Lexer {
 
 	public override string SerializedAtn { get { return new string(_serializedATN); } }
 
-	static HelloLexer() {
+	static OclLexer() {
 		decisionToDFA = new DFA[_ATN.NumberOfDecisions];
 		for (int i = 0; i < _ATN.NumberOfDecisions; i++) {
 			decisionToDFA[i] = new DFA(_ATN.GetDecisionState(i), i);

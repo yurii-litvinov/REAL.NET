@@ -1,4 +1,4 @@
-grammar Hello;
+grammar Ocl;
 
 oclFile : ( 'package' packageName
 oclExpressions

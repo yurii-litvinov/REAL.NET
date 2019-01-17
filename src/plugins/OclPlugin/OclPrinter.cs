@@ -9,36 +9,36 @@
     using EditorPluginInterfaces;
     using Repo;
 
-    internal class HelloPrinter : HelloBaseVisitor<bool>
+    internal class OclPrinter : OclBaseVisitor<bool>
     {
         private readonly ArrayList<Dictionary<string, object>> vars;
-        private readonly HelloCalc calc;
+        private readonly OclCalc calc;
         private readonly Dictionary<string, FunctionDef> funcs;
         private readonly IConsole console;
         private readonly IRepo repository;
         private Repo.IModel model;
         private IElement curElement;
 
-        public HelloPrinter(IConsole console, IRepo repo)
+        public OclPrinter(IConsole console, IRepo repo)
         {
             this.vars = new ArrayList<Dictionary<string, object>>
             {
                 new Dictionary<string, object>()
             };
             this.funcs = new Dictionary<string, FunctionDef>();
-            this.calc = new HelloCalc(this.vars, this.funcs, this, repo, console);
+            this.calc = new OclCalc(this.vars, this.funcs, this, repo, console);
             this.console = console;
             this.repository = repo;
         }
 
-        public override bool VisitPackageName([NotNull] HelloParser.PackageNameContext context)
+        public override bool VisitPackageName([NotNull] OclParser.PackageNameContext context)
         {
             this.model = this.repository.Model(context.pathName().GetText());
             this.calc.Model = this.model;
             return this.VisitPathName(context.pathName());
         }
 
-        public override bool VisitConstraint([NotNull] HelloParser.ConstraintContext context)
+        public override bool VisitConstraint([NotNull] OclParser.ConstraintContext context)
         {
             this.VisitContextDeclaration(context.contextDeclaration());
             string text = context.contextDeclaration().classifierContext().GetText();
@@ -70,7 +70,7 @@
             return base.VisitConstraint(context);
         }
 
-        public override bool VisitOclExpression([NotNull] HelloParser.OclExpressionContext context)
+        public override bool VisitOclExpression([NotNull] OclParser.OclExpressionContext context)
         {
             for (int i = 0; i < context.letExpression().Length; i++)
             {
@@ -89,7 +89,7 @@
             return true;
         }
 
-        public override bool VisitLetExpression([NotNull] HelloParser.LetExpressionContext context)
+        public override bool VisitLetExpression([NotNull] OclParser.LetExpressionContext context)
         {
             if (context.formalParameterList() != null)
             {
@@ -103,7 +103,7 @@
             return true;
         }
 
-        public override bool VisitRelationalExpression([NotNull] HelloParser.RelationalExpressionContext context)
+        public override bool VisitRelationalExpression([NotNull] OclParser.RelationalExpressionContext context)
         {
             if (context.relationalOperator() != null)
             {
@@ -159,11 +159,11 @@
             return (bool)this.calc.VisitAdditiveExpression(context.additiveExpression()[0]);
         }
 
-        private class HelloCalc : HelloBaseVisitor<object>
+        private class OclCalc : OclBaseVisitor<object>
         {
             private readonly ArrayList<Dictionary<string, object>> vars = null;
             private readonly Dictionary<string, FunctionDef> funcs = null;
-            private readonly HelloPrinter hp = null;
+            private readonly OclPrinter hp = null;
             private readonly IRepo repository = null;
             private readonly IConsole console = null;
 
@@ -175,7 +175,7 @@
 
             public object Res { get; private set; } = null;
 
-            public HelloCalc(ArrayList<Dictionary<string, object>> vars, Dictionary<string, FunctionDef> funcs, HelloPrinter hp, IRepo repo, IConsole cons)
+            public OclCalc(ArrayList<Dictionary<string, object>> vars, Dictionary<string, FunctionDef> funcs, OclPrinter hp, IRepo repo, IConsole cons)
             {
                 this.vars = vars;
                 this.funcs = funcs;
@@ -184,7 +184,7 @@
                 this.console = cons;
             }
 
-            public override object VisitAdditiveExpression([NotNull] HelloParser.AdditiveExpressionContext context)
+            public override object VisitAdditiveExpression([NotNull] OclParser.AdditiveExpressionContext context)
             {
                 if (context.addOperator() == null || context.addOperator().Length == 0)
                 {
@@ -208,7 +208,7 @@
                 return startAdd;
             }
 
-            public override object VisitMultiplicativeExpression([NotNull] HelloParser.MultiplicativeExpressionContext context)
+            public override object VisitMultiplicativeExpression([NotNull] OclParser.MultiplicativeExpressionContext context)
             {
                 if (context.multiplyOperator() == null || context.multiplyOperator().Length == 0)
                 {
@@ -232,7 +232,7 @@
                 return startMul;
             }
 
-            public override object VisitUnaryExpression([NotNull] HelloParser.UnaryExpressionContext context)
+            public override object VisitUnaryExpression([NotNull] OclParser.UnaryExpressionContext context)
             {
                 object postfix = this.VisitPostfixExpression(context.postfixExpression());
                 if (context.unaryOperator() != null)
@@ -247,7 +247,7 @@
                 return postfix;
             }
 
-            public override object VisitPostfixExpression([NotNull] HelloParser.PostfixExpressionContext context)
+            public override object VisitPostfixExpression([NotNull] OclParser.PostfixExpressionContext context)
             {
                 if (context.propertyCall() == null || context.propertyCall().Length == 0)
                 {
@@ -265,7 +265,7 @@
                 return this.Res;
             }
 
-            public override object VisitLiteral([NotNull] HelloParser.LiteralContext context)
+            public override object VisitLiteral([NotNull] OclParser.LiteralContext context)
             {
                 if (context.NUMBER() != null)
                 {
@@ -283,7 +283,7 @@
                 return null;
             }
 
-            public override object VisitLiteralCollection([NotNull] HelloParser.LiteralCollectionContext context)
+            public override object VisitLiteralCollection([NotNull] OclParser.LiteralCollectionContext context)
             {
                 switch (context.collectionKind().GetText())
                 {
@@ -300,7 +300,7 @@
                 return new HashSet<object>();
             }
 
-            public override object VisitPropertyCall([NotNull] HelloParser.PropertyCallContext context)
+            public override object VisitPropertyCall([NotNull] OclParser.PropertyCallContext context)
             {
                 if (context.propertyCallParameters() != null)
                 {
@@ -411,7 +411,7 @@
 
                     Dictionary<string, object> stack = new Dictionary<string, object>();
                     List<string> names = this.funcs[context.pathName().GetText()].param;
-                    HelloParser.ExpressionContext contextFunc = this.funcs[context.pathName().GetText()].context;
+                    OclParser.ExpressionContext contextFunc = this.funcs[context.pathName().GetText()].context;
                     for (int i = 0; i < names.Count; i++)
                     {
                         stack[names[i]] = this.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[i]);
@@ -422,7 +422,7 @@
                     this.vars.RemoveAt(this.vars.Count - 1);
                     return ress;
                 }
-                else if (context.Parent is HelloParser.PostfixExpressionContext expressionContext)
+                else if (context.Parent is OclParser.PostfixExpressionContext expressionContext)
                 {
                     string elem = expressionContext.primaryExpression().GetText();
                     if (elem != "self")
@@ -447,7 +447,7 @@
                 return this.VisitPathName(context.pathName());
             }
 
-            public override object VisitPathName([NotNull] HelloParser.PathNameContext context)
+            public override object VisitPathName([NotNull] OclParser.PathNameContext context)
             {
                 for (int i = this.vars.Count - 1; i >= 0; i--)
                 {
@@ -460,7 +460,7 @@
                 return context.NAME()[0].GetText();
             }
 
-            public override object VisitIfExpression([NotNull] HelloParser.IfExpressionContext context)
+            public override object VisitIfExpression([NotNull] OclParser.IfExpressionContext context)
             {
                 if (this.hp.VisitExpression(context.expression()[0]))
                 {
