@@ -40,17 +40,17 @@
 
         public override bool VisitConstraint([NotNull] HelloParser.ConstraintContext context)
         {
-            VisitContextDeclaration(context.contextDeclaration());
+            this.VisitContextDeclaration(context.contextDeclaration());
             string text = context.contextDeclaration().classifierContext().GetText();
             this.curElement = this.model.FindElement(text);
             this.calc.Element = this.curElement;
             for (int i = 0; i < context.oclExpression().Length; i++)
             {
-                this.calc.depth = int.Parse(context.NUMBER()[i].GetText());
+                this.calc.Depth = int.Parse(context.NUMBER()[i].GetText());
                 foreach (IElement el in this.model.Elements)
                 {
                     IElement par = el;
-                    for (int j = 0; j < this.calc.depth; j++)
+                    for (int j = 0; j < this.calc.Depth; j++)
                     {
                         par = par.Class;
                     }
@@ -64,8 +64,9 @@
                     }
                 }
 
-                this.calc.depth = 0;
+                this.calc.Depth = 0;
             }
+
             return base.VisitConstraint(context);
         }
 
@@ -101,7 +102,6 @@
 
             return true;
         }
-
 
         public override bool VisitRelationalExpression([NotNull] HelloParser.RelationalExpressionContext context)
         {
@@ -156,7 +156,7 @@
                 }
             }
 
-            return (bool) this.calc.VisitAdditiveExpression(context.additiveExpression()[0]);
+            return (bool)this.calc.VisitAdditiveExpression(context.additiveExpression()[0]);
         }
 
         private class HelloCalc : HelloBaseVisitor<object>
@@ -166,11 +166,14 @@
             private readonly HelloPrinter hp = null;
             private readonly IRepo repository = null;
             private readonly IConsole console = null;
-            private readonly int depth = 0;
+
+            public int Depth { internal get; set; } = 0;
 
             public Repo.IModel Model { private get; set; } = null;
+
             public IElement Element { private get; set; } = null;
-            private object res = null;
+
+            public object Res { get; private set; } = null;
 
             public HelloCalc(ArrayList<Dictionary<string, object>> vars, Dictionary<string, FunctionDef> funcs, HelloPrinter hp, IRepo repo, IConsole cons)
             {
@@ -212,7 +215,7 @@
                     return this.VisitUnaryExpression(context.unaryExpression()[0]);
                 }
 
-                double startMul = (double) this.VisitUnaryExpression(context.unaryExpression()[0]);
+                double startMul = (double)this.VisitUnaryExpression(context.unaryExpression()[0]);
                 for (int i = 1; i < context.unaryExpression().Length; i++)
                 {
                     switch (context.multiplyOperator()[i - 1].Start.Text)
@@ -225,6 +228,7 @@
                             break;
                     }
                 }
+
                 return startMul;
             }
 
@@ -247,18 +251,18 @@
             {
                 if (context.propertyCall() == null || context.propertyCall().Length == 0)
                 {
-                    this.res = this.VisitPrimaryExpression(context.primaryExpression());
+                    this.Res = this.VisitPrimaryExpression(context.primaryExpression());
                 }
                 else
                 {
-                    this.res = this.VisitPrimaryExpression(context.primaryExpression());
+                    this.Res = this.VisitPrimaryExpression(context.primaryExpression());
                     for (int i = 0; i < context.propertyCall().Length; i++)
                     {
-                        this.res = this.VisitPropertyCall(context.propertyCall()[i]);
+                        this.Res = this.VisitPropertyCall(context.propertyCall()[i]);
                     }
                 }
 
-                return this.res;
+                return this.Res;
             }
 
             public override object VisitLiteral([NotNull] HelloParser.LiteralContext context)
@@ -302,18 +306,18 @@
                 {
                     if (context.pathName().GetText() == "size")
                     {
-                        if (this.res is ICollection<object> objects)
+                        if (this.Res is ICollection<object> objects)
                         {
                             return objects.Count;
                         }
-                        else if (this.res is string s)
+                        else if (this.Res is string s)
                         {
                             return s.Length;
                         }
                     }
                     else if (context.pathName().GetText() == "allInstances")
                     {
-                        IElement elem = this.Model.FindElement(this.res.ToString());
+                        IElement elem = this.Model.FindElement(this.Res.ToString());
                         return this.Model.Elements.Where(x => x.Class == elem).ToList<object>();
                     }
                     else if (context.pathName().GetText() == "any")
@@ -321,7 +325,7 @@
                         Dictionary<string, object> st = new Dictionary<string, object>();
                         this.vars.Add(st);
                         object ret = null;
-                        foreach (object val in (ICollection<object>)this.res)
+                        foreach (object val in (ICollection<object>)this.Res)
                         {
                             st["self"] = val;
                             if (this.hp.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
@@ -338,7 +342,7 @@
                     {
                         Dictionary<string, object> st = new Dictionary<string, object>();
                         this.vars.Add(st);
-                        foreach (object val in (ICollection<object>)this.res)
+                        foreach (object val in (ICollection<object>)this.Res)
                         {
                             st["self"] = val;
                             if (!this.hp.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
@@ -353,22 +357,22 @@
                     else if (context.pathName().GetText() == "collect")
                     {
                         ICollection<object> ar = null;
-                        if (this.res is HashSet<object>)
+                        if (this.Res is HashSet<object>)
                         {
                             ar = new HashSet<object>();
                         }
-                        else if (this.res is SortedSet<object>)
+                        else if (this.Res is SortedSet<object>)
                         {
                             ar = new SortedSet<object>();
                         }
-                        else if (this.res is LinkedList<object>)
+                        else if (this.Res is LinkedList<object>)
                         {
                             ar = new LinkedList<object>();
                         }
 
-                        foreach (object val in (ICollection<object>)this.res)
+                        foreach (object val in (ICollection<object>)this.Res)
                         {
-                            this.res = val;
+                            this.Res = val;
                             ar.Add(this.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]));
                         }
 
@@ -377,22 +381,22 @@
                     else if (context.pathName().GetText() == "select")
                     {
                         ICollection<object> ar = null;
-                        if (this.res is HashSet<object>)
+                        if (this.Res is HashSet<object>)
                         {
                             ar = new HashSet<object>();
                         }
-                        else if (this.res is SortedSet<object>)
+                        else if (this.Res is SortedSet<object>)
                         {
                             ar = new SortedSet<object>();
                         }
-                        else if (this.res is LinkedList<object>)
+                        else if (this.Res is LinkedList<object>)
                         {
                             ar = new LinkedList<object>();
                         }
 
                         Dictionary<string, object> st = new Dictionary<string, object>();
                         this.vars.Add(st);
-                        foreach (object val in (ICollection<object>)this.res)
+                        foreach (object val in (ICollection<object>)this.Res)
                         {
                             st["self"] = val;
                             if (this.hp.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
@@ -429,7 +433,7 @@
                     if (context.NUMBER() != null)
                     {
                         IElement par = this.Element;
-                        for (int i = 0; i < this.depth - int.Parse(context.NUMBER().GetText()); i++)
+                        for (int i = 0; i < this.Depth - int.Parse(context.NUMBER().GetText()); i++)
                         {
                             par = par.Class;
                         }
@@ -458,7 +462,7 @@
 
             public override object VisitIfExpression([NotNull] HelloParser.IfExpressionContext context)
             {
-                if (hp.VisitExpression(context.expression()[0]))
+                if (this.hp.VisitExpression(context.expression()[0]))
                 {
                     return this.VisitExpression(context.expression()[1]);
                 }
