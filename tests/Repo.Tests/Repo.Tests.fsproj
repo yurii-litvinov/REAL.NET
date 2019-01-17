@@ -76,19 +76,19 @@
     <Content Include="Data\test.rns">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Compile Include="InstantiationSemanticsTests\DualInstantiationTests.fs" />
-    <Compile Include="InstantiationSemanticsTests\CoreLayerInstantiationTests.fs" />
-    <Compile Include="DataModelTests.fs" />
-    <Compile Include="DataRepoTest.fs" />
-    <Compile Include="DataElementTests.fs" />
-    <Compile Include="CoreModelTests.fs" />
-    <Compile Include="CoreSemanticLayerTests.fs" />
-    <Compile Include="InfrastructureSemanticLayerTests.fs" />
+    <Compile Include="DataLayerTests\DataModelTests.fs" />
+    <Compile Include="DataLayerTests\DataRepoTest.fs" />
+    <Compile Include="DataLayerTests\DataElementTests.fs" />
+    <Compile Include="CoreModelTests\CoreModelTests.fs" />
+    <Compile Include="CoreModelTests\CoreSemanticsTests.fs" />
+    <Compile Include="CoreModelTests\CoreLayerInstantiationTests.fs" />
+    <Compile Include="InfrastructureModelTests\InfrastructureSemanticLayerTests.fs" />
+    <Compile Include="InfrastructureModelTests\DualInstantiationTests.fs" />
     <Compile Include="RobotsTestModelsTests.fs" />
-    <Compile Include="FacadeRepoTests.fs" />
-    <Compile Include="FacadeModelTests.fs" />
-    <Compile Include="FacadeAttributeTests.fs" />
-    <Compile Include="FacadeNodeTests.fs" />
+    <Compile Include="FacadeLayerTests\FacadeNodeTests.fs" />
+    <Compile Include="FacadeLayerTests\FacadeAttributeTests.fs" />
+    <Compile Include="FacadeLayerTests\FacadeModelTests.fs" />
+    <Compile Include="FacadeLayerTests\FacadeRepoTests.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

@@ -21,7 +21,7 @@ open Repo.CoreModel
 type CoreSemanticsModelCreator private (repo: IDataRepository, modelName: string, metamodel: IDataModel) =
     let coreMetamodel = repo.Model "CoreModel"
     let coreSemantic = CoreSemantics(repo)
-    let node = coreMetamodel.Node "Node"
+    let coreNode = coreMetamodel.Node "Node"
     let stringNode = coreMetamodel.Node "String"
     let association = coreMetamodel.Node "Association"
 
@@ -36,7 +36,7 @@ type CoreSemanticsModelCreator private (repo: IDataRepository, modelName: string
         CoreSemanticsModelCreator(repo, modelName, repo.Model "CoreModel")
 
     member this.AddNode (name: string) (attributes: string list) =
-        let node = model.CreateNode(name, node)
+        let node = model.CreateNode(name, coreNode)
         attributes |> List.iter (fun attr -> this.AddAttribute node attr)
         node
 
@@ -60,7 +60,7 @@ type CoreSemanticsModelCreator private (repo: IDataRepository, modelName: string
     member this.AddAttribute (node: IDataNode) (name: string) =
         let stringNode =
             if not <| model.HasNode "String" then
-                model.CreateNode("String", node)
+                model.CreateNode("String", coreNode)
             else
                 model.Node "String"
             
