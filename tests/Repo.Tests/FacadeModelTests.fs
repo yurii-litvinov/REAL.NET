@@ -26,7 +26,7 @@ let init () =
     let build (builder: DataLayer.IModelBuilder) =
         builder.Build repo
 
-    CoreModel.CoreModel() |> build
+    CoreModel.CoreModelBuilder() |> build
     Metametamodels.LanguageMetamodelBuilder() |> build
     Metametamodels.InfrastructureMetamodelBuilder() |> build
 
@@ -68,10 +68,7 @@ let ``Model shall allow to create nodes`` () =
 let ``Model shall allow to list its nodes`` () =
     let repo = RepoFactory.Create ()
 
-    let model = repo.Models |> Seq.find (fun m -> m.Name = "RobotsTestModel")
-
-    let underlyingModel = (model :?> Model).UnderlyingModel
-    let initialNode = CoreModel.Model.findNode underlyingModel "aFinalNode"
+    let model = repo.Model "RobotsTestModel"
 
     model.Nodes |> should not' (be Empty)
     model.Nodes |> Seq.filter (fun n -> n.Name = "aFinalNode") |> should not' (be Empty)

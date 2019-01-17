@@ -27,7 +27,7 @@ let init () =
     let build (builder: IModelBuilder) =
         builder.Build repo
 
-    CoreModel() |> build
+    CoreModelBuilder() |> build
     LanguageMetamodelBuilder() |> build
     InfrastructureMetamodelBuilder() |> build
 

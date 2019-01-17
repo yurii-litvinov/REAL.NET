@@ -23,7 +23,7 @@ open Repo.CoreModel
 
 [<Test>]
 let ``Repo shall allow to create Type-Object-style model hierarchy`` () =
-    let builder = ModelCreator("Metamodel")
+    let builder = CoreSemanticsModelCreator("Metamodel")
 
     let productType = builder.AddNode "ProductType" ["VAT"]
     let product = builder.AddNode "Product" ["price"]
@@ -64,7 +64,7 @@ let ``Repo shall allow to create Type-Object-style model hierarchy`` () =
 
 [<Test>]
 let ``Repo shall allow to create deep model hierarchy`` () =
-    let model2Builder = ModelCreator("Model@2")
+    let model2Builder = CoreSemanticsModelCreator("Model@2")
 
     let productType = model2Builder.AddNode "ProductType" ["VAT"; "price"]
 

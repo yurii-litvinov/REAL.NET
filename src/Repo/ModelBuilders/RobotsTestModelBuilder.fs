@@ -26,11 +26,11 @@ type RobotsTestModelBuilder() =
             let metamodel = repo.Model "RobotsMetamodel"
             let infrastructureMetamodel = infrastructure.Metamodel.Model
 
-            let metamodelAbstractNode = Model.findNode metamodel "AbstractNode"
+            let metamodelAbstractNode = metamodel.Node "AbstractNode"
             //let metamodelInitialNode = Model.findNode metamodel "InitialNode"
-            let metamodelFinalNode = Model.findNode metamodel "FinalNode"
-            let metamodelMotorsForward = Model.findNode metamodel "MotorsForward"
-            let metamodelTimer = Model.findNode metamodel "Timer"
+            let metamodelFinalNode = metamodel.Node "FinalNode"
+            let metamodelMotorsForward = metamodel.Node "MotorsForward"
+            let metamodelTimer = metamodel.Node "Timer"
 
             let link = Model.findAssociationWithSource metamodelAbstractNode "target"
 

@@ -19,20 +19,9 @@ open Repo.DataLayer
 
 /// Helper for working with Infrastructure Metamodel.
 type InfrastructureMetamodel(repo: IDataRepository) =
-    let infrastructureMetamodel =
-        let models =
-            repo.Models
-            |> Seq.filter (fun m -> m.Name = "InfrastructureMetamodel")
+    let infrastructureMetamodel = repo.Model "InfrastructureMetamodel"
 
-        if Seq.isEmpty models then
-            raise (MalformedInfrastructureMetamodelException "Infrastructure Metamodel not found in a repository")
-        elif Seq.length models <> 1 then
-            raise (MalformedInfrastructureMetamodelException
-                    "There is more than one Infrastructure Metamodel in a repository")
-        else
-            Seq.head models
-
-    let findNode name = CoreModel.Model.findNode infrastructureMetamodel name
+    let findNode name = infrastructureMetamodel.Node name
 
     let element = findNode "Element"
     let node = findNode "Node"

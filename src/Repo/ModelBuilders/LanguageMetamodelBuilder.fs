@@ -23,9 +23,9 @@ type LanguageMetamodelBuilder() =
     interface IModelBuilder with
         member this.Build(repo: IDataRepository): unit =
             let coreMetamodel = repo.Model "CoreModel"
-            let metamodelNode = Model.findNode coreMetamodel "Node"
-            let metamodelGeneralization = Model.findNode coreMetamodel "Generalization"
-            let metamodelAssociation = Model.findNode coreMetamodel "Association"
+            let metamodelNode = coreMetamodel.Node "Node"
+            let metamodelGeneralization = coreMetamodel.Node "Generalization"
+            let metamodelAssociation = coreMetamodel.Node "Association"
 
             let languageMetamodel = repo.CreateModel("LanguageMetamodel", coreMetamodel)
 

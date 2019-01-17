@@ -17,7 +17,7 @@ namespace Repo.CoreModel
 open Repo.DataLayer
 
 /// Initializes repository with Core model.
-type CoreModel() =
+type CoreModelBuilder() =
     interface IModelBuilder with
         member this.Build(repo: IDataRepository): unit =
             let model = repo.CreateModel "CoreModel"

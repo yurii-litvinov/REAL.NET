@@ -22,7 +22,7 @@ open Repo.DataLayer
 
 let init () =
     let repo = DataRepo() :> IDataRepository
-    let builder = CoreModel() :> IModelBuilder
+    let builder = CoreModelBuilder() :> IModelBuilder
     builder.Build repo
     repo
 

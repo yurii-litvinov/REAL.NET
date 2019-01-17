@@ -68,8 +68,8 @@
   -->
   <ItemGroup>
     <None Include="paket.references" />
-    <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Properties\AssemblyInternalsVisibleTo.fs" />
+    <Compile Include="Properties\AssemblyInfo.fs" />
     <Compile Include="Exceptions.fs" />
     <Compile Include="Helpers.fs" />
     <Compile Include="DataLayer\DataLayer.fs" />
@@ -84,9 +84,9 @@
     <Compile Include="Serializer\DataObjects.fs" />
     <Compile Include="Serializer\Serializer.fs" />
     <Compile Include="Serializer\Deserializer.fs" />
-    <Compile Include="CoreModel\CoreSemantic.fs" />
-    <Compile Include="CoreModel\CoreModel.fs" />
-    <Compile Include="CoreModel\ModelCreator.fs" />
+    <Compile Include="CoreModel\CoreSemantics.fs" />
+    <Compile Include="CoreModel\CoreModelBuilder.fs" />
+    <Compile Include="CoreModel\CoreSemanticsModelCreator.fs" />
     <Compile Include="InfrastructureSemanticLayer.fs" />
     <Compile Include="ModelBuilders\LanguageMetamodelBuilder.fs" />
     <Compile Include="ModelBuilders\InfrastructureMetamodelBuilder.fs" />

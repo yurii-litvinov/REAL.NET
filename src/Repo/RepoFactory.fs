@@ -23,7 +23,7 @@ type RepoFactory =
         let build (builder: DataLayer.IModelBuilder) =
             builder.Build data
 
-        CoreModel.CoreModel() |> build
+        CoreModel.CoreModelBuilder() |> build
         Metametamodels.LanguageMetamodelBuilder() |> build
         Metametamodels.InfrastructureMetamodelBuilder() |> build
         Metametamodels.RobotsMetamodelBuilder() |> build
@@ -45,7 +45,7 @@ type RepoFactory =
         let build (builder: DataLayer.IModelBuilder) =
             builder.Build data
 
-        CoreModel.CoreModel() |> build
+        CoreModel.CoreModelBuilder() |> build
         Metametamodels.LanguageMetamodelBuilder() |> build
         Metametamodels.InfrastructureMetamodelBuilder() |> build
 

@@ -25,7 +25,7 @@ type RobotsMetamodelBuilder() =
             let infrastructure = InfrastructureSemanticLayer.InfrastructureSemantic(repo)
             let metamodel = infrastructure.Metamodel.Model
 
-            let find name = CoreModel.Model.findNode metamodel name
+            let find name = metamodel.Node name
             let findAssociation node name = CoreModel.Model.findAssociationWithSource node name
 
             let metamodelElement = find "Element"

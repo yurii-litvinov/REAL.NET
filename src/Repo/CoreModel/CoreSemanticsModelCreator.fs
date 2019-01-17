@@ -18,9 +18,9 @@ open Repo.DataLayer
 open Repo.CoreModel
 
 /// Class that allows to instantiate new models based on Core model semantics.
-type ModelCreator private (repo: IDataRepository, modelName: string, metamodel: IDataModel) =
+type CoreSemanticsModelCreator private (repo: IDataRepository, modelName: string, metamodel: IDataModel) =
     let coreMetamodel = repo.Model "CoreModel"
-    let coreSemantic = CoreSemantic(repo)
+    let coreSemantic = CoreSemantics(repo)
     let node = coreMetamodel.Node "Node"
     let stringNode = coreMetamodel.Node "String"
     let association = coreMetamodel.Node "Association"
@@ -32,8 +32,8 @@ type ModelCreator private (repo: IDataRepository, modelName: string, metamodel: 
         let build (builder: IModelBuilder) =
             builder.Build repo
 
-        CoreModel() |> build
-        ModelCreator(repo, modelName, repo.Model "CoreModel")
+        CoreModelBuilder() |> build
+        CoreSemanticsModelCreator(repo, modelName, repo.Model "CoreModel")
 
     member this.AddNode (name: string) (attributes: string list) =
         let node = model.CreateNode(name, node)
@@ -78,8 +78,6 @@ type ModelCreator private (repo: IDataRepository, modelName: string, metamodel: 
         model.CreateAssociation(``class``, source, target, ``class``.TargetName)
 
     member this.CreateInstanceModelBuilder (name: string) =
-        ModelCreator(repo, name, model)
+        CoreSemanticsModelCreator(repo, name, model)
 
     member this.Model with get () = model
-
-

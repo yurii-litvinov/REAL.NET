@@ -25,7 +25,7 @@ type AirSimMetamodelBuilder() =
             let infrastructure = InfrastructureSemanticLayer.InfrastructureSemantic(repo)
             let metamodel = infrastructure.Metamodel.Model
 
-            let find name = CoreModel.Model.findNode metamodel name
+            let find name = metamodel.Node name
             
             let metamodelNode = find "Node"
             let metamodelGeneralization = find "Generalization"

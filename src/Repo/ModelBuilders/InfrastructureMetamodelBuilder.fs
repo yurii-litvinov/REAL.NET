@@ -24,7 +24,7 @@ type InfrastructureMetamodelBuilder() =
         member this.Build(repo: IDataRepository): unit =
             let metamodel = repo.Model "LanguageMetamodel"
 
-            let find name = Model.findNode metamodel name
+            let find name = metamodel.Node name
 
             let metamodelNode = find "Node"
             let metamodelGeneralization = find "Generalization"
@@ -72,7 +72,7 @@ type InfrastructureMetamodelBuilder() =
                 let attributeNode = +name
                 model.CreateAssociation(metamodelAssociation, node, attributeNode, name) |> ignore
 
-                let kindNode = Model.findNode model (typeNodeToKind (``type`` :?> IDataNode))
+                let kindNode = model.Node (typeNodeToKind (``type`` :?> IDataNode))
                 model.CreateAssociation(metamodelAssociation, attributeNode, kindNode, "kind") |> ignore
 
                 let valueNode = Model.tryFindNode model value

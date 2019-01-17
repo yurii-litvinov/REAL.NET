@@ -23,7 +23,9 @@ module Element =
 
     /// Does a breadth-first search from a given element following given interesting edges until element matching
     /// given predicate is found.
-    let private bfs (element: IDataElement) (isInterestingEdge: IDataEdge -> bool) (isWhatWeSearch: IDataElement -> bool) =
+    let private bfs (element: IDataElement) 
+            (isInterestingEdge: IDataEdge -> bool) 
+            (isWhatWeSearch: IDataElement -> bool) =
         let queue = Queue<IDataElement>()
         queue.Enqueue element
         let visited = HashSet<IDataElement>()
@@ -202,23 +204,12 @@ module Node =
 
 /// Helper functions for working with models.
 module Model =
-    /// Searches for a given node in a given model by name. Assumes that it exists and there is only one node with
-    /// that name.
-    let findNode (model: IDataModel) name =
-        Helpers.getExactlyOne model.Nodes
-                (fun m -> m.Name = name)
-                (fun () -> InvalidSemanticOperationException 
-                        <| sprintf "Node %s not found in model %s" name model.Name)
-                (fun () -> InvalidSemanticOperationException 
-                        <| sprintf "Node %s appears more than once in model %s" name model.Name)
-
     /// Searches for a given node in a given model by name, returns None if not found or found more than one.
     let tryFindNode (model: IDataModel) name =
-        let nodes = model.Nodes |> Seq.filter (fun m -> m.Name = name)
-        if Seq.isEmpty nodes || Seq.length nodes <> 1 then
-            None
+        if model.HasNode name then
+            Some <| model.Node name
         else
-            Some <| Seq.head nodes
+            None
 
     /// Searches for a given association in a given model by target name and additional predicate. Assumes that it
     /// exists and there is only one such association. Throws InvalidSemanticOperationException if not.
@@ -242,7 +233,7 @@ module Model =
         findAssociationIn element.OutgoingEdges targetName
 
 /// Helper class that provides semantic operations on models conforming to Core Metamodel.
-type CoreSemantic(repo: IDataRepository) =
+type CoreSemantics(repo: IDataRepository) =
     /// Adds a new instance of an attribute with a given name to a given element and assigns it given value.
     /// ``class`` is a class of an element.
     let instantiateAttribute element ``class`` name value =
@@ -290,13 +281,7 @@ type CoreSemantic(repo: IDataRepository) =
         instance
 
     /// Instantiates given edge into given model, using given map to provide values for element attributes.
-    /// Since Core metamodel is rather limited, there are some counter-intuitive rules:
-    /// - all attributes are assumed to have infinite potency, so they are all preserved during instantiation;
-    /// - if some attributes are not present in attributeValues map, they are assumed abstract and will not have value;
-    /// - if an attribute has value in ``class`` but is not present in attributeValues, it will have its value from 
-    ///   ``class`` (to be consistent with static fields behavior).
-    /// - if there are attributes in attributeValues map which are absent in a ``class`` element (respecting 
-    ///   generalization hierarchy), instantiation is considered invalid and exception will be thrown.
+    /// Rules for instantiation are the same as for instantiation of nodes.
     member this.InstantiateAssociation 
             (model: IDataModel) 
             (source: IDataNode) 

@@ -26,14 +26,14 @@ type AirSimModelBuilder() =
             let metamodel = repo.Model "AirSimMetamodel"
             let infrastructureMetamodel = infrastructure.Metamodel.Model
 
-            let metamodelAbstractNode = Model.findNode metamodel "AbstractNode"
-            let metamodelInitialNode = Model.findNode metamodel "InitialNode"
-            let metamodelFinalNode = Model.findNode metamodel "FinalNode"
-            let metamodelTakeoff = Model.findNode metamodel "Takeoff"
-            let metamodelLand = Model.findNode metamodel "Land"
-            let metamodelMove = Model.findNode metamodel "Move"
-            let metamodelTimer = Model.findNode metamodel "Timer"
-            let metamodelIf = Model.findNode metamodel "IfNode"
+            let metamodelAbstractNode = metamodel.Node "AbstractNode"
+            let metamodelInitialNode = metamodel.Node "InitialNode"
+            let metamodelFinalNode = metamodel.Node "FinalNode"
+            let metamodelTakeoff = metamodel.Node "Takeoff"
+            let metamodelLand = metamodel.Node "Land"
+            let metamodelMove = metamodel.Node "Move"
+            let metamodelTimer = metamodel.Node "Timer"
+            let metamodelIf = metamodel.Node "IfNode"
 
             let link = Model.findAssociationWithSource metamodelAbstractNode "target"
             let ifLink = Model.findAssociationWithSource metamodelAbstractNode "ifTarget"
@@ -58,7 +58,7 @@ type AirSimModelBuilder() =
             
             let ifNode = infrastructure.Instantiate model metamodelIf
             
-            let find name = Model.findNode infrastructureMetamodel name
+            let find name = infrastructureMetamodel.Node name
 
             // The same as in the metamodel but with functions
             let (~+) (name, shape, isAbstract) =

@@ -26,7 +26,7 @@ let init () =
     let build (builder: IModelBuilder) =
         builder.Build repo
 
-    CoreModel() |> build
+    CoreModelBuilder() |> build
 
     repo
 
@@ -61,7 +61,7 @@ let ``isInstanceOf shall work for long instantiation chains`` () =
     let repo = init()
     let model1 = repo.CreateModel("TestModel")
     let coreMetamodel = repo.Model "CoreModel"
-    let node = Model.findNode coreMetamodel "Node"
+    let node = coreMetamodel.Node "Node"
 
     let element = model1.CreateNode("Element", node)
     let model2 = repo.CreateModel("TestModel2", model1)
@@ -77,8 +77,8 @@ let ``isInstanceOf shall respect generalization`` () =
     let repo = init()
     let model1 = repo.CreateModel("TestModel")
     let coreMetamodel = repo.Model "CoreModel"
-    let node = Model.findNode coreMetamodel "Node"
-    let generalization = Model.findNode coreMetamodel "Generalization"
+    let node = coreMetamodel.Node "Node"
+    let generalization = coreMetamodel.Node "Generalization"
 
     let parent = model1.CreateNode("Parent", node)
     let descendant = model1.CreateNode("Descendant", node)
@@ -98,10 +98,10 @@ let ``Setting attribute value in descendant shall not affect parent nor siblings
     let repo = init()
     let model1 = repo.CreateModel("TestModel")
     let coreMetamodel = repo.Model "CoreModel"
-    let node = Model.findNode coreMetamodel "Node"
-    let string = Model.findNode coreMetamodel "String"
-    let association = Model.findNode coreMetamodel "Association"
-    let generalization = Model.findNode coreMetamodel "Generalization"
+    let node = coreMetamodel.Node "Node"
+    let string = coreMetamodel.Node "String"
+    let association = coreMetamodel.Node "Association"
+    let generalization = coreMetamodel.Node "Generalization"
 
     let parent = model1.CreateNode("Parent", node)
     let descendant1 = model1.CreateNode("Descendant1", node)

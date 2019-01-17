@@ -36,13 +36,10 @@ type Repo(repo: DataLayer.IDataRepository) =
                 repo.Models |> Seq.map modelRepository.GetModel
 
         member this.Model name =
-            let models = (this :> IRepo).Models |> Seq.filter (fun m -> m.Name = name)
-            if Seq.isEmpty models then
-                raise (ModelNotFoundException name)
-            elif Seq.length models <> 1 then
-                raise (MultipleModelsException name)
-            else
-                Seq.head models
+            Helpers.getExactlyOne (this :> IRepo).Models
+                (fun m -> m.Name = name)
+                (fun () -> ModelNotFoundException name)
+                (fun () -> MultipleModelsException name)
 
         member this.CreateModel (name, metamodel) =
             let underlyingModel = repo.CreateModel (name, unwrap metamodel)
