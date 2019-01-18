@@ -146,6 +146,12 @@ public interface IOclVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitAndExpression([NotNull] OclParser.AndExpressionContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="OclParser.eqExpression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitEqExpression([NotNull] OclParser.EqExpressionContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="OclParser.relationalExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -260,17 +266,23 @@ public interface IOclVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitActualParameterList([NotNull] OclParser.ActualParameterListContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="OclParser.logicalOperator"/>.
+	/// Visit a parse tree produced by <see cref="OclParser.orOperator"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitLogicalOperator([NotNull] OclParser.LogicalOperatorContext context);
+	Result VisitOrOperator([NotNull] OclParser.OrOperatorContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="OclParser.collectionKind"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitCollectionKind([NotNull] OclParser.CollectionKindContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="OclParser.eqOperator"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitEqOperator([NotNull] OclParser.EqOperatorContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="OclParser.relationalOperator"/>.
 	/// </summary>

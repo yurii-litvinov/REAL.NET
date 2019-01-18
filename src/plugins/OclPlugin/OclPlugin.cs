@@ -35,7 +35,6 @@
             OclPrinter printer = new OclPrinter(this.console, repo);
             Console.WriteLine(tree.ToStringTree(parser));
             tree.Accept(printer);
-
         }
     }
 }

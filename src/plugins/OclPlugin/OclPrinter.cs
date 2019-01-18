@@ -103,17 +103,59 @@
             return true;
         }
 
-        public override bool VisitRelationalExpression([NotNull] OclParser.RelationalExpressionContext context)
+        public override bool VisitImplExpression([NotNull] OclParser.ImplExpressionContext context)
         {
-            if (context.relationalOperator() != null)
+            bool result = this.VisitOrExpression(context.orExpression()[0]);
+            for (int i = 1; i < context.orExpression().Length; i++)
+            {
+                result = !result || this.VisitOrExpression(context.orExpression()[i]);
+            }
+
+            return result;
+        }
+
+        public override bool VisitOrExpression([NotNull] OclParser.OrExpressionContext context)
+        {
+            bool result = this.VisitAndExpression(context.andExpression()[0]);
+            for (int i = 1; i < context.andExpression().Length; i++)
+            {
+                switch (context.orOperator()[i - 1].GetText())
+                {
+                    case "or":
+                        result = result || this.VisitAndExpression(context.andExpression()[i]);
+                        break;
+                    default:
+                        result = result ^ this.VisitAndExpression(context.andExpression()[i]);
+                        break;
+                }
+            }
+
+            return result;
+        }
+
+        public override bool VisitAndExpression([NotNull] OclParser.AndExpressionContext context)
+        {
+            bool result = this.VisitEqExpression(context.eqExpression()[0]);
+            for (int i = 1; i < context.eqExpression().Length; i++)
+            {
+                result = result && this.VisitEqExpression(context.eqExpression()[i]);
+            }
+
+            return result;
+        }
+
+        public override bool VisitEqExpression([NotNull] OclParser.EqExpressionContext context)
+        {
+            object result = this.calc.VisitRelationalExpression(context.relationalExpression()[0]);
+            for (int i = 1; i < context.relationalExpression().Length; i++)
             {
                 dynamic left = 0, right = 0;
-                var leftObj = this.calc.VisitAdditiveExpression(context.additiveExpression()[0]);
-                var rightObj = this.calc.VisitAdditiveExpression(context.additiveExpression()[1]);
+                var leftObj = result;
+                var rightObj = this.calc.VisitRelationalExpression(context.relationalExpression()[i]);
 
-                if (leftObj is int i)
+                if (leftObj is int j)
                 {
-                    left = i;
+                    left = j;
                 }
                 else if (leftObj is double d)
                 {
@@ -145,18 +187,18 @@
                     right = b;
                 }
 
-                switch (context.relationalOperator().Start.Text)
+                switch (context.eqOperator()[i - 1].GetText())
                 {
                     case "=":
-                        return left == right;
-                    case "<":
-                        return left < right;
-                    case ">":
-                        return left > right;
+                        result = left == right;
+                        break;
+                    default:
+                        result = left != right;
+                        break;
                 }
             }
 
-            return (bool)this.calc.VisitAdditiveExpression(context.additiveExpression()[0]);
+            return (bool)result;
         }
 
         private class OclCalc : OclBaseVisitor<object>
@@ -182,6 +224,64 @@
                 this.hp = hp;
                 this.repository = repo;
                 this.console = cons;
+            }
+
+            public override object VisitRelationalExpression([NotNull] OclParser.RelationalExpressionContext context)
+            {
+                object result = this.VisitAdditiveExpression(context.additiveExpression()[0]);
+
+                for (int i = 1; i < context.additiveExpression().Length; i++)
+                {
+                    dynamic left = 0, right = 0;
+                    var leftObj = result;
+                    var rightObj = this.VisitAdditiveExpression(context.additiveExpression()[i]);
+
+                    if (leftObj is int j)
+                    {
+                        left = j;
+                    }
+                    else if (leftObj is double d)
+                    {
+                        left = d;
+                    }
+                    else if (leftObj is string s)
+                    {
+                        left = s;
+                    }
+                    else if (leftObj is bool obj)
+                    {
+                        left = obj;
+                    }
+
+                    if (rightObj is int obj1)
+                    {
+                        right = obj1;
+                    }
+                    else if (rightObj is double obj)
+                    {
+                        right = obj;
+                    }
+                    else if (rightObj is string s)
+                    {
+                        right = s;
+                    }
+                    else if (rightObj is bool b)
+                    {
+                        right = b;
+                    }
+
+                    switch (context.relationalOperator().Start.Text)
+                    {
+                        case "<":
+                            result = left < right;
+                            break;
+                        case ">":
+                            result = left > right;
+                            break;
+                    }
+                }
+
+                return result;
             }
 
             public override object VisitAdditiveExpression([NotNull] OclParser.AdditiveExpressionContext context)
@@ -241,6 +341,8 @@
                     {
                         case "-":
                             return -(double)postfix;
+                        case "not":
+                            return !(bool)postfix;
                     }
                 }
 
