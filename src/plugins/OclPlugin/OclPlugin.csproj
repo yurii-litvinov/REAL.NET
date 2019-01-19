@@ -55,14 +55,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FunctionDef.cs" />
+    <Compile Include="BoolResult.cs" />
+    <Compile Include="CollectionResult.cs" />
+    <Compile Include="DoubleResult.cs" />
+    <Compile Include="FunctionDefinition.cs" />
+    <Compile Include="IntResult.cs" />
     <Compile Include="OclBaseVisitor.cs" />
     <Compile Include="OclLexer.cs" />
     <Compile Include="OclParser.cs" />
-    <Compile Include="OclPrinter.cs" />
+    <Compile Include="OclInterpreter.cs" />
     <Compile Include="OclPlugin.cs" />
     <Compile Include="OclVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Result.cs" />
+    <Compile Include="StringResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

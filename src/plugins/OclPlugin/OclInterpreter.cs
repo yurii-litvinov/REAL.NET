@@ -1,4 +1,6 @@
-﻿namespace OclPlugin
+﻿using System.ComponentModel.Design;
+
+namespace OclPlugin
 {
     using System;
     using System.Collections.Generic;
@@ -9,23 +11,23 @@
     using EditorPluginInterfaces;
     using Repo;
 
-    internal class OclPrinter : OclBaseVisitor<bool>
+    internal class OclInterpreter : OclBaseVisitor<bool>
     {
-        private readonly ArrayList<Dictionary<string, object>> vars;
+        private readonly ArrayList<Dictionary<string, Result>> vars;
         private readonly OclCalc calc;
-        private readonly Dictionary<string, FunctionDef> funcs;
+        private readonly Dictionary<string, FunctionDefinition> funcs;
         private readonly IConsole console;
         private readonly IRepo repository;
         private Repo.IModel model;
         private IElement curElement;
 
-        public OclPrinter(IConsole console, IRepo repo)
+        public OclInterpreter(IConsole console, IRepo repo)
         {
-            this.vars = new ArrayList<Dictionary<string, object>>
+            this.vars = new ArrayList<Dictionary<string, Result>>
             {
-                new Dictionary<string, object>()
+                new Dictionary<string, Result>()
             };
-            this.funcs = new Dictionary<string, FunctionDef>();
+            this.funcs = new Dictionary<string, FunctionDefinition>();
             this.calc = new OclCalc(this.vars, this.funcs, this, repo, console);
             this.console = console;
             this.repository = repo;
@@ -72,9 +74,9 @@
 
         public override bool VisitOclExpression([NotNull] OclParser.OclExpressionContext context)
         {
-            for (int i = 0; i < context.letExpression().Length; i++)
+            foreach (var expression in context.letExpression())
             {
-                this.VisitLetExpression(context.letExpression()[i]);
+                this.VisitLetExpression(expression);
             }
 
             if (!this.VisitExpression(context.expression()))
@@ -93,11 +95,15 @@
         {
             if (context.formalParameterList() != null)
             {
-                this.funcs[context.NAME().GetText()] = new FunctionDef { param = context.formalParameterList().NAME().Select(x => x.GetText()).ToList(), context = context.expression() };
+                this.funcs[context.NAME().GetText()] = new FunctionDefinition
+                {
+                    Param = context.formalParameterList().NAME()
+                    .Select(x => x.GetText()).ToList(), Context = context.expression()
+                };
             }
             else
             {
-                this.vars[this.vars.Count - 1][context.NAME().GetText()] = context.expression().GetText();
+                this.vars[this.vars.Count - 1][context.NAME().GetText()] = new StringResult(context.expression().GetText());
             }
 
             return true;
@@ -146,66 +152,32 @@
 
         public override bool VisitEqExpression([NotNull] OclParser.EqExpressionContext context)
         {
-            object result = this.calc.VisitRelationalExpression(context.relationalExpression()[0]);
+            Result result = (Result)this.calc.VisitRelationalExpression(context.relationalExpression()[0]);
+
             for (int i = 1; i < context.relationalExpression().Length; i++)
             {
-                dynamic left = 0, right = 0;
                 var leftObj = result;
                 var rightObj = this.calc.VisitRelationalExpression(context.relationalExpression()[i]);
-
-                if (leftObj is int j)
-                {
-                    left = j;
-                }
-                else if (leftObj is double d)
-                {
-                    left = d;
-                }
-                else if (leftObj is string s)
-                {
-                    left = s;
-                }
-                else if (leftObj is bool obj)
-                {
-                    left = obj;
-                }
-
-                if (rightObj is int obj1)
-                {
-                    right = obj1;
-                }
-                else if (rightObj is double obj)
-                {
-                    right = obj;
-                }
-                else if (rightObj is string s)
-                {
-                    right = s;
-                }
-                else if (rightObj is bool b)
-                {
-                    right = b;
-                }
 
                 switch (context.eqOperator()[i - 1].GetText())
                 {
                     case "=":
-                        result = left == right;
+                        result = new BoolResult(leftObj.CompareTo(rightObj) == 0);
                         break;
                     default:
-                        result = left != right;
+                        result = new BoolResult(leftObj.CompareTo(rightObj) != 0);
                         break;
                 }
             }
 
-            return (bool)result;
+            return ((BoolResult)result).GetValue();
         }
 
-        private class OclCalc : OclBaseVisitor<object>
+        private class OclCalc : OclBaseVisitor<Result>
         {
-            private readonly ArrayList<Dictionary<string, object>> vars = null;
-            private readonly Dictionary<string, FunctionDef> funcs = null;
-            private readonly OclPrinter hp = null;
+            private readonly ArrayList<Dictionary<string, Result>> vars = null;
+            private readonly Dictionary<string, FunctionDefinition> funcs = null;
+            private readonly OclInterpreter hp = null;
             private readonly IRepo repository = null;
             private readonly IConsole console = null;
 
@@ -215,9 +187,9 @@
 
             public IElement Element { private get; set; } = null;
 
-            public object Res { get; private set; } = null;
+            public Result Res { get; private set; } = null;
 
-            public OclCalc(ArrayList<Dictionary<string, object>> vars, Dictionary<string, FunctionDef> funcs, OclPrinter hp, IRepo repo, IConsole cons)
+            public OclCalc(ArrayList<Dictionary<string, Result>> vars, Dictionary<string, FunctionDefinition> funcs, OclInterpreter hp, IRepo repo, IConsole cons)
             {
                 this.vars = vars;
                 this.funcs = funcs;
@@ -226,57 +198,22 @@
                 this.console = cons;
             }
 
-            public override object VisitRelationalExpression([NotNull] OclParser.RelationalExpressionContext context)
+            public override Result VisitRelationalExpression([NotNull] OclParser.RelationalExpressionContext context)
             {
-                object result = this.VisitAdditiveExpression(context.additiveExpression()[0]);
+                Result result = (Result)this.VisitAdditiveExpression(context.additiveExpression()[0]);
 
                 for (int i = 1; i < context.additiveExpression().Length; i++)
                 {
-                    dynamic left = 0, right = 0;
                     var leftObj = result;
                     var rightObj = this.VisitAdditiveExpression(context.additiveExpression()[i]);
-
-                    if (leftObj is int j)
-                    {
-                        left = j;
-                    }
-                    else if (leftObj is double d)
-                    {
-                        left = d;
-                    }
-                    else if (leftObj is string s)
-                    {
-                        left = s;
-                    }
-                    else if (leftObj is bool obj)
-                    {
-                        left = obj;
-                    }
-
-                    if (rightObj is int obj1)
-                    {
-                        right = obj1;
-                    }
-                    else if (rightObj is double obj)
-                    {
-                        right = obj;
-                    }
-                    else if (rightObj is string s)
-                    {
-                        right = s;
-                    }
-                    else if (rightObj is bool b)
-                    {
-                        right = b;
-                    }
 
                     switch (context.relationalOperator().Start.Text)
                     {
                         case "<":
-                            result = left < right;
+                            result = new BoolResult(leftObj.CompareTo(rightObj) < 0);
                             break;
                         case ">":
-                            result = left > right;
+                            result = new BoolResult(leftObj.CompareTo(rightObj) > 0);
                             break;
                     }
                 }
@@ -284,23 +221,23 @@
                 return result;
             }
 
-            public override object VisitAdditiveExpression([NotNull] OclParser.AdditiveExpressionContext context)
+            public override Result VisitAdditiveExpression([NotNull] OclParser.AdditiveExpressionContext context)
             {
                 if (context.addOperator() == null || context.addOperator().Length == 0)
                 {
                     return this.VisitMultiplicativeExpression(context.multiplicativeExpression()[0]);
                 }
 
-                var startAdd = (double)this.VisitMultiplicativeExpression(context.multiplicativeExpression()[0]);
+                var startAdd = this.VisitMultiplicativeExpression(context.multiplicativeExpression()[0]);
                 for (int i = 1; i < context.multiplicativeExpression().Length; i++)
                 {
                     switch (context.addOperator()[i - 1].Start.Text)
                     {
                         case "+":
-                            startAdd += (double)this.VisitMultiplicativeExpression(context.multiplicativeExpression()[i]);
+                            startAdd = startAdd.Add(this.VisitMultiplicativeExpression(context.multiplicativeExpression()[i]));
                             break;
                         case "-":
-                            startAdd -= (double)this.VisitMultiplicativeExpression(context.multiplicativeExpression()[i]);
+                            startAdd = startAdd.Add(this.VisitMultiplicativeExpression(context.multiplicativeExpression()[i]).Not());
                             break;
                     }
                 }
@@ -308,23 +245,23 @@
                 return startAdd;
             }
 
-            public override object VisitMultiplicativeExpression([NotNull] OclParser.MultiplicativeExpressionContext context)
+            public override Result VisitMultiplicativeExpression([NotNull] OclParser.MultiplicativeExpressionContext context)
             {
                 if (context.multiplyOperator() == null || context.multiplyOperator().Length == 0)
                 {
                     return this.VisitUnaryExpression(context.unaryExpression()[0]);
                 }
 
-                double startMul = (double)this.VisitUnaryExpression(context.unaryExpression()[0]);
+                Result startMul = this.VisitUnaryExpression(context.unaryExpression()[0]);
                 for (int i = 1; i < context.unaryExpression().Length; i++)
                 {
                     switch (context.multiplyOperator()[i - 1].Start.Text)
                     {
                         case "*":
-                            startMul *= (double)this.VisitUnaryExpression(context.unaryExpression()[i]);
+                            startMul = startMul.Multiply(this.VisitUnaryExpression(context.unaryExpression()[i]));
                             break;
                         case "/":
-                            startMul /= (double)this.VisitUnaryExpression(context.unaryExpression()[i]);
+                            startMul = startMul.Divide(this.VisitUnaryExpression(context.unaryExpression()[i]));
                             break;
                     }
                 }
@@ -332,24 +269,18 @@
                 return startMul;
             }
 
-            public override object VisitUnaryExpression([NotNull] OclParser.UnaryExpressionContext context)
+            public override Result VisitUnaryExpression([NotNull] OclParser.UnaryExpressionContext context)
             {
-                object postfix = this.VisitPostfixExpression(context.postfixExpression());
+                Result postfix = this.VisitPostfixExpression(context.postfixExpression());
                 if (context.unaryOperator() != null)
                 {
-                    switch (context.unaryOperator().Start.Text)
-                    {
-                        case "-":
-                            return -(double)postfix;
-                        case "not":
-                            return !(bool)postfix;
-                    }
+                    return postfix.Not();
                 }
 
                 return postfix;
             }
 
-            public override object VisitPostfixExpression([NotNull] OclParser.PostfixExpressionContext context)
+            public override Result VisitPostfixExpression([NotNull] OclParser.PostfixExpressionContext context)
             {
                 if (context.propertyCall() == null || context.propertyCall().Length == 0)
                 {
@@ -367,67 +298,64 @@
                 return this.Res;
             }
 
-            public override object VisitLiteral([NotNull] OclParser.LiteralContext context)
+            public override Result VisitLiteral([NotNull] OclParser.LiteralContext context)
             {
                 if (context.NUMBER() != null)
                 {
-                    return double.Parse(context.NUMBER().GetText());
+                    return new DoubleResult(double.Parse(context.NUMBER().GetText()));
                 }
                 else if (context.stringLiteral() != null)
                 {
-                    return context.stringLiteral().NAME() != null ? context.stringLiteral().NAME().GetText() : string.Empty;
+                    return new StringResult(context.stringLiteral().NAME()?.GetText() ?? string.Empty);
                 }
                 else if (context.booleanLiteral() != null)
                 {
-                    return context.booleanLiteral().GetText() == "true";
+                    return new BoolResult(context.booleanLiteral().GetText() == "true");
                 }
 
                 return null;
             }
 
-            public override object VisitLiteralCollection([NotNull] OclParser.LiteralCollectionContext context)
+            public override Result VisitLiteralCollection([NotNull] OclParser.LiteralCollectionContext context)
             {
                 switch (context.collectionKind().GetText())
                 {
                     case "Set":
-                        return new HashSet<object>(context.collectionItem().Select(x => this.VisitExpression(x.expression()[0])));
+                        return new CollectionResult(new HashSet<Result>(context.collectionItem().Select(x => this.VisitExpression(x.expression()[0]))));
                     case "OrderedSet":
-                        return new SortedSet<object>(context.collectionItem().Select(x => this.VisitExpression(x.expression()[0])));
+                        return new CollectionResult(new SortedSet<Result>(context.collectionItem().Select(x => this.VisitExpression(x.expression()[0]))));
                     case "Bag":
-                        return new LinkedList<object>(context.collectionItem().Select(x => this.VisitExpression(x.expression()[0])));
-                    case "Sequence":
-                        return new LinkedList<object>(context.collectionItem().Select(x => this.VisitExpression(x.expression()[0])));
+                        return new CollectionResult(new LinkedList<Result>(context.collectionItem().Select(x => this.VisitExpression(x.expression()[0]))));
+                    default:
+                        return new CollectionResult(new LinkedList<Result>(context.collectionItem().Select(x => this.VisitExpression(x.expression()[0]))));
                 }
-
-                return new HashSet<object>();
             }
 
-            public override object VisitPropertyCall([NotNull] OclParser.PropertyCallContext context)
+            public override Result VisitPropertyCall([NotNull] OclParser.PropertyCallContext context)
             {
                 if (context.propertyCallParameters() != null)
                 {
                     if (context.pathName().GetText() == "size")
                     {
-                        if (this.Res is ICollection<object> objects)
+                        switch (this.Res)
                         {
-                            return objects.Count;
-                        }
-                        else if (this.Res is string s)
-                        {
-                            return s.Length;
+                            case CollectionResult objects:
+                                return new IntResult(objects.Count());
+                            case StringResult s:
+                                return new IntResult(s.GetValue().Length);
                         }
                     }
                     else if (context.pathName().GetText() == "allInstances")
                     {
                         IElement elem = this.Model.FindElement(this.Res.ToString());
-                        return this.Model.Elements.Where(x => x.Class == elem).ToList<object>();
+                        return new CollectionResult(this.Model.Elements.Where(x => x.Class == elem).ToList<object>());
                     }
                     else if (context.pathName().GetText() == "any")
                     {
-                        Dictionary<string, object> st = new Dictionary<string, object>();
+                        var st = new Dictionary<string, Result>();
                         this.vars.Add(st);
-                        object ret = null;
-                        foreach (object val in (ICollection<object>)this.Res)
+                        Result ret = null;
+                        foreach (var val in (CollectionResult)this.Res)
                         {
                             st["self"] = val;
                             if (this.hp.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
@@ -442,39 +370,28 @@
                     }
                     else if (context.pathName().GetText() == "forAll")
                     {
-                        Dictionary<string, object> st = new Dictionary<string, object>();
+                        var st = new Dictionary<string, Result>();
                         this.vars.Add(st);
-                        foreach (object val in (ICollection<object>)this.Res)
+                        foreach (var val in (CollectionResult)this.Res)
                         {
                             st["self"] = val;
                             if (!this.hp.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
                             {
-                                return false;
+                                return new BoolResult(false);
                             }
                         }
 
                         this.vars.RemoveAt(this.vars.Count - 1);
-                        return true;
+                        return new BoolResult(true);
                     }
                     else if (context.pathName().GetText() == "collect")
                     {
-                        ICollection<object> ar = null;
-                        if (this.Res is HashSet<object>)
-                        {
-                            ar = new HashSet<object>();
-                        }
-                        else if (this.Res is SortedSet<object>)
-                        {
-                            ar = new SortedSet<object>();
-                        }
-                        else if (this.Res is LinkedList<object>)
-                        {
-                            ar = new LinkedList<object>();
-                        }
+                        CollectionResult ar = (CollectionResult)this.Res;
 
-                        foreach (object val in (ICollection<object>)this.Res)
+                        foreach (Result val in ar.ToList())
                         {
                             this.Res = val;
+                            ar.Remove(val);
                             ar.Add(this.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]));
                         }
 
@@ -482,28 +399,16 @@
                     }
                     else if (context.pathName().GetText() == "select")
                     {
-                        ICollection<object> ar = null;
-                        if (this.Res is HashSet<object>)
-                        {
-                            ar = new HashSet<object>();
-                        }
-                        else if (this.Res is SortedSet<object>)
-                        {
-                            ar = new SortedSet<object>();
-                        }
-                        else if (this.Res is LinkedList<object>)
-                        {
-                            ar = new LinkedList<object>();
-                        }
+                        CollectionResult ar = (CollectionResult)this.Res;
 
-                        Dictionary<string, object> st = new Dictionary<string, object>();
+                        Dictionary<string, Result> st = new Dictionary<string, Result>();
                         this.vars.Add(st);
-                        foreach (object val in (ICollection<object>)this.Res)
+                        foreach (Result val in ar.ToList())
                         {
                             st["self"] = val;
-                            if (this.hp.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
+                            if (!this.hp.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
                             {
-                                ar.Add(val);
+                                ar.Remove(val);
                             }
                         }
 
@@ -511,16 +416,16 @@
                         return ar;
                     }
 
-                    Dictionary<string, object> stack = new Dictionary<string, object>();
-                    List<string> names = this.funcs[context.pathName().GetText()].param;
-                    OclParser.ExpressionContext contextFunc = this.funcs[context.pathName().GetText()].context;
+                    Dictionary<string, Result> stack = new Dictionary<string, Result>();
+                    List<string> names = this.funcs[context.pathName().GetText()].Param;
+                    OclParser.ExpressionContext contextFunc = this.funcs[context.pathName().GetText()].Context;
                     for (int i = 0; i < names.Count; i++)
                     {
                         stack[names[i]] = this.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[i]);
                     }
 
                     this.vars.Add(stack);
-                    object ress = this.VisitExpression(contextFunc);
+                    Result ress = this.VisitExpression(contextFunc);
                     this.vars.RemoveAt(this.vars.Count - 1);
                     return ress;
                 }
@@ -543,13 +448,13 @@
                         this.Element = par;
                     }
 
-                    return this.Element.Attributes.First(x => x.Name == context.pathName().GetText()).StringValue;
+                    return new StringResult(this.Element.Attributes.First(x => x.Name == context.pathName().GetText()).StringValue);
                 }
 
                 return this.VisitPathName(context.pathName());
             }
 
-            public override object VisitPathName([NotNull] OclParser.PathNameContext context)
+            public override Result VisitPathName([NotNull] OclParser.PathNameContext context)
             {
                 for (int i = this.vars.Count - 1; i >= 0; i--)
                 {
@@ -559,10 +464,10 @@
                     }
                 }
 
-                return context.NAME()[0].GetText();
+                return new StringResult(context.NAME()[0].GetText());
             }
 
-            public override object VisitIfExpression([NotNull] OclParser.IfExpressionContext context)
+            public override Result VisitIfExpression([NotNull] OclParser.IfExpressionContext context)
             {
                 if (this.hp.VisitExpression(context.expression()[0]))
                 {

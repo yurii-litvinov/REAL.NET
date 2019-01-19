@@ -24,17 +24,17 @@
             var model = config.Model;
             var repo = model.Repo;
 
-            ICharStream stream = CharStreams.fromPath("E:\\OUR DISK\\NIKITA\\REAL.NET\\src\\plugins\\OclPlugin\\test-ocl");
+            var stream = CharStreams.fromPath("E:\\OUR DISK\\NIKITA\\REAL.NET\\src\\plugins\\OclPlugin\\test-ocl");
             ITokenSource lexer = new OclLexer(stream);
             ITokenStream tokens = new CommonTokenStream(lexer);
-            OclParser parser = new OclParser(tokens)
+            var parser = new OclParser(tokens)
             {
                 BuildParseTree = true
             };
             IParseTree tree = parser.oclFile();
-            OclPrinter printer = new OclPrinter(this.console, repo);
+            var interpreter = new OclInterpreter(this.console, repo);
             Console.WriteLine(tree.ToStringTree(parser));
-            tree.Accept(printer);
+            tree.Accept(interpreter);
         }
     }
 }
