@@ -14,12 +14,12 @@ namespace OclPlugin
     internal class OclInterpreter : OclBaseVisitor<bool>
     {
         private readonly ArrayList<Dictionary<string, Result>> vars;
-        private readonly OclCalc calc;
+        private readonly OclCalculator calculator;
         private readonly Dictionary<string, FunctionDefinition> funcs;
         private readonly IConsole console;
         private readonly IRepo repository;
         private Repo.IModel model;
-        private IElement curElement;
+        private IElement currentElement;
 
         public OclInterpreter(IConsole console, IRepo repo)
         {
@@ -28,7 +28,7 @@ namespace OclPlugin
                 new Dictionary<string, Result>()
             };
             this.funcs = new Dictionary<string, FunctionDefinition>();
-            this.calc = new OclCalc(this.vars, this.funcs, this, repo, console);
+            this.calculator = new OclCalculator(this.vars, this.funcs, this, repo, console);
             this.console = console;
             this.repository = repo;
         }
@@ -36,7 +36,7 @@ namespace OclPlugin
         public override bool VisitPackageName([NotNull] OclParser.PackageNameContext context)
         {
             this.model = this.repository.Model(context.pathName().GetText());
-            this.calc.Model = this.model;
+            this.calculator.Model = this.model;
             return this.VisitPathName(context.pathName());
         }
 
@@ -44,29 +44,29 @@ namespace OclPlugin
         {
             this.VisitContextDeclaration(context.contextDeclaration());
             string text = context.contextDeclaration().classifierContext().GetText();
-            this.curElement = this.model.FindElement(text);
-            this.calc.Element = this.curElement;
+            this.currentElement = this.model.FindElement(text);
+            this.calculator.Element = this.currentElement;
             for (int i = 0; i < context.oclExpression().Length; i++)
             {
-                this.calc.Depth = int.Parse(context.NUMBER()[i].GetText());
-                foreach (IElement el in this.model.Elements)
+                this.calculator.Depth = int.Parse(context.NUMBER()[i].GetText());
+                foreach (IElement element in this.model.Elements)
                 {
-                    IElement par = el;
-                    for (int j = 0; j < this.calc.Depth; j++)
+                    IElement parent = element;
+                    for (int j = 0; j < this.calculator.Depth; j++)
                     {
-                        par = par.Class;
+                        parent = parent.Class;
                     }
 
-                    if (par == this.curElement)
+                    if (parent == this.currentElement)
                     {
-                        IElement tcur = this.curElement;
-                        this.curElement = par;
+                        IElement cur = this.currentElement;
+                        this.currentElement = parent;
                         this.VisitOclExpression(context.oclExpression()[i]);
-                        this.curElement = tcur;
+                        this.currentElement = cur;
                     }
                 }
 
-                this.calc.Depth = 0;
+                this.calculator.Depth = 0;
             }
 
             return base.VisitConstraint(context);
@@ -81,7 +81,7 @@ namespace OclPlugin
 
             if (!this.VisitExpression(context.expression()))
             {
-                this.console.SendMessage("err");
+                this.console.SendMessage("error");
             }
             else
             {
@@ -152,12 +152,12 @@ namespace OclPlugin
 
         public override bool VisitEqExpression([NotNull] OclParser.EqExpressionContext context)
         {
-            Result result = (Result)this.calc.VisitRelationalExpression(context.relationalExpression()[0]);
+            Result result = (Result)this.calculator.VisitRelationalExpression(context.relationalExpression()[0]);
 
             for (int i = 1; i < context.relationalExpression().Length; i++)
             {
                 var leftObj = result;
-                var rightObj = this.calc.VisitRelationalExpression(context.relationalExpression()[i]);
+                var rightObj = this.calculator.VisitRelationalExpression(context.relationalExpression()[i]);
 
                 switch (context.eqOperator()[i - 1].GetText())
                 {
@@ -173,11 +173,11 @@ namespace OclPlugin
             return ((BoolResult)result).GetValue();
         }
 
-        private class OclCalc : OclBaseVisitor<Result>
+        private class OclCalculator : OclBaseVisitor<Result>
         {
             private readonly ArrayList<Dictionary<string, Result>> vars = null;
             private readonly Dictionary<string, FunctionDefinition> funcs = null;
-            private readonly OclInterpreter hp = null;
+            private readonly OclInterpreter interpreter = null;
             private readonly IRepo repository = null;
             private readonly IConsole console = null;
 
@@ -187,13 +187,13 @@ namespace OclPlugin
 
             public IElement Element { private get; set; } = null;
 
-            public Result Res { get; private set; } = null;
+            public Result GlobalResult { get; private set; } = null;
 
-            public OclCalc(ArrayList<Dictionary<string, Result>> vars, Dictionary<string, FunctionDefinition> funcs, OclInterpreter hp, IRepo repo, IConsole cons)
+            public OclCalculator(ArrayList<Dictionary<string, Result>> vars, Dictionary<string, FunctionDefinition> funcs, OclInterpreter interpreter, IRepo repo, IConsole cons)
             {
                 this.vars = vars;
                 this.funcs = funcs;
-                this.hp = hp;
+                this.interpreter = interpreter;
                 this.repository = repo;
                 this.console = cons;
             }
@@ -284,18 +284,18 @@ namespace OclPlugin
             {
                 if (context.propertyCall() == null || context.propertyCall().Length == 0)
                 {
-                    this.Res = this.VisitPrimaryExpression(context.primaryExpression());
+                    this.GlobalResult = this.VisitPrimaryExpression(context.primaryExpression());
                 }
                 else
                 {
-                    this.Res = this.VisitPrimaryExpression(context.primaryExpression());
+                    this.GlobalResult = this.VisitPrimaryExpression(context.primaryExpression());
                     for (int i = 0; i < context.propertyCall().Length; i++)
                     {
-                        this.Res = this.VisitPropertyCall(context.propertyCall()[i]);
+                        this.GlobalResult = this.VisitPropertyCall(context.propertyCall()[i]);
                     }
                 }
 
-                return this.Res;
+                return this.GlobalResult;
             }
 
             public override Result VisitLiteral([NotNull] OclParser.LiteralContext context)
@@ -337,7 +337,7 @@ namespace OclPlugin
                 {
                     if (context.pathName().GetText() == "size")
                     {
-                        switch (this.Res)
+                        switch (this.GlobalResult)
                         {
                             case CollectionResult objects:
                                 return new IntResult(objects.Count());
@@ -347,35 +347,35 @@ namespace OclPlugin
                     }
                     else if (context.pathName().GetText() == "allInstances")
                     {
-                        IElement elem = this.Model.FindElement(this.Res.ToString());
-                        return new CollectionResult(this.Model.Elements.Where(x => x.Class == elem).ToList<object>());
+                        IElement element = this.Model.FindElement(this.GlobalResult.ToString());
+                        return new CollectionResult(this.Model.Elements.Where(x => x.Class == element).ToList<object>());
                     }
                     else if (context.pathName().GetText() == "any")
                     {
-                        var st = new Dictionary<string, Result>();
-                        this.vars.Add(st);
-                        Result ret = null;
-                        foreach (var val in (CollectionResult)this.Res)
+                        var varStack = new Dictionary<string, Result>();
+                        this.vars.Add(varStack);
+                        Result returnValue = null;
+                        foreach (var val in (CollectionResult)this.GlobalResult)
                         {
-                            st["self"] = val;
-                            if (this.hp.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
+                            varStack["self"] = val;
+                            if (this.interpreter.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
                             {
-                                ret = val;
+                                returnValue = val;
                                 break;
                             }
                         }
 
                         this.vars.RemoveAt(this.vars.Count - 1);
-                        return ret;
+                        return returnValue;
                     }
                     else if (context.pathName().GetText() == "forAll")
                     {
-                        var st = new Dictionary<string, Result>();
-                        this.vars.Add(st);
-                        foreach (var val in (CollectionResult)this.Res)
+                        var varStack = new Dictionary<string, Result>();
+                        this.vars.Add(varStack);
+                        foreach (var val in (CollectionResult)this.GlobalResult)
                         {
-                            st["self"] = val;
-                            if (!this.hp.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
+                            varStack["self"] = val;
+                            if (!this.interpreter.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
                             {
                                 return new BoolResult(false);
                             }
@@ -386,34 +386,34 @@ namespace OclPlugin
                     }
                     else if (context.pathName().GetText() == "collect")
                     {
-                        CollectionResult ar = (CollectionResult)this.Res;
+                        CollectionResult newElements = (CollectionResult)this.GlobalResult;
 
-                        foreach (Result val in ar.ToList())
+                        foreach (Result val in newElements.ToList())
                         {
-                            this.Res = val;
-                            ar.Remove(val);
-                            ar.Add(this.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]));
+                            this.GlobalResult = val;
+                            newElements.Remove(val);
+                            newElements.Add(this.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]));
                         }
 
-                        return ar;
+                        return newElements;
                     }
                     else if (context.pathName().GetText() == "select")
                     {
-                        CollectionResult ar = (CollectionResult)this.Res;
+                        CollectionResult filteredElements = (CollectionResult)this.GlobalResult;
 
-                        Dictionary<string, Result> st = new Dictionary<string, Result>();
-                        this.vars.Add(st);
-                        foreach (Result val in ar.ToList())
+                        Dictionary<string, Result> varsStack = new Dictionary<string, Result>();
+                        this.vars.Add(varsStack);
+                        foreach (Result val in filteredElements.ToList())
                         {
-                            st["self"] = val;
-                            if (!this.hp.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
+                            varsStack["self"] = val;
+                            if (!this.interpreter.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
                             {
-                                ar.Remove(val);
+                                filteredElements.Remove(val);
                             }
                         }
 
                         this.vars.RemoveAt(this.vars.Count - 1);
-                        return ar;
+                        return filteredElements;
                     }
 
                     Dictionary<string, Result> stack = new Dictionary<string, Result>();
@@ -425,27 +425,27 @@ namespace OclPlugin
                     }
 
                     this.vars.Add(stack);
-                    Result ress = this.VisitExpression(contextFunc);
+                    Result result = this.VisitExpression(contextFunc);
                     this.vars.RemoveAt(this.vars.Count - 1);
-                    return ress;
+                    return result;
                 }
                 else if (context.Parent is OclParser.PostfixExpressionContext expressionContext)
                 {
-                    string elem = expressionContext.primaryExpression().GetText();
-                    if (elem != "self")
+                    string element = expressionContext.primaryExpression().GetText();
+                    if (element != "self")
                     {
-                        this.Element = this.Model.FindElement(elem);
+                        this.Element = this.Model.FindElement(element);
                     }
 
                     if (context.NUMBER() != null)
                     {
-                        IElement par = this.Element;
+                        IElement parent = this.Element;
                         for (int i = 0; i < this.Depth - int.Parse(context.NUMBER().GetText()); i++)
                         {
-                            par = par.Class;
+                            parent = parent.Class;
                         }
 
-                        this.Element = par;
+                        this.Element = parent;
                     }
 
                     return new StringResult(this.Element.Attributes.First(x => x.Name == context.pathName().GetText()).StringValue);
@@ -469,7 +469,7 @@ namespace OclPlugin
 
             public override Result VisitIfExpression([NotNull] OclParser.IfExpressionContext context)
             {
-                if (this.hp.VisitExpression(context.expression()[0]))
+                if (this.interpreter.VisitExpression(context.expression()[0]))
                 {
                     return this.VisitExpression(context.expression()[1]);
                 }
