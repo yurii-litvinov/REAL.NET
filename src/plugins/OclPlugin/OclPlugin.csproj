@@ -55,11 +55,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BoolResult.cs" />
-    <Compile Include="CollectionResult.cs" />
-    <Compile Include="DoubleResult.cs" />
+    <Compile Include="Types\BoolResult.cs" />
+    <Compile Include="Types\CollectionResult.cs" />
+    <Compile Include="Types\DoubleResult.cs" />
     <Compile Include="FunctionDefinition.cs" />
-    <Compile Include="IntResult.cs" />
+    <Compile Include="Types\IntResult.cs" />
     <Compile Include="OclBaseVisitor.cs" />
     <Compile Include="OclLexer.cs" />
     <Compile Include="OclParser.cs" />
@@ -67,8 +67,8 @@
     <Compile Include="OclPlugin.cs" />
     <Compile Include="OclVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Result.cs" />
-    <Compile Include="StringResult.cs" />
+    <Compile Include="Types\Result.cs" />
+    <Compile Include="Types\StringResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

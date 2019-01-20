@@ -23,8 +23,17 @@
 
             var model = config.Model;
             var repo = model.Repo;
+            var textExpr = config.Properties?["ocl"];
+            ICharStream stream;
+            if (textExpr == null)
+            {
+                stream = CharStreams.fromPath("E:\\OUR DISK\\NIKITA\\REAL.NET\\src\\plugins\\OclPlugin\\test-ocl");
+            }
+            else
+            {
+                stream = CharStreams.fromstring(textExpr);
+            }
 
-            var stream = CharStreams.fromPath("E:\\OUR DISK\\NIKITA\\REAL.NET\\src\\plugins\\OclPlugin\\test-ocl");
             ITokenSource lexer = new OclLexer(stream);
             ITokenStream tokens = new CommonTokenStream(lexer);
             var parser = new OclParser(tokens)

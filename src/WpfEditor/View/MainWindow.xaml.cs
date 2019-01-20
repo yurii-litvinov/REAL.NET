@@ -130,7 +130,7 @@ namespace WpfEditor.View
             foreach (var plugindir in pluginDirs)
             {
                 var dirs = new List<string>(System.IO.Directory.GetDirectories(plugindir + "/bin"));
-                var config = new PluginConfig(this.model, null, null, this.Console, null);
+                var config = new PluginConfig(this.model, null, null, this.Console, null, null);
                 foreach (var dir in dirs)
                 {
                     libs.LaunchPlugins(dir, config);
