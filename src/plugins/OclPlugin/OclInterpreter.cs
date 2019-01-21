@@ -11,26 +11,36 @@ namespace OclPlugin
     using EditorPluginInterfaces;
     using Repo;
 
-    internal class OclInterpreter : OclBaseVisitor<bool>
+    public class OclInterpreter : OclBaseVisitor<bool>
     {
         private readonly ArrayList<Dictionary<string, Result>> vars;
         private readonly OclCalculator calculator;
         private readonly Dictionary<string, FunctionDefinition> funcs;
-        private readonly IConsole console;
         private readonly IRepo repository;
         private Repo.IModel model;
         private IElement currentElement;
 
-        public OclInterpreter(IConsole console, IRepo repo)
+        public OclInterpreter(IRepo repo)
         {
             this.vars = new ArrayList<Dictionary<string, Result>>
             {
                 new Dictionary<string, Result>()
             };
             this.funcs = new Dictionary<string, FunctionDefinition>();
-            this.calculator = new OclCalculator(this.vars, this.funcs, this, repo, console);
-            this.console = console;
+            this.calculator = new OclCalculator(this.vars, this.funcs, this, repo);
             this.repository = repo;
+        }
+
+        public override bool VisitOclFile([NotNull] OclParser.OclFileContext context)
+        {
+            bool result = true;
+            for (int i = 0; i < context.packageName().Length; i++)
+            {
+                this.VisitPackageName(context.packageName()[i]);
+                result = result && this.VisitOclExpressions(context.oclExpressions()[i]);
+            }
+
+            return result;
         }
 
         public override bool VisitPackageName([NotNull] OclParser.PackageNameContext context)
@@ -40,12 +50,24 @@ namespace OclPlugin
             return this.VisitPathName(context.pathName());
         }
 
+        public override bool VisitOclExpressions([NotNull] OclParser.OclExpressionsContext context)
+        {
+            bool result = true;
+            foreach (var constraint in context.constraint())
+            {
+                result = result && this.VisitConstraint(constraint);
+            }
+
+            return result;
+        }
+
         public override bool VisitConstraint([NotNull] OclParser.ConstraintContext context)
         {
             this.VisitContextDeclaration(context.contextDeclaration());
             string text = context.contextDeclaration().classifierContext().GetText();
             this.currentElement = this.model.FindElement(text);
             this.calculator.Element = this.currentElement;
+            bool result = true;
             for (int i = 0; i < context.oclExpression().Length; i++)
             {
                 this.calculator.Depth = int.Parse(context.NUMBER()[i].GetText());
@@ -61,7 +83,7 @@ namespace OclPlugin
                     {
                         IElement cur = this.currentElement;
                         this.currentElement = parent;
-                        this.VisitOclExpression(context.oclExpression()[i]);
+                        result = result && this.VisitOclExpression(context.oclExpression()[i]);
                         this.currentElement = cur;
                     }
                 }
@@ -69,7 +91,7 @@ namespace OclPlugin
                 this.calculator.Depth = 0;
             }
 
-            return base.VisitConstraint(context);
+            return result;
         }
 
         public override bool VisitOclExpression([NotNull] OclParser.OclExpressionContext context)
@@ -79,16 +101,7 @@ namespace OclPlugin
                 this.VisitLetExpression(expression);
             }
 
-            if (!this.VisitExpression(context.expression()))
-            {
-                this.console.SendMessage("error");
-            }
-            else
-            {
-                this.console.SendMessage("ok");
-            }
-
-            return true;
+            return this.VisitExpression(context.expression());
         }
 
         public override bool VisitLetExpression([NotNull] OclParser.LetExpressionContext context)
@@ -179,7 +192,6 @@ namespace OclPlugin
             private readonly Dictionary<string, FunctionDefinition> funcs = null;
             private readonly OclInterpreter interpreter = null;
             private readonly IRepo repository = null;
-            private readonly IConsole console = null;
 
             public int Depth { internal get; set; } = 0;
 
@@ -189,13 +201,12 @@ namespace OclPlugin
 
             public Result GlobalResult { get; private set; } = null;
 
-            public OclCalculator(ArrayList<Dictionary<string, Result>> vars, Dictionary<string, FunctionDefinition> funcs, OclInterpreter interpreter, IRepo repo, IConsole cons)
+            public OclCalculator(ArrayList<Dictionary<string, Result>> vars, Dictionary<string, FunctionDefinition> funcs, OclInterpreter interpreter, IRepo repo)
             {
                 this.vars = vars;
                 this.funcs = funcs;
                 this.interpreter = interpreter;
                 this.repository = repo;
-                this.console = cons;
             }
 
             public override Result VisitRelationalExpression([NotNull] OclParser.RelationalExpressionContext context)

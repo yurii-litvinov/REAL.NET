@@ -41,9 +41,16 @@
                 BuildParseTree = true
             };
             IParseTree tree = parser.oclFile();
-            var interpreter = new OclInterpreter(this.console, repo);
-            Console.WriteLine(tree.ToStringTree(parser));
-            tree.Accept(interpreter);
+            var interpreter = new OclInterpreter(repo);
+            //Console.WriteLine(tree.ToStringTree(parser));
+            if (tree.Accept(interpreter))
+            {
+                this.console.SendMessage("ok");
+            }
+            else
+            {
+                this.console.SendMessage("error");
+            }
         }
     }
 }
