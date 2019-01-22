@@ -55,6 +55,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OperationLauncher.cs" />
+    <Compile Include="Operations\AllInstancesOperation.cs" />
+    <Compile Include="Operations\AnyOperation.cs" />
+    <Compile Include="Operations\CollectOperation.cs" />
+    <Compile Include="Operations\ForAllOperation.cs" />
+    <Compile Include="Operations\Operation.cs" />
+    <Compile Include="Operations\SelectOperation.cs" />
+    <Compile Include="Operations\SizeOperation.cs" />
     <Compile Include="Types\BoolResult.cs" />
     <Compile Include="Types\CollectionResult.cs" />
     <Compile Include="Types\DoubleResult.cs" />
@@ -81,6 +89,12 @@
   <ItemGroup>
     <Analyzer Include="..\..\..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\..\..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\PluginManager\PluginManager.csproj">
+      <Project>{8B9C8D76-65B3-4A01-9D6F-B6192A823642}</Project>
+      <Name>PluginManager</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

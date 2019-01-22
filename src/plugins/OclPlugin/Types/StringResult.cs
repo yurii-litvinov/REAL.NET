@@ -30,19 +30,5 @@ namespace OclPlugin
             return new StringResult(this.value + ((StringResult) res).GetValue());
         }
 
-        public override Result Not()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override Result Multiply(Result res)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override Result Divide(Result res)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

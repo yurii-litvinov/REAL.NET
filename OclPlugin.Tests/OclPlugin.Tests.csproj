@@ -16,7 +16,6 @@
   <ItemGroup>
     <ProjectReference Include="..\src\EditorPluginInterfaces\EditorPluginInterfaces.csproj" />
     <ProjectReference Include="..\src\plugins\OclPlugin\OclPlugin.csproj" />
-    <ProjectReference Include="..\src\WpfControlsLib\WpfControlsLib.csproj" />
   </ItemGroup>
 
 </Project>

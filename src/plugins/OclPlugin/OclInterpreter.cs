@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.Design;
+using OclPlugin.Operations;
+using PluginManager;
 
 namespace OclPlugin
 {
@@ -186,7 +188,7 @@ namespace OclPlugin
             return ((BoolResult)result).GetValue();
         }
 
-        private class OclCalculator : OclBaseVisitor<Result>
+        internal class OclCalculator : OclBaseVisitor<Result>
         {
             private readonly ArrayList<Dictionary<string, Result>> vars = null;
             private readonly Dictionary<string, FunctionDefinition> funcs = null;
@@ -199,7 +201,9 @@ namespace OclPlugin
 
             public IElement Element { private get; set; } = null;
 
-            public Result GlobalResult { get; private set; } = null;
+            public Result GlobalResult { get; set; } = null;
+
+            private OperationLauncher launcher = null;
 
             public OclCalculator(ArrayList<Dictionary<string, Result>> vars, Dictionary<string, FunctionDefinition> funcs, OclInterpreter interpreter, IRepo repo)
             {
@@ -207,6 +211,7 @@ namespace OclPlugin
                 this.funcs = funcs;
                 this.interpreter = interpreter;
                 this.repository = repo;
+                this.launcher = new OperationLauncher(interpreter, this, vars, this.Model);
             }
 
             public override Result VisitRelationalExpression([NotNull] OclParser.RelationalExpressionContext context)
@@ -346,85 +351,10 @@ namespace OclPlugin
             {
                 if (context.propertyCallParameters() != null)
                 {
-                    if (context.pathName().GetText() == "size")
+                    Result result = this.launcher.LaunchOperation(context.pathName().GetText(), context);
+                    if (result != null)
                     {
-                        switch (this.GlobalResult)
-                        {
-                            case CollectionResult objects:
-                                return new IntResult(objects.Count());
-                            case StringResult s:
-                                return new IntResult(s.GetValue().Length);
-                        }
-                    }
-                    else if (context.pathName().GetText() == "allInstances")
-                    {
-                        IElement element = this.Model.FindElement(this.GlobalResult.ToString());
-                        return new CollectionResult(this.Model.Elements.Where(x => x.Class == element).ToList<object>());
-                    }
-                    else if (context.pathName().GetText() == "any")
-                    {
-                        var varStack = new Dictionary<string, Result>();
-                        this.vars.Add(varStack);
-                        Result returnValue = null;
-                        foreach (var val in (CollectionResult)this.GlobalResult)
-                        {
-                            varStack["self"] = val;
-                            if (this.interpreter.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
-                            {
-                                returnValue = val;
-                                break;
-                            }
-                        }
-
-                        this.vars.RemoveAt(this.vars.Count - 1);
-                        return returnValue;
-                    }
-                    else if (context.pathName().GetText() == "forAll")
-                    {
-                        var varStack = new Dictionary<string, Result>();
-                        this.vars.Add(varStack);
-                        foreach (var val in (CollectionResult)this.GlobalResult)
-                        {
-                            varStack["self"] = val;
-                            if (!this.interpreter.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
-                            {
-                                return new BoolResult(false);
-                            }
-                        }
-
-                        this.vars.RemoveAt(this.vars.Count - 1);
-                        return new BoolResult(true);
-                    }
-                    else if (context.pathName().GetText() == "collect")
-                    {
-                        CollectionResult newElements = (CollectionResult)this.GlobalResult;
-
-                        foreach (Result val in newElements.ToList())
-                        {
-                            this.GlobalResult = val;
-                            newElements.Remove(val);
-                            newElements.Add(this.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]));
-                        }
-
-                        return newElements;
-                    }
-                    else if (context.pathName().GetText() == "select")
-                    {
-                        CollectionResult filteredElements = (CollectionResult)this.GlobalResult;
-
-                        Dictionary<string, Result> varsStack = new Dictionary<string, Result>();
-                        this.vars.Add(varsStack);
-                        foreach (Result val in filteredElements.ToList())
-                        {
-                            varsStack["self"] = val;
-                            if (!this.interpreter.VisitExpression(context.propertyCallParameters().actualParameterList().expression()[0]))
-                            {
-                                filteredElements.Remove(val);
-                            }
-                        }
-
-                        this.vars.RemoveAt(this.vars.Count - 1);
-                        return filteredElements;
+                        return result;
                     }
 
                     Dictionary<string, Result> stack = new Dictionary<string, Result>();
@@ -436,7 +366,7 @@ namespace OclPlugin
                     }
 
                     this.vars.Add(stack);
-                    Result result = this.VisitExpression(contextFunc);
+                    result = this.VisitExpression(contextFunc);
                     this.vars.RemoveAt(this.vars.Count - 1);
                     return result;
                 }

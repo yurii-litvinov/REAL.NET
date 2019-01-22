@@ -4,7 +4,7 @@ using Antlr4.Runtime.Tree;
 using EditorPluginInterfaces;
 using NUnit.Framework;
 using OclPlugin;
-using WpfControlsLib.Controls.Console;
+using Repo;
 
 namespace Tests
 {
@@ -18,12 +18,11 @@ namespace Tests
         [Test]
         public void Test1()
         {
-            var model = new WpfControlsLib.Model.Model();
-            var repo = model.Repo;
+            var repo = RepoFactory.Create();
             ICharStream stream = CharStreams.fromstring(@"package RobotsTestModel
             context aMotorsForward
             inv@0:
-            Bag{ ""a"", ""bb"", ""ccc""}->select(self->size() = 2)->size() = 1
+            Bag{ ""a"", ""bb"", ""ccc""}->select(self->size() = 2)->size() = 0
             endpackage");
 
             ITokenSource lexer = new OclLexer(stream);

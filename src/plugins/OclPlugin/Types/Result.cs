@@ -10,12 +10,12 @@ namespace OclPlugin
     {
         public abstract int CompareTo(object obj);
 
-        public abstract Result Add(Result res);
+        public virtual Result Add(Result res) => throw new NotImplementedException();
 
-        public abstract Result Not();
+        public virtual Result Not() => throw new NotImplementedException();
 
-        public abstract Result Multiply(Result res);
+        public virtual Result Multiply(Result res) => throw new NotImplementedException();
 
-        public abstract Result Divide(Result res);
+        public virtual Result Divide(Result res) => throw new NotImplementedException();
     }
 }
