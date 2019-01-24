@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Antlr4.Runtime.Misc;
 using OclPlugin.Operations;
+using OclPlugin.Operations.String;
 using Repo;
 
 namespace OclPlugin
@@ -19,7 +20,14 @@ namespace OclPlugin
             new CollectOperation(),
             new ForAllOperation(),
             new SelectOperation(),
-            new SizeOperation()
+            new SizeOperation(),
+
+            new ConcatOperation(),
+            new SubstringOperation(),
+            new ToIntegerOperation(),
+            new ToLowerOperation(),
+            new ToRealOperation(),
+            new ToUpperOperation()
         };
 
         public OperationLauncher(OclInterpreter interpreter, OclInterpreter.OclCalculator calculator, ArrayList<Dictionary<string, Result>> vars, IModel model)

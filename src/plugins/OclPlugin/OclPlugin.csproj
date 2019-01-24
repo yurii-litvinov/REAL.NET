@@ -63,6 +63,12 @@
     <Compile Include="Operations\Operation.cs" />
     <Compile Include="Operations\SelectOperation.cs" />
     <Compile Include="Operations\SizeOperation.cs" />
+    <Compile Include="Operations\String\ConcatOperation.cs" />
+    <Compile Include="Operations\String\SubstringOperation.cs" />
+    <Compile Include="Operations\String\ToIntegerOperation.cs" />
+    <Compile Include="Operations\String\ToLowerOperation.cs" />
+    <Compile Include="Operations\String\ToRealOperation.cs" />
+    <Compile Include="Operations\String\ToUpperOperation.cs" />
     <Compile Include="Types\BoolResult.cs" />
     <Compile Include="Types\CollectionResult.cs" />
     <Compile Include="Types\DoubleResult.cs" />

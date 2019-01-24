@@ -72,7 +72,12 @@ namespace OclPlugin
             bool result = true;
             for (int i = 0; i < context.oclExpression().Length; i++)
             {
-                this.calculator.Depth = int.Parse(context.NUMBER()[i].GetText());
+                this.calculator.Depth = 0;
+                if (context.NUMBER() != null && context.NUMBER().Length > 0)
+                {
+                    this.calculator.Depth = int.Parse(context.NUMBER()[i].GetText());
+                }
+
                 foreach (IElement element in this.model.Elements)
                 {
                     IElement parent = element;
@@ -322,7 +327,18 @@ namespace OclPlugin
                 }
                 else if (context.stringLiteral() != null)
                 {
-                    return new StringResult(context.stringLiteral().NAME()?.GetText() ?? string.Empty);
+                    if (context.stringLiteral().NAME() != null)
+                    {
+                        return new StringResult(context.stringLiteral().NAME().GetText());
+                    }
+                    else if (context.stringLiteral().NUMBER() != null)
+                    {
+                        return new StringResult(context.stringLiteral().NUMBER().GetText());
+                    }
+                    else
+                    {
+                        return new StringResult(string.Empty);
+                    }
                 }
                 else if (context.booleanLiteral() != null)
                 {
