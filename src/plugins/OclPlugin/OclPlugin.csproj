@@ -40,10 +40,12 @@
       <HintPath>..\..\..\packages\Antlr4.Runtime.Standard.4.7.1.1\lib\net35\Antlr4.Runtime.Standard.dll</HintPath>
     </Reference>
     <Reference Include="EditorPluginInterfaces">
-      <HintPath>..\..\EditorPluginInterfaces\bin\Debug\EditorPluginInterfaces.dll</HintPath>
+      <HintPath Condition="Exists('..\..\EditorPluginInterfaces\bin\Release')">..\..\EditorPluginInterfaces\bin\Release\EditorPluginInterfaces.dll</HintPath>
+      <HintPath Condition="Exists('..\..\EditorPluginInterfaces\bin\Debug')">..\..\EditorPluginInterfaces\bin\Debug\EditorPluginInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="Repo">
-      <HintPath>..\..\Repo\bin\Debug\Repo.dll</HintPath>
+      <HintPath Condition="Exists('..\..\Repo\bin\Release')">..\..\Repo\bin\Release\Repo.dll</HintPath>
+      <HintPath Condition="Exists('..\..\Repo\bin\Debug')">..\..\Repo\bin\Debug\Repo.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
