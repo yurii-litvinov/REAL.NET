@@ -303,6 +303,7 @@ namespace OclPlugin
 
             public override Result VisitPostfixExpression([NotNull] OclParser.PostfixExpressionContext context)
             {
+                Result last = this.GlobalResult;
                 if (context.propertyCall() == null || context.propertyCall().Length == 0)
                 {
                     this.GlobalResult = this.VisitPrimaryExpression(context.primaryExpression());
@@ -316,7 +317,9 @@ namespace OclPlugin
                     }
                 }
 
-                return this.GlobalResult;
+                Result newResult = this.GlobalResult;
+                this.GlobalResult = last;
+                return newResult;
             }
 
             public override Result VisitLiteral([NotNull] OclParser.LiteralContext context)

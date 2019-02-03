@@ -62,6 +62,13 @@
     <Compile Include="Operations\AnyOperation.cs" />
     <Compile Include="Operations\CollectOperation.cs" />
     <Compile Include="Operations\ForAllOperation.cs" />
+    <Compile Include="Operations\Number\AbsOperation.cs" />
+    <Compile Include="Operations\Number\DivOperation.cs" />
+    <Compile Include="Operations\Number\FloorOperation.cs" />
+    <Compile Include="Operations\Number\MaxOperation.cs" />
+    <Compile Include="Operations\Number\MinOperation.cs" />
+    <Compile Include="Operations\Number\ModOperation.cs" />
+    <Compile Include="Operations\Number\RoundOperation.cs" />
     <Compile Include="Operations\Operation.cs" />
     <Compile Include="Operations\SelectOperation.cs" />
     <Compile Include="Operations\SizeOperation.cs" />
@@ -95,13 +102,14 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="..\..\..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\PluginManager\PluginManager.csproj">
       <Project>{8B9C8D76-65B3-4A01-9D6F-B6192A823642}</Project>
       <Name>PluginManager</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\..\..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\..\..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

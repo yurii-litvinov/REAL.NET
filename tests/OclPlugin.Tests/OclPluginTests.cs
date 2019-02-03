@@ -57,7 +57,28 @@ namespace OclPlugin.Tests
                 BuildParseTree = true
             };
             IParseTree tree = parser.oclFile();
-            Console.WriteLine(tree.ToStringTree(parser));
+            Assert.IsTrue(tree.Accept(interpreter));
+
+        }
+
+        [Test]
+        public void NumberTest1()
+        {
+            var stream = CharStreams.fromstring(@"package RobotsTestModel
+            context aMotorsForward
+            inv@0:
+            1->max(2) = 2
+            inv@0:
+            5->div(2) = 2
+            endpackage");
+
+            ITokenSource lexer = new OclLexer(stream);
+            ITokenStream tokens = new CommonTokenStream(lexer);
+            var parser = new OclParser(tokens)
+            {
+                BuildParseTree = true
+            };
+            IParseTree tree = parser.oclFile();
             Assert.IsTrue(tree.Accept(interpreter));
 
         }

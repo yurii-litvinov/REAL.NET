@@ -8,6 +8,7 @@ using Antlr4.Runtime.Misc;
 using OclPlugin.Operations;
 using OclPlugin.Operations.String;
 using Repo;
+using OclPlugin.Operations.Number;
 
 namespace OclPlugin
 {
@@ -27,7 +28,15 @@ namespace OclPlugin
             new ToIntegerOperation(),
             new ToLowerOperation(),
             new ToRealOperation(),
-            new ToUpperOperation()
+            new ToUpperOperation(),
+
+            new AbsOperation(),
+            new DivOperation(),
+            new FloorOperation(),
+            new MaxOperation(),
+            new MinOperation(),
+            new ModOperation(),
+            new RoundOperation()
         };
 
         public OperationLauncher(OclInterpreter interpreter, OclInterpreter.OclCalculator calculator, ArrayList<Dictionary<string, Result>> vars, IModel model)
