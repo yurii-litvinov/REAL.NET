@@ -26,6 +26,8 @@ namespace OclPlugin.Tests
             context aMotorsForward
             inv@0:
             Bag{ ""a"", ""bb"", ""ccc""}->select(self->size() = 2)->size() = 1
+            inv@0:
+            Bag{1,2,3}->forAll(x, y | x <> y implies x*y > 1)
             endpackage");
 
             ITokenSource lexer = new OclLexer(stream);
