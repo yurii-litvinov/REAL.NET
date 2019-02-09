@@ -62,6 +62,7 @@
     <Compile Include="Operations\AnyOperation.cs" />
     <Compile Include="Operations\CollectOperation.cs" />
     <Compile Include="Operations\ForAllOperation.cs" />
+    <Compile Include="Operations\IterateOperation.cs" />
     <Compile Include="Operations\Number\AbsOperation.cs" />
     <Compile Include="Operations\Number\DivOperation.cs" />
     <Compile Include="Operations\Number\FloorOperation.cs" />

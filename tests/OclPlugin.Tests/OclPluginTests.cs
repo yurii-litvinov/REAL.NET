@@ -28,6 +28,8 @@ namespace OclPlugin.Tests
             Bag{ ""a"", ""bb"", ""ccc""}->select(self->size() = 2)->size() = 1
             inv@0:
             Bag{1,2,3}->forAll(x, y | x <> y implies x*y > 1)
+            inv@0:
+            Bag{1,2,3}->iterate(x; y : T = 0 | y + x) = 6
             endpackage");
 
             ITokenSource lexer = new OclLexer(stream);

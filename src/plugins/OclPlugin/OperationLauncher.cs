@@ -22,6 +22,7 @@ namespace OclPlugin
             new ForAllOperation(),
             new SelectOperation(),
             new SizeOperation(),
+            new IterateOperation(),
 
             new ConcatOperation(),
             new SubstringOperation(),
