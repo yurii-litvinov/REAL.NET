@@ -12,15 +12,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace Repo.CoreModel
+namespace Repo.CoreMetamodel
 
 open Repo.DataLayer
 
 /// Initializes repository with Core model.
-type CoreModelBuilder() =
+type CoreMetamodelBuilder() =
     interface IModelBuilder with
         member this.Build(repo: IDataRepository): unit =
-            let model = repo.CreateModel "CoreModel"
+            let model = repo.CreateModel "CoreMetamodel"
 
             let node = model.CreateNode "Node"
 

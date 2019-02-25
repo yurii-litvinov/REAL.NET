@@ -19,21 +19,21 @@ open FsUnit
 
 open Repo.Metametamodels
 open Repo.DataLayer
-open Repo.CoreModel
+open Repo.CoreMetamodel
 
 let init () =
     let repo = DataRepo() :> IDataRepository
     let build (builder: IModelBuilder) =
         builder.Build repo
 
-    CoreModelBuilder() |> build
+    CoreMetamodelBuilder() |> build
 
     repo
 
 [<Test>]
-let ``Repo is able to find Core Model`` () =
+let ``Repo is able to find Core Metamodel`` () =
     let repo = init()
-    (repo.Model "CoreModel").Name |> should equal "CoreModel"
+    (repo.Model "CoreMetamodel").Name |> should equal "CoreMetamodel"
 
 [<Test>]
 let ``Repo is able to find any model`` () =
@@ -60,7 +60,7 @@ let ``Repo shall throw if searching two models with the same name`` () =
 let ``isInstanceOf shall work for long instantiation chains`` () =
     let repo = init()
     let model1 = repo.CreateModel("TestModel")
-    let coreMetamodel = repo.Model "CoreModel"
+    let coreMetamodel = repo.Model "CoreMetamodel"
     let node = coreMetamodel.Node "Node"
 
     let element = model1.CreateNode("Element", node)
@@ -76,7 +76,7 @@ let ``isInstanceOf shall work for long instantiation chains`` () =
 let ``isInstanceOf shall respect generalization`` () =
     let repo = init()
     let model1 = repo.CreateModel("TestModel")
-    let coreMetamodel = repo.Model "CoreModel"
+    let coreMetamodel = repo.Model "CoreMetamodel"
     let node = coreMetamodel.Node "Node"
     let generalization = coreMetamodel.Node "Generalization"
 
@@ -97,7 +97,7 @@ let ``isInstanceOf shall respect generalization`` () =
 let ``Setting attribute value in descendant shall not affect parent nor siblings`` () =
     let repo = init()
     let model1 = repo.CreateModel("TestModel")
-    let coreMetamodel = repo.Model "CoreModel"
+    let coreMetamodel = repo.Model "CoreMetamodel"
     let node = coreMetamodel.Node "Node"
     let string = coreMetamodel.Node "String"
     let association = coreMetamodel.Node "Association"

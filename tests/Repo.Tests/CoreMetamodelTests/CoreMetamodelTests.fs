@@ -12,17 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-module CoreModelTests
+module CoreMetamodelTests
 
 open FsUnit
 open NUnit.Framework
 
-open Repo.CoreModel
+open Repo.CoreMetamodel
 open Repo.DataLayer
 
 let init () =
     let repo = DataRepo() :> IDataRepository
-    let builder = CoreModelBuilder() :> IModelBuilder
+    let builder = CoreMetamodelBuilder() :> IModelBuilder
     builder.Build repo
     repo
 
@@ -32,7 +32,7 @@ let ``Builder shall be able to create model in repo`` () =
 
     Seq.length repo.Models |> should equal 1
 
-    (Seq.head repo.Models).Name |> should equal "CoreModel"
+    (Seq.head repo.Models).Name |> should equal "CoreMetamodel"
 
 [<Test>]
 let ``Every model element shall have correct type`` () =

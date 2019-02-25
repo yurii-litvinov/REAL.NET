@@ -19,7 +19,7 @@ open FsUnit
 
 open Repo.DataLayer
 open Repo.Metametamodels
-open Repo.CoreModel
+open Repo.CoreMetamodel
 
 // Strictness of metalayers --- each element in model is an instance of an element in metamodel.
 let checkMetalayerStrictness (creator: CoreSemanticsModelCreator) =

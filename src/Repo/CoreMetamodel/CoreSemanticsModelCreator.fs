@@ -12,14 +12,14 @@
 * See the License for the specific language governing permissions and
 * limitations under the License. *)
 
-namespace Repo.CoreModel
+namespace Repo.CoreMetamodel
 
 open Repo.DataLayer
-open Repo.CoreModel
+open Repo.CoreMetamodel
 
 /// Class that allows to instantiate new models based on Core model semantics.
 type CoreSemanticsModelCreator private (repo: IDataRepository, modelName: string, metamodel: IDataModel) =
-    let coreMetamodel = repo.Model "CoreModel"
+    let coreMetamodel = repo.Model "CoreMetamodel"
     let coreSemantic = CoreSemantics(repo)
     let coreNode = coreMetamodel.Node "Node"
     let stringNode = coreMetamodel.Node "String"
@@ -32,8 +32,8 @@ type CoreSemanticsModelCreator private (repo: IDataRepository, modelName: string
         let build (builder: IModelBuilder) =
             builder.Build repo
 
-        CoreModelBuilder() |> build
-        CoreSemanticsModelCreator(repo, modelName, repo.Model "CoreModel")
+        CoreMetamodelBuilder() |> build
+        CoreSemanticsModelCreator(repo, modelName, repo.Model "CoreMetamodel")
 
     member this.AddNode (name: string) (attributes: string list) =
         let node = model.CreateNode(name, coreNode)
