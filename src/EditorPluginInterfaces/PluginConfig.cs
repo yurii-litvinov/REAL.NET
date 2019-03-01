@@ -14,6 +14,7 @@
  
 namespace EditorPluginInterfaces
 {
+    using System.Windows.Controls;
     using Toolbar;
 
     /// <summary>
@@ -44,7 +45,22 @@ namespace EditorPluginInterfaces
         /// <summary>
         /// Palette's reference that should be given to plugin
         /// </summary>
-        public IPalette Palette { get; }
+        public IElementProvider ElementProvider { get; }
+
+        /// <summary>
+        /// DockPanel for Constraints plugin that should be given to plugin
+        /// </summary>
+        public Grid ConstraintsGrid { get; }
+
+        /// <summary>
+        /// RightPanel
+        /// </summary>
+        public Grid RightPanel { get; }
+
+        /// <summary>
+        /// RightPanel
+        /// </summary>
+        public Grid SceneGrid { get; }
 
         /// <summary>
         /// Initializes a new instance of <see cref="PluginConfig"/> 
@@ -54,14 +70,17 @@ namespace EditorPluginInterfaces
         /// <param name="scene">Scene</param>
         /// <param name="toolbar">Toolbar</param>
         /// <param name="console">Console</param>
-        /// <param name="palette">Palette</param>
-        public PluginConfig(IModel model, IScene scene, IToolbar toolbar, IConsole console, IPalette palette)
+        /// <param name="elementProvider">Element provider</param>
+        public PluginConfig(IModel model, IScene scene, IToolbar toolbar, IConsole console, IElementProvider elementProvider, Grid constraintsGrid, Grid rightPanel, Grid sceneGrid)
         {
             this.Model = model;
             this.Scene = scene;
             this.Toolbar = toolbar;
             this.Console = console;
-            this.Palette = palette;
+            this.ElementProvider = elementProvider;
+            this.ConstraintsGrid = constraintsGrid;
+            this.RightPanel = rightPanel;
+            this.SceneGrid = sceneGrid;
         }
     }
 }

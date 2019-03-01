@@ -43,6 +43,8 @@ namespace WpfEditor.View
 
         public ToolbarViewModel Toolbar { get; } = new ToolbarViewModel();
 
+        private IElementProvider temporaryElementProvider;
+
         public string WindowTitle
         {
             get
@@ -83,7 +85,8 @@ namespace WpfEditor.View
             this.scene.NodeSelected += (sender, args) => this.attributesView.DataContext = args.Node;
             this.scene.EdgeSelected += (sender, args) => this.attributesView.DataContext = args.Edge;
 
-            this.scene.Init(this.model, this.controller, new PaletteAdapter(this.palette));
+            this.temporaryElementProvider = new PaletteAdapter(this.palette);
+            this.scene.Init(this.model, this.controller, this.temporaryElementProvider);
 
             this.InitAndLaunchPlugins();
             this.InitToolbar();
@@ -130,7 +133,7 @@ namespace WpfEditor.View
             foreach (var plugindir in pluginDirs)
             {
                 var dirs = new List<string>(System.IO.Directory.GetDirectories(plugindir + "/bin"));
-                var config = new PluginConfig(this.model, null, null, this.Console, null);
+                var config = new PluginConfig(this.model, this.scene, null, this.Console, this.temporaryElementProvider, this.constraintsGrid, this.rightPanel, this.sceneGrid);
                 foreach (var dir in dirs)
                 {
                     libs.LaunchPlugins(dir, config);

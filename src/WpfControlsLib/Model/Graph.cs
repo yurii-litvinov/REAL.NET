@@ -72,8 +72,6 @@ namespace WpfControlsLib.Model
 
             foreach (var edge in model.Edges)
             {
-                /* var isViolation = Constraints.CheckEdge(edgeViewModel, this.repo, modelName); */
-
                 var sourceNode = edge.From as INode;
                 var targetNode = edge.To as INode;
                 if (sourceNode == null || targetNode == null)

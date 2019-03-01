@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
+using EditorPluginInterfaces;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -22,7 +23,7 @@ namespace WpfControlsLib.Controls.Palette
     /// <summary>
     /// Palette with elements of a visual language.
     /// </summary>
-    public partial class Palette : UserControl
+    public partial class Palette : UserControl, IPalette
     {
         private bool isInDrag;
         private readonly PaletteViewModel paletteViewModel;
