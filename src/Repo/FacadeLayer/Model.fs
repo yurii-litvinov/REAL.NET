@@ -51,6 +51,12 @@ and Model
     member this.UnderlyingModel = model
 
     interface IModel with
+        member this.Visible
+            with get (): bool = 
+                isVisible
+            and set (v: bool): unit = 
+                isVisible <- v
+
         member this.CreateElement (``type``: IElement) =
             let unwrappedType = (``type`` :?> Element).UnderlyingElement
             let element = infrastructure.Instantiate model unwrappedType

@@ -24,29 +24,29 @@ namespace ConstraintsPlugin
     /// <summary>
     /// Interaction logic for ConstraintsPanel.xaml
     /// </summary>
-    public partial class ConstraintsUnit : UserControl//, INotifyPropertyChanged
+    public partial class ConstraintsUnit : UserControl, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public event Action<ConstraintsUnit> DeleteButtonClicked;
-        //public event PropertyChangedEventHandler PropertyChanged;
 
-        //private String name;
-        //public string ConstraintsName
-        //{
-        //    get { return name; }
-        //    set
-        //    {
-        //        if (value != name)
-        //        {
-        //            name = value;
-        //            OnPropertyChanged("ConstraintsName");
-        //        }
-        //    }
-        //}
+        private String name;
 
-        public ConstraintsUnit()
+        public String ConstraintsName
         {
+            get { return name; }
+            set
+            {
+                name = value;
+                OnPropertyChanged("ConstraintsName");
+            }
+        }
+
+        public ConstraintsUnit(String rootName)
+        {
+            this.DataContext = this;
+            this.name = rootName;
             this.InitializeComponent();
-            //this.ConstraintsName = "Name";
         }
 
         private void DeleteButtonClick(object sender, System.Windows.RoutedEventArgs e)
@@ -54,9 +54,9 @@ namespace ConstraintsPlugin
             DeleteButtonClicked(this);
         }
 
-        //protected void OnPropertyChanged(string propertyName)
-        //{
-            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        //}
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

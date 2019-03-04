@@ -19,16 +19,21 @@ namespace ConstraintsPlugin
     using System.ComponentModel;
     using System.Windows.Controls;
     using WpfControlsLib.Controls.Scene;
+    using Palette = WpfControlsLib.Controls.Palette.Palette;
 
 
     /// <summary>
     /// Interaction logic for ConstraintsPanel.xaml
     /// </summary>
-    public partial class ConstraintsPanel : UserControl
+    public partial class ConstraintsPalette : UserControl
     {
-        public ConstraintsPanel()
+        public Palette Palette { get => this.palette; }
+
+        public ConstraintsPalette(WpfControlsLib.Model.Model model)
         {
             this.InitializeComponent();
+            this.palette.SetModel(model);
+            this.palette.InitPalette(model.ModelName);
         }
     }
 }

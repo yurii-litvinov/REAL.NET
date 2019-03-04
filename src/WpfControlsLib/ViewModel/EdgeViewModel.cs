@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows.Media;
 using GraphX.Measure;
 using GraphX.PCL.Common.Interfaces;
 using GraphX.PCL.Common.Models;
@@ -11,6 +12,8 @@ namespace WpfControlsLib.ViewModel
     {
         private EdgeTypeEnum edgeType = EdgeTypeEnum.Association;
         private IList<AttributeViewModel> attributes = new List<AttributeViewModel>();
+        private SolidColorBrush brush = new SolidColorBrush(Colors.Blue);
+        private bool isAllowed = true;
 
         private string text;
 
@@ -78,6 +81,28 @@ namespace WpfControlsLib.ViewModel
             {
                 this.edgeType = value;
                 this.OnPropertyChanged(nameof(this.EdgeType));
+            }
+        }
+
+        public SolidColorBrush Color
+        {
+            get => this.brush;
+
+            set
+            {
+                this.brush = value;
+                this.OnPropertyChanged(nameof(this.Color));
+            }
+        }
+
+        public bool IsAllowed
+        {
+            get => this.isAllowed;
+
+            set
+            {
+                this.isAllowed = value;
+                this.Color = value ? new SolidColorBrush(Colors.Blue) : new SolidColorBrush(Colors.Red);
             }
         }
 

@@ -19,27 +19,37 @@ namespace ConstraintsPlugin
     using System;
     using EditorPluginInterfaces;
     using System.Windows.Controls;
+    using ConstraintsMatcher;
+    using WpfControlsLib.Controls.Scene;
 
     /// <summary>
     /// This class is a sample plugin and is also used in unit tests to check plugin loading.
     /// </summary>
     public class ConstraintsPlugin : IPlugin<PluginConfig>
     {
+        public event Action<string> ChangeModel;
+        public event Action<bool> ChangeSelectorVisibility;
+
         /// <summary>
         /// Name of plugin
         /// </summary>
         public string Name => "constraintsPlugin";
 
-        public Grid constraintsPanel;
+        private Grid constraintsPanel;
+
+        private string currentModelName;
+        private Scene scene;
+
+        private ConstraintsCheckSystem checkSystem;
+        //private ConstraintsScene constraintsScene;
+
+        private ConstraintsColumn constraintsColumn;
         /// <summary>
         /// Field that contains reference to editor console.
         /// </summary>
         private IConsole console;
 
-        /// <summary>
-        /// Toolbar in the top of the windows
-        /// </summary>
-        //private IDockPanel dockPanel;
+        private WpfControlsLib.Model.Model targetModel;
 
         /// <summary>
         /// Establishes connection with the rest of the system.
@@ -54,16 +64,90 @@ namespace ConstraintsPlugin
             this.console = config.Console;
             this.console.SendMessage("Constraints add-on successfully launched");
 
-            this.constraintsPanel = config.ConstraintsGrid;
-            this.constraintsPanel.Children.Add(new ConstraintsColumn(config));
-            var model = config.Model;
-            var repo = model.Repo;
+            var repo = config.Model.Repo;
 
-            var initialNode = repo.Model("RobotsMetamodel").Nodes.FirstOrDefault(x => x.Name == "InitialNode");
-            if (initialNode != null)
+            this.targetModel = (WpfControlsLib.Model.Model)config.Model; //TODO сейчас мы можем работать только с роботстестмодел
+
+            this.currentModelName = config.Model.ModelName;
+            this.constraintsPanel = config.ConstraintsGrid;
+            this.constraintsColumn = new ConstraintsColumn(config);
+
+            this.constraintsColumn.NewButtonClicked += new Action<bool>(NewButtonClicked);
+            this.constraintsColumn.CloseButtonClicked += new Action<bool>(CloseButtonClicked);
+            this.constraintsColumn.SaveButtonClicked += new Action<bool>(SaveButtonClicked);
+            this.constraintsColumn.CheckButtonClicked += new Action<bool>(CheckButtonClicked);
+            config.OnMainModelChangedFunction = this.OnModelChanged;
+            this.scene = (Scene)config.Scene;
+            this.ChangeModel += new Action<string>(config.FuncCreateConstraintsModel);
+            this.ChangeSelectorVisibility += new Action<bool>(config.FuncChangeSelectorVisibility);
+
+            this.constraintsPanel.Children.Add(this.constraintsColumn);
+
+            this.checkSystem = new ConstraintsCheckSystem(this.targetModel, this.scene.Graph);
+
+    }
+
+        private void OnModelChanged(String modelName)
+        {
+            if (modelName != "ConstraintsTestModel")
+                this.currentModelName = modelName;
+        }
+
+        private void SaveButtonClicked(bool i)
+        {
+            try
             {
-                model.CreateNode(initialNode);
+                this.constraintsColumn.allowSave = false;
+                var rootName = this.checkSystem.AddConstraint("ConstraintsTestModel");
+                this.RemoveConstraintsSystemInterface();
+                var unit = this.CreateUnit(rootName);
+                this.constraintsColumn.AddUnit(unit);
+                this.constraintsColumn.allowSave = true;
             }
+            catch(Exception ex)
+            {
+                this.console.SendMessage(ex.Message);
+            }
+        }
+
+        private void CheckButtonClicked(bool i)
+        {
+            if (this.checkSystem.Check())
+            {
+                this.console.SendMessage("Constraints check successfully passed");
+            }
+            else
+            {
+                this.console.SendMessage("Constraints check did not passed successfully");
+            }
+        }
+
+        private ConstraintsUnit CreateUnit(String rootName)
+        {
+            var unit = new ConstraintsUnit(rootName);
+            unit.DeleteButtonClicked += new Action<ConstraintsUnit>(this.constraintsColumn.DeleteConstraintUnit);
+            return unit;
+        }
+        private void NewButtonClicked(bool i)
+        {
+            this.CreateConstraintsSystemInterface();
+        }
+
+        private void CloseButtonClicked(bool i)
+        {
+            this.RemoveConstraintsSystemInterface();
+        }
+
+        private void CreateConstraintsSystemInterface()
+        {
+            this.ChangeSelectorVisibility(false);
+            this.ChangeModel("ConstraintsTestModel");
+        }
+
+        private void RemoveConstraintsSystemInterface()
+        {
+            this.ChangeSelectorVisibility(true);
+            this.ChangeModel(this.currentModelName);
         }
     }
 }

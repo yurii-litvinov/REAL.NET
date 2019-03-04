@@ -30,33 +30,55 @@
         <Grid.RowDefinitions>
             <RowDefinition Height = "150" />
             <RowDefinition Height = "30" />
+            <RowDefinition Height = "30" />
             <RowDefinition Height = "*" />
         </Grid.RowDefinitions>
 
         <scene:Scene Grid.Row="0" Grid.Column="0" x:Name="scene"/>
-        
+
         <Grid Grid.Row="1" Grid.Column="0">
-            
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            
-            <Button Grid.Column="0" Margin ="2" Content="Save" IsEnabled="False"/>
             <Button 
+                Grid.Column="0"
+                Content="Constraints Check"
+                IsEnabled="{Binding Path=EnableNewButton}"
+                Click="CheckConstraintsClick" Margin="5,3,5,2"/>
+            <Grid/>
+
+            <Grid Grid.Column="0" Margin="0,30,0,-30">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Button 
+                Grid.Column="0"
+                Margin ="2"
+                Content="Save"
+                IsEnabled="{Binding Path=EnableSaveButton}"
+                Click="SaveConstraintClick"/>
+
+                <Button 
                 Grid.Column="1" 
                 Margin ="2" 
                 Content="New"
-                Click="NewButtonClick"/>
-            <Button Grid.Column="2" Margin ="2" Content="Close"/>
-        </Grid>
+                IsEnabled="{Binding Path=EnableNewButton}"
+                Click="NewConstraintClick"/>
 
-        <Grid
-            Grid.Column="0"
-            Grid.Row="2">
-            <StackPanel x:Name="stackPanel">
+                <Button 
+                Grid.Column="2"
+                Margin ="2"
+                Content="Close"
+                IsEnabled="{Binding Path=EnableCloseButton, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                Click="CloseConstraintClick"/>
+            </Grid>
+
+            <Grid
+            Grid.Column="0" Margin="0,60,0,-60">
+                <StackPanel x:Name="stackPanel">
                 </StackPanel>
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

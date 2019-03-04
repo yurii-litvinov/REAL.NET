@@ -13,20 +13,35 @@
  * limitations under the License. */
 
 using System;
+using System.Windows;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
+using System.ComponentModel;
 
 namespace WpfControlsLib.Controls.ModelSelector
 {
     /// <summary>
     /// Lists all models in a repository and provides means to select a model for editing.
     /// </summary>
-    public partial class ModelSelector : UserControl
+    public partial class ModelSelector : UserControl, INotifyPropertyChanged
     {
         /// <summary>
         /// Names of all models in a repository that can be edited.
         /// </summary>
         public ObservableCollection<string> ModelNames { get; } = new ObservableCollection<string>();
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private bool selectorVisibility = true;
+        public bool SelectorVisibility
+        {
+            get { return selectorVisibility; }
+            set
+            {
+                selectorVisibility = value;
+                OnPropertyChanged("SelectorVisibility");
+            }
+        }
 
         /// <summary>
         /// Event that is raised when model selection is changed (by user or programmatically).
@@ -92,6 +107,11 @@ namespace WpfControlsLib.Controls.ModelSelector
         public class ModelSelectedEventArgs : EventArgs
         {
             public string ModelName { get; set; }
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

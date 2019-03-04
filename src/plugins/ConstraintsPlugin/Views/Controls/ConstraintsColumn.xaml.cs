@@ -19,31 +19,109 @@ namespace ConstraintsPlugin
     using System.Windows.Controls;
     using WpfControlsLib.Controls.Scene;
     using WpfControlsLib.Model;
+    using System.ComponentModel;
 
 
     /// <summary>
     /// Interaction logic for ConstraintsPanel.xaml
     /// </summary>
-    public partial class ConstraintsColumn : UserControl
+    public partial class ConstraintsColumn : UserControl, INotifyPropertyChanged
     {
         private readonly WpfControlsLib.Controller.Controller controller;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public event Action<Boolean> SaveButtonClicked;
+        private Boolean enableSaveButton = false;
+        public Boolean EnableSaveButton
+        {
+            get { return enableSaveButton; }
+            set
+            {
+                enableSaveButton = value;
+                OnPropertyChanged("EnableSaveButton");
+            }
+        }
+
+        public event Action<bool> CheckButtonClicked;
+
+        public bool allowSave = true;
+        public event Action<Boolean> NewButtonClicked;
+        private Boolean enableNewButton = true;
+        public Boolean EnableNewButton
+        {
+            get { return enableNewButton; }
+            set
+            {
+                enableNewButton = value;
+                OnPropertyChanged("EnableNewButton");
+            }
+        }
+
+        public event Action<Boolean> CloseButtonClicked;
+        private Boolean enableCloseButton = false;
+        public Boolean EnableCloseButton
+        {
+            get { return enableCloseButton; }
+            set
+            {
+                enableCloseButton = value;
+                OnPropertyChanged("EnableCloseButton");
+            }
+        }
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public ConstraintsColumn(PluginConfig config)
         {
+            this.DataContext = this;
             this.controller = new WpfControlsLib.Controller.Controller();
-            this.scene = new Scene();
-            this.scene.Init((Model)config.Model, this.controller, config.ElementProvider);
+            //this.scene = new Scene();
+            //this.scene.Init((Model)config.Model, this.controller, config.ElementProvider);
             this.InitializeComponent();
         }
 
-        private void NewButtonClick(object sender, System.Windows.RoutedEventArgs e)
+        private void SaveConstraintClick(object sender, System.Windows.RoutedEventArgs e)
         {
-            var unit = new ConstraintsUnit();
-            unit.DeleteButtonClicked += new Action<ConstraintsUnit>(DeleteConstraintsUnit);
-            this.stackPanel.Children.Add(unit);
+            this.SaveButtonClicked(true);
+            if (allowSave)
+            {
+                this.EnableSaveButton = false;
+                this.EnableCloseButton = false;
+                this.EnableNewButton = true;
+            }
         }
 
-        private void DeleteConstraintsUnit(ConstraintsUnit i)
+        public void AddUnit(ConstraintsUnit unit)
+        {
+            this.stackPanel.Children.Add(unit);
+        }
+        private void CloseConstraintClick(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.EnableSaveButton = false;
+            this.EnableNewButton = true;
+            this.EnableCloseButton = false;
+            this.allowSave = true;
+            this.CloseButtonClicked(true);
+        }
+
+        private void NewConstraintClick(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.EnableSaveButton = true;
+            this.EnableNewButton = false;
+            this.EnableCloseButton = true;
+            this.allowSave = true;
+            this.NewButtonClicked(true);
+        }
+
+        private void CheckConstraintsClick(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.CheckButtonClicked(false);
+        }
+        public void DeleteConstraintUnit(ConstraintsUnit i)
         {
             this.stackPanel.Children.Remove(i);
         }

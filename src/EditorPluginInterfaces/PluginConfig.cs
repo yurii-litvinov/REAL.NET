@@ -14,6 +14,7 @@
  
 namespace EditorPluginInterfaces
 {
+    using System;
     using System.Windows.Controls;
     using Toolbar;
 
@@ -48,20 +49,34 @@ namespace EditorPluginInterfaces
         public IElementProvider ElementProvider { get; }
 
         /// <summary>
-        /// DockPanel for Constraints plugin that should be given to plugin
+        /// 
         /// </summary>
-        public Grid ConstraintsGrid { get; }
+        public Grid ConstraintsGrid { get; set; }
 
         /// <summary>
         /// RightPanel
         /// </summary>
-        public Grid RightPanel { get; }
+        public Grid RightPanel { get; set; }
 
         /// <summary>
-        /// RightPanel
+        /// SceneGrid
         /// </summary>
-        public Grid SceneGrid { get; }
+        public Grid SceneGrid { get; set; }
 
+        /// <summary>
+        /// SceneGrid
+        /// </summary>
+        public Grid PaletteGrid { get; set; }
+
+        public delegate void Func(string modelName);
+        public Func FuncCreateConstraintsModel;
+        public Func OnMainModelChangedFunction;
+
+        public delegate void Func1(bool modelName);
+        public Func1 FuncChangeSelectorVisibility;
+
+
+        public Action<String> OnMainModelChanged;
         /// <summary>
         /// Initializes a new instance of <see cref="PluginConfig"/> 
         /// </summary>
@@ -71,7 +86,7 @@ namespace EditorPluginInterfaces
         /// <param name="toolbar">Toolbar</param>
         /// <param name="console">Console</param>
         /// <param name="elementProvider">Element provider</param>
-        public PluginConfig(IModel model, IScene scene, IToolbar toolbar, IConsole console, IElementProvider elementProvider, Grid constraintsGrid, Grid rightPanel, Grid sceneGrid)
+        public PluginConfig(IModel model, IScene scene, IToolbar toolbar, IConsole console, IElementProvider elementProvider, Grid constraintsGrid)
         {
             this.Model = model;
             this.Scene = scene;
@@ -79,8 +94,14 @@ namespace EditorPluginInterfaces
             this.Console = console;
             this.ElementProvider = elementProvider;
             this.ConstraintsGrid = constraintsGrid;
-            this.RightPanel = rightPanel;
-            this.SceneGrid = sceneGrid;
         }
+
+        //public void AddGrids(Grid rightPanel, Grid sceneGrid, Grid paletteGrid)
+        //{
+        //    
+        //    this.RightPanel = rightPanel;
+        //    this.SceneGrid = sceneGrid;
+        //    this.PaletteGrid = paletteGrid;
+        //}
     }
 }

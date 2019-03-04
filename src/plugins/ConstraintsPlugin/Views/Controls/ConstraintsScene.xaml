@@ -14,7 +14,7 @@
 * limitations under the License. -->
 
 <UserControl
-    x:Class="ConstraintsPlugin.ConstraintsUnit"
+    x:Class="ConstraintsPlugin.ConstraintsScene"
     xmlns:constraintsColumn="using:ConstraintsPlugin"
     xmlns:scene="clr-namespace:WpfControlsLib.Controls.Scene;assembly=WpfControlsLib"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -25,11 +25,10 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height = "90" />
+            <RowDefinition Height = "*" />
         </Grid.RowDefinitions>
 
-        <TextBlock x:Name="constraintsName" Text ="{Binding Path=ConstraintsName}"/>
+        <scene:Scene  x:Name="scene"/>
 
-        <Button x:Name="deleteButton" Margin="4" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="20" Content="✘" Click="DeleteButtonClick"/>
     </Grid>
 </UserControl>

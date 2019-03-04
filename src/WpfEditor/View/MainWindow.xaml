@@ -94,7 +94,7 @@
             <!-- Scene area -->
             <Grid x:Name="sceneGrid"  Grid.Row="1">
                 <scene:Scene  x:Name="scene"/>
-                </Grid>
+            </Grid>
 
                     <!-- GridSplitter for console -->
             <GridSplitter Grid.Row ="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5"/>

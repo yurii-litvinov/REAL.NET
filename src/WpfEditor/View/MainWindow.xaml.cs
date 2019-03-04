@@ -39,6 +39,8 @@ namespace WpfEditor.View
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public event Action<String> OnModelChanged;
+
         public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();
 
         public ToolbarViewModel Toolbar { get; } = new ToolbarViewModel();
@@ -112,6 +114,7 @@ namespace WpfEditor.View
             this.model.ModelName = modelName;
             this.palette.InitPalette(this.model.ModelName);
             this.scene.Reload();
+            this.OnModelChanged?.Invoke(modelName);
         }
 
         private void InitToolbar()
@@ -133,11 +136,15 @@ namespace WpfEditor.View
             foreach (var plugindir in pluginDirs)
             {
                 var dirs = new List<string>(System.IO.Directory.GetDirectories(plugindir + "/bin"));
-                var config = new PluginConfig(this.model, this.scene, null, this.Console, this.temporaryElementProvider, this.constraintsGrid, this.rightPanel, this.sceneGrid);
+                var config = new PluginConfig(this.model, this.scene, null, this.Console, this.temporaryElementProvider, this.constraintsGrid);
+                //config.AddGrids(this.rightPanel, this.sceneGrid, this.paletteGrid);
+                config.FuncChangeSelectorVisibility = (x) => { this.modelSelector.SelectorVisibility = x; };
+                config.FuncCreateConstraintsModel = this.SelectModel;
                 foreach (var dir in dirs)
                 {
                     libs.LaunchPlugins(dir, config);
                 }
+                this.OnModelChanged += new Action<string>(config.OnMainModelChangedFunction);
             }
         }
 
@@ -248,6 +255,11 @@ namespace WpfEditor.View
             {
                 model.SaveAs(dialog.FileName);
             }
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
