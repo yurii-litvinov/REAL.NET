@@ -109,6 +109,8 @@ namespace WpfControlsLib.Controls.Scene
             this.Graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVertex);
             this.Graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.EdgeViewModel);
             this.InitGraphXLogicCore();
+            this.model.SavePositions += (sender, args) => this.SavePositions();
+            this.model.PlaceVertexCorrectly += (sender, args) => this.PlaceVertexCorrectly();
         }
 
         public void Clear() => this.Graph.DataGraph.Clear();
@@ -379,6 +381,7 @@ namespace WpfControlsLib.Controls.Scene
             command.Add(new RemoveNodeCommand(this.model, vertex.Node));
             this.controller.Execute(command);
             this.DrawGraph();
+            PlaceVertexCorrectly();
         }
 
         private void MenuItemClickEdge(object sender, EventArgs e)
@@ -444,6 +447,38 @@ namespace WpfControlsLib.Controls.Scene
         {
             var command = new CreateNodeCommand(this.model, element);
             this.controller.Execute(command);
+        }
+
+        /// <summary>
+        /// Save positions to model.positionsTable when the model is saved
+        /// </summary>
+        private void SavePositions()
+        {
+            model.positionsTable = new System.Collections.Generic.Dictionary<string, Point>();
+            var currentPositions = this.graphArea.GetVertexPositions();
+
+            foreach (var key in currentPositions.Keys)
+            {
+                Point point = new Point(currentPositions[key].X, currentPositions[key].Y);
+                model.positionsTable.Add(key.Name, point);
+            }
+        }
+
+        /// <summary>
+        /// Arranges the vertexes according to model.positionsTable
+        /// </summary>
+        private void PlaceVertexCorrectly()
+        {
+            if (model.positionsTable.Count == 0)
+            {
+                return;
+            }
+
+            var vertexList = this.graphArea.VertexList;
+            foreach (var key in vertexList.Keys)
+            {
+                vertexList[key].SetPosition(model.positionsTable[key.Name]);
+            }
         }
     }
 }

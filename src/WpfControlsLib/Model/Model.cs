@@ -28,6 +28,12 @@ namespace WpfControlsLib.Model
     {
         private bool hasUnsavedChanges = false;
 
+        /// <summary>
+        /// Contains positions of the nodes of this model
+        /// </summary>
+        public System.Collections.Generic.Dictionary<string, System.Windows.Point> positionsTable
+            = new System.Collections.Generic.Dictionary<string, System.Windows.Point>();
+
         public Model()
         {
             this.Repo = global::Repo.RepoFactory.Create();
@@ -43,6 +49,10 @@ namespace WpfControlsLib.Model
         public event EventHandler<EventArgs> FileSaved;
 
         public event EventHandler<EventArgs> UnsavedChanges;
+
+        public event EventHandler<EventArgs> SavePositions;
+
+        public event EventHandler<EventArgs> PlaceVertexCorrectly;
 
         /// <summary>
         /// Notifies all views that there are changes so massive that the model shall be completely reloaded 
@@ -94,6 +104,7 @@ namespace WpfControlsLib.Model
             this.Repo = global::Repo.RepoFactory.Create();
             this.CurrentFileName = "";
             this.HasUnsavedChanges = false;
+            this.positionsTable = new System.Collections.Generic.Dictionary<string, System.Windows.Point>();
             this.Reinit?.Invoke(this, EventArgs.Empty);
         }
 
@@ -107,6 +118,8 @@ namespace WpfControlsLib.Model
             this.CurrentFileName = fileName;
             this.HasUnsavedChanges = false;
             this.Reinit?.Invoke(this, EventArgs.Empty);
+            this.OpenPositions(CurrentFileName);
+            this.PlaceVertexCorrectly?.Invoke(this, null);
         }
 
         /// <summary>
@@ -120,6 +133,7 @@ namespace WpfControlsLib.Model
             }
 
             this.Repo.Save(CurrentFileName);
+            this.SavePositionsTable(CurrentFileName);
             this.HasUnsavedChanges = false;
         }
 
@@ -192,6 +206,7 @@ namespace WpfControlsLib.Model
 
         public void RemoveElement(Repo.IElement element)
         {
+            this.SavePositions?.Invoke(this, null);
             var model = this.Repo.Model(this.ModelName);
             model.DeleteElement(element);
             HasUnsavedChanges = true;
@@ -229,5 +244,65 @@ namespace WpfControlsLib.Model
 
             this.ElementRemoved?.Invoke(this, args);
         }
+
+        /// <summary>
+        /// Save dictionary with node positions
+        /// </summary>
+        /// <param name="fileName">Name of the file with model</param>
+        public void SavePositionsTable(string fileName)
+        {
+            this.SavePositions?.Invoke(this, null);
+            var positionsFileName = GetDicFileName(fileName);
+            using (System.IO.FileStream fstream = new System.IO.FileStream(positionsFileName, System.IO.FileMode.OpenOrCreate))
+            {
+                foreach (var nodeName in positionsTable.Keys)
+                {
+                    byte[] array1 = System.Text.Encoding.Default.GetBytes(
+                        nodeName + " " + Convert.ToString(positionsTable[nodeName].X) + " " + Convert.ToString(positionsTable[nodeName].Y + " "));
+                    fstream.Write(array1, 0, array1.Length);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Opens file with node positions and fills dictionary
+        /// </summary>
+        /// <param name="fileName">Name of the file with saved model to open</param>
+        /// <returns>Whether the positionsFile existed</returns>
+        public void OpenPositions(string fileName)
+        {
+            this.positionsTable = new System.Collections.Generic.Dictionary<string, System.Windows.Point>();
+            string positionsFileName = GetDicFileName(fileName);
+
+            if (!System.IO.File.Exists(positionsFileName))
+            {
+                return;
+            }
+
+            using (var reader = new System.IO.StreamReader(positionsFileName))
+            {
+                var str = reader.ReadLine().Split(' ');
+                for (var i = 0; i < str.Length - 1; i += 3)
+                {
+                    positionsTable.Add(str[i], new System.Windows.Point(Convert.ToDouble(str[i + 1]), Convert.ToDouble(str[i + 2])));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Make name for file with node positions
+        /// </summary>
+        /// <param name="fileName">Name of the file containing model</param>
+        /// <returns>the name for file with node positions</returns>
+        public string GetDicFileName(string fileName)
+        {
+            string dicFileName = null;
+            for (var i = 0; i <= fileName.LastIndexOf('.'); i++)
+            {
+                dicFileName += fileName[i];
+            }
+            dicFileName += "txt";
+            return dicFileName;
+        } 
     }
 }
