@@ -136,16 +136,12 @@ namespace WpfControlsLib.Model
             try
             {
                 this.OpenPositions(CurrentFileName);
-                this.PlaceVertexCorrectly?.Invoke(this, null);
             }
             catch (FormatException)
             {
                 this.HaveMessage?.Invoke(this, "The file with vertices positions has data in wrong format");
             }
-            catch (System.Collections.Generic.KeyNotFoundException)
-            {
-                this.HaveMessage?.Invoke(this, "Not all vertices are in the file with positions");
-            }
+            this.PlaceVertexCorrectly?.Invoke(this, null);
         }
 
         /// <summary>
@@ -159,14 +155,7 @@ namespace WpfControlsLib.Model
             }
 
             this.Repo.Save(CurrentFileName);
-            try
-            {
-                this.SavePositionsTable(CurrentFileName);
-            }
-            catch (ArgumentException)
-            {
-                this.HaveMessage?.Invoke(this, "There are vertices with the same names in the model");
-            }
+            this.SavePositionsTable(CurrentFileName);
             this.HasUnsavedChanges = false;
         }
 
@@ -239,14 +228,7 @@ namespace WpfControlsLib.Model
 
         public void RemoveElement(Repo.IElement element)
         {
-            try
-            {
-                this.SavePositionsTable(CurrentFileName);
-            }
-            catch (ArgumentException)
-            {
-                this.HaveMessage?.Invoke(this, "There are vertices with the same names in the model");
-            }
+            this.SavePositionsTable(CurrentFileName);
             this.vertexNames.Remove(element.Name);
             var model = this.Repo.Model(this.ModelName);
             model.DeleteElement(element);

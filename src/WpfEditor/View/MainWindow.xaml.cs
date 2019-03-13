@@ -82,6 +82,7 @@ namespace WpfEditor.View
             this.scene.ElementRemoved += (sender, args) => this.modelExplorer.RemoveElement(args.Element);
             this.scene.NodeSelected += (sender, args) => this.attributesView.DataContext = args.Node;
             this.scene.EdgeSelected += (sender, args) => this.attributesView.DataContext = args.Edge;
+            this.scene.HaveMessage += ShowMessage;
 
             this.scene.Init(this.model, this.controller, new PaletteAdapter(this.palette));
 

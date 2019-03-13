@@ -72,6 +72,11 @@ namespace WpfControlsLib.Controls.Scene
 
         public event EventHandler<ElementRemovedEventArgs> ElementRemoved;
 
+        /// <summary>
+        /// Send when there`s something to be told to the user
+        /// </summary>
+        public event EventHandler<string> HaveMessage;
+
         public Graph Graph { get; set; }
 
         private void InitGraphXLogicCore()
@@ -383,11 +388,7 @@ namespace WpfControlsLib.Controls.Scene
             command.Add(new RemoveNodeCommand(this.model, vertex.Node));
             this.controller.Execute(command);
             this.DrawGraph();
-            try
-            {
-                PlaceVertexCorrectly();
-            }
-            catch { }
+            PlaceVertexCorrectly();
         }
 
         private void MenuItemClickEdge(object sender, EventArgs e)
@@ -456,22 +457,36 @@ namespace WpfControlsLib.Controls.Scene
         }
 
         /// <summary>
-        /// Save positions to model.positionsTable when the model is saved
+        /// Save positions to model.positionsTable when the model is saved.
+        /// If there are some vertices have same names, user will be warned.
         /// </summary>
         private void SavePositions()
         {
             this.model.positionsTable = new System.Collections.Generic.Dictionary<string, Point>();
             var currentPositions = this.graphArea.GetVertexPositions();
-
+            var firstWarning = false;
             foreach (var key in currentPositions.Keys)
             {
                 Point point = new Point(currentPositions[key].X, currentPositions[key].Y);
-                this.model.positionsTable.Add(key.Name, point);
+                try
+                {
+                    this.model.positionsTable.Add(key.Name, point);
+                }
+                catch (ArgumentException)
+                {
+                    if (!firstWarning)
+                    {
+                        this.HaveMessage?.Invoke(this, "There are vertices with the same names in the model");
+                        firstWarning = true;
+                    }
+                }
             }
         }
 
         /// <summary>
-        /// Arranges the vertexes according to model.positionsTable
+        /// Arranges the vertices according to model.positionsTable
+        /// If not all vertices are in the positionsTable, first time user will be warned,
+        /// then absent vertices will be added just somewhere
         /// </summary>
         private void PlaceVertexCorrectly()
         {
@@ -481,9 +496,21 @@ namespace WpfControlsLib.Controls.Scene
             }
 
             var vertexList = this.graphArea.VertexList;
+            var firstWarning = false;
             foreach (var key in vertexList.Keys)
             {
-                vertexList[key].SetPosition(model.positionsTable[key.Name]);
+                try
+                {
+                    vertexList[key].SetPosition(model.positionsTable[key.Name]);
+                }
+                catch (System.Collections.Generic.KeyNotFoundException)
+                {
+                    if (!firstWarning)
+                    {
+                        this.HaveMessage?.Invoke(this, "Not all vertices are in the file with positions");
+                        firstWarning = true;
+                    }
+                }
             }
         }
 
