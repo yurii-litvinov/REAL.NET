@@ -90,6 +90,8 @@ namespace WpfEditor.View
 
             this.InitAndLaunchPlugins();
             this.InitToolbar();
+
+            this.model.HaveMessage += ShowMessage;
         }
 
         private void Reinit(object sender, EventArgs e)
@@ -245,6 +247,15 @@ namespace WpfEditor.View
             {
                 model.SaveAs(dialog.FileName);
             }
+        }
+
+        /// <summary>
+        /// Show the message in extra window
+        /// </summary>
+        /// <param name="message">The message</param>
+        private void ShowMessage(object sender, string message)
+        {
+            MessageBox.Show(message);
         }
     }
 }

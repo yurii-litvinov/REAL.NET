@@ -62,6 +62,11 @@ namespace WpfControlsLib.Model
         public event EventHandler<EventArgs> InitVertexNames;
 
         /// <summary>
+        /// Send when there`s something to be told to the user
+        /// </summary>
+        public event EventHandler<string> HaveMessage;
+
+        /// <summary>
         /// Notifies all views that there are changes so massive that the model shall be completely reloaded 
         /// (for example, when creating new or opening existing file).
         /// </summary>
@@ -88,7 +93,8 @@ namespace WpfControlsLib.Model
         {
             get => hasUnsavedChanges;
 
-            private set {
+            private set
+            {
                 if (hasUnsavedChanges && !value)
                 {
                     hasUnsavedChanges = value;
@@ -127,8 +133,19 @@ namespace WpfControlsLib.Model
             this.HasUnsavedChanges = false;
             this.Reinit?.Invoke(this, EventArgs.Empty);
             this.InitVertexNames?.Invoke(this, null);
-            this.OpenPositions(CurrentFileName);
-            this.PlaceVertexCorrectly?.Invoke(this, null);
+            try
+            {
+                this.OpenPositions(CurrentFileName);
+                this.PlaceVertexCorrectly?.Invoke(this, null);
+            }
+            catch (FormatException)
+            {
+                this.HaveMessage?.Invoke(this, "The file with vertices positions has data in wrong format");
+            }
+            catch (System.Collections.Generic.KeyNotFoundException)
+            {
+                this.HaveMessage?.Invoke(this, "Not all vertices are in the file with positions");
+            }
         }
 
         /// <summary>
@@ -142,7 +159,14 @@ namespace WpfControlsLib.Model
             }
 
             this.Repo.Save(CurrentFileName);
-            this.SavePositionsTable(CurrentFileName);
+            try
+            {
+                this.SavePositionsTable(CurrentFileName);
+            }
+            catch (ArgumentException)
+            {
+                this.HaveMessage?.Invoke(this, "There are vertices with the same names in the model");
+            }
             this.HasUnsavedChanges = false;
         }
 
@@ -193,8 +217,8 @@ namespace WpfControlsLib.Model
         public void CreateEdge(Repo.IEdge edge, Repo.IElement source, Repo.IElement destination)
         {
             if (this.Constraints.AllowCreateOrExistEdge(
-                    this.Repo.Model(this.ModelName).Edges, 
-                    source.Name, 
+                    this.Repo.Model(this.ModelName).Edges,
+                    source.Name,
                     destination.Name))
             {
                 var model = this.Repo.Model(this.ModelName);
@@ -215,7 +239,14 @@ namespace WpfControlsLib.Model
 
         public void RemoveElement(Repo.IElement element)
         {
-            this.SavePositions?.Invoke(this, null);
+            try
+            {
+                this.SavePositionsTable(CurrentFileName);
+            }
+            catch (ArgumentException)
+            {
+                this.HaveMessage?.Invoke(this, "There are vertices with the same names in the model");
+            }
             this.vertexNames.Remove(element.Name);
             var model = this.Repo.Model(this.ModelName);
             model.DeleteElement(element);
@@ -268,7 +299,8 @@ namespace WpfControlsLib.Model
                 foreach (var nodeName in positionsTable.Keys)
                 {
                     byte[] array1 = System.Text.Encoding.Default.GetBytes(
-                        nodeName + " " + Convert.ToString(positionsTable[nodeName].X) + " " + Convert.ToString(positionsTable[nodeName].Y + " "));
+                        nodeName + " " + Convert.ToString(positionsTable[nodeName].X)
+                        + " " + Convert.ToString(positionsTable[nodeName].Y + " "));
                     fstream.Write(array1, 0, array1.Length);
                 }
             }
@@ -291,10 +323,19 @@ namespace WpfControlsLib.Model
 
             using (var reader = new System.IO.StreamReader(positionsFileName))
             {
-                var str = reader.ReadLine().Split(' ');
-                for (var i = 0; i < str.Length - 1; i += 3)
+                try
                 {
-                    positionsTable.Add(str[i], new System.Windows.Point(Convert.ToDouble(str[i + 1]), Convert.ToDouble(str[i + 2])));
+                    var str = reader.ReadLine().Split(' ');
+                    for (var i = 0; i < str.Length - 1; i += 3)
+                    {
+                        positionsTable.Add(str[i], new System.Windows.Point(
+                            Convert.ToDouble(str[i + 1]), Convert.ToDouble(str[i + 2])));
+                    }
+                }
+                catch (FormatException)
+                {
+                    this.HaveMessage?.Invoke(this, "The file with vertices positions has data in wrong format");
+                    positionsTable = new System.Collections.Generic.Dictionary<string, System.Windows.Point>();
                 }
             }
         }

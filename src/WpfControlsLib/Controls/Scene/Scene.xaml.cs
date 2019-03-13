@@ -149,7 +149,7 @@ namespace WpfControlsLib.Controls.Scene
                 if (this.Graph.DataGraph.Vertices.ToList()[i].Name == name)
                 {
                     var vertex = this.Graph.DataGraph.Vertices.ToList()[i];
-                    this.NodeSelected?.Invoke(this, new NodeSelectedEventArgs {Node = vertex});
+                    this.NodeSelected?.Invoke(this, new NodeSelectedEventArgs { Node = vertex });
                     foreach (var ed in this.graphArea.VertexList)
                     {
                         if (ed.Key == vertex)
@@ -383,7 +383,11 @@ namespace WpfControlsLib.Controls.Scene
             command.Add(new RemoveNodeCommand(this.model, vertex.Node));
             this.controller.Execute(command);
             this.DrawGraph();
-            PlaceVertexCorrectly();
+            try
+            {
+                PlaceVertexCorrectly();
+            }
+            catch { }
         }
 
         private void MenuItemClickEdge(object sender, EventArgs e)
