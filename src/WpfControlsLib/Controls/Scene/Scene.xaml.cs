@@ -111,6 +111,7 @@ namespace WpfControlsLib.Controls.Scene
             this.InitGraphXLogicCore();
             this.model.SavePositions += (sender, args) => this.SavePositions();
             this.model.PlaceVertexCorrectly += (sender, args) => this.PlaceVertexCorrectly();
+            this.model.InitVertexNames += (sender, args) => this.InitVertexNames();
         }
 
         public void Clear() => this.Graph.DataGraph.Clear();
@@ -193,6 +194,7 @@ namespace WpfControlsLib.Controls.Scene
             if (element.Metatype == Repo.Metatype.Node)
             {
                 this.position = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.graphArea);
+                this.NewVertexName(element);
                 this.CreateNewNode(element);
                 this.ElementManipulationDone?.Invoke(this, EventArgs.Empty);
             }
@@ -454,13 +456,13 @@ namespace WpfControlsLib.Controls.Scene
         /// </summary>
         private void SavePositions()
         {
-            model.positionsTable = new System.Collections.Generic.Dictionary<string, Point>();
+            this.model.positionsTable = new System.Collections.Generic.Dictionary<string, Point>();
             var currentPositions = this.graphArea.GetVertexPositions();
 
             foreach (var key in currentPositions.Keys)
             {
                 Point point = new Point(currentPositions[key].X, currentPositions[key].Y);
-                model.positionsTable.Add(key.Name, point);
+                this.model.positionsTable.Add(key.Name, point);
             }
         }
 
@@ -478,6 +480,43 @@ namespace WpfControlsLib.Controls.Scene
             foreach (var key in vertexList.Keys)
             {
                 vertexList[key].SetPosition(model.positionsTable[key.Name]);
+            }
+        }
+
+        /// <summary>
+        /// Change new element name so there would be no same names
+        /// </summary>
+        /// <param name="element">New element</param>
+        private void NewVertexName(Repo.IElement element)
+        {
+            var name = element.Name;
+            if (element.Name.LastIndexOf('.') != -1)
+            {
+                name = string.Empty;
+                for (var i = 0; i < element.Name.LastIndexOf('.'); i++)
+                {
+                    name += element.Name[i];
+                }
+            }
+
+            var counter = 1;
+            while (this.model.vertexNames.Contains("a" + name + "." + counter))
+            {
+                counter++;
+            }
+
+            element.Name = name + "." + counter;
+            this.model.vertexNames.Add("a" + element.Name);
+        }
+
+        /// <summary>
+        /// Fill the list of taken names
+        /// </summary>
+        private void InitVertexNames()
+        {
+            foreach (var key in this.graphArea.GetVertexPositions().Keys)
+            {
+                this.model.vertexNames.Add(key.Name);
             }
         }
     }
