@@ -42,6 +42,7 @@ namespace WpfControlsLib.Controls.Scene
         private VertexControl currentVertex;
         private EdgeControl edgeControl;
         private Point position;
+        private const int checkScale = 110;
 
         private Model model;
         private Controller controller;
@@ -57,6 +58,7 @@ namespace WpfControlsLib.Controls.Scene
 
             this.graphArea.VertexSelected += this.VertexSelectedAction;
             this.graphArea.EdgeSelected += this.EdgeSelectedAction;
+            this.graphArea.LostMouseCapture += (sender, args) => this.FixPos();
             this.zoomControl.Click += this.ClearSelection;
             this.zoomControl.MouseDown += this.OnSceneMouseDown;
             this.zoomControl.Drop += this.ZoomControlDrop;
@@ -343,6 +345,9 @@ namespace WpfControlsLib.Controls.Scene
 
         private void AddNewVertexControl(NodeViewModel vertex)
         {
+            position.X = Math.Floor(position.X / checkScale) * checkScale;
+            position.Y = Math.Floor(position.Y / checkScale) * checkScale;
+
             var vc = new VertexControl(vertex);
             vc.SetPosition(this.position);
             this.graphArea.AddVertex(vertex, vc);
@@ -549,6 +554,21 @@ namespace WpfControlsLib.Controls.Scene
             {
                 this.model.vertexNames.Add(key.Name);
             }
+        }
+
+        /// <summary>
+        /// Fix positions so vertices would be in the checks after moving on scene
+        /// </summary>
+        private void FixPos()
+        {
+            var key = this.currentVertex.GetDataVertex<NodeViewModel>();
+            var vertexList = this.graphArea.VertexList;
+            var curPos = vertexList[key].GetPosition();
+
+            curPos.X = Math.Floor(curPos.X / checkScale) * checkScale;
+            curPos.Y = Math.Floor(curPos.Y / checkScale) * checkScale;
+
+            vertexList[key].SetPosition(curPos);
         }
     }
 }
