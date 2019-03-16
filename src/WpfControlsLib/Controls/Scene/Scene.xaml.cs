@@ -201,7 +201,7 @@ namespace WpfControlsLib.Controls.Scene
             if (element.Metatype == Repo.Metatype.Node)
             {
                 this.position = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.graphArea);
-                this.NewVertexName(element);
+                VertexName.NewVertexName(element, this.model.VertexNames);
                 this.CreateNewNode(element);
                 this.ElementManipulationDone?.Invoke(this, EventArgs.Empty);
             }
@@ -345,11 +345,8 @@ namespace WpfControlsLib.Controls.Scene
 
         private void AddNewVertexControl(NodeViewModel vertex)
         {
-            position.X = Math.Floor(position.X / checkScale) * checkScale;
-            position.Y = Math.Floor(position.Y / checkScale) * checkScale;
-
             var vc = new VertexControl(vertex);
-            vc.SetPosition(this.position);
+            vc.SetPosition(Geometry.RoundPosition(this.position, checkScale));
             this.graphArea.AddVertex(vertex, vc);
         }
 
@@ -467,7 +464,7 @@ namespace WpfControlsLib.Controls.Scene
         /// </summary>
         private void SavePositions()
         {
-            this.model.positionsTable = new System.Collections.Generic.Dictionary<string, Point>();
+            this.model.PositionsTable = new System.Collections.Generic.Dictionary<string, Point>();
             var currentPositions = this.graphArea.GetVertexPositions();
             var firstWarning = false;
             foreach (var key in currentPositions.Keys)
@@ -475,7 +472,7 @@ namespace WpfControlsLib.Controls.Scene
                 Point point = new Point(currentPositions[key].X, currentPositions[key].Y);
                 try
                 {
-                    this.model.positionsTable.Add(key.Name, point);
+                    this.model.PositionsTable.Add(key.Name, point);
                 }
                 catch (ArgumentException)
                 {
@@ -495,7 +492,7 @@ namespace WpfControlsLib.Controls.Scene
         /// </summary>
         private void PlaceVertexCorrectly()
         {
-            if (model.positionsTable.Count == 0)
+            if (model.PositionsTable.Count == 0)
             {
                 return;
             }
@@ -506,7 +503,7 @@ namespace WpfControlsLib.Controls.Scene
             {
                 try
                 {
-                    vertexList[key].SetPosition(model.positionsTable[key.Name]);
+                    vertexList[key].SetPosition(model.PositionsTable[key.Name]);
                 }
                 catch (System.Collections.Generic.KeyNotFoundException)
                 {
@@ -520,39 +517,14 @@ namespace WpfControlsLib.Controls.Scene
         }
 
         /// <summary>
-        /// Change new element name so there would be no same names
-        /// </summary>
-        /// <param name="element">New element</param>
-        private void NewVertexName(Repo.IElement element)
-        {
-            var name = element.Name;
-            if (element.Name.LastIndexOf('.') != -1)
-            {
-                name = string.Empty;
-                for (var i = 0; i < element.Name.LastIndexOf('.'); i++)
-                {
-                    name += element.Name[i];
-                }
-            }
-
-            var counter = 1;
-            while (this.model.vertexNames.Contains("a" + name + "." + counter))
-            {
-                counter++;
-            }
-
-            element.Name = name + "." + counter;
-            this.model.vertexNames.Add("a" + element.Name);
-        }
-
-        /// <summary>
         /// Fill the list of taken names
         /// </summary>
         private void InitVertexNames()
         {
+            this.model.VertexNames = new System.Collections.Generic.List<string>();
             foreach (var key in this.graphArea.GetVertexPositions().Keys)
             {
-                this.model.vertexNames.Add(key.Name);
+                this.model.VertexNames.Add(key.Name);
             }
         }
 
@@ -564,11 +536,9 @@ namespace WpfControlsLib.Controls.Scene
             var key = this.currentVertex.GetDataVertex<NodeViewModel>();
             var vertexList = this.graphArea.VertexList;
             var curPos = vertexList[key].GetPosition();
-
-            curPos.X = Math.Floor(curPos.X / checkScale) * checkScale;
-            curPos.Y = Math.Floor(curPos.Y / checkScale) * checkScale;
-
-            vertexList[key].SetPosition(curPos);
+            Geometry.RoundPosition(curPos, checkScale);
+            vertexList[key].SetPosition(Geometry.RoundPosition(curPos, checkScale));
         }
     }
 }
+

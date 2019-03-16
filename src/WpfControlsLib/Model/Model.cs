@@ -28,21 +28,11 @@ namespace WpfControlsLib.Model
     {
         private bool hasUnsavedChanges = false;
 
-        /// <summary>
-        /// Contains positions of the nodes of this model
-        /// </summary>
-        public System.Collections.Generic.Dictionary<string, System.Windows.Point> positionsTable
-            = new System.Collections.Generic.Dictionary<string, System.Windows.Point>();
-
-        /// <summary>
-        /// List of vertex names in this model
-        /// </summary>
-        public System.Collections.Generic.List<string> vertexNames = new System.Collections.Generic.List<string>();
-
         public Model()
         {
             this.Repo = global::Repo.RepoFactory.Create();
             this.Constraints = new Constraints.Constraints();
+            this.VertexNames = new System.Collections.Generic.List<string>();
         }
 
         public event EventHandler<VertexEventArgs> NewVertexAdded;
@@ -109,6 +99,16 @@ namespace WpfControlsLib.Model
         }
 
         /// <summary>
+        /// Contains positions of the nodes of this model
+        /// </summary>
+        public System.Collections.Generic.Dictionary<string, System.Windows.Point> PositionsTable { get; set; }
+
+        /// <summary>
+        /// List of vertex names in this model
+        /// </summary>
+        public System.Collections.Generic.List<string> VertexNames { get; set; }
+
+        /// <summary>
         /// Clears the contents of current repository and creates new empty one. Things like "Do you want to save 
         /// changes?" dialog or even new model selection are not supported yet.
         /// </summary>
@@ -117,8 +117,8 @@ namespace WpfControlsLib.Model
             this.Repo = global::Repo.RepoFactory.Create();
             this.CurrentFileName = "";
             this.HasUnsavedChanges = false;
-            this.positionsTable = new System.Collections.Generic.Dictionary<string, System.Windows.Point>();
-            this.vertexNames = new System.Collections.Generic.List<string>();
+            this.PositionsTable = new System.Collections.Generic.Dictionary<string, System.Windows.Point>();
+            this.VertexNames = new System.Collections.Generic.List<string>();
             this.Reinit?.Invoke(this, EventArgs.Empty);
         }
 
@@ -135,11 +135,12 @@ namespace WpfControlsLib.Model
             this.InitVertexNames?.Invoke(this, null);
             try
             {
-                this.OpenPositions(CurrentFileName);
+                this.PositionsTable = PositionsLoad.OpenPositions(CurrentFileName);
             }
             catch (FormatException)
             {
                 this.HaveMessage?.Invoke(this, "The file with vertices positions has data in wrong format");
+                this.PositionsTable = new System.Collections.Generic.Dictionary<string, System.Windows.Point>();
             }
             this.PlaceVertexCorrectly?.Invoke(this, null);
         }
@@ -155,7 +156,8 @@ namespace WpfControlsLib.Model
             }
 
             this.Repo.Save(CurrentFileName);
-            this.SavePositionsTable(CurrentFileName);
+            this.SavePositions?.Invoke(this, null);
+            PositionsLoad.SavePositionsTable(CurrentFileName, PositionsTable);
             this.HasUnsavedChanges = false;
         }
 
@@ -228,8 +230,9 @@ namespace WpfControlsLib.Model
 
         public void RemoveElement(Repo.IElement element)
         {
-            this.SavePositionsTable(CurrentFileName);
-            this.vertexNames.Remove(element.Name);
+            this.SavePositions?.Invoke(this, null);
+            PositionsLoad.SavePositionsTable(CurrentFileName, PositionsTable);
+            this.VertexNames.Remove(element.Name);
             var model = this.Repo.Model(this.ModelName);
             model.DeleteElement(element);
             HasUnsavedChanges = true;
@@ -266,76 +269,6 @@ namespace WpfControlsLib.Model
             };
 
             this.ElementRemoved?.Invoke(this, args);
-        }
-
-        /// <summary>
-        /// Save dictionary with node positions
-        /// </summary>
-        /// <param name="fileName">Name of the file with model</param>
-        private void SavePositionsTable(string fileName)
-        {
-            this.SavePositions?.Invoke(this, null);
-            var positionsFileName = GetDicFileName(fileName);
-            using (System.IO.FileStream fstream = new System.IO.FileStream(positionsFileName, System.IO.FileMode.OpenOrCreate))
-            {
-                foreach (var nodeName in positionsTable.Keys)
-                {
-                    byte[] array1 = System.Text.Encoding.Default.GetBytes(
-                        nodeName + " " + Convert.ToString(positionsTable[nodeName].X)
-                        + " " + Convert.ToString(positionsTable[nodeName].Y + " "));
-                    fstream.Write(array1, 0, array1.Length);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Opens file with node positions and fills dictionary
-        /// </summary>
-        /// <param name="fileName">Name of the file with saved model to open</param>
-        /// <returns>Whether the positionsFile existed</returns>
-        private void OpenPositions(string fileName)
-        {
-            this.positionsTable = new System.Collections.Generic.Dictionary<string, System.Windows.Point>();
-            string positionsFileName = GetDicFileName(fileName);
-
-            if (!System.IO.File.Exists(positionsFileName))
-            {
-                return;
-            }
-
-            using (var reader = new System.IO.StreamReader(positionsFileName))
-            {
-                try
-                {
-                    var str = reader.ReadLine().Split(' ');
-                    for (var i = 0; i < str.Length - 1; i += 3)
-                    {
-                        positionsTable.Add(str[i], new System.Windows.Point(
-                            Convert.ToDouble(str[i + 1]), Convert.ToDouble(str[i + 2])));
-                    }
-                }
-                catch (FormatException)
-                {
-                    this.HaveMessage?.Invoke(this, "The file with vertices positions has data in wrong format");
-                    positionsTable = new System.Collections.Generic.Dictionary<string, System.Windows.Point>();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Make name for file with node positions
-        /// </summary>
-        /// <param name="fileName">Name of the file containing model</param>
-        /// <returns>the name for file with node positions</returns>
-        private string GetDicFileName(string fileName)
-        {
-            string dicFileName = null;
-            for (var i = 0; i <= fileName.LastIndexOf('.'); i++)
-            {
-                dicFileName += fileName[i];
-            }
-            dicFileName += "txt";
-            return dicFileName;
         }
     }
 }

@@ -54,5 +54,18 @@ namespace WpfControlsLib.Controls.Scene
         /// <param name="p2">Second point.</param>
         /// <returns>Distance between two points.</returns>
         public static double GetDistance(Point p1, Point p2) => (p1 - p2).Length;
+
+        /// <summary>
+        /// Round position of the vertex, so it would stand in the check
+        /// </summary>
+        /// <param name="currentPosition">Given position</param>
+        /// <param name="checkScale">The scale of the check in the net</param>
+        public static System.Windows.Point RoundPosition(System.Windows.Point currentPosition, int checkScale)
+        {
+            currentPosition.X = Math.Round(currentPosition.X / checkScale) * checkScale;
+            currentPosition.Y = Math.Round(currentPosition.Y / checkScale) * checkScale;
+
+            return currentPosition;
+        }
     }
 }
