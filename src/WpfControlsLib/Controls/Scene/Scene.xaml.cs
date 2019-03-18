@@ -42,7 +42,7 @@ namespace WpfControlsLib.Controls.Scene
         private VertexControl currentVertex;
         private EdgeControl edgeControl;
         private Point position;
-        private const int checkScale = 110;
+        private int checkScale = 110;
 
         private Model model;
         private Controller controller;
@@ -62,6 +62,8 @@ namespace WpfControlsLib.Controls.Scene
             this.zoomControl.Click += this.ClearSelection;
             this.zoomControl.MouseDown += this.OnSceneMouseDown;
             this.zoomControl.Drop += this.ZoomControlDrop;
+            this.zoomControl.MouseDown += (sender, args) => this.LoadNet(sender, args);
+            this.zoomControl.ZoomAnimationCompleted += (sender, args) => this.LoadNet(sender, args);
         }
 
         public event EventHandler<EventArgs> ElementManipulationDone;
@@ -538,6 +540,25 @@ namespace WpfControlsLib.Controls.Scene
             var curPos = vertexList[key].GetPosition();
             Geometry.RoundPosition(curPos, checkScale);
             vertexList[key].SetPosition(Geometry.RoundPosition(curPos, checkScale));
+        }
+
+        /// <summary>
+        /// Create a host visual derived from the FrameworkElement class
+        /// Take point from the screen and draw around it the net with necessary size and scale
+        /// </summary>
+        private void LoadNet(object sender, EventArgs e)
+        {
+            var chosenPoint = e as MouseButtonEventArgs;
+            Point point = new Point(0, 0);
+            if (chosenPoint != null)
+            {
+                point = chosenPoint.GetPosition(canvas);
+            }
+
+            var visualHost = new NetVisualHost(zoomControl.ActualHeight / zoomControl.Zoom,
+                zoomControl.ActualWidth / zoomControl.Zoom, checkScale, point);
+            canvas.Children.Clear();
+            canvas.Children.Add(visualHost);
         }
     }
 }

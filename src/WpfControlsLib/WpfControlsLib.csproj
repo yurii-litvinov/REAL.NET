@@ -128,6 +128,7 @@
     <Compile Include="Controls\Scene\EventArguments\EdgeSelectedEventArgs.cs" />
     <Compile Include="Controls\Scene\EventArguments\ElementAddedEventArgs.cs" />
     <Compile Include="Controls\Scene\EventArguments\ElementRemovedEventArgs.cs" />
+    <Compile Include="Controls\Scene\NetVisualHost.cs" />
     <Compile Include="Controls\Scene\NewVertexName.cs" />
     <Compile Include="Controls\Scene\Geometry.cs" />
     <Compile Include="Controls\Scene\IElementProvider.cs" />
