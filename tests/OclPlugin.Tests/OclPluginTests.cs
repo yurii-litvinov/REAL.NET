@@ -5,6 +5,7 @@ using Antlr4.Runtime.Tree;
 using NUnit.Framework;
 using OclPlugin;
 using Repo;
+using Repo.InfrastructureSemanticLayer;
 
 namespace OclPlugin.Tests
 {
@@ -16,6 +17,15 @@ namespace OclPlugin.Tests
         public void Setup()
         {
             var repo = RepoFactory.Create();
+            //new InfrastructureSemantic(repo.);
+            IModel meta = repo.Model("CoreMetametamodel");
+            IModel func = repo.CreateModel("Function", meta);
+            
+            IModel call = repo.CreateModel("Call", func);
+            IElement funcElem = func.CreateElement(meta.FindElement("Node"));
+            
+            IElement callElem = call.CreateElement(funcElem);
+
             interpreter = new OclInterpreter(repo);
         }
 

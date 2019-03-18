@@ -29,6 +29,16 @@
             <TabItem Header="Errors">
                 <ListBox ItemsSource="{Binding Errors}"/>
             </TabItem>
+            <TabItem Header="Ocl">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" AcceptsReturn="True" Width="Auto" Grid.Column="0"/>
+                    <Button x:Name="button1" Width="60" Height="30" Content="Нажать" Grid.Column="1"/>
+                </Grid>
+            </TabItem>
         </TabControl>
     </Grid>
 </UserControl>

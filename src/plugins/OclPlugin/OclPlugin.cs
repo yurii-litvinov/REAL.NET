@@ -27,7 +27,7 @@
             ICharStream stream;
             if (textExpr == null)
             {
-                stream = CharStreams.fromPath("E:\\OUR DISK\\NIKITA\\REAL.NET\\src\\plugins\\OclPlugin\\test-ocl");
+                stream = CharStreams.fromPath("D:\\Projects\\REAL.NET\\src\\plugins\\OclPlugin\\test-ocl");
             }
             else
             {

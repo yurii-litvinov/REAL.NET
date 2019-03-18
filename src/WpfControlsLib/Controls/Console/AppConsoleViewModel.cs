@@ -27,6 +27,8 @@ namespace WpfControlsLib.Controls.Console
 
         public ObservableCollection<string> Errors { get; } = new ObservableCollection<string>();
 
+        public ObservableCollection<string> OclEditor { get; } = new ObservableCollection<string>();
+
         public void ReportError(string error) => this.Errors.Add(error);
 
         public void SendMessage(string message) => this.Messages.Add(message);
