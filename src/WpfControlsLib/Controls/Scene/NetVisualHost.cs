@@ -37,7 +37,7 @@ namespace WpfControlsLib.Controls.Scene
 
             point = Geometry.RoundPosition(point, scale);
 
-            Pen drawingpen = new Pen(Brushes.Black, 1);
+            Pen drawingpen = new Pen(Brushes.WhiteSmoke, 1);
             for (var i = point.Y; i < height + point.Y; i += scale)
             {
                 drawingContext.DrawLine(drawingpen, new Point(-width + point.X, i), new Point(width + point.X, i));

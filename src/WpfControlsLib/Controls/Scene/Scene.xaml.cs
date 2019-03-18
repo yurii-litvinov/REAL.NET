@@ -42,7 +42,7 @@ namespace WpfControlsLib.Controls.Scene
         private VertexControl currentVertex;
         private EdgeControl edgeControl;
         private Point position;
-        private int checkScale = 110;
+        private int checkScale = 30;
 
         private Model model;
         private Controller controller;
