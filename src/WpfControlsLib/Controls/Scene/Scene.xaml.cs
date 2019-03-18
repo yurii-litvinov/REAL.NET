@@ -64,6 +64,7 @@ namespace WpfControlsLib.Controls.Scene
             this.zoomControl.Drop += this.ZoomControlDrop;
             this.zoomControl.MouseDown += (sender, args) => this.LoadNet(sender, args);
             this.zoomControl.ZoomAnimationCompleted += (sender, args) => this.LoadNet(sender, args);
+            this.zoomControl.MaxZoom = 1.1;
         }
 
         public event EventHandler<EventArgs> ElementManipulationDone;
