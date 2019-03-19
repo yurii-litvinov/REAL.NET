@@ -15,6 +15,7 @@
 namespace WpfControlsLib.Controls.Scene
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -42,7 +43,7 @@ namespace WpfControlsLib.Controls.Scene
         private VertexControl currentVertex;
         private EdgeControl edgeControl;
         private Point position;
-        private int checkScale = 30;
+        private double checkScale = 26.7;
 
         private Model model;
         private Controller controller;
@@ -467,7 +468,7 @@ namespace WpfControlsLib.Controls.Scene
         /// </summary>
         private void SavePositions()
         {
-            this.model.PositionsTable = new System.Collections.Generic.Dictionary<string, Point>();
+            this.model.PositionsTable = new Dictionary<string, Point>();
             var currentPositions = this.graphArea.GetVertexPositions();
             var firstWarning = false;
             foreach (var key in currentPositions.Keys)
@@ -495,7 +496,7 @@ namespace WpfControlsLib.Controls.Scene
         /// </summary>
         private void PlaceVertexCorrectly()
         {
-            if (model.PositionsTable.Count == 0)
+            if (this.model.PositionsTable.Count == 0)
             {
                 return;
             }
@@ -506,9 +507,9 @@ namespace WpfControlsLib.Controls.Scene
             {
                 try
                 {
-                    vertexList[key].SetPosition(model.PositionsTable[key.Name]);
+                    vertexList[key].SetPosition(this.model.PositionsTable[key.Name]);
                 }
-                catch (System.Collections.Generic.KeyNotFoundException)
+                catch (KeyNotFoundException)
                 {
                     if (!firstWarning)
                     {
@@ -524,7 +525,7 @@ namespace WpfControlsLib.Controls.Scene
         /// </summary>
         private void InitVertexNames()
         {
-            this.model.VertexNames = new System.Collections.Generic.List<string>();
+            this.model.VertexNames = new List<string>();
             foreach (var key in this.graphArea.GetVertexPositions().Keys)
             {
                 this.model.VertexNames.Add(key.Name);
@@ -539,7 +540,6 @@ namespace WpfControlsLib.Controls.Scene
             var key = this.currentVertex.GetDataVertex<NodeViewModel>();
             var vertexList = this.graphArea.VertexList;
             var curPos = vertexList[key].GetPosition();
-            Geometry.RoundPosition(curPos, checkScale);
             vertexList[key].SetPosition(Geometry.RoundPosition(curPos, checkScale));
         }
 

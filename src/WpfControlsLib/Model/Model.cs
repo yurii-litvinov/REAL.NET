@@ -15,6 +15,7 @@
 namespace WpfControlsLib.Model
 {
     using System;
+    using System.Collections.Generic;
     using EditorPluginInterfaces;
 
     /// <summary>
@@ -101,12 +102,12 @@ namespace WpfControlsLib.Model
         /// <summary>
         /// Contains positions of the nodes of this model
         /// </summary>
-        public System.Collections.Generic.Dictionary<string, System.Windows.Point> PositionsTable { get; set; }
+        public Dictionary<string, System.Windows.Point> PositionsTable { get; set; }
 
         /// <summary>
         /// List of vertex names in this model
         /// </summary>
-        public System.Collections.Generic.List<string> VertexNames { get; set; }
+        public List<string> VertexNames { get; set; }
 
         /// <summary>
         /// Clears the contents of current repository and creates new empty one. Things like "Do you want to save 
@@ -117,8 +118,8 @@ namespace WpfControlsLib.Model
             this.Repo = global::Repo.RepoFactory.Create();
             this.CurrentFileName = "";
             this.HasUnsavedChanges = false;
-            this.PositionsTable = new System.Collections.Generic.Dictionary<string, System.Windows.Point>();
-            this.VertexNames = new System.Collections.Generic.List<string>();
+            this.PositionsTable = new Dictionary<string, System.Windows.Point>();
+            this.VertexNames = new List<string>();
             this.Reinit?.Invoke(this, EventArgs.Empty);
         }
 
@@ -140,7 +141,7 @@ namespace WpfControlsLib.Model
             catch (FormatException)
             {
                 this.HaveMessage?.Invoke(this, "The file with vertices positions has data in wrong format");
-                this.PositionsTable = new System.Collections.Generic.Dictionary<string, System.Windows.Point>();
+                this.PositionsTable = new Dictionary<string, System.Windows.Point>();
             }
             this.PlaceVertexCorrectly?.Invoke(this, null);
         }

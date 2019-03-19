@@ -60,7 +60,7 @@ namespace WpfControlsLib.Controls.Scene
         /// </summary>
         /// <param name="currentPosition">Given position</param>
         /// <param name="checkScale">The scale of the check in the net</param>
-        public static System.Windows.Point RoundPosition(System.Windows.Point currentPosition, int checkScale)
+        public static System.Windows.Point RoundPosition(System.Windows.Point currentPosition, double checkScale)
         {
             currentPosition.X = Math.Round(currentPosition.X / checkScale) * checkScale;
             currentPosition.Y = Math.Round(currentPosition.Y / checkScale) * checkScale;

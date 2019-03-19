@@ -15,13 +15,13 @@ namespace WpfControlsLib.Controls.Scene
         private readonly VisualCollection children;
 
         /// <summary>
-        /// 
+        /// Init parameters and create new visual collection
         /// </summary>
         /// <param name="height">Height of the scene on the screen</param>
         /// <param name="width">Width of the scene on the screen</param>
         /// <param name="scale">The scale of net check</param>
         /// <param name="point">The point that user presses on to move scene</param>
-        public NetVisualHost(double height, double width, int scale, Point point)
+        public NetVisualHost(double height, double width, double scale, Point point)
         {
             children = new VisualCollection(this)
             {
@@ -29,8 +29,15 @@ namespace WpfControlsLib.Controls.Scene
             };
         }
 
-        // Create a DrawingVisual that contains lines.
-        private DrawingVisual CreateDrawingVisualLines(double height, double width, int scale, Point point)
+        /// <summary>
+        /// Draw the net
+        /// </summary>
+        /// <param name="height">Height of the scene on the screen</param>
+        /// <param name="width">Width of the scene on the screen</param>
+        /// <param name="scale">The scale of net check</param>
+        /// <param name="point">The point that user presses on to move scene</param>
+        /// <returns></returns>
+        private DrawingVisual CreateDrawingVisualLines(double height, double width, double scale, Point point)
         {
             DrawingVisual drawingVisual = new DrawingVisual();
             DrawingContext drawingContext = drawingVisual.RenderOpen();
