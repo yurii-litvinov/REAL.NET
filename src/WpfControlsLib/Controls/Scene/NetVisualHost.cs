@@ -36,7 +36,7 @@ namespace WpfControlsLib.Controls.Scene
         /// <param name="width">Width of the scene on the screen</param>
         /// <param name="scale">The scale of net check</param>
         /// <param name="point">The point that user presses on to move scene</param>
-        /// <returns></returns>
+        /// <returns>Net, element of visual collection</returns>
         private DrawingVisual CreateDrawingVisualLines(double height, double width, double scale, Point point)
         {
             DrawingVisual drawingVisual = new DrawingVisual();
