@@ -65,7 +65,7 @@ namespace WpfControlsLib.Controls.Scene
         public static System.Windows.Point RoundPosition(System.Windows.Point currentPosition, double checkScale, double currentWidth = wantedWidth)
         {
             double difference = 0;
-            if (currentWidth != wantedWidth)
+            if (currentWidth != wantedWidth && currentWidth != 0)
             {
                 difference = (currentWidth - wantedWidth) / 2;
             }
