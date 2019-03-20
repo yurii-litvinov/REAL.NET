@@ -23,6 +23,7 @@ namespace WpfControlsLib.Controls.Scene
     static class Geometry
     {
         private const double delta = 3;
+        private const double wantedWidth = 80;
 
         /// <summary>
         /// Checking whether point belongs to line.
@@ -60,9 +61,16 @@ namespace WpfControlsLib.Controls.Scene
         /// </summary>
         /// <param name="currentPosition">Given position</param>
         /// <param name="checkScale">The scale of the check in the net</param>
-        public static System.Windows.Point RoundPosition(System.Windows.Point currentPosition, double checkScale)
+        /// <param name="currentWidth">Necessary for nodes which labels are wider then pictures</param>
+        public static System.Windows.Point RoundPosition(System.Windows.Point currentPosition, double checkScale, double currentWidth = wantedWidth)
         {
-            currentPosition.X = Math.Round(currentPosition.X / checkScale) * checkScale;
+            double difference = 0;
+            if (currentWidth != wantedWidth)
+            {
+                difference = (currentWidth - wantedWidth) / 2;
+            }
+
+            currentPosition.X = Math.Round(currentPosition.X / checkScale) * checkScale - difference;
             currentPosition.Y = Math.Round(currentPosition.Y / checkScale) * checkScale;
 
             return currentPosition;

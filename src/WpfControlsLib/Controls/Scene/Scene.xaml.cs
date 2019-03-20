@@ -351,7 +351,7 @@ namespace WpfControlsLib.Controls.Scene
         private void AddNewVertexControl(NodeViewModel vertex)
         {
             var vc = new VertexControl(vertex);
-            vc.SetPosition(Geometry.RoundPosition(this.position, checkScale));
+            vc.SetPosition(Geometry.RoundPosition(this.position, checkScale, vc.ActualWidth));
             this.graphArea.AddVertex(vertex, vc);
         }
 
@@ -540,8 +540,9 @@ namespace WpfControlsLib.Controls.Scene
         {
             var key = this.currentVertex.GetDataVertex<NodeViewModel>();
             var vertexList = this.graphArea.VertexList;
-            var curPos = vertexList[key].GetPosition();
-            vertexList[key].SetPosition(Geometry.RoundPosition(curPos, checkScale));
+            var currentPosition = vertexList[key].GetPosition();
+            var width = vertexList[key].ActualWidth;
+            vertexList[key].SetPosition(Geometry.RoundPosition(currentPosition, checkScale, width));
         }
 
         /// <summary>
