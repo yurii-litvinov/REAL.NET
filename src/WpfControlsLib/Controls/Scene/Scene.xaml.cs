@@ -48,6 +48,7 @@ namespace WpfControlsLib.Controls.Scene
         private Model model;
         private Controller controller;
         private IElementProvider elementProvider;
+        private NetVisualHost visualHost;
 
         public Scene()
         {
@@ -556,10 +557,17 @@ namespace WpfControlsLib.Controls.Scene
                 point = chosenPoint.GetPosition(canvas);
             }
 
-            var visualHost = new NetVisualHost(zoomControl.ActualHeight / zoomControl.Zoom,
+            if (this.visualHost == null)
+            {
+                this.visualHost = new NetVisualHost(zoomControl.ActualHeight / zoomControl.Zoom,
                 zoomControl.ActualWidth / zoomControl.Zoom, checkScale, point);
-            canvas.Children.Clear();
-            canvas.Children.Add(visualHost);
+                canvas.Children.Add(visualHost);
+            }
+            else
+            {
+                this.visualHost.ChangeNet(zoomControl.ActualHeight / zoomControl.Zoom,
+                zoomControl.ActualWidth / zoomControl.Zoom, checkScale, point);
+            }
         }
     }
 }

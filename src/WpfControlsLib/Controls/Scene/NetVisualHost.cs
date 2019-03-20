@@ -25,8 +25,21 @@ namespace WpfControlsLib.Controls.Scene
         {
             children = new VisualCollection(this)
             {
-                CreateDrawingVisualLines(height, width, scale, point),
+                CreateDrawingVisualLines(height, width, scale, point)
             };
+        }
+
+        /// <summary>
+        /// Change the net when params have changed
+        /// </summary>
+        /// <param name="height">Height of the scene on the screen</param>
+        /// <param name="width">Width of the scene on the screen</param>
+        /// <param name="scale">The scale of net check</param>
+        /// <param name="point">The point that user presses on to move scene</param>
+        public void ChangeNet(double height, double width, double scale, Point point)
+        {
+            children.Clear();
+            children.Add(CreateDrawingVisualLines(height, width, scale, point));
         }
 
         /// <summary>
