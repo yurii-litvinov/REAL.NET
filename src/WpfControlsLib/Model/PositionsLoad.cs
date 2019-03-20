@@ -64,7 +64,7 @@ namespace WpfControlsLib.Model
         {
             if (fileName == "")
             {
-                return "OpenModel.txt";
+                return "StartModel.txt";
             }
 
             string dicFileName = null;

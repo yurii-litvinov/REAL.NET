@@ -33,7 +33,7 @@ namespace WpfControlsLib.Model
         {
             this.Repo = global::Repo.RepoFactory.Create();
             this.Constraints = new Constraints.Constraints();
-            this.VertexNames = new System.Collections.Generic.List<string>();
+            SaveStartModelsNames();
         }
 
         public event EventHandler<VertexEventArgs> NewVertexAdded;
@@ -270,6 +270,24 @@ namespace WpfControlsLib.Model
             };
 
             this.ElementRemoved?.Invoke(this, args);
+        }
+
+        /// <summary>
+        /// Adds to the VertexNames the names of the nodes in start models.
+        /// Need special method, because the first nodes on the scene are not in the graphArea yet
+        /// </summary>
+        private void SaveStartModelsNames()
+        {
+            this.VertexNames = new List<string>();
+
+            var enumerator = this.Repo.Models.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                foreach (var node in enumerator.Current.Nodes)
+                {
+                    VertexNames.Add(node.Name);
+                }
+            }
         }
     }
 }
