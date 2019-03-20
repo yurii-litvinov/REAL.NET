@@ -119,8 +119,8 @@ namespace WpfControlsLib.Model
             this.CurrentFileName = "";
             this.HasUnsavedChanges = false;
             this.PositionsTable = new Dictionary<string, System.Windows.Point>();
-            this.VertexNames = new List<string>();
             this.Reinit?.Invoke(this, EventArgs.Empty);
+            SaveStartModelsNames();
         }
 
         /// <summary>

@@ -43,6 +43,7 @@ namespace WpfControlsLib.Controls.Scene
         private VertexControl currentVertex;
         private EdgeControl edgeControl;
         private Point position;
+        private Point mousePosition;
         private double checkScale = 26.7;
 
         private Model model;
@@ -67,6 +68,7 @@ namespace WpfControlsLib.Controls.Scene
             this.zoomControl.MouseDown += (sender, args) => this.LoadNet(sender, args);
             this.zoomControl.ZoomAnimationCompleted += (sender, args) => this.LoadNet(sender, args);
             this.zoomControl.MaxZoom = 1.1;
+            mousePosition = new Point(0, 0);
         }
 
         public event EventHandler<EventArgs> ElementManipulationDone;
@@ -552,22 +554,21 @@ namespace WpfControlsLib.Controls.Scene
         private void LoadNet(object sender, EventArgs e)
         {
             var chosenPoint = e as MouseButtonEventArgs;
-            Point point = new Point(0, 0);
             if (chosenPoint != null)
             {
-                point = chosenPoint.GetPosition(canvas);
+                mousePosition = chosenPoint.GetPosition(canvas);
             }
 
             if (this.visualHost == null)
             {
                 this.visualHost = new NetVisualHost(zoomControl.ActualHeight / zoomControl.Zoom,
-                zoomControl.ActualWidth / zoomControl.Zoom, checkScale, point);
+                zoomControl.ActualWidth / zoomControl.Zoom, checkScale, mousePosition);
                 canvas.Children.Add(visualHost);
             }
             else
             {
                 this.visualHost.ChangeNet(zoomControl.ActualHeight / zoomControl.Zoom,
-                zoomControl.ActualWidth / zoomControl.Zoom, checkScale, point);
+                zoomControl.ActualWidth / zoomControl.Zoom, checkScale, mousePosition);
             }
         }
     }
