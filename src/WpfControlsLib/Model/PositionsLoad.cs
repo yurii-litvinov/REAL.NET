@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Windows;
 
 namespace WpfControlsLib.Model
 {
@@ -12,10 +14,10 @@ namespace WpfControlsLib.Model
         /// Save dictionary with node positions
         /// </summary>
         /// <param name="fileName">Name of the file with model</param>
-        public static void SavePositionsTable(string fileName, Dictionary<string, System.Windows.Point> positionsTable)
+        public static void SavePositionsTable(string fileName, Dictionary<string, Point> positionsTable)
         {
             var positionsFileName = GetDicFileName(fileName);
-            using (System.IO.FileStream fstream = new System.IO.FileStream(positionsFileName, System.IO.FileMode.OpenOrCreate))
+            using (FileStream fstream = new FileStream(positionsFileName, FileMode.OpenOrCreate))
             {
                 foreach (var nodeName in positionsTable.Keys)
                 {
@@ -32,22 +34,22 @@ namespace WpfControlsLib.Model
         /// </summary>
         /// <param name="fileName">Name of the file with saved model to open</param>
         /// <returns>Whether the positionsFile existed</returns>
-        public static Dictionary<string, System.Windows.Point> OpenPositions(string fileName)
+        public static Dictionary<string, Point> OpenPositions(string fileName)
         {
-            var positionsTable = new Dictionary<string, System.Windows.Point>();
+            var positionsTable = new Dictionary<string, Point>();
             string positionsFileName = GetDicFileName(fileName);
 
-            if (!System.IO.File.Exists(positionsFileName))
+            if (!File.Exists(positionsFileName))
             {
-                return new Dictionary<string, System.Windows.Point>();
+                return new Dictionary<string, Point>();
             }
 
-            using (var reader = new System.IO.StreamReader(positionsFileName))
+            using (var reader = new StreamReader(positionsFileName))
             {
                 var str = reader.ReadLine().Split(' ');
                 for (var i = 0; i < str.Length - 1; i += 3)
                 {
-                    positionsTable.Add(str[i], new System.Windows.Point(
+                    positionsTable.Add(str[i], new Point(
                         Convert.ToDouble(str[i + 1]), Convert.ToDouble(str[i + 2])));
                 }
             }

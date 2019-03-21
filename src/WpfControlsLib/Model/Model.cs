@@ -16,6 +16,7 @@ namespace WpfControlsLib.Model
 {
     using System;
     using System.Collections.Generic;
+    using System.Windows;
     using EditorPluginInterfaces;
 
     /// <summary>
@@ -102,7 +103,7 @@ namespace WpfControlsLib.Model
         /// <summary>
         /// Contains positions of the nodes of this model
         /// </summary>
-        public Dictionary<string, System.Windows.Point> PositionsTable { get; set; }
+        public Dictionary<string, Point> PositionsTable { get; set; }
 
         /// <summary>
         /// List of vertex names in this model
@@ -141,7 +142,7 @@ namespace WpfControlsLib.Model
             catch (FormatException)
             {
                 this.HaveMessage?.Invoke(this, "The file with vertices positions has data in wrong format");
-                this.PositionsTable = new Dictionary<string, System.Windows.Point>();
+                this.PositionsTable = new Dictionary<string, Point>();
             }
             this.PlaceVertexCorrectly?.Invoke(this, null);
         }
