@@ -23,6 +23,7 @@ namespace WpfControlsLib.Controls.Scene
     static class Geometry
     {
         private const double delta = 3;
+        private const double wantedWidth = 80;
 
         /// <summary>
         /// Checking whether point belongs to line.
@@ -54,5 +55,25 @@ namespace WpfControlsLib.Controls.Scene
         /// <param name="p2">Second point.</param>
         /// <returns>Distance between two points.</returns>
         public static double GetDistance(Point p1, Point p2) => (p1 - p2).Length;
+
+        /// <summary>
+        /// Round position of the vertex, so it would stand in the check
+        /// </summary>
+        /// <param name="currentPosition">Given position</param>
+        /// <param name="checkScale">The scale of the check in the net</param>
+        /// <param name="currentWidth">Necessary for nodes which labels are wider then pictures</param>
+        public static System.Windows.Point RoundPosition(System.Windows.Point currentPosition, double checkScale, double currentWidth = wantedWidth)
+        {
+            double difference = 0;
+            if (currentWidth != wantedWidth && currentWidth != 0)
+            {
+                difference = (currentWidth - wantedWidth) / 2;
+            }
+
+            currentPosition.X = Math.Round(currentPosition.X / checkScale) * checkScale - difference;
+            currentPosition.Y = Math.Round(currentPosition.Y / checkScale) * checkScale;
+
+            return currentPosition;
+        }
     }
 }

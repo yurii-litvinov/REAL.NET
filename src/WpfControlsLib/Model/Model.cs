@@ -15,6 +15,8 @@
 namespace WpfControlsLib.Model
 {
     using System;
+    using System.Collections.Generic;
+    using System.Windows;
     using EditorPluginInterfaces;
 
     /// <summary>
@@ -32,6 +34,7 @@ namespace WpfControlsLib.Model
         {
             this.Repo = global::Repo.RepoFactory.Create();
             this.Constraints = new Constraints.Constraints();
+            SaveStartModelsNames();
         }
 
         public event EventHandler<VertexEventArgs> NewVertexAdded;
@@ -43,6 +46,17 @@ namespace WpfControlsLib.Model
         public event EventHandler<EventArgs> FileSaved;
 
         public event EventHandler<EventArgs> UnsavedChanges;
+
+        public event EventHandler<EventArgs> SavePositions;
+
+        public event EventHandler<EventArgs> PlaceVertexCorrectly;
+
+        public event EventHandler<EventArgs> InitVertexNames;
+
+        /// <summary>
+        /// Send when there`s something to be told to the user
+        /// </summary>
+        public event EventHandler<string> HaveMessage;
 
         /// <summary>
         /// Notifies all views that there are changes so massive that the model shall be completely reloaded 
@@ -71,7 +85,8 @@ namespace WpfControlsLib.Model
         {
             get => hasUnsavedChanges;
 
-            private set {
+            private set
+            {
                 if (hasUnsavedChanges && !value)
                 {
                     hasUnsavedChanges = value;
@@ -86,6 +101,16 @@ namespace WpfControlsLib.Model
         }
 
         /// <summary>
+        /// Contains positions of the nodes of this model
+        /// </summary>
+        public Dictionary<string, Point> PositionsTable { get; set; }
+
+        /// <summary>
+        /// List of vertex names in this model
+        /// </summary>
+        public List<string> VertexNames { get; set; }
+
+        /// <summary>
         /// Clears the contents of current repository and creates new empty one. Things like "Do you want to save 
         /// changes?" dialog or even new model selection are not supported yet.
         /// </summary>
@@ -94,7 +119,9 @@ namespace WpfControlsLib.Model
             this.Repo = global::Repo.RepoFactory.Create();
             this.CurrentFileName = "";
             this.HasUnsavedChanges = false;
+            this.PositionsTable = new Dictionary<string, System.Windows.Point>();
             this.Reinit?.Invoke(this, EventArgs.Empty);
+            SaveStartModelsNames();
         }
 
         /// <summary>
@@ -107,6 +134,17 @@ namespace WpfControlsLib.Model
             this.CurrentFileName = fileName;
             this.HasUnsavedChanges = false;
             this.Reinit?.Invoke(this, EventArgs.Empty);
+            this.InitVertexNames?.Invoke(this, null);
+            try
+            {
+                this.PositionsTable = PositionsLoad.OpenPositions(CurrentFileName);
+            }
+            catch (FormatException)
+            {
+                this.HaveMessage?.Invoke(this, "The file with vertices positions has data in wrong format");
+                this.PositionsTable = new Dictionary<string, Point>();
+            }
+            this.PlaceVertexCorrectly?.Invoke(this, null);
         }
 
         /// <summary>
@@ -120,6 +158,8 @@ namespace WpfControlsLib.Model
             }
 
             this.Repo.Save(CurrentFileName);
+            this.SavePositions?.Invoke(this, null);
+            PositionsLoad.SavePositionsTable(CurrentFileName, PositionsTable);
             this.HasUnsavedChanges = false;
         }
 
@@ -170,8 +210,8 @@ namespace WpfControlsLib.Model
         public void CreateEdge(Repo.IEdge edge, Repo.IElement source, Repo.IElement destination)
         {
             if (this.Constraints.AllowCreateOrExistEdge(
-                    this.Repo.Model(this.ModelName).Edges, 
-                    source.Name, 
+                    this.Repo.Model(this.ModelName).Edges,
+                    source.Name,
                     destination.Name))
             {
                 var model = this.Repo.Model(this.ModelName);
@@ -192,6 +232,9 @@ namespace WpfControlsLib.Model
 
         public void RemoveElement(Repo.IElement element)
         {
+            this.SavePositions?.Invoke(this, null);
+            PositionsLoad.SavePositionsTable(CurrentFileName, PositionsTable);
+            this.VertexNames.Remove(element.Name);
             var model = this.Repo.Model(this.ModelName);
             model.DeleteElement(element);
             HasUnsavedChanges = true;
@@ -228,6 +271,24 @@ namespace WpfControlsLib.Model
             };
 
             this.ElementRemoved?.Invoke(this, args);
+        }
+
+        /// <summary>
+        /// Adds to the VertexNames the names of the nodes in start models.
+        /// Need special method, because the first nodes on the scene are not in the graphArea yet
+        /// </summary>
+        private void SaveStartModelsNames()
+        {
+            this.VertexNames = new List<string>();
+
+            var enumerator = this.Repo.Models.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                foreach (var node in enumerator.Current.Nodes)
+                {
+                    VertexNames.Add(node.Name);
+                }
+            }
         }
     }
 }

@@ -15,6 +15,7 @@
 namespace WpfControlsLib.Controls.Scene
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -42,10 +43,13 @@ namespace WpfControlsLib.Controls.Scene
         private VertexControl currentVertex;
         private EdgeControl edgeControl;
         private Point position;
+        private Point mousePosition;
+        private double checkScale = 26.7;
 
         private Model model;
         private Controller controller;
         private IElementProvider elementProvider;
+        private NetVisualHost visualHost;
 
         public Scene()
         {
@@ -57,9 +61,14 @@ namespace WpfControlsLib.Controls.Scene
 
             this.graphArea.VertexSelected += this.VertexSelectedAction;
             this.graphArea.EdgeSelected += this.EdgeSelectedAction;
+            this.graphArea.LostMouseCapture += (sender, args) => this.FixPos();
             this.zoomControl.Click += this.ClearSelection;
             this.zoomControl.MouseDown += this.OnSceneMouseDown;
             this.zoomControl.Drop += this.ZoomControlDrop;
+            this.zoomControl.MouseDown += (sender, args) => this.LoadNet(sender, args);
+            this.zoomControl.ZoomAnimationCompleted += (sender, args) => this.LoadNet(sender, args);
+            this.zoomControl.MaxZoom = 1.1;
+            mousePosition = new Point(0, 0);
         }
 
         public event EventHandler<EventArgs> ElementManipulationDone;
@@ -71,6 +80,11 @@ namespace WpfControlsLib.Controls.Scene
         public event EventHandler<ElementAddedEventArgs> ElementAdded;
 
         public event EventHandler<ElementRemovedEventArgs> ElementRemoved;
+
+        /// <summary>
+        /// Send when there`s something to be told to the user
+        /// </summary>
+        public event EventHandler<string> HaveMessage;
 
         public Graph Graph { get; set; }
 
@@ -109,6 +123,9 @@ namespace WpfControlsLib.Controls.Scene
             this.Graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVertex);
             this.Graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.EdgeViewModel);
             this.InitGraphXLogicCore();
+            this.model.SavePositions += (sender, args) => this.SavePositions();
+            this.model.PlaceVertexCorrectly += (sender, args) => this.PlaceVertexCorrectly();
+            this.model.InitVertexNames += (sender, args) => this.InitVertexNames();
         }
 
         public void Clear() => this.Graph.DataGraph.Clear();
@@ -146,7 +163,7 @@ namespace WpfControlsLib.Controls.Scene
                 if (this.Graph.DataGraph.Vertices.ToList()[i].Name == name)
                 {
                     var vertex = this.Graph.DataGraph.Vertices.ToList()[i];
-                    this.NodeSelected?.Invoke(this, new NodeSelectedEventArgs {Node = vertex});
+                    this.NodeSelected?.Invoke(this, new NodeSelectedEventArgs { Node = vertex });
                     foreach (var ed in this.graphArea.VertexList)
                     {
                         if (ed.Key == vertex)
@@ -191,6 +208,7 @@ namespace WpfControlsLib.Controls.Scene
             if (element.Metatype == Repo.Metatype.Node)
             {
                 this.position = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.graphArea);
+                VertexName.NewVertexName(element, this.model.VertexNames);
                 this.CreateNewNode(element);
                 this.ElementManipulationDone?.Invoke(this, EventArgs.Empty);
             }
@@ -335,7 +353,7 @@ namespace WpfControlsLib.Controls.Scene
         private void AddNewVertexControl(NodeViewModel vertex)
         {
             var vc = new VertexControl(vertex);
-            vc.SetPosition(this.position);
+            vc.SetPosition(Geometry.RoundPosition(this.position, checkScale, vc.ActualWidth));
             this.graphArea.AddVertex(vertex, vc);
         }
 
@@ -379,6 +397,7 @@ namespace WpfControlsLib.Controls.Scene
             command.Add(new RemoveNodeCommand(this.model, vertex.Node));
             this.controller.Execute(command);
             this.DrawGraph();
+            PlaceVertexCorrectly();
         }
 
         private void MenuItemClickEdge(object sender, EventArgs e)
@@ -445,5 +464,113 @@ namespace WpfControlsLib.Controls.Scene
             var command = new CreateNodeCommand(this.model, element);
             this.controller.Execute(command);
         }
+
+        /// <summary>
+        /// Save positions to model.positionsTable when the model is saved.
+        /// If there are some vertices have same names, user will be warned.
+        /// </summary>
+        private void SavePositions()
+        {
+            this.model.PositionsTable = new Dictionary<string, Point>();
+            var currentPositions = this.graphArea.GetVertexPositions();
+            var firstWarning = false;
+            foreach (var key in currentPositions.Keys)
+            {
+                Point point = new Point(currentPositions[key].X, currentPositions[key].Y);
+                try
+                {
+                    this.model.PositionsTable.Add(key.Name, point);
+                }
+                catch (ArgumentException)
+                {
+                    if (!firstWarning)
+                    {
+                        this.HaveMessage?.Invoke(this, "There are vertices with the same names in the model");
+                        firstWarning = true;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Arranges the vertices according to model.positionsTable
+        /// If not all vertices are in the positionsTable, first time user will be warned,
+        /// then absent vertices will be added just somewhere
+        /// </summary>
+        private void PlaceVertexCorrectly()
+        {
+            if (this.model.PositionsTable.Count == 0)
+            {
+                return;
+            }
+
+            var vertexList = this.graphArea.VertexList;
+            var firstWarning = false;
+            foreach (var key in vertexList.Keys)
+            {
+                try
+                {
+                    vertexList[key].SetPosition(this.model.PositionsTable[key.Name]);
+                }
+                catch (KeyNotFoundException)
+                {
+                    if (!firstWarning)
+                    {
+                        this.HaveMessage?.Invoke(this, "Not all vertices are in the file with positions");
+                        firstWarning = true;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Fill the list of taken names
+        /// </summary>
+        private void InitVertexNames()
+        {
+            this.model.VertexNames = new List<string>();
+            foreach (var key in this.graphArea.GetVertexPositions().Keys)
+            {
+                this.model.VertexNames.Add(key.Name);
+            }
+        }
+
+        /// <summary>
+        /// Fix positions so vertices would be in the checks after moving on scene
+        /// </summary>
+        private void FixPos()
+        {
+            var key = this.currentVertex.GetDataVertex<NodeViewModel>();
+            var vertexList = this.graphArea.VertexList;
+            var currentPosition = vertexList[key].GetPosition();
+            var width = vertexList[key].ActualWidth;
+            vertexList[key].SetPosition(Geometry.RoundPosition(currentPosition, checkScale, width));
+        }
+
+        /// <summary>
+        /// Create a host visual derived from the FrameworkElement class
+        /// Take point from the screen and draw around it the net with necessary size and scale
+        /// </summary>
+        private void LoadNet(object sender, EventArgs e)
+        {
+            var chosenPoint = e as MouseButtonEventArgs;
+            if (chosenPoint != null)
+            {
+                mousePosition = chosenPoint.GetPosition(canvas);
+            }
+
+            if (this.visualHost == null)
+            {
+                this.visualHost = new NetVisualHost(zoomControl.ActualHeight / zoomControl.Zoom,
+                zoomControl.ActualWidth / zoomControl.Zoom, checkScale, mousePosition);
+                canvas.Children.Add(visualHost);
+            }
+            else
+            {
+                this.visualHost.ChangeNet(zoomControl.ActualHeight / zoomControl.Zoom,
+                zoomControl.ActualWidth / zoomControl.Zoom, checkScale, mousePosition);
+            }
+        }
     }
 }
+

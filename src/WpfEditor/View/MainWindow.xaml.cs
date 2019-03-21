@@ -82,6 +82,7 @@ namespace WpfEditor.View
             this.scene.ElementRemoved += (sender, args) => this.modelExplorer.RemoveElement(args.Element);
             this.scene.NodeSelected += (sender, args) => this.attributesView.DataContext = args.Node;
             this.scene.EdgeSelected += (sender, args) => this.attributesView.DataContext = args.Edge;
+            this.scene.HaveMessage += ShowMessage;
 
             this.scene.Init(this.model, this.controller, new PaletteAdapter(this.palette));
 
@@ -90,6 +91,8 @@ namespace WpfEditor.View
 
             this.InitAndLaunchPlugins();
             this.InitToolbar();
+
+            this.model.HaveMessage += ShowMessage;
         }
 
         private void Reinit(object sender, EventArgs e)
@@ -245,6 +248,15 @@ namespace WpfEditor.View
             {
                 model.SaveAs(dialog.FileName);
             }
+        }
+
+        /// <summary>
+        /// Show the message in extra window
+        /// </summary>
+        /// <param name="message">The message</param>
+        private void ShowMessage(object sender, string message)
+        {
+            MessageBox.Show(message);
         }
     }
 }

@@ -21,11 +21,14 @@
              xmlns:graphx="http://schemas.panthernet.ru/graphx/"
              xmlns:scene="clr-namespace:WpfControlsLib.Controls.Scene"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300" Loaded="LoadNet">
     <Grid>
         <Border BorderThickness="1"  Margin="2">
             <graphx:ZoomControl x:Name="zoomControl" AllowDrop="True">
-                <scene:GraphArea AllowDrop="True" x:Name="graphArea" />
+                <Grid>
+                    <Canvas Name="canvas" Margin="0,0,-224,-267.667"/>
+                    <scene:GraphArea AllowDrop="True" x:Name="graphArea"/>
+                </Grid>
             </graphx:ZoomControl>
         </Border>
     </Grid>
