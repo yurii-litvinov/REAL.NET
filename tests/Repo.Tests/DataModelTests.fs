@@ -134,7 +134,7 @@ let ``Data model shall allow deleting elements`` () =
     model.Nodes |> should not' (contain node2)
 
 [<Test>]
-let ``Data model shall disconnect edges on removing source or target`` () =
+let ``Data model shall fail to remove node - source or target`` () =
     let model = DataModel("model") :> IModel
     let node1 = model.CreateNode("node1", None)
     let node2 = model.CreateNode("node2", node1)
@@ -145,18 +145,12 @@ let ``Data model shall disconnect edges on removing source or target`` () =
     generalization.Source |> should equal (Some (node1 :> IElement))
     generalization.Target |> should equal (Some (node2 :> IElement))
 
-    model.DeleteElement node1
+    (fun () -> model.DeleteElement node1 |> ignore) |> should throw typeof<System.InvalidOperationException>
+    
 
-    generalization.Source |> should equal None
-    generalization.Target |> should equal (Some (node2 :> IElement))
-
-    model.DeleteElement node2
-
-    generalization.Source |> should equal None
-    generalization.Target |> should equal None
-
+// to do outgoing edges
 [<Test>]
-let ``Data model shall disconnect edges on removing source or target edges`` () =
+let ``Data model shall fail to remove edge - source or target`` () =
     let model = DataModel("model") :> IModel
     let generalizationClass = model.CreateNode("generalization", None)
 
@@ -170,9 +164,5 @@ let ``Data model shall disconnect edges on removing source or target edges`` () 
     edge3.Source |> should equal (Some (edge1 :> IElement))
     edge3.Target |> should equal (Some (edge2 :> IElement))
 
-    model.DeleteElement edge1
-
-    edge3.Source |> should equal None
-    edge3.Target |> should equal (Some (edge2 :> IElement))
-    edge2.Source |> should equal None
-    edge2.Target |> should equal None
+    (fun () -> model.DeleteElement edge2 |> ignore) |> should throw typeof<System.InvalidOperationException>
+    

@@ -131,6 +131,9 @@ and IModel =
 
         /// Deletes element from a model and unconnects related elements if needed.
         abstract DeleteElement: element : IElement -> unit
+
+        /// Restores element after deleting.
+        abstract RestoreElement: element : IElement -> unit
     end
 
 /// Repository is a collection of models.

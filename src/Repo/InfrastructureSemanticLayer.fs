@@ -310,7 +310,7 @@ module private Operations =
             copySimpleAttribute elementHelper attributeNode attributeClass "kind"
             copySimpleAttribute elementHelper attributeNode attributeClass "isInstantiable"
 
-    /// Creates a new instance of a given class in a givn model, with default values for attributes.
+    /// Creates a new instance of a given class in a given model, with default values for attributes.
     let instantiate (elementHelper: ElementHelper) (model: IModel) (``class``: IElement) =
         if elementHelper.AttributeValue ``class`` "isAbstract" <> "false" then
             raise (InvalidSemanticOperationException "Trying to instantiate abstract node")

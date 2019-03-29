@@ -14,12 +14,17 @@
 
 namespace Repo.DataLayer
 
+open System
+open System.ComponentModel
+
 /// Implementation of model interface in data layer. Contains nodes and edges in list, implements
 /// CRUD operations and keeps consistency.
 type DataModel private (name: string, metamodel: IModel option) =
 
     let mutable nodes = []
     let mutable edges = []
+    let mutable hiddenNodes = []
+    let mutable hiddenEdges = []
 
     new(name: string) = DataModel(name, None)
     new(name: string, metamodel: IModel) = DataModel(name, Some metamodel)
@@ -68,14 +73,27 @@ type DataModel private (name: string, metamodel: IModel option) =
             edge
 
         member this.DeleteElement(element: IElement): unit =
+            let listOfNeigbours = (edges |> List.filter (fun e -> e.Source = Some element || e.Target = Some element)) 
+            let isNotEmpty = listOfNeigbours |> List.isEmpty |> not
+            if isNotEmpty then invalidOp "cannot be deleted as it is end of some edges"
+            let delete (element: IElement) = 
+                match element with
+                | :? INode -> let elementToHide = nodes |> List.find (fun x -> x = (element :?> INode))
+                              hiddenNodes <- elementToHide :: hiddenNodes
+                              nodes <- nodes |> List.except [element :?> INode]
+                | _ ->        let elementToHide = edges |> List.find (fun x -> x = (element :?> IEdge))
+                              hiddenEdges <- elementToHide :: hiddenEdges
+                              edges <- edges |> List.except [element :?> IEdge]
+            delete element
+        
+        member this.RestoreElement(element: IElement): unit =
             match element with
-            | :? INode ->
-                nodes <- nodes |> List.except [element :?> INode]
-            | _ -> edges <- edges |> List.except [element :?> IEdge]
-            edges |> List.iter (fun e ->
-                if e.Source = Some element then e.Source <- None
-                if e.Target = Some element then e.Target <- None
-                )
+            | :? INode -> let elementToRestore = hiddenNodes |> List.find (fun x -> x = (element :?> INode))                          
+                          nodes <- elementToRestore :: nodes
+                          hiddenNodes <- hiddenNodes |> List.except [elementToRestore]
+            | _        -> let elementToRestore = hiddenEdges |> List.find (fun x -> x = (element :?> IEdge))
+                          edges <- elementToRestore :: edges
+                          hiddenEdges <- hiddenEdges |> List.except [elementToRestore]
 
         member this.Elements: IElement seq =
             let nodes = (nodes |> Seq.cast<IElement>)

@@ -314,7 +314,7 @@ namespace WpfControlsLib.Controls.Scene
                 {
                     var source = edge.Source;
                     edge.Source = vertexToConnect;
-                    this.graphArea.RemoveVertex(source.GetDataVertex<NodeViewModel>());                    
+                    this.graphArea.RemoveVertex(source.GetDataVertex<NodeViewModel>());
                 }
                 else
                 {
@@ -339,7 +339,7 @@ namespace WpfControlsLib.Controls.Scene
                     var target = edge.Target;
                     edge.Source = vertexToConnect;
                     this.graphArea.RemoveVertex(target.GetDataVertex<NodeViewModel>());
-;                }
+                    ; }
             }
         }
 
@@ -372,13 +372,19 @@ namespace WpfControlsLib.Controls.Scene
                 if (edgeControl.Source.GetDataVertex<NodeViewModel>().IsVirtual || edgeControl.Target.GetDataVertex<NodeViewModel>().IsVirtual)
                 {
                     // TODO: real delete with virtual edge
-                    mi.Click += (senderObj, eventArgs) => MenuItemClickedOnVirtualEdge(edgeControl, EventArgs.Empty);
+                    mi.Click += (senderObj, eventArgs) => MenuItemDeleteClickedOnVirtualEdge(edgeControl, EventArgs.Empty);
                 }
                 else
                 {
                     mi.Click += this.MenuItemClickEdge;
+                    var miSource = new MenuItem { Header = "Unpin Source", Tag = edgeControl };
+                    miSource.Click += (senderObj, eventArgs) => UnpinEdgeFromVertex(edgeControl, true);
+                    var miTarget = new MenuItem { Header = "Unpin Target", Tag = edgeControl };
+                    miTarget.Click += (senderObj, eventArgs) => UnpinEdgeFromVertex(edgeControl, false);
+                    edgeControl.ContextMenu.Items.Add(miSource);
+                    edgeControl.ContextMenu.Items.Add(miTarget);
                 }
-   
+
                 edgeControl.ContextMenu.Items.Add(mi);
                 edgeControl.ContextMenu.IsOpen = true;
 
@@ -396,6 +402,30 @@ namespace WpfControlsLib.Controls.Scene
                     mi2.Click += this.MenuItemClickRoutingPoint;
                     edgeControl.ContextMenu.Items.Add(mi2);
                 }
+            }
+        }
+
+        
+        private void UnpinEdgeFromVertex(EdgeControl edgeControl, bool isSource)
+        {
+            // to do : real remove form model
+            var vertexData = new NodeViewModel()
+            {
+                IsVirtual = true
+            };
+            var virtualVertex = new VertexControl(vertexData);
+            this.graphArea.AddVertex(vertexData, virtualVertex);
+            if (isSource)
+            {
+                var source = edgeControl.Source;                
+                virtualVertex.SetPosition(source.GetCenterPosition());
+                edgeControl.Source = virtualVertex;
+            }
+            else
+            {
+                var target = edgeControl.Target;
+                virtualVertex.SetPosition(target.GetCenterPosition());
+                edgeControl.Target = virtualVertex;
             }
         }
 
@@ -468,7 +498,7 @@ namespace WpfControlsLib.Controls.Scene
             this.editorManager.DestroyVirtualEdge();
         }
 
-        private void MenuItemClickedOnVirtualEdge(object sender, EventArgs args)
+        private void MenuItemDeleteClickedOnVirtualEdge(object sender, EventArgs args)
         {
             var edgeControl = sender as EdgeControl;
             var source = edgeControl.Source;
