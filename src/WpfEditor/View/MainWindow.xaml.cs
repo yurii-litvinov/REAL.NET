@@ -88,8 +88,8 @@ namespace WpfEditor.View
             this.modelSelector.Init(this.model);
             this.modelSelector.ChangeModel(2);
 
-            this.InitAndLaunchPlugins();
             this.InitToolbar();
+            this.InitAndLaunchPlugins();
         }
 
         private void Reinit(object sender, EventArgs e)
@@ -130,7 +130,7 @@ namespace WpfEditor.View
             foreach (var plugindir in pluginDirs)
             {
                 var dirs = new List<string>(System.IO.Directory.GetDirectories(plugindir + "/bin"));
-                var config = new PluginConfig(this.model, null, null, this.Console, null);
+                var config = new PluginConfig(this.model, null, this.Toolbar, this.Console, null);
                 foreach (var dir in dirs)
                 {
                     libs.LaunchPlugins(dir, config);
