@@ -173,7 +173,6 @@
   <ItemGroup>
     <Resource Include="View\Pictures\Toolbar\undo.png" />
   </ItemGroup>
-  <ItemGroup />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
       <ItemGroup>
