@@ -40,6 +40,9 @@ EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Repo", "src\Repo\Repo.fsproj", "{9E7065A4-BA5E-4752-84BF-54D5C00DB60C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "plugins", "plugins", "{F12CD406-E1CD-43B7-B4BC-E2991723C56E}"
+	ProjectSection(SolutionItems) = preProject
+		Highlighter.xshd = Highlighter.xshd
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginManager", "src\PluginManager\PluginManager.csproj", "{8B9C8D76-65B3-4A01-9D6F-B6192A823642}"
 EndProject
@@ -54,6 +57,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirSim", "src\AirSim\AirSim.csproj", "{757A3BAF-F8E1-4B54-96E7-B4D57B23251B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfControlsLib.Tests", "tests\WpfControlsLib.Tests\WpfControlsLib.Tests.csproj", "{8EDF4429-251A-416D-BB68-93F227191BCF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenerationRulesPlugin", "src\plugins\GenerationRulesPlugin\GenerationRulesPlugin.csproj", "{073FFD76-E332-4D14-B90E-08636940D330}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -193,6 +198,18 @@ Global
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|x64.ActiveCfg = Release|Any CPU
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|x64.Build.0 = Release|Any CPU
+		{073FFD76-E332-4D14-B90E-08636940D330}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{073FFD76-E332-4D14-B90E-08636940D330}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{073FFD76-E332-4D14-B90E-08636940D330}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{073FFD76-E332-4D14-B90E-08636940D330}.Debug|x64.Build.0 = Debug|Any CPU
+		{073FFD76-E332-4D14-B90E-08636940D330}.MonoRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{073FFD76-E332-4D14-B90E-08636940D330}.MonoRelease|Any CPU.Build.0 = Release|Any CPU
+		{073FFD76-E332-4D14-B90E-08636940D330}.MonoRelease|x64.ActiveCfg = Release|Any CPU
+		{073FFD76-E332-4D14-B90E-08636940D330}.MonoRelease|x64.Build.0 = Release|Any CPU
+		{073FFD76-E332-4D14-B90E-08636940D330}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{073FFD76-E332-4D14-B90E-08636940D330}.Release|Any CPU.Build.0 = Release|Any CPU
+		{073FFD76-E332-4D14-B90E-08636940D330}.Release|x64.ActiveCfg = Release|Any CPU
+		{073FFD76-E332-4D14-B90E-08636940D330}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -204,6 +221,7 @@ Global
 		{A0056C25-4EF7-4AF9-99E4-C13B937A3343} = {ED8079DD-2B06-4030-9F0F-DC548F98E1C4}
 		{C57410A1-A86F-418B-9AC7-38249450C497} = {F12CD406-E1CD-43B7-B4BC-E2991723C56E}
 		{8EDF4429-251A-416D-BB68-93F227191BCF} = {ED8079DD-2B06-4030-9F0F-DC548F98E1C4}
+		{073FFD76-E332-4D14-B90E-08636940D330} = {F12CD406-E1CD-43B7-B4BC-E2991723C56E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D0B60BC3-B119-4CD6-8FC4-CD8FA1429BE4}
