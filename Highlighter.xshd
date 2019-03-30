@@ -9,7 +9,6 @@
   <Color name="AttributeName" foreground="Red" />
   <Color name="AttributeValue" foreground="Blue" />
   <Color name="Entity" foreground="Teal" />
-  <Color name="BrokenEntity" foreground="Olive" />
 
   <Color name="Comment" foreground="Green" />
   <Color name="String" foreground="Blue" />
@@ -71,20 +70,6 @@
 
   <RuleSet name="RazorCommentBlock">
     <Rule color="Comment">.</Rule>
-  </RuleSet>
-
-  <RuleSet name="EntitySet">
-    <Rule color="Entity">
-      &amp;
-			[\w\d\#]+
-			;
-		</Rule>
-
-    <Rule color="BrokenEntity">
-      &amp;
-			[\w\d\#]*
-			#missing ;
-		</Rule>
   </RuleSet>
 
   <RuleSet name="RazorCode">

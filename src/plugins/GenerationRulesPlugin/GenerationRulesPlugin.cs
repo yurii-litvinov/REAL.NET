@@ -14,6 +14,10 @@ namespace GenerationRulesPlugin
     using EditorPluginInterfaces;
     using WpfControlsLib.Controls.Toolbar;
 
+    /// <inheritdoc />
+    /// <summary>
+    /// Represents model for Generation Rules Plugin.
+    /// </summary>
     public class GenerationRulesPlugin : IPlugin<PluginConfig>
     {
         public string Name => "Generation Rules Plugin";
@@ -45,6 +49,11 @@ namespace GenerationRulesPlugin
             toolbar.AddButton(button);
         }
 
+        /// <summary>
+        /// Compiles template from input and returns the result.
+        /// </summary>
+        /// <param name="input">Input to compile from.</param>
+        /// <returns>Compilation result.</returns>
         public string CompileTemplate(string input)
         {
             input = "@using GenerationRulesPlugin\n" + input;
@@ -76,7 +85,13 @@ namespace GenerationRulesPlugin
             }
         }
 
-        public void GenerateCompletionList(IList<ICompletionData> data, bool isElement, string element)
+        /// <summary>
+        /// Fills IList&lt;ICompletionData&gt; with proper elements or element attributes.
+        /// </summary>
+        /// <param name="data">List to fill.</param>
+        /// <param name="isElement">Defines whether element or attribute data is needed.</param>
+        /// <param name="element">Element name which attributes is needed.</param>
+        public void GenerateCompletionList(IList<ICompletionData> data, bool isElement, string element = null)
         {
             if (isElement)
             {
@@ -104,16 +119,25 @@ namespace GenerationRulesPlugin
         }
     }
 
+    /// <summary>
+    /// Represents auxiliary class which contains extension method to find attribute of element.
+    /// </summary>
     public static class ElementExtension
     {
-        public static IAttribute FindAttribute(this IElement element, string name)
+        /// <summary>
+        /// Finds attribute of the element.
+        /// </summary>
+        /// <param name="element">Element to find attribute of.</param>
+        /// <param name="attributeName">Name of the attribute.</param>
+        /// <returns>Required attribute.</returns>
+        public static IAttribute FindAttribute(this IElement element, string attributeName)
         {
-            foreach (IAttribute attribute in element.Attributes.Where(a => a.Name == name))
+            foreach (IAttribute attribute in element.Attributes.Where(a => a.Name == attributeName))
             {
                 return attribute;
             }
 
-            throw new AttributeNotFoundException(name);
+            throw new AttributeNotFoundException(attributeName);
         }
     }
 

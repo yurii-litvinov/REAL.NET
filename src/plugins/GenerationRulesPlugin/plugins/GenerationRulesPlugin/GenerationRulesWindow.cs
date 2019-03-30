@@ -13,8 +13,14 @@ using Microsoft.Win32;
 
 namespace GenerationRulesPlugin
 {
+    /// <summary>
+    /// Represents Window for Generations Rules Plugin.
+    /// </summary>
     public partial class GenerationRulesWindow
     {
+        /// <summary>
+        /// Window's plugin
+        /// </summary>
         public GenerationRulesPlugin Plugin { get; set; }
 
         private CompletionWindow completionWindow;
