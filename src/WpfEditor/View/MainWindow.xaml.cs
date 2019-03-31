@@ -55,6 +55,8 @@ namespace WpfEditor.View
             }
         }
 
+        PluginLauncher<PluginConfig> libs;
+
         public MainWindow()
         {
             // TODO: Fix sequential coupling here.
@@ -68,6 +70,8 @@ namespace WpfEditor.View
             this.model.FileSaved += (_, __) => NotifyTitleChanged();
             this.model.UnsavedChanges += (_, __) => NotifyTitleChanged();
 
+            this.appConsole.Pushed += this.AppConsole_Pushed;
+            
             // Notifying window first time, to initialize title.
             NotifyTitleChanged();
 
@@ -88,8 +92,18 @@ namespace WpfEditor.View
             this.modelSelector.Init(this.model);
             this.modelSelector.ChangeModel(2);
 
+            this.libs = new PluginLauncher<PluginConfig>();
+
             this.InitAndLaunchPlugins();
             this.InitToolbar();
+        }
+
+        private void AppConsole_Pushed(string message)
+        {
+            var stream = this.Console.Ocl;
+            Dictionary<string, string> prop = new Dictionary<string, string> { { "ocl", stream } };
+            PluginConfig config = new PluginConfig(this.model, null, null, this.Console, null, prop);
+            this.libs.Execute("OCL", config);
         }
 
         private void Reinit(object sender, EventArgs e)
@@ -109,6 +123,8 @@ namespace WpfEditor.View
             this.model.ModelName = modelName;
             this.palette.InitPalette(this.model.ModelName);
             this.scene.Reload();
+            this.Console.Ocl = string.Format("package {0}\ncontext \nendpackage", this.model.ModelName);
+            
         }
 
         private void InitToolbar()
@@ -124,13 +140,13 @@ namespace WpfEditor.View
 
         private void InitAndLaunchPlugins()
         {
-            var libs = new PluginLauncher<PluginConfig>();
+            //libs = new PluginLauncher<PluginConfig>();
             const string folder = "../../../plugins";
             var pluginDirs = new List<string>(System.IO.Directory.GetDirectories(folder));
             foreach (var plugindir in pluginDirs)
             {
                 var dirs = new List<string>(System.IO.Directory.GetDirectories(plugindir + "/bin"));
-                var config = new PluginConfig(this.model, null, null, this.Console, null);
+                var config = new PluginConfig(this.model, null, null, this.Console, null, null);
                 foreach (var dir in dirs)
                 {
                     libs.LaunchPlugins(dir, config);

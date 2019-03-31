@@ -11,7 +11,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License. */
- 
+
+using System.Collections.Generic;
+
 namespace EditorPluginInterfaces
 {
     using Toolbar;
@@ -46,6 +48,8 @@ namespace EditorPluginInterfaces
         /// </summary>
         public IPalette Palette { get; }
 
+        public Dictionary<string, string> Properties { get; }
+
         /// <summary>
         /// Initializes a new instance of <see cref="PluginConfig"/> 
         /// </summary>
@@ -55,13 +59,14 @@ namespace EditorPluginInterfaces
         /// <param name="toolbar">Toolbar</param>
         /// <param name="console">Console</param>
         /// <param name="palette">Palette</param>
-        public PluginConfig(IModel model, IScene scene, IToolbar toolbar, IConsole console, IPalette palette)
+        public PluginConfig(IModel model, IScene scene, IToolbar toolbar, IConsole console, IPalette palette, Dictionary<string, string> properties)
         {
             this.Model = model;
             this.Scene = scene;
             this.Toolbar = toolbar;
             this.Console = console;
             this.Palette = palette;
+            this.Properties = properties;
         }
     }
 }

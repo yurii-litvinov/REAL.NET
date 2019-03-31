@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2006
+VisualStudioVersion = 15.0.26228.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{63297B98-5CED-492C-A5B7-A5B4F73CF142}"
 	ProjectSection(SolutionItems) = preProject
@@ -54,6 +54,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirSim", "src\AirSim\AirSim.csproj", "{757A3BAF-F8E1-4B54-96E7-B4D57B23251B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfControlsLib.Tests", "tests\WpfControlsLib.Tests\WpfControlsLib.Tests.csproj", "{8EDF4429-251A-416D-BB68-93F227191BCF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OclPlugin", "src\plugins\OclPlugin\OclPlugin.csproj", "{4509B4F3-2FA5-4202-8D47-3A1EB10FC389}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OclPlugin.Tests", "tests\OclPlugin.Tests\OclPlugin.Tests.csproj", "{CE5AC0C8-4600-4AD7-9F37-1103D7F382D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -193,6 +197,30 @@ Global
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|x64.ActiveCfg = Release|Any CPU
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|x64.Build.0 = Release|Any CPU
+		{4509B4F3-2FA5-4202-8D47-3A1EB10FC389}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4509B4F3-2FA5-4202-8D47-3A1EB10FC389}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4509B4F3-2FA5-4202-8D47-3A1EB10FC389}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4509B4F3-2FA5-4202-8D47-3A1EB10FC389}.Debug|x64.Build.0 = Debug|Any CPU
+		{4509B4F3-2FA5-4202-8D47-3A1EB10FC389}.MonoRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{4509B4F3-2FA5-4202-8D47-3A1EB10FC389}.MonoRelease|Any CPU.Build.0 = Release|Any CPU
+		{4509B4F3-2FA5-4202-8D47-3A1EB10FC389}.MonoRelease|x64.ActiveCfg = Release|Any CPU
+		{4509B4F3-2FA5-4202-8D47-3A1EB10FC389}.MonoRelease|x64.Build.0 = Release|Any CPU
+		{4509B4F3-2FA5-4202-8D47-3A1EB10FC389}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4509B4F3-2FA5-4202-8D47-3A1EB10FC389}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4509B4F3-2FA5-4202-8D47-3A1EB10FC389}.Release|x64.ActiveCfg = Release|Any CPU
+		{4509B4F3-2FA5-4202-8D47-3A1EB10FC389}.Release|x64.Build.0 = Release|Any CPU
+		{CE5AC0C8-4600-4AD7-9F37-1103D7F382D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE5AC0C8-4600-4AD7-9F37-1103D7F382D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE5AC0C8-4600-4AD7-9F37-1103D7F382D0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CE5AC0C8-4600-4AD7-9F37-1103D7F382D0}.Debug|x64.Build.0 = Debug|Any CPU
+		{CE5AC0C8-4600-4AD7-9F37-1103D7F382D0}.MonoRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{CE5AC0C8-4600-4AD7-9F37-1103D7F382D0}.MonoRelease|Any CPU.Build.0 = Release|Any CPU
+		{CE5AC0C8-4600-4AD7-9F37-1103D7F382D0}.MonoRelease|x64.ActiveCfg = Release|Any CPU
+		{CE5AC0C8-4600-4AD7-9F37-1103D7F382D0}.MonoRelease|x64.Build.0 = Release|Any CPU
+		{CE5AC0C8-4600-4AD7-9F37-1103D7F382D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE5AC0C8-4600-4AD7-9F37-1103D7F382D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE5AC0C8-4600-4AD7-9F37-1103D7F382D0}.Release|x64.ActiveCfg = Release|Any CPU
+		{CE5AC0C8-4600-4AD7-9F37-1103D7F382D0}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -204,6 +232,8 @@ Global
 		{A0056C25-4EF7-4AF9-99E4-C13B937A3343} = {ED8079DD-2B06-4030-9F0F-DC548F98E1C4}
 		{C57410A1-A86F-418B-9AC7-38249450C497} = {F12CD406-E1CD-43B7-B4BC-E2991723C56E}
 		{8EDF4429-251A-416D-BB68-93F227191BCF} = {ED8079DD-2B06-4030-9F0F-DC548F98E1C4}
+		{4509B4F3-2FA5-4202-8D47-3A1EB10FC389} = {F12CD406-E1CD-43B7-B4BC-E2991723C56E}
+		{CE5AC0C8-4600-4AD7-9F37-1103D7F382D0} = {ED8079DD-2B06-4030-9F0F-DC548F98E1C4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D0B60BC3-B119-4CD6-8FC4-CD8FA1429BE4}

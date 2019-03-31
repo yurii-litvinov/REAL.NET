@@ -14,6 +14,8 @@
 
 using System.Collections.ObjectModel;
 using EditorPluginInterfaces;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace WpfControlsLib.Controls.Console
 {
@@ -21,14 +23,38 @@ namespace WpfControlsLib.Controls.Console
     /// ViewModel for errors and warnings window that is shown below the main scene.
     /// Allows to add new messages.
     /// </summary>
-    public class AppConsoleViewModel : IConsole
+    public class AppConsoleViewModel : INotifyPropertyChanged, IConsole
     {
         public ObservableCollection<string> Messages { get; } = new ObservableCollection<string>();
 
         public ObservableCollection<string> Errors { get; } = new ObservableCollection<string>();
 
+        public ObservableCollection<string> OclEditor { get; } = new ObservableCollection<string>();
+
         public void ReportError(string error) => this.Errors.Add(error);
 
         public void SendMessage(string message) => this.Messages.Add(message);
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+
+        string expr;
+        public string Ocl {
+            get
+            {
+                return this.expr;
+            }
+            set
+            {
+                this.expr = value;
+                OnPropertyChanged(nameof(Ocl));
+            }
+        }
+
     }
 }
