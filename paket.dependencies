@@ -1,4 +1,6 @@
-framework: net46
+version 5.198.0
+
+framework: net461
 source https://api.nuget.org/v3/index.json
 
 clitool dotnet-fake
@@ -16,7 +18,7 @@ nuget Newtonsoft.Json
 
 group Tests
 
-framework: net46
+framework: net461
 source https://api.nuget.org/v3/index.json
 
 nuget NSubstitute
@@ -27,7 +29,7 @@ nuget FsUnit
 
 group TestRunners
 
-framework: net46
+framework: net461
 source https://api.nuget.org/v3/index.json
 
 nuget NUnit.Console

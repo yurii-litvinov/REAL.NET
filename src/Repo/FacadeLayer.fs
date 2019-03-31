@@ -110,6 +110,9 @@ and [<AllowNullLiteral>] IElement =
         /// TODO: shapes are actually more complex structures than strings, and some uniform format for shape
         /// representation is needed. Can be postponed after v1.
         abstract Shape: string with get
+
+        /// Adds an attribute to a given element. Name of the attribute, its type and default value shall be specified.
+        abstract AddAttribute: name: string * kind: AttributeKind * defaultValue: string -> unit
     end
 
 /// Node --- well, a node in a model.

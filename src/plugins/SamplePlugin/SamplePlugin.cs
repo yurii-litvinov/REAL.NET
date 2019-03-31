@@ -55,6 +55,13 @@ namespace SamplePlugin
             {
                 model.CreateNode(initialNode);
             }
+
+            if (!repo.Models.Any(m => m.Name == "TestModel"))
+            {
+                var testModel = repo.CreateModel("TestModel", "InfrastructureMetamodel");
+                var node = testModel.CreateElement("Node");
+                
+            }
         }
     }
 }

@@ -90,3 +90,7 @@ and [<AbstractClass>] Element
             | "Metatype.Node" -> Metatype.Node
             | "Metatype.Edge" -> Metatype.Edge
             | _ -> failwith "Incorrect instanceMetatype attribute value"
+
+        member this.AddAttribute (name, kind, defaultValue) =
+            infrastructureSemantic.Element.AddAttribute element name (kind.ToString()) defaultValue
+            ()
