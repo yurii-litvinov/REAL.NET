@@ -89,7 +89,7 @@
             <!-- GridSplitter for console -->
             <GridSplitter Grid.Row ="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5"/>
 
-            <console1:AppConsole Grid.Row="3" DataContext="{Binding Console}"/>
+            <console1:AppConsole x:Name="appConsole" Grid.Row="3" DataContext="{Binding Console}"/>
         </Grid>
 
         <!-- GridSplitter for RightPanel-->

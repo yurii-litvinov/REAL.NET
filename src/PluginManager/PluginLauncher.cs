@@ -73,5 +73,11 @@ namespace PluginManager
                 }
             }
         }
+
+        public void Execute(string name, T config)
+        {
+            IPlugin<T> plugin = this.pluginsList.Find(x => x.Name == name);
+            plugin.Execute(config);
+        }
     }
 }

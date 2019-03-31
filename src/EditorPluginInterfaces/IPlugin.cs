@@ -29,5 +29,7 @@ namespace EditorPluginInterfaces
         /// </summary>
         /// <param name="config">Configuration to set</param>
         void SetConfig(T config);
+
+        void Execute(T config);
     }
 }

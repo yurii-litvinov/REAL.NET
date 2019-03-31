@@ -21,6 +21,11 @@
             this.console = config.Console;
             this.console.SendMessage("OCL add-on successfully launched");
 
+            this.Execute(config);
+        }
+
+        public void Execute(PluginConfig config)
+        {
             var model = config.Model;
             var repo = model.Repo;
             var textExpr = config.Properties?["ocl"];

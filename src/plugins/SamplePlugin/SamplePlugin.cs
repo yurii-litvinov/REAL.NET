@@ -56,5 +56,10 @@ namespace SamplePlugin
                 model.CreateNode(initialNode);
             }
         }
+
+        public void Execute(PluginConfig config)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

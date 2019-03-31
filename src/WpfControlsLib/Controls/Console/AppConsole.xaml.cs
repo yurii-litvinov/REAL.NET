@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
+using System.ComponentModel;
 using System.Windows.Controls;
 
 namespace WpfControlsLib.Controls.Console
@@ -21,9 +22,31 @@ namespace WpfControlsLib.Controls.Console
     /// </summary>
     public partial class AppConsole : UserControl
     {
+        // Объявляем делегат
+        public delegate void TextHandler(string message);
+        // Событие, возникающее при выводе денег
+        public event TextHandler Pushed;
         public AppConsole()
         {
             this.InitializeComponent();
+            Loaded += AppConsole_Loaded;
         }
+
+        private void AppConsole_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            INotifyPropertyChanged viewModel = DataContext as INotifyPropertyChanged;
+            viewModel.PropertyChanged += ViewModel_PropertyChanged;
+        }
+
+        private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            oclBox.Text = (DataContext as AppConsoleViewModel).Ocl;
+        }
+
+        private void button1_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Pushed("");
+        }
+        
     }
 }
