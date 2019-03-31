@@ -9,8 +9,8 @@
     "Models": [
       {
         "$id": "4",
-        "Name": "CoreModel",
-        "MetamodelName": "CoreModel",
+        "Name": "CoreMetamodel",
+        "MetamodelName": "CoreMetamodel",
         "Nodes": [
           {
             "$id": "5",
@@ -175,7 +175,7 @@
       {
         "$id": "19",
         "Name": "LanguageMetamodel",
-        "MetamodelName": "CoreModel",
+        "MetamodelName": "CoreMetamodel",
         "Nodes": [
           {
             "$id": "20",

@@ -41,7 +41,7 @@ let ``Repository shall contain at least core model`` () =
     repo.Models |> should not' (be Empty)
 
     // Should throw if not found.
-    repo.Models |> Seq.find (fun m -> m.Name = "CoreModel") |> ignore
+    repo.Models |> Seq.find (fun m -> m.Name = "CoreMetamodel") |> ignore
 
 [<Test>]
 let ``Repository shall allow to add a model`` () =

@@ -17,7 +17,7 @@ namespace Repo.FacadeLayer
 open System.Collections.Generic
 
 open Repo
-open Repo.CoreModel
+open Repo.CoreMetamodel
 
 /// Repository for attribute wrappers. Contains already created wrappers and creates new wrappers if needed.
 /// Holds references to attribute wrappers and elements.

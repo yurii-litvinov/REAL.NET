@@ -79,9 +79,9 @@
     <Compile Include="DataLayerTests\DataModelTests.fs" />
     <Compile Include="DataLayerTests\DataRepoTest.fs" />
     <Compile Include="DataLayerTests\DataElementTests.fs" />
-    <Compile Include="CoreModelTests\CoreModelTests.fs" />
-    <Compile Include="CoreModelTests\CoreSemanticsTests.fs" />
-    <Compile Include="CoreModelTests\CoreLayerInstantiationTests.fs" />
+    <Compile Include="CoreMetamodelTests\CoreMetamodelTests.fs" />
+    <Compile Include="CoreMetamodelTests\CoreSemanticsTests.fs" />
+    <Compile Include="CoreMetamodelTests\CoreLayerInstantiationTests.fs" />
     <Compile Include="InfrastructureModelTests\InfrastructureSemanticLayerTests.fs" />
     <Compile Include="InfrastructureModelTests\DualInstantiationTests.fs" />
     <Compile Include="RobotsTestModelsTests.fs" />

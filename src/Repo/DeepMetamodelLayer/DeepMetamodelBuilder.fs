@@ -15,7 +15,7 @@
 namespace Repo.DeepMetamodelLayer
 
 open Repo.DataLayer
-open Repo.CoreModel
+open Repo.CoreMetamodel
 
 /// Initializes repository with Deep metamodel.
 /// Deep metamodel is based on Core model and introduces notions of potency and linguistic/ontological instantiation.

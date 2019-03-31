@@ -15,7 +15,7 @@
 namespace Repo.Metametamodels
 
 open Repo.DataLayer
-open Repo.CoreModel
+open Repo.CoreMetamodel
 
 /// Initializes repository with Infrastructure Metamodel, which is used to define all other metamodels
 /// and closely coupled with editor capabilities.

@@ -17,7 +17,7 @@ module InfrastructureSemanticLayerTests
 open NUnit.Framework
 open FsUnit
 
-open Repo.CoreModel
+open Repo.CoreMetamodel
 open Repo.Metametamodels
 open Repo.DataLayer
 open Repo.InfrastructureSemanticLayer
@@ -27,7 +27,7 @@ let init () =
     let build (builder: IModelBuilder) =
         builder.Build repo
 
-    CoreModelBuilder() |> build
+    CoreMetamodelBuilder() |> build
     LanguageMetamodelBuilder() |> build
     InfrastructureMetamodelBuilder() |> build
 

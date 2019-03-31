@@ -33,11 +33,11 @@ type InfrastructureMetamodel(repo: IDataRepository) =
     let stringNode = findNode "String"
     let booleanNode = findNode "Boolean"
 
-    let attributesAssociation = CoreModel.Model.findAssociationWithSource element "attributes"
-    let attributeKindAssociation = CoreModel.Model.findAssociationWithSource attribute "kind"
-    let attributeStringValueAssociation = CoreModel.Model.findAssociationWithSource attribute "stringValue"
+    let attributesAssociation = CoreMetamodel.Model.findAssociationWithSource element "attributes"
+    let attributeKindAssociation = CoreMetamodel.Model.findAssociationWithSource attribute "kind"
+    let attributeStringValueAssociation = CoreMetamodel.Model.findAssociationWithSource attribute "stringValue"
     let attributeIsInstantiableAssociation =
-        CoreModel.Model.findAssociationWithSource attribute "isInstantiable"
+        CoreMetamodel.Model.findAssociationWithSource attribute "isInstantiable"
 
     member this.Model = infrastructureMetamodel
 
@@ -59,28 +59,28 @@ type InfrastructureMetamodel(repo: IDataRepository) =
     member this.AttributeIsInstantiableAssociation = attributeIsInstantiableAssociation
 
     member this.IsFromInfrastructureMetamodel element =
-        CoreModel.Element.containingModel element = infrastructureMetamodel
+        CoreMetamodel.Element.containingModel element = infrastructureMetamodel
 
     member this.IsNode (element: IDataElement) =
         if this.IsFromInfrastructureMetamodel element then
             // Kind of hack, here we know that all nodes supposed to be instantiated have linguistic attributes, like
             // "isAbstract". Actually, they are instances of "Node supposed to be instantiated" class, so it shall
             // be stated explicitly in metamodel hierarchy.
-            element :? IDataNode && CoreModel.Element.hasAttribute element "isAbstract"
+            element :? IDataNode && CoreMetamodel.Element.hasAttribute element "isAbstract"
         else
-            CoreModel.Element.isInstanceOf this.Node element
+            CoreMetamodel.Element.isInstanceOf this.Node element
 
     member this.IsAssociation (element: IDataElement) =
         if this.IsFromInfrastructureMetamodel element then
-            element :? IDataAssociation  && CoreModel.Element.hasAttribute element "isAbstract"
+            element :? IDataAssociation  && CoreMetamodel.Element.hasAttribute element "isAbstract"
         else
-            CoreModel.Element.isInstanceOf edge element
+            CoreMetamodel.Element.isInstanceOf edge element
 
     member this.IsGeneralization (element: IDataElement) =
         if this.IsFromInfrastructureMetamodel element then
             element :? IDataGeneralization
         else
-            CoreModel.Element.isInstanceOf this.Generalization element
+            CoreMetamodel.Element.isInstanceOf this.Generalization element
 
     member this.IsEdge element =
         this.IsAssociation element || this.IsGeneralization element
@@ -94,7 +94,7 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel) =
     let thisElementAttributes element =
         let rec isAttributeAssociation (a: IDataAssociation) =
             let attributesAssociation = infrastructureMetamodel.AttributesAssociation
-            if CoreModel.Element.isInstanceOf attributesAssociation a then
+            if CoreMetamodel.Element.isInstanceOf attributesAssociation a then
                 true
             else
                 let target = a.Target
@@ -113,7 +113,7 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel) =
                 | _ -> false
 
         element
-        |> CoreModel.Element.outgoingAssociations
+        |> CoreMetamodel.Element.outgoingAssociations
         |> Seq.filter isAttributeAssociation
         |> Seq.map (fun l -> l.Target)
         |> Seq.choose id
@@ -131,7 +131,7 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel) =
 
     /// Returns a sequence of all attributes from all parents of this element (not including element itself).
     let parentsAttributes element =
-        CoreModel.Element.parents element
+        CoreMetamodel.Element.parents element
         |> Seq.map thisElementAttributes
         |> Seq.concat
 
@@ -153,7 +153,7 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel) =
         // TODO: Check correctness of attribute overloading here.
         if thisElementHasAttribute element name then
             raise (InvalidSemanticOperationException <| sprintf "Attribute %s already present" name)
-        let model = CoreModel.Element.containingModel element
+        let model = CoreMetamodel.Element.containingModel element
         let infrastructureModel = infrastructureMetamodel.Model
         let attributeNode = infrastructureMetamodel.Attribute
         let attributeKindNode = infrastructureMetamodel.AttributeKind
@@ -167,9 +167,9 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel) =
 
         let attribute = model.CreateNode(name, attributeNode)
 
-        CoreModel.Element.addAttribute attribute "kind" attributeKindNode kindAssociation kind
-        CoreModel.Element.addAttribute attribute "stringValue" stringValueAssociation stringNode value
-        CoreModel.Element.addAttribute
+        CoreMetamodel.Element.addAttribute attribute "kind" attributeKindNode kindAssociation kind
+        CoreMetamodel.Element.addAttribute attribute "stringValue" stringValueAssociation stringNode value
+        CoreMetamodel.Element.addAttribute
             attribute "isInstantiable" isInstantiableAssociation booleanNode isInstantiable
 
         model.CreateAssociation(attributesAssociation, element, attribute, name) |> ignore
@@ -190,10 +190,10 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel) =
                 raise (AttributeNotFoundException name)
             let parentAttribute = parentAttribute.Value
 
-            let parentAttributeValue = CoreModel.Element.attributeValue parentAttribute "stringValue"
-            let parentAttributeKind = CoreModel.Element.attributeValue parentAttribute "kind"
+            let parentAttributeValue = CoreMetamodel.Element.attributeValue parentAttribute "stringValue"
+            let parentAttributeKind = CoreMetamodel.Element.attributeValue parentAttribute "kind"
             let parentAttributeIsInstantiable =
-                CoreModel.Element.attributeValue parentAttribute "isInstantiable"
+                CoreMetamodel.Element.attributeValue parentAttribute "isInstantiable"
 
             addAttribute element name parentAttributeKind parentAttributeValue parentAttributeIsInstantiable
 
@@ -220,17 +220,17 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel) =
         // TODO: Check that it is actually last overriden attribute, not some attribute from one of the parents.
         // TODO: Also do something with correctness of attribute inheritance.
         attributeNode element attributeName
-        |> fun attr -> CoreModel.Element.attributeValue attr "stringValue"
+        |> fun attr -> CoreMetamodel.Element.attributeValue attr "stringValue"
 
     /// Sets value for a given attribute to a given value. Copies it from parent if needed.
     member this.SetAttributeValue element attributeName value =
         let attribute = copyIfNeeded element attributeName
-        CoreModel.Element.setAttributeValue attribute "stringValue" value
+        CoreMetamodel.Element.setAttributeValue attribute "stringValue" value
 
     /// Returns true if an attribute is instantiable (passes to the instances), false if instances shall not have it.
     member this.IsAttributeInstantiable element name =
         let attributeNode = attributeNode element name
-        CoreModel.Element.attributeValue attributeNode "isInstantiable" = "true"
+        CoreMetamodel.Element.attributeValue attributeNode "isInstantiable" = "true"
 
     /// Sets this attribute to instantiable or non-instantiable.
     member this.SetAttributeInstantiable element attributeName (value: bool) =
@@ -240,23 +240,23 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel) =
             | false -> "false"
 
         let attribute = copyIfNeeded element attributeName
-        CoreModel.Element.setAttributeValue attribute "isInstantiable" (boolToString value)
+        CoreMetamodel.Element.setAttributeValue attribute "isInstantiable" (boolToString value)
 
     /// Returns kind of an attribute (i.e. is it string, boolean, enum or reference to other element).
     member this.AttributeKind element name =
         let attributeNode = attributeNode element name
-        CoreModel.Element.attributeValue attributeNode "kind"
+        CoreMetamodel.Element.attributeValue attributeNode "kind"
 
 /// Module containing semantic operations on elements.
 module private Operations =
     /// Returns link corresponding to an attribute respecting generalization hierarchy.
     let rec private attributeLink element attribute =
         let thisElementAttributeLinks e =
-            CoreModel.Element.outgoingAssociations e
+            CoreMetamodel.Element.outgoingAssociations e
             |> Seq.filter (fun a -> a.Target = Some attribute)
 
         let attributeLinks =
-            CoreModel.Element.parents element
+            CoreMetamodel.Element.parents element
             |> Seq.map thisElementAttributeLinks
             |> Seq.concat
             |> Seq.append (thisElementAttributeLinks element)
@@ -269,7 +269,7 @@ module private Operations =
             Seq.head attributeLinks
 
     let private copySimpleAttribute (elementHelper: ElementHelper) element (``class``: IDataElement) name =
-        let attributeClassNode = CoreModel.Element.attribute ``class`` name
+        let attributeClassNode = CoreMetamodel.Element.attribute ``class`` name
         let attributeAssociation =
             match name with
             | "kind" -> elementHelper.InfrastructureMetamodel.AttributeKindAssociation
@@ -277,13 +277,13 @@ module private Operations =
             | "isInstantiable" -> elementHelper.InfrastructureMetamodel.AttributeIsInstantiableAssociation
             | _ -> failwith "Unknown simple attribute name"
 
-        let defaultValue = CoreModel.Element.attributeValue ``class`` name
-        CoreModel.Element.addAttribute element name attributeClassNode attributeAssociation defaultValue
+        let defaultValue = CoreMetamodel.Element.attributeValue ``class`` name
+        CoreMetamodel.Element.addAttribute element name attributeClassNode attributeAssociation defaultValue
 
     let private addAttribute (element: IDataElement) (elementHelper: ElementHelper) (attributeClass: IDataNode)  =
-        let model = CoreModel.Element.containingModel element
+        let model = CoreMetamodel.Element.containingModel element
         if elementHelper.HasAttribute element attributeClass.Name then
-            let valueFromClass = CoreModel.Element.attributeValue attributeClass "stringValue"
+            let valueFromClass = CoreMetamodel.Element.attributeValue attributeClass "stringValue"
             elementHelper.SetAttributeValue element attributeClass.Name valueFromClass
         else
             let attributeLink = attributeLink element.Class attributeClass
@@ -314,7 +314,7 @@ module private Operations =
 
         let attributes =
             elementHelper.Attributes ``class``
-            |> Seq.filter (fun n -> CoreModel.Element.attributeValue n "isInstantiable" = "true")
+            |> Seq.filter (fun n -> CoreMetamodel.Element.attributeValue n "isInstantiable" = "true")
 
         attributes |> Seq.rev |> Seq.iter (addAttribute newElement elementHelper)
 

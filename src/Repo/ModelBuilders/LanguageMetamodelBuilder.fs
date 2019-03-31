@@ -15,14 +15,14 @@
 namespace Repo.Metametamodels
 
 open Repo.DataLayer
-open Repo.CoreModel
+open Repo.CoreMetamodel
 
 /// Initializes repository with Language Metamodel, which is used as a language to define Infrastructure Metamodel,
 // which in turn is used to define all other metamodels and closely coupled with editor capabilities.
 type LanguageMetamodelBuilder() =
     interface IModelBuilder with
         member this.Build(repo: IDataRepository): unit =
-            let coreMetamodel = repo.Model "CoreModel"
+            let coreMetamodel = repo.Model "CoreMetamodel"
             let metamodelNode = coreMetamodel.Node "Node"
             let metamodelGeneralization = coreMetamodel.Node "Generalization"
             let metamodelAssociation = coreMetamodel.Node "Association"

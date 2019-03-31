@@ -23,13 +23,15 @@ type RepoFactory =
         let build (builder: DataLayer.IModelBuilder) =
             builder.Build data
 
-        CoreModel.CoreModelBuilder() |> build
+        CoreMetamodel.CoreMetamodelBuilder() |> build
         Metametamodels.LanguageMetamodelBuilder() |> build
         Metametamodels.InfrastructureMetamodelBuilder() |> build
         Metametamodels.RobotsMetamodelBuilder() |> build
         Metametamodels.RobotsTestModelBuilder() |> build
         Metametamodels.AirSimMetamodelBuilder() |> build
         Metametamodels.AirSimModelBuilder() |> build
+        Metametamodels.FeatureMetamodelBuilder() |> build
+        Metametamodels.FeatureTestModelBuilder() |> build
 
         new FacadeLayer.Repo(data) :> IRepo
 
@@ -45,7 +47,7 @@ type RepoFactory =
         let build (builder: DataLayer.IModelBuilder) =
             builder.Build data
 
-        CoreModel.CoreModelBuilder() |> build
+        CoreMetamodel.CoreMetamodelBuilder() |> build
         Metametamodels.LanguageMetamodelBuilder() |> build
         Metametamodels.InfrastructureMetamodelBuilder() |> build
 

@@ -26,7 +26,7 @@ type RobotsMetamodelBuilder() =
             let metamodel = infrastructure.Metamodel.Model
 
             let find name = metamodel.Node name
-            let findAssociation node name = CoreModel.Model.findAssociationWithSource node name
+            let findAssociation node name = CoreMetamodel.Model.findAssociationWithSource node name
 
             let metamodelElement = find "Element"
             let metamodelNode = find "Node"

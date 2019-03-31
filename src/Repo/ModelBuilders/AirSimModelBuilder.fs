@@ -15,7 +15,7 @@
 namespace Repo.Metametamodels
 
 open Repo.DataLayer
-open Repo.CoreModel
+open Repo.CoreMetamodel
 open Repo.InfrastructureSemanticLayer
 
 /// Initializes repository with test model conforming to AirSim Metamodel, actual program that can be written by end-user.

@@ -26,7 +26,7 @@ let init () =
     let build (builder: DataLayer.IModelBuilder) =
         builder.Build repo
 
-    CoreModel.CoreModelBuilder() |> build
+    CoreMetamodel.CoreMetamodelBuilder() |> build
     Metametamodels.LanguageMetamodelBuilder() |> build
     Metametamodels.InfrastructureMetamodelBuilder() |> build
 

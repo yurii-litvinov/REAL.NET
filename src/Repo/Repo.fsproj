@@ -84,9 +84,10 @@
     <Compile Include="Serializer\DataObjects.fs" />
     <Compile Include="Serializer\Serializer.fs" />
     <Compile Include="Serializer\Deserializer.fs" />
-    <Compile Include="CoreModel\CoreSemantics.fs" />
-    <Compile Include="CoreModel\CoreModelBuilder.fs" />
-    <Compile Include="CoreModel\CoreSemanticsModelCreator.fs" />
+    <Compile Include="CoreMetamodel\CoreMetamodelBuilder.fs" />
+    <Compile Include="CoreMetamodel\CoreSemantics.fs" />
+    <Compile Include="CoreMetamodel\CoreSemanticsModelCreator.fs" />
+    <Compile Include="DeepMetamodelLayer\DeepMetamodelBuilder.fs" />
     <Compile Include="InfrastructureSemanticLayer.fs" />
     <Compile Include="ModelBuilders\LanguageMetamodelBuilder.fs" />
     <Compile Include="ModelBuilders\InfrastructureMetamodelBuilder.fs" />
@@ -94,6 +95,8 @@
     <Compile Include="ModelBuilders\RobotsTestModelBuilder.fs" />
     <Compile Include="ModelBuilders\AirSimMetamodelBuilder.fs" />
     <Compile Include="ModelBuilders\AirSimModelBuilder.fs" />
+    <Compile Include="ModelBuilders\FeatureMetamodelBuilder.fs" />
+    <Compile Include="ModelBuilders\FeatureTestModelBuilder.fs" />
     <Compile Include="FacadeLayer.fs" />
     <Compile Include="FacadeLayer\Attribute.fs" />
     <Compile Include="FacadeLayer\Element.fs" />
