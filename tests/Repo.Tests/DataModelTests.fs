@@ -176,3 +176,11 @@ let ``Data model shall disconnect edges on removing source or target edges`` () 
     edge3.Target |> should equal (Some (edge2 :> IElement))
     edge2.Source |> should equal None
     edge2.Target |> should equal None
+
+[<Test>]
+let ``Data model properties shall allow to store some data`` () =
+    let model = DataModel("model") :> IModel
+
+    model.Properties <- model.Properties.Add ("key", "value")
+
+    model.Properties.["key"] |> should equal "value"

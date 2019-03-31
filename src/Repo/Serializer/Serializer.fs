@@ -99,6 +99,7 @@ module Serializer =
         let wrappedModel = WrappedModel ()
         wrappedModel.Name <- model.Name
         wrappedModel.MetamodelName <- model.Metamodel.Name
+        wrappedModel.Properties <- Map.toArray model.Properties
         wrappedModel.Nodes <- model.Nodes |> Seq.rev |> Seq.map wrapNode |> Seq.toArray
 
         let associations (e: IEdge) =
