@@ -67,7 +67,7 @@ namespace WpfControlsLib.Controls.ModelSelector
 
             foreach (var currentModel in dataModel.Repo.Models)
             {
-                if (IsBasedOnInfrastructureMetamodel(currentModel))
+                if (IsBasedOnInfrastructureMetamodel(currentModel) && currentModel.IsVisible)
                 {
                     this.ModelNames.Add(currentModel.Name);
                 }

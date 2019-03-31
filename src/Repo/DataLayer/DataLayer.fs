@@ -126,8 +126,12 @@ and IModel =
         /// Returns all edges in a model.
         abstract Edges: IEdge seq with get
 
+        /// A map of custom model properties.
+        abstract Properties: Map<string, string> with get, set
+
         /// Deletes element from a model and unconnects related elements if needed.
         abstract DeleteElement: element : IElement -> unit
+
     end
 
 /// Repository is a collection of models.
