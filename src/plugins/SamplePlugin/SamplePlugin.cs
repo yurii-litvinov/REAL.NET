@@ -46,22 +46,6 @@ namespace SamplePlugin
             }
             this.console = config.Console;
             this.console.SendMessage("Sample add-on successfully launched");
-
-            var model = config.Model;
-            var repo = model.Repo;
-
-            var initialNode = repo.Model("RobotsMetamodel").Nodes.FirstOrDefault(x => x.Name == "InitialNode");
-            if (initialNode != null)
-            {
-                model.CreateNode(initialNode);
-            }
-
-            if (!repo.Models.Any(m => m.Name == "TestModel"))
-            {
-                var testModel = repo.CreateModel("TestModel", "InfrastructureMetamodel");
-                var node = testModel.CreateElement("Node");
-                
-            }
         }
     }
 }
