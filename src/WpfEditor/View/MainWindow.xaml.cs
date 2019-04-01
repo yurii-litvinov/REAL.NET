@@ -123,8 +123,8 @@ namespace WpfEditor.View
             this.model.ModelName = modelName;
             this.palette.InitPalette(this.model.ModelName);
             this.scene.Reload();
-            this.Console.Ocl = string.Format("package {0}\ncontext \nendpackage", this.model.ModelName);
-            
+            this.Console.Ocl = string.Format("package {0}\ncontext\ninv@0:\n\nendpackage", this.model.ModelName);
+            this.Console.OnPropertyChanged(nameof(this.Console.Ocl));
         }
 
         private void InitToolbar()

@@ -52,7 +52,7 @@ namespace WpfControlsLib.Controls.Console
             set
             {
                 this.expr = value;
-                OnPropertyChanged(nameof(Ocl));
+                //OnPropertyChanged(nameof(Ocl));
             }
         }
 

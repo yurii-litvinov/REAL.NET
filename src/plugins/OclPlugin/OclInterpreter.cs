@@ -408,6 +408,20 @@ namespace OclPlugin
                         this.Element = parent;
                     }
 
+                    IAttribute attr = this.Element.Attributes.First(x => x.Name == context.pathName().GetText());
+
+                    switch (attr.Kind)
+                    {
+                        case AttributeKind.Boolean:
+                            return new BoolResult(bool.Parse(attr.StringValue));
+                        case AttributeKind.String:
+                            return new StringResult(attr.StringValue);
+                        case AttributeKind.Int:
+                            return new IntResult(int.Parse(attr.StringValue));
+                        case AttributeKind.Double:
+                            return new DoubleResult(double.Parse(attr.StringValue));
+                    }
+
                     return new StringResult(this.Element.Attributes.First(x => x.Name == context.pathName().GetText()).StringValue);
                 }
 

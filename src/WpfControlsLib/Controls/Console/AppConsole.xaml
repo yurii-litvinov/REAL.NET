@@ -35,7 +35,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox x:Name="oclBox" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" AcceptsReturn="True" Width="Auto" Grid.Column="0" Text="{Binding Ocl,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="oclBox" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" AcceptsReturn="True" Width="Auto" Grid.Column="0" Text="{Binding Ocl,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                     <Button x:Name="button1" Width="60" Height="30" Content="Нажать" Grid.Column="1" Click="button1_Click"/>
                 </Grid>
             </TabItem>
