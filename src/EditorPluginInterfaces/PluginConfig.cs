@@ -48,7 +48,7 @@ namespace EditorPluginInterfaces
         /// </summary>
         public IPalette Palette { get; }
 
-        public Dictionary<string, string> Properties { get; }
+        public Dictionary<string, object> Properties { get; }
 
         /// <summary>
         /// Initializes a new instance of <see cref="PluginConfig"/> 
@@ -59,7 +59,7 @@ namespace EditorPluginInterfaces
         /// <param name="toolbar">Toolbar</param>
         /// <param name="console">Console</param>
         /// <param name="palette">Palette</param>
-        public PluginConfig(IModel model, IScene scene, IToolbar toolbar, IConsole console, IPalette palette, Dictionary<string, string> properties)
+        public PluginConfig(IModel model, IScene scene, IToolbar toolbar, IConsole console, IPalette palette, Dictionary<string, object> properties)
         {
             this.Model = model;
             this.Scene = scene;

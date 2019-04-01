@@ -27,7 +27,11 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:VertexControl}">
                     <Grid>
-                        <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill"/>
+                        <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill">
+                            <Image.Effect>
+                                <DropShadowEffect Color="{Binding ShadowColor}"></DropShadowEffect>
+                            </Image.Effect>
+                        </Image>
                         <controls:VertexLabelControl 
                             x:Name="PART_vertexLabel" 
                             Content="{Binding Name}" 

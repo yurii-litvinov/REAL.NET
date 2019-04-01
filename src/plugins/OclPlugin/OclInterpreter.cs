@@ -12,6 +12,7 @@ namespace OclPlugin
     using Antlr4.Runtime.Misc;
     using EditorPluginInterfaces;
     using Repo;
+    using WpfControlsLib.Controls.Scene;
 
     public class OclInterpreter : OclBaseVisitor<bool>
     {
@@ -21,8 +22,9 @@ namespace OclPlugin
         private readonly IRepo repository;
         private Repo.IModel model;
         private IElement currentElement;
+        Scene scene;
 
-        public OclInterpreter(IRepo repo)
+        public OclInterpreter(IRepo repo, Scene scene)
         {
             this.vars = new ArrayList<Dictionary<string, Result>>
             {
@@ -31,6 +33,7 @@ namespace OclPlugin
             this.funcs = new Dictionary<string, FunctionDefinition>();
             this.calculator = new OclCalculator(this.vars, this.funcs, this, repo);
             this.repository = repo;
+            this.scene = scene;
         }
 
         public override bool VisitOclFile([NotNull] OclParser.OclFileContext context)
@@ -78,6 +81,11 @@ namespace OclPlugin
                     this.calculator.Depth = int.Parse(context.NUMBER()[i].GetText());
                 }
 
+                if (this.scene != null)
+                {
+                    this.scene.AllowNodes();
+                }
+
                 foreach (IElement element in this.model.Elements)
                 {
                     IElement parent = element;
@@ -89,8 +97,11 @@ namespace OclPlugin
                     if (parent == this.currentElement)
                     {
                         IElement cur = this.currentElement;
-                        this.currentElement = parent;
-                        result = result && this.VisitOclExpression(context.oclExpression()[i]);
+                        this.currentElement = element;
+                        bool curBool = this.VisitOclExpression(context.oclExpression()[i]);
+                        if (this.scene != null && !curBool)
+                            this.scene.SelectNode(element.Name);
+                        result = result && curBool;
                         this.currentElement = cur;
                     }
                 }

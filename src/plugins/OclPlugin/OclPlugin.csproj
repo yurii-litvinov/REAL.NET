@@ -43,6 +43,8 @@
       <HintPath Condition="Exists('..\..\EditorPluginInterfaces\bin\Release')">..\..\EditorPluginInterfaces\bin\Release\EditorPluginInterfaces.dll</HintPath>
       <HintPath Condition="Exists('..\..\EditorPluginInterfaces\bin\Debug')">..\..\EditorPluginInterfaces\bin\Debug\EditorPluginInterfaces.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="Repo">
       <HintPath Condition="Exists('..\..\Repo\bin\Release')">..\..\Repo\bin\Release\Repo.dll</HintPath>
       <HintPath Condition="Exists('..\..\Repo\bin\Debug')">..\..\Repo\bin\Debug\Repo.dll</HintPath>
@@ -55,6 +57,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="OperationLauncher.cs" />
@@ -106,6 +109,10 @@
     <ProjectReference Include="..\..\PluginManager\PluginManager.csproj">
       <Project>{8B9C8D76-65B3-4A01-9D6F-B6192A823642}</Project>
       <Name>PluginManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\WpfControlsLib\WpfControlsLib.csproj">
+      <Project>{1DCB1D77-AB11-404C-BCE4-8EB7BF8F549D}</Project>
+      <Name>WpfControlsLib</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

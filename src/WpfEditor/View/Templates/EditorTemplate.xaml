@@ -63,8 +63,8 @@
 
         <Style.Triggers>
             <Trigger Property="controls:HighlightBehaviour.Highlighted" Value="True">
-                <Setter Property="BorderBrush" Value="Gold"/>
-                <Setter Property="BorderThickness" Value="3"/>
+                <Setter Property="BorderBrush" Value="Red"/>
+                <Setter Property="BorderThickness" Value="10"/>
             </Trigger>
         </Style.Triggers>
 

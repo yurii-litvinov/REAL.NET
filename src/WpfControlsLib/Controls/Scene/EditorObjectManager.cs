@@ -38,6 +38,7 @@ namespace WpfControlsLib.Controls.Scene
             {
                 Source = new Uri("pack://application:,,,/View/Templates/EditorTemplate.xaml", UriKind.RelativeOrAbsolute),
             };
+            
         }
 
         public void CreateVirtualEdge(VertexControl source, Point targetPos)

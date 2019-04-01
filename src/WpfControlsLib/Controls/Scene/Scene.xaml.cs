@@ -74,6 +74,8 @@ namespace WpfControlsLib.Controls.Scene
 
         public Graph Graph { get; set; }
 
+        public EditorObjectManager EditorManager => editorManager;
+
         private void InitGraphXLogicCore()
         {
             var logic =
@@ -147,6 +149,7 @@ namespace WpfControlsLib.Controls.Scene
                 {
                     var vertex = this.Graph.DataGraph.Vertices.ToList()[i];
                     this.NodeSelected?.Invoke(this, new NodeSelectedEventArgs {Node = vertex});
+                    vertex.ShadowColor = Colors.Red;
                     foreach (var ed in this.graphArea.VertexList)
                     {
                         if (ed.Key == vertex)
@@ -157,6 +160,15 @@ namespace WpfControlsLib.Controls.Scene
 
                     break;
                 }
+            }
+        }
+
+        public void AllowNodes()
+        {
+            for (var i = 0; i < this.Graph.DataGraph.Vertices.Count(); i++)
+            {
+                var vertex = this.Graph.DataGraph.Vertices.ToList()[i];
+                vertex.ShadowColor = Colors.White;
             }
         }
 
@@ -203,7 +215,7 @@ namespace WpfControlsLib.Controls.Scene
             {
                 if (this.previosVertex == null)
                 {
-                    this.editorManager.CreateVirtualEdge(this.currentVertex, this.currentVertex.GetPosition());
+                    this.EditorManager.CreateVirtualEdge(this.currentVertex, this.currentVertex.GetPosition());
                     this.previosVertex = this.currentVertex;
                 }
                 else
@@ -344,7 +356,7 @@ namespace WpfControlsLib.Controls.Scene
             var ec = new EdgeControl(this.previosVertex, this.currentVertex, edgeViewModel);
             this.graphArea.InsertEdge(edgeViewModel, ec);
             this.previosVertex = null;
-            this.editorManager.DestroyVirtualEdge();
+            this.EditorManager.DestroyVirtualEdge();
         }
 
         private void MenuItemClickRoutingPoint(object sender, EventArgs e)
@@ -433,7 +445,7 @@ namespace WpfControlsLib.Controls.Scene
                     if (this.previosVertex != null)
                     {
                         this.previosVertex = null;
-                        this.editorManager.DestroyVirtualEdge();
+                        this.EditorManager.DestroyVirtualEdge();
                         this.ElementManipulationDone?.Invoke(this, EventArgs.Empty);
                     }
                 }

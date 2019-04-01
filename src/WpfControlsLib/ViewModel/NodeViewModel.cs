@@ -15,6 +15,7 @@ namespace WpfControlsLib.ViewModel
         private Brush color = Brushes.Green;
         private IList<AttributeViewModel> attributes = new List<AttributeViewModel>();
         private string picture = string.Empty;
+        private Color shadowColor = Colors.White;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NodeViewModel"/> class.
@@ -40,6 +41,16 @@ namespace WpfControlsLib.ViewModel
             set
             {
                 this.color = value;
+                this.OnPropertyChanged();
+            }
+        }
+
+        public Color ShadowColor
+        {
+            get => this.shadowColor;
+            set
+            {
+                this.shadowColor = value;
                 this.OnPropertyChanged();
             }
         }

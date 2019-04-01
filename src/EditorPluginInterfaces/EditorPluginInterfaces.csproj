@@ -44,6 +44,15 @@
     </CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GraphX.PCL.Common">
+      <HintPath>..\..\packages\GraphX\lib\net40-client\GraphX.PCL.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphX.PCL.Logic">
+      <HintPath>..\..\packages\GraphX\lib\net40-client\GraphX.PCL.Logic.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphX.WPF.Controls">
+      <HintPath>..\..\packages\GraphX\lib\net40-client\GraphX.WPF.Controls.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

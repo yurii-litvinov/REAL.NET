@@ -4,6 +4,7 @@
     using Antlr4.Runtime;
     using Antlr4.Runtime.Tree;
     using EditorPluginInterfaces;
+    using WpfControlsLib.Controls.Scene;
 
     public class OclPlugin : IPlugin<PluginConfig>
     {
@@ -29,6 +30,7 @@
             var model = config.Model;
             var repo = model.Repo;
             var textExpr = config.Properties?["ocl"];
+            Scene scene = (Scene)config.Properties?["scene"];
             ICharStream stream;
             if (textExpr == null)
             {
@@ -36,7 +38,7 @@
             }
             else
             {
-                stream = CharStreams.fromstring(textExpr);
+                stream = CharStreams.fromstring(textExpr.ToString());
             }
 
             ITokenSource lexer = new OclLexer(stream);
@@ -46,7 +48,7 @@
                 BuildParseTree = true
             };
             IParseTree tree = parser.oclFile();
-            var interpreter = new OclInterpreter(repo);
+            var interpreter = new OclInterpreter(repo, scene);
             //Console.WriteLine(tree.ToStringTree(parser));
             if (tree.Accept(interpreter))
             {

@@ -101,7 +101,7 @@ namespace WpfEditor.View
         private void AppConsole_Pushed(string message)
         {
             var stream = this.Console.Ocl;
-            Dictionary<string, string> prop = new Dictionary<string, string> { { "ocl", stream } };
+            Dictionary<string, object> prop = new Dictionary<string, object> { { "ocl", stream }, { "scene", this.scene } };
             PluginConfig config = new PluginConfig(this.model, null, null, this.Console, null, prop);
             this.libs.Execute("OCL", config);
         }
