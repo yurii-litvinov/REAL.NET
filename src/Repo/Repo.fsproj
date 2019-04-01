@@ -93,6 +93,7 @@
     <Compile Include="ModelBuilders\AirSimModelBuilder.fs" />
     <Compile Include="ModelBuilders\CoreMetametamodelBuilder.fs" />
     <Compile Include="FacadeLayer.fs" />
+    <Compile Include="FacadeLayer\Visual\VisualInfo.fs" />
     <Compile Include="FacadeLayer\Attribute.fs" />
     <Compile Include="FacadeLayer\Element.fs" />
     <Compile Include="FacadeLayer\Edge.fs" />
@@ -100,7 +101,6 @@
     <Compile Include="FacadeLayer\Node.fs" />
     <Compile Include="FacadeLayer\ElementRepository.fs" />
     <Compile Include="FacadeLayer\Repo.fs" />
-    <Compile Include="FacadeLayer\Visual\IVisualInfo.fs" />
     <Compile Include="RepoFactory.fs" />
     <Content Include="app.config" />
   </ItemGroup>
