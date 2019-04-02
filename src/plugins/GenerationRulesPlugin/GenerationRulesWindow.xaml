@@ -28,7 +28,7 @@
                 Name="CodeEditor"
                 FontFamily="Consolas"
                 FontSize="10pt"
-                Margin="10,30,10,10"
+                Margin="10"
                 ShowLineNumbers="True"
                 Grid.Row="0"/>
             <TextBox

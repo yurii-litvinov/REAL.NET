@@ -70,12 +70,20 @@ namespace GenerationRulesPlugin
                 string lastCharacter = lastCharacterMatchGroup.Success
                     ? lastCharacterMatchGroup.Captures[0].Value
                     : string.Empty;
-                template = Regex.Replace(template, match.Value, $"@Model.FindElement(\"{element}\").FindAttribute(\"{attribute}\").StringValue{lastCharacter}");
+                // TODO Fix: match.Value is not valid pattern value (it has not escaped parentheses)
+                if (match.Value.Last() == ')')
+                {
+                    template = Regex.Replace(template, match.Value.Substring(0, match.Value.Length - 1) + @"\)",
+                        $"@Model.FindElement(\"{element}\").FindAttribute(\"{attribute}\").StringValue{lastCharacter}");
+                    continue;
+                }
+
+                template = Regex.Replace(template, match.Value,
+                    $"@Model.FindElement(\"{element}\").FindAttribute(\"{attribute}\").StringValue{lastCharacter}");
             }
 
             try
             {
-
                 return Engine.Razor.RunCompile(template, $"key{new Random().Next()}", typeof(Repo.IModel),
                     currentModel).Trim();
             }
