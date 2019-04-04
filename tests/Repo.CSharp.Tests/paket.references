@@ -1,5 +1,4 @@
 group Tests
-
 NUnit
 NSubstitute
 NUnit3TestAdapter
