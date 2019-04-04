@@ -65,9 +65,11 @@ namespace WpfControlsLib.Controls.ModelSelector
                 return false;
             }
 
+            this.ModelNames.Clear();
+
             foreach (var currentModel in dataModel.Repo.Models)
             {
-                if (IsBasedOnInfrastructureMetamodel(currentModel))
+                if (IsBasedOnInfrastructureMetamodel(currentModel) && currentModel.IsVisible)
                 {
                     this.ModelNames.Add(currentModel.Name);
                 }

@@ -26,6 +26,8 @@ type DataModel private (name: string, metamodel: IModel option) =
     let mutable hiddenNodes = []
     let mutable hiddenEdges = []
 
+    let mutable properties = Map.empty
+
     new(name: string) = DataModel(name, None)
     new(name: string, metamodel: IModel) = DataModel(name, Some metamodel)
 
@@ -113,3 +115,8 @@ type DataModel private (name: string, metamodel: IModel option) =
 
         member this.Edges: seq<IEdge> =
             edges |> Seq.ofList
+
+        member this.Properties
+            with get () = properties
+            and set v = properties <- v
+            

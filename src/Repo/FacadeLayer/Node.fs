@@ -39,13 +39,5 @@ type Node
         with get () = visualInfo
         and set (info) = visualInfo <- info
 
-    interface INode with
-        member this.Function
-            with get (): IElement = 
-                if element.Function.IsNone then
-                    null
-                else
-                    elementRepository.GetElement element.Function.Value
-            and set (v: IElement): unit = 
-                raise (Exception("You can't modify function (yet)"))
+    interface INode
  

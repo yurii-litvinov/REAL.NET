@@ -85,11 +85,11 @@ namespace WpfEditor.View
 
             this.scene.Init(this.model, this.controller, new PaletteAdapter(this.palette));
 
-            this.modelSelector.Init(this.model);
-            this.modelSelector.ChangeModel(2);
-
             this.InitAndLaunchPlugins();
             this.InitToolbar();
+
+            this.modelSelector.Init(this.model);
+            this.modelSelector.ChangeModel(2);
         }
 
         private void Reinit(object sender, EventArgs e)
