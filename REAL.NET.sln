@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirSim", "src\AirSim\AirSim
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfControlsLib.Tests", "tests\WpfControlsLib.Tests\WpfControlsLib.Tests.csproj", "{8EDF4429-251A-416D-BB68-93F227191BCF}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShapeEditorLib", "src\ShapeEditorLib\ShapeEditorLib.csproj", "{70C4C455-CE5C-47CE-B623-CB48424C87DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -193,6 +195,18 @@ Global
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|x64.ActiveCfg = Release|Any CPU
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|x64.Build.0 = Release|Any CPU
+		{70C4C455-CE5C-47CE-B623-CB48424C87DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70C4C455-CE5C-47CE-B623-CB48424C87DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70C4C455-CE5C-47CE-B623-CB48424C87DE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{70C4C455-CE5C-47CE-B623-CB48424C87DE}.Debug|x64.Build.0 = Debug|Any CPU
+		{70C4C455-CE5C-47CE-B623-CB48424C87DE}.MonoRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{70C4C455-CE5C-47CE-B623-CB48424C87DE}.MonoRelease|Any CPU.Build.0 = Release|Any CPU
+		{70C4C455-CE5C-47CE-B623-CB48424C87DE}.MonoRelease|x64.ActiveCfg = Release|Any CPU
+		{70C4C455-CE5C-47CE-B623-CB48424C87DE}.MonoRelease|x64.Build.0 = Release|Any CPU
+		{70C4C455-CE5C-47CE-B623-CB48424C87DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70C4C455-CE5C-47CE-B623-CB48424C87DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70C4C455-CE5C-47CE-B623-CB48424C87DE}.Release|x64.ActiveCfg = Release|Any CPU
+		{70C4C455-CE5C-47CE-B623-CB48424C87DE}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

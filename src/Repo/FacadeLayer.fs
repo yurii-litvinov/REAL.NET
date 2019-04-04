@@ -36,9 +36,9 @@ type AttributeKind =
     /// Complex attribute kind, reference to another node in the same (or some other) model. Attribute shall reference
     /// target node in tis case. Example of reference types usage is UML class diagram, where field of a class
     /// can be an object of another class defined on the same diagram. Note that in UML reference attributes and
-    /// associations are the same thing from the point of view of abstract syntax (and our Core Metametamodel does not
+    /// associations are the same thing from the point of view of abstract syntax (and our Core Metamodel does not
     /// have a notion of attribute for that reason, they are modelled as associations). But concrete syntax (and,
-    /// consequently, editors) shall distinquish these two cases.
+    /// consequently, editors) shall distinguish these two cases.
     /// NOTE: Reference types are not supported in v1, so AttributeKind value shall never be Reference.
     | Reference = 5
 
@@ -199,9 +199,9 @@ type IRepo =
     end
 
 type TypeOfVisual =
-    | XML
-    | Image
-    | NoFile
+    | XML = 0
+    | Image = 1
+    | NoFile = 2
 
 /// This interface represents information about how element is shown on screen.
 type IVisualInfo =
