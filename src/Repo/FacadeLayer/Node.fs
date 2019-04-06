@@ -27,13 +27,4 @@ type Node
     ) =
 
     inherit Element(infrastructure, element, elementRepository, attributeRepository)
-
-    interface INode with
-        member this.Function
-            with get (): IElement = 
-                if element.Function.IsNone then
-                    null
-                else
-                    elementRepository.GetElement element.Function.Value
-            and set (v: IElement): unit = 
-                raise (Exception("You can't modify function (yet)"))
+    interface INode

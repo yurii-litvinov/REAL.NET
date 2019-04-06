@@ -50,9 +50,6 @@ and INode =
 
         /// Name of a node, possibly not unique.
         abstract Name: string with get, set
-        
-        /// Funtion in the node
-        abstract Function: Option<IElement> with get, set
     end
 
 /// Edge is a kind of element which can connect to everything.
@@ -129,8 +126,12 @@ and IModel =
         /// Returns all edges in a model.
         abstract Edges: IEdge seq with get
 
+        /// A map of custom model properties.
+        abstract Properties: Map<string, string> with get, set
+
         /// Deletes element from a model and unconnects related elements if needed.
         abstract DeleteElement: element : IElement -> unit
+
     end
 
 /// Repository is a collection of models.

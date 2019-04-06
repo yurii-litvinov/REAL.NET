@@ -61,7 +61,7 @@ module Element =
                     |> Seq.map (fun e -> e.Target)
                     |> Seq.choose id
                     |> Seq.filter (not << visited.Contains)
-                    |> Seq.iter (fun element -> queue.Enqueue element)
+                    |> Seq.iter queue.Enqueue
                     doBfs()
 
         doBfs ()
