@@ -59,7 +59,7 @@ type RobotsMetamodelBuilder() =
                 edge
 
             let abstractNode = +("AbstractNode", "", true)
-           // let initialNode = +("InitialNode", "View/Pictures/initialBlock.png", false)
+            let initialNode = +("InitialNode", "View/Pictures/initialBlock.png", false)
             let finalNode = +("FinalNode", "View/Pictures/finalBlock.png", false)
 
             let abstractMotorsBlock = +("AbstractMotorsBlock", "", true)

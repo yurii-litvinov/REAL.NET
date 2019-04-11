@@ -21,6 +21,7 @@ namespace ConstraintsPlugin
     using System.Windows.Controls;
     using ConstraintsMatcher;
     using WpfControlsLib.Controls.Scene;
+    using System.Collections.Generic;
 
     /// <summary>
     /// This class is a sample plugin and is also used in unit tests to check plugin loading.
@@ -37,10 +38,11 @@ namespace ConstraintsPlugin
 
         private Grid constraintsPanel;
 
-        private string currentModelName;
         private Scene scene;
 
-        private ConstraintsCheckSystem checkSystem;
+        private List<Tuple<string, ConstraintsCheckSystem>> checkSystems;
+        private ConstraintsCheckSystem currentCheckSystem;
+        private string currentModelName;
         //private ConstraintsScene constraintsScene;
 
         private ConstraintsColumn constraintsColumn;
@@ -50,6 +52,7 @@ namespace ConstraintsPlugin
         private IConsole console;
 
         private WpfControlsLib.Model.Model targetModel;
+        private WpfControlsLib.Model.Model currentModel;
 
         /// <summary>
         /// Establishes connection with the rest of the system.
@@ -67,9 +70,8 @@ namespace ConstraintsPlugin
             var repo = config.Model.Repo;
 
             this.targetModel = (WpfControlsLib.Model.Model)config.Model; //TODO сейчас мы можем работать только с роботстестмодел
-
-            this.currentModelName = config.Model.ModelName;
-            this.constraintsPanel = config.ConstraintsGrid;
+            this.currentModelName = targetModel.ModelName;
+            this.constraintsPanel = config.LeftPanelGrid;
             this.constraintsColumn = new ConstraintsColumn(config);
 
             this.constraintsColumn.NewButtonClicked += new Action<bool>(NewButtonClicked);
@@ -83,14 +85,26 @@ namespace ConstraintsPlugin
 
             this.constraintsPanel.Children.Add(this.constraintsColumn);
 
-            this.checkSystem = new ConstraintsCheckSystem(this.targetModel, this.scene.Graph);
+            this.checkSystems = new List<Tuple<string, ConstraintsCheckSystem>>();
+            if (targetModel.ModelName != null)
+            {
+                this.checkSystems.Add(new Tuple<string, ConstraintsCheckSystem>(this.targetModel.ModelName, new ConstraintsCheckSystem(this.targetModel, this.scene.Graph)));
+            }
 
     }
 
-        private void OnModelChanged(String modelName)
+        private void OnModelChanged(string modelName)
         {
             if (modelName != "ConstraintsTestModel")
+            {
                 this.currentModelName = modelName;
+                var curScene = (Scene)scene;
+                if (!this.checkSystems.Any(x => x.Item1 == targetModel.ModelName))
+                {
+                    this.checkSystems.Add(new Tuple<string, ConstraintsCheckSystem>(targetModel.ModelName, new ConstraintsCheckSystem(this.targetModel, this.scene.Graph)));
+                }
+                this.currentCheckSystem = this.checkSystems.Find(x => x.Item1 == targetModel.ModelName).Item2;
+            }
         }
 
         private void SaveButtonClicked(bool i)
@@ -98,9 +112,14 @@ namespace ConstraintsPlugin
             try
             {
                 this.constraintsColumn.allowSave = false;
-                var rootName = this.checkSystem.AddConstraint("ConstraintsTestModel");
+                var unit = new ConstraintsUnit();
+                var rootName = this.currentCheckSystem.AddConstraint(this.targetModel, unit.GetHashCode());
+                unit.RootName = rootName;
+                unit.ConstraintsModelName = "ConstraintsTestModel"; //TODO 
+                unit.DeleteButtonClicked += new Action<ConstraintsUnit>(this.DeleteConstraint);
+                unit.EditButtonClicked += new Action<string>(this.EditConstraint);
                 this.RemoveConstraintsSystemInterface();
-                var unit = this.CreateUnit(rootName);
+               
                 this.constraintsColumn.AddUnit(unit);
                 this.constraintsColumn.allowSave = true;
             }
@@ -110,9 +129,14 @@ namespace ConstraintsPlugin
             }
         }
 
+        private void EditConstraint(string constraintsModelName)
+        {
+            this.constraintsColumn.NewButtonClickedActions();
+        }
+
         private void CheckButtonClicked(bool i)
         {
-            if (this.checkSystem.Check())
+            if (this.currentCheckSystem.Check())
             {
                 this.console.SendMessage("Constraints check successfully passed");
             }
@@ -124,9 +148,15 @@ namespace ConstraintsPlugin
 
         private ConstraintsUnit CreateUnit(String rootName)
         {
-            var unit = new ConstraintsUnit(rootName);
-            unit.DeleteButtonClicked += new Action<ConstraintsUnit>(this.constraintsColumn.DeleteConstraintUnit);
+            var unit = new ConstraintsUnit();
+            
             return unit;
+        }
+
+        private void DeleteConstraint(ConstraintsUnit unit)
+        {
+            this.constraintsColumn.DeleteConstraintUnit(unit);
+            this.currentCheckSystem.DeleteConstraint("ConstraintsTestModel", unit.GetHashCode());
         }
         private void NewButtonClicked(bool i)
         {

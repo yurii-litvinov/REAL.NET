@@ -39,6 +39,10 @@ namespace EditorPluginInterfaces
         public IToolbar Toolbar { get; }
 
         /// <summary>
+        /// Left panel grid
+        /// </summary>
+        public Grid LeftPanelGrid { get; }
+        /// <summary>
         /// Console's reference that should be given to plugin
         /// </summary>
         public IConsole Console { get; }
@@ -48,35 +52,14 @@ namespace EditorPluginInterfaces
         /// </summary>
         public IElementProvider ElementProvider { get; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public Grid ConstraintsGrid { get; set; }
-
-        /// <summary>
-        /// RightPanel
-        /// </summary>
-        public Grid RightPanel { get; set; }
-
-        /// <summary>
-        /// SceneGrid
-        /// </summary>
-        public Grid SceneGrid { get; set; }
-
-        /// <summary>
-        /// SceneGrid
-        /// </summary>
-        public Grid PaletteGrid { get; set; }
-
         public delegate void Func(string modelName);
         public Func FuncCreateConstraintsModel;
-        public Func OnMainModelChangedFunction;
 
-        public delegate void Func1(bool modelName);
-        public Func1 FuncChangeSelectorVisibility;
+        public delegate void VisibilityFunc(bool isVisible);
+        public VisibilityFunc FuncChangeSelectorVisibility;
 
+        public Action<String> OnMainModelChangedFunction;
 
-        public Action<String> OnMainModelChanged;
         /// <summary>
         /// Initializes a new instance of <see cref="PluginConfig"/> 
         /// </summary>
@@ -86,22 +69,14 @@ namespace EditorPluginInterfaces
         /// <param name="toolbar">Toolbar</param>
         /// <param name="console">Console</param>
         /// <param name="elementProvider">Element provider</param>
-        public PluginConfig(IModel model, IScene scene, IToolbar toolbar, IConsole console, IElementProvider elementProvider, Grid constraintsGrid)
+        public PluginConfig(IModel model, IScene scene, IToolbar toolbar, IConsole console, IElementProvider elementProvider, Grid leftPanelGrid)
         {
             this.Model = model;
             this.Scene = scene;
             this.Toolbar = toolbar;
             this.Console = console;
             this.ElementProvider = elementProvider;
-            this.ConstraintsGrid = constraintsGrid;
+            this.LeftPanelGrid = leftPanelGrid;
         }
-
-        //public void AddGrids(Grid rightPanel, Grid sceneGrid, Grid paletteGrid)
-        //{
-        //    
-        //    this.RightPanel = rightPanel;
-        //    this.SceneGrid = sceneGrid;
-        //    this.PaletteGrid = paletteGrid;
-        //}
     }
 }

@@ -30,28 +30,42 @@ namespace ConstraintsPlugin
 
         public event Action<ConstraintsUnit> DeleteButtonClicked;
 
-        private String name;
+        public event Action<string> EditButtonClicked;
 
-        public String ConstraintsName
+        public string ConstraintsModelName;
+        private String rootName;
+
+        public String RootName
         {
-            get { return name; }
+            get { return rootName; }
             set
             {
-                name = value;
-                OnPropertyChanged("ConstraintsName");
+                rootName = value;
+                OnPropertyChanged("RootName");
             }
         }
 
-        public ConstraintsUnit(String rootName)
+        public ConstraintsUnit()
         {
             this.DataContext = this;
-            this.name = rootName;
+            this.rootName = rootName;
             this.InitializeComponent();
         }
+
+        //public ConstraintsUnit()
+        //{
+        //    this.DataContext = this;
+        //    this.InitializeComponent();
+        //}
 
         private void DeleteButtonClick(object sender, System.Windows.RoutedEventArgs e)
         {
             DeleteButtonClicked(this);
+        }
+
+        private void EditButtonClick(object sender, System.Windows.RoutedEventArgs e)
+        {
+            EditButtonClicked(this.ConstraintsModelName);
         }
 
         protected void OnPropertyChanged(string propertyName)

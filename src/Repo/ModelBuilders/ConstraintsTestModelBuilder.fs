@@ -17,6 +17,7 @@ namespace Repo.Metametamodels
 open Repo.DataLayer
 open Repo.CoreSemanticLayer
 open Repo.InfrastructureSemanticLayer
+open System.Runtime.InteropServices
 
 /// Initializes repository with test model conforming to Robots Metamodel, actual program that can be written by end-user.
 type ConstraintsTestModelBuilder() =
@@ -27,14 +28,14 @@ type ConstraintsTestModelBuilder() =
             let infrastructureMetamodel = infrastructure.Metamodel.Model
 
             let metamodelAbstractNode = Model.findNode metamodel "AbstractNode"
-            //let metamodelInitialNode = Model.findNode metamodel "InitialNode"
+            let metamodelInitialNode = Model.findNode metamodel "InitialNode"
             let metamodelFinalNode = Model.findNode metamodel "FinalNode"
             let metamodelMotorsForward = Model.findNode metamodel "MotorsForward"
             let metamodelTimer = Model.findNode metamodel "Timer"
 
             let metamodelAll = Model.findNode metamodel "AllNodes"
-            let metamodelAny = Model.findNode metamodel "AnyNodes"
-            let metamodelAnd = Model.findNode metamodel "AndNode"
+            //let metamodelAny = Model.findNode metamodel "AnyNodes"
+            
             let metamodelOr = Model.findNode metamodel "OrNode"
             let metamodelNot = Model.findNode metamodel "NotNode"
             let metamodelNone = Model.findNode metamodel "NoNodes"
@@ -43,31 +44,13 @@ type ConstraintsTestModelBuilder() =
             let link = Model.findAssociationWithSource metamodelAbstractNode "target"
 
             let model = repo.CreateModel("ConstraintsTestModel", metamodel)
+            model.Properties <- model.Properties.Add ("IsVisible", false.ToString())
+            let initialNode = infrastructure.Instantiate model metamodelInitialNode
 
-            //let initialNode = infrastructure.Instantiate model metamodelInitialNode
-            let finalNode = infrastructure.Instantiate model metamodelFinalNode
+            let motorsForw = infrastructure.Instantiate model metamodelMotorsForward
+            infrastructure.Element.SetAttributeValue motorsForw "ports" "M3, M4"
+            infrastructure.Element.SetAttributeValue motorsForw "power" "10*"
 
-            let motorsForward = infrastructure.Instantiate model metamodelMotorsForward
-            infrastructure.Element.SetAttributeValue motorsForward "ports" "M3, M4"
-            infrastructure.Element.SetAttributeValue motorsForward "power" "100"
-
-            let motorsForward2 = infrastructure.Instantiate model metamodelMotorsForward
-            infrastructure.Element.SetAttributeValue motorsForward2 "ports" "M3, M4"
-            infrastructure.Element.SetAttributeValue motorsForward2 "power" "100"
-
-            let timer = infrastructure.Instantiate model metamodelTimer
-            infrastructure.Element.SetAttributeValue timer "delay" "3000"
-
-            let notNode = infrastructure.Instantiate model metamodelNot
-
-            let orNodes = infrastructure.Instantiate model metamodelOr
-
-            let timer2 = infrastructure.Instantiate model metamodelTimer
-            infrastructure.Element.SetAttributeValue timer2 "delay" "3000"
-
-            let timer3 = infrastructure.Instantiate model metamodelTimer
-            infrastructure.Element.SetAttributeValue timer3 "delay" "3000"
-            
 
             let (-->) (src: IElement) dst =
                 let aLink = infrastructure.Instantiate model link :?> IAssociation
@@ -75,7 +58,6 @@ type ConstraintsTestModelBuilder() =
                 aLink.Target <- Some dst
                 dst
 
-            //initialNode -->
-            finalNode --> timer --> motorsForward --> notNode --> timer2 |> ignore
-            timer --> timer3 --> orNodes --> motorsForward2 |> ignore
+            
+            motorsForw |> ignore
             ()

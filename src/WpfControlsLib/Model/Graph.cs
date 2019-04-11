@@ -162,6 +162,7 @@ namespace WpfControlsLib.Model
             {
                 DataVertex = vertex
             };
+
             this.AddNewVertexControl?.Invoke(this, args);
             this.ElementAdded?.Invoke(this, new ElementAddedEventArgs { Element = node });
         }
@@ -197,6 +198,9 @@ namespace WpfControlsLib.Model
                 var nodeViewModel = this.DataGraph.Vertices.First(x => x.Node == element);
                 this.DataGraph.RemoveVertex(nodeViewModel);
             }
+
+            var model = this.model.Repo.Model(this.model.ModelName);
+            model.DeleteElement(element);
 
             this.ElementRemoved?.Invoke(this, new ElementRemovedEventArgs { Element = element });
         }

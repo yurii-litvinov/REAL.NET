@@ -73,7 +73,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\ConstraintsMatcher\ConstraintsMatcher.csproj">
+    <ProjectReference Include="..\ConstraintsMatcher\ConstraintsMatcher.csproj">
       <Project>{10456fba-b53a-486a-811a-96a5e962b026}</Project>
       <Name>ConstraintsMatcher</Name>
     </ProjectReference>
@@ -91,6 +91,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

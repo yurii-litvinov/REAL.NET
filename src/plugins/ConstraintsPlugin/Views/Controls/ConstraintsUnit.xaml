@@ -25,11 +25,12 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height = "90" />
+            <RowDefinition Height = "120" />
         </Grid.RowDefinitions>
 
-        <TextBlock x:Name="constraintsName" Text ="{Binding Path=ConstraintsName}"/>
+        <TextBlock x:Name="constraintsName" Text ="{Binding Path=RootName}"/>
 
         <Button x:Name="deleteButton" Margin="4" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="20" Content="✘" Click="DeleteButtonClick"/>
+        <Button x:Name="watchButton" Margin="15" HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="20" Content="👁" Click="EditButtonClick"/>
     </Grid>
 </UserControl>

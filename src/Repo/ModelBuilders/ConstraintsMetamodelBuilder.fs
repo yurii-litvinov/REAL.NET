@@ -51,6 +51,7 @@ type ConstraintsMetamodelBuilder() =
             let edgeTargetNameAssociation = findAssociation metamodelAssociation "targetName"
 
             let model = repo.CreateModel("ConstraintsMetamodel", metamodel)
+            model.Properties <- model.Properties.Add ("IsVisible", false.ToString())
 
             let (~+) (name, shape, isAbstract) =
                 let node = infrastructure.Instantiate model metamodelNode :?> INode
@@ -78,6 +79,7 @@ type ConstraintsMetamodelBuilder() =
                 edge
 
             let abstractNode = +("AbstractNode", "", true)
+            let initialNode = +("InitialNode", "View/Pictures/initialBlock.png", false)
             let finalNode = +("FinalNode", "View/Pictures/finalBlock.png", false)
 
             let abstractMotorsBlock = +("AbstractMotorsBlock", "", true)
@@ -92,11 +94,10 @@ type ConstraintsMetamodelBuilder() =
             let timer = +("Timer", "View/Pictures/timerBlock.png", false)
 
             let allNodes = +("AllNodes", "View/Pictures/allNodes.png", false)
-            let anyNodes = +("AnyNodes", "View/Pictures/timerBlock.png", false)
-            let noNodes = +("NoNodes", "View/Pictures/timerBlock.png", false)
-            let andNode = +("AndNode", "View/Pictures/timerBlock.png", false)
-            let orNode = +("OrNode", "View/Pictures/timerBlock.png", false)
-            let notNode = +("NotNode", "View/Pictures/timerBlock.png", false)
+            //let anyNodes = +("AnyNodes", "View/Pictures/timerBlock.png", false)
+            let noNodes = +("NoNodes", "View/Pictures/noNodes.png", false)
+            let orNode = +("OrNode", "View/Pictures/orNode.png", false)
+            let notNode = +("NotNode", "View/Pictures/notNode.png", false)
 
             let link = abstractNode ---> (abstractNode, "target", "Link")
             infrastructure.Element.AddAttribute link "guard" "AttributeKind.String" ""
@@ -111,9 +112,9 @@ type ConstraintsMetamodelBuilder() =
             abstractMotorsBlock --|> abstractNode
             timer --|> abstractNode
             allNodes --|> abstractNode
-            anyNodes --|> abstractNode
+            //anyNodes --|> abstractNode
             noNodes --|> abstractNode
-            andNode --|> abstractNode
+            //andNode --|> abstractNode
             orNode --|> abstractNode
             notNode --|> abstractNode
 

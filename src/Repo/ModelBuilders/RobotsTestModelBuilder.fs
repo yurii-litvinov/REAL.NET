@@ -27,7 +27,7 @@ type RobotsTestModelBuilder() =
             let infrastructureMetamodel = infrastructure.Metamodel.Model
 
             let metamodelAbstractNode = Model.findNode metamodel "AbstractNode"
-            //let metamodelInitialNode = Model.findNode metamodel "InitialNode"
+            let metamodelInitialNode = Model.findNode metamodel "InitialNode"
             let metamodelFinalNode = Model.findNode metamodel "FinalNode"
             let metamodelMotorsForward = Model.findNode metamodel "MotorsForward"
             let metamodelTimer = Model.findNode metamodel "Timer"
@@ -36,28 +36,15 @@ type RobotsTestModelBuilder() =
 
             let model = repo.CreateModel("RobotsTestModel", metamodel)
 
-            //let initialNode = infrastructure.Instantiate model metamodelInitialNode
+            let initialNode = infrastructure.Instantiate model metamodelInitialNode
             let finalNode = infrastructure.Instantiate model metamodelFinalNode
 
             let motorsForward = infrastructure.Instantiate model metamodelMotorsForward
             infrastructure.Element.SetAttributeValue motorsForward "ports" "M3, M4"
             infrastructure.Element.SetAttributeValue motorsForward "power" "100"
 
-            let motorsForward2 = infrastructure.Instantiate model metamodelMotorsForward
-            infrastructure.Element.SetAttributeValue motorsForward2 "ports" "M3, M4"
-            infrastructure.Element.SetAttributeValue motorsForward2 "power" "100"
-
             let timer = infrastructure.Instantiate model metamodelTimer
             infrastructure.Element.SetAttributeValue timer "delay" "3000"
-
-            let timer2 = infrastructure.Instantiate model metamodelTimer
-            infrastructure.Element.SetAttributeValue timer2 "delay" "3000"
-
-            let timer3 = infrastructure.Instantiate model metamodelTimer
-            infrastructure.Element.SetAttributeValue timer3 "delay" "3000"
-
-            let timer4 = infrastructure.Instantiate model metamodelTimer
-            infrastructure.Element.SetAttributeValue timer4 "delay" "3000"
 
             let (-->) (src: IElement) dst =
                 let aLink = infrastructure.Instantiate model link :?> IAssociation
@@ -65,10 +52,9 @@ type RobotsTestModelBuilder() =
                 aLink.Target <- Some dst
                 dst
 
-            //initialNode --> 
-            finalNode --> timer --> motorsForward |> ignore
-
-            //timer --> timer2 --> motorsForward --> finalNode |> ignore
-            //motorsForward --> timer3 --> motorsForward2 |> ignore
-
+            
+            initialNode --> motorsForward --> timer --> finalNode |> ignore
             ()
+
+           //initialNode -->
+           //

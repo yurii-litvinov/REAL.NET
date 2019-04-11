@@ -110,13 +110,17 @@ namespace ConstraintsPlugin
 
         private void NewConstraintClick(object sender, System.Windows.RoutedEventArgs e)
         {
+            this.NewButtonClickedActions();
+        }
+
+        public void NewButtonClickedActions()
+        {
             this.EnableSaveButton = true;
             this.EnableNewButton = false;
             this.EnableCloseButton = true;
             this.allowSave = true;
             this.NewButtonClicked(true);
         }
-
         private void CheckConstraintsClick(object sender, System.Windows.RoutedEventArgs e)
         {
             this.CheckButtonClicked(false);
