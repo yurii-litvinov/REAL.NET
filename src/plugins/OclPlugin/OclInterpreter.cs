@@ -86,23 +86,45 @@ namespace OclPlugin
                     this.scene.AllowNodes();
                 }
 
-                foreach (IElement element in this.model.Elements)
+                foreach (Repo.IModel model in this.repository.Models)
                 {
-                    IElement parent = element;
-                    for (int j = 0; j < this.calculator.Depth; j++)
-                    {
-                        parent = parent.Class;
-                    }
+                    this.model = model;
+                    this.calculator.Model = this.model;
+                    bool ok = true;
 
-                    if (parent == this.currentElement)
+                    foreach (IElement element in this.model.Elements)
                     {
-                        IElement cur = this.currentElement;
-                        this.currentElement = element;
-                        bool curBool = this.VisitOclExpression(context.oclExpression()[i]);
-                        if (this.scene != null && !curBool)
-                            this.scene.SelectNode(element.Name);
-                        result = result && curBool;
-                        this.currentElement = cur;
+                        IElement parent = element;
+                        for (int j = 0; j < this.calculator.Depth; j++)
+                        {
+                            try
+                            {
+                                parent = parent.Class;
+                            }
+                            catch (InvalidSemanticOperationException)
+                            {
+                                ok = false;
+                                break;
+                            }
+                        }
+
+                        if (!ok)
+                        {
+                            continue;
+                        }
+
+                        if (parent == this.currentElement)
+                        {
+                            IElement cur = this.currentElement;
+                            this.currentElement = element;
+                            this.calculator.Element = this.currentElement;
+                            bool curBool = this.VisitOclExpression(context.oclExpression()[i]);
+                            if (this.scene != null && !curBool)
+                                this.scene.SelectNode(element.Name);
+                            result = result && curBool;
+                            this.currentElement = cur;
+                            this.calculator.Element = this.currentElement;
+                        }
                     }
                 }
 
@@ -408,6 +430,7 @@ namespace OclPlugin
                         this.Element = this.Model.FindElement(element);
                     }
 
+                    var old = this.Element;
                     if (context.NUMBER() != null)
                     {
                         IElement parent = this.Element;
@@ -420,6 +443,7 @@ namespace OclPlugin
                     }
 
                     IAttribute attr = this.Element.Attributes.First(x => x.Name == context.pathName().GetText());
+                    this.Element = old;
 
                     switch (attr.Kind)
                     {
