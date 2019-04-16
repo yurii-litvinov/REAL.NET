@@ -70,6 +70,10 @@
       <Project>{9e7065a4-ba5e-4752-84bf-54d5c00db60c}</Project>
       <Name>Repo</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\WpfControlsLib\WpfControlsLib.csproj">
+      <Project>{1DCB1D77-AB11-404C-BCE4-8EB7BF8F549D}</Project>
+      <Name>WpfControlsLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

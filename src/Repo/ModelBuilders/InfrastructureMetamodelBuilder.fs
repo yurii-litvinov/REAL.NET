@@ -123,6 +123,8 @@ type InfrastructureMetamodelBuilder() =
             createAttribute element booleanNode "isAbstract" "true"
             createAttribute element metatype "instanceMetatype" "Metatype.Node"
 
+            createAttribute element booleanNode "isValid" "true"
+
             createAttribute node booleanNode "isAbstract" "false"
 
             createAttribute edge stringNode "shape" "View/Pictures/edge.png"

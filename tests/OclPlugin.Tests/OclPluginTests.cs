@@ -6,6 +6,7 @@ using NUnit.Framework;
 using OclPlugin;
 using Repo;
 using Repo.InfrastructureSemanticLayer;
+using Repo.Metametamodels;
 
 namespace OclPlugin.Tests
 {
@@ -16,17 +17,28 @@ namespace OclPlugin.Tests
         [SetUp]
         public void Setup()
         {
-            var repo = RepoFactory.Create();
+            //var repo = RepoFactory.Create();
             //new InfrastructureSemantic(repo.);
-            IModel meta = repo.Model("CoreMetametamodel");
-            IModel func = repo.CreateModel("Function", meta);
-            
-            IModel call = repo.CreateModel("Call", func);
-            IElement funcElem = func.CreateElement(meta.FindElement("Node"));
-            
-            IElement callElem = call.CreateElement(funcElem);
+            var data = new Repo.DataLayer.DataRepo();
 
-            interpreter = new OclInterpreter(repo);
+            CoreMetametamodelBuilder builder5 = new CoreMetametamodelBuilder();
+            ((IModelBuilder)builder5).Build(data);
+            LanguageMetamodelBuilder builder6 = new LanguageMetamodelBuilder();
+            ((IModelBuilder)builder6).Build(data);
+            InfrastructureMetamodelBuilder builder7 = new InfrastructureMetamodelBuilder();
+            ((IModelBuilder)builder7).Build(data);
+            NodeMetamodelBuilder builder = new NodeMetamodelBuilder();
+            ((IModelBuilder)builder).Build(data);
+            ObjectMetamodelBuilder builder2 = new ObjectMetamodelBuilder();
+            ((IModelBuilder)builder2).Build(data);
+            ImplObjectMetamodelBuilder builder3 = new ImplObjectMetamodelBuilder();
+            ((IModelBuilder)builder3).Build(data);
+            DiagramObjectMetamodelBuilder builder4 = new DiagramObjectMetamodelBuilder();
+            ((IModelBuilder)builder4).Build(data);
+
+            var repo = new Repo.FacadeLayer.Repo(data);
+
+            interpreter = new OclInterpreter(repo, null);
         }
 
         [Test]
@@ -84,6 +96,27 @@ namespace OclPlugin.Tests
             1->max(2) = 2
             inv@0:
             5->div(2) = 2
+            endpackage");
+
+            ITokenSource lexer = new OclLexer(stream);
+            ITokenStream tokens = new CommonTokenStream(lexer);
+            var parser = new OclParser(tokens)
+            {
+                BuildParseTree = true
+            };
+            IParseTree tree = parser.oclFile();
+            Assert.IsTrue(tree.Accept(interpreter));
+
+        }
+
+        [Test]
+        public void FuncTest1()
+        {
+
+            var stream = CharStreams.fromstring(@"package ObjectMetamodel
+            context FunctionNode
+            inv@2:
+            self.params@1 <> self.callParams@2
             endpackage");
 
             ITokenSource lexer = new OclLexer(stream);

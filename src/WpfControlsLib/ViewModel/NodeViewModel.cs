@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Media;
 using GraphX.PCL.Common.Models;
 using Repo;
+using System.Linq;
 
 namespace WpfControlsLib.ViewModel
 {
@@ -16,6 +17,7 @@ namespace WpfControlsLib.ViewModel
         private IList<AttributeViewModel> attributes = new List<AttributeViewModel>();
         private string picture = string.Empty;
         private Color shadowColor = Colors.White;
+        private INode node = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NodeViewModel"/> class.
@@ -32,7 +34,18 @@ namespace WpfControlsLib.ViewModel
         /// </summary>
         public string Name { get; set; }
 
-        public INode Node { get; set; }
+        public INode Node { get { return node; } set { node = value;
+                if (node.Attributes.First(x => x.Name == "isValid").StringValue == "false")
+                {
+                    ShadowColor = Colors.Red;
+                    Color = Brushes.Red;
+                }
+                else
+                {
+                    ShadowColor = Colors.White;
+                    Color = Brushes.Black;
+                }
+            } }
 
         public Brush Color
         {

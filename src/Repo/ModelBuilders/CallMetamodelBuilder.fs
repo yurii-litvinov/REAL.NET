@@ -136,7 +136,7 @@ type ImplObjectMetamodelBuilder() =
 
                 node
                 
-            let rotateNode = +("RotateFunctionNode", "View/Pictures/initialBlock.png", false)
+            let rotateNode = +("RotateFunctionNode", "", false)
 
             infrastructure.Element.AddAttribute rotateNode "rotation" "AttributeKind.Double" "1.57"
             infrastructure.Element.SetAttributeValue rotateNode "params" "1"

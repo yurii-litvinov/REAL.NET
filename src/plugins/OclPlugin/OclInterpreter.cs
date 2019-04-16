@@ -73,17 +73,24 @@ namespace OclPlugin
             this.currentElement = this.model.FindElement(text);
             this.calculator.Element = this.currentElement;
             bool result = true;
+
+            foreach (Repo.IModel model in this.repository.Models)
+            {
+                foreach (IElement element in model.Elements)
+                {
+                    if (element.Attributes.Any(x => x.Name == "isValid"))
+                    {
+                        element.Attributes.First(x => x.Name == "isValid").StringValue = "true";
+                    }
+                }
+            }
+
             for (int i = 0; i < context.oclExpression().Length; i++)
             {
                 this.calculator.Depth = 0;
                 if (context.NUMBER() != null && context.NUMBER().Length > 0)
                 {
                     this.calculator.Depth = int.Parse(context.NUMBER()[i].GetText());
-                }
-
-                if (this.scene != null)
-                {
-                    this.scene.AllowNodes();
                 }
 
                 foreach (Repo.IModel model in this.repository.Models)
@@ -119,8 +126,12 @@ namespace OclPlugin
                             this.currentElement = element;
                             this.calculator.Element = this.currentElement;
                             bool curBool = this.VisitOclExpression(context.oclExpression()[i]);
-                            if (this.scene != null && !curBool)
-                                this.scene.SelectNode(element.Name);
+                            if (!curBool)
+                            {
+                                element.Attributes.First(x => x.Name == "isValid").StringValue = "false";
+                            }
+                            //if (this.scene != null && !curBool)
+                            //    this.scene.SelectNode(element.Name);
                             result = result && curBool;
                             this.currentElement = cur;
                             this.calculator.Element = this.currentElement;

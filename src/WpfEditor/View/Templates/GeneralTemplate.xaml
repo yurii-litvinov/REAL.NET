@@ -35,6 +35,7 @@
                         <controls:VertexLabelControl 
                             x:Name="PART_vertexLabel" 
                             Content="{Binding Name}" 
+                            Foreground="{Binding Color}"
                             LabelPositionSide="Bottom" 
                             FontFamily="Lucida Sans Regular" />
                     </Grid>

@@ -20,7 +20,7 @@
 
     <!-- VERTEX CONTROL -->
     <Style TargetType="{x:Type controls:VertexControl}">
-        <Setter Property="Background" Value="{Binding Color}"/>
+        <Setter Property="Foreground" Value="{Binding Color}"/>
         <Setter Property="VertexShape" Value="None"/>
         <Setter Property= "ShowLabel" Value="True"/>
         <Setter Property="Template">
@@ -31,7 +31,7 @@
                         <controls:VertexLabelControl 
                             x:Name="PART_vertexLabel" 
                             Content="{Binding Name}" 
-                            LabelPositionSide="Bottom" 
+                            LabelPositionSide="Bottom"
                             FontFamily="Lucida Sans Regular" />
                     </Grid>
                 </ControlTemplate>
