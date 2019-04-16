@@ -74,6 +74,11 @@ namespace OclPlugin
             this.calculator.Element = this.currentElement;
             bool result = true;
 
+            if (this.scene != null)
+            {
+                this.scene.AllowNodes();
+            }
+
             foreach (Repo.IModel model in this.repository.Models)
             {
                 foreach (IElement element in model.Elements)
@@ -128,6 +133,7 @@ namespace OclPlugin
                             bool curBool = this.VisitOclExpression(context.oclExpression()[i]);
                             if (!curBool)
                             {
+                                this.scene.SelectNode(this.currentElement.Name);
                                 element.Attributes.First(x => x.Name == "isValid").StringValue = "false";
                             }
                             //if (this.scene != null && !curBool)

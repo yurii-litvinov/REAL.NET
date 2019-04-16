@@ -150,6 +150,7 @@ namespace WpfControlsLib.Controls.Scene
                     var vertex = this.Graph.DataGraph.Vertices.ToList()[i];
                     this.NodeSelected?.Invoke(this, new NodeSelectedEventArgs {Node = vertex});
                     vertex.ShadowColor = Colors.Red;
+                    vertex.Color = Brushes.Red;
                     foreach (var ed in this.graphArea.VertexList)
                     {
                         if (ed.Key == vertex)
@@ -169,6 +170,7 @@ namespace WpfControlsLib.Controls.Scene
             {
                 var vertex = this.Graph.DataGraph.Vertices.ToList()[i];
                 vertex.ShadowColor = Colors.White;
+                vertex.Color = Brushes.Black;
             }
         }
 
