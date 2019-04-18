@@ -22,7 +22,6 @@ namespace WpfEditor.View
     using EditorPluginInterfaces;
     using PluginManager;
     using Repo;
-    using WpfControlsLib.Constraints;
     using WpfControlsLib.Controls.Console;
     using WpfControlsLib.Controls.ModelSelector;
     using WpfControlsLib.Controls.Scene;
@@ -143,17 +142,6 @@ namespace WpfEditor.View
             foreach (Window w in Application.Current.Windows)
             {
                 w.Close();
-            }
-        }
-
-        private void ConstraintsButtonClick(object sender, RoutedEventArgs e)
-        {
-            var constraintsWindow = new ConstraintsWindow(this.model);
-            constraintsWindow.ShowDialog();
-
-            if (!this.model.ConstraintsCheck())
-            {
-                this.Console.ReportError(this.model.Constraints.ErrorMsg);
             }
         }
 

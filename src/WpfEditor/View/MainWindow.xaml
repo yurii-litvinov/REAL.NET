@@ -125,13 +125,6 @@
                         <DataGridTextColumn Header="Value" IsReadOnly="False" Binding="{Binding Value}"/>
                     </DataGrid.Columns>
                 </DataGrid>
-
-                <Button 
-                    Grid.Row="5"
-                    Content="Constraints"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Bottom"
-                    Click="ConstraintsButtonClick" Height="26"/>
             </Grid>
 
         </DockPanel>
