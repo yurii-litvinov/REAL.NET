@@ -1,5 +1,5 @@
 group Tests
 FsUnit
-FSharp.Core
+FSharp.Core redirects: force
 NUnit
 NUnit3TestAdapter

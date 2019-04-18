@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="XMLParserTests.fs" />
     <Content Include="paket.references" />
+    <Content Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
