@@ -39,6 +39,8 @@ namespace WpfControlsLib.Model
 
         public event EventHandler<ElementEventArgs> ElementRemoved;
 
+        public event EventHandler<ElementEventArgs> ElementCheck;
+
         public event EventHandler<EventArgs> FileSaved;
 
         public event EventHandler<EventArgs> UnsavedChanges;
@@ -166,6 +168,11 @@ namespace WpfControlsLib.Model
             this.RaiseElementRemoved(element);
         }
 
+        public void SetElementAllowed(Repo.IElement element, bool isAllowed)
+        {
+            this.RaiseElementCheck(element, isAllowed);
+        }
+
         private void RaiseNewVertex(Repo.INode node)
         {
             var args = new VertexEventArgs
@@ -196,6 +203,18 @@ namespace WpfControlsLib.Model
             };
 
             this.ElementRemoved?.Invoke(this, args);
+        }
+
+        private void RaiseElementCheck(Repo.IElement element, bool isAllowed)
+        {
+            var args = new ElementEventArgs
+            {
+                Element = element,
+                IsAllowed = isAllowed
+            };
+
+
+            this.ElementCheck?.Invoke(this, args);
         }
     }
 }

@@ -38,6 +38,8 @@ namespace WpfEditor.View
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public event Action<string> OnModelChanged;
+
         public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();
 
         public ToolbarViewModel Toolbar { get; } = new ToolbarViewModel();
@@ -108,6 +110,7 @@ namespace WpfEditor.View
             this.model.ModelName = modelName;
             this.palette.InitPalette(this.model.ModelName);
             this.scene.Reload();
+            this.OnModelChanged?.Invoke(this.model.ModelName);
         }
 
         private void InitToolbar()
@@ -129,11 +132,15 @@ namespace WpfEditor.View
             foreach (var plugindir in pluginDirs)
             {
                 var dirs = new List<string>(System.IO.Directory.GetDirectories(plugindir + "/bin"));
-                var config = new PluginConfig(this.model, null, null, this.Console, null);
+                var config = new PluginConfig(this.model, null, null, this.Console, null, this.leftPanelGrid);
+                config.ChangeSelectorVisibility = (x) => { this.modelSelector.SelectorVisibility = x; };
+                config.ChangeModel = this.SelectModel;
                 foreach (var dir in dirs)
                 {
                     libs.LaunchPlugins(dir, config);
                 }
+                if (config.OnMainModelChanged != null)
+                    this.OnModelChanged += new Action<string>(config.OnMainModelChanged);
             }
         }
 

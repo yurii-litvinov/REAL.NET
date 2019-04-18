@@ -27,7 +27,12 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:VertexControl}">
                     <Grid>
-                        <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill"/>
+                        <Border BorderThickness="4"
+                            BorderBrush="{Binding BorderColor}"
+                            CornerRadius="14">
+                            <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill">
+                            </Image>
+                        </Border>
                         <controls:VertexLabelControl 
                             x:Name="PART_vertexLabel" 
                             Content="{Binding Name}" 
@@ -75,7 +80,7 @@
 
     <ControlTemplate x:Key="AssociationEdge" TargetType="{x:Type controls:EdgeControl}">
         <Grid>
-            <Path Stroke="Blue"
+            <Path Stroke="{Binding Color}"
                 StrokeThickness="2"
                 ToolTip="{TemplateBinding ToolTip}" 
                 x:Name="PART_edgePath"/>
