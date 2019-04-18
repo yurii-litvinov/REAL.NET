@@ -2,7 +2,7 @@ RESTRICTION: == net461
 NUGET
   remote: https://api.nuget.org/v3/index.json
     dotnet-fake (5.12.6) - clitool: true
-    FSharp.Core (4.3.4)
+    FSharp.Core (4.6.2) - redirects: force
     GraphX (2.3.6)
       QuickGraphPCL
     Microsoft.Msagl (1.0.2)

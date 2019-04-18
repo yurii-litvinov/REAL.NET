@@ -5,7 +5,7 @@ source https://api.nuget.org/v3/index.json
 
 clitool dotnet-fake
 
-nuget FSharp.Core 4.3.4 restriction: >= net452
+nuget FSharp.Core redirects: force
 nuget GraphX
 nuget QuickGraphPCL 3.6.61114.2
 nuget Microsoft.Msagl 1.0.2

@@ -60,6 +60,10 @@
       <Project>{6e5f1b5d-f165-4cec-a240-8887ebd28e3b}</Project>
       <Name>EditorPluginInterfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Repo\Repo.fsproj">
+      <Project>{9e7065a4-ba5e-4752-84bf-54d5c00db60c}</Project>
+      <Name>Repo</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
