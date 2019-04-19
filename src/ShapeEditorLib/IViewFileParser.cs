@@ -20,12 +20,5 @@ namespace ShapeEditorLib
         /// </summary>
         /// <returns>Extracted info.</returns>
         IElementView ParseElementView();
-
-        /// <summary>
-        /// Gets info about attribute.
-        /// </summary>
-        /// <param name="attributeName">Name of attribute.</param>
-        /// <returns>Extracted info.</returns>
-        IAttributeView ParseAttributeProperties(string attributeName);
     }
 }

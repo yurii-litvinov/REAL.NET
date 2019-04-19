@@ -48,16 +48,13 @@
     <Compile Include="IElementView.cs" />
     <Compile Include="INodeView.cs" />
     <Compile Include="IViewFileParser.cs" />
+    <Compile Include="Parsers\Wrappers\AttributeView.cs" />
+    <Compile Include="Parsers\Wrappers\ElementView.cs" />
     <Compile Include="Parsers\XML\DocumentParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewFactory.cs" />
     <Compile Include="ViewFileGenerator.cs" />
     <Compile Include="Parsers\XMLParser.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="ViewFiles\TestView.xml">
-      <SubType>Designer</SubType>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="paket.references" />
