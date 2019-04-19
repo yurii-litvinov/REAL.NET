@@ -1,3 +1,4 @@
+System.Xml.XmlDocument
 group Tests
 FsUnit
 FSharp.Core redirects: force

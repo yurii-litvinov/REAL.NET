@@ -1,7 +1,7 @@
 RESTRICTION: == net461
 NUGET
   remote: https://api.nuget.org/v3/index.json
-    dotnet-fake (5.12.6) - clitool: true
+    dotnet-fake (5.13) - clitool: true
     FSharp.Core (4.6.2) - redirects: force
     GraphX (2.3.6)
       QuickGraphPCL
@@ -14,6 +14,7 @@ NUGET
     QuickGraphPCL (3.6.61114.2)
     StyleCop.Analyzers (1.0.2)
     System.ValueTuple (4.5)
+    System.Xml.XmlDocument (4.3)
 
 GROUP FakeBuild
 STORAGE: NONE

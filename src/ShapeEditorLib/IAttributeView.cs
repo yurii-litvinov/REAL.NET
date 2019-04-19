@@ -13,11 +13,6 @@ namespace ShapeEditorLib
         string AttributeName { get; }
 
         /// <summary>
-        /// Type of attribute.
-        /// </summary>
-        AttributeKind AttributeType { get; }
-
-        /// <summary>
         /// Value to show as an example of some value of attribute.
         /// </summary>
         string ExampleValue { get; set; }
