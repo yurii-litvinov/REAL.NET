@@ -19,7 +19,7 @@ let ``attribute should be parsed``() =
     let attributeView = parser.ParseAttributeProperties("Attribute1")
     attributeView.AttributeName |> should equal "Attribute1"
     attributeView.ExampleValue |> should equal "ExampleValue1"
-    attributeView.IsVisible |> should equal true
+    attributeView.IsVisible |> should be True
     attributeView.OrderNumber |> should equal 1
     attributeView.Position.Value|> should equal <| (100, 200).ToValueTuple()
 

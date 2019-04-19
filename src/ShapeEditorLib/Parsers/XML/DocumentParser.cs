@@ -13,6 +13,17 @@ namespace ShapeEditorLib.Parsers.XML
             this.document = document;
         }
 
+        public string GetName()
+        {
+            var list = document.SelectNodes("/Element");
+            if (list.Count != 1)
+            {
+                throw new InvalidOperationException("Incorrect format: can't find tag Element or it's more tha one");
+            }
+            XmlNode element = list[0];
+            string name = element.Attributes["Name"].Value;
+            return name;
+        }
 
         public IDictionary<string, string> GetProperties()
         {

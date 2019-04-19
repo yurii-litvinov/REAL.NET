@@ -32,6 +32,13 @@ namespace ShapeEditorLib.Parsers
         /// <returns>Extracted info.</returns>
         public IElementView ParseElementView()
         {
+            var elementProperties = documentParser.GetProperties();
+            var attributeNames = documentParser.GetAttributesNames();
+            var attributeList = new List<IAttributeView>();
+            foreach (var attributeName in attributeNames)
+            {
+                attributeList.Add(ParseAttributeProperties(attributeName));
+            }
             throw new NotImplementedException();
         }
 

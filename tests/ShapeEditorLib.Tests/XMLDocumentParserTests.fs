@@ -16,6 +16,10 @@ let initParser() =
 let parser = initParser();
 
 [<Test>]
+let ``parser should get element's name``() =
+    parser.GetName() |> should equal "TestElement"
+
+[<Test>]
 let ``parser should parse properties``() = 
      let properties = parser.GetProperties()
      properties.Count |> should equal 2
