@@ -73,6 +73,20 @@ let ``Model shall allow to create nodes`` () =
     node.Metatype |> should equal Metatype.Node
 
 [<Test>]
+let ``Model shal allow to delete elements``() =
+    let model = init()
+    let ``type`` = model.Metamodel.Nodes |> Seq.find (fun n -> n.Name = "Node")
+    let node = model.CreateElement ``type``
+    node.AddAttribute ("Attribute1", AttributeKind.String, "default") |> ignore
+    let unwrapped = (node :?> Element).UnderlyingElement
+    let attribute = node.Attributes |> Seq.find (fun u -> u.Name = "Attribute1")
+    let unwrappedAttribute = (attribute :?> Attribute).UnderlyingNode
+    model.DeleteElement node
+    model.Nodes |> should not' (contain node) 
+    unwrapped.IsMarkedDeleted |> should be True
+    unwrappedAttribute.IsMarkedDeleted |> should be True
+
+[<Test>]
 let ``Model shall allow to list its nodes`` () =
     let repo = RepoFactory.Create ()
 

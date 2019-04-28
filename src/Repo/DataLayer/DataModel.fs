@@ -23,8 +23,6 @@ type DataModel private (name: string, metamodel: IModel option) =
 
     let mutable nodes = []
     let mutable edges = []
-    let mutable hiddenNodes = []
-    let mutable hiddenEdges = []
 
     let mutable properties = Map.empty
 
@@ -74,32 +72,25 @@ type DataModel private (name: string, metamodel: IModel option) =
             edges <- (edge :> IEdge) :: edges
             edge
 
-        member this.DeleteElement(element: IElement): unit =
-            let listOfNeigbours = (edges |> List.filter (fun e -> e.Source = Some element || e.Target = Some element)) 
-            let isNotEmpty = listOfNeigbours |> List.isEmpty |> not
-            if isNotEmpty then invalidOp "cannot be deleted as it is end of some edges"
-            let delete (element: IElement) = 
+        member this.MarkElementDeleted(element: IElement): unit =           
+            let mark (element: IElement) = 
                 match element with
-                | :? INode -> let elementToHide = nodes |> List.find (fun x -> x = (element :?> INode))
-                              hiddenNodes <- elementToHide :: hiddenNodes
-                              nodes <- nodes |> List.except [element :?> INode]
-                | _ ->        let elementToHide = edges |> List.find (fun x -> x = (element :?> IEdge))
-                              hiddenEdges <- elementToHide :: hiddenEdges
-                              edges <- edges |> List.except [element :?> IEdge]
-            delete element
+                | :? INode -> let elementToDelete = nodes |> List.find (fun x -> x = (element :?> INode))
+                              elementToDelete.IsMarkedDeleted <- true
+                | _ ->        let elementToDelete = edges |> List.find (fun x -> x = (element :?> IEdge))
+                              elementToDelete.IsMarkedDeleted <- true                                                            
+            mark element
         
-        member this.RestoreElement(element: IElement): unit =
-            match element with
-            | :? INode -> let elementToRestore = hiddenNodes |> List.find (fun x -> x = (element :?> INode))                          
-                          nodes <- elementToRestore :: nodes
-                          hiddenNodes <- hiddenNodes |> List.except [elementToRestore]
-            | _        -> let elementToRestore = hiddenEdges |> List.find (fun x -> x = (element :?> IEdge))
-                          edges <- elementToRestore :: edges
-                          hiddenEdges <- hiddenEdges |> List.except [elementToRestore]
+        member this.UnmarkDeletedElement(element: IElement): unit =
+             match element with
+                | :? INode -> let elementToRestore = nodes |> List.find (fun x -> x = (element :?> INode))
+                              elementToRestore.IsMarkedDeleted <- false
+                | _ ->        let elementToRestore = edges |> List.find (fun x -> x = (element :?> IEdge))
+                              elementToRestore.IsMarkedDeleted <- false 
 
         member this.Elements: IElement seq =
-            let nodes = (nodes |> Seq.cast<IElement>)
-            let edges = (edges |> Seq.cast<IElement>)
+            let nodes = (nodes |> List.filter (fun node -> not node.IsMarkedDeleted) |> Seq.cast<IElement>)
+            let edges = (edges |> List.filter (fun edge -> not edge.IsMarkedDeleted) |> Seq.cast<IElement>)
             Seq.append nodes edges
 
         member this.Metamodel
@@ -111,10 +102,10 @@ type DataModel private (name: string, metamodel: IModel option) =
         member val Name = name with get, set
 
         member this.Nodes: seq<INode> =
-            nodes |> Seq.ofList
+            nodes |> List.filter (fun node -> not node.IsMarkedDeleted) |> Seq.ofList
 
         member this.Edges: seq<IEdge> =
-            edges |> Seq.ofList
+            edges |> List.filter (fun edge -> not edge.IsMarkedDeleted) |> Seq.ofList
 
         member this.Properties
             with get () = properties
