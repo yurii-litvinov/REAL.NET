@@ -92,5 +92,5 @@ and [<AbstractClass>] Element
             | _ -> failwith "Incorrect instanceMetatype attribute value"
 
         member this.AddAttribute (name, kind, defaultValue) =
-            infrastructureSemantic.Element.AddAttribute element name (kind.ToString()) defaultValue
+            infrastructureSemantic.Element.AddAttribute element name ("AttributeKind." + kind.ToString()) defaultValue
             ()
