@@ -35,9 +35,9 @@ type Node
     new(infrastructure, element, elementRepository, attributeRepository) 
         = Node(infrastructure, element, elementRepository, attributeRepository, VisualNodeInfo()) 
 
-    member this.VisualInfo
-        with get () = visualInfo
-        and set (info) = visualInfo <- info
-
-    interface INode
+    interface INode with
+        
+        member this.VisualInfo
+            with get () = visualInfo
+            and set (info) = visualInfo <- info
  

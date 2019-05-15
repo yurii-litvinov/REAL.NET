@@ -14,6 +14,40 @@
 
 namespace Repo
 
+
+type TypeOfVisual =
+    | XML = 0
+    | Image = 1
+    | NoFile = 2
+
+/// This interface represents information about how element is shown on screen.
+type IVisualInfo =
+    interface
+        /// Address to  file. 
+        abstract LinkToFile : string with get, set
+        
+        /// Type of linked file.
+        abstract Type : TypeOfVisual with get, set 
+    end
+
+/// This interface represents information about how node is shown on screen.
+type IVisualNodeInfo =
+    interface
+        inherit IVisualInfo
+
+        /// Position of node on screen.
+        abstract Position : (int * int) option with get, set          
+    end
+
+// This interface represents information about how edge is shown on screen.
+type IVisualEdgeInfo =
+    interface
+        inherit IVisualInfo
+
+        /// Coordinates of routing points without ends.
+        abstract RoutingPoints : (int * int) list with get, set
+    end
+
 /// Enumeration with all kinds of attributes supported by repository
 type AttributeKind =
     /// Attribute whose value is a string.
@@ -119,6 +153,8 @@ and [<AllowNullLiteral>] IElement =
 type INode =
     interface
         inherit IElement
+
+        abstract member VisualInfo: IVisualNodeInfo with get, set
     end
 
 /// Edge --- an edge in a model. Note that here it can connect not only nodes, but edges too. It is needed to model
@@ -133,6 +169,8 @@ type IEdge =
 
         /// Reference to an element connected to an end of an edge, null if no element is connected.
         abstract To: IElement with get, set
+
+        abstract member VisualInfo: IVisualEdgeInfo with get, set
     end
 
 /// Model is one "graph", represented by one diagram on a scene. Has name, consists of nodes and edges.
@@ -202,35 +240,3 @@ type IRepo =
         abstract Save: fileName: string -> unit
     end
 
-type TypeOfVisual =
-    | XML = 0
-    | Image = 1
-    | NoFile = 2
-
-/// This interface represents information about how element is shown on screen.
-type IVisualInfo =
-    interface
-        /// Address to  file. 
-        abstract LinkToFile : string with get, set
-        
-        /// Type of linked file.
-        abstract Type : TypeOfVisual with get, set 
-    end
-
-/// This interface represents information about how node is shown on screen.
-type IVisualNodeInfo =
-    interface
-        inherit IVisualInfo
-
-        /// Position of node on screen.
-        abstract Position : (int * int) option with get, set          
-    end
-
-// This interface represents information about how edge is shown on screen.
-type IVisualEdgeInfo =
-    interface
-        inherit IVisualInfo
-
-        /// Coordinates of routing points without ends.
-        abstract RoutingPoints : (int * int) list with get, set
-    end

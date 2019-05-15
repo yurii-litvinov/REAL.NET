@@ -47,9 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IAttributeView.cs" />
-    <Compile Include="IEdgeInfo.cs" />
     <Compile Include="IElementView.cs" />
-    <Compile Include="INodeView.cs" />
     <Compile Include="IViewFileParser.cs" />
     <Compile Include="Parsers\Wrappers\AttributeView.cs" />
     <Compile Include="Parsers\Wrappers\ElementView.cs" />

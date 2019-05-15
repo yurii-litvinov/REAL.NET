@@ -34,10 +34,6 @@ type Edge
     new(infrastructure, element, elementRepository, attributeRepository) 
         = Edge(infrastructure, element, elementRepository, attributeRepository, VisualEdgeInfo()) 
 
-    member this.VisualInfo
-        with get () = visualInfo
-        and set (info) = visualInfo <- info
-
     interface IEdge with
         member this.From
             with get (): IElement =
@@ -58,3 +54,7 @@ type Edge
             and set (v: IElement): unit =
                 let dataElement = (v :?> Element).UnderlyingElement
                 element.Target <- Some dataElement
+        
+        member this.VisualInfo
+            with get () = visualInfo
+            and set (info) = visualInfo <- info

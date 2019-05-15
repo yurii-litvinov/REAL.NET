@@ -5,7 +5,7 @@ namespace ShapeEditorLib
 {
     public static class ViewFileGenerator
     {
-        public static void UpdateFile(IElementView view)
+        public static void UpdateFile(IElementView view, IElement element)
         {
             throw new NotImplementedException();
         }
