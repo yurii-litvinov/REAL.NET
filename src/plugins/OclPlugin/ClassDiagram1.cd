@@ -1,29 +1,37 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="OclPlugin.FunctionDefinition" Collapsed="true">
-    <Position X="39" Y="3.5" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAIAAgAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>FunctionDefinition.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="OclPlugin.OclInterpreter" Collapsed="true">
-    <Position X="35.25" Y="4.5" Width="1.5" />
+    <Position X="37" Y="4.5" Width="2" />
+    <NestedTypes>
+      <Class Name="OclPlugin.OclInterpreter.OclCalculator" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>OclInterpreter.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>BAAAAQAAAQACBAIAAAAAAICAMAAgAAAAAAIAQQAIAAQ=</HashCode>
+      <HashCode>BAAAAQAAAQACBAIAAAAAAICAMAAgAAAAAAIAQQAoAAQ=</HashCode>
       <FileName>OclInterpreter.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="OperationLauncher" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="OclPlugin.OclPlugin" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="39" Y="4.5" Width="1.75" />
+    <Position X="34" Y="5.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAgAAAgAQAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAgAAAoAQAAAEEAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>OclPlugin.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
+    <ShowAsAssociation>
+      <Property Name="OclParser" />
+      <Property Name="OclLexer" />
+      <Property Name="OclInterpreter" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.242" Collapsed="true" />
   </Class>
   <Class Name="OclPlugin.OperationLauncher" Collapsed="true">
-    <Position X="41" Y="4.5" Width="1.75" />
+    <Position X="34" Y="3.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
       <FileName>OperationLauncher.cs</FileName>
@@ -74,7 +82,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="OclBaseVisitor&lt;Result&gt;" Collapsed="true">
-    <Position X="35.25" Y="3.5" Width="1.5" />
+    <Position X="37" Y="3.5" Width="2" />
     <TypeIdentifier>
       <HashCode>FIMERQAgEQIOBgAEgARgAAAEIBQhAETAFAIAQEBICAQ=</HashCode>
       <FileName>OclBaseVisitor.cs</FileName>
@@ -82,14 +90,14 @@
     <Lollipop Position="0.219" />
   </Class>
   <Class Name="OclLexer" Collapsed="true">
-    <Position X="41" Y="3.5" Width="1.75" />
+    <Position X="34" Y="6.75" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AWhZDAwQ8P8AgAYIAAAEANACAgFAr2+xAAAA0ATaAEQ=</HashCode>
       <FileName>OclLexer.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OclParser" Collapsed="true">
-    <Position X="37.25" Y="4.5" Width="1.5" />
+    <Position X="37" Y="6.75" Width="2" />
     <TypeIdentifier>
       <HashCode>DXh9XDzU8P9ZjhYqpqwuAtQCgBFAv/3zEnFI2hfeAsY=</HashCode>
       <FileName>OclParser.cs</FileName>
@@ -109,20 +117,6 @@
       <FileName>Operations\AnyOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="OclPlugin.Operations.CollectOperation" Collapsed="true">
-    <Position X="31.5" Y="3.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Operations\CollectOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="OclPlugin.Operations.ForAllOperation" Collapsed="true">
-    <Position X="29.25" Y="3.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAIAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Operations\ForAllOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="OclPlugin.Operations.IterateOperation" Collapsed="true">
     <Position X="20.25" Y="3.25" Width="1.5" />
     <TypeIdentifier>
@@ -135,13 +129,6 @@
     <TypeIdentifier>
       <HashCode>AAAQAAAAABAAAAAAAgASAAAAAAAEAAAAAAgCAAAABAA=</HashCode>
       <FileName>Operations\Operation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="OclPlugin.Operations.SelectOperation" Collapsed="true">
-    <Position X="18.25" Y="3.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Operations\SelectOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OclPlugin.Operations.SizeOperation" Collapsed="true">
@@ -158,32 +145,11 @@
       <FileName>Operations\Number\AbsOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="OclPlugin.Operations.Number.DivOperation" Collapsed="true">
-    <Position X="29.25" Y="4.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Operations\Number\DivOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="OclPlugin.Operations.Number.FloorOperation" Collapsed="true">
     <Position X="24.75" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Operations\Number\FloorOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="OclPlugin.Operations.Number.MaxOperation" Collapsed="true">
-    <Position X="18.25" Y="4.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Operations\Number\MaxOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="OclPlugin.Operations.Number.MinOperation" Collapsed="true">
-    <Position X="31.5" Y="4.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Operations\Number\MinOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OclPlugin.Operations.Number.ModOperation" Collapsed="true">
@@ -214,13 +180,6 @@
       <FileName>Operations\String\SubstringOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="OclPlugin.Operations.String.ToIntegerOperation" Collapsed="true">
-    <Position X="29.25" Y="5.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Operations\String\ToIntegerOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="OclPlugin.Operations.String.ToLowerOperation" Collapsed="true">
     <Position X="22.5" Y="5.75" Width="1.5" />
     <TypeIdentifier>
@@ -235,26 +194,71 @@
       <FileName>Operations\String\ToRealOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="OclPlugin.Operations.String.ToUpperOperation" Collapsed="true">
-    <Position X="31.5" Y="5.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Operations\String\ToUpperOperation.cs</FileName>
-    </TypeIdentifier>
+  <Class Name="EditorPluginInterfaces.EdgeEventArgs" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="EditorPluginInterfaces.ElementEventArgs" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="EditorPluginInterfaces.PluginConfig" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="EditorPluginInterfaces.VertexEventArgs" Collapsed="true">
+    <Position X="2.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier />
   </Class>
   <Class Name="System.AssemblyVersionInformation" Collapsed="true">
-    <Position X="37.25" Y="3.5" Width="1.5" />
+    <Position X="0.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>EIAAAAAAAAAACAEAAAAAAAAAAAAAAAAAAAAAAIACAAA=</HashCode>
       <FileName>Properties\AssemblyInfo.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Interface Name="IOclVisitor&lt;Result&gt;" Collapsed="true">
-    <Position X="35.25" Y="2.5" Width="1.75" />
+    <Position X="37" Y="2.5" Width="2" />
     <TypeIdentifier>
       <HashCode>FIMERQAgEQIOBgAEgARgAAAEIBQhAETAFAIAQEBICAQ=</HashCode>
       <FileName>OclVisitor.cs</FileName>
     </TypeIdentifier>
+  </Interface>
+  <Interface Name="EditorPluginInterfaces.ICommand" Collapsed="true">
+    <Position X="2.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="EditorPluginInterfaces.IConsole" Collapsed="true">
+    <Position X="4" Y="2.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="EditorPluginInterfaces.IModel" Collapsed="true">
+    <Position X="2.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="EditorPluginInterfaces.IPalette" Collapsed="true">
+    <Position X="4" Y="3.5" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="EditorPluginInterfaces.IPlugin&lt;T&gt;" Collapsed="true">
+    <Position X="34" Y="4.75" Width="1.75" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="EditorPluginInterfaces.IScene" Collapsed="true">
+    <Position X="2.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="EditorPluginInterfaces.Toolbar.IButton" Collapsed="true">
+    <Position X="0.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="EditorPluginInterfaces.Toolbar.IMenu" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="EditorPluginInterfaces.Toolbar.IToolbar" Collapsed="true">
+    <Position X="4" Y="4.25" Width="1.5" />
+    <TypeIdentifier />
   </Interface>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

@@ -17,7 +17,7 @@ namespace OclPlugin.Operations
 
         public override Result Process(OclParser.PropertyCallContext context)
         {
-            IElement element = Model.FindElement(GlobalResult.ToString());
+            IElement element = Model.FindElement(((StringResult) GlobalResult).GetValue());
             return new CollectionResult(Model.Elements.Where(x => x.Class == element).ToList<object>());
         }
     }

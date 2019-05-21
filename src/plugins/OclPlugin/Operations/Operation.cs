@@ -22,7 +22,7 @@ namespace OclPlugin.Operations
 
         protected static ArrayList<Dictionary<string, Result>> Vars { get; set; }
 
-        protected static IModel Model { get; set; }
+        public static IModel Model { get; set; }
 
         internal static void Init(OclInterpreter interpreter, OclInterpreter.OclCalculator calculator, ArrayList<Dictionary<string, Result>> vars, IModel model)
         {

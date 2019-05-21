@@ -35,6 +35,10 @@ namespace OclPlugin.Tests
             ((IModelBuilder)builder3).Build(data);
             DiagramObjectMetamodelBuilder builder4 = new DiagramObjectMetamodelBuilder();
             ((IModelBuilder)builder4).Build(data);
+            RobotsMetamodelBuilder builder8 = new RobotsMetamodelBuilder();
+            ((IModelBuilder)builder8).Build(data);
+            RobotsTestModelBuilder builder9 = new RobotsTestModelBuilder();
+            ((IModelBuilder)builder9).Build(data);
 
             var repo = new Repo.FacadeLayer.Repo(data);
 
@@ -52,6 +56,12 @@ namespace OclPlugin.Tests
             Bag{1,2,3}->forAll(x, y | x <> y implies x*y > 1)
             inv@0:
             Bag{1,2,3}->iterate(x; y : T = 0 | y + x) = 6
+            inv@0:
+            Set{""1"",""2"",""3""}->collect(self = ""0"")->size() = 3
+            inv@0:
+            Bag{""1"",""2"",""3""}->any(self.toInteger() > 2).toInteger() = 3
+            inv@0:
+            aMotorsForward->allInstances()->size() > -1
             endpackage");
 
             ITokenSource lexer = new OclLexer(stream);
@@ -74,6 +84,14 @@ namespace OclPlugin.Tests
             ""ABC""->toLower() = ""abc""
             inv@0:
             ""123""->toInteger() = 123
+            inv@0:
+            ""123""->toReal() = 123
+            inv@0:
+            ""abc""->toUpper() = ""ABC""
+            inv@0:
+            ""abc""->concat(""cde"")->toUpper() = ""ABCCDE""
+            inv@0:
+            ""abc""->substring(1, 1) = ""a""
             endpackage");
 
             ITokenSource lexer = new OclLexer(stream);
@@ -96,6 +114,12 @@ namespace OclPlugin.Tests
             1->max(2) = 2
             inv@0:
             5->div(2) = 2
+            inv@0:
+            5->min(2) = 2
+            inv@0:
+            5->mod(2) = 1
+            inv@0:
+            5->abs() = 5
             endpackage");
 
             ITokenSource lexer = new OclLexer(stream);

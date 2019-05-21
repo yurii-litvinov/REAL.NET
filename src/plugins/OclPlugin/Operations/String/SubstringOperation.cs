@@ -15,9 +15,9 @@ namespace OclPlugin.Operations.String
 
         public override Result Process(OclParser.PropertyCallContext context)
         {
-            var start = (IntResult)Calculator.VisitExpression(
+            var start = (DoubleResult)Calculator.VisitExpression(
                 context.propertyCallParameters().actualParameterList().expression()[0]);
-            var end = (IntResult)Calculator.VisitExpression(
+            var end = (DoubleResult)Calculator.VisitExpression(
                 context.propertyCallParameters().actualParameterList().expression()[1]);
             return new StringResult(((StringResult)GlobalResult).GetValue().Substring((int)start.GetValue() - 1, (int)(end.GetValue() - start.GetValue() + 1)));
         }

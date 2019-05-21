@@ -36,6 +36,14 @@ namespace OclPlugin
             this.scene = scene;
         }
 
+        internal OperationLauncher OperationLauncher
+        {
+            get => default(OperationLauncher);
+            set
+            {
+            }
+        }
+
         public override bool VisitOclFile([NotNull] OclParser.OclFileContext context)
         {
             bool result = true;
@@ -131,7 +139,7 @@ namespace OclPlugin
                             this.currentElement = element;
                             this.calculator.Element = this.currentElement;
                             bool curBool = this.VisitOclExpression(context.oclExpression()[i]);
-                            if (!curBool)
+                            if (this.scene != null && !curBool)
                             {
                                 this.scene.SelectNode(this.currentElement.Name);
                                 element.Attributes.First(x => x.Name == "isValid").StringValue = "false";
@@ -252,7 +260,9 @@ namespace OclPlugin
 
             public int Depth { internal get; set; } = 0;
 
-            public Repo.IModel Model { private get; set; } = null;
+            private Repo.IModel model = null;
+
+            public Repo.IModel Model { private get { return model; } set { model = value; Operation.Model = value; } }
 
             public IElement Element { private get; set; } = null;
 

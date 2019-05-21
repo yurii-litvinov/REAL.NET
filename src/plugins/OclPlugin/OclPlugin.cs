@@ -10,6 +10,30 @@
     {
         public string Name => "OCL";
 
+        public OclParser OclParser
+        {
+            get => default(OclParser);
+            set
+            {
+            }
+        }
+
+        public OclLexer OclLexer
+        {
+            get => default(OclLexer);
+            set
+            {
+            }
+        }
+
+        public OclInterpreter OclInterpreter
+        {
+            get => default(OclInterpreter);
+            set
+            {
+            }
+        }
+
         private IConsole console;
 
         public void SetConfig(PluginConfig config)
