@@ -14,6 +14,8 @@
  
 namespace EditorPluginInterfaces
 {
+    using System;
+    using System.Windows.Controls;
     using Toolbar;
 
     /// <summary>
@@ -37,6 +39,10 @@ namespace EditorPluginInterfaces
         public IToolbar Toolbar { get; }
 
         /// <summary>
+        /// Left panel grid
+        /// </summary>
+        public Grid LeftPanelGrid { get; }
+        /// <summary>
         /// Console's reference that should be given to plugin
         /// </summary>
         public IConsole Console { get; }
@@ -44,7 +50,15 @@ namespace EditorPluginInterfaces
         /// <summary>
         /// Palette's reference that should be given to plugin
         /// </summary>
-        public IPalette Palette { get; }
+        public IElementProvider ElementProvider { get; }
+
+        public delegate void Func(string modelName);
+        public Func FuncCreateConstraintsModel;
+
+        public delegate void VisibilityFunc(bool isVisible);
+        public VisibilityFunc FuncChangeSelectorVisibility;
+
+        public Action<String> OnMainModelChangedFunction;
 
         /// <summary>
         /// Initializes a new instance of <see cref="PluginConfig"/> 
@@ -54,14 +68,15 @@ namespace EditorPluginInterfaces
         /// <param name="scene">Scene</param>
         /// <param name="toolbar">Toolbar</param>
         /// <param name="console">Console</param>
-        /// <param name="palette">Palette</param>
-        public PluginConfig(IModel model, IScene scene, IToolbar toolbar, IConsole console, IPalette palette)
+        /// <param name="elementProvider">Element provider</param>
+        public PluginConfig(IModel model, IScene scene, IToolbar toolbar, IConsole console, IElementProvider elementProvider, Grid leftPanelGrid)
         {
             this.Model = model;
             this.Scene = scene;
             this.Toolbar = toolbar;
             this.Console = console;
-            this.Palette = palette;
+            this.ElementProvider = elementProvider;
+            this.LeftPanelGrid = leftPanelGrid;
         }
     }
 }

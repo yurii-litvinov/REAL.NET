@@ -26,7 +26,7 @@
         <DropShadowEffect x:Key="DragAndDropShadow" Color="Black" Direction="300" ShadowDepth="0" Opacity="0.75"/>
     </UserControl.Resources>
 
-    <Grid>
+    <Grid Width="200" HorizontalAlignment="Left">
         <ItemsControl ItemsSource="{Binding Elements}" HorizontalContentAlignment="Stretch">
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="palette:PaletteElement">

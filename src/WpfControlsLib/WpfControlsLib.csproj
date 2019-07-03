@@ -129,7 +129,6 @@
     <Compile Include="Controls\Scene\EventArguments\ElementAddedEventArgs.cs" />
     <Compile Include="Controls\Scene\EventArguments\ElementRemovedEventArgs.cs" />
     <Compile Include="Controls\Scene\Geometry.cs" />
-    <Compile Include="Controls\Scene\IElementProvider.cs" />
     <Compile Include="Controls\Scene\EventArguments\NodeSelectedEventArgs.cs" />
     <Compile Include="Controls\Scene\Scene.xaml.cs">
       <DependentUpon>Scene.xaml</DependentUpon>
@@ -217,6 +216,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="ClassDiagram1.cd" />
     <None Include="paket.references" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

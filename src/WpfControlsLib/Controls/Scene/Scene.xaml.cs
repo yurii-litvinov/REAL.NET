@@ -31,11 +31,12 @@ namespace WpfControlsLib.Controls.Scene
     using WpfControlsLib.Controls.Scene.EventArguments;
     using WpfControlsLib.Model;
     using WpfControlsLib.ViewModel;
+    using EditorPluginInterfaces;
 
     /// <summary>
     /// Visualizes  model graph and makes it possible for a user to interact with it.
     /// </summary>
-    public partial class Scene : UserControl
+    public partial class Scene : UserControl, IScene
     {
         private readonly EditorObjectManager editorManager;
         private VertexControl previosVertex;

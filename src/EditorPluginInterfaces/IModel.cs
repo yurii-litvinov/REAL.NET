@@ -21,6 +21,12 @@ namespace EditorPluginInterfaces
     /// </summary>
     public interface IModel
     {
+
+        /// <summary>
+        /// Model name.
+        /// </summary>
+        string ModelName { get; set; }
+
         /// <summary>
         /// New vertex was added into a model.
         /// </summary>

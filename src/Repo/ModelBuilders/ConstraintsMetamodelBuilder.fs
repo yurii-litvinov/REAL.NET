@@ -19,19 +19,39 @@ open Repo.DataLayer
 open Repo.InfrastructureSemanticLayer
 
 /// Initializes repository with Robots Metamodel, first testing metamodel of a real language.
-type RobotsMetamodelBuilder() =
+type ConstraintsMetamodelBuilder() =
     interface IModelBuilder with
         member this.Build(repo: IRepo): unit =
             let infrastructure = InfrastructureSemanticLayer.InfrastructureSemantic(repo)
             let metamodel = infrastructure.Metamodel.Model
 
             let find name = CoreSemanticLayer.Model.findNode metamodel name
+            let findAssociation node name = CoreSemanticLayer.Model.findAssociationWithSource node name
 
+            let metamodelElement = find "Element"
             let metamodelNode = find "Node"
             let metamodelGeneralization = find "Generalization"
             let metamodelAssociation = find "Association"
+            let metamodelAttribute = find "Attribute"
 
-            let model = repo.CreateModel("RobotsMetamodel", metamodel)
+            let metamodelStringNode = find "String"
+            let metamodelBooleanNode = find "Boolean"
+            let metamodelMetatypeNode = find "Metatype"
+            let metamodelAttributeKindNode = find "AttributeKind"
+
+            let attributesAssociation = findAssociation metamodelElement "attributes"
+
+            let shapeAssociation = findAssociation metamodelElement "shape"
+            let isAbstractAssociation = findAssociation metamodelElement "isAbstract"
+            let instanceMetatypeAssociation = findAssociation metamodelElement "instanceMetatype"
+
+            let attributeKindAssociation = findAssociation metamodelAttribute "kind"
+            let attributeStringValueAssociation = findAssociation metamodelAttribute "stringValue"
+
+            let edgeTargetNameAssociation = findAssociation metamodelAssociation "targetName"
+
+            let model = repo.CreateModel("ConstraintsMetamodel", metamodel)
+            model.Properties <- model.Properties.Add ("IsVisible", false.ToString())
 
             let (~+) (name, shape, isAbstract) =
                 let node = infrastructure.Instantiate model metamodelNode :?> INode
@@ -73,12 +93,17 @@ type RobotsMetamodelBuilder() =
             let motorsStop = +("MotorsStop", "View/Pictures/enginesStopBlock.png", false)
             let timer = +("Timer", "View/Pictures/timerBlock.png", false)
 
+            let allNodes = +("AllNodes", "View/Pictures/allNodes.png", false)
+            //let anyNodes = +("AnyNodes", "View/Pictures/timerBlock.png", false)
+            let noNodes = +("NoNodes", "View/Pictures/noNodes.png", false)
+            let orNode = +("OrNode", "View/Pictures/orNode.png", false)
+            let notNode = +("NotNode", "View/Pictures/notNode.png", false)
+
             let link = abstractNode ---> (abstractNode, "target", "Link")
             infrastructure.Element.AddAttribute link "guard" "AttributeKind.String" ""
 
             infrastructure.Element.AddAttribute timer "delay" "AttributeKind.Int" "1000"
 
-            //initialNode --|> abstractNode
             finalNode --|> abstractNode
             motorsForward --|> abstractMotorsPowerBlock
             motorsBackward --|> abstractMotorsPowerBlock
@@ -86,5 +111,11 @@ type RobotsMetamodelBuilder() =
             motorsStop --|> abstractMotorsBlock
             abstractMotorsBlock --|> abstractNode
             timer --|> abstractNode
+            allNodes --|> abstractNode
+            //anyNodes --|> abstractNode
+            noNodes --|> abstractNode
+            //andNode --|> abstractNode
+            orNode --|> abstractNode
+            notNode --|> abstractNode
 
             ()

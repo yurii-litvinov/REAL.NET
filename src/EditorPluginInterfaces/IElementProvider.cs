@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-namespace WpfControlsLib.Controls.Scene
+namespace EditorPluginInterfaces
 {
     /// <summary>
     /// Something that can say what element scene shall create when someone clicks on it. For example, selected

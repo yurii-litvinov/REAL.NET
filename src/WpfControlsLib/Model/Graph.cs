@@ -42,6 +42,7 @@ namespace WpfControlsLib.Model
             this.model.NewVertexAdded += (sender, args) => this.CreateNodeWithPos(args.Node);
             this.model.NewEdgeAdded += (sender, args) => this.CreateEdge(args.Edge, args.Source, args.Target);
             this.model.ElementRemoved += (sender, args) => this.RemoveElement(args.Element);
+            this.model.ElementCheck += (sender, args) => this.CheckElement(args.Element, args.IsAllowed);
         }
 
         public event EventHandler DrawGraph;
@@ -72,8 +73,6 @@ namespace WpfControlsLib.Model
 
             foreach (var edge in model.Edges)
             {
-                /* var isViolation = Constraints.CheckEdge(edgeViewModel, this.repo, modelName); */
-
                 var sourceNode = edge.From as INode;
                 var targetNode = edge.To as INode;
                 if (sourceNode == null || targetNode == null)
@@ -163,6 +162,7 @@ namespace WpfControlsLib.Model
             {
                 DataVertex = vertex
             };
+
             this.AddNewVertexControl?.Invoke(this, args);
             this.ElementAdded?.Invoke(this, new ElementAddedEventArgs { Element = node });
         }
@@ -197,6 +197,26 @@ namespace WpfControlsLib.Model
             {
                 var nodeViewModel = this.DataGraph.Vertices.First(x => x.Node == element);
                 this.DataGraph.RemoveVertex(nodeViewModel);
+            }
+
+            var model = this.model.Repo.Model(this.model.ModelName);
+            model.DeleteElement(element);
+
+            this.ElementRemoved?.Invoke(this, new ElementRemovedEventArgs { Element = element });
+        }
+
+        private void CheckElement(IElement element, bool isAllowed)
+        {
+            if (element.Metatype == Metatype.Edge)
+            {
+                var edgeViewModel = this.DataGraph.Edges.First(x => x.Edge == element);
+                edgeViewModel.IsAllowed = isAllowed;
+            }
+
+            if (element.Metatype == Metatype.Node)
+            {
+                var nodeViewModel = this.DataGraph.Vertices.First(x => x.Node == element);
+                nodeViewModel.IsAllowed = isAllowed;
             }
 
             this.ElementRemoved?.Invoke(this, new ElementRemovedEventArgs { Element = element });
