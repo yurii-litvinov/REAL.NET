@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WpfControlsLib</RootNamespace>
     <AssemblyName>WpfControlsLib</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -95,7 +95,6 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constraints\ConstraintItem.cs" />
     <Compile Include="Controller\CompositeCommand.cs" />
     <Compile Include="Controller\Controller.cs" />
     <Compile Include="Controller\UndoRedoAvailabilityChangedArgs.cs" />
@@ -144,9 +143,6 @@
     </Compile>
     <Compile Include="Model\Graph.cs" />
     <Compile Include="Model\Model.cs" />
-    <Compile Include="Constraints\Constraints.cs" />
-    <Compile Include="Constraints\ConstraintsValues.cs" />
-    <Compile Include="Constraints\ConstraintsWindow.xaml.cs" />
     <Compile Include="Controls\Console\AppConsoleViewModel.cs" />
     <Compile Include="Controller\UndoRedo\UndoRedoStack.cs" />
     <Compile Include="Properties\AssemblyInternalsVisibleTo.cs" />
@@ -154,11 +150,6 @@
     <Compile Include="Controls\Scene\EdgeBlueprint.cs" />
     <Compile Include="Controls\Scene\EditorObjectManager.cs" />
     <Compile Include="Controls\Toolbar\ToolbarViewModel.cs" />
-    <Compile Include="Constraints\RepoInfo.cs" />
-    <Page Include="Constraints\ConstraintsWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Controls\Console\AppConsole.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -307,7 +298,7 @@
     <Resource Include="Controls\Scene\Pictures\vertex.png" />
   </ItemGroup>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="FSharp.Core">
           <HintPath>..\..\packages\FSharp.Core\lib\net45\FSharp.Core.dll</HintPath>
@@ -318,7 +309,7 @@
     </When>
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="Quickgraph">
           <Paket>True</Paket>
@@ -342,7 +333,7 @@
     </When>
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="QuickGraph">
           <HintPath>..\..\packages\QuickgraphPCL\lib\net40-client\QuickGraph.dll</HintPath>
@@ -368,10 +359,13 @@
     </When>
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
+        <Reference Include="mscorlib">
+          <Paket>True</Paket>
+        </Reference>
         <Reference Include="System.ValueTuple">
-          <HintPath>..\..\packages\System.ValueTuple\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+          <HintPath>..\..\packages\System.ValueTuple\lib\net461\System.ValueTuple.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

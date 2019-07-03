@@ -72,6 +72,7 @@ module Deserializer =
                     match metamodel with
                     | None -> repo.CreateModel model.Name
                     | Some m -> repo.CreateModel(model.Name, m)
+                this.currentModel.Properties <- Map.ofArray model.Properties
 
             member this.Visit (repo: WrappedRepo) =
                 ()

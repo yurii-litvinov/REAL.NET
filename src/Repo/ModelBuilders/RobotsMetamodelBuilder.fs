@@ -28,27 +28,9 @@ type RobotsMetamodelBuilder() =
             let find name = metamodel.Node name
             let findAssociation node name = CoreMetamodel.Model.findAssociationWithSource node name
 
-            let metamodelElement = find "Element"
             let metamodelNode = find "Node"
             let metamodelGeneralization = find "Generalization"
             let metamodelAssociation = find "Association"
-            let metamodelAttribute = find "Attribute"
-
-            let metamodelStringNode = find "String"
-            let metamodelBooleanNode = find "Boolean"
-            let metamodelMetatypeNode = find "Metatype"
-            let metamodelAttributeKindNode = find "AttributeKind"
-
-            let attributesAssociation = findAssociation metamodelElement "attributes"
-
-            let shapeAssociation = findAssociation metamodelElement "shape"
-            let isAbstractAssociation = findAssociation metamodelElement "isAbstract"
-            let instanceMetatypeAssociation = findAssociation metamodelElement "instanceMetatype"
-
-            let attributeKindAssociation = findAssociation metamodelAttribute "kind"
-            let attributeStringValueAssociation = findAssociation metamodelAttribute "stringValue"
-
-            let edgeTargetNameAssociation = findAssociation metamodelAssociation "targetName"
 
             let model = repo.CreateModel("RobotsMetamodel", metamodel)
 

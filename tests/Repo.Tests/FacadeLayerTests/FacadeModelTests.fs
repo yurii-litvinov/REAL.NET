@@ -19,6 +19,14 @@ open FsUnit
 
 open Repo
 open Repo.FacadeLayer
+open System.IO
+
+let tempFile = Path.Combine(TestContext.CurrentContext.TestDirectory, "temp.rns")
+
+[<SetUp>]
+let setup () =
+    if File.Exists tempFile then
+        File.Delete tempFile
 
 let init () =
     let repo = new DataLayer.DataRepo()
@@ -72,3 +80,39 @@ let ``Model shall allow to list its nodes`` () =
 
     model.Nodes |> should not' (be Empty)
     model.Nodes |> Seq.filter (fun n -> n.Name = "aFinalNode") |> should not' (be Empty)
+
+[<Test>]
+let ``Model IsVisible attribute can be stored and changed`` () =
+    let repo = RepoFactory.Create ()
+    
+    let model = repo.Models |> Seq.find (fun m -> m.Name = "RobotsTestModel")
+    
+    model.IsVisible |> should be True
+
+    model.IsVisible <- false
+
+    model.IsVisible |> should be False
+
+    model.IsVisible <- true
+
+    model.IsVisible |> should be True
+
+[<Test>]
+let ``Model IsVisible attribute shall be serialized/deserialized properly`` () =
+    let repo = RepoFactory.Create ()
+    
+    let model = repo.Models |> Seq.find (fun m -> m.Name = "RobotsTestModel")
+    
+    model.IsVisible |> should be True
+
+    model.IsVisible <- false
+
+    model.IsVisible |> should be False
+
+    repo.Save tempFile
+
+    let repo = RepoFactory.Load tempFile
+
+    let model = repo.Models |> Seq.find (fun m -> m.Name = "RobotsTestModel")
+
+    model.IsVisible |> should be False

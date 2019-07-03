@@ -57,6 +57,7 @@ and [<JsonObject>] WrappedNode() =
 and [<JsonObject>] WrappedModel() =
     member val Name = "" with get, set
     member val MetamodelName = "" with get, set
+    member val Properties: (string * string)[] = [||] with get, set
     member val Nodes: WrappedNode[] = [||] with get, set
     member val Associations: WrappedAssociation[] = [||] with get, set
     member val Generalizations: WrappedGeneralization[] = [||] with get, set

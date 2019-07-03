@@ -42,6 +42,11 @@ and Model
         repository: ModelRepository
     ) =
 
+    /// Initializing infrastructural properties of a model
+    do
+        if not <| model.Properties.ContainsKey "IsVisible" then
+            model.Properties <- model.Properties.Add ("IsVisible", true.ToString())
+
     /// Returns model corresponding to this wrapper in a data layer.
     member this.UnderlyingModel = model
 
@@ -96,3 +101,9 @@ and Model
         member this.Name
             with get () = model.Name
             and set v = model.Name <- v
+
+        member this.IsVisible
+            with get () = 
+                model.Properties.["IsVisible"] = true.ToString()
+            and set v = 
+                model.Properties <- model.Properties.Add ("IsVisible", v.ToString())

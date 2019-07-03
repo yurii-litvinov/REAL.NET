@@ -21,6 +21,8 @@ type DataModel private (name: string, metamodel: IDataModel option) =
     let mutable nodes = []
     let mutable edges = []
 
+    let mutable properties = Map.empty
+
     new(name: string) = DataModel(name, None)
     new(name: string, metamodel: IDataModel) = DataModel(name, Some metamodel)
 
@@ -105,3 +107,7 @@ type DataModel private (name: string, metamodel: IDataModel option) =
 
         member this.HasNode (name: string): bool =
             nodes |> List.exists (fun x -> x.Name = name)
+        member this.Properties
+            with get () = properties
+            and set v = properties <- v
+            

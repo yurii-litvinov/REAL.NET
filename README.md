@@ -8,7 +8,7 @@
 
 [![BCH compliance](https://bettercodehub.com/edge/badge/yurii-litvinov/REAL.NET?branch=master)](https://bettercodehub.com/)
 
-A set of .NET libraries for quick creation of visual languages and related tools (spiritual successor of QReal project)
+A set of .NET libraries for quick creation of visual languages and related tools. Spiritual successor of QReal project (https://github.com/qreal/qreal)
 
 ## Usage
 
@@ -28,5 +28,3 @@ See [API Reference](https://yurii-litvinov.github.io/REAL.NET/reference) page fo
 
 First visual domain specific language made on REAL.NET is language for simulated by AirSim drones.
 You can download stand-alone app using [this link](https://drive.google.com/open?id=1FrQxmErz7r0Q8nWjjAsuYUslZ_PtQwtW) and test it.
-
-

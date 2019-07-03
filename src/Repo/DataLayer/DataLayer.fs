@@ -126,6 +126,9 @@ and IDataModel =
         /// Returns all edges in a model.
         abstract Edges: IDataEdge seq with get
 
+        /// A map of custom model properties.
+        abstract Properties: Map<string, string> with get, set
+
         /// Deletes element from a model and unconnects related elements if needed.
         abstract DeleteElement: element : IDataElement -> unit
 
@@ -134,6 +137,7 @@ and IDataModel =
 
         /// Returns true if a node with given name exists in a model.
         abstract HasNode: name: string -> bool
+
     end
 
 /// Repository is a collection of models.

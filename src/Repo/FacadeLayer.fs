@@ -114,6 +114,9 @@ and [<AllowNullLiteral>] IElement =
         /// TODO: shapes are actually more complex structures than strings, and some uniform format for shape
         /// representation is needed. Can be postponed after v1.
         abstract Shape: string with get
+
+        /// Adds an attribute to a given element. Name of the attribute, its type and default value shall be specified.
+        abstract AddAttribute: name: string * kind: AttributeKind * defaultValue: string -> unit
     end
 
 /// Node --- well, a node in a model.
@@ -143,6 +146,10 @@ type IModel =
     interface
         /// Name of a model.
         abstract Name: string with get, set
+
+        /// Shall this model be visible to user and selectable by user. True by default, but some tools
+        /// may want to create their own internal models in a repository.
+        abstract IsVisible: bool with get, set
 
         /// Reference to a metamodel for this model (may be reference to itself, for example, for Core Metametamodel).
         /// Can not be changed after model is created.
