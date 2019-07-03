@@ -169,9 +169,7 @@ namespace WpfControlsLib.Model
         }
 
         public void SetElementAllowed(Repo.IElement element, bool isAllowed)
-        {
-            this.RaiseElementCheck(element, isAllowed);
-        }
+            => this.RaiseElementCheck(element, isAllowed);
 
         private void RaiseNewVertex(Repo.INode node)
         {

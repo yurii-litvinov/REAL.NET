@@ -56,12 +56,12 @@ namespace EditorPluginInterfaces
         /// <summary>
         /// Allows plugin to subscribe to the model change.
         /// </summary>
-        public Action<String> OnMainModelChanged;
+        public Action<string> OnMainModelChanged;
 
         /// <summary>
         /// Allows plugin to remove model selector from the editor.
         /// </summary>
-        public Action<bool> ChangeSelectorVisibility;
+        public Action<bool> ChangeModelSelectorVisibility;
 
         /// <summary>
         /// Allows plugin to change model in the editor.
@@ -77,6 +77,8 @@ namespace EditorPluginInterfaces
         /// <param name="toolbar">Toolbar</param>
         /// <param name="console">Console</param>
         /// <param name="palette">Palette</param>
+        /// <param name="leftPanelGrid">Grid where left panel elements are located. Empty by default, but plugins can 
+        ///     use it to add some new tools.</param>
         public PluginConfig(IModel model, IScene scene, IToolbar toolbar, IConsole console, IPalette palette, Grid leftPanelGrid)
         {
             this.Model = model;

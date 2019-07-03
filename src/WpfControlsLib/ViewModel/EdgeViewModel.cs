@@ -12,8 +12,11 @@ namespace WpfControlsLib.ViewModel
     {
         private EdgeTypeEnum edgeType = EdgeTypeEnum.Association;
         private IList<AttributeViewModel> attributes = new List<AttributeViewModel>();
-        private SolidColorBrush brush = new SolidColorBrush(Colors.Blue);
+        private SolidColorBrush brush = Brushes.Blue;
         private bool isAllowed = true;
+
+        private static readonly SolidColorBrush invalidEdgeBrush = Brushes.Red;
+        private static readonly SolidColorBrush defaultEdgeBrush = Brushes.Blue;
 
         private string text;
 
@@ -57,7 +60,8 @@ namespace WpfControlsLib.ViewModel
             set
             {
                 this.isAllowed = value;
-                this.Color = value ? new SolidColorBrush(Colors.Blue) : new SolidColorBrush(Colors.Red);
+                // TODO: Color property can be set by an user, and user color will be forgotten after IsAllowed change.
+                this.Color = value ? defaultEdgeBrush : invalidEdgeBrush;
             }
         }
 

@@ -133,14 +133,17 @@ namespace WpfEditor.View
             {
                 var dirs = new List<string>(System.IO.Directory.GetDirectories(plugindir + "/bin"));
                 var config = new PluginConfig(this.model, null, null, this.Console, null, this.leftPanelGrid);
-                config.ChangeSelectorVisibility = (x) => { this.modelSelector.SelectorVisibility = x; };
+                config.ChangeModelSelectorVisibility = (x) => { this.modelSelector.SelectorVisibility = x; };
                 config.ChangeModel = this.SelectModel;
                 foreach (var dir in dirs)
                 {
                     libs.LaunchPlugins(dir, config);
                 }
+
                 if (config.OnMainModelChanged != null)
+                {
                     this.OnModelChanged += new Action<string>(config.OnMainModelChanged);
+                }
             }
         }
 
