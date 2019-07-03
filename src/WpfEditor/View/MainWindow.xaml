@@ -55,10 +55,11 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
         <!-- Main menu -->
-        <Menu Grid.Row="0" Grid.ColumnSpan="3" IsMainMenu="True">
+        <Menu Grid.Row="0" Grid.ColumnSpan="4" IsMainMenu="True">
             <MenuItem Header="_File" >
                 <MenuItem Header="_New" Command="New"/>
                 <MenuItem Header="Open..." Command="Open"/>
@@ -70,10 +71,10 @@
         </Menu>
 
         <!-- LeftPanel -->
-        <Grid
-            x:Name="leftPanelGrid"
-            Grid.Row="1"
+        <Grid 
+            Grid.Row="1" 
             Grid.Column="0"
+            x:Name="leftPanelGrid"
             HorizontalAlignment="Left"/>
 
 
