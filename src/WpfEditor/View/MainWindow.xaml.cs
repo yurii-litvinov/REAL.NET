@@ -132,7 +132,7 @@ namespace WpfEditor.View
             foreach (var plugindir in pluginDirs)
             {
                 var dirs = new List<string>(System.IO.Directory.GetDirectories(plugindir + "/bin"));
-                var config = new PluginConfig(this.model, null, null, this.Console, null, this.leftPanelGrid);
+                var config = new PluginConfig(this.model, this.scene, null, this.Console, null, this.leftPanelGrid);
                 config.ChangeModelSelectorVisibility = (x) => { this.modelSelector.SelectorVisibility = x; };
                 config.ChangeModel = this.SelectModel;
                 foreach (var dir in dirs)
@@ -243,6 +243,11 @@ namespace WpfEditor.View
             {
                 model.SaveAs(dialog.FileName);
             }
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -46,6 +46,9 @@ namespace WpfControlsLib.ViewModel
             }
         }
 
+        /// <summary>
+        /// Gets or sets border color for a node.
+        /// </summary>
         public Brush BorderColor
         {
             get => this.borderColor;
@@ -56,6 +59,9 @@ namespace WpfControlsLib.ViewModel
             }
         }
 
+        /// <summary>
+        /// Shows if node is allowed.
+        /// </summary>
         public bool IsAllowed
         {
             get => this.isAllowed;

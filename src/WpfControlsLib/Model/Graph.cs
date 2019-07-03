@@ -198,6 +198,8 @@ namespace WpfControlsLib.Model
                 this.DataGraph.RemoveVertex(nodeViewModel);
             }
 
+            var model = this.model.Repo.Model(this.model.ModelName);
+            model.DeleteElement(element);
             this.ElementRemoved?.Invoke(this, new ElementRemovedEventArgs { Element = element });
         }
 
@@ -214,6 +216,7 @@ namespace WpfControlsLib.Model
                 var nodeViewModel = this.DataGraph.Vertices.First(x => x.Node == element);
                 nodeViewModel.IsAllowed = isAllowed;
             }
+            this.ElementRemoved?.Invoke(this, new ElementRemovedEventArgs { Element = element });
         }
 
         public class DataVertexArgs : EventArgs
