@@ -21,7 +21,12 @@
              xmlns:modelSelector="clr-namespace:WpfControlsLib.Controls.ModelSelector"
              mc:Ignorable="d" 
              d:DataContext="{modelSelector:ModelSelector}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
-        <ComboBox x:Name="modelsComboBox" ItemsSource="{Binding ModelNames}" Width="200" HorizontalAlignment="Left"/>
+        <ComboBox x:Name="modelsComboBox" ItemsSource="{Binding ModelNames}" Width="200" HorizontalAlignment="Left" Visibility="{Binding Path=SelectorVisibility, Converter={StaticResource booleanToVisibilityConverter}}"/>
     </Grid>
 </UserControl>
