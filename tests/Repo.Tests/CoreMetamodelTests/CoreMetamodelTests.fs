@@ -46,4 +46,7 @@ let ``Every model element shall have correct type`` () =
     let association = model.Nodes |> Seq.find (fun n -> n.Name = "Association") :> IDataElement
 
     model |> (fun m -> m.Nodes) |> Seq.iter (fun e -> e.Class |> should equal node)
-    model |> (fun m -> m.Edges) |> Seq.iter (fun e -> (e.Class = generalization || e.Class = association) |> should be True)
+
+    model 
+    |> (fun m -> m.Edges) 
+    |> Seq.iter (fun e -> (e.Class = generalization || e.Class = association) |> should be True)

@@ -95,7 +95,7 @@ module Element =
         |> Seq.concat
         |> Seq.append (strictElementAttributes element)
 
-    /// Returns an attribute lint (outgoing association with given target name).
+    /// Returns an attribute link (outgoing association with given target name).
     /// Throws InvalidSemanticOperationException if there is no such association or there is more than one.
     let attributeLink element name =
         let attributeContainer = bfs element isGeneralization (hasStrictAttribute name)
@@ -132,6 +132,8 @@ module Element =
 
     /// Sets attribute value for given attribute. If this attribute is defined in parent, copies it into current
     /// element and then sets value.
+    /// If this attribute is used by more than one element, exception will be thrown (it shall be treated not as an
+    /// attribute, but as an association).
     let setAttributeValue element name value =
         let strictAtribute = strictElementAttributes element |> Seq.tryFind (fun attr -> attr.TargetName = name)
         if strictAtribute.IsSome then
@@ -260,7 +262,7 @@ type CoreSemantics(repo: IDataRepository) =
     /// Instantiates given node into given model, using given map to provide values for element attributes.
     /// Since Core metamodel is rather limited, there are some counter-intuitive considerations:
     /// - actually there is no notion of attribute in Core metamodel, attributes are no more than associations
-    ///   pointing to nodes which name is considered attribute value;
+    ///   pointing to nodes whose names are considered attribute value;
     /// - model has no way to know if given association is an attribute or a proper association with a separate node;
     /// - Core metamodel assumes that each association has unbounded multiplicity, so it can be instantiated zero or
     ///   more times in instances.

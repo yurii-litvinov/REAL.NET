@@ -77,7 +77,7 @@ module Deserializer =
             member this.Visit (repo: WrappedRepo) =
                 ()
 
-            member this.Visit (save: Save) =
+            member this.Visit (save: SaveFile) =
                 ()
 
     /// Loads given file contents into a given repository. Clears repository contents.
@@ -90,7 +90,7 @@ module Deserializer =
                 saveFileStream :> Stream
         use reader = new JsonTextReader(new StreamReader(saveFileStream))
         let serializer = new JsonSerializer();
-        let deserializedRepo = serializer.Deserialize<Save>(reader)
+        let deserializedRepo = serializer.Deserialize<SaveFile>(reader)
 
         repo.Clear()
         let visitor = DeserializingVisitor(repo)

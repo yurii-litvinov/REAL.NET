@@ -128,7 +128,7 @@ module Serializer =
 
     /// Function that wraps entire repository into data object.
     let private wrapRepo (repo: IDataRepository) =
-        let save = Save ()
+        let save = SaveFile ()
         save.Contents.Models <- repo.Models |> Seq.rev |> Seq.map wrapModel |> Seq.toArray
         save
 
@@ -144,7 +144,7 @@ module Serializer =
                 saveFileStream :> Stream
 
         use writer = new JsonTextWriter(new StreamWriter(saveFileStream))
-        let serializer = new JsonSerializer();
+        let serializer = new JsonSerializer()
         serializer.Formatting <- Formatting.Indented
         serializer.PreserveReferencesHandling <- PreserveReferencesHandling.Objects
         serializer.Serialize(writer, save)

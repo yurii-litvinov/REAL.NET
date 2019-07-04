@@ -79,7 +79,7 @@ and [<JsonObject>] WrappedRepo() =
             model.Accept visitor
 
 /// Helper class that represents the entire save file.
-and [<JsonObject>] Save() =
+and [<JsonObject>] SaveFile() =
     member val Version = "0.1" with get, set
     member val Extensions = Dictionary<string, obj>() with get, set
     member val Contents = WrappedRepo() with get, set
@@ -95,4 +95,4 @@ and Visitor =
     abstract Visit: WrappedNode -> unit
     abstract Visit: WrappedModel -> unit
     abstract Visit: WrappedRepo -> unit
-    abstract Visit: Save -> unit
+    abstract Visit: SaveFile -> unit
