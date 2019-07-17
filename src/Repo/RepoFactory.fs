@@ -24,14 +24,14 @@ type RepoFactory =
             builder.Build data
 
         CoreMetamodel.CoreMetamodelBuilder() |> build
-        Metametamodels.LanguageMetamodelBuilder() |> build
-        Metametamodels.InfrastructureMetamodelBuilder() |> build
-        Metametamodels.RobotsMetamodelBuilder() |> build
-        Metametamodels.RobotsTestModelBuilder() |> build
-        Metametamodels.AirSimMetamodelBuilder() |> build
-        Metametamodels.AirSimModelBuilder() |> build
-        Metametamodels.FeatureMetamodelBuilder() |> build
-        Metametamodels.FeatureTestModelBuilder() |> build
+        Metamodels.LanguageMetamodelBuilder() |> build
+        Metamodels.InfrastructureMetamodelBuilder() |> build
+        Metamodels.RobotsMetamodelBuilder() |> build
+        Metamodels.RobotsTestModelBuilder() |> build
+        Metamodels.AirSimMetamodelBuilder() |> build
+        Metamodels.AirSimModelBuilder() |> build
+        Metamodels.FeatureMetamodelBuilder() |> build
+        Metamodels.FeatureTestModelBuilder() |> build
 
         new FacadeLayer.Repo(data) :> IRepo
 
@@ -48,7 +48,7 @@ type RepoFactory =
             builder.Build data
 
         CoreMetamodel.CoreMetamodelBuilder() |> build
-        Metametamodels.LanguageMetamodelBuilder() |> build
-        Metametamodels.InfrastructureMetamodelBuilder() |> build
+        Metamodels.LanguageMetamodelBuilder() |> build
+        Metamodels.InfrastructureMetamodelBuilder() |> build
 
         new FacadeLayer.Repo(data) :> IRepo

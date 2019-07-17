@@ -36,7 +36,7 @@ let ``Node in a model shall have metatype`` () =
 
     let infrastructure = InfrastructureSemanticLayer.InfrastructureSemantic(underlyingRepo)
 
-    let attributeRepository = AttributeRepository()
+    let attributeRepository = AttributeRepository(underlyingRepo)
     let elementRepository = ElementRepository(infrastructure, attributeRepository) :> IElementRepository
 
     let motorsForwardInstanceNode = elementRepository.GetElement dataLayerElement
@@ -59,7 +59,7 @@ let ``Timer block shall have a picture`` () =
 
     let infrastructure = InfrastructureSemanticLayer.InfrastructureSemantic(underlyingRepo)
 
-    let attributeRepository = AttributeRepository()
+    let attributeRepository = AttributeRepository(underlyingRepo)
     let elementRepository = ElementRepository(infrastructure, attributeRepository) :> IElementRepository
 
     let timer = elementRepository.GetElement dataLayerElement

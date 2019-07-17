@@ -1,4 +1,4 @@
-﻿(* Copyright 2017 Yurii Litvinov
+﻿(* Copyright 2017-2019 Yurii Litvinov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@ namespace Repo.CoreMetamodel
 
 open Repo.DataLayer
 
-/// Initializes repository with Core model.
+/// Initializes repository with Core Metamodel.
 type CoreMetamodelBuilder() =
     interface IModelBuilder with
         member this.Build(repo: IDataRepository): unit =

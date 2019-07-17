@@ -17,17 +17,16 @@ namespace Repo.FacadeLayer
 open System.Collections.Generic
 
 open Repo
-open Repo.CoreMetamodel
 
 /// Repository for attribute wrappers. Contains already created wrappers and creates new wrappers if needed.
 /// Holds references to attribute wrappers and elements.
-type AttributeRepository() =
+type AttributeRepository(repo: DataLayer.IDataRepository) =
     let attributes = Dictionary<_, _>()
     member this.GetAttribute (attributeNode: DataLayer.IDataNode) =
         if attributes.ContainsKey attributeNode then
             attributes.[attributeNode] :> IAttribute
         else
-            let newAttribute = Attribute(attributeNode)
+            let newAttribute = Attribute(attributeNode, repo)
             attributes.Add(attributeNode, newAttribute)
             newAttribute :> IAttribute
 
@@ -36,11 +35,13 @@ type AttributeRepository() =
             attributes.Remove(node) |> ignore
 
 /// Implements attribute wrapper.
-and Attribute(attributeNode: DataLayer.IDataNode) =
+and Attribute(attributeNode: DataLayer.IDataNode, repo: DataLayer.IDataRepository) =
+    let dataElementSemantics = AttributeMetamodel.Element repo
+
     interface IAttribute with
         member this.Kind =
-            let kindNode = Element.attribute attributeNode "kind"
-            match Node.name kindNode with
+            let kindNode = dataElementSemantics.Attribute attributeNode "kind"
+            match AttributeMetamodel.Node.Name kindNode with
             | "AttributeKind.String" -> AttributeKind.String
             | "AttributeKind.Int" -> AttributeKind.Int
             | "AttributeKind.Double" -> AttributeKind.Double
@@ -57,10 +58,10 @@ and Attribute(attributeNode: DataLayer.IDataNode) =
 
         member this.StringValue
             with get (): string =
-                Node.name <| Element.attribute attributeNode "stringValue"
+                AttributeMetamodel.Node.Name <| dataElementSemantics.Attribute attributeNode "stringValue"
             and set (v: string): unit =
-                (Element.attribute attributeNode "stringValue").Name <- v
+                (dataElementSemantics.Attribute attributeNode "stringValue").Name <- v
 
         member this.Type = null
 
-        member this.IsInstantiable = Element.attributeValue attributeNode "isInstantiable" = "true"
+        member this.IsInstantiable = dataElementSemantics.AttributeValue attributeNode "isInstantiable" = "true"

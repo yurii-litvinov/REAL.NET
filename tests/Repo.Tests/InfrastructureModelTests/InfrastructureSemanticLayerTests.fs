@@ -17,22 +17,17 @@ module InfrastructureSemanticLayerTests
 open NUnit.Framework
 open FsUnit
 
-open Repo.CoreMetamodel
-open Repo.Metametamodels
+open Repo.AttributeMetamodel
+open Repo.Metamodels
 open Repo.DataLayer
 open Repo.InfrastructureSemanticLayer
 
 let init () =
-    let repo = DataRepo() :> IDataRepository
-    let build (builder: IModelBuilder) =
-        builder.Build repo
-
-    CoreMetamodelBuilder() |> build
-    LanguageMetamodelBuilder() |> build
-    InfrastructureMetamodelBuilder() |> build
-
+    let repo = TestUtils.init [
+        Repo.CoreMetamodel.CoreMetamodelBuilder(); 
+        LanguageMetamodelBuilder(); 
+        InfrastructureMetamodelBuilder()]
     let infrastructure = InfrastructureSemantic(repo)
-
     (repo, infrastructure)
 
 let initForMetamodel () =
@@ -54,7 +49,7 @@ let initForModel () =
 let ``Instantiation shall preserve linguistic attributes`` () =
     let repo, infrastructure, model, _, element = initForModel ()
 
-    let outgoingAssociations = Element.outgoingAssociations element
+    let outgoingAssociations = Element.OutgoingAssociations element
     outgoingAssociations |> Seq.map (fun a -> (a.Target.Value :?> IDataNode).Name) |> should contain "shape"
     let attributes = infrastructure.Element.Attributes element
     attributes |> should not' (be Empty)
@@ -64,9 +59,11 @@ let ``Instantiation shall preserve linguistic attributes`` () =
 let ``Double instantiation shall result in correct instantiation chain`` () =
     let repo, infrastructure, metamodel, model, node, element = initForMetamodel ()
 
+    let elementSemantics = Element(repo)
+
     let attribites =
         infrastructure.Element.Attributes element
-        |> Seq.map (fun attr -> Element.attributeValue attr "stringValue")
+        |> Seq.map (fun attr -> elementSemantics.AttributeValue attr "stringValue")
 
     let elementInstance = infrastructure.Instantiate model element
 
@@ -98,12 +95,12 @@ let ``Instantiation shall create attributes from class's parents`` () =
     let repo, infrastructure, metamodel, model, node, parent = initForMetamodel ()
     let generalization = infrastructure.Metamodel.Generalization
 
-    Node.setName "Parent" parent
+    Node.SetName "Parent" parent
     infrastructure.Element.AddAttribute parent "parentAttribute" "AttributeKind.String" "parent attribute"
 
     let descendant = infrastructure.Instantiate metamodel node
     metamodel.CreateGeneralization(generalization, descendant, parent) |> ignore
-    Node.setName "Descendant" descendant
+    Node.SetName "Descendant" descendant
     infrastructure.Element.AddAttribute descendant "descendantAttribute" "AttributeKind.String" "descendant attribute"
 
     let instance = infrastructure.Instantiate model descendant
@@ -115,7 +112,7 @@ let ``Instantiation shall create attributes from class's parents`` () =
 let ``Changing attribute in instance should not affect class or other instances`` () =
     let repo, infrastructure, metamodel, model, node, ``class`` = initForMetamodel ()
 
-    Node.setName "Class" ``class``
+    Node.SetName "Class" ``class``
     infrastructure.Element.AddAttribute ``class`` "classAttribute" "AttributeKind.String" "class value"
 
     let instance1 = infrastructure.Instantiate model ``class``

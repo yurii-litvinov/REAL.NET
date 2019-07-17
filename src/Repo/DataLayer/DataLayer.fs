@@ -138,6 +138,13 @@ and IDataModel =
         /// Returns true if a node with given name exists in a model.
         abstract HasNode: name: string -> bool
 
+        /// Searches association with given traget name in a model. If there are none or more than one association 
+        /// with given name, throws an exception.
+        abstract Association: name: string -> IDataAssociation
+
+        /// Returns true if an association with given target name exists in a model.
+        abstract HasAssociation: name: string -> bool
+
     end
 
 /// Repository is a collection of models.

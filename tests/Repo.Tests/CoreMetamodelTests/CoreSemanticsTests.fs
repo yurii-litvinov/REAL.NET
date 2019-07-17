@@ -12,23 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-module CoreSemanticLayerTests
+module CoreSemanticsTests
 
 open NUnit.Framework
 open FsUnit
 
-open Repo.Metametamodels
-open Repo.DataLayer
 open Repo.CoreMetamodel
 
-let init () =
-    let repo = DataRepo() :> IDataRepository
-    let build (builder: IModelBuilder) =
-        builder.Build repo
-
-    CoreMetamodelBuilder() |> build
-
-    repo
+let init () = TestUtils.init [CoreMetamodelBuilder()]
 
 [<Test>]
 let ``Repo is able to find Core Metamodel`` () =
@@ -52,12 +43,12 @@ let ``Repo shall throw if no model found`` () =
 let ``Repo shall throw if searching two models with the same name`` () =
     let repo = init()
     let model1 = repo.CreateModel("TestModel")
-    let model2 = repo.CreateModel("TestModel", model1)
+    let _ = repo.CreateModel("TestModel", model1)
     (fun () -> repo.Model "TestModel" |> ignore)
             |> should throw typeof<Repo.MultipleModelsException>
 
 [<Test>]
-let ``isInstanceOf shall work for long instantiation chains`` () =
+let ``IsInstanceOf shall work for long instantiation chains`` () =
     let repo = init()
     let model1 = repo.CreateModel("TestModel")
     let coreMetamodel = repo.Model "CoreMetamodel"
@@ -67,13 +58,13 @@ let ``isInstanceOf shall work for long instantiation chains`` () =
     let model2 = repo.CreateModel("TestModel2", model1)
     let instance = model2.CreateNode("Instance", element)
 
-    Element.isInstanceOf element instance |> should be True
-    Element.isInstanceOf node element |> should be True
-    Element.isInstanceOf node instance |> should be True
-    Element.isInstanceOf instance node |> should be False
+    Element.IsInstanceOf element instance |> should be True
+    Element.IsInstanceOf node element |> should be True
+    Element.IsInstanceOf node instance |> should be True
+    Element.IsInstanceOf instance node |> should be False
 
 [<Test>]
-let ``isInstanceOf shall respect generalization`` () =
+let ``IsInstanceOf shall respect generalization`` () =
     let repo = init()
     let model1 = repo.CreateModel("TestModel")
     let coreMetamodel = repo.Model "CoreMetamodel"
@@ -87,36 +78,8 @@ let ``isInstanceOf shall respect generalization`` () =
     let descendantInstance = model2.CreateNode("descendantInstance", descendant)
     let parentInstance = model2.CreateNode("parentInstance", parent)
 
-    Element.isInstanceOf descendant descendantInstance |> should be True
-    Element.isInstanceOf parent descendantInstance |> should be True
+    Element.IsInstanceOf descendant descendantInstance |> should be True
+    Element.IsInstanceOf parent descendantInstance |> should be True
 
-    Element.isInstanceOf descendant parentInstance |> should be False
-    Element.isInstanceOf parent parentInstance |> should be True
-
-[<Test>]
-let ``Setting attribute value in descendant shall not affect parent nor siblings`` () =
-    let repo = init()
-    let model1 = repo.CreateModel("TestModel")
-    let coreMetamodel = repo.Model "CoreMetamodel"
-    let node = coreMetamodel.Node "Node"
-    let string = coreMetamodel.Node "String"
-    let association = coreMetamodel.Node "Association"
-    let generalization = coreMetamodel.Node "Generalization"
-
-    let parent = model1.CreateNode("Parent", node)
-    let descendant1 = model1.CreateNode("Descendant1", node)
-    let descendant2 = model1.CreateNode("Descendant2", node)
-    model1.CreateGeneralization(generalization, descendant1, parent) |> ignore
-    model1.CreateGeneralization(generalization, descendant2, parent) |> ignore
-
-    Element.addAttribute parent "attribute" string association "attributeValueInParent"
-
-    Element.attributeValue parent "attribute" |> should equal "attributeValueInParent"
-    Element.attributeValue descendant1 "attribute" |> should equal "attributeValueInParent"
-    Element.attributeValue descendant2 "attribute" |> should equal "attributeValueInParent"
-
-    Element.setAttributeValue descendant1 "attribute" "attributeValueInDescendant"
-
-    Element.attributeValue parent "attribute" |> should equal "attributeValueInParent"
-    Element.attributeValue descendant1 "attribute" |> should equal "attributeValueInDescendant"
-    Element.attributeValue descendant2 "attribute" |> should equal "attributeValueInParent"
+    Element.IsInstanceOf descendant parentInstance |> should be False
+    Element.IsInstanceOf parent parentInstance |> should be True

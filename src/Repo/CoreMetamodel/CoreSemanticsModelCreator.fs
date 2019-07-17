@@ -15,17 +15,34 @@
 namespace Repo.CoreMetamodel
 
 open Repo.DataLayer
-open Repo.CoreMetamodel
 
 /// Class that allows to instantiate new models based on Core model semantics.
 type CoreSemanticsModelCreator private (repo: IDataRepository, modelName: string, metamodel: IDataModel) =
     let coreMetamodel = repo.Model "CoreMetamodel"
-    let coreSemantic = CoreSemantics(repo)
     let coreNode = coreMetamodel.Node "Node"
-    let stringNode = coreMetamodel.Node "String"
     let association = coreMetamodel.Node "Association"
+    let generalization = coreMetamodel.Node "Generalization"
 
     let model = repo.CreateModel(modelName, metamodel)
+
+    /// Helper function that creates a copy of a given edge in a current model (identifying source and target by name
+    /// and assuming they already present in a model).
+    let reinstantiateEdge (edge: IDataEdge) =
+        let sourceName = (edge.Source.Value :?> IDataNode).Name
+        let targetName = (edge.Target.Value :?> IDataNode).Name
+        let source = model.Node sourceName
+        let target = model.Node targetName
+
+        match edge with 
+        | :? IDataGeneralization ->
+            model.CreateGeneralization(generalization, source, target) |> ignore
+        | :? IDataAssociation as a ->
+            model.CreateAssociation(association, source, target, a.TargetName) |> ignore
+        | _ -> failwith "Unknown edge type"
+
+    /// Creates a new model in existing repository with Core Metamodel as its metamodel.
+    new (repo: IDataRepository, modelName: string) =
+        CoreSemanticsModelCreator(repo, modelName, repo.Model "CoreMetamodel")
 
     /// Creates a new repository with Core Metamodel and creates a new model in it.
     new (modelName: string) =
@@ -36,59 +53,33 @@ type CoreSemanticsModelCreator private (repo: IDataRepository, modelName: string
         CoreMetamodelBuilder() |> build
         CoreSemanticsModelCreator(repo, modelName, repo.Model "CoreMetamodel")
 
-    /// Adds a node (an instance of CoreMetamodel.Node) with given attributes into a model.
-    /// Attributes do not receive value.
-    member this.AddNode (name: string) (attributes: string list) =
-        this.AddNodeWithClass name coreNode attributes
+    /// Adds a node (an instance of CoreMetamodel.Node) into a model.
+    member this.AddNode (name: string) =
+        this.AddNodeWithClass name coreNode
 
-    /// Adds a node (an instance of given class) with given attributes to a model.
-    /// Attributes do not receive value.
-    member this.AddNodeWithClass (name: string) (``class``: IDataElement) (attributes: string list) =
-        let node = model.CreateNode(name, ``class``)
-        attributes |> List.iter (fun attr -> this.AddAttribute node attr)
-        node
-
-    /// Instantiates a node of a given class into a model. Uses provided attribute list to instantiate attributes.
-    member this.InstantiateNode (name: string) (``class``: IDataNode) (attributeValuesList: List<string * string>) =
-        let attributeValues = Map.ofList attributeValuesList
-        let node = coreSemantic.InstantiateNode model ``class`` attributeValues
-        Node.setName name node
-        node
-
-    /// Adds attribute without a value. So it refers to a type of possible values and is supposed to be instantiated
-    /// (then a value becomes an instance of a type). The only type in Core metamodel is String, so this method checks
-    /// if String already exists in a model and if not, creates a new node for a String type (so there is a 
-    /// "Duplication of concepts" antipattern since String has to be reintroduced at each metalevel, but we do not have
-    /// deep metamodeling machinery to avoid it in Core Metamodel). Note that String is also a valid value for an 
-    /// attribute and we have no means to distinquish between a value and a type, but that's ok, we don't have such 
-    /// high-level concepts in Core metamodel anyway, and attributes are no more than links to some nodes.
-    ///
-    /// Note that adding attribute using this method and later setting attribute value can lead to unexpected results.
-    /// TODO: Refine attribute type/value semantics. Actually there are no attributes in Core Metamodel, so this is
-    ///       technically not a bug, but still.
-    member this.AddAttribute (node: IDataNode) (name: string) =
-        let stringNode =
-            if not <| model.HasNode "String" then
-                model.CreateNode("String", coreNode)
-            else
-                model.Node "String"
-            
-        model.CreateAssociation(association, node, stringNode, name) |> ignore
-
-    /// Adds an attribute to a given node that is an instance of String node, with given value.
-    member this.AddAttributeWithValue (node: IDataNode) (name: string) (value: string) =
-        let attributeNode = model.CreateNode(name, stringNode)
-        model.CreateAssociation(association, node, attributeNode, name) |> ignore
-        Element.setAttributeValue node name value
+    /// Adds a node (an instance of given class) to a model.
+    member this.AddNodeWithClass (name: string) (``class``: IDataElement) =
+        model.CreateNode(name, ``class``)
 
     /// Adds an association between two elements. Association will be an instance of a CoreMetamodel.Association
     /// node.
-    member this.AddAssociation (source: IDataNode) (target: IDataNode) (name: string) =
+    member this.AddAssociation (source: IDataElement) (target: IDataElement) (name: string) =
         model.CreateAssociation(association, source, target, name)
+
+    /// Adds an association between two elements. Association will be an instance of a CoreMetamodel.Generalization
+    /// node.
+    member this.AddGeneralization (child: IDataNode) (parent: IDataNode) =
+        model.CreateGeneralization(generalization, child, parent) |> ignore
 
     /// Instantiates an association between two given elements using supplied association class as a type of 
     /// resulting edge.
-    member this.InstantiateEdge (source: IDataNode) (target: IDataNode) (``class``: IDataAssociation) =
+    member this.AddAssociationWithClass (source: IDataNode) (target: IDataNode) (``class``: IDataAssociation) =
+        model.CreateAssociation(``class``, source, target, ``class``.TargetName)
+
+    /// Instantiates an association between two given elements. Searches metamodel for association with given name, and
+    /// if such association is found (and exactly once), uses it as a class for a new association.
+    member this.AddAssociationByName (source: IDataNode) (target: IDataNode) (name: string) =
+        let ``class`` = Model.FindAssociation metamodel name
         model.CreateAssociation(``class``, source, target, ``class``.TargetName)
 
     /// Creates model builder that uses Core Metamodel semantics and has current model as its ontological metamodel
@@ -99,3 +90,25 @@ type CoreSemanticsModelCreator private (repo: IDataRepository, modelName: string
 
     /// Returns model which this builder builds.
     member this.Model with get () = model
+
+    /// Helper operator that adds a node to a model.
+    static member (+) (creator: CoreSemanticsModelCreator, name) = creator.AddNode name
+
+    /// Helper operator that adds a generalization between given elements to a model.
+    static member (+--|>) (creator: CoreSemanticsModelCreator, (source, target)) = 
+        creator.AddGeneralization source target
+
+    /// Helper operator that adds an association between given elements to a model.
+    static member (+--->) (creator: CoreSemanticsModelCreator, (source, target, name)) = 
+        creator.AddAssociation source target name |> ignore
+
+    /// Instantiates an exact copy of a metamodel in a current model. Supposed to be used to reintroduce linguistic
+    /// metatypes at a new metalevel.
+    member this.ReinstantiateParentModel () =
+        metamodel.Nodes |> Seq.iter (fun node -> this + node.Name |> ignore)
+        metamodel.Edges |> Seq.iter reinstantiateEdge
+        ()
+
+    /// Returns node by name, if it exists.
+    member this.Node name =
+        model.Node name

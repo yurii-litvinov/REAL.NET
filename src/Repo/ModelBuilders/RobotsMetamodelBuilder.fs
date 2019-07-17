@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace Repo.Metametamodels
+namespace Repo.Metamodels
 
 open Repo
 open Repo.DataLayer
@@ -26,7 +26,7 @@ type RobotsMetamodelBuilder() =
             let metamodel = infrastructure.Metamodel.Model
 
             let find name = metamodel.Node name
-            let findAssociation node name = CoreMetamodel.Model.findAssociationWithSource node name
+            let findAssociation node name = CoreMetamodel.Model.FindAssociationWithSource node name
 
             let metamodelNode = find "Node"
             let metamodelGeneralization = find "Generalization"

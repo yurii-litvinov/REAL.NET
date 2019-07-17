@@ -29,24 +29,20 @@ let setup () =
         File.Delete tempFile
 
 let init () =
-    let repo = new DataLayer.DataRepo()
-
-    let build (builder: DataLayer.IModelBuilder) =
-        builder.Build repo
-
-    CoreMetamodel.CoreMetamodelBuilder() |> build
-    Metametamodels.LanguageMetamodelBuilder() |> build
-    Metametamodels.InfrastructureMetamodelBuilder() |> build
+    let repo = TestUtils.init [
+        CoreMetamodel.CoreMetamodelBuilder(); 
+        Metamodels.LanguageMetamodelBuilder(); 
+        Metamodels.InfrastructureMetamodelBuilder()]
 
     let infrastructure = InfrastructureSemanticLayer.InfrastructureSemantic(repo)
 
-    let attributeRepository = AttributeRepository()
+    let attributeRepository = AttributeRepository(repo)
     let elementRepository = ElementRepository(infrastructure, attributeRepository)
     let modelRepository = ModelRepository(infrastructure, elementRepository)
 
     let infrastructureMetamodel = infrastructure.Metamodel.Model
 
-    let underlyingModel = (repo :> DataLayer.IDataRepository).CreateModel("Model", infrastructureMetamodel)
+    let underlyingModel = repo.CreateModel("Model", infrastructureMetamodel)
     let model = Model(infrastructure, underlyingModel, elementRepository, modelRepository)
 
     model :> IModel

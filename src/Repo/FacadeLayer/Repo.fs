@@ -21,7 +21,7 @@ open Repo.Serializer
 type Repo(repo: DataLayer.IDataRepository) =
     let infrastructure = InfrastructureSemanticLayer.InfrastructureSemantic(repo)
 
-    let attributeRepository = AttributeRepository()
+    let attributeRepository = AttributeRepository(repo)
     let elementRepository = ElementRepository(infrastructure, attributeRepository)
     let modelRepository = ModelRepository(infrastructure, elementRepository)
 

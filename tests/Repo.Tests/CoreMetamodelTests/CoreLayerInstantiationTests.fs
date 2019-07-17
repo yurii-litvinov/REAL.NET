@@ -17,102 +17,36 @@ module CoreLayerInstantiationTests
 open NUnit.Framework
 open FsUnit
 
-open Repo.DataLayer
-open Repo.Metametamodels
 open Repo.CoreMetamodel
 
-// Strictness of metalayers --- each element in model is an instance of an element in metamodel.
-let checkMetalayerStrictness (creator: CoreSemanticsModelCreator) =
-    creator.Model.Elements |> Seq.forall (fun e -> e.Class.Model = creator.Model.Metamodel) |> should be True
-
-// Associations can not cross metalayers.
-let checkAssociationsCantCrossMetalayers (creator: CoreSemanticsModelCreator) =
-    creator.Model.Edges |> Seq.forall (fun e -> e.Source.Value.Model = e.Target.Value.Model) |> should be True 
+let init () = TestUtils.init [CoreMetamodelBuilder()]
 
 [<Test>]
-let ``Repo shall allow to create Type-Object-style model hierarchy`` () =
-    let metamodelCreator = CoreSemanticsModelCreator("Metamodel")
+let ``Core Metamodel shall be able to be reinstantiated from itself`` () =
+    let model = CoreSemanticsModelCreator("Model")
+    let (~+) name = model.AddNode(name)
 
-    let productType = metamodelCreator.AddNode "ProductType" ["VAT"]
-    let product = metamodelCreator.AddNode "Product" ["price"]
-    let typeAssociation = metamodelCreator.AddAssociation product productType "type"
+    let node = +"Node"
+    let element = +"Element"
+    let edge = +"Edge"
+    let generalization = +"Generalization"
+    let association = +"Association"
+    let stringNode = +"String"
 
-    let modelCreator = metamodelCreator.CreateInstanceModelBuilder "Model"
+    let (--|>) child parent = model.AddGeneralization child parent
 
-    let book = modelCreator.InstantiateNode "Book" productType ["VAT", "7"]
-    let mobyDick = modelCreator.InstantiateNode "mobyDick" product ["price", "10"]
-    modelCreator.InstantiateEdge mobyDick book typeAssociation |> ignore
+    node --|> element
+    edge --|> element
+    generalization --|> edge
+    association --|> edge
 
-    let cd = modelCreator.InstantiateNode "CD" productType ["VAT", "10.5"]
-    let tosca = modelCreator.InstantiateNode "Tosca" product ["price", "16"]
-    modelCreator.InstantiateEdge tosca cd typeAssociation |> ignore
+    let (--->) source (target, name) = model.AddAssociationByName source target name |> ignore
 
-    Element.attributeValue cd "VAT" |> should equal "10.5"
-    Element.hasAttribute tosca "VAT" |> should be False
-    Element.attributeValue tosca "price" |> should equal "16"
+    element ---> (element, "class")
+    edge ---> (element, "source")
+    edge ---> (element, "target")
+    association ---> (stringNode, "targetName")
 
-    Element.attributeValue tosca "type" |> should equal "CD"
+    let metaNode = Model.FindNode model.Model.Metamodel "Node"
 
-    // VAT has a type of String (as anything else in models derived from Core metamodel
-    Element.attributeValue productType "VAT" |> should equal "String"
-
-    // Assigning value to an attribute that was created without a value (so it is an attribute, not a field) 
-    // should be impossible.
-    (fun () -> Element.setAttributeValue productType "VAT" "Test") 
-            |> should throw (typeof<Repo.InvalidSemanticOperationException>)
-
-    // Some model consistency checks:
-    // 1. Strictness of metalayers
-    checkMetalayerStrictness modelCreator
-    
-    // 2. There are no associations crossing metalayers.
-    checkAssociationsCantCrossMetalayers modelCreator
-    ()
-
-
-[<Test>]
-let ``Repo shall allow to create deep model hierarchy`` () =
-    let model2Creator = CoreSemanticsModelCreator("Model@2")
-
-    let productType = model2Creator.AddNode "ProductType" ["VAT"; "price"]
-
-    let model1Creator = model2Creator.CreateInstanceModelBuilder "Model@1"
-
-    let book = model1Creator.InstantiateNode "Book" productType ["VAT", "7"]
-    // Here we need to reintroduce attribute because core semantics treats attributes as associations.
-    model1Creator.AddAttribute book "price"
-
-    let cd = model1Creator.InstantiateNode "CD" productType ["VAT", "10.5"]
-    model1Creator.AddAttribute cd "price"
-
-    let model0Creator = model1Creator.CreateInstanceModelBuilder "Model@0"
-
-    let mobyDick = model0Creator.InstantiateNode "mobyDick" book ["price", "10"]
-    let tosca = model0Creator.InstantiateNode "Tosca" cd ["price", "16"]
-
-    Element.attributeValue cd "VAT" |> should equal "10.5"
-    Element.hasAttribute tosca "VAT" |> should be False
-    Element.attributeValue tosca "price" |> should equal "16"
-
-    // VAT has a type of String (as anything else in models derived from Core metamodel
-    Element.attributeValue productType "VAT" |> should equal "String"
-
-    // Assigning value to an attribute that was created without a value (so it is an attribute, not a field) 
-    // should be impossible.
-    (fun () -> Element.setAttributeValue productType "VAT" "Test") 
-            |> should throw (typeof<Repo.InvalidSemanticOperationException>)
-
-    // Some model consistency checks:
-    // 1. Strictness of metalayers --- each element in model is an instance of an element in metamodel.
-    checkMetalayerStrictness model0Creator
-    checkMetalayerStrictness model2Creator
-
-    // Model@1 reintroduces attributes using Core model as their type, so it is a linguistic extension and breaks 
-    // level hierarchy.
-
-    // 2. There are no associations crossing metalayers.
-    checkAssociationsCantCrossMetalayers model0Creator
-    checkAssociationsCantCrossMetalayers model1Creator
-    checkAssociationsCantCrossMetalayers model2Creator
-
-    ()
+    model.Model.Nodes |> Seq.iter (fun e -> e.Class |> should equal metaNode)

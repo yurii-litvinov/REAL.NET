@@ -85,8 +85,12 @@
     <Compile Include="Serializer\Serializer.fs" />
     <Compile Include="Serializer\Deserializer.fs" />
     <Compile Include="CoreMetamodel\CoreMetamodelBuilder.fs" />
+    <Compile Include="CoreMetamodel\CoreSemanticsHelpers.fs" />
     <Compile Include="CoreMetamodel\CoreSemantics.fs" />
     <Compile Include="CoreMetamodel\CoreSemanticsModelCreator.fs" />
+    <Compile Include="AttributeMetamodel\AttributeMetamodelBuilder.fs" />
+    <Compile Include="AttributeMetamodel\AttributeSemantics.fs" />
+    <Compile Include="AttributeMetamodel\AttributeSemanticsModelCreator.fs" />
     <Compile Include="DeepMetamodelLayer\DeepMetamodelBuilder.fs" />
     <Compile Include="InfrastructureSemanticLayer.fs" />
     <Compile Include="ModelBuilders\LanguageMetamodelBuilder.fs" />

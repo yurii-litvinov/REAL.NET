@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace Repo.Metametamodels
+namespace Repo.Metamodels
 
 open Repo.DataLayer
 open Repo.CoreMetamodel
@@ -35,8 +35,8 @@ type AirSimModelBuilder() =
             let metamodelTimer = metamodel.Node "Timer"
             let metamodelIf = metamodel.Node "IfNode"
 
-            let link = Model.findAssociationWithSource metamodelAbstractNode "target"
-            let ifLink = Model.findAssociationWithSource metamodelAbstractNode "ifTarget"
+            let link = Model.FindAssociationWithSource metamodelAbstractNode "target"
+            let ifLink = Model.FindAssociationWithSource metamodelAbstractNode "ifTarget"
 
             let model = repo.CreateModel("AirSimModel", metamodel)
 

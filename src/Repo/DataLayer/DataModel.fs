@@ -23,6 +23,12 @@ type DataModel private (name: string, metamodel: IDataModel option) =
 
     let mutable properties = Map.empty
 
+    /// Helper function to choose only associatinons from sequence of edges.
+    let chooseAssociation: IDataEdge -> IDataAssociation option = 
+        function
+        | :? IDataAssociation as a -> Some a
+        | _ -> None
+
     new(name: string) = DataModel(name, None)
     new(name: string, metamodel: IDataModel) = DataModel(name, Some metamodel)
 
@@ -107,7 +113,17 @@ type DataModel private (name: string, metamodel: IDataModel option) =
 
         member this.HasNode (name: string): bool =
             nodes |> List.exists (fun x -> x.Name = name)
+
         member this.Properties
             with get () = properties
             and set v = properties <- v
-            
+
+        member this.Association (name: string): IDataAssociation =
+            Repo.Helpers.getExactlyOne 
+                (edges |> Seq.choose chooseAssociation)
+                (fun a -> a.TargetName = name)
+                (fun () -> Repo.ElementNotFoundException name)
+                (fun () -> Repo.MultipleElementsException name)
+
+        member this.HasAssociation (name: string) =
+            edges |> Seq.choose chooseAssociation |> Seq.tryFind (fun a -> a.TargetName = name) |> Option.isSome

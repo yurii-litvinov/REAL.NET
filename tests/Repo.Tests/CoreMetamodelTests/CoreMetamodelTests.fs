@@ -20,11 +20,7 @@ open NUnit.Framework
 open Repo.CoreMetamodel
 open Repo.DataLayer
 
-let init () =
-    let repo = DataRepo() :> IDataRepository
-    let builder = CoreMetamodelBuilder() :> IModelBuilder
-    builder.Build repo
-    repo
+let init () = TestUtils.init [CoreMetamodelBuilder()]
 
 [<Test>]
 let ``Builder shall be able to create model in repo`` () =

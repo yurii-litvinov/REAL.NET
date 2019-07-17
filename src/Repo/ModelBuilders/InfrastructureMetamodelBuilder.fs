@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace Repo.Metametamodels
+namespace Repo.Metamodels
 
 open Repo.DataLayer
 open Repo.CoreMetamodel
@@ -31,7 +31,7 @@ type InfrastructureMetamodelBuilder() =
             let metamodelAssociation = find "Association"
             let metamodelString = find "String"
             let metamodelEnum = find "Enum"
-            let metamodelEnumLiteralLink = Model.findAssociation metamodel "elements"
+            let metamodelEnumLiteralLink = Model.FindAssociation metamodel "elements"
 
             let model = repo.CreateModel("InfrastructureMetamodel", metamodel)
 
@@ -75,7 +75,7 @@ type InfrastructureMetamodelBuilder() =
                 let kindNode = model.Node (typeNodeToKind (``type`` :?> IDataNode))
                 model.CreateAssociation(metamodelAssociation, attributeNode, kindNode, "kind") |> ignore
 
-                let valueNode = Model.tryFindNode model value
+                let valueNode = Model.TryFindNode model value
                 if valueNode.IsSome then
                     /// All these attribute are immutable, so can be shared (at least it seems so).
                     model.CreateAssociation(metamodelAssociation, attributeNode, valueNode.Value, "stringValue")
@@ -87,7 +87,7 @@ type InfrastructureMetamodelBuilder() =
 
                 // All linguistic attributes shall be instantiable, since every model shall conform to Infrastructure
                 // Metamodel if it shall be opened in editor.
-                let trueNode = Model.tryFindNode model "true"
+                let trueNode = Model.TryFindNode model "true"
                 let trueNode = if trueNode.IsNone then +"true" else trueNode.Value
 
                 model.CreateAssociation(metamodelAssociation, attributeNode, trueNode, "isInstantiable") |> ignore

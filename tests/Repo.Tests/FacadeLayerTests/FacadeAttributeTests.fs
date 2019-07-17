@@ -24,30 +24,34 @@ let getAttributeType nodeName name =
     let repo = RepoFactory.Create ()
     let underlyingRepo = (repo :?> Repo).UnderlyingRepo
     let model = repo.Model "RobotsMetamodel"
-    let attributeRepository = AttributeRepository()
+    let attributeRepository = AttributeRepository(underlyingRepo)
+
+    let elementSemantics = AttributeMetamodel.Element underlyingRepo
 
     let dataLayerModel = (model :?> Model).UnderlyingModel
     let dataLayerElement = dataLayerModel.Nodes |> Seq.find (fun n -> n.Name = nodeName) :> DataLayer.IDataElement
 
-    let dataLayerAttribute = CoreMetamodel.Element.attribute dataLayerElement name
+    let dataLayerAttribute = elementSemantics.Attribute dataLayerElement name
 
     attributeRepository.GetAttribute dataLayerAttribute
 
 let getAttributeInstance nodeName name =
     let repo = RepoFactory.Create ()
     let underlyingRepo = (repo :?> Repo).UnderlyingRepo
+    let elementSemantics = AttributeMetamodel.Element underlyingRepo
+
     let model = repo.Models |> Seq.find (fun m -> m.Name = "RobotsTestModel")
-    let metamodel = model.Metamodel
-    let attributeRepository = AttributeRepository()
+    let attributeRepository = AttributeRepository(underlyingRepo)
 
     let dataLayerModel = (model :?> Model).UnderlyingModel
     let dataLayerMetamodel = (model.Metamodel :?> Model).UnderlyingModel
 
     let dataLayerClass = dataLayerMetamodel.Nodes |> Seq.find (fun n -> n.Name = nodeName) :> DataLayer.IDataElement
-    let dataLayerElement = dataLayerModel.Nodes |> Seq.find (fun n -> n.Class = dataLayerClass) :> DataLayer.IDataElement
+    let dataLayerElement = 
+        dataLayerModel.Nodes 
+        |> Seq.find (fun n -> n.Class = dataLayerClass) :> DataLayer.IDataElement
 
-    let dataLayerAttribute =
-        CoreMetamodel.Element.attribute dataLayerElement name
+    let dataLayerAttribute = elementSemantics.Attribute dataLayerElement name
 
     attributeRepository.GetAttribute dataLayerAttribute
 
