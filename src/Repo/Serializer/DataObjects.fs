@@ -24,7 +24,8 @@ open System.Collections.Generic
 [<AllowNullLiteral>]
 [<AbstractClass>]
 type WrappedElement() =
-    member val Class: WrappedElement = null with get, set
+    member val OntologicalType: WrappedElement = null with get, set
+    member val LinguisticType: WrappedElement = null with get, set
     abstract Accept: visitor: Visitor -> unit
 
 /// Helper class for edge serialization.
@@ -56,7 +57,8 @@ and [<JsonObject>] WrappedNode() =
 /// Helper class for model serialization.
 and [<JsonObject>] WrappedModel() =
     member val Name = "" with get, set
-    member val MetamodelName = "" with get, set
+    member val OntologicalMetamodelName = "" with get, set
+    member val LinguisticMetamodelName = "" with get, set
     member val Properties: (string * string)[] = [||] with get, set
     member val Nodes: WrappedNode[] = [||] with get, set
     member val Associations: WrappedAssociation[] = [||] with get, set
@@ -80,7 +82,7 @@ and [<JsonObject>] WrappedRepo() =
 
 /// Helper class that represents the entire save file.
 and [<JsonObject>] SaveFile() =
-    member val Version = "0.1" with get, set
+    member val Version = "0.12" with get, set
     member val Extensions = Dictionary<string, obj>() with get, set
     member val Contents = WrappedRepo() with get, set
     member this.Accept (visitor: Visitor) =

@@ -20,7 +20,7 @@ open NUnit.Framework
 open Repo.CoreMetamodel
 open Repo.AttributeMetamodel
 
-let init () = TestUtils.init [CoreMetamodelBuilder(); AttributeMetamodelBuilder()]
+let init () = TestUtils.init [CoreMetamodelCreator(); AttributeMetamodelCreator()]
 
 [<Test>]
 let ``Builder shall be able to create model in repo`` () =
@@ -43,11 +43,9 @@ let ``Attribute metamodel shall have attributes`` () =
 
     let attributeNode = attributeModel.Node "Attribute"
     let element = attributeModel.Node "Element"
-    let attributeAssociation = Element.OutgoingAssociation element "attributes"
+    let attributeAssociation = ElementSemantics.OutgoingAssociation element "attributes"
     attributeAssociation.Target.Value |> should equal <| attributeNode
 
-    attributeNode.OutgoingEdges |> Seq.length |> should equal 3
+    attributeNode.OutgoingEdges |> Seq.length |> should equal 1
 
-    Element.HasOutgoingAssociation attributeNode "name" |> should equal true
-    Element.HasOutgoingAssociation attributeNode "type" |> should equal true
-    Element.HasOutgoingAssociation attributeNode "value" |> should equal true
+    ElementSemantics.HasOutgoingAssociation attributeNode "type" |> should equal true

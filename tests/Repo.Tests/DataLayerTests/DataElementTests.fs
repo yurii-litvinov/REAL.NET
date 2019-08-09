@@ -28,8 +28,8 @@ let ``DataElement shall have class and name`` () =
     node.Name <- "changedName"
     node.Name |> should equal "changedName"
 
-    node.Class |> should equal node
+    node.OntologicalType |> should equal node
 
-    let node2 = DataNode("node2", node, model) :> IDataNode
+    let node2 = DataNode("node2", node, node, model) :> IDataNode
 
-    node2.Class |> should equal node
+    node2.OntologicalType |> should equal node

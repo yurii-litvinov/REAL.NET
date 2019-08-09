@@ -16,7 +16,12 @@ namespace Repo.DataLayer
 
 /// Implementation of model interface in data layer. Contains nodes and edges in list, implements
 /// CRUD operations and keeps consistency.
-type DataModel private (name: string, metamodel: IDataModel option) =
+type DataModel private 
+        (
+        name: string, 
+        ontologicalMetamodel: IDataModel option, 
+        linguisticMetamodel: IDataModel option
+        ) =
 
     let mutable nodes = []
     let mutable edges = []
@@ -29,8 +34,9 @@ type DataModel private (name: string, metamodel: IDataModel option) =
         | :? IDataAssociation as a -> Some a
         | _ -> None
 
-    new(name: string) = DataModel(name, None)
-    new(name: string, metamodel: IDataModel) = DataModel(name, Some metamodel)
+    new(name: string) = DataModel(name, None, None)
+    new(name: string, ontologicalMetamodel: IDataModel, linguisticMetamodel: IDataModel) = 
+        DataModel(name, Some ontologicalMetamodel, Some linguisticMetamodel)
 
     interface IDataModel with
         member this.CreateNode name =
@@ -38,13 +44,15 @@ type DataModel private (name: string, metamodel: IDataModel option) =
             nodes <- node :: nodes
             node
 
-        member this.CreateNode(name, (``class``:IDataElement)) =
-            let node = DataNode(name, ``class``, this) :> IDataNode
+        member this.CreateNode(name, (ontologicalType: IDataElement), (linguisticType: IDataElement)) =
+            let node = DataNode(name, ontologicalType, linguisticType, this) :> IDataNode
             nodes <- node :: nodes
             node
 
-        member this.CreateAssociation(``class``, source, target, targetName) =
-            let edge = new DataAssociation(``class``, source, target, targetName, this) :> IDataAssociation
+        member this.CreateAssociation(ontologicalType, linguisticType, source, target, targetName) =
+            let edge = 
+                new DataAssociation(ontologicalType, linguisticType, source, target, targetName, this) 
+                :> IDataAssociation
             edges <- (edge :> IDataEdge) :: edges
             if source.IsSome then
                 source.Value.AddOutgoingEdge edge
@@ -52,15 +60,19 @@ type DataModel private (name: string, metamodel: IDataModel option) =
                 target.Value.AddIncomingEdge edge
             edge
 
-        member this.CreateAssociation(``class``, source, target, targetName) =
-            let edge = new DataAssociation(``class``, Some source, Some target, targetName, this) :> IDataAssociation
+        member this.CreateAssociation(ontologicalType, linguisticType, source, target, targetName) =
+            let edge = 
+                new DataAssociation(ontologicalType, linguisticType, Some source, Some target, targetName, this) 
+                :> IDataAssociation
             edges <- (edge :> IDataEdge) :: edges
             source.AddOutgoingEdge edge
             target.AddIncomingEdge edge
             edge
 
-        member this.CreateGeneralization(``class``, source, target) =
-            let edge = new DataGeneralization(``class``, source, target, this) :> IDataGeneralization
+        member this.CreateGeneralization(ontologicalType, linguisticType, source, target) =
+            let edge = 
+                new DataGeneralization(ontologicalType, linguisticType, source, target, this) 
+                :> IDataGeneralization
             if source.IsSome then
                 source.Value.AddOutgoingEdge edge
             if target.IsSome then
@@ -68,8 +80,10 @@ type DataModel private (name: string, metamodel: IDataModel option) =
             edges <- (edge :> IDataEdge) :: edges
             edge
 
-        member this.CreateGeneralization(``class``, source, target) =
-            let edge = new DataGeneralization(``class``, Some source, Some target, this) :> IDataGeneralization
+        member this.CreateGeneralization(ontologicalType, linguisticType, source, target) =
+            let edge = 
+                new DataGeneralization(ontologicalType, linguisticType, Some source, Some target, this) 
+                :> IDataGeneralization
             source.AddOutgoingEdge edge
             target.AddIncomingEdge edge
             edges <- (edge :> IDataEdge) :: edges
@@ -90,9 +104,15 @@ type DataModel private (name: string, metamodel: IDataModel option) =
             let edges = (edges |> Seq.cast<IDataElement>)
             Seq.append nodes edges
 
-        member this.Metamodel
+        member this.OntologicalMetamodel
             with get(): IDataModel =
-                match metamodel with
+                match ontologicalMetamodel with
+                | Some v -> v
+                | None -> this :> IDataModel
+
+        member this.LinguisticMetamodel
+            with get(): IDataModel =
+                match linguisticMetamodel with
                 | Some v -> v
                 | None -> this :> IDataModel
 

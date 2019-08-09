@@ -16,8 +16,9 @@ namespace Repo.Metamodels
 
 open Repo
 open Repo.DataLayer
-open Repo.InfrastructureSemanticLayer
+open Repo.InfrastructureMetamodel
 
+(*
 /// Initializes repository with AirSim Metamodel
 type AirSimMetamodelBuilder() =
     interface IModelBuilder with
@@ -86,3 +87,4 @@ type AirSimMetamodelBuilder() =
             ifNode --|> abstractNode
 
             ()
+*)

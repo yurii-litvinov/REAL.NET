@@ -19,19 +19,16 @@ namespace Repo
 type RepoFactory =
     /// Method that returns initialized repository.
     static member Create() = 
-        let data = new DataLayer.DataRepo() :> DataLayer.IDataRepository
-        let build (builder: DataLayer.IModelBuilder) =
-            builder.Build data
+        let data = ((RepoFactory.CreateEmpty (): IRepo) :?> FacadeLayer.Repo).UnderlyingRepo
+        let add (creator: DataLayer.IModelCreator) =
+            creator.CreateIn data
 
-        CoreMetamodel.CoreMetamodelBuilder() |> build
-        Metamodels.LanguageMetamodelBuilder() |> build
-        Metamodels.InfrastructureMetamodelBuilder() |> build
-        Metamodels.RobotsMetamodelBuilder() |> build
-        Metamodels.RobotsTestModelBuilder() |> build
-        Metamodels.AirSimMetamodelBuilder() |> build
-        Metamodels.AirSimModelBuilder() |> build
-        Metamodels.FeatureMetamodelBuilder() |> build
-        Metamodels.FeatureTestModelBuilder() |> build
+        //Metamodels.RobotsMetamodelBuilder() |> add
+        //Metamodels.RobotsTestModelBuilder() |> add
+        //Metamodels.AirSimMetamodelBuilder() |> add
+        //Metamodels.AirSimModelBuilder() |> add
+        //Metamodels.FeatureMetamodelBuilder() |> add
+        //Metamodels.FeatureTestModelBuilder() |> add
 
         new FacadeLayer.Repo(data) :> IRepo
 
@@ -44,11 +41,12 @@ type RepoFactory =
     /// Method that returns repository with infrastructure metamodel only.
     static member CreateEmpty () =
         let data = new DataLayer.DataRepo() :> DataLayer.IDataRepository
-        let build (builder: DataLayer.IModelBuilder) =
-            builder.Build data
+        let add (creator: DataLayer.IModelCreator) =
+            creator.CreateIn data
 
-        CoreMetamodel.CoreMetamodelBuilder() |> build
-        Metamodels.LanguageMetamodelBuilder() |> build
-        Metamodels.InfrastructureMetamodelBuilder() |> build
+        CoreMetamodel.CoreMetamodelCreator() |> add
+        AttributeMetamodel.AttributeMetamodelCreator() |> add
+        LanguageMetamodel.LanguageMetamodelCreator() |> add
+        InfrastructureMetamodel.InfrastructureMetamodelCreator() |> add
 
         new FacadeLayer.Repo(data) :> IRepo

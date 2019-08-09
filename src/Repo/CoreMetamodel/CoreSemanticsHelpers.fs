@@ -49,3 +49,21 @@ let isGeneralization (e: IDataElement) = e :? IDataGeneralization
 
 /// Returns true if given element is association edge.
 let isAssociation (e: IDataElement) = e :? IDataAssociation
+
+/// Helper function that creates a copy of a given edge in a given model (identifying source and target by name
+/// and assuming they already present in a model).
+let reinstantiateEdge (edge: IDataEdge) (model: IDataModel) (linguisticMetamodel: IDataModel) =
+    let sourceName = (edge.Source.Value :?> IDataNode).Name
+    let targetName = (edge.Target.Value :?> IDataNode).Name
+    let source = model.Node sourceName
+    let target = model.Node targetName
+
+    let generalization = linguisticMetamodel.Node "Generalization"
+    let association = linguisticMetamodel.Node "Association"
+
+    match edge with 
+    | :? IDataGeneralization ->
+        model.CreateGeneralization(edge, generalization, source, target) |> ignore
+    | :? IDataAssociation as a ->
+        model.CreateAssociation(edge, association, source, target, a.TargetName) |> ignore
+    | _ -> failwith "Unknown edge type"

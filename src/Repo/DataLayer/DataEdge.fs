@@ -16,8 +16,15 @@ namespace Repo.DataLayer
 
 /// Implementation of Edge abstraction.
 [<AbstractClass>]
-type DataEdge (``class``: IDataElement option, source: IDataElement option, target: IDataElement option, model: IDataModel) =
-    inherit DataElement(``class``, model)
+type DataEdge 
+        (
+        ontologicalType: IDataElement option, 
+        linguisticType: IDataElement option, 
+        source: IDataElement option, 
+        target: IDataElement option, 
+        model: IDataModel
+        ) =
+    inherit DataElement(ontologicalType, linguisticType, model)
 
     let mutable source = source
     let mutable target = target

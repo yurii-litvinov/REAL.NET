@@ -16,8 +16,9 @@ namespace Repo.Metamodels
 
 open Repo.DataLayer
 open Repo.CoreMetamodel
-open Repo.InfrastructureSemanticLayer
+open Repo.InfrastructureMetamodel
 
+(*
 /// Initializes repository with test model conforming to Robots Metamodel, actual program that can be written by end-user.
 type RobotsTestModelBuilder() =
     interface IModelBuilder with
@@ -32,7 +33,7 @@ type RobotsTestModelBuilder() =
             let metamodelMotorsForward = metamodel.Node "MotorsForward"
             let metamodelTimer = metamodel.Node "Timer"
 
-            let link = Model.FindAssociationWithSource metamodelAbstractNode "target"
+            let link = ModelSemantics.FindAssociationWithSource metamodelAbstractNode "target"
 
             let model = repo.CreateModel("RobotsTestModel", metamodel)
 
@@ -56,3 +57,4 @@ type RobotsTestModelBuilder() =
             motorsForward --> timer --> finalNode |> ignore
 
             ()
+*)

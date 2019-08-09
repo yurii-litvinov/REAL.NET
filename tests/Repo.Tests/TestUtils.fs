@@ -17,11 +17,11 @@ module TestUtils
 open Repo.DataLayer
 
 /// Initializes a repository with given list of model builders.
-let init (models: IModelBuilder list) =
+let init (models: IModelCreator list) =
     let repo = DataRepo() :> IDataRepository
 
-    let build (builder: IModelBuilder) =
-        builder.Build repo
+    let build (builder: IModelCreator) =
+        builder.CreateIn repo
 
     List.iter build models
     repo

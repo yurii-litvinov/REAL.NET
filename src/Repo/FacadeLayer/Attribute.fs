@@ -36,12 +36,12 @@ type AttributeRepository(repo: DataLayer.IDataRepository) =
 
 /// Implements attribute wrapper.
 and Attribute(attributeNode: DataLayer.IDataNode, repo: DataLayer.IDataRepository) =
-    let dataElementSemantics = AttributeMetamodel.Element repo
+    let dataElementSemantics = AttributeMetamodel.ElementSemantics repo
 
     interface IAttribute with
         member this.Kind =
             let kindNode = dataElementSemantics.Attribute attributeNode "kind"
-            match AttributeMetamodel.Node.Name kindNode with
+            match AttributeMetamodel.NodeSemantics.Name kindNode with
             | "AttributeKind.String" -> AttributeKind.String
             | "AttributeKind.Int" -> AttributeKind.Int
             | "AttributeKind.Double" -> AttributeKind.Double
@@ -58,10 +58,12 @@ and Attribute(attributeNode: DataLayer.IDataNode, repo: DataLayer.IDataRepositor
 
         member this.StringValue
             with get (): string =
-                AttributeMetamodel.Node.Name <| dataElementSemantics.Attribute attributeNode "stringValue"
+                AttributeMetamodel.NodeSemantics.Name <| dataElementSemantics.Attribute attributeNode "stringValue"
             and set (v: string): unit =
                 (dataElementSemantics.Attribute attributeNode "stringValue").Name <- v
 
         member this.Type = null
 
-        member this.IsInstantiable = dataElementSemantics.AttributeValue attributeNode "isInstantiable" = "true"
+        member this.IsInstantiable = 
+            true
+            // dataElementSemantics.AttributeValue attributeNode "isInstantiable" = "true"

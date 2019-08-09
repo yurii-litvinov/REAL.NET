@@ -41,7 +41,7 @@ let ``Repo shall be able to delete a model`` () =
 let ``Repo shall throw if deleting model in use`` () =
     let repo = DataRepo() :> IDataRepository
     let metamodel = repo.CreateModel "metamodel"
-    let model = repo.CreateModel("model", metamodel)
+    let model = repo.CreateModel("model", metamodel, metamodel)
 
     repo.Models |> should contain model
 

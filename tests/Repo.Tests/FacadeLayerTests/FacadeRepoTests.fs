@@ -23,6 +23,7 @@ open Repo.Serializer.Serializer
 
 let tempFile = Path.Combine(TestContext.CurrentContext.TestDirectory, "temp.rns")
 
+(*
 [<SetUp>]
 let setup () =
     if File.Exists tempFile then
@@ -137,3 +138,4 @@ let ``Graph with two nodes and one edge shall be serialized/deserialized properl
 
     association.From |> should equal node1
     association.To |> should equal node2
+*)

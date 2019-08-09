@@ -17,14 +17,14 @@ namespace Repo.CoreMetamodel
 open Repo.DataLayer
 
 /// Initializes repository with Core Metamodel.
-type CoreMetamodelBuilder() =
-    interface IModelBuilder with
-        member this.Build(repo: IDataRepository): unit =
+type CoreMetamodelCreator() =
+    interface IModelCreator with
+        member this.CreateIn(repo: IDataRepository): unit =
             let model = repo.CreateModel "CoreMetamodel"
 
             let node = model.CreateNode "Node"
 
-            let (~+) name = model.CreateNode(name, node)
+            let (~+) name = model.CreateNode(name, node, node)
 
             let element = +"Element"
             let edge = +"Edge"
@@ -33,7 +33,7 @@ type CoreMetamodelBuilder() =
             let stringNode = +"String"
 
             let (--|>) (source: IDataElement) target =
-                model.CreateGeneralization(generalization, source, target) |> ignore
+                model.CreateGeneralization(generalization, generalization, source, target) |> ignore
 
             node --|> element
             edge --|> element
@@ -41,9 +41,10 @@ type CoreMetamodelBuilder() =
             association --|> edge
 
             let (--->) (source: IDataElement) (target, name) =
-                model.CreateAssociation(association, source, target, name) |> ignore
+                model.CreateAssociation(association, association, source, target, name) |> ignore
 
-            element ---> (element, "class")
+            element ---> (element, "ontologicalType")
+            element ---> (element, "linguisticType")
             edge ---> (element, "source")
             edge ---> (element, "target")
             association ---> (stringNode, "targetName")

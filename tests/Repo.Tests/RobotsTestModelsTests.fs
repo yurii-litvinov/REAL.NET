@@ -22,6 +22,7 @@ open Repo
 let init () =
     RepoFactory.Create ()
 
+(*
 [<Test>]
 let ``Generalizations shall be listed as edges in metamodel`` () =
     let repo = init ()
@@ -49,3 +50,4 @@ let ``Generalizations shall be listed as edges in metamodel`` () =
     someWrappedGeneralization.LinguisticType |> should sameAs generalization
 
     model.Edges |> Seq.filter (fun e -> e.LinguisticType = (generalization :> IElement)) |> should not' (be Empty)
+*)

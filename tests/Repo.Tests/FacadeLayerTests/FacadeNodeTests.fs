@@ -20,6 +20,8 @@ open FsUnit
 open Repo
 open Repo.FacadeLayer
 
+
+(*
 [<Test>]
 let ``Node in a model shall have metatype`` () =
     let repo = RepoFactory.Create ()
@@ -65,3 +67,4 @@ let ``Timer block shall have a picture`` () =
     let timer = elementRepository.GetElement dataLayerElement
 
     timer.LinguisticType.Shape |> should equal "View/Pictures/timerBlock.png"
+*)

@@ -16,13 +16,18 @@ namespace Repo.DataLayer
 
 /// Implementation of Element.
 [<AbstractClass>]
-type DataElement(``class``: IDataElement option, model: IDataModel) =
+type DataElement(ontologicalType: IDataElement option, linguisticType: IDataElement option, model: IDataModel) =
     let mutable outgoingEdges = []
     let mutable incomingEdges = []
 
     interface IDataElement with
-        member this.Class: IDataElement =
-            match ``class`` with
+        member this.OntologicalType: IDataElement =
+            match ontologicalType with
+            | Some v -> v
+            | None -> this :> IDataElement
+
+        member this.LinguisticType: IDataElement =
+            match linguisticType with
             | Some v -> v
             | None -> this :> IDataElement
 

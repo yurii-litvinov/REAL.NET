@@ -15,8 +15,8 @@
 namespace Repo.DataLayer
 
 /// Interface that can create a model in a given repo.
-type IModelBuilder =
+type IModelCreator =
     interface
-        /// Builds a model inside given repository.
-        abstract Build: repo: IDataRepository -> unit
+        /// Creates and initializes a model inside given repository.
+        abstract CreateIn: repo: IDataRepository -> unit
     end

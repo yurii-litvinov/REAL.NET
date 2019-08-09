@@ -16,8 +16,9 @@ namespace Repo.Metamodels
 
 open Repo.DataLayer
 open Repo.CoreMetamodel
-open Repo.InfrastructureSemanticLayer
+open Repo.InfrastructureMetamodel
 
+(*
 /// Initializes repository with test model conforming to AirSim Metamodel, actual program that can be written by end-user.
 type AirSimModelBuilder() =
     interface IModelBuilder with
@@ -35,8 +36,8 @@ type AirSimModelBuilder() =
             let metamodelTimer = metamodel.Node "Timer"
             let metamodelIf = metamodel.Node "IfNode"
 
-            let link = Model.FindAssociationWithSource metamodelAbstractNode "target"
-            let ifLink = Model.FindAssociationWithSource metamodelAbstractNode "ifTarget"
+            let link = ModelSemantics.FindAssociationWithSource metamodelAbstractNode "target"
+            let ifLink = ModelSemantics.FindAssociationWithSource metamodelAbstractNode "ifTarget"
 
             let model = repo.CreateModel("AirSimModel", metamodel)
 
@@ -108,3 +109,4 @@ type AirSimModelBuilder() =
             initialNode --> ifNode-->> takeoff --> move --> timer3 --> landing --> finalNode |> ignore
             ifNode -->>> finalNode2 |> ignore
             ()
+*)

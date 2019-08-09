@@ -17,8 +17,13 @@ namespace Repo.DataLayer
 /// Element, most general thing that can be in a model.
 type IDataElement =
     interface
-        /// Type of an element.
-        abstract Class: IDataElement with get
+        /// Ontological type of an element --- type from problem domain. 
+        /// E.g. "Species" is an ontological type of "Dog".
+        abstract OntologicalType: IDataElement with get
+
+        /// Linguistic type of an element --- type from language and tooling point of view.
+        /// E.g. "Species" and "Dog" are both "Object" and will be drawn as a rectangle on a diagram.
+        abstract LinguisticType: IDataElement with get
 
         /// Outgoing edges for that element.
         abstract OutgoingEdges: IDataEdge seq with get
@@ -85,25 +90,40 @@ and IDataModel =
         /// Model can have descriptive name (must be unique).
         abstract Name: string with get, set
 
-        /// Metamodel is a model whose elements are types of elements for this model. Model can be a metamodel
-        /// for itself.
-        abstract Metamodel: IDataModel with get
+        /// Ontological metamodel is a model whose elements are ontological types of elements for this model.
+        /// Model can be a metamodel for itself.
+        abstract OntologicalMetamodel: IDataModel with get
 
-        /// Creates a new node of given class in a model.
-        abstract CreateNode: name: string * ``class``: IDataElement -> IDataNode
+        /// Linguistic metamodel is a model whose elements are linguistic types of elements for this model.
+        /// Model can be a metamodel for itself.
+        abstract LinguisticMetamodel: IDataModel with get
+
+        /// Creates a new node of given ontological and linguistic types in a model.
+        abstract CreateNode: name: string * ontologicalType: IDataElement * linguisticType: IDataElement -> IDataNode
 
         /// Creates a node that is its own type (Node, for example, is an instance of Node).
         abstract CreateNode: name: string -> IDataNode
 
-        /// Creates new Generalization edge with given source and target.
-        abstract CreateGeneralization: ``class``: IDataElement * source: IDataElement * target: IDataElement -> IDataGeneralization
+        /// Creates new Generalization edge with given source and target. 
+        abstract CreateGeneralization: 
+                ontologicalType: IDataElement
+                * linguisticType: IDataElement
+                * source: IDataElement
+                * target: IDataElement
+                -> IDataGeneralization
 
         /// Creates new possibly unconnected Generalization edge.
-        abstract CreateGeneralization: ``class``: IDataElement * source: IDataElement option * target: IDataElement option -> IDataGeneralization
+        abstract CreateGeneralization: 
+                ontologicalType: IDataElement
+                * linguisticType: IDataElement
+                * source: IDataElement option 
+                * target: IDataElement option 
+                -> IDataGeneralization
 
         /// Creates new Association edge with given source and target.
         abstract CreateAssociation:
-                ``class``: IDataElement
+                ontologicalType: IDataElement
+                * linguisticType: IDataElement
                 * source: IDataElement
                 * target: IDataElement
                 * targetName: string
@@ -111,7 +131,8 @@ and IDataModel =
 
         /// Creates new possibly unconnected Association edge.
         abstract CreateAssociation:
-                ``class``: IDataElement
+                ontologicalType: IDataElement
+                * linguisticType: IDataElement
                 * source: IDataElement option
                 * target: IDataElement option
                 * targetName: string
@@ -150,14 +171,18 @@ and IDataModel =
 /// Repository is a collection of models.
 type IDataRepository =
     interface
-        /// All models in a repository
+        /// All models in a repository.
         abstract Models: IDataModel seq with get
 
-        /// Creates and returns a new model in repository.
+        /// Creates and returns a new model in repository which is linguistic and ontological metamodel of itself.
         abstract CreateModel: name : string -> IDataModel
 
         /// Creates and returns a new model in repository based on a given metamodel.
-        abstract CreateModel: name: string * metamodel: IDataModel -> IDataModel
+        abstract CreateModel: 
+                name: string 
+                * ontologicalMetamodel: IDataModel
+                * linguisticMetamodel: IDataModel 
+                -> IDataModel
 
         /// Deletes given model from repository.
         abstract DeleteModel: model : IDataModel -> unit
@@ -165,6 +190,7 @@ type IDataRepository =
         /// Clears repository contents.
         abstract Clear : unit -> unit
 
-        /// Searches model in repository. If there are none or more than one model with given name, throws an exception.
+        /// Searches model in repository. 
+        /// If there are none or more than one model with given name, throws an exception.
         abstract Model: name: string -> IDataModel
     end

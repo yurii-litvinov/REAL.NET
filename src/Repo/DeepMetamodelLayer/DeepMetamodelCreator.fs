@@ -15,13 +15,13 @@
 namespace Repo.DeepMetamodelLayer
 
 open Repo.DataLayer
-open Repo.CoreMetamodel
+open Repo.AttributeMetamodel
 
 /// Initializes repository with Deep metamodel.
 /// Deep metamodel is based on Core model and introduces notions of potency and linguistic/ontological instantiation.
-type DeepMetamodelBuilder() =
-   interface IModelBuilder with
-       member this.Build(repo: IDataRepository): unit =
-           let creator = CoreSemanticsModelCreator "DeepMetamodel"
+type DeepMetamodelCreator() =
+   interface IModelCreator with
+       member this.CreateIn(repo: IDataRepository): unit =
+           let creator = AttributeSemanticsModelBuilder(repo, "DeepMetamodel")
 
            ()

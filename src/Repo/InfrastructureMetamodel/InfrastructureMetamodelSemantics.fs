@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace Repo.InfrastructureSemanticLayer
+namespace Repo.InfrastructureMetamodel
 
 open Repo
 open Repo.DataLayer
@@ -20,8 +20,8 @@ open Repo.DataLayer
 /// Helper for working with Infrastructure Metamodel.
 type InfrastructureMetamodel(repo: IDataRepository) =
     let infrastructureMetamodel = repo.Model "InfrastructureMetamodel"
-    let elementSemantics = Repo.AttributeMetamodel.Element(repo)
-
+    let elementSemantics = Repo.AttributeMetamodel.ElementSemantics(repo)
+    
     let findNode name = infrastructureMetamodel.Node name
 
     let element = findNode "Element"
@@ -34,11 +34,11 @@ type InfrastructureMetamodel(repo: IDataRepository) =
     let stringNode = findNode "String"
     let booleanNode = findNode "Boolean"
 
-    let attributesAssociation = AttributeMetamodel.Model.FindAssociationWithSource element "attributes"
-    let attributeKindAssociation = AttributeMetamodel.Model.FindAssociationWithSource attribute "kind"
-    let attributeStringValueAssociation = AttributeMetamodel.Model.FindAssociationWithSource attribute "stringValue"
+    let attributesAssociation = AttributeMetamodel.ModelSemantics.FindAssociationWithSource element "attributes"
+    let attributeKindAssociation = AttributeMetamodel.ModelSemantics.FindAssociationWithSource attribute "kind"
+    let attributeStringValueAssociation = AttributeMetamodel.ModelSemantics.FindAssociationWithSource attribute "stringValue"
     let attributeIsInstantiableAssociation =
-        AttributeMetamodel.Model.FindAssociationWithSource attribute "isInstantiable"
+        AttributeMetamodel.ModelSemantics.FindAssociationWithSource attribute "isInstantiable"
 
     member this.Model = infrastructureMetamodel
 
@@ -60,28 +60,16 @@ type InfrastructureMetamodel(repo: IDataRepository) =
     member this.AttributeIsInstantiableAssociation = attributeIsInstantiableAssociation
 
     member this.IsFromInfrastructureMetamodel element =
-        AttributeMetamodel.Element.ContainingModel element = infrastructureMetamodel
+        AttributeMetamodel.ElementSemantics.ContainingModel element = infrastructureMetamodel
 
     member this.IsNode (element: IDataElement) =
-        if this.IsFromInfrastructureMetamodel element then
-            // Kind of hack, here we know that all nodes supposed to be instantiated have linguistic attributes, like
-            // "isAbstract". Actually, they are instances of "Node supposed to be instantiated" class, so it shall
-            // be stated explicitly in metamodel hierarchy.
-            element :? IDataNode && elementSemantics.HasAttribute element "isAbstract"
-        else
-            AttributeMetamodel.Element.IsInstanceOf this.Node element
+        element.LinguisticType = (this.Node :> IDataElement)
 
     member this.IsAssociation (element: IDataElement) =
-        if this.IsFromInfrastructureMetamodel element then
-            element :? IDataAssociation  && elementSemantics.HasAttribute element "isAbstract"
-        else
-            AttributeMetamodel.Element.IsInstanceOf edge element
+        element.LinguisticType = (this.Association :> IDataElement)
 
     member this.IsGeneralization (element: IDataElement) =
-        if this.IsFromInfrastructureMetamodel element then
-            element :? IDataGeneralization
-        else
-            AttributeMetamodel.Element.IsInstanceOf this.Generalization element
+        element.LinguisticType = (this.Generalization :> IDataElement)
 
     member this.IsEdge element =
         this.IsAssociation element || this.IsGeneralization element
@@ -91,13 +79,14 @@ type InfrastructureMetamodel(repo: IDataRepository) =
 
 /// Helper for working with elements in Infrastructure Metamodel terms.
 type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel, repo: IDataRepository) =
-    let elementSemantics = Repo.AttributeMetamodel.Element repo
+    let elementSemantics = Repo.AttributeMetamodel.ElementSemantics repo
 
+(*
     /// Returns attributes of only this element, ignoring generalizations.
     let thisElementAttributes element =
         let rec isAttributeAssociation (a: IDataAssociation) =
             let attributesAssociation = infrastructureMetamodel.AttributesAssociation
-            if AttributeMetamodel.Element.IsInstanceOf attributesAssociation a then
+            if elementSemantics.IsInstanceOf attributesAssociation a then
                 true
             else
                 let target = a.Target
@@ -116,7 +105,7 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel, repo: IData
                 | _ -> false
 
         element
-        |> AttributeMetamodel.Element.OutgoingAssociations
+        |> AttributeMetamodel.ElementSemantics.OutgoingAssociations
         |> Seq.filter isAttributeAssociation
         |> Seq.map (fun l -> l.Target)
         |> Seq.choose id
@@ -134,7 +123,7 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel, repo: IData
 
     /// Returns a sequence of all attributes from all parents of this element (not including element itself).
     let parentsAttributes element =
-        AttributeMetamodel.Element.Parents element
+        AttributeMetamodel.ElementSemantics.Parents element
         |> Seq.map thisElementAttributes
         |> Seq.concat
 
@@ -156,7 +145,7 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel, repo: IData
         // TODO: Check correctness of attribute overloading here.
         if thisElementHasAttribute element name then
             raise (InvalidSemanticOperationException <| sprintf "Attribute %s already present" name)
-        let model = AttributeMetamodel.Element.ContainingModel element
+        let model = AttributeMetamodel.ElementSemantics.ContainingModel element
         let infrastructureModel = infrastructureMetamodel.Model
         let attributeNode = infrastructureMetamodel.Attribute
         let attributeKindNode = infrastructureMetamodel.AttributeKind
@@ -170,9 +159,9 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel, repo: IData
 
         let attribute = model.CreateNode(name, attributeNode)
 
-        AttributeMetamodel.Element.AddAttribute attribute "kind" attributeKindNode kindAssociation kind
-        AttributeMetamodel.Element.AddAttribute attribute "stringValue" stringValueAssociation stringNode value
-        AttributeMetamodel.Element.AddAttribute
+        AttributeMetamodel.ElementSemantics.AddAttribute attribute "kind" attributeKindNode kindAssociation kind
+        AttributeMetamodel.ElementSemantics.AddAttribute attribute "stringValue" stringValueAssociation stringNode value
+        AttributeMetamodel.ElementSemantics.AddAttribute
             attribute "isInstantiable" isInstantiableAssociation booleanNode isInstantiable
 
         model.CreateAssociation(attributesAssociation, element, attribute, name) |> ignore
@@ -199,20 +188,18 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel, repo: IData
                 elementSemantics.AttributeValue parentAttribute "isInstantiable"
 
             addAttribute element name parentAttributeKind parentAttributeValue parentAttributeIsInstantiable
-
+*)
     /// Returns underlying Infrastructure Metamodel.
     member this.InfrastructureMetamodel = infrastructureMetamodel
 
     /// Returns a list of all attributes for an element, respecting generalization. Attributes of most special node
     /// are the first in resulting sequence.
-    /// TODO: Actually do BFS and ignore overriden attributes.
-    member this.Attributes element = allAttributes element
+    member this.Attributes element = elementSemantics.Attributes element
 
     /// Returns true if an attribute with given name is present in given element.
-    /// TODO: Actually do BFS and stop on first matching attribute.
-    member this.HasAttribute element name =
-        this.Attributes element |> Seq.filter (fun attr -> attr.Name = name) |> Seq.isEmpty |> not
+    member this.HasAttribute element name = elementSemantics.HasAttribute element name
 
+(*
     /// Adds a new attribute to a given element and initializes it with given value.
     member this.AddAttribute element name kind value =
         addAttribute element name kind value "true" |> ignore
@@ -249,17 +236,19 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel, repo: IData
     member this.AttributeKind element name =
         let attributeNode = attributeNode element name
         elementSemantics.AttributeValue attributeNode "kind"
+*)
 
 /// Module containing semantic operations on elements.
 module private Operations =
+(*
     /// Returns link corresponding to an attribute respecting generalization hierarchy.
     let rec private attributeLink element attribute =
         let thisElementAttributeLinks e =
-            AttributeMetamodel.Element.OutgoingAssociations e
+            AttributeMetamodel.ElementSemantics.OutgoingAssociations e
             |> Seq.filter (fun a -> a.Target = Some attribute)
 
         let attributeLinks =
-            AttributeMetamodel.Element.Parents element
+            AttributeMetamodel.ElementSemantics.Parents element
             |> Seq.map thisElementAttributeLinks
             |> Seq.concat
             |> Seq.append (thisElementAttributeLinks element)
@@ -273,7 +262,7 @@ module private Operations =
 
     let private copySimpleAttribute 
             (elementHelper: ElementHelper)
-            (elementSemantics: Repo.AttributeMetamodel.Element)
+            (elementSemantics: Repo.AttributeMetamodel.ElementSemantics)
             element
             (``class``: IDataElement)
             name =
@@ -286,14 +275,14 @@ module private Operations =
             | _ -> failwith "Unknown simple attribute name"
 
         let defaultValue = elementSemantics.AttributeValue ``class`` name
-        AttributeMetamodel.Element.AddAttribute element name attributeClassNode attributeAssociation defaultValue
+        AttributeMetamodel.ElementSemantics.AddAttribute element name attributeClassNode attributeAssociation defaultValue
 
     let private addAttribute
             (element: IDataElement)
             (elementHelper: ElementHelper)
-            (elementSemantics: Repo.AttributeMetamodel.Element)
+            (elementSemantics: Repo.AttributeMetamodel.ElementSemantics)
             (attributeClass: IDataNode) =
-        let model = AttributeMetamodel.Element.ContainingModel element
+        let model = AttributeMetamodel.ElementSemantics.ContainingModel element
         if elementHelper.HasAttribute element attributeClass.Name then
             let valueFromClass = elementSemantics.AttributeValue attributeClass "stringValue"
             elementHelper.SetAttributeValue element attributeClass.Name valueFromClass
@@ -305,34 +294,39 @@ module private Operations =
             copySimpleAttribute elementHelper elementSemantics attributeNode attributeClass "stringValue"
             copySimpleAttribute elementHelper elementSemantics attributeNode attributeClass "kind"
             copySimpleAttribute elementHelper elementSemantics attributeNode attributeClass "isInstantiable"
+*)
 
     /// Creates a new instance of a given class in a given model, with default values for attributes.
     let instantiate 
             (elementHelper: ElementHelper)
-            (elementSemantics: Repo.AttributeMetamodel.Element)
+            (elementSemantics: Repo.AttributeMetamodel.ElementSemantics)
             (model: IDataModel)
-            (``class``: IDataElement) =
-        if elementHelper.AttributeValue ``class`` "isAbstract" <> "false" then
+            (ontologicalType: IDataElement) =
+        if elementSemantics.StringSlotValue ontologicalType "isAbstract" <> "false" then
             raise (InvalidSemanticOperationException "Trying to instantiate abstract node")
 
         let name =
-            match ``class`` with
+            match ontologicalType with
             | :? IDataNode as n -> "a" + n.Name
             | :? IDataAssociation as a -> a.TargetName
             | _ -> raise (InvalidSemanticOperationException
                     "Trying to instantiate something that should not be instantiated")
 
         let newElement =
-            if elementHelper.AttributeValue ``class`` "instanceMetatype" = "Metatype.Node" then
-                model.CreateNode(name, ``class``) :> IDataElement
+            if elementSemantics.StringSlotValue ontologicalType "instanceMetatype" = "Metatype.Node" then
+                model.CreateNode(name, ontologicalType, elementHelper.InfrastructureMetamodel.Node) :> IDataElement
             else
-                model.CreateAssociation(``class``, None, None, name) :> IDataElement
+                model.CreateAssociation(
+                    ontologicalType, 
+                    elementHelper.InfrastructureMetamodel.Association, 
+                    None, 
+                    None, 
+                    name
+                    ) :> IDataElement
 
-        let attributes =
-            elementHelper.Attributes ``class``
-            |> Seq.filter (fun n -> elementSemantics.AttributeValue n "isInstantiable" = "true")
+        let attributes = elementSemantics.Attributes ontologicalType
 
-        attributes |> Seq.rev |> Seq.iter (addAttribute newElement elementHelper elementSemantics)
+        attributes |> Seq.rev |> Seq.iter (fun a -> elementSemantics.AddSlot newElement a "")
 
         newElement
 
@@ -340,10 +334,10 @@ module private Operations =
 type InfrastructureSemantic(repo: IDataRepository) =
     let infrastructureMetamodel = InfrastructureMetamodel(repo)
     let elementHelper = ElementHelper(infrastructureMetamodel, repo)
-    let elementSemantics = Repo.AttributeMetamodel.Element repo
+    let elementSemantics = Repo.AttributeMetamodel.ElementSemantics repo
 
-    member this.Instantiate (model: IDataModel) (``class``: IDataElement) =
-        Operations.instantiate elementHelper elementSemantics model ``class``
+    member this.Instantiate (model: IDataModel) (ontologicalType: IDataElement) =
+        Operations.instantiate elementHelper elementSemantics model ontologicalType
 
     member this.Metamodel = infrastructureMetamodel
     member this.Element = elementHelper

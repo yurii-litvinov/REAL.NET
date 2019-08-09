@@ -17,20 +17,21 @@ namespace Repo.FacadeLayer
 open System.Collections.Generic
 
 open Repo
-open Repo.InfrastructureSemanticLayer
+open Repo.InfrastructureMetamodel
 
 /// Repository for element wrappers. Contains already created wrappers and creates new wrappers if needed.
 type ElementRepository(infrastructure: InfrastructureSemantic, attributeRepository: AttributeRepository) =
     let elements = Dictionary<_, _>()
 
     let findMetatype (element : DataLayer.IDataElement) =
-        if infrastructure.Metamodel.IsNode element then
-            Metatype.Node
-        elif infrastructure.Metamodel.IsEdge element then
-            Metatype.Edge
-        else
-            raise (InvalidSemanticOperationException
-                "Trying to get a metatype of an element that is not instance of the Element. Model is malformed.")
+        failwith "Not implemented"
+        //if infrastructure.Metamodel.IsNode element then
+        //    Metatype.Node
+        //elif infrastructure.Metamodel.IsEdge element then
+        //    Metatype.Edge
+        //else
+        //    raise (InvalidSemanticOperationException
+        //        "Trying to get a metatype of an element that is not instance of the Element. Model is malformed.")
 
     interface IElementRepository with
         member this.GetElement (element: DataLayer.IDataElement) =

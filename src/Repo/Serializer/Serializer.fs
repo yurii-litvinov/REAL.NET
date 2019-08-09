@@ -51,10 +51,14 @@ module Serializer =
 
     /// Function that adds IElement-specific to already constructed data object.
     and private wrapElement (wrappedElement: WrappedElement) (element: IDataElement) =
-        if element.Class = element then 
-            wrappedElement.Class <- null
+        if element.OntologicalType = element then 
+            wrappedElement.OntologicalType <- null
         else
-            wrappedElement.Class <- wrap (Some element.Class)
+            wrappedElement.OntologicalType <- wrap (Some element.OntologicalType)
+        if element.LinguisticType = element then 
+            wrappedElement.LinguisticType <- null
+        else
+            wrappedElement.LinguisticType <- wrap (Some element.LinguisticType)
 
     /// Function that adds IEdge-specific to already constructed data object.
     and private wrapEdge (wrappedEdge: WrappedEdge) (edge: IDataEdge) =
@@ -98,7 +102,8 @@ module Serializer =
     let private wrapModel (model: IDataModel) =
         let wrappedModel = WrappedModel ()
         wrappedModel.Name <- model.Name
-        wrappedModel.MetamodelName <- model.Metamodel.Name
+        wrappedModel.OntologicalMetamodelName <- model.OntologicalMetamodel.Name
+        wrappedModel.LinguisticMetamodelName <- model.LinguisticMetamodel.Name
         wrappedModel.Properties <- Map.toArray model.Properties
         wrappedModel.Nodes <- model.Nodes |> Seq.rev |> Seq.map wrapNode |> Seq.toArray
 
@@ -106,6 +111,7 @@ module Serializer =
             match e with
             | :? IDataAssociation as a -> Some a
             | _ -> None
+
         wrappedModel.Associations <- 
             model.Edges 
             |> Seq.rev 
@@ -117,6 +123,7 @@ module Serializer =
             match e with
             | :? IDataGeneralization as a -> Some a
             | _ -> None
+
         wrappedModel.Generalizations <- 
             model.Edges 
             |> Seq.rev 

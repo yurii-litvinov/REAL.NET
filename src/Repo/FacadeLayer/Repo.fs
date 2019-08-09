@@ -19,7 +19,7 @@ open Repo.Serializer
 
 /// Wrapper around repository from data layer. Maintains a repository of models and creates new models if needed.
 type Repo(repo: DataLayer.IDataRepository) =
-    let infrastructure = InfrastructureSemanticLayer.InfrastructureSemantic(repo)
+    let infrastructure = InfrastructureMetamodel.InfrastructureSemantic(repo)
 
     let attributeRepository = AttributeRepository(repo)
     let elementRepository = ElementRepository(infrastructure, attributeRepository)
@@ -41,9 +41,10 @@ type Repo(repo: DataLayer.IDataRepository) =
                 (fun () -> ModelNotFoundException name)
                 (fun () -> MultipleModelsException name)
 
-        member this.CreateModel (name, metamodel) =
-            let underlyingModel = repo.CreateModel (name, unwrap metamodel)
-            modelRepository.GetModel underlyingModel
+        member this.CreateModel (name: string, metamodel: IModel): IModel =
+            failwith "Not implemented"
+            //let underlyingModel = repo.CreateModel (name, unwrap metamodel)
+            //modelRepository.GetModel underlyingModel
 
         member this.CreateModel (name, metamodelName) =
             let metamodel = (this :> IRepo).Model metamodelName

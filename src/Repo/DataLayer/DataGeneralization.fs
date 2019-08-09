@@ -15,7 +15,14 @@
 namespace Repo.DataLayer
 
 /// Implementation of Generalization edge.
-type DataGeneralization (``class``: IDataElement, source: IDataElement option, target: IDataElement option, model: IDataModel) =
-    inherit DataEdge(Some ``class``, source, target, model)
+type DataGeneralization 
+        (
+        ontologicalType: IDataElement,
+        linguisticType: IDataElement,
+        source: IDataElement option,
+        target: IDataElement option,
+        model: IDataModel
+        ) =
+    inherit DataEdge(Some ontologicalType, Some linguisticType, source, target, model)
 
     interface IDataGeneralization

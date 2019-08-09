@@ -16,8 +16,9 @@ namespace Repo.Metamodels
 
 open Repo
 open Repo.DataLayer
-open Repo.InfrastructureSemanticLayer
+open Repo.InfrastructureMetamodel
 
+(*
 /// Initializes repository with Robots Metamodel, first testing metamodel of a real language.
 type RobotsMetamodelBuilder() =
     interface IModelBuilder with
@@ -26,7 +27,7 @@ type RobotsMetamodelBuilder() =
             let metamodel = infrastructure.Metamodel.Model
 
             let find name = metamodel.Node name
-            let findAssociation node name = CoreMetamodel.Model.FindAssociationWithSource node name
+            let findAssociation node name = CoreMetamodel.ModelSemantics.FindAssociationWithSource node name
 
             let metamodelNode = find "Node"
             let metamodelGeneralization = find "Generalization"
@@ -89,3 +90,4 @@ type RobotsMetamodelBuilder() =
             timer --|> abstractNode
 
             ()
+*)

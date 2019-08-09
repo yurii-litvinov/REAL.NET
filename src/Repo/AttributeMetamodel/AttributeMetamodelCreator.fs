@@ -18,19 +18,20 @@ open Repo.DataLayer
 open Repo.CoreMetamodel
 
 /// Initializes repository with Attribute Metamodel.
-type AttributeMetamodelBuilder() =
-    interface IModelBuilder with
-        member this.Build(repo: IDataRepository): unit =
-            let model = CoreSemanticsModelCreator(repo, "AttributeMetamodel")
-            let (--->) (source: IDataElement) (target, name) = model +---> (source, target, name)
+type AttributeMetamodelCreator() =
+    interface IModelCreator with
+        member this.CreateIn(repo: IDataRepository): unit =
+            let builder = CoreSemanticsModelBuilder(repo, "AttributeMetamodel")
+            let (--->) (source: IDataElement) (target, name) = builder +---> (source, target, name)
 
-            model.ReinstantiateParentModel ()
+            builder.ReinstantiateParentModel ()
             
-            let attribute = model + "Attribute"
+            let attribute = builder + "Attribute"
+            let slot = builder + "Slot"
 
-            model.Node "Element" ---> (attribute, "attributes")
-            attribute ---> (model.Node "String", "name")
-            attribute ---> (model.Node "Node", "type")
-            attribute ---> (model.Node "Node", "value")
+            builder.Node "Element" ---> (attribute, "attributes")
+            builder.Node "Element" ---> (slot, "slots")
+            attribute ---> (builder.Node "Node", "type")
+            slot ---> (builder.Node "Node", "value")
 
             ()

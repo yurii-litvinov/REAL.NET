@@ -20,7 +20,7 @@ open NUnit.Framework
 open Repo.CoreMetamodel
 open Repo.DataLayer
 
-let init () = TestUtils.init [CoreMetamodelBuilder()]
+let init () = TestUtils.init [CoreMetamodelCreator()]
 
 [<Test>]
 let ``Builder shall be able to create model in repo`` () =
@@ -41,8 +41,8 @@ let ``Every model element shall have correct type`` () =
     let generalization = model.Nodes |> Seq.find (fun n -> n.Name = "Generalization") :> IDataElement
     let association = model.Nodes |> Seq.find (fun n -> n.Name = "Association") :> IDataElement
 
-    model |> (fun m -> m.Nodes) |> Seq.iter (fun e -> e.Class |> should equal node)
+    model |> (fun m -> m.Nodes) |> Seq.iter (fun e -> e.OntologicalType |> should equal node)
 
     model 
     |> (fun m -> m.Edges) 
-    |> Seq.iter (fun e -> (e.Class = generalization || e.Class = association) |> should be True)
+    |> Seq.iter (fun e -> (e.OntologicalType = generalization || e.OntologicalType = association) |> should be True)

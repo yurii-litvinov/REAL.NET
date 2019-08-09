@@ -16,8 +16,9 @@ namespace Repo.Metamodels
 
 open Repo.DataLayer
 open Repo.CoreMetamodel
-open Repo.InfrastructureSemanticLayer
+open Repo.InfrastructureMetamodel
 
+(*
 /// Initializes repository with test model conforming to Robots Metamodel, actual program that can be written by end-user.
 type FeatureTestModelBuilder() =
    interface IModelBuilder with
@@ -29,3 +30,4 @@ type FeatureTestModelBuilder() =
            let model = repo.CreateModel("FeatureTestModel", metamodel)
 
            ()
+*)

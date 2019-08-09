@@ -39,14 +39,29 @@ module Deserializer =
             let (!!) e = if e = null then None else Some(unwrap e model)
             match element with
             | :? WrappedNode as n -> 
-                if n.Class = null then
+                if n.OntologicalType = null then
                     register n (model.CreateNode n.Name) :> IDataElement
                 else
-                    register n (model.CreateNode(n.Name, !n.Class)) :> IDataElement
+                    register n (model.CreateNode(n.Name, !n.OntologicalType, !n.LinguisticType)) :> IDataElement
             | :? WrappedAssociation as a -> 
-                register a (model.CreateAssociation(!a.Class, !!a.Source, !!a.Target, a.TargetName) :> IDataElement)
+                model.CreateAssociation
+                        (
+                        !a.OntologicalType, 
+                        !a.LinguisticType, 
+                        !!a.Source, 
+                        !!a.Target, 
+                        a.TargetName
+                        ) :> IDataElement
+                |> register a
             | :? WrappedGeneralization as g -> 
-                register g (model.CreateGeneralization(!g.Class, !!g.Source, !!g.Target) :> IDataElement)
+                model.CreateGeneralization
+                        (
+                        !g.OntologicalType, 
+                        !g.LinguisticType, 
+                        !!g.Source, 
+                        !!g.Target
+                        ) :> IDataElement
+                |> register g
             | _ -> failwith "Unknown element type in serialized file, can not deserialize"
 
     /// Visitor that takes care of adding new elements and models to a repo, assuming that they are provided in 
@@ -67,11 +82,17 @@ module Deserializer =
                 unwrap node this.currentModel |> ignore
 
             member this.Visit (model: WrappedModel) =
-                let metamodel = repo.Models |> Seq.tryFind (fun m -> m.Name = model.MetamodelName)
+                let ontologicalMetamodel = 
+                    repo.Models |> Seq.tryFind (fun m -> m.Name = model.OntologicalMetamodelName)
+                let linguisticMetamodel = 
+                    repo.Models |> Seq.tryFind (fun m -> m.Name = model.LinguisticMetamodelName)
+
                 this.currentModel <- 
-                    match metamodel with
-                    | None -> repo.CreateModel model.Name
-                    | Some m -> repo.CreateModel(model.Name, m)
+                    match ontologicalMetamodel, linguisticMetamodel with
+                    | None, None -> repo.CreateModel model.Name
+                    | Some om, Some lm -> repo.CreateModel(model.Name, om, lm)
+                    | _ -> failwith "Ontological and linguistic metamodels should be both set or both unset"
+
                 this.currentModel.Properties <- Map.ofArray model.Properties
 
             member this.Visit (repo: WrappedRepo) =

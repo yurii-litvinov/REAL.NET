@@ -17,7 +17,7 @@ namespace Repo.FacadeLayer
 open System.Collections.Generic
 
 open Repo
-open Repo.InfrastructureSemanticLayer
+open Repo.InfrastructureMetamodel
 
 ///Model repository. Holds all already created wrappers for data models, creates them as needed.
 type ModelRepository(infrastructure: InfrastructureSemantic, elementRepository: IElementRepository) =
@@ -51,13 +51,15 @@ and Model
     member this.UnderlyingModel = model
 
     interface IModel with
-        member this.CreateElement (``type``: IElement) =
-            let unwrappedType = (``type`` :?> Element).UnderlyingElement
-            let element = infrastructure.Instantiate model unwrappedType
-            elementRepository.GetElement element
+        member this.CreateElement (``type``: IElement): IElement =
+            failwith "Not implemented"
+
+            //let unwrappedType = (``type`` :?> Element).UnderlyingElement
+            //let element = infrastructure.Instantiate model unwrappedType
+            //elementRepository.GetElement element
 
         member this.CreateElement (typeName: string) =
-            let ``type`` = (repository.GetModel <| this.UnderlyingModel.Metamodel).FindElement typeName
+            let ``type`` = (repository.GetModel <| this.UnderlyingModel.OntologicalMetamodel).FindElement typeName
             (this :> IModel).CreateElement ``type``
 
         member this.DeleteElement element =
@@ -80,13 +82,13 @@ and Model
 
         member this.Nodes =
             model.Nodes
-            |> Seq.filter infrastructure.Metamodel.IsNode
+            //|> Seq.filter infrastructure.Metamodel.IsNode
             |> Seq.map elementRepository.GetElement
             |> Seq.cast<INode>
 
         member this.Edges =
             model.Edges
-            |> Seq.filter infrastructure.Metamodel.IsAssociation
+            //|> Seq.filter infrastructure.Metamodel.IsAssociation
             |> Seq.map elementRepository.GetElement
             |> Seq.cast<IEdge>
 
@@ -96,7 +98,7 @@ and Model
             |> Seq.append ((this :> IModel).Edges |> Seq.cast<IElement>)
 
         member this.Metamodel =
-            repository.GetModel model.Metamodel
+            repository.GetModel model.OntologicalMetamodel
 
         member this.Name
             with get () = model.Name

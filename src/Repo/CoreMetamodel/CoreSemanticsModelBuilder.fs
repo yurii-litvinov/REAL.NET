@@ -17,89 +17,83 @@ namespace Repo.CoreMetamodel
 open Repo.DataLayer
 
 /// Class that allows to instantiate new models based on Core model semantics.
-type CoreSemanticsModelCreator private (repo: IDataRepository, modelName: string, metamodel: IDataModel) =
+type CoreSemanticsModelBuilder private (repo: IDataRepository, modelName: string, metamodel: IDataModel) =
     let coreMetamodel = repo.Model "CoreMetamodel"
-    let coreNode = coreMetamodel.Node "Node"
+    let node = coreMetamodel.Node "Node"
     let association = coreMetamodel.Node "Association"
     let generalization = coreMetamodel.Node "Generalization"
 
-    let model = repo.CreateModel(modelName, metamodel)
+    let model = repo.CreateModel(modelName, metamodel, coreMetamodel)
 
     /// Helper function that creates a copy of a given edge in a current model (identifying source and target by name
     /// and assuming they already present in a model).
-    let reinstantiateEdge (edge: IDataEdge) =
-        let sourceName = (edge.Source.Value :?> IDataNode).Name
-        let targetName = (edge.Target.Value :?> IDataNode).Name
-        let source = model.Node sourceName
-        let target = model.Node targetName
-
-        match edge with 
-        | :? IDataGeneralization ->
-            model.CreateGeneralization(generalization, source, target) |> ignore
-        | :? IDataAssociation as a ->
-            model.CreateAssociation(association, source, target, a.TargetName) |> ignore
-        | _ -> failwith "Unknown edge type"
+    let reinstantiateEdge (edge: IDataEdge) = CoreSemanticsHelpers.reinstantiateEdge edge model coreMetamodel
 
     /// Creates a new model in existing repository with Core Metamodel as its metamodel.
     new (repo: IDataRepository, modelName: string) =
-        CoreSemanticsModelCreator(repo, modelName, repo.Model "CoreMetamodel")
+        CoreSemanticsModelBuilder(repo, modelName, repo.Model "CoreMetamodel")
 
     /// Creates a new repository with Core Metamodel and creates a new model in it.
     new (modelName: string) =
         let repo = DataRepo() :> IDataRepository
-        let build (builder: IModelBuilder) =
-            builder.Build repo
+        let build (builder: IModelCreator) =
+            builder.CreateIn repo
 
-        CoreMetamodelBuilder() |> build
-        CoreSemanticsModelCreator(repo, modelName, repo.Model "CoreMetamodel")
-
-    /// Adds a node (an instance of CoreMetamodel.Node) into a model.
-    member this.AddNode (name: string) =
-        this.AddNodeWithClass name coreNode
-
-    /// Adds a node (an instance of given class) to a model.
-    member this.AddNodeWithClass (name: string) (``class``: IDataElement) =
-        model.CreateNode(name, ``class``)
-
-    /// Adds an association between two elements. Association will be an instance of a CoreMetamodel.Association
-    /// node.
-    member this.AddAssociation (source: IDataElement) (target: IDataElement) (name: string) =
-        model.CreateAssociation(association, source, target, name)
-
-    /// Adds an association between two elements. Association will be an instance of a CoreMetamodel.Generalization
-    /// node.
-    member this.AddGeneralization (child: IDataNode) (parent: IDataNode) =
-        model.CreateGeneralization(generalization, child, parent) |> ignore
-
-    /// Instantiates an association between two given elements using supplied association class as a type of 
-    /// resulting edge.
-    member this.AddAssociationWithClass (source: IDataNode) (target: IDataNode) (``class``: IDataAssociation) =
-        model.CreateAssociation(``class``, source, target, ``class``.TargetName)
-
-    /// Instantiates an association between two given elements. Searches metamodel for association with given name, and
-    /// if such association is found (and exactly once), uses it as a class for a new association.
-    member this.AddAssociationByName (source: IDataNode) (target: IDataNode) (name: string) =
-        let ``class`` = Model.FindAssociation metamodel name
-        model.CreateAssociation(``class``, source, target, ``class``.TargetName)
+        CoreMetamodelCreator() |> build
+        CoreSemanticsModelBuilder(repo, modelName, repo.Model "CoreMetamodel")
 
     /// Creates model builder that uses Core Metamodel semantics and has current model as its ontological metamodel
     /// and Core Metamodel as its linguistic metamodel. So instantiations will use this model for instantiated classes,
     /// but Node, String and Association will be from Core Metamodel.
     member this.CreateInstanceModelBuilder (name: string) =
-        CoreSemanticsModelCreator(repo, name, model)
+        CoreSemanticsModelBuilder(repo, name, model)
+
+    /// Adds a node (an instance of CoreMetamodel.Node) into a model.
+    member this.AddNode (name: string) =
+        this.AddNodeWithOntologicalType name node
+
+    /// Adds a node (an instance of given class) to a model.
+    member this.AddNodeWithOntologicalType (name: string) (ontologicalType: IDataElement) =
+        model.CreateNode(name, ontologicalType, node)
+
+    /// Adds an association between two elements. Association will be an instance of a CoreMetamodel.Association
+    /// node.
+    member this.AddAssociation (source: IDataElement) (target: IDataElement) (name: string) =
+        model.CreateAssociation(association, association, source, target, name)
+
+    /// Adds a generalization between two elements. Generalization will be an instance of a 
+    /// CoreMetamodel.Generalization node. Note that generalization is always a linguistic extension within its model:
+    /// its ontological type is from Core Metamodel.
+    member this.AddGeneralization (child: IDataNode) (parent: IDataNode) =
+        model.CreateGeneralization(generalization, generalization, child, parent) |> ignore
+
+    /// Instantiates an association between two given elements using supplied association class as a type of 
+    /// resulting edge.
+    member this.AddAssociationWithOntologicalType 
+            (source: IDataNode) 
+            (target: IDataNode) 
+            (ontologicalType: IDataAssociation) =
+        model.CreateAssociation(ontologicalType, association, source, target, ontologicalType.TargetName)
+
+    /// Instantiates an association between two given elements. Searches ontological metamodel for association with 
+    /// given name, and if such association is found (and exactly once), uses it as an ontological type 
+    /// for a new association.
+    member this.AddAssociationByName (source: IDataNode) (target: IDataNode) (name: string) =
+        let ontologicalType = ModelSemantics.FindAssociation metamodel name
+        model.CreateAssociation(ontologicalType, association, source, target, ontologicalType.TargetName)
 
     /// Returns model which this builder builds.
     member this.Model with get () = model
 
     /// Helper operator that adds a node to a model.
-    static member (+) (creator: CoreSemanticsModelCreator, name) = creator.AddNode name
+    static member (+) (creator: CoreSemanticsModelBuilder, name) = creator.AddNode name
 
     /// Helper operator that adds a generalization between given elements to a model.
-    static member (+--|>) (creator: CoreSemanticsModelCreator, (source, target)) = 
+    static member (+--|>) (creator: CoreSemanticsModelBuilder, (source, target)) = 
         creator.AddGeneralization source target
 
     /// Helper operator that adds an association between given elements to a model.
-    static member (+--->) (creator: CoreSemanticsModelCreator, (source, target, name)) = 
+    static member (+--->) (creator: CoreSemanticsModelBuilder, (source, target, name)) = 
         creator.AddAssociation source target name |> ignore
 
     /// Instantiates an exact copy of a metamodel in a current model. Supposed to be used to reintroduce linguistic

@@ -24,13 +24,18 @@ type DataRepo() =
             models <- model :: models
             model
 
-        member this.CreateModel(name: string, metamodel: IDataModel): IDataModel =
-            let model = DataModel(name, metamodel) :> IDataModel
+        member this.CreateModel
+                (
+                name: string, 
+                ontologicalMetamodel: IDataModel, 
+                linguisticMetamodel: IDataModel
+                ) : IDataModel =
+            let model = DataModel(name, ontologicalMetamodel, linguisticMetamodel) :> IDataModel
             models <- model :: models
             model
 
         member this.DeleteModel(model: IDataModel): unit =
-            if models |> List.exists (fun m -> m.Metamodel = model &&  m <> model) then
+            if models |> List.exists (fun m -> m.OntologicalMetamodel = model &&  m <> model) then
                 raise (Repo.DeletingUsedModel(model.Name))
             models <- models |> List.filter (fun m -> not (m.Equals(model)))
 

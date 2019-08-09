@@ -19,7 +19,7 @@ open FsUnit
 
 open Repo.CoreMetamodel
 
-let init () = TestUtils.init [CoreMetamodelBuilder()]
+let init () = TestUtils.init [CoreMetamodelCreator()]
 
 [<Test>]
 let ``Repo is able to find Core Metamodel`` () =
@@ -30,7 +30,7 @@ let ``Repo is able to find Core Metamodel`` () =
 let ``Repo is able to find any model`` () =
     let repo = init()
     let model1 = repo.CreateModel("TestModel1")
-    let model2 = repo.CreateModel("TestModel2", model1)
+    let model2 = repo.CreateModel("TestModel2", model1, model1)
     repo.Model "TestModel1" |> should sameAs model1
     repo.Model "TestModel2" |> should sameAs model2
 
@@ -43,7 +43,7 @@ let ``Repo shall throw if no model found`` () =
 let ``Repo shall throw if searching two models with the same name`` () =
     let repo = init()
     let model1 = repo.CreateModel("TestModel")
-    let _ = repo.CreateModel("TestModel", model1)
+    let _ = repo.CreateModel("TestModel", model1, model1)
     (fun () -> repo.Model "TestModel" |> ignore)
             |> should throw typeof<Repo.MultipleModelsException>
 
@@ -54,14 +54,14 @@ let ``IsInstanceOf shall work for long instantiation chains`` () =
     let coreMetamodel = repo.Model "CoreMetamodel"
     let node = coreMetamodel.Node "Node"
 
-    let element = model1.CreateNode("Element", node)
-    let model2 = repo.CreateModel("TestModel2", model1)
-    let instance = model2.CreateNode("Instance", element)
+    let element = model1.CreateNode("Element", node, node)
+    let model2 = repo.CreateModel("TestModel2", model1, model1)
+    let instance = model2.CreateNode("Instance", element, element)
 
-    Element.IsInstanceOf element instance |> should be True
-    Element.IsInstanceOf node element |> should be True
-    Element.IsInstanceOf node instance |> should be True
-    Element.IsInstanceOf instance node |> should be False
+    ElementSemantics.IsOntologicalInstanceOf element instance |> should be True
+    ElementSemantics.IsOntologicalInstanceOf node element |> should be True
+    ElementSemantics.IsOntologicalInstanceOf node instance |> should be True
+    ElementSemantics.IsOntologicalInstanceOf instance node |> should be False
 
 [<Test>]
 let ``IsInstanceOf shall respect generalization`` () =
@@ -71,15 +71,15 @@ let ``IsInstanceOf shall respect generalization`` () =
     let node = coreMetamodel.Node "Node"
     let generalization = coreMetamodel.Node "Generalization"
 
-    let parent = model1.CreateNode("Parent", node)
-    let descendant = model1.CreateNode("Descendant", node)
-    model1.CreateGeneralization(generalization, descendant, parent) |> ignore
-    let model2 = repo.CreateModel("TestModel2", model1)
-    let descendantInstance = model2.CreateNode("descendantInstance", descendant)
-    let parentInstance = model2.CreateNode("parentInstance", parent)
+    let parent = model1.CreateNode("Parent", node, node)
+    let descendant = model1.CreateNode("Descendant", node, node)
+    model1.CreateGeneralization(generalization, generalization, descendant, parent) |> ignore
+    let model2 = repo.CreateModel("TestModel2", model1, model1)
+    let descendantInstance = model2.CreateNode("descendantInstance", descendant, descendant)
+    let parentInstance = model2.CreateNode("parentInstance", parent, parent)
 
-    Element.IsInstanceOf descendant descendantInstance |> should be True
-    Element.IsInstanceOf parent descendantInstance |> should be True
+    ElementSemantics.IsOntologicalInstanceOf descendant descendantInstance |> should be True
+    ElementSemantics.IsOntologicalInstanceOf parent descendantInstance |> should be True
 
-    Element.IsInstanceOf descendant parentInstance |> should be False
-    Element.IsInstanceOf parent parentInstance |> should be True
+    ElementSemantics.IsOntologicalInstanceOf descendant parentInstance |> should be False
+    ElementSemantics.IsOntologicalInstanceOf parent parentInstance |> should be True

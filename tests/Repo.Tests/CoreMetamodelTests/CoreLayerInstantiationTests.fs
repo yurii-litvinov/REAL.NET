@@ -19,11 +19,11 @@ open FsUnit
 
 open Repo.CoreMetamodel
 
-let init () = TestUtils.init [CoreMetamodelBuilder()]
+let init () = TestUtils.init [CoreMetamodelCreator()]
 
 [<Test>]
 let ``Core Metamodel shall be able to be reinstantiated from itself`` () =
-    let model = CoreSemanticsModelCreator("Model")
+    let model = CoreSemanticsModelBuilder("Model")
     let (~+) name = model.AddNode(name)
 
     let node = +"Node"
@@ -47,6 +47,6 @@ let ``Core Metamodel shall be able to be reinstantiated from itself`` () =
     edge ---> (element, "target")
     association ---> (stringNode, "targetName")
 
-    let metaNode = Model.FindNode model.Model.Metamodel "Node"
+    let metaNode = model.Model.OntologicalMetamodel.Node "Node"
 
-    model.Model.Nodes |> Seq.iter (fun e -> e.Class |> should equal metaNode)
+    model.Model.Nodes |> Seq.iter (fun e -> e.OntologicalType |> should equal metaNode)
