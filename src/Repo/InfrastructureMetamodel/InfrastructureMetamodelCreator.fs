@@ -29,22 +29,21 @@ type InfrastructureMetamodelCreator() =
 
             builder.ReinstantiateParentModel ()
 
-            let createEnum name = builder.InstantiateNode name (metamodel.Node "Enum") []
-
-            let createEnumLiterals enum literals =
+            let createEnum name literals = 
+                let enum = builder.InstantiateNode name (metamodel.Node "Enum") []
                 literals |> Seq.iter (fun l ->
                     let enumLiteral = builder.AddNode l []
                     let metamodelEnumLiteralLink = ModelSemantics.FindAssociation metamodel "elements"
-                    let association = builder.InstantiateAssociation enum enumLiteral metamodelEnumLiteralLink
+                    let association = builder.InstantiateAssociation enum enumLiteral metamodelEnumLiteralLink []
                     association.TargetName <- "enumElement"
                 )
+                enum
 
-            let booleanNode = builder + "Boolean"
+            let boolean = createEnum "Boolean" ["true"; "false"]
             let modelNode = builder + "Model"
             let repoNode = builder + "Repo"
 
-            let metatype = createEnum "Metatype"
-            createEnumLiterals metatype ["Node"; "Edge"]
+            let metatype = createEnum "Metatype" ["Metatype.Node"; "Metatype.Edge"]
 
             let element = builder.Node "Element"
 
@@ -52,9 +51,10 @@ type InfrastructureMetamodelCreator() =
             modelNode ---> (element, "elements")
 
             builder.AddAttribute element "shape"
-            builder.AddAttributeWithType element "isAbstract" booleanNode
-            builder.AddAttributeWithType element "instanceMetatype" metatype
+            builder.AddAttributeWithType element boolean (builder.Node "false") "isAbstract"
+            builder.AddAttributeWithType element metatype (builder.Node "Node") "instanceMetatype"
 
-            builder.AddAttributeWithType (builder.Node "Node") "isAbstract" booleanNode
+            let association = builder.Node "Association"
+            builder.AddAttribute association "name"
 
             ()

@@ -27,6 +27,7 @@ type ElementSemantics (repo: IDataRepository) =
     let attribute = attributeMetamodel.Node "Attribute"
     let attributeAssociation = attributeMetamodel.Association "attributes"
     let attributeTypeAssociation = attributeMetamodel.Association "type"
+    let attributeDefaultValueAssociation = attributeMetamodel.Association "defaultValue"
 
     let slot = attributeMetamodel.Node "Slot"
     let slotAssociation = attributeMetamodel.Association "slots"
@@ -62,6 +63,7 @@ type ElementSemantics (repo: IDataRepository) =
         |> Seq.filter isAttributeAssociation
         |> Seq.exists (fun (e: IDataAssociation) -> e.TargetName = name)
 
+    /// Returns all own attribute associations for a given element.
     let ownAttributeAssociations element =
         ElementSemantics.OutgoingAssociations element
         |> Seq.filter isAttributeAssociation
@@ -113,7 +115,7 @@ type ElementSemantics (repo: IDataRepository) =
 
     /// Adds a new attribute to an element. New attribute is always a linguistic extension (i.e. can not have 
     /// ontological type) at this metalevel.
-    member this.AddAttribute element name attributeType =
+    member this.AddAttribute element name attributeType defaultValue =
         let model = ElementSemantics.ContainingModel element
         let attributeNode = model.CreateNode(name, attribute, attribute)
         model.CreateAssociation
@@ -133,6 +135,19 @@ type ElementSemantics (repo: IDataRepository) =
                 attributeType,
                 "type"
                 ) |> ignore
+
+        model.CreateAssociation
+                (
+                attributeDefaultValueAssociation,
+                attributeDefaultValueAssociation,
+                attributeNode,
+                defaultValue,
+                "defaultValue"
+                ) |> ignore
+
+    /// Returns node representing default value of an attribute.
+    static member AttributeDefaultValue (attribute: IDataNode) =
+        ElementSemantics.OutgoingAssociation attribute "defaultValue" |> fun a -> a.Target.Value :?> IDataNode
 
     /// Adds a new slot that is an instance of a given attribute. Sets its value.
     member this.AddSlot (element: IDataElement) (attribute: IDataNode) (value: IDataNode) =
@@ -197,6 +212,13 @@ type ElementSemantics (repo: IDataRepository) =
                 value,
                 "value"
                 ) |> ignore
+
+    /// Sets new slot value as an instance of String, leaving old value in a model. Assumes that slot exists.
+    member this.SetStringSlotValue (element: IDataElement) (slotName: string) (value: string) =
+        let model = ElementSemantics.ContainingModel element
+        let stringNode = model.LinguisticMetamodel.Node "String"
+        let stringInstance = model.CreateNode(value, stringNode, stringNode)
+        this.SetSlotValue element slotName stringInstance
 
     /// Returns a sequence of all slot nodes present in given element.
     member this.Slots (element: IDataElement) =
@@ -282,15 +304,22 @@ type AttributeMetamodelSemantics(repo: IDataRepository) =
             (model: IDataModel)
             (source: IDataNode)
             (target: IDataNode)
-            (ontologicalType: IDataAssociation)
+            (ontologicalType: IDataElement)
             (attributeValues: Map<string, IDataNode>) =
+
+        let name =
+            match ontologicalType with
+            | :? IDataNode as n -> n.Name
+            | :? IDataAssociation as a -> a.TargetName
+            | _ -> failwith "Incorrect association ontological type"
+
         let instance = 
             model.CreateAssociation (
                 ontologicalType, 
                 association, 
                 source, 
                 target, 
-                ontologicalType.TargetName
+                name
             )
 
         instantiateAttributes instance ontologicalType attributeValues

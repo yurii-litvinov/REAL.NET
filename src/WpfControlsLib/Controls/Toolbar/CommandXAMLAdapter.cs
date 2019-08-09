@@ -5,7 +5,7 @@
 
     public class CommandXAMLAdapter : System.Windows.Input.ICommand
     {
-        private ICommand command;
+        private readonly ICommand command;
 
         public CommandXAMLAdapter(ICommand command)
         {

@@ -23,8 +23,9 @@ type Node
         infrastructure: InfrastructureMetamodel.InfrastructureSemantic,
         element: DataLayer.IDataNode,
         elementRepository: IElementRepository,
-        attributeRepository: AttributeRepository
+        attributeRepository: AttributeRepository,
+        repo: DataLayer.IDataRepository
     ) =
 
-    inherit Element(infrastructure, element, elementRepository, attributeRepository)
+    inherit Element(infrastructure, element, elementRepository, attributeRepository, repo)
     interface INode

@@ -30,7 +30,7 @@ type DataNode private
     new (name: string, ontologicalType: IDataElement, linguisticType: IDataElement, model: IDataModel) = 
         DataNode(name, Some ontologicalType, Some linguisticType, model)
 
-    override this.ToString () = name
+    override this.ToString () = model.Name + "." + name
 
     interface IDataNode with
         member __.Name

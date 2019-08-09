@@ -31,7 +31,8 @@ type AttributeMetamodelCreator() =
 
             builder.Node "Element" ---> (attribute, "attributes")
             builder.Node "Element" ---> (slot, "slots")
-            attribute ---> (builder.Node "Node", "type")
-            slot ---> (builder.Node "Node", "value")
+            attribute ---> (builder.Node "String", "type")
+            attribute ---> (builder.Node "String", "defaultValue")
+            slot ---> (builder.Node "String", "value")
 
             ()

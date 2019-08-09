@@ -22,7 +22,7 @@ type Repo(repo: DataLayer.IDataRepository) =
     let infrastructure = InfrastructureMetamodel.InfrastructureSemantic(repo)
 
     let attributeRepository = AttributeRepository(repo)
-    let elementRepository = ElementRepository(infrastructure, attributeRepository)
+    let elementRepository = ElementRepository(infrastructure, attributeRepository, repo)
     let modelRepository = ModelRepository(infrastructure, elementRepository)
 
     let unwrap (model: IModel) = (model :?> Model).UnderlyingModel

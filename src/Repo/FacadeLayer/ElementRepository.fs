@@ -20,18 +20,17 @@ open Repo
 open Repo.InfrastructureMetamodel
 
 /// Repository for element wrappers. Contains already created wrappers and creates new wrappers if needed.
-type ElementRepository(infrastructure: InfrastructureSemantic, attributeRepository: AttributeRepository) =
+type ElementRepository(infrastructure: InfrastructureSemantic, attributeRepository: AttributeRepository, repo: DataLayer.IDataRepository) =
     let elements = Dictionary<_, _>()
 
     let findMetatype (element : DataLayer.IDataElement) =
-        failwith "Not implemented"
-        //if infrastructure.Metamodel.IsNode element then
-        //    Metatype.Node
-        //elif infrastructure.Metamodel.IsEdge element then
-        //    Metatype.Edge
-        //else
-        //    raise (InvalidSemanticOperationException
-        //        "Trying to get a metatype of an element that is not instance of the Element. Model is malformed.")
+        if infrastructure.Metamodel.IsNode element then
+            Metatype.Node
+        elif infrastructure.Metamodel.IsEdge element then
+            Metatype.Edge
+        else
+            raise (InvalidSemanticOperationException
+                "Trying to get a metatype of an element that is not instance of the Element. Model is malformed.")
 
     interface IElementRepository with
         member this.GetElement (element: DataLayer.IDataElement) =
@@ -51,7 +50,8 @@ type ElementRepository(infrastructure: InfrastructureSemantic, attributeReposito
                                     infrastructure,
                                     element :?> DataLayer.IDataEdge,
                                     this :> IElementRepository,
-                                    attributeRepository
+                                    attributeRepository,
+                                    repo
                                 ) :> IElement
                     | Metatype.Node ->
                         if not <| element :? DataLayer.IDataNode then
@@ -65,7 +65,8 @@ type ElementRepository(infrastructure: InfrastructureSemantic, attributeReposito
                                     infrastructure,
                                     element :?> DataLayer.IDataNode,
                                     this :> IElementRepository,
-                                    attributeRepository
+                                    attributeRepository,
+                                    repo
                                 ) :> IElement
                     | _ -> failwith "Unknown metatype"
                 elements.Add(element, newElement)

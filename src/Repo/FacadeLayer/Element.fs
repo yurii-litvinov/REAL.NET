@@ -29,17 +29,19 @@ and [<AbstractClass>] Element
         , element: DataLayer.IDataElement
         , repository: IElementRepository
         , attributeRepository: AttributeRepository
+        , repo: DataLayer.IDataRepository
     ) =
 
+    let elementSemantics = Repo.AttributeMetamodel.ElementSemantics(repo)
+
     let findMetatype (element : DataLayer.IDataElement) =
-        failwith "Not implemented"
-        //if infrastructureSemantic.Metamodel.IsNode element then
-        //    Metatype.Node
-        //elif infrastructureSemantic.Metamodel.IsEdge element then
-        //    Metatype.Edge
-        //else
-        //    raise (InvalidSemanticOperationException
-        //        "Trying to get a metatype of an element that is not instance of the Element. Model is malformed.")
+        if infrastructureSemantic.Metamodel.IsNode element then
+            Metatype.Node
+        elif infrastructureSemantic.Metamodel.IsEdge element then
+            Metatype.Edge
+        else
+            raise (InvalidSemanticOperationException
+                "Trying to get a metatype of an element that is not instance of the Element. Model is malformed.")
 
     /// Returns corresponding element from data repository.
     member this.UnderlyingElement = element
@@ -47,61 +49,55 @@ and [<AbstractClass>] Element
     interface IElement with
         member this.Name
             with get (): string =
-                failwith "Not implemented"
-                //match element with
-                //| :? DataLayer.IDataNode as n-> n.Name
-                //| _ ->
-                //    if infrastructureSemantic.Element.HasAttribute element "name" then
-                //        infrastructureSemantic.Element.AttributeValue element "name"
-                //    else
-                //        ""
+                match element with
+                | :? DataLayer.IDataNode as n-> n.Name
+                | _ ->
+                    if elementSemantics.HasSlot element "name" then
+                        elementSemantics.StringSlotValue element "name"
+                    else
+                        ""
 
             and set (v: string): unit =
-                failwith "Not implemented"
-                //match element with
-                //| :? DataLayer.IDataNode as n-> n.Name <- v
-                //| _ ->
-                //    if infrastructureSemantic.Element.HasAttribute element "name" then
-                //        infrastructureSemantic.Element.SetAttributeValue element "name" v
-                //    else
-                //        raise (Repo.InvalidSemanticOperationException "Trying to set a name to an element which does not have one")
+                match element with
+                | :? DataLayer.IDataNode as n-> n.Name <- v
+                | _ ->
+                    if elementSemantics.HasSlot element "name" then
+                        elementSemantics.SetStringSlotValue element "name" v
+                    else
+                        raise (Repo.InvalidSemanticOperationException "Trying to set a name to an element which does not have one")
 
         member this.Attributes = 
-            Seq.empty
-            //infrastructureSemantic.Element.Attributes element |> Seq.map attributeRepository.GetAttribute
+            elementSemantics.Attributes element |> Seq.map attributeRepository.GetAttribute
 
         member this.LinguisticType =
-            repository.GetElement element.OntologicalType
+            repository.GetElement element.LinguisticType
 
         member this.OntologicalType =
             // TODO: Properly implement Ontological Type.
             repository.GetElement element.OntologicalType
 
         member this.IsAbstract =
-            failwith "Not implemented"
-            //if infrastructureSemantic.Element.InfrastructureMetamodel.IsElement element then
-            //    if infrastructureSemantic.Element.InfrastructureMetamodel.IsGeneralization element then
-            //        true
-            //    else
-            //        match infrastructureSemantic.Element.AttributeValue element "isAbstract" with
-            //        | "true" -> true
-            //        | "false" -> false
-            //        | _ -> failwith "Incorrect isAbstract attribute value"
-            //else
-            //    true
+            if infrastructureSemantic.Element.InfrastructureMetamodel.IsElement element then
+                if infrastructureSemantic.Element.InfrastructureMetamodel.IsGeneralization element then
+                    true
+                else
+                    match elementSemantics.StringSlotValue element "isAbstract" with
+                    | "true" -> true
+                    | "false" -> false
+                    | _ -> failwith "Incorrect isAbstract attribute value"
+            else
+                true
 
         member this.Shape = 
-            failwith "Not implemented"
-            // infrastructureSemantic.Element.AttributeValue element "shape"
+            elementSemantics.StringSlotValue element "shape"
 
         member this.Metatype = findMetatype element
 
         member this.InstanceMetatype =
-            failwith "Not implemented"
-            //match infrastructureSemantic.Element.AttributeValue element "instanceMetatype" with
-            //| "Metatype.Node" -> Metatype.Node
-            //| "Metatype.Edge" -> Metatype.Edge
-            //| _ -> failwith "Incorrect instanceMetatype attribute value"
+            match elementSemantics.StringSlotValue element "instanceMetatype" with
+            | "Metatype.Node" -> Metatype.Node
+            | "Metatype.Edge" -> Metatype.Edge
+            | _ -> failwith "Incorrect instanceMetatype attribute value"
 
         member this.AddAttribute (name, kind, defaultValue) =
             failwith "Not implemented"

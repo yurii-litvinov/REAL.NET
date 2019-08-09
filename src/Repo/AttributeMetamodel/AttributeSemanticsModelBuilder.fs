@@ -33,20 +33,23 @@ type AttributeSemanticsModelBuilder
 
     let model = repo.CreateModel(modelName, ontologicalMetamodel, attributeMetamodel)
 
+    /// Creating empty instance of String that will be attribute default value by default.
+    let emptyString = model.CreateNode("", stringNode, stringNode)
+
     /// Helper function that creates a copy of a given edge in a current model (identifying source and target by name
     /// and assuming they already present in a model).
     let reinstantiateEdge (edge: IDataEdge) = 
         Repo.CoreMetamodel.CoreSemanticsHelpers.reinstantiateEdge edge model attributeMetamodel
 
     /// Helper function that adds a new attribute to a node.
-    let addAttribute (node: IDataNode) (ontologicalType: IDataNode) (name: string) =
-        elementSemantics.AddAttribute node name ontologicalType
+    let addAttribute (node: IDataNode) (ontologicalType: IDataNode) (defaultValue: IDataNode) (name: string) =
+        elementSemantics.AddAttribute node name ontologicalType defaultValue
 
     /// Helper function that instantiates a new node of a given ontological type hoping that this type does not have
     /// attributes to instantiate.
     let addNodeWithOntologicalType (name: string) (ontologicalType: IDataElement) (attributes: string list) =
         let newNode = attributeSemantics.InstantiateNode model name (ontologicalType :?> IDataNode) Map.empty
-        attributes |> List.iter (addAttribute newNode stringNode)
+        attributes |> List.iter (addAttribute newNode stringNode emptyString)
         newNode
 
     /// Creates a new model in existing repository with Attribute Metamodel as its metamodel.
@@ -84,11 +87,15 @@ type AttributeSemanticsModelBuilder
         if not <| AttributeSemanticsHelpers.isAttributeAddingPossible elementSemantics node name stringNode then
             failwith <| "Attribute is already present in an element (including its generalization hierarchy) and has "
                 + "different type"
-        addAttribute node stringNode name
+        addAttribute node stringNode emptyString name 
 
     /// Adds a new attribute with given type to a node.
-    member this.AddAttributeWithType (node: IDataNode) (name: string) (ontologicalType: IDataNode) =
-        addAttribute node ontologicalType name
+    member this.AddAttributeWithType 
+            (node: IDataNode) 
+            (ontologicalType: IDataNode) 
+            (defaultValue: IDataNode) 
+            (name: string) =
+        addAttribute node ontologicalType defaultValue name
 
     /// Adds an association between two elements. Association will be an instance of an AttributeMetamodel.Association
     /// node.
@@ -104,8 +111,15 @@ type AttributeSemanticsModelBuilder
 
     /// Instantiates an association between two given elements using supplied association class as a type of 
     /// resulting edge.
-    member this.InstantiateAssociation (source: IDataNode) (target: IDataNode) (ontologicalType: IDataAssociation) =
-        attributeSemantics.InstantiateAssociation model source target ontologicalType Map.empty
+    member this.InstantiateAssociation 
+            (source: IDataNode) 
+            (target: IDataNode) 
+            (ontologicalType: IDataElement) 
+            (slotsList: List<string * string>) =
+        let slots = 
+            Map.ofList slotsList
+            |> Map.map (fun _ value -> model.CreateNode(value, stringNode, stringNode))
+        attributeSemantics.InstantiateAssociation model source target ontologicalType slots
 
     /// Creates model builder that uses Attribute Metamodel semantics and has current model as its
     /// ontological metamodel and Attribute Metamodel as its linguistic metamodel. So instantiations will use 
@@ -137,6 +151,18 @@ type AttributeSemanticsModelBuilder
         ontologicalMetamodel.Edges |> Seq.iter reinstantiateEdge
         ()
 
-    /// Returns node by name, if it exists.
+    /// Returns node in current model by name, if it exists.
     member this.Node name =
         model.Node name
+
+    /// Returns node in ontological metamodel by name, if it exists.
+    member this.MetamodelNode name =
+        ontologicalMetamodel.Node name
+
+    /// Returns association from current model by name, if it exists.
+    member this.Association name =
+        model.Association name
+
+    /// Returns association from ontological metamodel by name, if it exists.
+    member this.MetamodelAssociation name =
+        ontologicalMetamodel.Association name

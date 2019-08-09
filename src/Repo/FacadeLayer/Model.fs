@@ -52,11 +52,9 @@ and Model
 
     interface IModel with
         member this.CreateElement (``type``: IElement): IElement =
-            failwith "Not implemented"
-
-            //let unwrappedType = (``type`` :?> Element).UnderlyingElement
-            //let element = infrastructure.Instantiate model unwrappedType
-            //elementRepository.GetElement element
+            let unwrappedType = (``type`` :?> Element).UnderlyingElement
+            let element = infrastructure.Instantiate model unwrappedType
+            elementRepository.GetElement element
 
         member this.CreateElement (typeName: string) =
             let ``type`` = (repository.GetModel <| this.UnderlyingModel.OntologicalMetamodel).FindElement typeName
@@ -82,13 +80,13 @@ and Model
 
         member this.Nodes =
             model.Nodes
-            //|> Seq.filter infrastructure.Metamodel.IsNode
+            |> Seq.filter infrastructure.Metamodel.IsNode
             |> Seq.map elementRepository.GetElement
             |> Seq.cast<INode>
 
         member this.Edges =
             model.Edges
-            //|> Seq.filter infrastructure.Metamodel.IsAssociation
+            |> Seq.filter infrastructure.Metamodel.IsAssociation
             |> Seq.map elementRepository.GetElement
             |> Seq.cast<IEdge>
 

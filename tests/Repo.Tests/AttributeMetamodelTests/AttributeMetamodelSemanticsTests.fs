@@ -26,9 +26,10 @@ let ``Reintroduction of an attribute shall fail`` () =
     let model1creator = AttributeSemanticsModelBuilder("TestModel")
 
     let intNode = model1creator.AddNode "Int" []
+    let zeroNode = model1creator.AddNode "0" []
 
     let parent = model1creator.AddNode "Parent" ["Attribute1"]
     let descendant = model1creator.AddNode "Descendant" []
-    model1creator.AddAttributeWithType descendant "Attribute1" intNode
+    model1creator.AddAttributeWithType descendant intNode zeroNode "Attribute1"
 
     (fun () -> model1creator.AddGeneralization descendant parent) |> should throw typeof<System.Exception>

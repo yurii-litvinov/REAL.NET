@@ -23,8 +23,8 @@ type RepoFactory =
         let add (creator: DataLayer.IModelCreator) =
             creator.CreateIn data
 
-        //Metamodels.RobotsMetamodelBuilder() |> add
-        //Metamodels.RobotsTestModelBuilder() |> add
+        Metamodels.RobotsMetamodelCreator() |> add
+        Metamodels.RobotsTestModelCreator() |> add
         //Metamodels.AirSimMetamodelBuilder() |> add
         //Metamodels.AirSimModelBuilder() |> add
         //Metamodels.FeatureMetamodelBuilder() |> add

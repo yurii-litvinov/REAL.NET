@@ -30,15 +30,10 @@ type InfrastructureMetamodel(repo: IDataRepository) =
     let association = findNode "Association"
     let generalization = findNode "Generalization"
     let attribute = findNode "Attribute"
-    let attributeKind = findNode "AttributeKind"
     let stringNode = findNode "String"
     let booleanNode = findNode "Boolean"
 
     let attributesAssociation = AttributeMetamodel.ModelSemantics.FindAssociationWithSource element "attributes"
-    let attributeKindAssociation = AttributeMetamodel.ModelSemantics.FindAssociationWithSource attribute "kind"
-    let attributeStringValueAssociation = AttributeMetamodel.ModelSemantics.FindAssociationWithSource attribute "stringValue"
-    let attributeIsInstantiableAssociation =
-        AttributeMetamodel.ModelSemantics.FindAssociationWithSource attribute "isInstantiable"
 
     member this.Model = infrastructureMetamodel
 
@@ -49,27 +44,23 @@ type InfrastructureMetamodel(repo: IDataRepository) =
     member this.Generalization = generalization
 
     member this.Attribute = attribute
-    member this.AttributeKind = attributeKind
     member this.String = stringNode
     member this.Boolean = booleanNode
 
     member this.AttributesAssociation = attributesAssociation
 
-    member this.AttributeKindAssociation = attributeKindAssociation
-    member this.AttributeStringValueAssociation = attributeStringValueAssociation
-    member this.AttributeIsInstantiableAssociation = attributeIsInstantiableAssociation
-
     member this.IsFromInfrastructureMetamodel element =
         AttributeMetamodel.ElementSemantics.ContainingModel element = infrastructureMetamodel
 
+    // TODO: Change back to this metamodel after implementing Infrastructure Metamodel as proper linguistic metamodel.
     member this.IsNode (element: IDataElement) =
-        element.LinguisticType = (this.Node :> IDataElement)
+        element.LinguisticType = (this.Model.LinguisticMetamodel.Node "Node" :> IDataElement)
 
     member this.IsAssociation (element: IDataElement) =
-        element.LinguisticType = (this.Association :> IDataElement)
+        element.LinguisticType = (this.Model.LinguisticMetamodel.Node "Association" :> IDataElement)
 
     member this.IsGeneralization (element: IDataElement) =
-        element.LinguisticType = (this.Generalization :> IDataElement)
+        element.LinguisticType = (this.Model.LinguisticMetamodel.Node "Generalization" :> IDataElement)
 
     member this.IsEdge element =
         this.IsAssociation element || this.IsGeneralization element
@@ -326,7 +317,15 @@ module private Operations =
 
         let attributes = elementSemantics.Attributes ontologicalType
 
-        attributes |> Seq.rev |> Seq.iter (fun a -> elementSemantics.AddSlot newElement a "")
+        attributes 
+        |> Seq.rev 
+        |> Seq.iter (
+            fun a -> 
+                elementSemantics.AddSlot 
+                    newElement 
+                    a 
+                    (AttributeMetamodel.ElementSemantics.AttributeDefaultValue a)
+                    )
 
         newElement
 
