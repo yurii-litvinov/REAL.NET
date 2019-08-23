@@ -25,7 +25,7 @@ type IElementRepository =
 /// Implementation of an element wrapper.
 and [<AbstractClass>] Element
     (
-        infrastructureSemantic: InfrastructureMetamodel.InfrastructureSemantic
+        infrastructureSemantic: InfrastructureMetamodel.InfrastructureMetamodelSemantics
         , element: DataLayer.IDataElement
         , repository: IElementRepository
         , attributeRepository: AttributeRepository
@@ -52,8 +52,8 @@ and [<AbstractClass>] Element
                 match element with
                 | :? DataLayer.IDataNode as n-> n.Name
                 | _ ->
-                    if elementSemantics.HasSlot element "name" then
-                        elementSemantics.StringSlotValue element "name"
+                    if elementSemantics.HasSlot "name" element then
+                        elementSemantics.StringSlotValue "name" element 
                     else
                         ""
 
@@ -61,8 +61,8 @@ and [<AbstractClass>] Element
                 match element with
                 | :? DataLayer.IDataNode as n-> n.Name <- v
                 | _ ->
-                    if elementSemantics.HasSlot element "name" then
-                        elementSemantics.SetStringSlotValue element "name" v
+                    if elementSemantics.HasSlot "name" element  then
+                        elementSemantics.SetStringSlotValue "name" element v
                     else
                         raise (Repo.InvalidSemanticOperationException "Trying to set a name to an element which does not have one")
 
@@ -81,7 +81,7 @@ and [<AbstractClass>] Element
                 if infrastructureSemantic.Element.InfrastructureMetamodel.IsGeneralization element then
                     true
                 else
-                    match elementSemantics.StringSlotValue element "isAbstract" with
+                    match elementSemantics.StringSlotValue "isAbstract" element with
                     | "true" -> true
                     | "false" -> false
                     | _ -> failwith "Incorrect isAbstract attribute value"
@@ -89,12 +89,12 @@ and [<AbstractClass>] Element
                 true
 
         member this.Shape = 
-            elementSemantics.StringSlotValue element "shape"
+            elementSemantics.StringSlotValue "shape" element
 
         member this.Metatype = findMetatype element
 
         member this.InstanceMetatype =
-            match elementSemantics.StringSlotValue element "instanceMetatype" with
+            match elementSemantics.StringSlotValue "instanceMetatype" element with
             | "Metatype.Node" -> Metatype.Node
             | "Metatype.Edge" -> Metatype.Edge
             | _ -> failwith "Incorrect instanceMetatype attribute value"

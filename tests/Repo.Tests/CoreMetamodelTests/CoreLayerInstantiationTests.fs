@@ -42,7 +42,8 @@ let ``Core Metamodel shall be able to be reinstantiated from itself`` () =
 
     let (--->) source (target, name) = model.AddAssociationByName source target name |> ignore
 
-    element ---> (element, "class")
+    element ---> (element, "ontologicalType")
+    element ---> (element, "linguisticType")
     edge ---> (element, "source")
     edge ---> (element, "target")
     association ---> (stringNode, "targetName")

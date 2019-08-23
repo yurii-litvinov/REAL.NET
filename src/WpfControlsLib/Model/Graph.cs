@@ -171,7 +171,7 @@ namespace WpfControlsLib.Model
             var vertex = new NodeViewModel(node.Name)
             {
                 Node = node,
-                Picture = node.LinguisticType.Shape
+                Picture = node.Shape
             };
 
             var attributeInfos = node.Attributes.Select(x => new AttributeViewModel(x, x.Name, x.Kind.ToString())

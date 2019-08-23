@@ -55,7 +55,15 @@ type ElementSemantics () =
 
     /// Returns true if outgoing association with given name exists for a given node.
     static member HasOutgoingAssociation (element: IDataElement) name =
-        element |> ElementSemantics.OutgoingAssociations |> Seq.filter (fun a -> a.TargetName = name) |> Seq.isEmpty |> not
+        element 
+        |> ElementSemantics.OutgoingAssociations 
+        |> Seq.filter (fun a -> a.TargetName = name) 
+        |> Seq.isEmpty 
+        |> not
+
+    /// Returns a node that is a target of an association with given name.
+    static member ConnectedNode (element: IDataElement) associationName =
+        ElementSemantics.OutgoingAssociation element associationName |> fun a -> a.Target.Value :?> IDataNode
 
     /// Returns a model containing given element.
     static member ContainingModel (element: IDataElement) =
@@ -137,9 +145,10 @@ type CoreMetamodelSemantics(repo: IDataRepository) =
     /// Instantiates given node into given model. As Core Metamodel does not have a notion of attributes, instantiation
     /// is straightforward. New instance of a given node is created, without associations.
     member this.InstantiateNode
+            (name: string)
             (model: IDataModel)
             (ontologicalType: IDataNode) =
-        model.CreateNode("a" + ontologicalType.Name, ontologicalType, node)
+        model.CreateNode(name, ontologicalType, node)
 
     /// Instantiates given association into given model.
     member this.InstantiateAssociation 

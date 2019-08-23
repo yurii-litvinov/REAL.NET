@@ -19,7 +19,7 @@ open Repo
 /// Implementation of edge wrapper.
 type Edge
     (
-        infrastructure: InfrastructureMetamodel.InfrastructureSemantic,
+        infrastructure: InfrastructureMetamodel.InfrastructureMetamodelSemantics,
         element: DataLayer.IDataEdge,
         elementRepository: IElementRepository,
         attributeRepository: AttributeRepository,

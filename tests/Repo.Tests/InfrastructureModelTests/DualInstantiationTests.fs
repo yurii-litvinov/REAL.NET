@@ -26,8 +26,8 @@ type ``Given an initialized repository`` () =
     let abstractNodeType = metamodel.FindElement "AbstractNode"
 
     let model = repo.Model "RobotsTestModel"
-    let timerNode = model.FindElement "aTimer"
-    let timerType = timerNode.LinguisticType
+    let timerNode = model.FindElement "timer"
+    let timerOntologicalType = timerNode.OntologicalType
 
     [<Test>]
     member this.``Node shall not have linguistic attributes in Attributes list`` () =
@@ -35,7 +35,12 @@ type ``Given an initialized repository`` () =
 
     [<Test>]
     member this.``Linguistic attributes shall still be accessible`` () =
-        timerType.Attributes |> Seq.filter (fun attr -> attr.Name = "isAbstract") |> should be Empty
-        timerType.IsAbstract |> should be False
+        timerOntologicalType.Attributes |> Seq.filter (fun attr -> attr.Name = "isAbstract") |> should be Empty
+        timerOntologicalType.IsAbstract |> should be False
 
         abstractNodeType.IsAbstract |> should be True
+
+    [<Test>]
+    member this.``Ontological instances shall still have linguistic attributes`` () =
+        timerNode.IsAbstract |> should be False
+        timerNode.Shape |> should equal "View/Pictures/timerBlock.png"

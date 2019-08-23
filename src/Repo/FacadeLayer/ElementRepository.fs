@@ -20,7 +20,7 @@ open Repo
 open Repo.InfrastructureMetamodel
 
 /// Repository for element wrappers. Contains already created wrappers and creates new wrappers if needed.
-type ElementRepository(infrastructure: InfrastructureSemantic, attributeRepository: AttributeRepository, repo: DataLayer.IDataRepository) =
+type ElementRepository(infrastructure: InfrastructureMetamodelSemantics, attributeRepository: AttributeRepository, repo: DataLayer.IDataRepository) =
     let elements = Dictionary<_, _>()
 
     let findMetatype (element : DataLayer.IDataElement) =

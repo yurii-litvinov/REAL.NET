@@ -46,6 +46,6 @@ let ``Attribute metamodel shall have attributes`` () =
     let attributeAssociation = ElementSemantics.OutgoingAssociation element "attributes"
     attributeAssociation.Target.Value |> should equal <| attributeNode
 
-    attributeNode.OutgoingEdges |> Seq.length |> should equal 1
+    attributeNode.OutgoingEdges |> Seq.length |> should equal 2  // Type and default value.
 
     ElementSemantics.HasOutgoingAssociation attributeNode "type" |> should equal true

@@ -12,6 +12,8 @@
 * See the License for the specific language governing permissions and
 * limitations under the License. *)
 
+/// Module that contains helper functions that are useful in Core Metamodel semantics and in other semantic definitions
+/// that are based on Core Metamodel.
 module Repo.CoreMetamodel.CoreSemanticsHelpers
 
 open Repo.DataLayer

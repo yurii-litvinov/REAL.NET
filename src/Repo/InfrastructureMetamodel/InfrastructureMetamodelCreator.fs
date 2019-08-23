@@ -15,46 +15,19 @@
 namespace Repo.InfrastructureMetamodel
 
 open Repo.DataLayer
-open Repo.AttributeMetamodel
+open Repo.LanguageMetamodel
 
-/// Initializes repository with Infrastructure Metamodel, which is used to define all other metamodels
-/// and closely coupled with editor capabilities.
+/// Initializes repository with Infrastructure Metamodel, which defines a metamodel that can be instantiated by actual
+/// models (or metamodels). Editor can not show this model directly (only in palette), but can work with all models 
+/// that instantiate (directly or indirectly) this metamodel. So, it is a kind of built-in metaeditor.
 type InfrastructureMetamodelCreator() =
     interface IModelCreator with
         member this.CreateIn(repo: IDataRepository): unit =
-            let metamodel = repo.Model "LanguageMetamodel"
-            let builder = AttributeSemanticsModelBuilder(repo, "InfrastructureMetamodel", metamodel)
+            let metamodel = repo.Model Consts.infrastructureMetametamodel
+            let builder = LanguageSemanticsModelBuilder(repo, Consts.infrastructureMetamodel, metamodel)
 
             let (--->) (source: IDataElement) (target, name) = builder +---> (source, target, name)
 
             builder.ReinstantiateParentModel ()
-
-            let createEnum name literals = 
-                let enum = builder.InstantiateNode name (metamodel.Node "Enum") []
-                literals |> Seq.iter (fun l ->
-                    let enumLiteral = builder.AddNode l []
-                    let metamodelEnumLiteralLink = ModelSemantics.FindAssociation metamodel "elements"
-                    let association = builder.InstantiateAssociation enum enumLiteral metamodelEnumLiteralLink []
-                    association.TargetName <- "enumElement"
-                )
-                enum
-
-            let boolean = createEnum "Boolean" ["true"; "false"]
-            let modelNode = builder + "Model"
-            let repoNode = builder + "Repo"
-
-            let metatype = createEnum "Metatype" ["Metatype.Node"; "Metatype.Edge"]
-
-            let element = builder.Node "Element"
-
-            repoNode ---> (modelNode, "models")
-            modelNode ---> (element, "elements")
-
-            builder.AddAttribute element "shape"
-            builder.AddAttributeWithType element boolean (builder.Node "false") "isAbstract"
-            builder.AddAttributeWithType element metatype (builder.Node "Node") "instanceMetatype"
-
-            let association = builder.Node "Association"
-            builder.AddAttribute association "name"
 
             ()

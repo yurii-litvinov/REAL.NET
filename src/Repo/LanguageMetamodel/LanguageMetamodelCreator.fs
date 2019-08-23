@@ -23,7 +23,7 @@ type LanguageMetamodelCreator() =
     interface IModelCreator with
         member this.CreateIn(repo: IDataRepository): unit =
 
-            let builder = AttributeSemanticsModelBuilder(repo, "LanguageMetamodel")
+            let builder = AttributeSemanticsModelBuilder(repo, Consts.languageMetamodel)
             let (--->) (source: IDataElement) (target, name) = builder +---> (source, target, name)
             let (--|>) (source: IDataNode) (target: IDataNode) = builder +--|> (source, target)
 

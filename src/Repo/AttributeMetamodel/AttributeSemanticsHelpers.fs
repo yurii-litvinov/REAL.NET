@@ -16,11 +16,6 @@ module Repo.AttributeMetamodel.AttributeSemanticsHelpers
 
 open Repo.DataLayer
 
-/// Returns a node that represents type of an attribute.
-let private attributeType attribute =
-    ElementSemantics.OutgoingAssociation attribute "type"
-    |> fun a -> a.Target.Value :?> IDataNode
-
 /// Checks if generalization relation is possible between two given elements. Generalization is impossible if child
 /// or its descendants reintroduce attributes that are already present within parent generalization hierarchy, but
 /// with different types.
@@ -28,7 +23,7 @@ let private attributeType attribute =
 let isGeneralizationPossible (elementSemantics: ElementSemantics) (child: IDataElement) (parent: IDataElement) =
     let getNameTypePairs (attributes: IDataNode seq) =
         attributes
-        |> Seq.map (fun a -> (a.Name, attributeType a))
+        |> Seq.map (fun a -> (a.Name, AttributeSemantics.Type a))
     
     let parentAttributes = elementSemantics.Attributes parent |> getNameTypePairs
     let childAttributes = elementSemantics.Attributes child |> getNameTypePairs

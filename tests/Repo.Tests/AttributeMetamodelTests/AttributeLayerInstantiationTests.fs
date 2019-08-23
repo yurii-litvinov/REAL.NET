@@ -31,8 +31,8 @@ let checkMetalayerStrictness (creator: AttributeSemanticsModelBuilder) =
             ) 
     |> should be True
 
-// Associations can not cross metalayers.
-let checkAssociationsCantCrossMetalayers (creator: AttributeSemanticsModelBuilder) =
+// Associations can not cross metalayers in this test.
+let checkAssociationsDontCrossMetalayers (creator: AttributeSemanticsModelBuilder) =
     creator.Model.Edges |> Seq.forall (fun e -> e.Source.Value.Model = e.Target.Value.Model) |> should be True 
 
 [<Test>]
@@ -55,20 +55,20 @@ let ``Repo shall allow to create Type-Object-style model hierarchy`` () =
 
     let elementSemantics = ElementSemantics metamodelCreator.Repo
 
-    elementSemantics.StringSlotValue cd "VAT" |> should equal "10.5"
-    elementSemantics.HasSlot tosca "VAT" |> should be False
-    elementSemantics.StringSlotValue tosca "price" |> should equal "16"
+    elementSemantics.StringSlotValue "VAT" cd |> should equal "10.5"
+    elementSemantics.HasSlot "VAT" tosca |> should be False
+    elementSemantics.StringSlotValue "price" tosca |> should equal "16"
 
-    elementSemantics.HasSlot tosca "type" |> should be False
+    elementSemantics.HasSlot "type" tosca |> should be False
 
-    elementSemantics.HasSlot productType "VAT" |> should be False
+    elementSemantics.HasSlot "VAT" productType |> should be False
 
     // Some model consistency checks:
     // 1. Strictness of metalayers
     checkMetalayerStrictness modelCreator
     
     // 2. There are no associations crossing metalayers.
-    checkAssociationsCantCrossMetalayers modelCreator
+    checkAssociationsDontCrossMetalayers modelCreator
     ()
 
 (*

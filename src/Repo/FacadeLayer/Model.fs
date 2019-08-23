@@ -20,7 +20,7 @@ open Repo
 open Repo.InfrastructureMetamodel
 
 ///Model repository. Holds all already created wrappers for data models, creates them as needed.
-type ModelRepository(infrastructure: InfrastructureSemantic, elementRepository: IElementRepository) =
+type ModelRepository(infrastructure: InfrastructureMetamodelSemantics, elementRepository: IElementRepository) =
     let models = Dictionary<DataLayer.IDataModel, Model>()
     member this.GetModel (data: DataLayer.IDataModel) =
         if models.ContainsKey data then
@@ -36,7 +36,7 @@ type ModelRepository(infrastructure: InfrastructureSemantic, elementRepository: 
 
 and Model
     (
-        infrastructure: InfrastructureSemantic,
+        infrastructure: InfrastructureMetamodelSemantics,
         model: DataLayer.IDataModel,
         elementRepository: IElementRepository,
         repository: ModelRepository

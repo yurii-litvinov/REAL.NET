@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-module InfrastructureSemanticLayerTests
+module InfrastructureMetamodelSemanticsTests
 
 open NUnit.Framework
 open FsUnit
@@ -24,8 +24,8 @@ let init () =
     let repo = TestUtils.init [
         CoreMetamodel.CoreMetamodelCreator(); 
         LanguageMetamodel.LanguageMetamodelCreator(); 
-        InfrastructureMetamodelCreator()]
-    let infrastructure = InfrastructureSemantic(repo)
+        InfrastructureMetametamodelCreator()]
+    let infrastructure = InfrastructureMetamodelSemantics(repo)
     (repo, infrastructure)
 
 (*

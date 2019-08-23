@@ -50,9 +50,15 @@ type ElementSemantics (repo: IDataRepository) =
     /// Returns slot node with given name for a given element.
     /// Throws if there is no such slot or there is more than one.
     let slotNode name element =
-        ElementSemantics.OutgoingAssociations element
-        |> Seq.filter isSlotAssociation
-        |> Seq.filter (fun a -> a.TargetName = name)
+        let slots = 
+            ElementSemantics.OutgoingAssociations element
+            |> Seq.filter isSlotAssociation
+            |> Seq.filter (fun a -> a.TargetName = name)
+
+        if Seq.isEmpty slots then
+            failwithf "No such slot: %s" name
+        
+        slots
         |> Seq.exactlyOne
         |> fun a -> a.Target
         |> Option.get
@@ -145,10 +151,6 @@ type ElementSemantics (repo: IDataRepository) =
                 "defaultValue"
                 ) |> ignore
 
-    /// Returns node representing default value of an attribute.
-    static member AttributeDefaultValue (attribute: IDataNode) =
-        ElementSemantics.OutgoingAssociation attribute "defaultValue" |> fun a -> a.Target.Value :?> IDataNode
-
     /// Adds a new slot that is an instance of a given attribute. Sets its value.
     member this.AddSlot (element: IDataElement) (attribute: IDataNode) (value: IDataNode) =
         let model = ElementSemantics.ContainingModel element
@@ -175,14 +177,14 @@ type ElementSemantics (repo: IDataRepository) =
                 ) |> ignore
 
     /// Returns true if given element has given slot.
-    member this.HasSlot (element: IDataElement) (name: string) =
+    member this.HasSlot (name: string) (element: IDataElement)  =
         ElementSemantics.OutgoingAssociations element
         |> Seq.filter isSlotAssociation
         |> Seq.filter (fun a -> a.TargetName = name)
         |> Seq.length = 1
 
     /// Returns slot value (an element) by given slot name.
-    member this.SlotValue (element: IDataElement) (name: string) =
+    member this.SlotValue (name: string) (element: IDataElement)  =
         slotNode name element
         |> fun a -> a.OutgoingEdges
         |> Seq.exactlyOne
@@ -190,8 +192,8 @@ type ElementSemantics (repo: IDataRepository) =
         |> Option.get
 
     /// Convenience method that returns slot value as a string by given slot name.
-    member this.StringSlotValue (element: IDataElement) (name: string) =
-        match this.SlotValue element name with
+    member this.StringSlotValue (name: string) (element: IDataElement)  =
+        match this.SlotValue name element with
         | :? IDataNode as n -> n.Name
         | _ -> failwith "Slot value can only be a node"
 
@@ -214,7 +216,7 @@ type ElementSemantics (repo: IDataRepository) =
                 ) |> ignore
 
     /// Sets new slot value as an instance of String, leaving old value in a model. Assumes that slot exists.
-    member this.SetStringSlotValue (element: IDataElement) (slotName: string) (value: string) =
+    member this.SetStringSlotValue (slotName: string) (element: IDataElement) (value: string) =
         let model = ElementSemantics.ContainingModel element
         let stringNode = model.LinguisticMetamodel.Node "String"
         let stringInstance = model.CreateNode(value, stringNode, stringNode)
@@ -262,6 +264,21 @@ type NodeSemantics (repo: IDataRepository) =
             |> Seq.reduce (+)
         result + slots
 
+/// Helper methods for working with attributes.
+type AttributeSemantics () =
+    /// Returns attribute name.
+    static member Name (attribute: IDataNode) =
+        (CoreMetamodel.ElementSemantics.ConnectedNode attribute "name").Name
+
+    /// Returns a node that represents type of an attribute.
+    static member Type (attribute: IDataNode) =
+        ElementSemantics.OutgoingAssociation attribute "type"
+        |> fun a -> a.Target.Value :?> IDataNode
+
+    /// Returns node representing default value of an attribute.
+    static member DefaultValue (attribute: IDataNode) =
+        ElementSemantics.OutgoingAssociation attribute "defaultValue" |> fun a -> a.Target.Value :?> IDataNode
+        
 /// Helper functions for working with models.
 type ModelSemantics () =
     inherit CoreMetamodel.ModelSemantics ()

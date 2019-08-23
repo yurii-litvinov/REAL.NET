@@ -20,7 +20,7 @@ open System
 /// Implementation of a node in model.
 type Node
     (
-        infrastructure: InfrastructureMetamodel.InfrastructureSemantic,
+        infrastructure: InfrastructureMetamodel.InfrastructureMetamodelSemantics,
         element: DataLayer.IDataNode,
         elementRepository: IElementRepository,
         attributeRepository: AttributeRepository,

@@ -86,8 +86,9 @@
     <Compile Include="AttributeMetamodelTests\AttributeMetamodelTests.fs" />
     <Compile Include="AttributeMetamodelTests\AttributeMetamodelSemanticsTests.fs" />
     <Compile Include="AttributeMetamodelTests\AttributeLayerInstantiationTests.fs" />
-    <Compile Include="InfrastructureModelTests\InfrastructureSemanticLayerTests.fs" />
+    <Compile Include="InfrastructureModelTests\InfrastructureMetamodelSemanticsTests.fs" />
     <Compile Include="InfrastructureModelTests\DualInstantiationTests.fs" />
+    <Compile Include="InfrastructureModelTests\InstantiationTests.fs" />
     <Compile Include="RobotsTestModelsTests.fs" />
     <Compile Include="FacadeLayerTests\FacadeNodeTests.fs" />
     <Compile Include="FacadeLayerTests\FacadeAttributeTests.fs" />

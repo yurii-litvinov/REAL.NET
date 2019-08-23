@@ -47,6 +47,6 @@ type RepoFactory =
         CoreMetamodel.CoreMetamodelCreator() |> add
         AttributeMetamodel.AttributeMetamodelCreator() |> add
         LanguageMetamodel.LanguageMetamodelCreator() |> add
-        InfrastructureMetamodel.InfrastructureMetamodelCreator() |> add
+        InfrastructureMetamodel.InfrastructureMetametamodelCreator() |> add
 
         new FacadeLayer.Repo(data) :> IRepo

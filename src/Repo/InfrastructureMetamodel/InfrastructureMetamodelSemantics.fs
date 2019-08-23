@@ -19,7 +19,7 @@ open Repo.DataLayer
 
 /// Helper for working with Infrastructure Metamodel.
 type InfrastructureMetamodel(repo: IDataRepository) =
-    let infrastructureMetamodel = repo.Model "InfrastructureMetamodel"
+    let infrastructureMetamodel = repo.Model Consts.infrastructureMetametamodel
     let elementSemantics = Repo.AttributeMetamodel.ElementSemantics(repo)
     
     let findNode name = infrastructureMetamodel.Node name
@@ -69,8 +69,9 @@ type InfrastructureMetamodel(repo: IDataRepository) =
         this.IsNode element || this.IsEdge element
 
 /// Helper for working with elements in Infrastructure Metamodel terms.
-type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel, repo: IDataRepository) =
-    let elementSemantics = Repo.AttributeMetamodel.ElementSemantics repo
+type ElementSemantics(infrastructureMetamodel: InfrastructureMetamodel, repo: IDataRepository) =
+    inherit Repo.AttributeMetamodel.ElementSemantics(repo)
+    //let underlyingSemantics = Repo.AttributeMetamodel.ElementSemantics repo
 
 (*
     /// Returns attributes of only this element, ignoring generalizations.
@@ -179,21 +180,20 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel, repo: IData
                 elementSemantics.AttributeValue parentAttribute "isInstantiable"
 
             addAttribute element name parentAttributeKind parentAttributeValue parentAttributeIsInstantiable
-*)
+    *)
     /// Returns underlying Infrastructure Metamodel.
     member this.InfrastructureMetamodel = infrastructureMetamodel
-
+    (*
     /// Returns a list of all attributes for an element, respecting generalization. Attributes of most special node
     /// are the first in resulting sequence.
-    member this.Attributes element = elementSemantics.Attributes element
+    member this.Attributes element = underlyingSemantics.Attributes element
 
     /// Returns true if an attribute with given name is present in given element.
-    member this.HasAttribute element name = elementSemantics.HasAttribute element name
+    member this.HasAttribute element name = underlyingSemantics.HasAttribute element name
 
-(*
-    /// Adds a new attribute to a given element and initializes it with given value.
-    member this.AddAttribute element name kind value =
-        addAttribute element name kind value "true" |> ignore
+    /// Adds a new ontological attribute to a given element.
+    member this.AddAttribute element name attributeType defaultValue =
+        underlyingSemantics.AddAttribute element name attributeType defaultValue
 
     /// Returns value of an attribute with given name.
     // TODO: Actually do BFS and stop on first matching attribute.
@@ -230,7 +230,7 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel, repo: IData
 *)
 
 /// Module containing semantic operations on elements.
-module private Operations =
+// module private Operations =
 (*
     /// Returns link corresponding to an attribute respecting generalization hierarchy.
     let rec private attributeLink element attribute =
@@ -287,24 +287,25 @@ module private Operations =
             copySimpleAttribute elementHelper elementSemantics attributeNode attributeClass "isInstantiable"
 *)
 
-    /// Creates a new instance of a given class in a given model, with default values for attributes.
-    let instantiate 
-            (elementHelper: ElementHelper)
-            (elementSemantics: Repo.AttributeMetamodel.ElementSemantics)
+
+
+/// Helper class that provides low-level operations with a model conforming to Infrastructure Metamodel.
+type InfrastructureMetamodelSemantics(repo: IDataRepository) =
+    let infrastructureMetamodel = InfrastructureMetamodel(repo)
+    let elementHelper = ElementSemantics(infrastructureMetamodel, repo)
+    let elementSemantics = Repo.AttributeMetamodel.ElementSemantics repo
+
+    /// Instantiates given node into given model, using given map to provide values for element attributes.
+    member this.InstantiateNode
             (model: IDataModel)
-            (ontologicalType: IDataElement) =
-        if elementSemantics.StringSlotValue ontologicalType "isAbstract" <> "false" then
+            (name: string)
+            (ontologicalType: IDataNode)
+            (attributeValues: Map<string, IDataNode>) =
+        if elementSemantics.StringSlotValue Consts.isAbstract ontologicalType <> Consts.stringFalse then
             raise (InvalidSemanticOperationException "Trying to instantiate abstract node")
 
-        let name =
-            match ontologicalType with
-            | :? IDataNode as n -> "a" + n.Name
-            | :? IDataAssociation as a -> a.TargetName
-            | _ -> raise (InvalidSemanticOperationException
-                    "Trying to instantiate something that should not be instantiated")
-
         let newElement =
-            if elementSemantics.StringSlotValue ontologicalType "instanceMetatype" = "Metatype.Node" then
+            if elementSemantics.StringSlotValue Consts.instanceMetatype ontologicalType = Consts.metatypeNode then
                 model.CreateNode(name, ontologicalType, elementHelper.InfrastructureMetamodel.Node) :> IDataElement
             else
                 model.CreateAssociation(
@@ -317,26 +318,28 @@ module private Operations =
 
         let attributes = elementSemantics.Attributes ontologicalType
 
+        let slotValue (attr: IDataNode) =
+            if attributeValues.ContainsKey (AttributeMetamodel.AttributeSemantics.Name attr) then 
+                attributeValues.[name]
+            else
+                AttributeMetamodel.AttributeSemantics.DefaultValue attr
+
         attributes 
         |> Seq.rev 
-        |> Seq.iter (
-            fun a -> 
-                elementSemantics.AddSlot 
-                    newElement 
-                    a 
-                    (AttributeMetamodel.ElementSemantics.AttributeDefaultValue a)
-                    )
+        |> Seq.iter (fun a -> elementSemantics.AddSlot newElement a (slotValue a))
 
         newElement
 
-/// Helper class that provides low-level operations with a model conforming to Infrastructure Metamodel.
-type InfrastructureSemantic(repo: IDataRepository) =
-    let infrastructureMetamodel = InfrastructureMetamodel(repo)
-    let elementHelper = ElementHelper(infrastructureMetamodel, repo)
-    let elementSemantics = Repo.AttributeMetamodel.ElementSemantics repo
-
+    /// Instantiates a node to a given model, using default name and default values for all attributes.
     member this.Instantiate (model: IDataModel) (ontologicalType: IDataElement) =
-        Operations.instantiate elementHelper elementSemantics model ontologicalType
+        let name =
+            match ontologicalType with
+            | :? IDataNode as n -> "a" + n.Name
+            | :? IDataAssociation as a -> a.TargetName
+            | _ -> raise (InvalidSemanticOperationException
+                    "Trying to instantiate something that should not be instantiated")
+
+        this.InstantiateNode model name (ontologicalType :?> IDataNode) Map.empty
 
     member this.Metamodel = infrastructureMetamodel
     member this.Element = elementHelper
