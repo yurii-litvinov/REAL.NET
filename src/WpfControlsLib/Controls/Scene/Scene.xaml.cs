@@ -20,6 +20,7 @@ namespace WpfControlsLib.Controls.Scene
     using System.Windows.Controls;
     using System.Windows.Input;
     using System.Windows.Media;
+    using EditorPluginInterfaces;
     using GraphX.Controls;
     using GraphX.Controls.Models;
     using GraphX.PCL.Common.Enums;
@@ -35,7 +36,7 @@ namespace WpfControlsLib.Controls.Scene
     /// <summary>
     /// Visualizes  model graph and makes it possible for a user to interact with it.
     /// </summary>
-    public partial class Scene : UserControl
+    public partial class Scene : UserControl, IScene
     {
         private readonly EditorObjectManager editorManager;
         private VertexControl previosVertex;

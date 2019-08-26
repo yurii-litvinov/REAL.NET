@@ -69,6 +69,21 @@ namespace EditorPluginInterfaces
         public Action<string> ChangeModel;
 
         /// <summary>
+        /// Main window's right panel area
+        /// </summary>
+        public Grid RightPanelGrid { get; set; }
+
+        /// <summary>
+        /// SceneGrid
+        /// </summary>
+        public Grid SceneGrid { get; set; }
+
+        /// <summary>
+        /// SceneGrid
+        /// </summary>
+        public Grid PaletteGrid { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of <see cref="PluginConfig"/> 
         /// </summary>
         /// <param name="model">Model of the editor, allows to manipulate repository and keep consistence 
