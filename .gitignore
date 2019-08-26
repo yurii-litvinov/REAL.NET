@@ -197,4 +197,4 @@ docs/tools/FSharp.Formatting.svclog
 
 # Line endings unifier plugin
 .leu
-*.vbak
+*.vbak*

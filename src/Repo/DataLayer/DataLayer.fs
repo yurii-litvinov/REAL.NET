@@ -166,6 +166,9 @@ and IDataModel =
         /// Returns true if an association with given target name exists in a model.
         abstract HasAssociation: name: string -> bool
 
+        /// Prints model contents on a console.
+        abstract PrintContents: unit -> unit
+
     end
 
 /// Repository is a collection of models.

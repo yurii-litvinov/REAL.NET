@@ -134,19 +134,19 @@ type AttributeSemanticsModelBuilder
     member this.Repo with get () = repo
 
     /// Helper operator that adds a node to a model.
-    static member (+) (creator: AttributeSemanticsModelBuilder, name) = creator.AddNode name []
+    static member (+) (builder: AttributeSemanticsModelBuilder, name) = builder.AddNode name []
 
     /// Helper operator that adds a generalization between given elements to a model.
-    static member (+--|>) (creator: AttributeSemanticsModelBuilder, (source, target)) = 
-        creator.AddGeneralization source target
+    static member (+--|>) (builder: AttributeSemanticsModelBuilder, (source, target)) = 
+        builder.AddGeneralization source target
 
     /// Helper operator that adds an association between given elements to a model.
-    static member (+--->) (creator: AttributeSemanticsModelBuilder, (source, target, name)) = 
-        creator.AddAssociation source target name |> ignore
+    static member (+--->) (builder: AttributeSemanticsModelBuilder, (source, target, name)) = 
+        builder.AddAssociation source target name |> ignore
 
-    /// Instantiates an exact copy of a metamodel in a current model. Supposed to be used to reintroduce
+    /// Instantiates an exact copy of Attribute Metamodel in a current model. Supposed to be used to reintroduce
     /// metatypes at a new metalevel.
-    member this.ReinstantiateParentModel () =
+    member this.ReinstantiateAttributeMetamodel () =
         ontologicalMetamodel.Nodes |> Seq.iter (fun node -> this + node.Name |> ignore)
         ontologicalMetamodel.Edges |> Seq.iter reinstantiateEdge
         ()

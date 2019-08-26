@@ -28,6 +28,6 @@ type InfrastructureMetamodelCreator() =
 
             let (--->) (source: IDataElement) (target, name) = builder +---> (source, target, name)
 
-            builder.ReinstantiateParentModel ()
+            builder.ReinstantiateLanguageMetamodel ()
 
             ()

@@ -34,6 +34,8 @@ type DataModel private
         | :? IDataAssociation as a -> Some a
         | _ -> None
 
+    override this.ToString () = name
+
     new(name: string) = DataModel(name, None, None)
     new(name: string, ontologicalMetamodel: IDataModel, linguisticMetamodel: IDataModel) = 
         DataModel(name, Some ontologicalMetamodel, Some linguisticMetamodel)
@@ -147,3 +149,16 @@ type DataModel private
 
         member this.HasAssociation (name: string) =
             edges |> Seq.choose chooseAssociation |> Seq.tryFind (fun a -> a.TargetName = name) |> Option.isSome
+
+        member this.PrintContents () =
+            printfn "%s:" <| this.ToString ()
+            printfn "Nodes:"
+            nodes 
+                |> List.map (fun n -> n.ToString())
+                |> List.iter (printfn "    %s")
+            printfn ""
+            printfn "Edges:"
+            edges 
+                |> List.map (fun n -> n.ToString())
+                |> List.iter (printfn "    %s")
+                

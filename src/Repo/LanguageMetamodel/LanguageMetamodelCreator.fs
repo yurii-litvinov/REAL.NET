@@ -27,7 +27,7 @@ type LanguageMetamodelCreator() =
             let (--->) (source: IDataElement) (target, name) = builder +---> (source, target, name)
             let (--|>) (source: IDataNode) (target: IDataNode) = builder +--|> (source, target)
 
-            builder.ReinstantiateParentModel ()
+            builder.ReinstantiateAttributeMetamodel ()
 
             let enum = builder + "Enum"
             enum --|> builder.Node "Element"

@@ -26,15 +26,20 @@ type LanguageSemanticsModelBuilder
     let elementSemantics = ElementSemantics(repo)
     let linguisticMetamodel = repo.Model Consts.languageMetamodel
     let semantics = LanguageMetamodelSemantics(repo)
-    let node = linguisticMetamodel.Node "Node"
-    let stringNode = linguisticMetamodel.Node "String"
-    let association = linguisticMetamodel.Node "Association"
-    let generalization = linguisticMetamodel.Node "Generalization"
-
+    let languageNode = linguisticMetamodel.Node "Node"
+    let languageString = linguisticMetamodel.Node "String"
+    let languageAssociation = linguisticMetamodel.Node "Association"
+    let languageGeneralization = linguisticMetamodel.Node "Generalization"
+    
+    let languageAttribute = linguisticMetamodel.Node "Attribute"
+    let attributeAssociation = linguisticMetamodel.Association "attributes"
+    let attributeTypeAssociation = linguisticMetamodel.Association "type"
+    let attributeDefaultValueAssociation = linguisticMetamodel.Association "defaultValue"
+    
     let model = repo.CreateModel(modelName, ontologicalMetamodel, linguisticMetamodel)
 
     /// Creating empty instance of String that will be attribute default value by default.
-    let emptyString = model.CreateNode("", stringNode, stringNode)
+    let emptyString = model.CreateNode("", languageString, languageString)
 
     /// Helper function that creates a copy of a given edge in a current model (identifying source and target by name
     /// and assuming they already present in a model).
@@ -42,15 +47,46 @@ type LanguageSemanticsModelBuilder
         Repo.CoreMetamodel.CoreSemanticsHelpers.reinstantiateEdge edge model linguisticMetamodel
 
     /// Helper function that adds a new attribute to a node.
-    let addAttribute (node: IDataNode) (ontologicalType: IDataNode) (defaultValue: IDataNode) (name: string) =
-        elementSemantics.AddAttribute node name ontologicalType defaultValue
+    let addAttribute (node: IDataNode) (attributeOntologicalType: IDataNode) (defaultValue: IDataNode) (name: string) =
+        let model = ElementSemantics.ContainingModel node
+        let attributeNode = model.CreateNode(name, languageAttribute, languageAttribute)
+        model.CreateAssociation
+                (
+                attributeAssociation,
+                attributeAssociation,
+                node,
+                attributeNode,
+                name
+                ) |> ignore
+
+        model.CreateAssociation
+                (
+                attributeTypeAssociation,
+                attributeTypeAssociation,
+                attributeNode,
+                attributeOntologicalType,
+                "type"
+                ) |> ignore
+
+        model.CreateAssociation
+                (
+                attributeDefaultValueAssociation,
+                attributeDefaultValueAssociation,
+                attributeNode,
+                defaultValue,
+                "defaultValue"
+                ) |> ignore
 
     /// Helper function that instantiates a new node of a given ontological type hoping that this type does not have
     /// attributes to instantiate.
     let addNodeWithOntologicalType (name: string) (ontologicalType: IDataElement) (attributes: string list) =
         let newNode = semantics.InstantiateNode model name (ontologicalType :?> IDataNode) Map.empty
-        attributes |> List.iter (addAttribute newNode stringNode emptyString)
+        attributes |> List.iter (addAttribute newNode languageString emptyString)
         newNode
+
+    /// Reinstantiates a node as an instance of Language Metamodel.
+    let reinstantiateNode (node: IDataNode) =
+        model.CreateNode(node.Name, languageNode, languageNode) |> ignore
 
     /// Creates a new model in existing repository with Language Metamodel as its metamodel.
     new (repo: IDataRepository, modelName: string) =
@@ -70,7 +106,7 @@ type LanguageSemanticsModelBuilder
     /// Adds a node (an instance of LanguageMetamodel.Node) with given attributes (of type LanguageMetamodel.String)
     /// with empty default values into a model.
     member this.AddNode (name: string) (attributes: string list) =
-        addNodeWithOntologicalType name node attributes
+        addNodeWithOntologicalType name languageNode attributes
 
     /// Instantiates a node of a given class into a model. Uses provided list to instantiate attributes into slots.
     member this.InstantiateNode
@@ -79,13 +115,13 @@ type LanguageSemanticsModelBuilder
             (slotsList: List<string * string>) =
         let attributeValues = 
             Map.ofList slotsList
-            |> Map.map (fun _ value -> model.CreateNode(value, stringNode, stringNode))
+            |> Map.map (fun _ value -> model.CreateNode(value, languageString, languageString))
         let node = semantics.InstantiateNode model name ontologicalType attributeValues
         node
 
     /// Adds a new attribute to a node with AttributeMetamodel.String as a type.
     member this.AddAttribute (node: IDataNode) (name: string) =
-        addAttribute node stringNode emptyString name 
+        addAttribute node languageString emptyString name 
 
     /// Adds a new attribute with given type to a node.
     member this.AddAttributeWithType 
@@ -98,7 +134,7 @@ type LanguageSemanticsModelBuilder
     /// Adds an association between two elements. Association will be an instance of an AttributeMetamodel.Association
     /// node.
     member this.AddAssociation (source: IDataElement) (target: IDataElement) (name: string) =
-        model.CreateAssociation(association, association, source, target, name)
+        model.CreateAssociation(languageAssociation, languageAssociation, source, target, name)
 
     /// Adds an association between two elements. Association will be an instance of 
     /// an AttributeMetamodel.Generalization node.
@@ -107,7 +143,7 @@ type LanguageSemanticsModelBuilder
             Repo.AttributeMetamodel.AttributeSemanticsHelpers.isGeneralizationPossible elementSemantics child parent
         if not <| isGeneralizationPossible then
             failwith "Generalization relation is not possible between such elements"
-        model.CreateGeneralization(generalization, generalization, child, parent) |> ignore
+        model.CreateGeneralization(languageGeneralization, languageGeneralization, child, parent) |> ignore
 
     /// Instantiates an association between two given elements using supplied association class as a type of 
     /// resulting edge.
@@ -118,14 +154,14 @@ type LanguageSemanticsModelBuilder
             (slotsList: List<string * string>) =
         let slots = 
             Map.ofList slotsList
-            |> Map.map (fun _ value -> model.CreateNode(value, stringNode, stringNode))
+            |> Map.map (fun _ value -> model.CreateNode(value, languageString, languageString))
         semantics.InstantiateAssociation model source target ontologicalType slots
 
     /// Creates a new enumeration with given literals.
     member this.AddEnum name literals = 
         let enum = this.InstantiateNode name (linguisticMetamodel.Node "Enum") []
         literals |> Seq.iter (fun l ->
-            let enumLiteral = this.AddNode l []
+            let enumLiteral = this.InstantiateNode l (linguisticMetamodel.Node "String") []
             let metamodelEnumLiteralLink = ModelSemantics.FindAssociation linguisticMetamodel "elements"
             let association = this.InstantiateAssociation enum enumLiteral metamodelEnumLiteralLink []
             association.TargetName <- "enumElement"
@@ -155,11 +191,11 @@ type LanguageSemanticsModelBuilder
     static member (+--->) (builder: LanguageSemanticsModelBuilder, (source, target, name)) = 
         builder.AddAssociation source target name |> ignore
 
-    /// Instantiates an exact copy of a metamodel in a current model. Supposed to be used to reintroduce
+    /// Instantiates an exact copy of Language Metamodel in a current model. Supposed to be used to reintroduce
     /// metatypes at a new metalevel. Does not reinstantiate already existing (by name) nodes.
-    member this.ReinstantiateParentModel () =
+    member this.ReinstantiateLanguageMetamodel () =
         ontologicalMetamodel.Nodes 
-        |> Seq.iter (fun node -> if not <| this.Model.HasNode node.Name then this + node.Name |> ignore)
+        |> Seq.iter (fun node -> if not <| this.Model.HasNode node.Name then reinstantiateNode node |> ignore)
 
         ontologicalMetamodel.Edges |> Seq.iter reinstantiateEdge
         ()

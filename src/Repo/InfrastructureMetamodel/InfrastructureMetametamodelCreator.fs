@@ -27,7 +27,7 @@ type InfrastructureMetametamodelCreator() =
 
             let (--->) (source: IDataElement) (target, name) = builder +---> (source, target, name)
 
-            builder.ReinstantiateParentModel ()
+            builder.ReinstantiateLanguageMetamodel ()
 
             let boolean = builder.AddEnum Consts.boolean [Consts.stringTrue; Consts.stringFalse]
             let int = builder + "Int"

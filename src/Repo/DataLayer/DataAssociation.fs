@@ -26,5 +26,7 @@ type DataAssociation
         ) =
     inherit DataEdge(Some ontologicalType, Some linguisticType, source, target, model)
 
+    override this.ToString () = model.Name + "." + nameTarget
+
     interface IDataAssociation with
         member val TargetName: string = nameTarget with get, set

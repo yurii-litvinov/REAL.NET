@@ -229,46 +229,11 @@ type ElementSemantics (repo: IDataRepository) =
         |> Seq.map (fun a -> a.Target.Value)
         |> Seq.cast<IDataNode>
 
-/// Helper functions for node semantics.
-type NodeSemantics (repo: IDataRepository) =
-    inherit CoreMetamodel.NodeSemantics ()
-
-    let elementHelper = ElementSemantics repo
-
-    /// Returns a node that represents type of an attribute.
-    let attributeType attribute =
-        ElementSemantics.OutgoingAssociation attribute "type"
-        |> fun a -> a.Target.Value :?> IDataNode
-
-    /// Returns a node that represents slot value.
-    let slotValue slot =
-        ElementSemantics.OutgoingAssociation slot "value"
-        |> fun a -> a.Target.Value :?> IDataNode
-
-    /// Returns string representation of a node.
-    member this.ToString (node: IDataNode) =
-        let result = sprintf "Name: %s\n" <| node.Name
-        let result = result + (sprintf "Ontological type: %s\n" <| NodeSemantics.Name node.OntologicalType)
-        let result = result + (sprintf "Linguistic type: %s\n" <| NodeSemantics.Name node.LinguisticType)
-        let result = result + "Attributes:\n"
-        let attributes =
-            elementHelper.OwnAttributes node
-            |> Seq.map (fun attr -> sprintf "    %s: %s\n" attr.Name (attributeType attr).Name)
-            |> Seq.reduce (+)
-        let result = result + attributes
-
-        let result = result + "Slots:\n"
-        let slots =
-            elementHelper.Slots node
-            |> Seq.map (fun slot -> sprintf "    %s = %s\n" slot.Name (slotValue slot).Name)
-            |> Seq.reduce (+)
-        result + slots
-
 /// Helper methods for working with attributes.
 type AttributeSemantics () =
     /// Returns attribute name.
     static member Name (attribute: IDataNode) =
-        (CoreMetamodel.ElementSemantics.ConnectedNode attribute "name").Name
+        attribute.Name
 
     /// Returns a node that represents type of an attribute.
     static member Type (attribute: IDataNode) =
@@ -279,9 +244,59 @@ type AttributeSemantics () =
     static member DefaultValue (attribute: IDataNode) =
         ElementSemantics.OutgoingAssociation attribute "defaultValue" |> fun a -> a.Target.Value :?> IDataNode
         
+/// Helper functions for node semantics.
+type NodeSemantics (repo: IDataRepository) =
+    inherit CoreMetamodel.NodeSemantics ()
+
+    let elementHelper = ElementSemantics repo
+
+    /// Returns a node that represents slot value.
+    let slotValue slot =
+        ElementSemantics.OutgoingAssociation slot "value"
+        |> fun a -> a.Target.Value :?> IDataNode
+
+    /// Returns string representation of a node.
+    member this.ToString (node: IDataNode) =
+        let result = sprintf "Name: %s\n" <| node.Name
+        let result = result + (sprintf "Ontological type: %s\n" <| node.OntologicalType.ToString ())
+        let result = result + (sprintf "Linguistic type: %s\n" <| node.LinguisticType.ToString())
+        let result = result + "Attributes:\n"
+        let attributes =
+            elementHelper.OwnAttributes node
+            |> Seq.map (fun attr -> sprintf "    %s: %s\n" attr.Name (AttributeSemantics.Type attr).Name)
+            |> fun s -> if Seq.isEmpty s then "" else Seq.reduce (+) s
+        let result = result + attributes
+
+        let result = result + "Slots:\n"
+        let slots =
+            elementHelper.Slots node
+            |> Seq.map (fun slot -> sprintf "    %s = %s\n" slot.Name (slotValue slot).Name)
+            |> fun s -> if Seq.isEmpty s then "" else Seq.reduce (+) s
+        result + slots
+
 /// Helper functions for working with models.
-type ModelSemantics () =
+type ModelSemantics (repo: IDataRepository) =
     inherit CoreMetamodel.ModelSemantics ()
+
+    let nodeSemantics = NodeSemantics(repo)
+
+    /// Prints model contents on a console.
+    member this.PrintContents (model: IDataModel) =
+        printfn "%s (ontological metamodel: %s, linguistic metamodel: %s):" 
+            model.Name
+            model.OntologicalMetamodel.Name
+            model.LinguisticMetamodel.Name
+       
+        printfn "Nodes:"
+        model.Nodes
+            |> Seq.map (fun n -> nodeSemantics.ToString n)
+            |> Seq.iter (printfn "%s\n")
+        printfn ""
+
+        printfn "Edges:"
+        model.Edges 
+            |> Seq.map (fun e -> e.ToString())
+            |> Seq.iter (printfn "    %s")
 
 /// Helper class that provides semantic operations on models conforming to Attribute Metamodel.
 type AttributeMetamodelSemantics(repo: IDataRepository) =

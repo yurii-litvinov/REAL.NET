@@ -99,9 +99,9 @@
     <Compile Include="LanguageMetamodel\LanguageSemanticsModelBuilder.fs" />
     <Compile Include="InfrastructureMetamodel\Consts.fs" />
     <Compile Include="InfrastructureMetamodel\InfrastructureMetametamodelCreator.fs" />
-    <Compile Include="InfrastructureMetamodel\InfrastructureMetamodelCreator.fs" />
     <Compile Include="InfrastructureMetamodel\InfrastructureMetamodelSemantics.fs" />
     <Compile Include="InfrastructureMetamodel\InfrastructureSemanticsModelBuilder.fs" />
+    <Compile Include="InfrastructureMetamodel\InfrastructureMetamodelCreator.fs" />
     <Compile Include="ModelCreators\RobotsMetamodelCreator.fs" />
     <Compile Include="ModelCreators\RobotsTestModelCreator.fs" />
     <Compile Include="ModelCreators\AirSimMetamodelBuilder.fs" />

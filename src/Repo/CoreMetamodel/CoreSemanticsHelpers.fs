@@ -65,7 +65,7 @@ let reinstantiateEdge (edge: IDataEdge) (model: IDataModel) (linguisticMetamodel
 
     match edge with 
     | :? IDataGeneralization ->
-        model.CreateGeneralization(edge, generalization, source, target) |> ignore
+        model.CreateGeneralization(generalization, generalization, source, target) |> ignore
     | :? IDataAssociation as a ->
-        model.CreateAssociation(edge, association, source, target, a.TargetName) |> ignore
+        model.CreateAssociation(association, association, source, target, a.TargetName) |> ignore
     | _ -> failwith "Unknown edge type"

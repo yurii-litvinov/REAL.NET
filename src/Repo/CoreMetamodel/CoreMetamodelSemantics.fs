@@ -135,6 +135,10 @@ type ModelSemantics () =
     static member FindAssociationWithSource (element: IDataElement) targetName =
         FindAssociationIn element.OutgoingEdges targetName
 
+    /// Returns a sequence of all nodes with given name.
+    static member FindNodes (model: IDataModel) name =
+        model.Nodes |> Seq.filter (fun n -> n.Name = name)
+
 /// Helper class that provides semantic operations on models conforming to Core Metamodel.
 type CoreMetamodelSemantics(repo: IDataRepository) =
 

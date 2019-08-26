@@ -19,6 +19,7 @@ open FsUnit
 
 open Repo
 open Repo.InfrastructureMetamodel
+open Repo.DataLayer
 
 [<Test>]
 let ``Dual instantiation shall require linguistic attributes`` () =
@@ -62,19 +63,35 @@ let ``Reinstantiation of Infrastructure Metametamodel shall produce something li
                                 InfrastructureMetametamodelCreator()
                               ]
 
-    let elementSemantics = LanguageMetamodel.ElementSemantics repo
+    let elementSemantics = InfrastructureMetamodel.ElementSemantics repo
+    let modelSemantics = InfrastructureMetamodel.ModelSemantics repo
+
+    (repo.Model "InfrastructureMetametamodel").Elements 
+    |> Seq.iter 
+        (fun (n: IDataElement) -> n.LinguisticType.Model |> should equal (repo.Model "LanguageMetamodel"))
     
     let builder = 
-        LanguageMetamodel.LanguageSemanticsModelBuilder
+        InfrastructureSemanticsModelBuilder
             (
                 repo, 
                 "TestModel", 
                 repo.Model "InfrastructureMetametamodel"
             )
 
-    builder.ReinstantiateParentModel ()
+    builder.ReinstantiateInfrastructureMetametamodel ()
+
+    modelSemantics.PrintContents builder.Model
+
+    builder.Model.Elements 
+    |> Seq.iter 
+        (fun (n: IDataElement) -> n.LinguisticType.Model |> should equal (repo.Model "InfrastructureMetametamodel"))
 
     builder.Model.HasNode "Node" |> should be True
     builder.Node "Node" |> elementSemantics.HasSlot "isAbstract" |> should be True
 
+    builder.Node "Node" |> elementSemantics.HasAttribute "isAbstract" |> should be True
+
+    CoreMetamodel.ElementSemantics.HasOutgoingAssociation (builder.Node "Edge") "source" |> should be True
+
     ()
+    

@@ -25,4 +25,6 @@ type DataGeneralization
         ) =
     inherit DataEdge(Some ontologicalType, Some linguisticType, source, target, model)
 
+    override this.ToString () = model.Name + ".Generalization"
+
     interface IDataGeneralization
