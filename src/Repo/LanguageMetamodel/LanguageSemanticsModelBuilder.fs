@@ -164,7 +164,7 @@ type LanguageSemanticsModelBuilder
             let enumLiteral = this.InstantiateNode l (linguisticMetamodel.Node "String") []
             let metamodelEnumLiteralLink = ModelSemantics.FindAssociation linguisticMetamodel "elements"
             let association = this.InstantiateAssociation enum enumLiteral metamodelEnumLiteralLink []
-            association.TargetName <- "enumElement"
+            association.TargetName <- "elements"
         )
         enum
 

@@ -22,22 +22,62 @@ open Repo.InfrastructureMetamodel
 open Repo.DataLayer
 
 [<Test>]
-let ``Dual instantiation shall require linguistic attributes`` () =
-    let metamodelCreator = InfrastructureSemanticsModelBuilder("RobotsMetamodel")
+let ``Instantiation shall set slots to default values by default`` () =
+    let builder = InfrastructureSemanticsModelBuilder("TestModel")
 
-    let zero = metamodelCreator.InstantiateNode "0" metamodelCreator.Int []
+    let semantics = InfrastructureMetamodelSemantics builder.Repo
+    let elementSemantics = InfrastructureMetamodel.ElementSemantics builder.Repo
+
+    let testNode = semantics.InstantiateNode builder.Model "test" (builder.MetamodelNode "Node") Map.empty
+    
+    elementSemantics.HasSlot "shape" testNode |> should be True
+    elementSemantics.StringSlotValue "shape" testNode |> should equal ""
+    elementSemantics.HasAttribute "shape" testNode |> should be False
+
+[<Test>]
+let ``Instantiation shall use provided slot values`` () =
+    let builder = InfrastructureSemanticsModelBuilder("TestModel")
+
+    let semantics = InfrastructureMetamodelSemantics builder.Repo
+    let elementSemantics = InfrastructureMetamodel.ElementSemantics builder.Repo
+
+    let testNode = 
+        semantics.InstantiateNode 
+            builder.Model 
+            "test" 
+            (builder.MetamodelNode "Node") 
+            (Map.ofList ["shape", builder.AddStringNode "testShape"])
+    
+    elementSemantics.HasSlot "shape" testNode |> should be True
+    elementSemantics.StringSlotValue "shape" testNode |> should equal ""
+    elementSemantics.HasAttribute "shape" testNode |> should be False
+
+
+[<Test>]
+let ``Instantiation shall provide default values for linguistic attributes`` () =
+    let metamodelBuilder = InfrastructureSemanticsModelBuilder("RobotsMetamodel")
+
+    let elementSemantics = InfrastructureMetamodel.ElementSemantics metamodelBuilder.Repo
+
+    let zero = metamodelBuilder.InstantiateNode "0" metamodelBuilder.Int []
     
     let timerType = 
-        metamodelCreator.AddNode "Timer" 
+        metamodelBuilder.AddNode "Timer" 
             [
-                { Name = "Interval"; Type = metamodelCreator.Int; DefaultValue = zero};
+                { Name = "Interval"; Type = metamodelBuilder.Int; DefaultValue = zero};
             ]
 
-    let modelCreator = metamodelCreator.CreateInstanceModelBuilder "RobotsModel"
+    let modelCreator = metamodelBuilder.CreateInstanceModelBuilder "RobotsModel"
 
-    (fun() -> modelCreator.InstantiateNode "timer" timerType ["Interval", "1000"] |> ignore) |> shouldFail
+    let timerInstance = modelCreator.InstantiateNode "timer" timerType ["Interval", "1000"]
 
-    ()
+    elementSemantics.HasSlot "Interval" timerInstance |> should be True
+    elementSemantics.StringSlotValue "Interval" timerInstance |> should equal "1000"
+    elementSemantics.HasAttribute "Interval" timerInstance |> should be False
+    
+    elementSemantics.HasSlot "isAbstract" timerInstance |> should be True
+    elementSemantics.StringSlotValue "isAbstract" timerInstance |> should equal "false"
+    elementSemantics.HasAttribute "isAbstract" timerInstance |> should be False
 
 [<Test>]
 let ``Check that we have no more than one empty string in each model`` () =
@@ -52,8 +92,6 @@ let ``Check that we have no more than one empty string in each model`` () =
     |> Seq.map (Seq.map (fun n -> n.Name))
     |> Seq.iter ((should not' (greaterThan 1)) << Seq.length << Seq.filter ((=) ""))
 
-    ()
-
 [<Test>]
 let ``Reinstantiation of Infrastructure Metametamodel shall produce something like Infrastructure Metamodel`` () =
     let repo = TestUtils.init [
@@ -64,34 +102,29 @@ let ``Reinstantiation of Infrastructure Metametamodel shall produce something li
                               ]
 
     let elementSemantics = InfrastructureMetamodel.ElementSemantics repo
-    let modelSemantics = InfrastructureMetamodel.ModelSemantics repo
+
+    let infrastructureMetamodel = repo.Model "InfrastructureMetametamodel"
 
     (repo.Model "InfrastructureMetametamodel").Elements 
     |> Seq.iter 
         (fun (n: IDataElement) -> n.LinguisticType.Model |> should equal (repo.Model "LanguageMetamodel"))
+
+    let testModel = repo.CreateModel("TestModel", infrastructureMetamodel, infrastructureMetamodel)
     
-    let builder = 
-        InfrastructureSemanticsModelBuilder
-            (
-                repo, 
-                "TestModel", 
-                repo.Model "InfrastructureMetametamodel"
-            )
+    Reinstantiator.reinstantiateInfrastructureMetametamodel repo testModel
 
-    builder.ReinstantiateInfrastructureMetametamodel ()
-
-    modelSemantics.PrintContents builder.Model
-
-    builder.Model.Elements 
+    testModel.Elements 
     |> Seq.iter 
         (fun (n: IDataElement) -> n.LinguisticType.Model |> should equal (repo.Model "InfrastructureMetametamodel"))
 
-    builder.Model.HasNode "Node" |> should be True
-    builder.Node "Node" |> elementSemantics.HasSlot "isAbstract" |> should be True
+    testModel.HasNode "Node" |> should be True
+    testModel.Node "Node" |> elementSemantics.HasSlot "isAbstract" |> should be True
+    testModel.Node "Node" |> elementSemantics.HasAttribute "isAbstract" |> should be True
 
-    builder.Node "Node" |> elementSemantics.HasAttribute "isAbstract" |> should be True
+    testModel.Node "Int" |> elementSemantics.HasSlot "isAbstract" |> should be True
+    testModel.Node "Int" |> elementSemantics.HasAttribute "isAbstract" |> should be False
 
-    CoreMetamodel.ElementSemantics.HasOutgoingAssociation (builder.Node "Edge") "source" |> should be True
+    testModel.HasNode "Boolean" |> should be True
+    testModel.HasNode "true" |> should be True
 
-    ()
-    
+    CoreMetamodel.ElementSemantics.HasOutgoingAssociation (testModel.Node "Edge") "source" |> should be True

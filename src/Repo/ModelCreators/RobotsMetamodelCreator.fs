@@ -22,7 +22,7 @@ open Repo.InfrastructureMetamodel
 type RobotsMetamodelCreator() =
     interface IModelCreator with
         member this.CreateIn (repo: IDataRepository): unit =
-            let infrastructureMetamodel = InfrastructureMetametamodel(repo).Model
+            let infrastructureMetamodel = InfrastructureMetamodel(repo).Model
             let builder = 
                 AttributeMetamodel.AttributeSemanticsModelBuilder(repo, "RobotsMetamodel", infrastructureMetamodel)
 

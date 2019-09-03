@@ -26,8 +26,6 @@ type InfrastructureMetamodelCreator() =
             let metamodel = repo.Model Consts.infrastructureMetametamodel
             let builder = LanguageSemanticsModelBuilder(repo, Consts.infrastructureMetamodel, metamodel)
 
-            let (--->) (source: IDataElement) (target, name) = builder +---> (source, target, name)
-
-            builder.ReinstantiateLanguageMetamodel ()
+            Reinstantiator.reinstantiateInfrastructureMetametamodel repo builder.Model
 
             ()

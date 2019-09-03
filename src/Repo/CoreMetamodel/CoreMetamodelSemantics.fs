@@ -45,6 +45,13 @@ type ElementSemantics () =
     static member OutgoingAssociations element =
         ElementSemantics.OutgoingEdges element |> Seq.filter isAssociation |> Seq.cast<IDataAssociation>
 
+    /// Returns all outgoing associations with given target name for an element.
+    static member OutgoingAssociationsWithTargetName element targetName =
+        ElementSemantics.OutgoingEdges element 
+        |> Seq.filter isAssociation 
+        |> Seq.cast<IDataAssociation>
+        |> Seq.filter (fun a -> a.TargetName = targetName)
+
     /// Returns outgoing association with given name.
     static member OutgoingAssociation (element: IDataElement) name =
         Helpers.getExactlyOne

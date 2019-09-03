@@ -95,6 +95,12 @@ type ElementSemantics (repo: IDataRepository) =
 type NodeSemantics (repo: IDataRepository) =
     inherit AttributeMetamodel.NodeSemantics (repo)
 
+/// Helper functions for enum semantics.
+type EnumSemantics (repo: IDataRepository) =
+    static member Values (enum: IDataNode) =
+        CoreMetamodel.ElementSemantics.OutgoingAssociationsWithTargetName enum "elements"
+        |> Seq.map (fun a -> a.Target.Value :?> IDataNode)
+
 /// Helper functions for working with models.
 type ModelSemantics (repo: IDataRepository) =
     inherit AttributeMetamodel.ModelSemantics (repo: IDataRepository)

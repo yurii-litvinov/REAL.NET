@@ -17,27 +17,26 @@ namespace Repo.InfrastructureMetamodel
 open Repo
 open Repo.DataLayer
 
-/// Helper for working with Infrastructure Metametamodel.
-type InfrastructureMetametamodel(repo: IDataRepository) =
+/// Helper class for working with Infrastructure Metamodel. Provides most commonly used metamodel nodes and edges.
+type InfrastructureMetamodel(repo: IDataRepository) =
     let infrastructureMetametamodel = repo.Model Consts.infrastructureMetametamodel
-    let elementSemantics = Repo.AttributeMetamodel.ElementSemantics(repo)
     
     let findNode name = infrastructureMetametamodel.Node name
 
     let element = findNode "Element"
     let node = findNode "Node"
-    let edge = findNode "Edge"
     let association = findNode "Association"
     let generalization = findNode "Generalization"
     let attribute = findNode "Attribute"
     let slot = findNode "Slot"
     let stringNode = findNode "String"
     let booleanNode = findNode "Boolean"
+    let intNode = findNode "Int"
 
-    let attributesAssociation = AttributeMetamodel.ModelSemantics.FindAssociationWithSource element "attributes"
-    let attributeTypeAssociation = AttributeMetamodel.ModelSemantics.FindAssociationWithSource attribute "type"
+    let attributesAssociation = CoreMetamodel.ModelSemantics.FindAssociationWithSource element "attributes"
+    let attributeTypeAssociation = CoreMetamodel.ModelSemantics.FindAssociationWithSource attribute "type"
     let attributeDefaultValueAssociation = 
-        AttributeMetamodel.ModelSemantics.FindAssociationWithSource attribute "defaultValue"
+        CoreMetamodel.ModelSemantics.FindAssociationWithSource attribute "defaultValue"
 
     let slotsAssociation = AttributeMetamodel.ModelSemantics.FindAssociationWithSource element "slots"
     let valueAssociation = AttributeMetamodel.ModelSemantics.FindAssociationWithSource slot "value"
@@ -62,7 +61,7 @@ type InfrastructureMetametamodel(repo: IDataRepository) =
     member this.AttributeDefaultValueAssociation = attributeDefaultValueAssociation
 
     member this.IsFromInfrastructureMetamodel element =
-        AttributeMetamodel.ElementSemantics.ContainingModel element = infrastructureMetametamodel
+        CoreMetamodel.ElementSemantics.ContainingModel element = infrastructureMetametamodel
 
     member this.IsNode element =
         isLinguisticType element <| this.Model.LinguisticMetamodel.Node "Node"
@@ -100,11 +99,9 @@ type InfrastructureMetametamodel(repo: IDataRepository) =
     member this.IsSlotValueAssociation association =
         isLinguisticType association valueAssociation
 
-open Repo.AttributeMetamodel
-
 /// Helper for working with elements in Infrastructure Metamodel terms.
 type ElementSemantics(repo: IDataRepository) =
-    let infrastructureMetametamodel = new InfrastructureMetametamodel(repo)
+    let infrastructureMetametamodel = new InfrastructureMetamodel(repo)
     let attribute = infrastructureMetametamodel.Attribute
     let attributeAssociation = infrastructureMetametamodel.AttributesAssociation
     let attributeTypeAssociation = infrastructureMetametamodel.AttributeTypeAssociation
@@ -128,7 +125,7 @@ type ElementSemantics(repo: IDataRepository) =
     /// Throws if there is no such slot or there is more than one.
     let slotNode name element =
         let slots = 
-            ElementSemantics.OutgoingAssociations element
+            CoreMetamodel.ElementSemantics.OutgoingAssociations element
             |> Seq.filter isSlotAssociation
             |> Seq.filter (fun a -> a.TargetName = name)
 
@@ -142,18 +139,18 @@ type ElementSemantics(repo: IDataRepository) =
 
     /// Returns if a given element has attribute with given name, ignoring generalization hierarchy.
     let hasOwnAttribute name element =
-        ElementSemantics.OutgoingAssociations element
+        CoreMetamodel.ElementSemantics.OutgoingAssociations element
         |> Seq.filter isAttributeAssociation
         |> Seq.exists (fun (e: IDataAssociation) -> e.TargetName = name)
 
     /// Returns all own attribute associations for a given element.
     let ownAttributeAssociations element =
-        ElementSemantics.OutgoingAssociations element
+        CoreMetamodel.ElementSemantics.OutgoingAssociations element
         |> Seq.filter isAttributeAssociation
 
     /// Returns a sequence of all attribute associations for a given element.
     let attributeAssociations element =
-        ElementSemantics.Parents element
+        CoreMetamodel.ElementSemantics.Parents element
         |> Seq.map ownAttributeAssociations
         |> Seq.concat
         |> Seq.append (ownAttributeAssociations element)
@@ -202,7 +199,7 @@ type ElementSemantics(repo: IDataRepository) =
     /// Adds a new attribute to an element. New attribute is always a linguistic extension (i.e. can not have 
     /// ontological type) at this metalevel.
     member this.AddAttribute element name attributeType defaultValue =
-        let model = ElementSemantics.ContainingModel element
+        let model = CoreMetamodel.ElementSemantics.ContainingModel element
         let attributeNode = model.CreateNode(name, attribute, attribute)
         model.CreateAssociation
                 (
@@ -233,10 +230,10 @@ type ElementSemantics(repo: IDataRepository) =
 
     /// Adds a new slot that is an instance of a given attribute. Sets its value.
     member this.AddSlot (element: IDataElement) (attribute: IDataNode) (value: IDataNode) =
-        let model = ElementSemantics.ContainingModel element
+        let model = CoreMetamodel.ElementSemantics.ContainingModel element
         let slotNode = model.CreateNode(attribute.Name, attribute, slot)
         let attributeAssociation = attribute.IncomingEdges |> Seq.exactlyOne
-        let attributeTypeAssociation = ElementSemantics.OutgoingAssociation attribute "type"
+        let attributeTypeAssociation = CoreMetamodel.ElementSemantics.OutgoingAssociation attribute "type"
 
         model.CreateAssociation
                 (
@@ -258,7 +255,7 @@ type ElementSemantics(repo: IDataRepository) =
 
     /// Returns true if given element has given slot.
     member this.HasSlot (name: string) (element: IDataElement)  =
-        ElementSemantics.OutgoingAssociations element
+        CoreMetamodel.ElementSemantics.OutgoingAssociations element
         |> Seq.filter isSlotAssociation
         |> Seq.filter (fun a -> a.TargetName = name)
         |> Seq.length = 1
@@ -279,9 +276,9 @@ type ElementSemantics(repo: IDataRepository) =
 
     /// Sets new slot value, leaving old value in a model. Assumes that slot exists.
     member this.SetSlotValue (element: IDataElement) (slotName: string) (value: IDataNode) =
-        let model = ElementSemantics.ContainingModel element
+        let model = CoreMetamodel.ElementSemantics.ContainingModel element
         let slotNode = slotNode slotName element
-        let oldSlotValueAssociation = ElementSemantics.OutgoingAssociation slotNode "value"
+        let oldSlotValueAssociation = CoreMetamodel.ElementSemantics.OutgoingAssociation slotNode "value"
         let attributeTypeAssociation = oldSlotValueAssociation.OntologicalType
 
         model.DeleteElement oldSlotValueAssociation
@@ -297,14 +294,14 @@ type ElementSemantics(repo: IDataRepository) =
 
     /// Sets new slot value as an instance of String, leaving old value in a model. Assumes that slot exists.
     member this.SetStringSlotValue (slotName: string) (element: IDataElement) (value: string) =
-        let model = ElementSemantics.ContainingModel element
+        let model = CoreMetamodel.ElementSemantics.ContainingModel element
         let stringNode = model.LinguisticMetamodel.Node "String"
         let stringInstance = model.CreateNode(value, stringNode, stringNode)
         this.SetSlotValue element slotName stringInstance
 
     /// Returns a sequence of all slot nodes present in given element.
     member this.Slots (element: IDataElement) =
-        ElementSemantics.OutgoingAssociations element
+        CoreMetamodel.ElementSemantics.OutgoingAssociations element
         |> Seq.filter isSlotAssociation
         |> Seq.map (fun a -> a.Target.Value)
         |> Seq.cast<IDataNode>
@@ -320,7 +317,7 @@ type NodeSemantics (repo: IDataRepository) =
 
     /// Returns a node that represents slot value.
     let slotValue slot =
-        ElementSemantics.OutgoingAssociation slot "value"
+        CoreMetamodel.ElementSemantics.OutgoingAssociation slot "value"
         |> fun a -> a.Target.Value :?> IDataNode
 
     /// Returns string representation of a node.
@@ -331,7 +328,8 @@ type NodeSemantics (repo: IDataRepository) =
         let result = result + "Attributes:\n"
         let attributes =
             elementSemantics.OwnAttributes node
-            |> Seq.map (fun attr -> sprintf "    %s: %s\n" attr.Name (AttributeSemantics.Type attr).Name)
+            |> Seq.map 
+                (fun attr -> sprintf "    %s: %s\n" attr.Name (AttributeMetamodel.AttributeSemantics.Type attr).Name)
             |> fun s -> if Seq.isEmpty s then "" else Seq.reduce (+) s
         let result = result + attributes
 
@@ -346,7 +344,7 @@ type NodeSemantics (repo: IDataRepository) =
 type ModelSemantics (repo: IDataRepository) =
     inherit CoreMetamodel.ModelSemantics ()
 
-    let infrastructureMetamodel = InfrastructureMetametamodel(repo)
+    let infrastructureMetamodel = InfrastructureMetamodel(repo)
     let nodeSemantics = NodeSemantics(repo)
 
     /// Prints model contents on a console.
@@ -376,9 +374,8 @@ type ModelSemantics (repo: IDataRepository) =
 
 /// Helper class that provides low-level operations with a model conforming to Infrastructure Metamodel.
 type InfrastructureMetamodelSemantics(repo: IDataRepository) =
-    let infrastructureMetamodel = InfrastructureMetametamodel(repo)
-    let elementHelper = ElementSemantics(repo)
-    let elementSemantics = Repo.AttributeMetamodel.ElementSemantics repo
+    let infrastructureMetamodel = InfrastructureMetamodel(repo)
+    let elementSemantics = ElementSemantics(repo)
 
     /// Instantiates given node into given model, using given map to provide values for element attributes.
     member this.InstantiateNode
@@ -391,11 +388,11 @@ type InfrastructureMetamodelSemantics(repo: IDataRepository) =
 
         let newElement =
             if elementSemantics.StringSlotValue Consts.instanceMetatype ontologicalType = Consts.metatypeNode then
-                model.CreateNode(name, ontologicalType, elementHelper.InfrastructureMetamodel.Node) :> IDataElement
+                model.CreateNode(name, ontologicalType, elementSemantics.InfrastructureMetamodel.Node) :> IDataElement
             else
                 model.CreateAssociation(
                     ontologicalType, 
-                    elementHelper.InfrastructureMetamodel.Association, 
+                    elementSemantics.InfrastructureMetamodel.Association, 
                     None, 
                     None, 
                     name
@@ -404,8 +401,9 @@ type InfrastructureMetamodelSemantics(repo: IDataRepository) =
         let attributes = elementSemantics.Attributes ontologicalType
 
         let slotValue (attr: IDataNode) =
-            if attributeValues.ContainsKey (AttributeMetamodel.AttributeSemantics.Name attr) then 
-                attributeValues.[name]
+            let slotName = AttributeMetamodel.AttributeSemantics.Name attr
+            if attributeValues.ContainsKey slotName then 
+                attributeValues.[slotName]
             else
                 AttributeMetamodel.AttributeSemantics.DefaultValue attr
 
@@ -427,4 +425,4 @@ type InfrastructureMetamodelSemantics(repo: IDataRepository) =
         this.InstantiateNode model name (ontologicalType :?> IDataNode) Map.empty
 
     member this.Metamodel = infrastructureMetamodel
-    member this.Element = elementHelper
+    member this.Element = elementSemantics

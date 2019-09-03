@@ -14,15 +14,8 @@
 
 namespace Repo.InfrastructureMetamodel
 
+open Repo
 open Repo.DataLayer
-
-/// Record with all information required to create an attribute.
-[<Struct>]
-type AttributeInfo =
-    { Name: string;
-      Type: IDataNode;
-      DefaultValue: IDataNode
-    }
 
 /// Class that allows to instantiate new models based on Attribute Metamodel semantics.
 type InfrastructureSemanticsModelBuilder 
@@ -33,143 +26,46 @@ type InfrastructureSemanticsModelBuilder
         ) =
     let infrastructureSemantics = InfrastructureMetamodelSemantics(repo)
     let elementSemantics = ElementSemantics(repo)
-    let infrastructureMetamodel = repo.Model Consts.infrastructureMetametamodel
-    let infrastructureMetametamodel = repo.Model Consts.infrastructureMetametamodel
+    let infrastructureMetamodel = repo.Model Consts.infrastructureMetamodel
 
     let metamodelNode = infrastructureMetamodel.Node "Node"
     let metamodelString = infrastructureMetamodel.Node "String"
     let metamodelAssociation = infrastructureMetamodel.Node "Association"
     let metamodelGeneralization = infrastructureMetamodel.Node "Generalization"
 
-    let metametamodelNode = infrastructureMetametamodel.Node "Node"
-    let metametamodelAttribute = infrastructureMetametamodel.Node "Attribute"
-    let metametamodelSlot = infrastructureMetametamodel.Node "Slot"
+    let metametamodel = repo.Model Consts.infrastructureMetametamodel
+    let metametamodelAttribute = metametamodel.Node "Attribute"
+    let metametamodelEnumElement = metametamodel.Node "Attribute"
 
-    let languageMetamodel = repo.Model "LanguageMetamodel"
-    let languageMetamodelNode = languageMetamodel.Node "Node"
-    let languageMetamodelGeneralization = languageMetamodel.Node "Generalization"
-    let languageMetamodelAssociation = languageMetamodel.Node "Association"
-    let languageSemantics = Repo.LanguageMetamodel.LanguageMetamodelSemantics repo
+    let findAttributeNode name =
+        infrastructureMetamodel.Nodes 
+        |> Seq.filter (fun n -> n.Name = name)
+        |> Seq.filter (fun n -> n.OntologicalType = (metametamodelAttribute :> IDataElement))
+        |> Seq.exactlyOne
+
+    let findEnumElementNode enumName name =
+        let enum = infrastructureMetamodel.Node enumName 
+        CoreMetamodel.ElementSemantics.OutgoingAssociationsWithTargetName enum "elements"
+        |> Seq.map (fun a -> a.Target.Value :?> IDataNode)
+        |> Seq.filter (fun n -> n.Name = name)
+        |> Seq.exactlyOne
+
+    let metamodelShapeAttribute = findAttributeNode "shape"
+    let metamodelIsAbstractAttribute = findAttributeNode "isAbstract"
+    let metamodelInstanceMetatypeAttribute = findAttributeNode "instanceMetatype"
+
+    let metamodelTrue = findEnumElementNode Consts.boolean Consts.stringTrue 
+    let metamodelFalse = findEnumElementNode Consts.boolean Consts.stringFalse
 
     let model = repo.CreateModel(modelName, ontologicalMetamodel, infrastructureMetamodel)
-
-    /// Helper function that creates a copy of a given edge in a current model (assuming that source and target are 
-    /// already in a model).
-    let reinstantiateEdge (edge: IDataEdge) =
-        if edge.OntologicalType = (languageMetamodelGeneralization :> IDataElement)
-            || edge.OntologicalType = (languageMetamodelAssociation :> IDataElement)
-        then
-            let isExactlyOneWithThisName (elementOption: IDataElement option) = 
-                Repo.CoreMetamodel.ModelSemantics.FindNodes model (elementOption.Value :?> IDataNode).Name 
-                |> Seq.length = 1
-            if isExactlyOneWithThisName edge.Source && isExactlyOneWithThisName edge.Target then
-                Repo.CoreMetamodel.CoreSemanticsHelpers.reinstantiateEdge edge model infrastructureMetamodel
 
     /// Helper function that adds a new attribute to a node.
     let addAttribute (node: IDataNode) (ontologicalType: IDataNode) (defaultValue: IDataNode) (name: string) =
         elementSemantics.AddAttribute node name ontologicalType defaultValue
 
-    /// Helper function that instantiates a new node of a given ontological type hoping that this type does not have
-    /// attributes to instantiate.
-    let addNodeWithOntologicalType (name: string) (ontologicalType: IDataElement) (attributes: AttributeInfo list) =
-        if not (Seq.isEmpty <| elementSemantics.Attributes ontologicalType) then
-            failwithf 
-                "Can not add node %s with ontological type %s because it has attributes" 
-                name 
-                (Repo.CoreMetamodel.NodeSemantics.Name ontologicalType)
-        
-        let newNode = infrastructureSemantics.Instantiate model ontologicalType
-        
-        attributes 
-        |> List.iter (fun attr -> addAttribute (newNode :?> IDataNode) attr.Type attr.DefaultValue attr.Name)
-        
-        newNode
-
-    /// Helper function that creates a proper instance of a given node in a current model. All instances of Node
-    /// will remain instances of Node, all attributes will become the instances of Attribute, all values will become
-    /// instances of corresponding type. Infrastructure Metamodel instantiation semantics will apply --- all attributes
-    /// will get corresponding slots. But original attributes will be retained since it is reinstantiation.
-    let reinstantiateNode (node: IDataNode) =
-
-        let languageElementSemantics = Repo.LanguageMetamodel.ElementSemantics repo
-
-        let addSlot (element: IDataElement) (attribute: IDataNode) (value: IDataNode) =
-            let model = Repo.CoreMetamodel.ElementSemantics.ContainingModel element
-            let slotNode = model.CreateNode(attribute.Name, attribute, metametamodelSlot)
-            let attributeAssociation = attribute.IncomingEdges |> Seq.exactlyOne
-            let attributeTypeAssociation = Repo.CoreMetamodel.ElementSemantics.OutgoingAssociation attribute "type"
-
-            let slotAssociation = infrastructureMetametamodel.Association "slots"
-            let slotValueAssociation = infrastructureMetametamodel.Association "value"
-
-            model.CreateAssociation
-                    (
-                    attributeAssociation,
-                    slotAssociation,
-                    element,
-                    slotNode,
-                    attribute.Name
-                    ) |> ignore
-
-            model.CreateAssociation
-                    (
-                    attributeTypeAssociation,
-                    slotValueAssociation,
-                    slotNode,
-                    value,
-                    "value"
-                    ) |> ignore
-
-        let instantiateAttribute element ontologicalType name value =
-            if languageElementSemantics.HasAttribute ontologicalType name then
-                let attribute = languageElementSemantics.Attribute ontologicalType name
-                addSlot element attribute value
-            else
-                failwithf "Invalid attribute reinstantiation, node: %s, attribute: %s" (node.ToString ()) name
-
-        let instantiateAttributes (element: IDataElement) (ontologicalType: IDataElement) attributeValues =
-            attributeValues |> Map.iter (instantiateAttribute element ontologicalType)
-
-        let instantiateNode
-                (name: string)
-                (ontologicalType: IDataNode)
-                (attributeValues: Map<string, IDataNode>) =
-            let instance = model.CreateNode(name, ontologicalType, metametamodelNode)
-            instantiateAttributes instance ontologicalType attributeValues
-            instance
-
-        if node.OntologicalType = (languageMetamodelNode :> IDataElement) then
-            let toAttributeInfo attribute =
-                { Name = Repo.AttributeMetamodel.AttributeSemantics.Name attribute;
-                  Type = Repo.AttributeMetamodel.AttributeSemantics.Type attribute;
-                  DefaultValue = Repo.AttributeMetamodel.AttributeSemantics.DefaultValue attribute}
-
-            let attributes = languageElementSemantics.Attributes metametamodelNode
-            let slots = 
-                attributes
-                |> Seq.map toAttributeInfo
-                |> Seq.map 
-                    (fun attr -> 
-                        (attr.Name, model.CreateNode(attr.DefaultValue.Name, attr.Type, metametamodelSlot))
-                     )
-                |> Map.ofSeq
-
-            let instance = instantiateNode node.Name metametamodelNode slots
-
-            languageElementSemantics.OwnAttributes node
-            |> Seq.iter 
-                (fun attr ->
-                    elementSemantics.AddAttribute 
-                        instance
-                        (Repo.AttributeMetamodel.AttributeSemantics.Name attr)
-                        (Repo.AttributeMetamodel.AttributeSemantics.Type attr)
-                        (Repo.AttributeMetamodel.AttributeSemantics.DefaultValue attr)
-                )
-            ()
-
     /// Creates a new model in existing repository with Attribute Metamodel as its metamodel.
     new (repo: IDataRepository, modelName: string) =
-        InfrastructureSemanticsModelBuilder(repo, modelName, repo.Model Consts.infrastructureMetametamodel)
+        InfrastructureSemanticsModelBuilder(repo, modelName, repo.Model Consts.infrastructureMetamodel)
 
     /// Creates a new repository with Core Metamodel and creates a new model in it.
     new (modelName: string) =
@@ -180,13 +76,19 @@ type InfrastructureSemanticsModelBuilder
         +Repo.AttributeMetamodel.AttributeMetamodelCreator()
         +Repo.LanguageMetamodel.LanguageMetamodelCreator()
         +InfrastructureMetametamodelCreator()
+        +InfrastructureMetamodelCreator()
 
-        InfrastructureSemanticsModelBuilder(repo, modelName, repo.Model Consts.infrastructureMetametamodel)
+        InfrastructureSemanticsModelBuilder(repo, modelName, repo.Model Consts.infrastructureMetamodel)
 
-    /// Adds a node (an instance of InfrastructureMetamodel.Node) with given attributes 
+    /// Adds a node as a linguistic extension (an instance of InfrastructureMetamodel.Node) with given attributes 
     /// (of type InfrastructureMetamodel.String) into a model.
     member this.AddNode (name: string) (attributes: AttributeInfo list) =
-        addNodeWithOntologicalType name metamodelNode attributes :?> IDataNode
+        let node = infrastructureSemantics.InstantiateNode model name metamodelNode Map.empty :?> IDataNode
+
+        attributes 
+        |> List.iter (fun attr -> addAttribute node attr.Type attr.DefaultValue attr.Name)
+        
+        node
 
     /// Instantiates a node of a given class into a model. Uses provided list to instantiate attributes into slots.
     member this.InstantiateNode
@@ -199,6 +101,25 @@ type InfrastructureSemanticsModelBuilder
         let node = infrastructureSemantics.Instantiate model ontologicalType // attributeValues
         node :?> IDataNode
     
+    /// Adds a new string constant to a model.
+    member this.AddStringNode name =
+        // TODO: Linguisic type shall be set correctly
+        this.InstantiateNode name this.String []
+
+    /// Adds a new int constant to a model.
+    member this.AddIntNode name =
+        match System.Int32.TryParse(name) with
+        // TODO: Linguisic type shall be set correctly
+        | (true, _ ) -> this.InstantiateNode name this.Int []
+        | _ -> failwith "Trying to add int node with non-int value"
+        
+    /// Adds a new boolean "true" constant to a model.
+    member this.AddBooleanTrueNode =
+        this.InstantiateNode Consts.stringTrue metamodelTrue []
+
+    /// Adds a new boolean "false" constant to a model.
+    member this.AddBooleanFalseNode =
+        this.InstantiateNode Consts.stringFalse metamodelFalse []
     (*
     /// Adds a new attribute to a node with AttributeMetamodel.String as a type.
     member this.AddAttribute (node: IDataNode) (name: string) =
@@ -259,13 +180,6 @@ type InfrastructureSemanticsModelBuilder
     /// Helper operator that adds an association between given elements to a model.
     static member (+--->) (builder: InfrastructureSemanticsModelBuilder, (source, target, name)) = 
         builder.AddAssociation source target name |> ignore
-
-    /// Instantiates an exact copy of Infrastructure Metametamodel in a current model. Supposed to be used to 
-    /// reintroduce metatypes at a new metalevel.
-    member this.ReinstantiateInfrastructureMetametamodel () =
-        infrastructureMetametamodel.Nodes |> Seq.iter reinstantiateNode
-        infrastructureMetametamodel.Edges |> Seq.iter reinstantiateEdge
-        ()
 
     /// Returns node in current model by name, if it exists.
     member this.Node name =
