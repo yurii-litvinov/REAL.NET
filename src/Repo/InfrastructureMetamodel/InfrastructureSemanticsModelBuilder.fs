@@ -17,16 +17,16 @@ namespace Repo.InfrastructureMetamodel
 open Repo
 open Repo.DataLayer
 
-/// Class that allows to instantiate new models based on Attribute Metamodel semantics.
+/// Class that allows to instantiate new models based on Infrastructure Metamodel semantics.
 type InfrastructureSemanticsModelBuilder 
         (
         repo: IDataRepository, 
         modelName: string, 
         ontologicalMetamodel: IDataModel
         ) =
-    let infrastructureSemantics = InfrastructureMetamodelSemantics(repo)
-    let elementSemantics = ElementSemantics(repo)
     let infrastructureMetamodel = repo.Model Consts.infrastructureMetamodel
+    let instantiationSemantics = Semantics.InstantiationSemantics(infrastructureMetamodel)
+    let elementSemantics = Semantics.ElementSemantics(infrastructureMetamodel)
 
     let metamodelNode = infrastructureMetamodel.Node "Node"
     let metamodelString = infrastructureMetamodel.Node "String"
@@ -35,12 +35,11 @@ type InfrastructureSemanticsModelBuilder
 
     let metametamodel = repo.Model Consts.infrastructureMetametamodel
     let metametamodelAttribute = metametamodel.Node "Attribute"
-    let metametamodelEnumElement = metametamodel.Node "Attribute"
 
     let findAttributeNode name =
         infrastructureMetamodel.Nodes 
         |> Seq.filter (fun n -> n.Name = name)
-        |> Seq.filter (fun n -> n.OntologicalType = (metametamodelAttribute :> IDataElement))
+        |> Seq.filter (fun n -> n.LinguisticType = (metametamodelAttribute :> IDataElement))
         |> Seq.exactlyOne
 
     let findEnumElementNode enumName name =
@@ -83,7 +82,7 @@ type InfrastructureSemanticsModelBuilder
     /// Adds a node as a linguistic extension (an instance of InfrastructureMetamodel.Node) with given attributes 
     /// (of type InfrastructureMetamodel.String) into a model.
     member this.AddNode (name: string) (attributes: AttributeInfo list) =
-        let node = infrastructureSemantics.InstantiateNode model name metamodelNode Map.empty :?> IDataNode
+        let node = instantiationSemantics.InstantiateElement model name metamodelNode Map.empty :?> IDataNode
 
         attributes 
         |> List.iter (fun attr -> addAttribute node attr.Type attr.DefaultValue attr.Name)
@@ -98,27 +97,25 @@ type InfrastructureSemanticsModelBuilder
         let attributeValues = 
             Map.ofList slotsList
             |> Map.map (fun _ value -> model.CreateNode(value, metamodelString, metamodelString))
-        let node = infrastructureSemantics.Instantiate model ontologicalType // attributeValues
+        let node = instantiationSemantics.InstantiateElement model name ontologicalType attributeValues
         node :?> IDataNode
     
     /// Adds a new string constant to a model.
     member this.AddStringNode name =
-        // TODO: Linguisic type shall be set correctly
-        this.InstantiateNode name this.String []
+        instantiationSemantics.InstantiateString model name
 
     /// Adds a new int constant to a model.
     member this.AddIntNode name =
         match System.Int32.TryParse(name) with
-        // TODO: Linguisic type shall be set correctly
-        | (true, _ ) -> this.InstantiateNode name this.Int []
+        | (true, _ ) -> instantiationSemantics.InstantiateInt model name
         | _ -> failwith "Trying to add int node with non-int value"
         
     /// Adds a new boolean "true" constant to a model.
-    member this.AddBooleanTrueNode =
+    member this.AddBooleanTrueNode () =
         this.InstantiateNode Consts.stringTrue metamodelTrue []
 
     /// Adds a new boolean "false" constant to a model.
-    member this.AddBooleanFalseNode =
+    member this.AddBooleanFalseNode () =
         this.InstantiateNode Consts.stringFalse metamodelFalse []
     (*
     /// Adds a new attribute to a node with AttributeMetamodel.String as a type.
@@ -165,10 +162,13 @@ type InfrastructureSemanticsModelBuilder
         InfrastructureSemanticsModelBuilder(repo, name, model)
 
     /// Returns model which this builder builds.
-    member this.Model with get () = model
+    member this.Model = model
 
     /// Returns repository in which the model is being built.
-    member this.Repo with get () = repo
+    member this.Repo = repo
+
+    /// Return instantiation semantics for this model.
+    member this.InstantiationSemantics = instantiationSemantics
 
     /// Helper operator that adds a linguistic extension node to a model.
     static member (+) (builder: InfrastructureSemanticsModelBuilder, name) = builder.AddNode name []

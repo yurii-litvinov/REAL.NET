@@ -15,6 +15,7 @@
 module Repo.AttributeMetamodel.AttributeSemanticsHelpers
 
 open Repo.DataLayer
+open Repo.AttributeMetamodel.Semantics
 
 /// Checks if generalization relation is possible between two given elements. Generalization is impossible if child
 /// or its descendants reintroduce attributes that are already present within parent generalization hierarchy, but

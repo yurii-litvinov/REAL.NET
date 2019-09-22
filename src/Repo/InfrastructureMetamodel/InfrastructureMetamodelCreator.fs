@@ -14,6 +14,7 @@
 
 namespace Repo.InfrastructureMetamodel
 
+open Repo
 open Repo.DataLayer
 open Repo.LanguageMetamodel
 
@@ -24,8 +25,16 @@ type InfrastructureMetamodelCreator() =
     interface IModelCreator with
         member this.CreateIn(repo: IDataRepository): unit =
             let metamodel = repo.Model Consts.infrastructureMetametamodel
-            let builder = LanguageSemanticsModelBuilder(repo, Consts.infrastructureMetamodel, metamodel)
+            let model = repo.CreateModel(Consts.infrastructureMetamodel, metamodel, metamodel)
+            let elementSemantics = LanguageMetamodel.ElementSemantics metamodel
 
-            Reinstantiator.reinstantiateInfrastructureMetametamodel repo builder.Model
+            let metamodelBoolean = metamodel.Node Consts.boolean
+            let metamodelTrue = EnumSemantics.EnumElementNode metamodelBoolean Consts.stringTrue 
+
+            let modelTrue = model.CreateNode("true", metamodelTrue, metamodel.Node Consts.boolean)
+
+            Reinstantiator.reinstantiateInfrastructureMetametamodel repo model
+
+            elementSemantics.SetSlotValue (model.Node "Element") "isAbstract" modelTrue
 
             ()

@@ -25,7 +25,8 @@ let init () =
         CoreMetamodel.CoreMetamodelCreator(); 
         LanguageMetamodel.LanguageMetamodelCreator(); 
         InfrastructureMetametamodelCreator()]
-    let infrastructure = InfrastructureMetamodelSemantics(repo)
+    let infrastructure = Semantics.InstantiationSemantics(
+        repo.Model InfrastructureMetamodel.Consts.infrastructureMetamodel)
     (repo, infrastructure)
 
 (*

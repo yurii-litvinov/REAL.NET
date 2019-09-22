@@ -25,14 +25,17 @@ type IElementRepository =
 /// Implementation of an element wrapper.
 and [<AbstractClass>] Element
     (
-        infrastructureSemantic: InfrastructureMetamodel.InfrastructureMetamodelSemantics
+        infrastructureSemantic: InfrastructureMetamodel.Semantics.InstantiationSemantics
         , element: DataLayer.IDataElement
         , repository: IElementRepository
         , attributeRepository: AttributeRepository
         , repo: DataLayer.IDataRepository
     ) =
 
-    let elementSemantics = Repo.AttributeMetamodel.ElementSemantics(repo)
+    let infrastructureMetamodel = repo.Model InfrastructureMetamodel.Consts.infrastructureMetamodel
+    let infrastructureMetamodelHelper = 
+        InfrastructureMetamodel.Semantics.InfrastructureMetamodelHelper infrastructureMetamodel
+    let elementSemantics = Repo.AttributeMetamodel.Semantics.ElementSemantics(infrastructureMetamodel)
 
     let findMetatype (element : DataLayer.IDataElement) =
         if infrastructureSemantic.Metamodel.IsNode element then
@@ -77,8 +80,8 @@ and [<AbstractClass>] Element
             repository.GetElement element.OntologicalType
 
         member this.IsAbstract =
-            if infrastructureSemantic.Element.InfrastructureMetamodel.IsElement element then
-                if infrastructureSemantic.Element.InfrastructureMetamodel.IsGeneralization element then
+            if infrastructureMetamodelHelper.IsElement element then
+                if infrastructureMetamodelHelper.IsGeneralization element then
                     true
                 else
                     match elementSemantics.StringSlotValue "isAbstract" element with

@@ -89,7 +89,10 @@
     <Compile Include="CoreMetamodel\CoreMetamodelSemantics.fs" />
     <Compile Include="CoreMetamodel\CoreSemanticsModelBuilder.fs" />
     <Compile Include="AttributeMetamodel\AttributeMetamodelCreator.fs" />
-    <Compile Include="AttributeMetamodel\AttributeMetamodelSemantics.fs" />
+    <Compile Include="AttributeMetamodel\Semantics\AttributeSemantics.fs" />
+    <Compile Include="AttributeMetamodel\Semantics\ElementSemantics.fs" />
+    <Compile Include="AttributeMetamodel\Semantics\ModelSemantics.fs" />
+    <Compile Include="AttributeMetamodel\Semantics\InstantiationSemantics.fs" />
     <Compile Include="AttributeMetamodel\AttributeSemanticsHelpers.fs" />
     <Compile Include="AttributeMetamodel\AttributeSemanticsModelBuilder.fs" />
     <Compile Include="DeepMetamodelLayer\DeepMetamodelCreator.fs" />
@@ -99,10 +102,13 @@
     <Compile Include="LanguageMetamodel\LanguageSemanticsModelBuilder.fs" />
     <Compile Include="InfrastructureMetamodel\Consts.fs" />
     <Compile Include="InfrastructureMetamodel\InfrastructureMetametamodelCreator.fs" />
-    <Compile Include="InfrastructureMetamodel\InfrastructureMetamodelSemantics.fs" />
     <Compile Include="InfrastructureMetamodel\AttributeInfo.fs" />
     <Compile Include="InfrastructureMetamodel\Reinstantiator.fs" />
     <Compile Include="InfrastructureMetamodel\InfrastructureMetamodelCreator.fs" />
+    <Compile Include="InfrastructureMetamodel\Semantics\InfrastructureMetamodel.fs" />
+    <Compile Include="InfrastructureMetamodel\Semantics\ElementSemantics.fs" />
+    <Compile Include="InfrastructureMetamodel\Semantics\ModelSemantics.fs" />
+    <Compile Include="InfrastructureMetamodel\Semantics\InstantiationSemantics.fs" />
     <Compile Include="InfrastructureMetamodel\InfrastructureSemanticsModelBuilder.fs" />
     <Compile Include="ModelCreators\RobotsMetamodelCreator.fs" />
     <Compile Include="ModelCreators\RobotsTestModelCreator.fs" />

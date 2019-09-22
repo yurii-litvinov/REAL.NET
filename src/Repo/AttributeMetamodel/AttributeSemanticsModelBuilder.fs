@@ -15,6 +15,7 @@
 namespace Repo.AttributeMetamodel
 
 open Repo.DataLayer
+open Repo.AttributeMetamodel.Semantics
 
 /// Class that allows to instantiate new models based on Attribute Metamodel semantics.
 type AttributeSemanticsModelBuilder 
@@ -23,9 +24,9 @@ type AttributeSemanticsModelBuilder
         modelName: string, 
         ontologicalMetamodel: IDataModel
         ) =
-    let elementSemantics = Repo.AttributeMetamodel.ElementSemantics(repo)
     let attributeMetamodel = repo.Model "AttributeMetamodel"
-    let attributeSemantics = AttributeMetamodelSemantics(repo)
+    let elementSemantics = ElementSemantics(attributeMetamodel)
+    let attributeSemantics = InstantiationSemantics(attributeMetamodel)
     let node = attributeMetamodel.Node "Node"
     let stringNode = attributeMetamodel.Node "String"
     let association = attributeMetamodel.Node "Association"

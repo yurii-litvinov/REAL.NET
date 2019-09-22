@@ -36,17 +36,21 @@ type AttributeRepository(repo: DataLayer.IDataRepository) =
 
 /// Implements attribute wrapper.
 and Attribute(attributeNode: DataLayer.IDataNode, repo: DataLayer.IDataRepository) =
-    let dataElementSemantics = AttributeMetamodel.ElementSemantics repo
+    let infrastructureMetamodel = repo.Model InfrastructureMetamodel.Consts.infrastructureMetamodel
+    let dataElementSemantics = InfrastructureMetamodel.Semantics.ElementSemantics(infrastructureMetamodel)
 
     interface IAttribute with
         member this.Kind =
+            (*
             let kindNode = dataElementSemantics.Attribute attributeNode "kind"
-            match AttributeMetamodel.NodeSemantics.Name kindNode with
+            match InfrastructureMetamodel.Semantics.ElementSemantics. kindNode with
             | "AttributeKind.String" -> AttributeKind.String
             | "AttributeKind.Int" -> AttributeKind.Int
             | "AttributeKind.Double" -> AttributeKind.Double
             | "AttributeKind.Boolean" -> AttributeKind.Boolean
             | _ -> failwith "unknown 'kind' value"
+            *)
+            AttributeKind.String
 
         member this.Name = attributeNode.Name
 
@@ -58,9 +62,9 @@ and Attribute(attributeNode: DataLayer.IDataNode, repo: DataLayer.IDataRepositor
 
         member this.StringValue
             with get (): string =
-                AttributeMetamodel.NodeSemantics.Name <| dataElementSemantics.Attribute attributeNode "stringValue"
+                CoreMetamodel.NodeSemantics.Name <| dataElementSemantics.Attribute "stringValue" attributeNode 
             and set (v: string): unit =
-                (dataElementSemantics.Attribute attributeNode "stringValue").Name <- v
+                (dataElementSemantics.Attribute "stringValue" attributeNode).Name <- v
 
         member this.Type = null
 

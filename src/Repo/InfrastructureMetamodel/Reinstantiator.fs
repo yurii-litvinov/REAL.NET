@@ -49,22 +49,21 @@ let private reinstantiateEdge (repo: IDataRepository) (model: IDataModel) (edge:
 let private reinstantiateNode (repo: IDataRepository) (model: IDataModel) (node: IDataNode) =
     let infrastructureMetametamodel = repo.Model Consts.infrastructureMetametamodel
 
-    let languageElementSemantics = LanguageMetamodel.ElementSemantics repo
+    let languageElementSemantics = LanguageMetamodel.ElementSemantics infrastructureMetametamodel.LinguisticMetamodel
+    let infrastructureElementSemantics = LanguageMetamodel.ElementSemantics infrastructureMetametamodel
     let metametamodelNode = infrastructureMetametamodel.Node "Node"
     let metametamodelEnum = infrastructureMetametamodel.Node "Enum"
     let metametamodelSlot = infrastructureMetametamodel.Node "Slot"
     let metametamodelString = infrastructureMetametamodel.Node "String"
 
     let metametamodelEnumElementsAssociation = 
-        ModelSemantics.FindAssociationWithSource 
+        LanguageMetamodel.ModelSemantics.FindAssociationWithSource 
             (infrastructureMetametamodel.Node "Enum") 
             "elements" 
 
     let languageMetamodel = repo.Model "LanguageMetamodel"
     let languageMetamodelNode = languageMetamodel.Node "Node"
     let languageMetamodelEnum = languageMetamodel.Node "Enum"
-
-    let elementSemantics = ElementSemantics(repo)
 
     let addSlot (element: IDataElement) (attribute: IDataNode) (value: IDataNode) =
         let model = CoreMetamodel.ElementSemantics.ContainingModel element
@@ -93,9 +92,9 @@ let private reinstantiateNode (repo: IDataRepository) (model: IDataModel) (node:
                 "value"
                 ) |> ignore
 
-    let instantiateAttribute element ontologicalType name value =
-        if languageElementSemantics.HasAttribute ontologicalType name then
-            let attribute = languageElementSemantics.Attribute ontologicalType name
+    let instantiateAttribute element (ontologicalType: IDataElement) name value =
+        if languageElementSemantics.HasAttribute name ontologicalType then
+            let attribute = languageElementSemantics.Attribute name ontologicalType
             addSlot element attribute value
         else
             failwithf "Invalid attribute reinstantiation, node: %s, attribute: %s" (node.ToString ()) name
@@ -113,9 +112,9 @@ let private reinstantiateNode (repo: IDataRepository) (model: IDataModel) (node:
 
     if node.OntologicalType = (languageMetamodelNode :> IDataElement) then
         let toAttributeInfo attribute =
-            { Name = AttributeMetamodel.AttributeSemantics.Name attribute;
-                Type = AttributeMetamodel.AttributeSemantics.Type attribute;
-                DefaultValue = AttributeMetamodel.AttributeSemantics.DefaultValue attribute}
+            { Name = AttributeMetamodel.Semantics.AttributeSemantics.Name attribute;
+                Type = AttributeMetamodel.Semantics.AttributeSemantics.Type attribute;
+                DefaultValue = AttributeMetamodel.Semantics.AttributeSemantics.DefaultValue attribute}
 
         let attributes = languageElementSemantics.Attributes metametamodelNode
         let slots = 
@@ -132,11 +131,11 @@ let private reinstantiateNode (repo: IDataRepository) (model: IDataModel) (node:
         languageElementSemantics.OwnAttributes node
         |> Seq.iter 
             (fun attr ->
-                elementSemantics.AddAttribute 
+                infrastructureElementSemantics.AddAttribute 
                     instance
-                    (AttributeMetamodel.AttributeSemantics.Name attr)
-                    (AttributeMetamodel.AttributeSemantics.Type attr)
-                    (AttributeMetamodel.AttributeSemantics.DefaultValue attr)
+                    (AttributeMetamodel.Semantics.AttributeSemantics.Name attr)
+                    (AttributeMetamodel.Semantics.AttributeSemantics.Type attr)
+                    (AttributeMetamodel.Semantics.AttributeSemantics.DefaultValue attr)
             )
         ()
     elif node.OntologicalType = (languageMetamodelEnum :> IDataElement) then

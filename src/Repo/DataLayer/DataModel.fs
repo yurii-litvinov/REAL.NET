@@ -93,9 +93,21 @@ type DataModel private
 
         member this.DeleteElement(element: IDataElement): unit =
             match element with
-            | :? IDataNode ->
-                nodes <- nodes |> List.except [element :?> IDataNode]
-            | _ -> edges <- edges |> List.except [element :?> IDataEdge]
+            | :? IDataNode as n ->
+                nodes <- nodes |> List.except [n]
+            | :? IDataEdge as e -> 
+                edges <- edges |> List.except [e]
+                
+                match e.Source with
+                | Some element -> element.DeleteOutgoingEdge e
+                | _ -> ()
+
+                match e.Target with
+                | Some element -> element.DeleteIncomingEdge e
+                | _ -> ()
+
+            | _ -> failwith "Unknown descendant of IDataElement"
+
             edges |> List.iter (fun e ->
                 if e.Source = Some element then e.Source <- None
                 if e.Target = Some element then e.Target <- None

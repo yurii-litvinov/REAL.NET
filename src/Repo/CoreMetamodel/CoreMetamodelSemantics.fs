@@ -37,6 +37,14 @@ type ElementSemantics () =
         else
             ElementSemantics.IsOntologicalInstanceOf ontologicalClass instance.OntologicalType
 
+    /// Returns all outgoing edges for an element.
+    static member OutgoingEdges (element: IDataElement) =
+        element.OutgoingEdges
+
+    /// Returns all incoming edges for an element.
+    static member IncomingEdges (element: IDataElement) =
+        element.IncomingEdges
+
     /// Returns all outgoing generalizations for an element.
     static member OutgoingGeneralizations element =
         ElementSemantics.OutgoingEdges element |> Seq.filter isGeneralization |> Seq.cast<IDataGeneralization>
@@ -45,9 +53,20 @@ type ElementSemantics () =
     static member OutgoingAssociations element =
         ElementSemantics.OutgoingEdges element |> Seq.filter isAssociation |> Seq.cast<IDataAssociation>
 
+    /// Returns all incoming associations for an element.
+    static member IncomingAssociations element =
+        ElementSemantics.IncomingEdges element |> Seq.filter isAssociation |> Seq.cast<IDataAssociation>
+
     /// Returns all outgoing associations with given target name for an element.
     static member OutgoingAssociationsWithTargetName element targetName =
         ElementSemantics.OutgoingEdges element 
+        |> Seq.filter isAssociation 
+        |> Seq.cast<IDataAssociation>
+        |> Seq.filter (fun a -> a.TargetName = targetName)
+
+    /// Returns all incoming associations with given target name for an element.
+    static member IncomingAssociationsWithTargetName element targetName =
+        ElementSemantics.IncomingEdges element 
         |> Seq.filter isAssociation 
         |> Seq.cast<IDataAssociation>
         |> Seq.filter (fun a -> a.TargetName = targetName)
@@ -56,6 +75,14 @@ type ElementSemantics () =
     static member OutgoingAssociation (element: IDataElement) name =
         Helpers.getExactlyOne
             (ElementSemantics.OutgoingAssociations element)
+            (fun (a: IDataAssociation) -> a.TargetName = name)
+            (fun () -> InvalidSemanticOperationException <| sprintf "Association %s not found" name)
+            (fun () -> InvalidSemanticOperationException <| sprintf "Association %s appears more than once" name)
+
+    /// Returns incoming association with given name.
+    static member IncomingAssociation (element: IDataElement) name =
+        Helpers.getExactlyOne
+            (ElementSemantics.IncomingAssociations element)
             (fun (a: IDataAssociation) -> a.TargetName = name)
             (fun () -> InvalidSemanticOperationException <| sprintf "Association %s not found" name)
             (fun () -> InvalidSemanticOperationException <| sprintf "Association %s appears more than once" name)
@@ -75,10 +102,6 @@ type ElementSemantics () =
     /// Returns a model containing given element.
     static member ContainingModel (element: IDataElement) =
         element.Model
-
-    /// Returns all outgoing edges for an element.
-    static member OutgoingEdges (element: IDataElement) =
-        element.OutgoingEdges
 
     /// Returns a sequence of all parents (in terms of generalization hierarchy) for given element.
     /// Most special node is the first in resulting sequence, most general is the last.
@@ -147,7 +170,7 @@ type ModelSemantics () =
         model.Nodes |> Seq.filter (fun n -> n.Name = name)
 
 /// Helper class that provides semantic operations on models conforming to Core Metamodel.
-type CoreMetamodelSemantics(repo: IDataRepository) =
+type InstantiationSemantics(repo: IDataRepository) =
 
     let coreMetamodel = repo.Model "CoreMetamodel"
     let node = coreMetamodel.Node "Node"

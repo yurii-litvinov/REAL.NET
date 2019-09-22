@@ -18,6 +18,7 @@ open NUnit.Framework
 open FsUnit
 
 open Repo.AttributeMetamodel
+open Repo.AttributeMetamodel.Semantics
 
 /// Strictness of metalayers --- each element in model is an instance of an element in ontological 
 /// or linguistic metamodel.
@@ -53,7 +54,7 @@ let ``Repo shall allow to create Type-Object-style model hierarchy`` () =
     let tosca = modelCreator.InstantiateNode "Tosca" product ["price", "16"]
     modelCreator.InstantiateAssociation tosca cd typeAssociation |> ignore
 
-    let elementSemantics = ElementSemantics metamodelCreator.Repo
+    let elementSemantics = ElementSemantics metamodelCreator.Model.LinguisticMetamodel
 
     elementSemantics.StringSlotValue "VAT" cd |> should equal "10.5"
     elementSemantics.HasSlot "VAT" tosca |> should be False

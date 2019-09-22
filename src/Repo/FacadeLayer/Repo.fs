@@ -19,12 +19,12 @@ open Repo.Serializer
 
 /// Wrapper around repository from data layer. Maintains a repository of models and creates new models if needed.
 type Repo(repo: DataLayer.IDataRepository) =
-    let infrastructure = InfrastructureMetamodel.InfrastructureMetamodelSemantics(repo)
+    let infrastructureMetamodel = repo.Model InfrastructureMetamodel.Consts.infrastructureMetamodel
+    let infrastructure = InfrastructureMetamodel.Semantics.InstantiationSemantics(infrastructureMetamodel)
 
     let attributeRepository = AttributeRepository(repo)
     let elementRepository = ElementRepository(infrastructure, attributeRepository, repo)
     let modelRepository = ModelRepository(infrastructure, elementRepository)
-    let infrastructureMetamodel = repo.Model "InfrastructureMetamodel"
 
     let unwrap (model: IModel) = (model :?> Model).UnderlyingModel
 

@@ -23,9 +23,9 @@ type LanguageSemanticsModelBuilder
         modelName: string, 
         ontologicalMetamodel: IDataModel
         ) =
-    let elementSemantics = ElementSemantics(repo)
     let linguisticMetamodel = repo.Model Consts.languageMetamodel
-    let semantics = LanguageMetamodelSemantics(repo)
+    let elementSemantics = ElementSemantics(linguisticMetamodel)
+    let semantics = InstantiationSemantics(linguisticMetamodel)
     let languageNode = linguisticMetamodel.Node "Node"
     let languageString = linguisticMetamodel.Node "String"
     let languageAssociation = linguisticMetamodel.Node "Association"
