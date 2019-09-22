@@ -62,6 +62,10 @@ type InfrastructureSemanticsModelBuilder
     let addAttribute (node: IDataNode) (ontologicalType: IDataNode) (defaultValue: IDataNode) (name: string) =
         elementSemantics.AddAttribute node name ontologicalType defaultValue
 
+    let addSlots (slotsList: List<string * string>) =
+        Map.ofList slotsList
+        |> Map.map (fun _ value -> model.CreateNode(value, metamodelString, metamodelString))
+
     /// Creates a new model in existing repository with Attribute Metamodel as its metamodel.
     new (repo: IDataRepository, modelName: string) =
         InfrastructureSemanticsModelBuilder(repo, modelName, repo.Model Consts.infrastructureMetamodel)
@@ -94,10 +98,8 @@ type InfrastructureSemanticsModelBuilder
             (name: string)
             (ontologicalType: IDataNode)
             (slotsList: List<string * string>) =
-        let attributeValues = 
-            Map.ofList slotsList
-            |> Map.map (fun _ value -> model.CreateNode(value, metamodelString, metamodelString))
-        let node = instantiationSemantics.InstantiateElement model name ontologicalType attributeValues
+        let slots = addSlots slotsList
+        let node = instantiationSemantics.InstantiateElement model name ontologicalType slots
         node :?> IDataNode
     
     /// Adds a new string constant to a model.
@@ -142,19 +144,27 @@ type InfrastructureSemanticsModelBuilder
     /// an AttributeMetamodel.Generalization node.
     member this.AddGeneralization (child: IDataNode) (parent: IDataNode) =
         model.CreateGeneralization(metamodelGeneralization, metamodelGeneralization, child, parent) |> ignore
-        (*
-    /// Instantiates an association between two given elements using supplied association class as a type of 
+        
+    /// Instantiates an association between two given elements using supplied association class as a type of
     /// resulting edge.
     member this.InstantiateAssociation 
             (source: IDataNode) 
             (target: IDataNode) 
             (ontologicalType: IDataElement) 
             (slotsList: List<string * string>) =
-        let slots = 
-            Map.ofList slotsList
-            |> Map.map (fun _ value -> model.CreateNode(value, stringNode, stringNode))
-        attributeSemantics.InstantiateAssociation model source target ontologicalType slots
-    *)
+        let slots = addSlots slotsList
+        let name = 
+            match ontologicalType with
+            | :? IDataAssociation as a -> a.TargetName
+            | :? IDataNode as n -> n.Name
+            | _ -> failwith "Trying to instantiate something strange"
+        instantiationSemantics.InstantiateAssociation model name source target ontologicalType slots 
+        :?> IDataAssociation
+
+    /// Sets slot value for a given element.
+    member this.SetSlotValue (element: IDataElement) (slot: string) (value: string) =
+        ()
+
     /// Creates model builder that uses Attribute Metamodel semantics and has current model as its
     /// ontological metamodel and Attribute Metamodel as its linguistic metamodel. So instantiations will use 
     /// this model for instantiated classes, but Node, String and Association will be from Attribute Metamodel.

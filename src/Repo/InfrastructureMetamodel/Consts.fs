@@ -15,18 +15,20 @@
 /// Module that contains string constants that are used in several places across Infrastructure Metamodel module
 /// (to avoid errors related to typos).
 module Repo.InfrastructureMetamodel.Consts
-    let infrastructureMetametamodel = "InfrastructureMetametamodel"
-    let infrastructureMetamodel = "InfrastructureMetamodel"
 
-    let metatypeNode = "Metatype.Node"
-    let metatypeEdge = "Metatype.Edge"
+let infrastructureMetametamodel = "InfrastructureMetametamodel"
+let infrastructureMetamodel = "InfrastructureMetamodel"
+
+let metatype = "Metatype"
+let metatypeNode = "Metatype.Node"
+let metatypeEdge = "Metatype.Edge"
     
-    let boolean = "Boolean"
-    let stringTrue = "true"
-    let stringFalse = "false"
+let boolean = "Boolean"
+let stringTrue = "true"
+let stringFalse = "false"
 
-    let int = "Int"
-    let string = "String"
+let int = "Int"
+let string = "String"
 
-    let isAbstract = "isAbstract"
-    let instanceMetatype = "instanceMetatype"
+let isAbstract = "isAbstract"
+let instanceMetatype = "instanceMetatype"

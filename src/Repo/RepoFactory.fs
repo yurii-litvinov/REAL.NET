@@ -20,11 +20,11 @@ type RepoFactory =
     /// Method that returns initialized repository.
     static member Create() = 
         let data = ((RepoFactory.CreateEmpty (): IRepo) :?> FacadeLayer.Repo).UnderlyingRepo
-        let add (creator: DataLayer.IModelCreator) =
+        let (~+) (creator: DataLayer.IModelCreator) =
             creator.CreateIn data
 
-        Metamodels.RobotsMetamodelCreator() |> add
-        Metamodels.RobotsTestModelCreator() |> add
+        +Metamodels.RobotsMetamodelCreator()
+        +Metamodels.RobotsTestModelCreator()
         //Metamodels.AirSimMetamodelBuilder() |> add
         //Metamodels.AirSimModelBuilder() |> add
         //Metamodels.FeatureMetamodelBuilder() |> add
@@ -41,12 +41,13 @@ type RepoFactory =
     /// Method that returns repository with infrastructure metamodel only.
     static member CreateEmpty () =
         let data = new DataLayer.DataRepo() :> DataLayer.IDataRepository
-        let add (creator: DataLayer.IModelCreator) =
+        let (~+) (creator: DataLayer.IModelCreator) =
             creator.CreateIn data
 
-        CoreMetamodel.CoreMetamodelCreator() |> add
-        AttributeMetamodel.AttributeMetamodelCreator() |> add
-        LanguageMetamodel.LanguageMetamodelCreator() |> add
-        InfrastructureMetamodel.InfrastructureMetametamodelCreator() |> add
+        +CoreMetamodel.CoreMetamodelCreator()
+        +AttributeMetamodel.AttributeMetamodelCreator()
+        +LanguageMetamodel.LanguageMetamodelCreator()
+        +InfrastructureMetamodel.InfrastructureMetametamodelCreator()
+        +InfrastructureMetamodel.InfrastructureMetamodelCreator()
 
         new FacadeLayer.Repo(data) :> IRepo

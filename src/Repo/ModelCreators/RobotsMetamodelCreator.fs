@@ -24,7 +24,7 @@ type RobotsMetamodelCreator() =
         member this.CreateIn (repo: IDataRepository): unit =
             let infrastructureMetamodel = repo.Model Consts.infrastructureMetamodel
             let builder = 
-                AttributeMetamodel.AttributeSemanticsModelBuilder(repo, "RobotsMetamodel", infrastructureMetamodel)
+                InfrastructureMetamodel.InfrastructureSemanticsModelBuilder(repo, "RobotsMetamodel")
 
             let node = builder.MetamodelNode "Node"
             let association = builder.MetamodelNode "Association"

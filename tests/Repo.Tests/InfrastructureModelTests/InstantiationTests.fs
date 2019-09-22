@@ -65,7 +65,6 @@ let ``Instantiation shall use provided slot values`` () =
     elementSemantics.StringSlotValue "shape" testNode |> should equal "testShape"
     elementSemantics.HasAttribute "shape" testNode |> should be False
 
-
 [<Test>]
 let ``Instantiation shall provide default values for linguistic attributes`` () =
     let metamodelBuilder = InfrastructureSemanticsModelBuilder("RobotsMetamodel")

@@ -30,18 +30,22 @@ type InstantiationSemantics(metamodel: IDataModel) =
     /// So when instantiating node from Infrastructure Metamodel, we need Infrastructure Metametamodel semantics,
     /// when instantiating node from subsequent metalayers, we need Infrastructure Metamodel semantics.
     let semantics (node: IDataElement) = 
-        if node.Model = infrastructureMetamodel.Model then
+        if node.Model = infrastructureMetamodel.Metamodel then
             infrastuctureMetametamodelElementSemantics
         else
             infrastructureMetamodelElementSemantics
 
-    /// Instantiates given node into given model, using given map to provide values for element attributes.
+    /// Instantiates given element into given model, using given map to provide values for element attributes.
     let instantiateElementWithLinguisticType
             (model: IDataModel)
             (name: string)
+            (source: IDataElement option)
+            (target: IDataElement option)
             (ontologicalType: IDataElement)
             (linguisticType: IDataElement)
             (attributeValues: Map<string, IDataNode>) =
+        // Type can be from Infrastructure Metamodel or from metamodels of subsequent metalevels, so we need to choose
+        // semantics accordingly.
         let typeSemantics = semantics ontologicalType
         
         // All instances are always linguistic instances of Infrastructure Metamodel, so we shall always use its 
@@ -53,7 +57,7 @@ type InstantiationSemantics(metamodel: IDataModel) =
         let linguisticTypeSemantics = infrastuctureMetametamodelElementSemantics
 
         if typeSemantics.StringSlotValue Consts.isAbstract ontologicalType <> Consts.stringFalse then
-            raise (InvalidSemanticOperationException "Trying to instantiate abstract node")
+            raise (InvalidSemanticOperationException "Trying to instantiate abstract element")
 
         let newElement =
             if typeSemantics.StringSlotValue Consts.instanceMetatype ontologicalType = Consts.metatypeNode then
@@ -62,8 +66,8 @@ type InstantiationSemantics(metamodel: IDataModel) =
                 model.CreateAssociation(
                     ontologicalType, 
                     linguisticType, 
-                    None, 
-                    None, 
+                    source, 
+                    target, 
                     name
                     ) :> IDataElement
 
@@ -105,6 +109,34 @@ type InstantiationSemantics(metamodel: IDataModel) =
         instantiateElementWithLinguisticType 
             model 
             name 
+            None
+            None
+            ontologicalType 
+            linguisticType
+            attributeValues
+
+    /// Instantiates an association into given model, using given map to provide values for its attributes.
+    member this.InstantiateAssociation
+        (model: IDataModel)
+        (name: string)
+        (source: IDataElement)
+        (target: IDataElement)
+        (ontologicalType: IDataElement)
+        (attributeValues: Map<string, IDataNode>) =
+
+        let typeSemantics = semantics ontologicalType
+
+        let linguisticType = 
+            if typeSemantics.StringSlotValue Consts.instanceMetatype ontologicalType = Consts.metatypeNode then
+                infrastructureMetamodel.Node :> IDataElement
+            else
+                infrastructureMetamodel.Association :> IDataElement
+
+        instantiateElementWithLinguisticType 
+            model 
+            name 
+            (Some source)
+            (Some target)
             ontologicalType 
             linguisticType
             attributeValues
@@ -112,8 +144,10 @@ type InstantiationSemantics(metamodel: IDataModel) =
     /// Creates a new string instance in a given model.
     member this.InstantiateString (model: IDataModel) (value: string) =
         instantiateElementWithLinguisticType 
-            model 
-            value 
+            model
+            value
+            None
+            None
             infrastructureMetamodel.String
             infrastructureMetamodel.String
             Map.empty
@@ -126,6 +160,8 @@ type InstantiationSemantics(metamodel: IDataModel) =
             instantiateElementWithLinguisticType 
                 model 
                 value 
+                None 
+                None
                 infrastructureMetamodel.Int
                 infrastructureMetamodel.Int
                 Map.empty

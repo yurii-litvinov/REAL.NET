@@ -31,10 +31,16 @@ type InfrastructureMetamodelCreator() =
             let metamodelBoolean = metamodel.Node Consts.boolean
             let metamodelTrue = EnumSemantics.EnumElementNode metamodelBoolean Consts.stringTrue 
 
-            let modelTrue = model.CreateNode("true", metamodelTrue, metamodel.Node Consts.boolean)
+            let metamodelMetatype = metamodel.Node Consts.metatype
+            let metamodelMetatypeEdge = EnumSemantics.EnumElementNode metamodelMetatype Consts.metatypeEdge
+
+            let modelTrue = model.CreateNode(Consts.stringTrue, metamodelTrue, metamodelBoolean)
+
+            let modelMetatypeEdge = model.CreateNode(Consts.metatypeEdge, metamodelMetatypeEdge, metamodelMetatype)
 
             Reinstantiator.reinstantiateInfrastructureMetametamodel repo model
 
-            elementSemantics.SetSlotValue (model.Node "Element") "isAbstract" modelTrue
+            elementSemantics.SetSlotValue (model.Node "Element") Consts.isAbstract modelTrue
+            elementSemantics.SetSlotValue (model.Node "Association") Consts.instanceMetatype modelMetatypeEdge
 
             ()
