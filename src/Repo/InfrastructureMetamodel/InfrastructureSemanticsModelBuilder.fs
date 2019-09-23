@@ -36,31 +36,14 @@ type InfrastructureSemanticsModelBuilder
     let metametamodel = repo.Model Consts.infrastructureMetametamodel
     let metametamodelAttribute = metametamodel.Node "Attribute"
 
-    let findAttributeNode name =
-        infrastructureMetamodel.Nodes 
-        |> Seq.filter (fun n -> n.Name = name)
-        |> Seq.filter (fun n -> n.LinguisticType = (metametamodelAttribute :> IDataElement))
-        |> Seq.exactlyOne
-
-    let findEnumElementNode enumName name =
-        let enum = infrastructureMetamodel.Node enumName 
-        CoreMetamodel.ElementSemantics.OutgoingAssociationsWithTargetName enum "elements"
-        |> Seq.map (fun a -> a.Target.Value :?> IDataNode)
-        |> Seq.filter (fun n -> n.Name = name)
-        |> Seq.exactlyOne
-
-    let metamodelShapeAttribute = findAttributeNode "shape"
-    let metamodelIsAbstractAttribute = findAttributeNode "isAbstract"
-    let metamodelInstanceMetatypeAttribute = findAttributeNode "instanceMetatype"
-
-    let metamodelTrue = findEnumElementNode Consts.boolean Consts.stringTrue 
-    let metamodelFalse = findEnumElementNode Consts.boolean Consts.stringFalse
-
     let model = repo.CreateModel(modelName, ontologicalMetamodel, infrastructureMetamodel)
 
-    /// Helper function that adds a new attribute to a node.
-    let addAttribute (node: IDataNode) (ontologicalType: IDataNode) (defaultValue: IDataNode) (name: string) =
-        elementSemantics.AddAttribute node name ontologicalType defaultValue
+    /// Helper function that adds a new attribute to an element.
+    let addAttribute (element: IDataElement) (ontologicalType: IDataNode) (defaultValue: IDataNode) (name: string) =
+        if not <| AttributeMetamodel.AttributeSemanticsHelpers.isAttributeAddingPossible elementSemantics element name ontologicalType then
+            failwith <| "Attribute is already present in an element (including its generalization hierarchy) and has "
+                + "different type"
+        elementSemantics.AddAttribute element name ontologicalType defaultValue
 
     let addSlots (slotsList: List<string * string>) =
         Map.ofList slotsList
@@ -96,8 +79,9 @@ type InfrastructureSemanticsModelBuilder
     /// Instantiates a node of a given class into a model. Uses provided list to instantiate attributes into slots.
     member this.InstantiateNode
             (name: string)
-            (ontologicalType: IDataNode)
+            (ontologicalTypeName: string)
             (slotsList: List<string * string>) =
+        let ontologicalType = ontologicalMetamodel.Node ontologicalTypeName
         let slots = addSlots slotsList
         let node = instantiationSemantics.InstantiateElement model name ontologicalType slots
         node :?> IDataNode
@@ -114,27 +98,28 @@ type InfrastructureSemanticsModelBuilder
         
     /// Adds a new boolean "true" constant to a model.
     member this.AddBooleanTrueNode () =
-        this.InstantiateNode Consts.stringTrue metamodelTrue []
+        this.InstantiateNode Consts.stringTrue Consts.stringTrue []
 
     /// Adds a new boolean "false" constant to a model.
     member this.AddBooleanFalseNode () =
-        this.InstantiateNode Consts.stringFalse metamodelFalse []
-    (*
-    /// Adds a new attribute to a node with AttributeMetamodel.String as a type.
-    member this.AddAttribute (node: IDataNode) (name: string) =
-        if not <| AttributeSemanticsHelpers.isAttributeAddingPossible elementSemantics node name stringNode then
-            failwith <| "Attribute is already present in an element (including its generalization hierarchy) and has "
-                + "different type"
-        addAttribute node stringNode emptyString name 
+        this.InstantiateNode Consts.stringFalse Consts.stringFalse []
+    
+    /// Adds a new attribute to an element with AttributeMetamodel.String as a type.
+    member this.AddAttribute (element: IDataElement) (name: string) (defaultValue: string) =
+        let defaultValueNode = this.AddStringNode defaultValue
+        addAttribute element metamodelString defaultValueNode name 
 
-    /// Adds a new attribute with given type to a node.
+    /// Adds a new attribute with given type to an element. Works only for types that do not themselves have 
+    /// attributes and have node as instance metatype.
     member this.AddAttributeWithType 
-            (node: IDataNode) 
+            (element: IDataElement) 
+            (name: string) 
             (ontologicalType: IDataNode) 
-            (defaultValue: IDataNode) 
-            (name: string) =
-        addAttribute node ontologicalType defaultValue name
-        *)
+            (defaultValue: string) =
+        let defaultValueNode = instantiationSemantics.InstantiateElement model defaultValue ontologicalType Map.empty 
+                               :?> IDataNode
+        addAttribute element ontologicalType defaultValueNode name
+ 
     /// Adds an association between two elements. Association will be an instance of an AttributeMetamodel.Association
     /// node.
     member this.AddAssociation (source: IDataElement) (target: IDataElement) (name: string) =
@@ -163,7 +148,7 @@ type InfrastructureSemanticsModelBuilder
 
     /// Sets slot value for a given element.
     member this.SetSlotValue (element: IDataElement) (slot: string) (value: string) =
-        ()
+        elementSemantics.SetStringSlotValue slot element value
 
     /// Creates model builder that uses Attribute Metamodel semantics and has current model as its
     /// ontological metamodel and Attribute Metamodel as its linguistic metamodel. So instantiations will use 

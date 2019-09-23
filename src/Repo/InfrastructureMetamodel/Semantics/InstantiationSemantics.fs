@@ -172,12 +172,16 @@ type InstantiationSemantics(metamodel: IDataModel) =
     member this.Instantiate (model: IDataModel) (ontologicalType: IDataElement) =
         let name =
             match ontologicalType with
-            | :? IDataNode as n -> "a" + n.Name
+            | :? IDataNode as n -> 
+                if n.Name = Consts.generalization then
+                    Consts.generalization
+                else 
+                    "a" + n.Name
             | :? IDataAssociation as a -> a.TargetName
             | _ -> raise (InvalidSemanticOperationException
                     "Trying to instantiate something that should not be instantiated")
 
-        this.InstantiateElement model name (ontologicalType :?> IDataNode) Map.empty
+        this.InstantiateElement model name ontologicalType Map.empty
 
     member this.Metamodel = infrastructureMetamodel
     member this.Element = infrastructureMetamodelElementSemantics

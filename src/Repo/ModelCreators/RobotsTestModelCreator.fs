@@ -27,25 +27,19 @@ type RobotsTestModelCreator() =
                 InfrastructureMetamodel.InfrastructureSemanticsModelBuilder(repo, "RobotsTestModel", robotsMetamodel)
 
             let metamodelAbstractNode = builder.MetamodelNode "AbstractNode"
-            //let metamodelInitialNode = Model.findNode metamodel "InitialNode"
-            let metamodelFinalNode = builder.MetamodelNode "FinalNode"
-            let metamodelMotorsForward = builder.MetamodelNode "MotorsForward"
-            let metamodelTimer = builder.MetamodelNode "Timer"
 
             let link = ModelSemantics.FindAssociationWithSource metamodelAbstractNode "target"
 
-            //let initialNode = infrastructure.Instantiate model metamodelInitialNode
-            let finalNode = builder.InstantiateNode "finalNode" metamodelFinalNode []
+            let initialNode = builder.InstantiateNode "initialNode" "InitialNode" []
+            let finalNode = builder.InstantiateNode "finalNode" "FinalNode" []
+            let motorsForward = builder.InstantiateNode "motorsForward" "MotorsForward" []
 
-            let motorsForward = builder.InstantiateNode "motorsForward" metamodelMotorsForward []
-
-            let timer = builder.InstantiateNode "timer" metamodelTimer []
+            let timer = builder.InstantiateNode "timer" "Timer" ["shape", "View/Pictures/timerBlock.png"]
 
             let (-->) src dst =
                 builder.InstantiateAssociation src dst link [] |> ignore
                 dst
 
-            //initialNode --> 
-            motorsForward --> timer --> finalNode |> ignore
+            initialNode --> motorsForward --> timer --> finalNode |> ignore
 
             ()

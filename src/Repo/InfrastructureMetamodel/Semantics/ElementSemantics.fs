@@ -20,7 +20,7 @@ open Repo.InfrastructureMetamodel
 
 /// Helper for working with elements in Infrastructure Metamodel terms.
 type ElementSemantics(metamodel: IDataModel) =
-    inherit AttributeMetamodel.Semantics.ElementSemantics(metamodel)
+    inherit LanguageMetamodel.Semantics.ElementSemantics(metamodel)
 
     /// Returns underlying metamodel.
     member this.Metamodel = metamodel

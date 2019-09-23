@@ -74,11 +74,7 @@ type IAttribute =
 
         /// String representation of a value of an attribute if it is an attribute of basic type.
         // NOTE: Actually we need a whole hierarchy of attribute classes.
-        abstract StringValue: string with get, set
-
-        /// Holds a reference to an element which is a value of this attribute if this attribute has complex type.
-        /// NOTE: Complex attribute values are not supported in v1, so it is always null.
-        abstract ReferenceValue: IElement with get, set
+        abstract StringDefaultValue: string with get, set
     end
 
 /// Element is a general term for nodes or edges.

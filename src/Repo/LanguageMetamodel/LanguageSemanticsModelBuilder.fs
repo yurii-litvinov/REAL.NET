@@ -24,8 +24,8 @@ type LanguageSemanticsModelBuilder
         ontologicalMetamodel: IDataModel
         ) =
     let linguisticMetamodel = repo.Model Consts.languageMetamodel
-    let elementSemantics = ElementSemantics(linguisticMetamodel)
-    let semantics = InstantiationSemantics(linguisticMetamodel)
+    let elementSemantics = Semantics.ElementSemantics(linguisticMetamodel)
+    let semantics = Semantics.InstantiationSemantics(linguisticMetamodel)
     let languageNode = linguisticMetamodel.Node "Node"
     let languageString = linguisticMetamodel.Node "String"
     let languageAssociation = linguisticMetamodel.Node "Association"
@@ -48,7 +48,7 @@ type LanguageSemanticsModelBuilder
 
     /// Helper function that adds a new attribute to a node.
     let addAttribute (node: IDataNode) (attributeOntologicalType: IDataNode) (defaultValue: IDataNode) (name: string) =
-        let model = ElementSemantics.ContainingModel node
+        let model = Semantics.ElementSemantics.ContainingModel node
         let attributeNode = model.CreateNode(name, languageAttribute, languageAttribute)
         model.CreateAssociation
                 (
@@ -162,7 +162,7 @@ type LanguageSemanticsModelBuilder
         let enum = this.InstantiateNode name (linguisticMetamodel.Node "Enum") []
         literals |> Seq.iter (fun l ->
             let enumLiteral = this.InstantiateNode l (linguisticMetamodel.Node "String") []
-            let metamodelEnumLiteralLink = ModelSemantics.FindAssociation linguisticMetamodel "elements"
+            let metamodelEnumLiteralLink = Semantics.ModelSemantics.FindAssociation linguisticMetamodel "elements"
             let association = this.InstantiateAssociation enum enumLiteral metamodelEnumLiteralLink []
             association.TargetName <- "elements"
         )

@@ -32,3 +32,8 @@ let string = "String"
 
 let isAbstract = "isAbstract"
 let instanceMetatype = "instanceMetatype"
+
+let element = "Element"
+let edge = "Edge"
+let generalization = "Generalization"
+let association = "Association"

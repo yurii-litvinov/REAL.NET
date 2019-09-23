@@ -41,7 +41,7 @@ namespace WpfControlsLib.ViewModel
 
             set
             {
-                this.attribute.StringValue = value;
+                this.attribute.StringDefaultValue = value;
                 this.value = value;
             }
         }

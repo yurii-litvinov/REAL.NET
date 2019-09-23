@@ -26,13 +26,13 @@ type InfrastructureMetamodelCreator() =
         member this.CreateIn(repo: IDataRepository): unit =
             let metamodel = repo.Model Consts.infrastructureMetametamodel
             let model = repo.CreateModel(Consts.infrastructureMetamodel, metamodel, metamodel)
-            let elementSemantics = LanguageMetamodel.ElementSemantics metamodel
+            let elementSemantics = LanguageMetamodel.Semantics.ElementSemantics metamodel
 
             let metamodelBoolean = metamodel.Node Consts.boolean
-            let metamodelTrue = EnumSemantics.EnumElementNode metamodelBoolean Consts.stringTrue 
+            let metamodelTrue = Semantics.EnumSemantics.EnumElementNode metamodelBoolean Consts.stringTrue 
 
             let metamodelMetatype = metamodel.Node Consts.metatype
-            let metamodelMetatypeEdge = EnumSemantics.EnumElementNode metamodelMetatype Consts.metatypeEdge
+            let metamodelMetatypeEdge = Semantics.EnumSemantics.EnumElementNode metamodelMetatype Consts.metatypeEdge
 
             let modelTrue = model.CreateNode(Consts.stringTrue, metamodelTrue, metamodelBoolean)
 
@@ -40,7 +40,9 @@ type InfrastructureMetamodelCreator() =
 
             Reinstantiator.reinstantiateInfrastructureMetametamodel repo model
 
-            elementSemantics.SetSlotValue (model.Node "Element") Consts.isAbstract modelTrue
-            elementSemantics.SetSlotValue (model.Node "Association") Consts.instanceMetatype modelMetatypeEdge
+            elementSemantics.SetSlotValue (model.Node Consts.element) Consts.isAbstract modelTrue
+            elementSemantics.SetSlotValue (model.Node Consts.edge) Consts.isAbstract modelTrue
+            elementSemantics.SetSlotValue (model.Node Consts.generalization) Consts.instanceMetatype modelMetatypeEdge
+            elementSemantics.SetSlotValue (model.Node Consts.association) Consts.instanceMetatype modelMetatypeEdge
 
             ()

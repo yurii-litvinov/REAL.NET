@@ -146,7 +146,7 @@ namespace MsAglWinFormsEditor
                     this.attributeTable.Rows.Clear();
                     foreach (var attribute in attributes)
                     {
-                        object[] row = { attribute.Name, attribute.Kind.ToString(), attribute.StringValue };
+                        object[] row = { attribute.Name, attribute.Kind.ToString(), attribute.StringDefaultValue };
                         this.attributeTable.Rows.Add(row);
                     }
                 }

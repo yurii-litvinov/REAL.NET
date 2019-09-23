@@ -31,6 +31,7 @@ type InfrastructureMetametamodelCreator() =
 
             let boolean = builder.AddEnum Consts.boolean [Consts.stringTrue; Consts.stringFalse]
             let int = builder + "Int"
+            let double = builder + "Double"
 
             let modelNode = builder + "Model"
             let repoNode = builder + "Repo"

@@ -43,6 +43,12 @@ type InfrastructureMetamodelHelper(metamodel: IDataModel) =
     let isLinguisticType (element: IDataElement) (linguisticType: IDataElement) =
         element.LinguisticType = linguisticType
 
+    let getMetamodel (element: IDataElement) = 
+        if element.Model = metamodel then  
+            metamodel.LinguisticMetamodel
+        else
+            metamodel
+
     member this.Metamodel = metamodel
 
     member this.Node = node
@@ -64,13 +70,13 @@ type InfrastructureMetamodelHelper(metamodel: IDataModel) =
         CoreMetamodel.ElementSemantics.ContainingModel element = metamodel
 
     member this.IsNode element =
-        isLinguisticType element <| this.Metamodel.Node "Node"
+        isLinguisticType element <| (getMetamodel element).Node "Node"
 
     member this.IsAssociation element =
-        isLinguisticType element <| this.Metamodel.Node "Association"
+        isLinguisticType element <| (getMetamodel element).Node "Association"
 
     member this.IsGeneralization element =
-        isLinguisticType element <| this.Metamodel.Node "Generalization"
+        isLinguisticType element <| (getMetamodel element).Node "Generalization"
 
     member this.IsEdge element =
         this.IsAssociation element || this.IsGeneralization element

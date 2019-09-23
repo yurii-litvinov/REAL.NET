@@ -40,10 +40,10 @@ namespace Repo.CSharp.Tests
             generalization.To = node1;
 
             Assert.AreEqual("testAttribute", node1.Attributes.First().Name);
-            Assert.AreEqual("10", node1.Attributes.First().StringValue);
+            Assert.AreEqual("10", node1.Attributes.First().StringDefaultValue);
 
             Assert.AreEqual("otherAttribute", node2.Attributes.First().Name);
-            Assert.AreEqual("Ololo", node2.Attributes.First().StringValue);
+            Assert.AreEqual("Ololo", node2.Attributes.First().StringDefaultValue);
         }
     }
 }

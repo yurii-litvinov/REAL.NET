@@ -149,16 +149,16 @@ namespace AirSim.AirSimLib
         private class TakeoffNode : NodeExecution
         {
             public override void ExecuteNode(INode node, MultirotorClient client)
-                => client.Takeoff(float.Parse(node.Attributes.ToList()[0].StringValue));
+                => client.Takeoff(float.Parse(node.Attributes.ToList()[0].StringDefaultValue));
         }
 
         private class MoveNode : NodeExecution
         {
             public override void ExecuteNode(INode node, MultirotorClient client)
             {
-                var t = float.Parse(node.Attributes.ToList()[0].StringValue);
+                var t = float.Parse(node.Attributes.ToList()[0].StringDefaultValue);
                 client.EnableApiControl();
-                client.MoveByVelocityZ(float.Parse(node.Attributes.ToList()[0].StringValue));
+                client.MoveByVelocityZ(float.Parse(node.Attributes.ToList()[0].StringDefaultValue));
             }
         }
 
@@ -171,7 +171,7 @@ namespace AirSim.AirSimLib
         private class TimerNode : NodeExecution
         {
             public override void ExecuteNode(INode node, MultirotorClient client)
-                => client.Sleep(float.Parse(node.Attributes.ToList()[0].StringValue));
+                => client.Sleep(float.Parse(node.Attributes.ToList()[0].StringDefaultValue));
         }
 
         private class HoverNode : NodeExecution
@@ -188,7 +188,7 @@ namespace AirSim.AirSimLib
             private bool condition;
 
             public override void ExecuteNode(INode node, MultirotorClient client)
-                => this.condition = this.CheckCondition(client, node.Attributes.ToList()[0].StringValue);
+                => this.condition = this.CheckCondition(client, node.Attributes.ToList()[0].StringDefaultValue);
 
             private bool CheckCondition(MultirotorClient client, string conditionString)
             {
@@ -259,13 +259,13 @@ namespace AirSim.AirSimLib
                 IEdge edge = outEdges[0];
                 if (this.condition)
                 {
-                    return (INode)(edge.Attributes.ToList()[0].StringValue == "true"
+                    return (INode)(edge.Attributes.ToList()[0].StringDefaultValue == "true"
                         ? edge.To
                         : outEdges[1].To);
                 }
                 else
                 {
-                    return (INode)(edge.Attributes.ToList()[0].StringValue == "false"
+                    return (INode)(edge.Attributes.ToList()[0].StringDefaultValue == "false"
                         ? edge.To
                         : outEdges[1].To);
                 }

@@ -49,15 +49,15 @@ let private reinstantiateEdge (repo: IDataRepository) (model: IDataModel) (edge:
 let private reinstantiateNode (repo: IDataRepository) (model: IDataModel) (node: IDataNode) =
     let infrastructureMetametamodel = repo.Model Consts.infrastructureMetametamodel
 
-    let languageElementSemantics = LanguageMetamodel.ElementSemantics infrastructureMetametamodel.LinguisticMetamodel
-    let infrastructureElementSemantics = LanguageMetamodel.ElementSemantics infrastructureMetametamodel
+    let languageElementSemantics = LanguageMetamodel.Semantics.ElementSemantics infrastructureMetametamodel.LinguisticMetamodel
+    let infrastructureElementSemantics = LanguageMetamodel.Semantics.ElementSemantics infrastructureMetametamodel
     let metametamodelNode = infrastructureMetametamodel.Node "Node"
     let metametamodelEnum = infrastructureMetametamodel.Node "Enum"
     let metametamodelSlot = infrastructureMetametamodel.Node "Slot"
     let metametamodelString = infrastructureMetametamodel.Node "String"
 
     let metametamodelEnumElementsAssociation = 
-        LanguageMetamodel.ModelSemantics.FindAssociationWithSource 
+        LanguageMetamodel.Semantics.ModelSemantics.FindAssociationWithSource 
             (infrastructureMetametamodel.Node "Enum") 
             "elements" 
 
@@ -140,7 +140,7 @@ let private reinstantiateNode (repo: IDataRepository) (model: IDataModel) (node:
         ()
     elif node.OntologicalType = (languageMetamodelEnum :> IDataElement) then
         let instance = model.CreateNode(node.Name, metametamodelEnum, metametamodelEnum)
-        let enumElements = LanguageMetamodel.EnumSemantics.Values node
+        let enumElements = LanguageMetamodel.Semantics.EnumSemantics.Values node
         
         enumElements 
         |> Seq.iter (fun n ->

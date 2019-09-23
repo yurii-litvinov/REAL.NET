@@ -98,7 +98,7 @@
     <Compile Include="DeepMetamodelLayer\DeepMetamodelCreator.fs" />
     <Compile Include="LanguageMetamodel\Consts.fs" />
     <Compile Include="LanguageMetamodel\LanguageMetamodelCreator.fs" />
-    <Compile Include="LanguageMetamodel\LanguageMetamodelSemantics.fs" />
+    <Compile Include="LanguageMetamodel\Semantics\LanguageMetamodelSemantics.fs" />
     <Compile Include="LanguageMetamodel\LanguageSemanticsModelBuilder.fs" />
     <Compile Include="InfrastructureMetamodel\Consts.fs" />
     <Compile Include="InfrastructureMetamodel\InfrastructureMetametamodelCreator.fs" />

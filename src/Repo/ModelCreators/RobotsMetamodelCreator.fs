@@ -22,18 +22,16 @@ open Repo.InfrastructureMetamodel
 type RobotsMetamodelCreator() =
     interface IModelCreator with
         member this.CreateIn (repo: IDataRepository): unit =
-            let infrastructureMetamodel = repo.Model Consts.infrastructureMetamodel
             let builder = 
                 InfrastructureMetamodel.InfrastructureSemanticsModelBuilder(repo, "RobotsMetamodel")
 
-            let node = builder.MetamodelNode "Node"
             let association = builder.MetamodelNode "Association"
 
             let (~+) (name, shape, isAbstract) =
                 let isAbstract = if isAbstract then "true" else "false"
                 builder.InstantiateNode 
                     name 
-                    node 
+                    "Node" 
                     ["shape", shape; "isAbstract", isAbstract; "instanceMetatype", "Metatype.Node"]
 
             let (--|>) child parent =
@@ -54,14 +52,14 @@ type RobotsMetamodelCreator() =
                 edge
 
             let abstractNode = +("AbstractNode", "", true)
-           // let initialNode = +("InitialNode", "View/Pictures/initialBlock.png", false)
+            let initialNode = +("InitialNode", "View/Pictures/initialBlock.png", false)
             let finalNode = +("FinalNode", "View/Pictures/finalBlock.png", false)
 
             let abstractMotorsBlock = +("AbstractMotorsBlock", "", true)
-            // infrastructure.Element.AddAttribute abstractMotorsBlock "ports" "AttributeKind.String" "M3, M4"
+            builder.AddAttribute abstractMotorsBlock "ports" "M3, M4"
 
             let abstractMotorsPowerBlock = +("AbstractMotorsPowerBlock", "", true)
-            // infrastructure.Element.AddAttribute abstractMotorsPowerBlock "power" "AttributeKind.Int" "100"
+            builder.AddAttributeWithType abstractMotorsPowerBlock "power" builder.Int "100"
 
             let motorsForward = +("MotorsForward", "View/Pictures/enginesForwardBlock.png", false)
             let motorsBackward = +("MotorsBackward", "View/Pictures/enginesBackwardBlock.png", false)
@@ -69,11 +67,11 @@ type RobotsMetamodelCreator() =
             let timer = +("Timer", "View/Pictures/timerBlock.png", false)
 
             let link = abstractNode ---> (abstractNode, "target", "Link")
-            // infrastructure.Element.AddAttribute link "guard" "AttributeKind.String" ""
+            builder.AddAttribute link "guard" ""
 
-            // infrastructure.Element.AddAttribute timer "delay" "AttributeKind.Int" "1000"
+            builder.AddAttributeWithType timer "delay" builder.Int "1000"
 
-            //initialNode --|> abstractNode
+            initialNode --|> abstractNode
             finalNode --|> abstractNode
             motorsForward --|> abstractMotorsPowerBlock
             motorsBackward --|> abstractMotorsPowerBlock

@@ -98,7 +98,7 @@ namespace WpfControlsLib.Model
                 };
                 var attributeInfos = edge.Attributes.Select(x => new AttributeViewModel(x, x.Name, x.Kind.ToString())
                 {
-                    Value = x.StringValue
+                    Value = x.StringDefaultValue
                 });
                 var attributes = attributeInfos as IList<AttributeViewModel> ?? attributeInfos.ToList();
                 attributes.ForEach(x => newEdge.Attributes.Add(x));
@@ -153,7 +153,7 @@ namespace WpfControlsLib.Model
 
             var attributeInfos = node.Attributes.Select(x => new AttributeViewModel(x, x.Name, x.Kind.ToString())
             {
-                Value = x.StringValue
+                Value = x.StringDefaultValue
             });
 
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
@@ -176,7 +176,7 @@ namespace WpfControlsLib.Model
 
             var attributeInfos = node.Attributes.Select(x => new AttributeViewModel(x, x.Name, x.Kind.ToString())
             {
-                Value = x.StringValue
+                Value = x.StringDefaultValue
             });
 
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));

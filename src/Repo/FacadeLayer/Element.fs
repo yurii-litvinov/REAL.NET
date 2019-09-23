@@ -25,7 +25,7 @@ type IElementRepository =
 /// Implementation of an element wrapper.
 and [<AbstractClass>] Element
     (
-        infrastructureSemantic: InfrastructureMetamodel.Semantics.InstantiationSemantics
+        instantiationSemantics: InfrastructureMetamodel.Semantics.InstantiationSemantics
         , element: DataLayer.IDataElement
         , repository: IElementRepository
         , attributeRepository: AttributeRepository
@@ -38,13 +38,21 @@ and [<AbstractClass>] Element
     let elementSemantics = Repo.AttributeMetamodel.Semantics.ElementSemantics(infrastructureMetamodel)
 
     let findMetatype (element : DataLayer.IDataElement) =
-        if infrastructureSemantic.Metamodel.IsNode element then
+        if instantiationSemantics.Metamodel.IsNode element then
             Metatype.Node
-        elif infrastructureSemantic.Metamodel.IsEdge element then
+        elif instantiationSemantics.Metamodel.IsEdge element then
             Metatype.Edge
         else
             raise (InvalidSemanticOperationException
                 "Trying to get a metatype of an element that is not instance of the Element. Model is malformed.")
+
+    let attributeType (kind: AttributeKind) =
+        match kind with
+        | AttributeKind.Boolean -> infrastructureMetamodel.Node "Boolean"
+        | AttributeKind.Double -> infrastructureMetamodel.Node "Double"
+        | AttributeKind.Int -> infrastructureMetamodel.Node "Int"
+        | AttributeKind.String -> infrastructureMetamodel.Node "String"
+        |_ -> raise (new System.NotSupportedException ())
 
     /// Returns corresponding element from data repository.
     member this.UnderlyingElement = element
@@ -76,7 +84,6 @@ and [<AbstractClass>] Element
             repository.GetElement element.LinguisticType
 
         member this.OntologicalType =
-            // TODO: Properly implement Ontological Type.
             repository.GetElement element.OntologicalType
 
         member this.IsAbstract =
@@ -103,6 +110,9 @@ and [<AbstractClass>] Element
             | _ -> failwith "Incorrect instanceMetatype attribute value"
 
         member this.AddAttribute (name, kind, defaultValue) =
-            failwith "Not implemented"
-            //infrastructureSemantic.Element.AddAttribute element name ("AttributeKind." + kind.ToString()) defaultValue
+            let attributeType = attributeType kind
+            let defaultValueNode = 
+                instantiationSemantics.InstantiateElement element.Model defaultValue attributeType Map.empty 
+                :?> DataLayer.IDataNode
+            instantiationSemantics.Element.AddAttribute element name attributeType defaultValueNode
             //()

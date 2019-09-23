@@ -54,17 +54,11 @@ and Attribute(attributeNode: DataLayer.IDataNode, repo: DataLayer.IDataRepositor
 
         member this.Name = attributeNode.Name
 
-        member this.ReferenceValue
-            with get (): IElement =
-                null
-            and set (v: IElement): unit =
-                ()
-
-        member this.StringValue
+        member this.StringDefaultValue
             with get (): string =
-                CoreMetamodel.NodeSemantics.Name <| dataElementSemantics.Attribute "stringValue" attributeNode 
+                (AttributeMetamodel.Semantics.AttributeSemantics.DefaultValue attributeNode).Name
             and set (v: string): unit =
-                (dataElementSemantics.Attribute "stringValue" attributeNode).Name <- v
+                raise (new System.NotImplementedException())
 
         member this.Type = null
 

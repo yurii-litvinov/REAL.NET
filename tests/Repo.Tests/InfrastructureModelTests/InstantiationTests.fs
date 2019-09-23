@@ -79,9 +79,9 @@ let ``Instantiation shall provide default values for linguistic attributes`` () 
                 { Name = "Interval"; Type = metamodelBuilder.Int; DefaultValue = zero};
             ]
 
-    let modelCreator = metamodelBuilder.CreateInstanceModelBuilder "RobotsModel"
+    let modelBuilder = metamodelBuilder.CreateInstanceModelBuilder "RobotsModel"
 
-    let timerInstance = modelCreator.InstantiateNode "timer" timerType ["Interval", "1000"]
+    let timerInstance = modelBuilder.InstantiateNode "timer" "Timer" ["Interval", "1000"]
 
     elementSemantics.HasSlot "Interval" timerInstance |> should be True
     elementSemantics.StringSlotValue "Interval" timerInstance |> should equal "1000"
