@@ -20,6 +20,11 @@ open CoreSemanticsHelpers
 
 /// Helper functions for element semantics.
 type ElementSemantics () =
+    /// Returns type of an element (term "instanceOf" is used as a relation name like in most 
+    /// publications on deep metamodeling).
+    static member LinguisticType (element: IDataElement) =
+        let instanceOfAssociation: IDataAssociation = ElementSemantics.OutgoingAssociation element "instanceOf"
+        instanceOfAssociation.Target.Value
 
     /// Returns true if 'descendant' is a (possibly indirect) descendant of a 'parent', in terms of generalization
     /// hierarchy.
@@ -27,46 +32,39 @@ type ElementSemantics () =
         bfs descendant isGeneralization ((=) parent) |> Option.isSome
 
     /// Returns true if an 'instance' is a (possibly indirect) instance of a 'class'.
-    static member IsOntologicalInstanceOf (ontologicalClass: IDataElement) (instance: IDataElement) =
-        if instance.OntologicalType = ontologicalClass 
-                || ElementSemantics.IsDescendantOf ontologicalClass instance.OntologicalType 
+    static member IsInstanceOf (linguisticType: IDataElement) (instance: IDataElement) =
+        let instanceType = ElementSemantics.LinguisticType instance
+        if instanceType = linguisticType 
+                || ElementSemantics.IsDescendantOf linguisticType instanceType
         then
             true
-        elif instance.OntologicalType = instance then
+        elif instanceType = instance then
             false
         else
-            ElementSemantics.IsOntologicalInstanceOf ontologicalClass instance.OntologicalType
-
-    /// Returns all outgoing edges for an element.
-    static member OutgoingEdges (element: IDataElement) =
-        element.OutgoingEdges
-
-    /// Returns all incoming edges for an element.
-    static member IncomingEdges (element: IDataElement) =
-        element.IncomingEdges
+            ElementSemantics.IsInstanceOf linguisticType instanceType
 
     /// Returns all outgoing generalizations for an element.
-    static member OutgoingGeneralizations element =
-        ElementSemantics.OutgoingEdges element |> Seq.filter isGeneralization |> Seq.cast<IDataGeneralization>
+    static member OutgoingGeneralizations (element: IDataElement) =
+        element.OutgoingEdges |> Seq.filter isGeneralization |> Seq.cast<IDataGeneralization>
 
     /// Returns all outgoing associations for an element.
-    static member OutgoingAssociations element =
-        ElementSemantics.OutgoingEdges element |> Seq.filter isAssociation |> Seq.cast<IDataAssociation>
+    static member OutgoingAssociations (element: IDataElement) =
+        element.OutgoingEdges |> Seq.filter isAssociation |> Seq.cast<IDataAssociation>
 
     /// Returns all incoming associations for an element.
-    static member IncomingAssociations element =
-        ElementSemantics.IncomingEdges element |> Seq.filter isAssociation |> Seq.cast<IDataAssociation>
+    static member IncomingAssociations (element: IDataElement) =
+        element.IncomingEdges |> Seq.filter isAssociation |> Seq.cast<IDataAssociation>
 
     /// Returns all outgoing associations with given target name for an element.
-    static member OutgoingAssociationsWithTargetName element targetName =
-        ElementSemantics.OutgoingEdges element 
+    static member OutgoingAssociationsWithTargetName (element: IDataElement) (targetName: string) =
+        element.OutgoingEdges
         |> Seq.filter isAssociation 
         |> Seq.cast<IDataAssociation>
         |> Seq.filter (fun a -> a.TargetName = targetName)
 
     /// Returns all incoming associations with given target name for an element.
-    static member IncomingAssociationsWithTargetName element targetName =
-        ElementSemantics.IncomingEdges element 
+    static member IncomingAssociationsWithTargetName (element: IDataElement) (targetName: string) =
+        element.IncomingEdges
         |> Seq.filter isAssociation 
         |> Seq.cast<IDataAssociation>
         |> Seq.filter (fun a -> a.TargetName = targetName)
@@ -130,9 +128,9 @@ type NodeSemantics () =
     
     /// Returns string representation of a node.
     static member ToString (node: IDataNode) =
+        let linguisticType = ElementSemantics.LinguisticType node
         let result = sprintf "Name: %s\n" <| node.Name
-        let result = result + (sprintf "Ontological type: %s\n" <| NodeSemantics.Name node.OntologicalType)
-        let result = result + (sprintf "Linguistic type: %s\n" <| NodeSemantics.Name node.LinguisticType)
+        let result = result + (sprintf "Type: %s\n" <| NodeSemantics.Name linguisticType)
         result
 
 /// Helper functions for working with models.

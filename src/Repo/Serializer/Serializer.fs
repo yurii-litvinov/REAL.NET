@@ -36,29 +36,19 @@ module Serializer =
 
     /// Function that wraps element from repository to its corresponding wrapper object for serialization.
     /// Maintains a repository of wrapped objects, so if this object was seen already, does not create a new object.
-    let rec private wrap (element: IDataElement option) =
-        match element with
-        | None -> null
-        | Some e -> 
-            if wrappedElements.ContainsKey e then
-                wrappedElements.[e]
-            else
-                match e with
-                | :? IDataNode as n -> wrapNode n :> WrappedElement
-                | :? IDataAssociation as a -> wrapAssociation a :> WrappedElement
-                | :? IDataGeneralization as g -> wrapGeneralization g :> WrappedElement
-                | _ -> failwith "Unknown element type in data repo, can not serialize"
+    let rec private wrap (element: IDataElement) =
+        if wrappedElements.ContainsKey element then
+            wrappedElements.[element]
+        else
+            match element with
+            | :? IDataNode as n -> wrapNode n :> WrappedElement
+            | :? IDataAssociation as a -> wrapAssociation a :> WrappedElement
+            | :? IDataGeneralization as g -> wrapGeneralization g :> WrappedElement
+            | _ -> failwith "Unknown element type in data repo, can not serialize"
 
     /// Function that adds IElement-specific to already constructed data object.
     and private wrapElement (wrappedElement: WrappedElement) (element: IDataElement) =
-        if element.OntologicalType = element then 
-            wrappedElement.OntologicalType <- null
-        else
-            wrappedElement.OntologicalType <- wrap (Some element.OntologicalType)
-        if element.LinguisticType = element then 
-            wrappedElement.LinguisticType <- null
-        else
-            wrappedElement.LinguisticType <- wrap (Some element.LinguisticType)
+        ()
 
     /// Function that adds IEdge-specific to already constructed data object.
     and private wrapEdge (wrappedEdge: WrappedEdge) (edge: IDataEdge) =

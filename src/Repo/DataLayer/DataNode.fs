@@ -15,24 +15,10 @@
 namespace Repo.DataLayer
 
 /// Implementation of a node in model.
-type DataNode private 
-        (
-        name: string, 
-        ontologicalType: IDataElement option, 
-        linguisticType: IDataElement option, 
-        model: IDataModel
-        ) =
-    inherit DataElement(ontologicalType, linguisticType, model)
+type DataNode (name: string, model: IDataModel) =
+    inherit DataElement(model)
 
-    let mutable name = name
-    
-    new (name: string, model: IDataModel) = DataNode(name, None, None, model)
-    new (name: string, ontologicalType: IDataElement, linguisticType: IDataElement, model: IDataModel) = 
-        DataNode(name, Some ontologicalType, Some linguisticType, model)
-
-    override this.ToString () = model.Name + "." + name
+    override this.ToString () = model.Name + "." + (this :> IDataNode).Name
 
     interface IDataNode with
-        member __.Name
-            with get(): string = name
-            and set v = name <- v
+        member val Name = name with get,set

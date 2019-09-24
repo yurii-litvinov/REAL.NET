@@ -24,8 +24,6 @@ open System.Collections.Generic
 [<AllowNullLiteral>]
 [<AbstractClass>]
 type WrappedElement() =
-    member val OntologicalType: WrappedElement = null with get, set
-    member val LinguisticType: WrappedElement = null with get, set
     abstract Accept: visitor: Visitor -> unit
 
 /// Helper class for edge serialization.
@@ -82,7 +80,7 @@ and [<JsonObject>] WrappedRepo() =
 
 /// Helper class that represents the entire save file.
 and [<JsonObject>] SaveFile() =
-    member val Version = "0.12" with get, set
+    member val Version = "0.13" with get, set
     member val Extensions = Dictionary<string, obj>() with get, set
     member val Contents = WrappedRepo() with get, set
     member this.Accept (visitor: Visitor) =

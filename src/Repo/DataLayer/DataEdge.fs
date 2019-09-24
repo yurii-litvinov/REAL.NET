@@ -16,15 +16,8 @@ namespace Repo.DataLayer
 
 /// Implementation of Edge abstraction.
 [<AbstractClass>]
-type DataEdge 
-        (
-        ontologicalType: IDataElement option, 
-        linguisticType: IDataElement option, 
-        source: IDataElement option, 
-        target: IDataElement option, 
-        model: IDataModel
-        ) =
-    inherit DataElement(ontologicalType, linguisticType, model)
+type DataEdge(source: IDataElement, target: IDataElement, model: IDataModel) =
+    inherit DataElement(model)
 
     let mutable source = source
     let mutable target = target
@@ -33,17 +26,13 @@ type DataEdge
         member this.Source
             with get () = source
             and set v =
-                if source.IsSome then
-                    source.Value.DeleteOutgoingEdge this
+                source.DeleteOutgoingEdge this
                 source <- v
-                if source.IsSome then
-                    source.Value.AddOutgoingEdge this
+                source.AddOutgoingEdge this
 
         member this.Target
             with get () = target
             and set v =
-                if source.IsSome then
-                    source.Value.DeleteIncomingEdge this
+                source.DeleteIncomingEdge this
                 target <- v
-                if target.IsSome then
-                    target.Value.AddIncomingEdge this
+                target.AddIncomingEdge this

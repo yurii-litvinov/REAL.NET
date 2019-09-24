@@ -36,30 +36,22 @@ module Deserializer =
             unwrappedElements.[element]
         else
             let (!) e = unwrap e model
-            let (!!) e = if e = null then None else Some(unwrap e model)
             match element with
             | :? WrappedNode as n -> 
-                if n.OntologicalType = null then
-                    register n (model.CreateNode n.Name) :> IDataElement
-                else
-                    register n (model.CreateNode(n.Name, !n.OntologicalType, !n.LinguisticType)) :> IDataElement
+                register n (model.CreateNode n.Name) :> IDataElement
             | :? WrappedAssociation as a -> 
                 model.CreateAssociation
                         (
-                        !a.OntologicalType, 
-                        !a.LinguisticType, 
-                        !!a.Source, 
-                        !!a.Target, 
+                        !a.Source, 
+                        !a.Target, 
                         a.TargetName
                         ) :> IDataElement
                 |> register a
             | :? WrappedGeneralization as g -> 
                 model.CreateGeneralization
                         (
-                        !g.OntologicalType, 
-                        !g.LinguisticType, 
-                        !!g.Source, 
-                        !!g.Target
+                        !g.Source, 
+                        !g.Target
                         ) :> IDataElement
                 |> register g
             | _ -> failwith "Unknown element type in serialized file, can not deserialize"

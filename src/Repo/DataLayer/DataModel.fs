@@ -46,46 +46,15 @@ type DataModel private
             nodes <- node :: nodes
             node
 
-        member this.CreateNode(name, (ontologicalType: IDataElement), (linguisticType: IDataElement)) =
-            let node = DataNode(name, ontologicalType, linguisticType, this) :> IDataNode
-            nodes <- node :: nodes
-            node
-
-        member this.CreateAssociation(ontologicalType, linguisticType, source, target, targetName) =
-            let edge = 
-                new DataAssociation(ontologicalType, linguisticType, source, target, targetName, this) 
-                :> IDataAssociation
-            edges <- (edge :> IDataEdge) :: edges
-            if source.IsSome then
-                source.Value.AddOutgoingEdge edge
-            if target.IsSome then
-                target.Value.AddIncomingEdge edge
-            edge
-
-        member this.CreateAssociation(ontologicalType, linguisticType, source, target, targetName) =
-            let edge = 
-                new DataAssociation(ontologicalType, linguisticType, Some source, Some target, targetName, this) 
-                :> IDataAssociation
+        member this.CreateAssociation(source, target, targetName) =
+            let edge = new DataAssociation(source, target, targetName, this) :> IDataAssociation
             edges <- (edge :> IDataEdge) :: edges
             source.AddOutgoingEdge edge
             target.AddIncomingEdge edge
             edge
 
-        member this.CreateGeneralization(ontologicalType, linguisticType, source, target) =
-            let edge = 
-                new DataGeneralization(ontologicalType, linguisticType, source, target, this) 
-                :> IDataGeneralization
-            if source.IsSome then
-                source.Value.AddOutgoingEdge edge
-            if target.IsSome then
-                target.Value.AddIncomingEdge edge
-            edges <- (edge :> IDataEdge) :: edges
-            edge
-
-        member this.CreateGeneralization(ontologicalType, linguisticType, source, target) =
-            let edge = 
-                new DataGeneralization(ontologicalType, linguisticType, Some source, Some target, this) 
-                :> IDataGeneralization
+        member this.CreateGeneralization(source, target) =
+            let edge = new DataGeneralization(source, target, this) :> IDataGeneralization
             source.AddOutgoingEdge edge
             target.AddIncomingEdge edge
             edges <- (edge :> IDataEdge) :: edges
@@ -95,23 +64,18 @@ type DataModel private
             match element with
             | :? IDataNode as n ->
                 nodes <- nodes |> List.except [n]
+                n.OutgoingEdges |> Seq.iter (fun e -> (this :> IDataModel).DeleteElement e)
+                n.IncomingEdges |> Seq.iter (fun e -> (this :> IDataModel).DeleteElement e)
+
+                // TODO: Some kind of garbage collection.
             | :? IDataEdge as e -> 
                 edges <- edges |> List.except [e]
-                
-                match e.Source with
-                | Some element -> element.DeleteOutgoingEdge e
-                | _ -> ()
-
-                match e.Target with
-                | Some element -> element.DeleteIncomingEdge e
-                | _ -> ()
+                if e.Source = element then 
+                    element.DeleteOutgoingEdge e
+                else 
+                    element.DeleteIncomingEdge e
 
             | _ -> failwith "Unknown descendant of IDataElement"
-
-            edges |> List.iter (fun e ->
-                if e.Source = Some element then e.Source <- None
-                if e.Target = Some element then e.Target <- None
-                )
 
         member this.Elements: IDataElement seq =
             let nodes = (nodes |> Seq.cast<IDataElement>)

@@ -17,13 +17,11 @@ namespace Repo.DataLayer
 /// Implementation of Generalization edge.
 type DataGeneralization 
         (
-        ontologicalType: IDataElement,
-        linguisticType: IDataElement,
-        source: IDataElement option,
-        target: IDataElement option,
+        source: IDataElement,
+        target: IDataElement,
         model: IDataModel
         ) =
-    inherit DataEdge(Some ontologicalType, Some linguisticType, source, target, model)
+    inherit DataEdge(source, target, model)
 
     override this.ToString () = model.Name + ".Generalization"
 

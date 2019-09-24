@@ -17,14 +17,6 @@ namespace Repo.DataLayer
 /// Element, most general thing that can be in a model.
 type IDataElement =
     interface
-        /// Ontological type of an element --- type from problem domain. 
-        /// E.g. "Species" is an ontological type of "Dog".
-        abstract OntologicalType: IDataElement with get
-
-        /// Linguistic type of an element --- type from language and tooling point of view.
-        /// E.g. "Species" and "Dog" are both "Object" and will be drawn as a rectangle on a diagram.
-        abstract LinguisticType: IDataElement with get
-
         /// Outgoing edges for that element.
         abstract OutgoingEdges: IDataEdge seq with get
 
@@ -62,10 +54,10 @@ and IDataEdge =
     interface
         inherit IDataElement
         /// Element at the beginning of an edge, may be None if edge is not connected.
-        abstract Source: IDataElement option with get, set
+        abstract Source: IDataElement with get, set
 
         /// Element at the ending of an edge, may be None if edge is not connected.
-        abstract Target: IDataElement option with get, set
+        abstract Target: IDataElement with get, set
     end
 
 /// Generalization is a kind of edge which has special semantic in metamodel (allows to inherit associations).
@@ -84,6 +76,20 @@ and IDataAssociation =
         abstract TargetName: string with get, set
     end
 
+/// InstanceOf is a kind of edge which has special semantic in entire metamodel stack. Means that source is an instance
+/// of target. Every element shall have at least one such outgoing edge (except InstanceOf itself, for it we assume
+/// that it is always an instance of InstanceOf node of a corresponding metamodel). Can cross metamodel boundaries. 
+/// There can be several InstanceOf relations from the same element (for example, linguistic InstanceOf and ontological
+/// InstanceOf), to differentiate between them subsequent metalevels can add attributes to this edge.
+///
+/// InstanceOf type is determined by metalevel of edge source and is governed by its linguistic metamodel (or just
+/// metamodel, if linguistic and ontological metamodels are not differentiated on that metalevel). Note that
+/// all linguistic metamodels shall have InstanceOf node and fully support InstanceOf semantics.
+and IDataInstanceOf =
+    interface
+        inherit IDataEdge
+    end
+
 /// Model is a set of nodes and edges, corresponds to one diagram (or one palette) in editor.
 and IDataModel =
     interface
@@ -98,43 +104,19 @@ and IDataModel =
         /// Model can be a metamodel for itself.
         abstract LinguisticMetamodel: IDataModel with get
 
-        /// Creates a new node of given ontological and linguistic types in a model.
-        abstract CreateNode: name: string * ontologicalType: IDataElement * linguisticType: IDataElement -> IDataNode
-
-        /// Creates a node that is its own type (Node, for example, is an instance of Node).
+        /// Creates a new node in a model.
         abstract CreateNode: name: string -> IDataNode
 
         /// Creates new Generalization edge with given source and target. 
         abstract CreateGeneralization: 
-                ontologicalType: IDataElement
-                * linguisticType: IDataElement
-                * source: IDataElement
+                source: IDataElement
                 * target: IDataElement
-                -> IDataGeneralization
-
-        /// Creates new possibly unconnected Generalization edge.
-        abstract CreateGeneralization: 
-                ontologicalType: IDataElement
-                * linguisticType: IDataElement
-                * source: IDataElement option 
-                * target: IDataElement option 
                 -> IDataGeneralization
 
         /// Creates new Association edge with given source and target.
         abstract CreateAssociation:
-                ontologicalType: IDataElement
-                * linguisticType: IDataElement
-                * source: IDataElement
+                source: IDataElement
                 * target: IDataElement
-                * targetName: string
-                -> IDataAssociation
-
-        /// Creates new possibly unconnected Association edge.
-        abstract CreateAssociation:
-                ontologicalType: IDataElement
-                * linguisticType: IDataElement
-                * source: IDataElement option
-                * target: IDataElement option
                 * targetName: string
                 -> IDataAssociation
 
@@ -150,7 +132,8 @@ and IDataModel =
         /// A map of custom model properties.
         abstract Properties: Map<string, string> with get, set
 
-        /// Deletes element from a model and unconnects related elements if needed.
+        /// Deletes element from a model and unconnects related elements if needed. Removes "hanging" edges.
+        /// Nodes without connections are not removed automatically.
         abstract DeleteElement: element : IDataElement -> unit
 
         /// Searches node in a model. If there are none or more than one node with given name, throws an exception.

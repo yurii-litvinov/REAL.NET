@@ -24,7 +24,7 @@ type CoreMetamodelCreator() =
 
             let node = model.CreateNode "Node"
 
-            let (~+) name = model.CreateNode(name, node, node)
+            let (~+) name = model.CreateNode name
 
             let element = +"Element"
             let edge = +"Edge"
@@ -32,8 +32,14 @@ type CoreMetamodelCreator() =
             let association = +"Association"
             let stringNode = +"String"
 
+            let (--//-->) (source: IDataElement) target =
+                model.CreateAssociation(association, source, target, "instanceOf") |> ignore
+
+            element --//--> node
+            node --//--> node
+
             let (--|>) (source: IDataElement) target =
-                model.CreateGeneralization(generalization, generalization, source, target) |> ignore
+                model.CreateGeneralization(generalization, source, target) |> ignore
 
             node --|> element
             edge --|> element
@@ -41,10 +47,16 @@ type CoreMetamodelCreator() =
             association --|> edge
 
             let (--->) (source: IDataElement) (target, name) =
-                model.CreateAssociation(association, association, source, target, name) |> ignore
+                model.CreateAssociation(association, source, target, name) |> ignore
 
+            /// Ontological type of an element --- type from problem domain. 
+            /// E.g. "Species" is an ontological type of "Dog".
             element ---> (element, "ontologicalType")
+
+            /// Linguistic type of an element --- type from language and tooling point of view.
+            /// E.g. "Species" and "Dog" are both "Object" and will be drawn as a rectangle on a diagram.
             element ---> (element, "linguisticType")
+
             edge ---> (element, "source")
             edge ---> (element, "target")
             association ---> (stringNode, "targetName")

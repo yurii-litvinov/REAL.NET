@@ -58,10 +58,10 @@ let ``IsInstanceOf shall work for long instantiation chains`` () =
     let model2 = repo.CreateModel("TestModel2", model1, model1)
     let instance = model2.CreateNode("Instance", element, element)
 
-    ElementSemantics.IsOntologicalInstanceOf element instance |> should be True
-    ElementSemantics.IsOntologicalInstanceOf node element |> should be True
-    ElementSemantics.IsOntologicalInstanceOf node instance |> should be True
-    ElementSemantics.IsOntologicalInstanceOf instance node |> should be False
+    ElementSemantics.IsInstanceOf element instance |> should be True
+    ElementSemantics.IsInstanceOf node element |> should be True
+    ElementSemantics.IsInstanceOf node instance |> should be True
+    ElementSemantics.IsInstanceOf instance node |> should be False
 
 [<Test>]
 let ``IsInstanceOf shall respect generalization`` () =
@@ -78,8 +78,8 @@ let ``IsInstanceOf shall respect generalization`` () =
     let descendantInstance = model2.CreateNode("descendantInstance", descendant, descendant)
     let parentInstance = model2.CreateNode("parentInstance", parent, parent)
 
-    ElementSemantics.IsOntologicalInstanceOf descendant descendantInstance |> should be True
-    ElementSemantics.IsOntologicalInstanceOf parent descendantInstance |> should be True
+    ElementSemantics.IsInstanceOf descendant descendantInstance |> should be True
+    ElementSemantics.IsInstanceOf parent descendantInstance |> should be True
 
-    ElementSemantics.IsOntologicalInstanceOf descendant parentInstance |> should be False
-    ElementSemantics.IsOntologicalInstanceOf parent parentInstance |> should be True
+    ElementSemantics.IsInstanceOf descendant parentInstance |> should be False
+    ElementSemantics.IsInstanceOf parent parentInstance |> should be True
