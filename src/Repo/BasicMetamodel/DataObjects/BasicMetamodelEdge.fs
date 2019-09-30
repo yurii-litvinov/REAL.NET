@@ -1,4 +1,4 @@
-﻿(* Copyright 2017 Yurii Litvinov
+﻿(* Copyright 2019 REAL.NET group
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,27 +12,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace Repo.DataLayer
+namespace Repo.BasicMetamodel.DataObjects
+
+open Repo.BasicMetamodel
 
 /// Implementation of Edge abstraction.
-[<AbstractClass>]
-type DataEdge(source: IDataElement, target: IDataElement, model: IDataModel) =
-    inherit DataElement(model)
+type BasicMetamodelEdge(source: IBasicMetamodelElement, target: IBasicMetamodelElement, targetName: string) as this =
+    inherit BasicMetamodelElement()
 
     let mutable source = source
-    let mutable target = target
 
-    interface IDataEdge with
+    do
+        (source :?> BasicMetamodelElement).RegisterOutgoingEdge this
+
+    interface IBasicMetamodelEdge with
         member this.Source
             with get () = source
             and set v =
-                source.DeleteOutgoingEdge this
+                (source :?> BasicMetamodelElement).UnregisterOutgoingEdge this
                 source <- v
-                source.AddOutgoingEdge this
+                (source :?> BasicMetamodelElement).RegisterOutgoingEdge this
 
-        member this.Target
-            with get () = target
-            and set v =
-                source.DeleteIncomingEdge this
-                target <- v
-                target.AddIncomingEdge this
+        member val Target = target with get,set
+
+        member val TargetName = targetName with get,set

@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="nunit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
+    <PackageReference Include="FsUnit" Version="3.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="BasicMetamodel.Tests\DataObjects.Tests\BasicMetamodelEdgeTests.fs" />
+    <Compile Include="BasicMetamodel.Tests\DataObjects.Tests\BasicMetamodelElementTests.fs" />
+    <Compile Include="BasicMetamodel.Tests\DataObjects.Tests\BasicMetamodelNodeTests.fs" />
+    <Compile Include="BasicMetamodel.Tests\DataObjects.Tests\BasicMetamodelRepoTests.fs" />
+    <Compile Include="BasicMetamodel.Tests\BasicMetamodelRepoFactoryTests.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Repo\Repo.Core.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="4.7.0" />
+  </ItemGroup>
+
+</Project>

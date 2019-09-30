@@ -1,4 +1,4 @@
-﻿(* Copyright 2019 Yurii Litvinov
+(* Copyright 2019 REAL.NET group
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -12,17 +12,4 @@
 * See the License for the specific language governing permissions and
 * limitations under the License. *)
 
-namespace Repo.DataLayer
-
-/// Implementation of InstanceOf edge.
-type DataInstanceOf
-       (
-       source: IDataElement,
-       target: IDataElement,
-       model: IDataModel
-       ) =
-   inherit DataEdge(source, target, model)
-
-   override this.ToString () = model.Name + ".InstanceOf"
-
-   interface IDataInstanceOf
+module Program = let [<EntryPoint>] main _ = 0

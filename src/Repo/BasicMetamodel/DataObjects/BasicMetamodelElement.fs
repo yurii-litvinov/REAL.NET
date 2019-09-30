@@ -1,4 +1,4 @@
-﻿(* Copyright 2017 Yurii Litvinov
+﻿(* Copyright 2019 REAL.NET group
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,19 +12,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace Repo.DataLayer
+namespace Repo.BasicMetamodel.DataObjects
 
-/// Implementation of Association edge.
-type DataAssociation
-        (
-        source: IDataElement,
-        target: IDataElement,
-        targetName: string,
-        model: IDataModel
-        ) =
-    inherit DataEdge(source, target, model)
+open Repo.BasicMetamodel
 
-    override this.ToString () = model.Name + "." + targetName
+/// Implementation of Element.
+[<AbstractClass>]
+type BasicMetamodelElement() =
+    let mutable outgoingEdges = []
 
-    interface IDataAssociation with
-        member val TargetName: string = targetName with get, set
+    member this.RegisterOutgoingEdge edge =
+        outgoingEdges <- edge :: outgoingEdges
+
+    member this.UnregisterOutgoingEdge edge =
+        outgoingEdges <- outgoingEdges |> List.except [edge]
+    
+    interface IBasicMetamodelElement with
+        member this.OutgoingEdges =
+            Seq.ofList outgoingEdges
