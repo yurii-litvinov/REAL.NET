@@ -14,10 +14,15 @@
 
 namespace Repo
 
-
+/// Type of file which represents visual information
 type TypeOfVisual =
+    /// Xml file
     | XML = 0
+
+    /// Just image connected to element
     | Image = 1
+
+    /// No file provided
     | NoFile = 2
 
 /// This interface represents information about how element is shown on screen.
@@ -154,6 +159,7 @@ type INode =
     interface
         inherit IElement
 
+        /// Info how element should be represented on screen
         abstract member VisualInfo: IVisualNodeInfo with get, set
     end
 
@@ -170,6 +176,7 @@ type IEdge =
         /// Reference to an element connected to an end of an edge, null if no element is connected.
         abstract To: IElement with get, set
 
+        /// Info how element should be represented on screen
         abstract member VisualInfo: IVisualEdgeInfo with get, set
     end
 
@@ -208,6 +215,9 @@ type IModel =
 
         /// Deletes given element from a model.
         abstract DeleteElement: element: IElement -> unit
+
+        /// Restores given element to this model
+        abstract RestoreElement: element: IElement -> unit
 
         /// Searches for an element with given name in a model. Throws if there is no such element or there is 
         /// more than one.

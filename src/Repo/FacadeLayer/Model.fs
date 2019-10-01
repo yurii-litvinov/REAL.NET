@@ -64,13 +64,22 @@ and Model
             // TODO: Clean up the memory and check correctness (for example, check for "class" relations)
             let unwrappedElement = (element :?> Element).UnderlyingElement
             /// TODO: Delete all attributes.
-            let rec delete (element: IElement) = 
+            let delete (element: IElement) = 
                 model.MarkElementDeleted unwrappedElement            
-                elementRepository.DeleteElement unwrappedElement
+                /// elementRepository.DeleteElement unwrappedElement
                 for attribute in element.Attributes do
                     let unwrappedAttribute = (attribute :?> Attribute).UnderlyingNode
                     model.MarkElementDeleted unwrappedAttribute
             delete element
+
+        member this.RestoreElement element = 
+            let unwrappedElement = (element :?> Element).UnderlyingElement
+            let restore (element: IElement) =
+                model.UnmarkDeletedElement unwrappedElement
+                for attribute in element.Attributes do
+                    let unwrappedAttribute = (attribute :?> Attribute).UnderlyingNode
+                    model.UnmarkDeletedElement unwrappedAttribute
+            restore element
 
         member this.FindElement name =
             let matchingElements =
