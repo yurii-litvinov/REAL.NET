@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows.Media;
 using GraphX.Measure;
 using GraphX.PCL.Common.Interfaces;
 using GraphX.PCL.Common.Models;
@@ -11,6 +12,11 @@ namespace WpfControlsLib.ViewModel
     {
         private EdgeTypeEnum edgeType = EdgeTypeEnum.Association;
         private IList<AttributeViewModel> attributes = new List<AttributeViewModel>();
+        private SolidColorBrush brush = Brushes.Blue;
+        private bool isAllowed = true;
+
+        private static readonly SolidColorBrush invalidEdgeBrush = Brushes.Red;
+        private static readonly SolidColorBrush defaultEdgeBrush = Brushes.Blue;
 
         private string text;
 
@@ -34,6 +40,29 @@ namespace WpfControlsLib.ViewModel
             Association,
             Type,
             Attribute,
+        }
+
+        public SolidColorBrush Color
+        {
+            get => this.brush;
+
+            set
+            {
+                this.brush = value;
+                this.OnPropertyChanged(nameof(this.Color));
+            }
+        }
+
+        public bool IsAllowed
+        {
+            get => this.isAllowed;
+
+            set
+            {
+                this.isAllowed = value;
+                // TODO: Color property can be set by an user, and user color will be forgotten after IsAllowed change.
+                this.Color = value ? defaultEdgeBrush : invalidEdgeBrush;
+            }
         }
 
         public bool ArrowTarget { get; set; }

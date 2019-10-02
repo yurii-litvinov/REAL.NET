@@ -22,7 +22,6 @@ namespace WpfEditor.View
     using EditorPluginInterfaces;
     using PluginManager;
     using Repo;
-    using WpfControlsLib.Constraints;
     using WpfControlsLib.Controls.Console;
     using WpfControlsLib.Controls.ModelSelector;
     using WpfControlsLib.Controls.Scene;
@@ -38,6 +37,8 @@ namespace WpfEditor.View
         private readonly WpfControlsLib.Controller.Controller controller;
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public event Action<string> OnModelChanged;
 
         public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();
 
@@ -109,6 +110,7 @@ namespace WpfEditor.View
             this.model.ModelName = modelName;
             this.palette.InitPalette(this.model.ModelName);
             this.scene.Reload();
+            this.OnModelChanged?.Invoke(this.model.ModelName);
         }
 
         private void InitToolbar()
@@ -130,10 +132,17 @@ namespace WpfEditor.View
             foreach (var plugindir in pluginDirs)
             {
                 var dirs = new List<string>(System.IO.Directory.GetDirectories(plugindir + "/bin"));
-                var config = new PluginConfig(this.model, null, null, this.Console, null);
+                var config = new PluginConfig(this.model, null, null, this.Console, null, this.leftPanelGrid);
+                config.ChangeModelSelectorVisibility = (x) => { this.modelSelector.SelectorVisibility = x; };
+                config.ChangeModel = this.SelectModel;
                 foreach (var dir in dirs)
                 {
                     libs.LaunchPlugins(dir, config);
+                }
+
+                if (config.OnMainModelChanged != null)
+                {
+                    this.OnModelChanged += new Action<string>(config.OnMainModelChanged);
                 }
             }
         }
@@ -143,17 +152,6 @@ namespace WpfEditor.View
             foreach (Window w in Application.Current.Windows)
             {
                 w.Close();
-            }
-        }
-
-        private void ConstraintsButtonClick(object sender, RoutedEventArgs e)
-        {
-            var constraintsWindow = new ConstraintsWindow(this.model);
-            constraintsWindow.ShowDialog();
-
-            if (!this.model.ConstraintsCheck())
-            {
-                this.Console.ReportError(this.model.Constraints.ErrorMsg);
             }
         }
 
