@@ -3,13 +3,28 @@
 set -eu
 set -o pipefail
 
-export BUILD_PACKAGES=.fake
-export FAKE_CLI="$BUILD_PACKAGES/fake.exe"
-
-if [ ! -f "$%FAKE_CLI" ]; then
-  dotnet tool install fake-cli --tool-path ./$BUILD_PACKAGES
-fi
-
 dotnet restore build.proj
-$FAKE_CLI run build-core.fsx --target "RunTests"
+
+# liberated from https://stackoverflow.com/a/18443300/433393
+realpath() {
+  OURPWD=$PWD
+  cd "$(dirname "$1")"
+  LINK=$(readlink "$(basename "$1")")
+  while [ "$LINK" ]; do
+    cd "$(dirname "$LINK")"
+    LINK=$(readlink "$(basename "$1")")
+  done
+  REALPATH="$PWD/$(basename "$1")"
+  cd "$OURPWD"
+  echo "$REALPATH"
+}
+
+TOOL_PATH=$(realpath .fake)
+FAKE="$TOOL_PATH"/fake
+
+if ! [ -e "$FAKE" ]
+then
+  dotnet tool install fake-cli --tool-path "$TOOL_PATH"
+fi
+"$FAKE" --target "RunTests"
 
