@@ -1,9 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Include="Exceptions.fs" />
     <Compile Include="Helpers.fs" />
@@ -14,5 +14,5 @@
     <Compile Include="BasicMetamodel\DataObjects\BasicMetamodelRepo.fs" />
     <Compile Include="BasicMetamodel\BasicMetamodelRepoFactory.fs" />
   </ItemGroup>
-
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

@@ -1,4 +1,4 @@
-version 5.198.0
+version 5.216.0
 
 framework: net461
 source https://api.nuget.org/v3/index.json
@@ -27,6 +27,27 @@ nuget NUnit3TestAdapter
 nuget FsUnit
 
 
+group Core
+
+framework: netstandard2.0
+source https://api.nuget.org/v3/index.json
+
+nuget FSharp.Core redirects: force
+nuget Newtonsoft.Json
+
+
+group TestsCore
+
+framework: netcoreapp2.2
+source https://api.nuget.org/v3/index.json
+
+nuget NSubstitute
+nuget NUnit
+nuget NUnit3TestAdapter
+nuget FsUnit
+nuget Microsoft.NET.Test.Sdk
+
+
 group TestRunners
 
 framework: net461
@@ -47,3 +68,4 @@ nuget Fake.DotNet.AssemblyInfoFile
 nuget Fake.DotNet.MsBuild
 nuget Fake.DotNet.Testing.NUnit
 nuget Fake.IO.FileSystem
+nuget Fake.DotNet.Cli

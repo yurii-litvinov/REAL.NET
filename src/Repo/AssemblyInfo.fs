@@ -3,8 +3,8 @@ namespace System
 open System.Reflection
 
 [<assembly: AssemblyTitleAttribute("Repo")>]
-[<assembly: AssemblyProductAttribute("REAL.NET")>]
-[<assembly: AssemblyDescriptionAttribute("Domain-specific modeling toolkit")>]
+[<assembly: AssemblyProductAttribute("REAL.NET Repository Core")>]
+[<assembly: AssemblyDescriptionAttribute("Domain-specific modeling repository")>]
 [<assembly: AssemblyVersionAttribute("0.1")>]
 [<assembly: AssemblyFileVersionAttribute("0.1")>]
 [<assembly: AssemblyConfigurationAttribute("Release")>]
@@ -12,8 +12,8 @@ do ()
 
 module internal AssemblyVersionInformation =
     let [<Literal>] AssemblyTitle = "Repo"
-    let [<Literal>] AssemblyProduct = "REAL.NET"
-    let [<Literal>] AssemblyDescription = "Domain-specific modeling toolkit"
+    let [<Literal>] AssemblyProduct = "REAL.NET Repository Core"
+    let [<Literal>] AssemblyDescription = "Domain-specific modeling repository"
     let [<Literal>] AssemblyVersion = "0.1"
     let [<Literal>] AssemblyFileVersion = "0.1"
     let [<Literal>] AssemblyConfiguration = "Release"
