@@ -38,7 +38,7 @@ nuget Newtonsoft.Json
 
 group TestsCore
 
-framework: netcoreapp2.2
+framework: netcoreapp3.0
 source https://api.nuget.org/v3/index.json
 
 nuget NSubstitute

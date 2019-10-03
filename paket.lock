@@ -777,7 +777,7 @@ NUGET
       System.Runtime.CompilerServices.Unsafe (>= 4.5.2)
 
 GROUP TestsCore
-RESTRICTION: == netcoreapp2.2
+RESTRICTION: == netcoreapp3.0
 NUGET
   remote: https://api.nuget.org/v3/index.json
     Castle.Core (4.4)
@@ -1057,7 +1057,6 @@ NUGET
       Microsoft.NETCore.Platforms (>= 3.0)
       System.Security.Principal.Windows (>= 4.6)
     System.Security.Principal.Windows (4.6)
-      Microsoft.NETCore.Platforms (>= 3.0)
     System.Text.Encoding (4.3)
       Microsoft.NETCore.Platforms (>= 1.1)
       Microsoft.NETCore.Targets (>= 1.1)
