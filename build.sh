@@ -26,5 +26,5 @@ if ! [ -e "$FAKE" ]
 then
   dotnet tool install fake-cli --tool-path "$TOOL_PATH"
 fi
-"$FAKE" --target "RunTests"
+"$FAKE" run build-core.fsx --target "RunTests"
 
