@@ -11,5 +11,5 @@ if [ ! -f "$%FAKE_CLI" ]; then
 fi
 
 dotnet restore build.proj
-dotnet fake build-core $@
+$FAKE_CLI run build-core.fsx --target "RunTests"
 
