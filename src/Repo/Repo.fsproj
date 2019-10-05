@@ -94,6 +94,8 @@
     <Compile Include="ModelBuilders\CoreMetametamodelBuilder.fs" />
     <Compile Include="FacadeLayer.fs" />
     <Compile Include="FacadeLayer\Visual\VisualInfo.fs" />
+    <Compile Include="FacadeLayer\Visual\VisualNodeInfo.fs" />
+    <Compile Include="FacadeLayer\Visual\VisualEdgeInfo.fs" />
     <Compile Include="FacadeLayer\Attribute.fs" />
     <Compile Include="FacadeLayer\Element.fs" />
     <Compile Include="FacadeLayer\Edge.fs" />

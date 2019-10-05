@@ -16,20 +16,22 @@ namespace Repo.Visual
 
 open Repo
 
-type [<AbstractClass>] VisualInfo
+/// Implements class - representation of node on screen
+type VisualNodeInfo
     (
         link: string,
-        ``type``: TypeOfVisual
+        ``type``: TypeOfVisual,
+        position : (int * int) option
     ) =
 
-    let mutable link = link
-    let mutable typeOfVisual = ``type``
+    inherit VisualInfo(link, ``type``)
 
-    interface IVisualInfo with
-        member this.LinkToFile
-            with get (): string = link
-            and set (v: string): unit = link <- v
-        member this.Type
-            with get (): TypeOfVisual = typeOfVisual             
-            and set (v: TypeOfVisual): unit = typeOfVisual <-v
+    let mutable position = position
 
+    /// Instantiates instance of class with default values.
+    new() = VisualNodeInfo("", TypeOfVisual.NoFile, None)
+
+    interface IVisualNodeInfo with
+        member this.Position
+            with get (): (int * int) option = position             
+            and set (v: (int * int) option): unit = position <- v

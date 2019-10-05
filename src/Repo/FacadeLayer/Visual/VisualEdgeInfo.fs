@@ -16,20 +16,22 @@ namespace Repo.Visual
 
 open Repo
 
-type [<AbstractClass>] VisualInfo
+/// Implements class - representation of edge on screen
+type VisualEdgeInfo
     (
         link: string,
-        ``type``: TypeOfVisual
+        ``type``: TypeOfVisual,
+        routingPoints : (int * int) list
     ) =
 
-    let mutable link = link
-    let mutable typeOfVisual = ``type``
+    inherit VisualInfo(link, ``type``)
 
-    interface IVisualInfo with
-        member this.LinkToFile
-            with get (): string = link
-            and set (v: string): unit = link <- v
-        member this.Type
-            with get (): TypeOfVisual = typeOfVisual             
-            and set (v: TypeOfVisual): unit = typeOfVisual <-v
+    let mutable routingPoints = routingPoints
 
+    /// Instantiates instance of class with default values.
+    new() = VisualEdgeInfo("", TypeOfVisual.NoFile, [])
+
+    interface IVisualEdgeInfo with
+        member this.RoutingPoints
+            with get () = routingPoints             
+            and set (v) = routingPoints <- v       
