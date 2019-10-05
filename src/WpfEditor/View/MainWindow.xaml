@@ -25,6 +25,7 @@
     xmlns:modelExplorer="clr-namespace:WpfControlsLib.Controls.ModelExplorer;assembly=WpfControlsLib"
     xmlns:palette="clr-namespace:WpfControlsLib.Controls.Palette;assembly=WpfControlsLib"
     xmlns:toolbar="clr-namespace:WpfControlsLib.Controls.Toolbar;assembly=WpfControlsLib"
+    xmlns:attributesPanel="clr-namespace:WpfControlsLib.Controls.AttributesPanel;assembly=WpfControlsLib"
     xmlns:validators="clr-namespace:WpfEditor.View.Validators"
     Title="{Binding WindowTitle}"
     mc:Ignorable="d"
@@ -128,68 +129,8 @@
                 <modelExplorer:ModelExplorer x:Name="modelExplorer" Grid.Row="2"/>
 
                 <Label x:Name="selectedEntityLabel" Grid.Row="3" Content="Selected entity:" HorizontalAlignment="Stretch" />
-
-
-                <DataGrid Grid.Row="4" x:Name="attributesView" ItemsSource="{Binding Attributes}" AutoGenerateColumns="False" CellEditEnding="AttributesViewCellEditEnding">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Name}"/>
-                        <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Type}"/>
-                        <DataGridTemplateColumn Header="Value" IsReadOnly="False">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <ContentControl>
-                                        <ContentControl.Style>
-                                            <Style TargetType="ContentControl">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Path=Type}" Value="String">
-                                                        <Setter Property="ContentTemplate">
-                                                            <Setter.Value>
-                                                                <DataTemplate>
-                                                                    <TextBox Text="{Binding DataContext.Value, RelativeSource={RelativeSource AncestorType=DataGridCell}}"/>
-                                                                </DataTemplate>
-                                                            </Setter.Value>
-                                                        </Setter>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Path=Type}" Value="Int">
-                                                        <Setter Property="ContentTemplate">
-                                                            <Setter.Value>
-                                                                <DataTemplate>
-                                                                    <TextBox>
-                                                                        <TextBox.Text>
-                                                                            <Binding>
-                                                                                <Binding.Path>DataContext.Value</Binding.Path>
-                                                                                <Binding.RelativeSource>
-                                                                                    <RelativeSource AncestorType="DataGridCell"/>
-                                                                                </Binding.RelativeSource>
-                                                                                <Binding.ValidationRules>
-                                                                                    <validators:IntValidation/>
-                                                                                    <ExceptionValidationRule/>
-                                                                                </Binding.ValidationRules>
-                                                                            </Binding>
-                                                                            </TextBox.Text>
-                                                                    </TextBox>
-                                                                </DataTemplate>
-                                                            </Setter.Value>
-                                                        </Setter>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Path=Type}" Value="Boolean">
-                                                        <Setter Property="ContentTemplate">
-                                                            <Setter.Value>
-                                                                <DataTemplate>
-                                                                    <CheckBox IsChecked ="{Binding DataContext.Value, RelativeSource={RelativeSource AncestorType=DataGridCell}}"/>
-                                                                </DataTemplate>
-                                                            </Setter.Value>
-                                                        </Setter>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </ContentControl.Style>
-                                    </ContentControl>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
+                <attributesPanel:AttributesPanel Grid.Row="4" DataContext="{Binding AttributesPanel}"/>
+                
             </Grid>
 
         </DockPanel>
