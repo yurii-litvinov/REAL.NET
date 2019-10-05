@@ -4,7 +4,7 @@
 #endif
 #load "./.fake/build.fsx/intellisense.fsx"
 
-open System
+open System.IO
 open System.Runtime.InteropServices
 open Fake.Core
 open Fake.Core.TargetOperators
@@ -50,11 +50,11 @@ let tags = "DSM visual-modeling visual-languages"
 let solutionFile  = "REAL.NET.sln"
 
 // Default target configuration
-let configuration, doNotCopyBinaries = 
+let configuration = 
     if RuntimeInformation.IsOSPlatform OSPlatform.Linux then
-        "MonoRelease", ["WpfEditor"; "WpfControlsLib"; "AirSim"]
+        "MonoRelease"
     else
-        "Release", []
+        "Release"
 
 // Pattern specifying assemblies to be tested using NUnit
 let testAssemblies = "tests/**/bin" </> configuration </> "*Tests*.dll"
@@ -117,8 +117,8 @@ Target.create "AssemblyInfo" (fun _ ->
 Target.create "CopyBinaries" (fun _ ->
     !! "src/**/*.??proj"
     -- "src/**/*.shproj"
-    |>  Seq.filter (fun f -> not (Seq.exists ((=) (System.IO.Path.GetFileNameWithoutExtension f)) doNotCopyBinaries))
-    |>  Seq.map (fun f -> ((System.IO.Path.GetDirectoryName f) </> "bin" </> configuration, "bin" </> (System.IO.Path.GetFileNameWithoutExtension f)))
+    |>  Seq.map (fun f -> ((Path.GetDirectoryName f) </> "bin" </> configuration, "bin" </> (Path.GetFileNameWithoutExtension f)))
+    |>  Seq.filter (fun (fromDir, _) -> File.Exists fromDir)
     |>  Seq.iter (fun (fromDir, toDir) -> Shell.copyDir toDir fromDir (fun _ -> true))
 )
 
@@ -154,7 +154,7 @@ Target.create "RunTests" (fun _ ->
     |> NUnit3.run (fun p ->
         { p with
             ToolPath = "packages/testrunners/NUnit.ConsoleRunner/tools/nunit3-console.exe"
-            TimeOut = TimeSpan.FromMinutes 20.
+            TimeOut = System.TimeSpan.FromMinutes 20.
         })
 )
 
