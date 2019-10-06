@@ -12,61 +12,53 @@
 * See the License for the specific language governing permissions and
 * limitations under the License. *)
 
-namespace Repo.BasicMetamodel.DataObjects
+namespace Repo.BasicMetamodel.Details.Elements
 
 open Repo.BasicMetamodel
 
 /// Implementation of basic repository (who doesn't even know about models).
-type BasicMetamodelRepo(name: string) =
-    inherit BasicMetamodelElement()
+type BasicRepository() =
+    let mutable nodes: IBasicNode list = []
+    let mutable edges: IBasicEdge list = []
 
-    let mutable nodes: IBasicMetamodelNode list = []
-    let mutable edges: IBasicMetamodelEdge list = []
-
-    interface IBasicMetamodelRepository with
-        member this.CreateNode (name: string): IBasicMetamodelNode =
-            let node = BasicMetamodelNode(name) :> IBasicMetamodelNode
+    interface IBasicRepository with
+        member this.CreateNode name =
+            let node = BasicNode(name) :> IBasicNode
             nodes <- node :: nodes
             node
 
-        member this.CreateEdge 
-                (source: IBasicMetamodelElement)
-                (target: IBasicMetamodelElement)
-                (targetName: string)
-                 =
-            let edge = BasicMetamodelEdge(source, target, targetName) :> IBasicMetamodelEdge
+        member this.CreateEdge source target targetName =
+            let edge = BasicEdge(source, target, targetName) :> IBasicEdge
             edges <- edge :: edges
             edge
 
-        member this.Elements: IBasicMetamodelElement seq =
-            let nodes = nodes |> Seq.cast<IBasicMetamodelElement>
-            let edges = edges |> Seq.cast<IBasicMetamodelElement>
+        member this.Elements: IBasicElement seq =
+            let nodes = nodes |> Seq.cast<IBasicElement>
+            let edges = edges |> Seq.cast<IBasicElement>
             Seq.append nodes edges
 
-        member this.Nodes: IBasicMetamodelNode seq =
-            nodes |> Seq.ofList
+        member this.Nodes = nodes |> Seq.ofList
 
-        member this.Edges: IBasicMetamodelEdge seq =
-            edges |> Seq.ofList
+        member this.Edges = edges |> Seq.ofList
 
-        member this.DeleteElement (element: IBasicMetamodelElement) =
+        member this.DeleteElement element =
             match element with
-            | :? IBasicMetamodelNode as n ->
+            | :? IBasicNode as n ->
                 nodes <- nodes |> List.except [n]
 
-                let deleteEdge e = (this :> IBasicMetamodelRepository).DeleteElement e
+                let deleteEdge e = (this :> IBasicRepository).DeleteElement e
 
                 n.OutgoingEdges |> Seq.iter deleteEdge
-                edges |> List.filter (fun e -> e.Target = (n :> IBasicMetamodelElement)) |> Seq.iter deleteEdge
+                edges |> List.filter (fun e -> e.Target = (n :> IBasicElement)) |> Seq.iter deleteEdge
             
-            | :? IBasicMetamodelEdge as e -> 
+            | :? IBasicEdge as e -> 
                 edges <- edges |> List.except [e]
-                (e.Source :?> BasicMetamodelElement).UnregisterOutgoingEdge e
+                (e.Source :?> BasicElement).UnregisterOutgoingEdge e
 
             | _ -> failwith "Unknown descendant of IBasicMetamodelElement"
 
 
-        member this.Node (name: string): IBasicMetamodelNode =
+        member this.Node (name: string): IBasicNode =
             let filtered = nodes |> List.filter (fun x -> x.Name = name)
             match filtered with
             | [] -> raise (Repo.ElementNotFoundException name)
@@ -76,7 +68,7 @@ type BasicMetamodelRepo(name: string) =
         member this.HasNode (name: string): bool =
             nodes |> List.exists (fun x -> x.Name = name)
 
-        member this.Edge (name: string): IBasicMetamodelEdge =
+        member this.Edge (name: string): IBasicEdge =
             Repo.Helpers.getExactlyOne 
                 edges
                 (fun a -> a.TargetName = name)

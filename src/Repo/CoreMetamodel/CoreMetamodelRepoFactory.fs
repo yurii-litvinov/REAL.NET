@@ -12,15 +12,22 @@
 * See the License for the specific language governing permissions and
 * limitations under the License. *)
 
-namespace Repo.BasicMetamodel
+namespace Repo.CoreMetamodel
 
-open Repo.BasicMetamodel.Details
+open Repo
+open Repo.CoreMetamodel
+open Repo.CoreMetamodel.Details
+open Repo.CoreMetamodel.Details.Elements
 
-/// Factory that creates basic metamodel repository.
+/// Factory that creates core metamodel repository.
 [<AbstractClass; Sealed>]
 type RepoFactory =
-    /// Method that returns repository with Basic Metamodel.
+    /// Method that returns repository with Core Metamodel.
     static member Create() = 
-        let repo = Elements.BasicRepository ()
-        BasicMetamodelCreator.createIn repo
-        repo :> IBasicRepository
+        let basicRepo = BasicMetamodel.RepoFactory.Create ()
+        let factory = CoreFactory(basicRepo)
+        let pool = CorePool(factory)
+        let repo = CoreRepository(pool, basicRepo)
+        CoreMetametamodelCreator.createIn repo
+        CoreMetamodelCreator.createIn repo
+        repo :> ICoreRepository

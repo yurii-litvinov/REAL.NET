@@ -7,12 +7,29 @@
   <ItemGroup>
     <Compile Include="Exceptions.fs" />
     <Compile Include="Helpers.fs" />
+    <Compile Include="BasicMetamodel\Consts.fs" />
     <Compile Include="BasicMetamodel\BasicMetamodel.fs" />
-    <Compile Include="BasicMetamodel\DataObjects\BasicMetamodelElement.fs" />
-    <Compile Include="BasicMetamodel\DataObjects\BasicMetamodelNode.fs" />
-    <Compile Include="BasicMetamodel\DataObjects\BasicMetamodelEdge.fs" />
-    <Compile Include="BasicMetamodel\DataObjects\BasicMetamodelRepo.fs" />
+    <Compile Include="BasicMetamodel\Details\Elements\BasicElement.fs" />
+    <Compile Include="BasicMetamodel\Details\Elements\BasicNode.fs" />
+    <Compile Include="BasicMetamodel\Details\Elements\BasicEdge.fs" />
+    <Compile Include="BasicMetamodel\Details\Elements\BasicRepository.fs" />
+    <Compile Include="BasicMetamodel\Details\BasicMetamodelCreator.fs" />
     <Compile Include="BasicMetamodel\BasicMetamodelRepoFactory.fs" />
+    <Compile Include="CoreMetamodel\Consts.fs" />
+    <Compile Include="CoreMetamodel\CoreMetamodel.fs" />
+    <Compile Include="CoreMetamodel\Details\Elements\CorePool.fs" />
+    <Compile Include="CoreMetamodel\Details\Elements\CoreElement.fs" />
+    <Compile Include="CoreMetamodel\Details\Elements\CoreEdge.fs" />
+    <Compile Include="CoreMetamodel\Details\Elements\CoreInstanceOf.fs" />
+    <Compile Include="CoreMetamodel\Details\Elements\CoreGeneralization.fs" />
+    <Compile Include="CoreMetamodel\Details\Elements\CoreAssociation.fs" />
+    <Compile Include="CoreMetamodel\Details\Elements\CoreNode.fs" />
+    <Compile Include="CoreMetamodel\Details\Elements\CoreModel.fs" />
+    <Compile Include="CoreMetamodel\Details\Elements\CoreRepository.fs" />
+    <Compile Include="CoreMetamodel\Details\Elements\CoreFactory.fs" />
+    <Compile Include="CoreMetamodel\Details\CoreMetametamodelCreator.fs" />
+    <Compile Include="CoreMetamodel\Details\CoreMetamodelCreator.fs" />
+    <Compile Include="CoreMetamodel\CoreMetamodelRepoFactory.fs" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

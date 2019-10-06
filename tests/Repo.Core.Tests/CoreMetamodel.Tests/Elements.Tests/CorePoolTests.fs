@@ -12,25 +12,20 @@
 * See the License for the specific language governing permissions and
 * limitations under the License. *)
 
-namespace Repo.BasicMetamodel.DataObjects.Tests
+namespace Repo.CoreMetamodel.Elements.Tests
 
-open Repo.BasicMetamodel.DataObjects
-open Repo.BasicMetamodel
+open Repo.CoreMetamodel.Details.Elements
 
 open NUnit.Framework
 open FsUnitTyped
 
 [<TestFixture>]
-type BasicMetamodelNodeTests() =
+type CorePoolTests() =
 
     [<SetUp>]
     member this.Setup () =
         ()
 
     [<Test>]
-    member this.NameTest () =
-        let node = BasicMetamodelNode("node") :> IBasicMetamodelNode
-        node.Name |> shouldEqual "node"
-        node.Name <- "newName"
-        node.Name |> shouldEqual "newName"
+    member this.CreateEmptyRepoTests () =
         ()

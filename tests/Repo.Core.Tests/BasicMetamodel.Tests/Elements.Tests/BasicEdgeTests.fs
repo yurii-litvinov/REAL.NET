@@ -12,9 +12,9 @@
 * See the License for the specific language governing permissions and
 * limitations under the License. *)
 
-namespace Repo.BasicMetamodel.DataObjects.Tests
+namespace Repo.BasicMetamodel.Elements.Tests
 
-open Repo.BasicMetamodel.DataObjects
+open Repo.BasicMetamodel.Details.Elements
 open Repo.BasicMetamodel
 
 open NUnit.Framework
@@ -23,16 +23,12 @@ open FsUnitTyped
 [<TestFixture>]
 type BasicMetamodelEdgeTests() =
     
-    let createNode name = BasicMetamodelNode(name) :> IBasicMetamodelElement
-
-    [<SetUp>]
-    member this.Setup () =
-        ()
+    let createNode name = BasicNode(name) :> IBasicElement
 
     [<Test>]
     member this.NameTest () =
         let node = createNode "node"
-        let edge = BasicMetamodelEdge(node, node, "edge") :> IBasicMetamodelEdge
+        let edge = BasicEdge(node, node, "edge") :> IBasicEdge
         edge.TargetName |> shouldEqual "edge"
         edge.TargetName <- "newName"
         edge.TargetName |> shouldEqual "newName"
@@ -45,7 +41,7 @@ type BasicMetamodelEdgeTests() =
         let node2 = createNode "node2"
         let node3 = createNode "node3"
 
-        let edge = BasicMetamodelEdge(node1, node2, "edge") :> IBasicMetamodelEdge
+        let edge = BasicEdge(node1, node2, "edge") :> IBasicEdge
 
         edge.Source |> shouldEqual node1
         edge.Target |> shouldEqual node2

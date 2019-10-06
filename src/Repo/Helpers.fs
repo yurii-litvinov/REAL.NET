@@ -27,3 +27,21 @@ module Helpers =
             raise <| ifManyExceptionFactory ()
         else
             Seq.head filtered
+
+    /// Checks that given sequence contains exactly one element and returns it. Throws appropriate exceptions if not.
+    let exactlyOneElement elementName seq =
+        if Seq.isEmpty seq then
+            raise <| ElementNotFoundException elementName
+        elif Seq.length seq <> 1 then
+            raise <| MultipleElementsException elementName
+        else 
+            Seq.head seq
+
+    /// Checks that given sequence contains exactly one model and returns it. Throws appropriate exceptions if not.
+    let exactlyOneModel modelName seq =
+        if Seq.isEmpty seq then
+            raise <| ModelNotFoundException modelName
+        elif Seq.length seq <> 1 then
+            raise <| MultipleModelsException modelName
+        else 
+            Seq.head seq

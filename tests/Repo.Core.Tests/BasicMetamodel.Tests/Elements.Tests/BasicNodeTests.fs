@@ -1,4 +1,4 @@
-(* Copyright 2019 REAL.NET group
+﻿(* Copyright 2019 REAL.NET group
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -12,32 +12,25 @@
 * See the License for the specific language governing permissions and
 * limitations under the License. *)
 
-namespace Repo.BasicMetamodel.DataObjects.Tests
+namespace Repo.BasicMetamodel.Elements.Tests
 
-open Repo.BasicMetamodel.DataObjects
+open Repo.BasicMetamodel.Details.Elements
 open Repo.BasicMetamodel
 
 open NUnit.Framework
 open FsUnitTyped
 
 [<TestFixture>]
-type BasicMetamodelElementTests() =
+type BasicMetamodelNodeTests() =
 
     [<SetUp>]
     member this.Setup () =
         ()
 
     [<Test>]
-    member this.OutgoingEdgesTest () =
-        let node1 = BasicMetamodelNode("node1") :> IBasicMetamodelElement
-        let node2 = BasicMetamodelNode("node2") :> IBasicMetamodelElement
-        let edge1 = BasicMetamodelEdge(node1, node2, "edge1") :> IBasicMetamodelEdge
-        let edge2 = BasicMetamodelEdge(node1, node1, "loop") :> IBasicMetamodelEdge
-
-        node1.OutgoingEdges |> shouldHaveLength 2
-        node2.OutgoingEdges |> shouldBeEmpty
-
-        node1.OutgoingEdges |> shouldContain edge1
-        node1.OutgoingEdges |> shouldContain edge2
-
+    member this.NameTest () =
+        let node = BasicNode("node") :> IBasicNode
+        node.Name |> shouldEqual "node"
+        node.Name <- "newName"
+        node.Name |> shouldEqual "newName"
         ()

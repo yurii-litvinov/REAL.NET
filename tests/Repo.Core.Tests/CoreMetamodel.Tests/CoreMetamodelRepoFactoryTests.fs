@@ -12,13 +12,20 @@
 * See the License for the specific language governing permissions and
 * limitations under the License. *)
 
-namespace Repo.BasicMetamodel.DataObjects
+namespace Repo.CoreMetamodel.Tests
 
-open Repo.BasicMetamodel
+open Repo.CoreMetamodel
 
-/// Implementation of Node abstraction.
-type BasicMetamodelNode(name: string) =
-    inherit BasicMetamodelElement()
+open NUnit.Framework
+open FsUnitTyped
 
-    interface IBasicMetamodelNode with
-        member val Name = name with get,set
+[<TestFixture>]
+type CoreMetamodelRepoFactoryTests() =
+
+    [<SetUp>]
+    member this.Setup () =
+        ()
+
+    [<Test>]
+    member this.CreateEmptyRepoTests () =
+        ()

@@ -5,11 +5,14 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BasicMetamodel.Tests\DataObjects.Tests\BasicMetamodelEdgeTests.fs" />
-    <Compile Include="BasicMetamodel.Tests\DataObjects.Tests\BasicMetamodelElementTests.fs" />
-    <Compile Include="BasicMetamodel.Tests\DataObjects.Tests\BasicMetamodelNodeTests.fs" />
-    <Compile Include="BasicMetamodel.Tests\DataObjects.Tests\BasicMetamodelRepoTests.fs" />
+    <Compile Include="CoreMetamodel.Tests\Semantics.Tests\CoreMetamodelConstraintsTests.fs" />
+    <Compile Include="CoreMetamodel.Tests\CoreMetamodelRepoFactoryTests.fs" />
+    <Compile Include="BasicMetamodel.Tests\Elements.Tests\BasicElementTests.fs" />
+    <Compile Include="BasicMetamodel.Tests\Elements.Tests\BasicNodeTests.fs" />
+    <Compile Include="BasicMetamodel.Tests\Elements.Tests\BasicEdgeTests.fs" />
+    <Compile Include="BasicMetamodel.Tests\Elements.Tests\BasicRepositoryTests.fs" />
     <Compile Include="BasicMetamodel.Tests\BasicMetamodelRepoFactoryTests.fs" />
+    <Compile Include="CoreMetamodel.Tests\Elements.Tests\CorePoolTests.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Repo\Repo.Core.fsproj" />

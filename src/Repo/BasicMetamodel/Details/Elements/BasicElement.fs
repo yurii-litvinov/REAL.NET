@@ -12,13 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace Repo.BasicMetamodel.DataObjects
+namespace Repo.BasicMetamodel.Details.Elements
 
+open Repo
 open Repo.BasicMetamodel
 
 /// Implementation of Element.
 [<AbstractClass>]
-type BasicMetamodelElement() =
+type BasicElement() =
     let mutable outgoingEdges = []
 
     member this.RegisterOutgoingEdge edge =
@@ -27,6 +28,27 @@ type BasicMetamodelElement() =
     member this.UnregisterOutgoingEdge edge =
         outgoingEdges <- outgoingEdges |> List.except [edge]
     
-    interface IBasicMetamodelElement with
+    interface IBasicElement with
         member this.OutgoingEdges =
             Seq.ofList outgoingEdges
+
+        member this.OutgoingEdge name =
+            outgoingEdges 
+            |> Seq.filter (fun e -> e.TargetName = name)
+            |> Helpers.exactlyOneElement name
+
+        member this.HasExactlyOneOutgoingEdge name =
+            outgoingEdges 
+            |> Seq.filter (fun e -> e.TargetName = name)
+            |> Seq.length
+            |> (=) 1
+
+        member this.Metatypes =
+            outgoingEdges
+            |> Seq.filter (fun e -> e.TargetName = "instanceOf")
+            |> Seq.filter (fun e -> e.Metatypes |> Seq.isEmpty)
+            |> Seq.map (fun e -> e.Target)
+
+        member this.Metatype =
+            (this :> IBasicElement).Metatypes
+            |> Helpers.exactlyOneElement "instanceOf"

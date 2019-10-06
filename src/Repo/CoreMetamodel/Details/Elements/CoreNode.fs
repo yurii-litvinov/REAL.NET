@@ -12,25 +12,15 @@
 * See the License for the specific language governing permissions and
 * limitations under the License. *)
 
-namespace Repo.BasicMetamodel.DataObjects.Tests
+namespace Repo.CoreMetamodel.Details.Elements
 
-open Repo.BasicMetamodel.DataObjects
+open Repo.CoreMetamodel
 open Repo.BasicMetamodel
 
-open NUnit.Framework
-open FsUnitTyped
-
-[<TestFixture>]
-type BasicMetamodelRepoTests() =
-
-    [<SetUp>]
-    member this.Setup () =
-        ()
-
-    [<Test>]
-    member this.NameTest () =
-        let node = BasicMetamodelNode("node") :> IBasicMetamodelNode
-        node.Name |> shouldEqual "node"
-        node.Name <- "newName"
-        node.Name |> shouldEqual "newName"
-        ()
+/// Implementation of Node.
+type CoreNode(node: IBasicNode, pool: CorePool, repo: IBasicRepository) =
+    inherit CoreElement(node, pool, repo)
+    interface ICoreNode with
+        member this.Name
+            with get () = node.Name
+            and set v = node.Name <- v

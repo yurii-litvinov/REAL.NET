@@ -12,26 +12,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. *)
 
-namespace Repo.BasicMetamodel.DataObjects
+namespace Repo.BasicMetamodel.Details.Elements
 
 open Repo.BasicMetamodel
 
 /// Implementation of Edge abstraction.
-type BasicMetamodelEdge(source: IBasicMetamodelElement, target: IBasicMetamodelElement, targetName: string) as this =
-    inherit BasicMetamodelElement()
+type BasicEdge(source: IBasicElement, target: IBasicElement, targetName: string) as this =
+    inherit BasicElement()
 
     let mutable source = source
 
     do
-        (source :?> BasicMetamodelElement).RegisterOutgoingEdge this
+        (source :?> BasicElement).RegisterOutgoingEdge this
 
-    interface IBasicMetamodelEdge with
+    override this.ToString () =
+        targetName
+
+    interface IBasicEdge with
         member this.Source
             with get () = source
             and set v =
-                (source :?> BasicMetamodelElement).UnregisterOutgoingEdge this
+                (source :?> BasicElement).UnregisterOutgoingEdge this
                 source <- v
-                (source :?> BasicMetamodelElement).RegisterOutgoingEdge this
+                (source :?> BasicElement).RegisterOutgoingEdge this
 
         member val Target = target with get,set
 
