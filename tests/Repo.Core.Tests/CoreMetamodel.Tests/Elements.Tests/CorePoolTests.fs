@@ -27,5 +27,5 @@ type CorePoolTests() =
         ()
 
     [<Test>]
-    member this.CreateEmptyRepoTests () =
+    member this.WrapTests () =
         ()

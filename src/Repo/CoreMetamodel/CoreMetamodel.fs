@@ -100,17 +100,28 @@ and ICoreModel =
         /// Model can be a metamodel for itself.
         abstract Metamodel: ICoreModel with get
 
-        /// Creates a new node in a model.
+        /// Creates a new node in a model by instantiating Core Metamodel "Node".
         abstract CreateNode: name: string -> ICoreNode
 
-        /// Creates new Generalization edge with given source and target. 
+        /// Creates new Generalization edge with given source and target by instantiating 
+        /// Core Metamodel "Generalization"
         abstract CreateGeneralization: source: ICoreElement -> target: ICoreElement -> ICoreGeneralization
 
-        /// Creates new Association edge with given source and target.
+        /// Creates new Association edge with given source and target by instantiating Core Metamodel "Association".
         abstract CreateAssociation: 
             source: ICoreElement 
             -> target: ICoreElement 
             -> targetName: string 
+            -> ICoreAssociation
+
+        /// Creates a new node in a model by instantiating given node from metamodel.
+        abstract InstantiateNode: name: string -> metatype: ICoreNode -> ICoreNode
+
+        /// Creates a new association in a model by instantiating given association from metamodel.
+        abstract InstantiateAssociation: 
+            source: ICoreElement 
+            -> target: ICoreElement 
+            -> metatype: ICoreAssociation 
             -> ICoreAssociation
 
         /// Returns all elements in a model.
@@ -122,7 +133,6 @@ and ICoreModel =
         /// Returns all edges in a model.
         abstract Edges: ICoreEdge seq with get
 
-        (*
         /// Deletes element from a model and unconnects related elements if needed. Removes "hanging" edges.
         /// Nodes without connections are not removed automatically.
         abstract DeleteElement: element : ICoreElement -> unit
@@ -142,7 +152,6 @@ and ICoreModel =
 
         /// Prints model contents on a console.
         abstract PrintContents: unit -> unit
-        *)
     end
 
 /// Repository is a collection of models.
@@ -151,21 +160,19 @@ type ICoreRepository =
         /// All models in a repository.
         abstract Models: ICoreModel seq with get
 
-        /// Creates and returns a new model in repository which is a metamodel of itself.
-        abstract CreateModelWithoutMetamodel: name : string -> ICoreModel
+        /// Creates and returns a new model in repository based on Core Metamodel.
+        abstract InstantiateCoreMetamodel: name: string -> ICoreModel
+
+        /// Creates and returns a new model in repository based on a given metamodel.
+        abstract InstantiateModel: name: string -> metamodel: ICoreModel -> ICoreModel
 
         /// Searches model in repository. 
         /// If there are none or more than one model with given name, throws an exception.
         abstract Model: name: string -> ICoreModel
-
-(*
-        /// Creates and returns a new model in repository based on a given metamodel.
-        abstract CreateModel: name: string -> metamodel: ICoreModel -> ICoreModel
 
         /// Deletes given model and all its elements from repository.
         abstract DeleteModel: model : ICoreModel -> unit
 
         /// Clears repository contents.
         abstract Clear : unit -> unit
-*)
     end

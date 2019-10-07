@@ -18,25 +18,24 @@
 /// any model.
 module Repo.CoreMetamodel.Details.CoreMetametamodelCreator
 
+open Repo
 open Repo.CoreMetamodel
 open Repo.CoreMetamodel.Details.Elements
-open Repo.BasicMetamodel
 
 let createIn(repo: ICoreRepository): unit =
     let repo = (repo :?> CoreRepository).UnderlyingRepo
 
-    let nodeMetatype = repo.Node Consts.node
-    let generalizationMetatype = (repo.Node Consts.element).OutgoingEdge Consts.generalization
-    let edgeMetatype = repo.Node Consts.edge
+    let nodeMetatype = repo.Node BasicMetamodel.Consts.node
+    let generalizationMetatype = 
+        (repo.Node BasicMetamodel.Consts.element).OutgoingEdge BasicMetamodel.Consts.generalization
+    let edgeMetatype = repo.Node BasicMetamodel.Consts.edge
 
     let (--/-->) source target =
-        repo.CreateEdge source target Consts.instanceOf |> ignore
-        ()
+        repo.CreateEdge source target Consts.instanceOfEdge |> ignore
 
     let (--->) source (target, name) =
         let edge = repo.CreateEdge source target name
         edge --/--> edgeMetatype
-        ()
 
     let (~+) name = 
         let node = repo.CreateNode name
@@ -46,17 +45,16 @@ let createIn(repo: ICoreRepository): unit =
     let (--|>) source target =
         let edge = repo.CreateEdge source target Consts.generalization
         edge --/--> generalizationMetatype
-        ()
 
-    let model = +"CoreMetametamodel::Model"
-    let repository = +"CoreMetametamodel::Repository"
-    let element = +"CoreMetametamodel::Element"
-    let node = +"CoreMetametamodel::Node"
-    let edge = +"CoreMetametamodel::Edge"
-    let generalization = +"CoreMetametamodel::Generalization"
-    let association = +"CoreMetametamodel::Association"
-    let instanceOf = +"CoreMetametamodel::InstanceOf"
-    let stringNode = +"CoreMetametamodel::String"
+    let model = +Consts.metamodelModel
+    let repository = +Consts.metamodelRepository
+    let element = +Consts.metamodelElement
+    let node = +Consts.metamodelNode
+    let edge = +Consts.metamodelEdgeNode
+    let generalization = +Consts.metamodelGeneralization
+    let association = +Consts.metamodelAssociation
+    let instanceOf = +Consts.metamodelInstanceOf
+    let stringNode = +Consts.metamodelString
 
     node --|> element
     edge --|> element
@@ -64,14 +62,12 @@ let createIn(repo: ICoreRepository): unit =
     association --|> edge
     instanceOf --|> edge
 
-    repository ---> (model, "models")
-    model ---> (model, "metamodel")
-    model ---> (element, "elements")
-    model ---> (stringNode, "name")
-    element ---> (model, "model")
-    edge ---> (element, "source")
-    edge ---> (element, "target")
-    node ---> (stringNode, "name")
-    association ---> (stringNode, "targetName")
-
-    ()
+    repository ---> (model, Consts.modelsEdge)
+    model ---> (model, Consts.metamodelEdge)
+    model ---> (element, Consts.elementsEdge)
+    model ---> (stringNode, Consts.nameEdge)
+    element ---> (model, Consts.modelEdge)
+    edge ---> (element, Consts.sourceEdge)
+    edge ---> (element, Consts.targetEdge)
+    node ---> (stringNode, Consts.nameEdge)
+    association ---> (stringNode, Consts.targetNameEdge)

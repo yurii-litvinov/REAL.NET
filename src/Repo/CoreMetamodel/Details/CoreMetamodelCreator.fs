@@ -39,7 +39,7 @@ let createIn(repo: ICoreRepository): unit =
         let modelEdge = repo.CreateEdge element model Consts.modelEdge
         modelEdge --/--> modelEdgeMetatype
 
-    let coreMetamodel = repo.CreateNode "CoreMetamodel"
+    let coreMetamodel = repo.CreateNode Consts.coreMetamodel
     coreMetamodel --/--> modelMetatype
 
     let (--->) source (target, name) =
@@ -85,5 +85,3 @@ let createIn(repo: ICoreRepository): unit =
     edge ---> (element, Consts.targetEdge)
     node ---> (stringNode, Consts.nameEdge)
     association ---> (stringNode, Consts.targetNameEdge)
-
-    ()

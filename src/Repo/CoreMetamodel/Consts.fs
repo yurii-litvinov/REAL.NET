@@ -16,6 +16,8 @@ module Repo.CoreMetamodel.Consts
 
 let instanceOfEdge = "instanceOf"
 
+let coreMetamodel = "CoreMetamodel"
+
 let metamodelNode = "CoreMetametamodel::Node"
 let metamodelElement = "CoreMetametamodel::Element"
 let metamodelEdgeNode = "CoreMetametamodel::Edge"

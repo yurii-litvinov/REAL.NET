@@ -20,6 +20,7 @@ open Repo.CoreMetamodel
 open NUnit.Framework
 open FsUnitTyped
 
+/// Tests for basic semantic constraints for repository with Core Metamodel.
 [<TestFixture>]
 type CoreMetamodelConstraintsTests() =
 

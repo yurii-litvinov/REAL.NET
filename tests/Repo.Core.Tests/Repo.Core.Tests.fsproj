@@ -5,6 +5,7 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CoreMetamodel.Tests\Semantics.Tests\ModelCreationTests.fs" />
     <Compile Include="CoreMetamodel.Tests\Semantics.Tests\CoreMetamodelConstraintsTests.fs" />
     <Compile Include="CoreMetamodel.Tests\CoreMetamodelRepoFactoryTests.fs" />
     <Compile Include="BasicMetamodel.Tests\Elements.Tests\BasicElementTests.fs" />

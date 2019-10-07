@@ -18,42 +18,76 @@ open Repo
 open Repo.CoreMetamodel
 
 /// Implementation of model.
-type CoreModel(node: BasicMetamodel.IBasicNode, pool: CorePool, repo: BasicMetamodel.IBasicRepository) =
+type CoreModel(modelNode: BasicMetamodel.IBasicNode, pool: CorePool, repo: BasicMetamodel.IBasicRepository) =
 
     let unwrap (element: ICoreElement) = (element :?> CoreElement).UnderlyingElement
+
+    let coreMetamodelNode = repo.Node Consts.node
+    let coreMetamodelGeneralization = repo.Node Consts.generalization
+    let coreMetamodelAssociation = repo.Node Consts.association
+    let coreMetamodelElementsEdge = (repo.Node Consts.model).OutgoingEdge Consts.elementsEdge
+    let coreMetamodelModelEdge = 
+        (repo.Node Consts.element).OutgoingEdges 
+        |> Seq.filter (fun e -> e.TargetName = Consts.modelEdge)
+        |> Seq.filter (fun e -> e.Metatype :? BasicMetamodel.IBasicEdge)
+        |> Helpers.exactlyOneElement "models"
+
+    let (--/-->) source target = repo.CreateEdge source target Consts.instanceOfEdge |> ignore
+    let (--->) source (target, targetName) =
+        repo.CreateEdge (unwrap source) (unwrap target) targetName
+    let (~+) name = repo.CreateNode name
+    let (++) model element =
+        let elementsEdge = repo.CreateEdge model element Consts.elementsEdge
+        elementsEdge --/--> coreMetamodelElementsEdge
+        let modelEdge = repo.CreateEdge element model Consts.modelEdge
+        modelEdge --/--> coreMetamodelModelEdge
+
+    /// Returns underlying BasicNode that is a root node for model.
+    member this.UnderlyingModel = modelNode
 
     interface ICoreModel with
 
         member this.Name 
-            with get () = node.Name
-            and set v = node.Name <- v
+            with get () = modelNode.Name
+            and set v = modelNode.Name <- v
 
         member this.Metamodel =
-            let metamodel = (node.OutgoingEdge Consts.metamodelEdge).Target
+            let metamodel = (modelNode.OutgoingEdge Consts.metamodelEdge).Target
             pool.WrapModel metamodel
 
         member this.CreateNode name =
-            let node = repo.CreateNode name
-            pool.Wrap node :?> ICoreNode
+            (this :> ICoreModel).InstantiateNode name ((pool.Wrap coreMetamodelNode) :?> ICoreNode)
 
         member this.CreateGeneralization source target =
-            let elementMetatype = repo.Node Consts.metamodelElement
-            let generalizationMetatype = elementMetatype.OutgoingEdge Consts.generalization
-            let edge = repo.CreateEdge (unwrap source) (unwrap target) ""
-            repo.CreateEdge edge generalizationMetatype Consts.instanceOfEdge |> ignore
+            let edge = source ---> (target, "")
+            edge --/--> coreMetamodelGeneralization
+            modelNode ++ edge
             pool.Wrap edge :?> ICoreGeneralization
 
         member this.CreateAssociation source target targetName =
-            let edgeMetatype = repo.Node "Edge"
-            let edge = repo.CreateEdge (unwrap source) (unwrap target) ""
-            repo.CreateEdge edge edgeMetatype "instanceOf" |> ignore
+            let edge = source ---> (target, targetName)
+            edge --/--> coreMetamodelAssociation
+            modelNode ++ edge
+            pool.Wrap edge :?> ICoreAssociation
+
+        member this.InstantiateNode name metatype =
+            let node = +name
+            node --/--> (unwrap metatype)
+            modelNode ++ node
+            pool.Wrap node :?> ICoreNode
+
+        member this.InstantiateAssociation source target metatype =
+            let targetName = ((unwrap metatype) :?> BasicMetamodel.IBasicEdge).TargetName
+            let edge = source ---> (target, targetName)
+            edge --/--> unwrap metatype
+            modelNode ++ edge
             pool.Wrap edge :?> ICoreAssociation
 
         member this.Elements =
             let modelMetatype = repo.Node Consts.metamodelModel
             let elementsMetatype = modelMetatype.OutgoingEdge Consts.elementsEdge :> BasicMetamodel.IBasicElement
 
-            node.OutgoingEdges
+            modelNode.OutgoingEdges
             |> Seq.filter (fun e -> (e.Metatypes |> Seq.isEmpty |> not) && (e.Metatype = elementsMetatype))
             |> Seq.map (fun e -> e.Target)
             |> Seq.map pool.Wrap
@@ -68,24 +102,36 @@ type CoreModel(node: BasicMetamodel.IBasicNode, pool: CorePool, repo: BasicMetam
             |> Seq.filter (fun e -> e :? ICoreEdge)
             |> Seq.cast<ICoreEdge>
 
-        (*
-        /// Deletes element from a model and unconnects related elements if needed. Removes "hanging" edges.
-        /// Nodes without connections are not removed automatically.
-        abstract DeleteElement: element : ICoreElement -> unit
+        member this.DeleteElement element =
+            let edges = Seq.append element.OutgoingEdges element.IncomingEdges |> Seq.toList
+            edges |> Seq.iter (this :> ICoreModel).DeleteElement
+            pool.UnregisterElement (element :?> CoreElement).UnderlyingElement
+            repo.DeleteElement (element :?> CoreElement).UnderlyingElement
 
-        /// Searches node in a model. If there are none or more than one node with given name, throws an exception.
-        abstract Node: name: string -> ICoreNode
+        member this.Node name =
+            (this :> ICoreModel).Nodes
+            |> Seq.filter (fun n -> n.Name = name)
+            |> Helpers.exactlyOneElement name
 
-        /// Returns true if a node with given name exists in a model.
-        abstract HasNode: name: string -> bool
+        member this.HasNode name =
+            (this :> ICoreModel).Nodes
+            |> Seq.filter (fun n -> n.Name = name)
+            |> Seq.isEmpty
+            |> not
 
-        /// Searches association with given traget name in a model. If there are none or more than one association 
-        /// with given name, throws an exception.
-        abstract Association: name: string -> ICoreAssociation
+        member this.Association name =
+            (this :> ICoreModel).Edges
+            |> Seq.choose (fun e -> if e :? ICoreAssociation then Some (e :?> ICoreAssociation) else None)
+            |> Seq.filter (fun e -> e.TargetName = name)
+            |> Helpers.exactlyOneElement name
 
-        /// Returns true if an association with given target name exists in a model.
-        abstract HasAssociation: name: string -> bool
+        member this.HasAssociation name =
+            (this :> ICoreModel).Edges
+            |> Seq.choose (fun e -> if e :? ICoreAssociation then Some (e :?> ICoreAssociation) else None)
+            |> Seq.filter (fun e -> e.TargetName = name)
+            |> Seq.isEmpty
+            |> not
 
-        /// Prints model contents on a console.
-        abstract PrintContents: unit -> unit
-        *)
+        member this.PrintContents () =
+            printfn "Model: %s" modelNode.Name
+            ()

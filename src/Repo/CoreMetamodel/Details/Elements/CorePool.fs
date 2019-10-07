@@ -24,7 +24,8 @@ open System.Collections.Generic
 type CorePool(factory: ICoreFactory) =
     let elementsPool = Dictionary<IBasicElement, ICoreElement>() :> IDictionary<_, _>
     let modelsPool = Dictionary<IBasicElement, ICoreModel>() :> IDictionary<_, _>
-    
+
+    /// Wraps given BasicElement to CoreElement. Creates new wrapper if needed, otherwise returns cached copy.
     member this.Wrap (element: IBasicElement): ICoreElement =
         if elementsPool.ContainsKey element then
             elementsPool.[element]
@@ -33,10 +34,12 @@ type CorePool(factory: ICoreFactory) =
             elementsPool.Add(element, wrapper)
             wrapper
 
+    /// Removes element from cache.
     member this.UnregisterElement (element: IBasicElement): unit =
         if not <| elementsPool.Remove element then 
             failwith "Removing non-existent element"
 
+    /// Wraps given node to CoreModel. Creates new wrapper if needed, otherwise returns cached copy.
     member this.WrapModel (model: IBasicElement): ICoreModel =
         if modelsPool.ContainsKey model then
             modelsPool.[model]
@@ -45,6 +48,20 @@ type CorePool(factory: ICoreFactory) =
             modelsPool.Add(model, wrapper)
             wrapper
 
+    /// Removes model from cache.
+    member this.UnregisterModel (model: IBasicElement): unit =
+        if not <| modelsPool.Remove model then 
+            failwith "Removing non-existent model"
+
+    /// Clears cached values, invalidating all references to Core elements.
+    member this.Clear () =
+        elementsPool.Clear ()
+        modelsPool.Clear ()
+
+/// Abstract factory that creates wrapper objects.
 and ICoreFactory =
+    /// Creates CoreElement wrapper by given BasicElement.
     abstract CreateElement: element: IBasicElement -> pool: CorePool -> ICoreElement
+
+    /// Creates CoreModel wrapper by given BasicModel.
     abstract CreateModel: model: IBasicNode -> pool: CorePool -> ICoreModel

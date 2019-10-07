@@ -30,6 +30,7 @@ type CoreElement(element: IBasicElement, pool: CorePool, repo: IBasicRepository)
         |> Seq.isEmpty
         |> not
 
+    /// Returns underlying BasicElement.
     member this.UnderlyingElement = element
 
     interface ICoreElement with

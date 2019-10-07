@@ -27,5 +27,5 @@ type CoreMetamodelRepoFactoryTests() =
         ()
 
     [<Test>]
-    member this.CreateEmptyRepoTests () =
+    member this.CreateRepoTests () =
         ()

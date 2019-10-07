@@ -18,6 +18,7 @@ open Repo
 open Repo.CoreMetamodel
 open Repo.BasicMetamodel
 
+/// Implementation of wrapper factory.
 type CoreFactory(repo: IBasicRepository) =
     interface ICoreFactory with
         member this.CreateElement element pool =
