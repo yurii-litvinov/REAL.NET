@@ -27,7 +27,7 @@ type ModelCreationTests() =
 
     [<Test>]
     member this.``There shall be possible to create two-level hierarchy based on Core Metamodel`` () =
-        let repo = RepoFactory.Create ()
+        let repo = CoreMetamodelRepoFactory.Create ()
         let metamodel = repo.InstantiateCoreMetamodel "Metamodel"
 
         let productType = metamodel.CreateNode "ProductType"

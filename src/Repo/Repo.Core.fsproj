@@ -30,6 +30,22 @@
     <Compile Include="CoreMetamodel\Details\CoreMetametamodelCreator.fs" />
     <Compile Include="CoreMetamodel\Details\CoreMetamodelCreator.fs" />
     <Compile Include="CoreMetamodel\CoreMetamodelRepoFactory.fs" />
+    <Compile Include="AttributeMetamodel\Consts.fs" />
+    <Compile Include="AttributeMetamodel\AttributeMetamodel.fs" />
+    <Compile Include="AttributeMetamodel\Details\AttributeMetamodelCreator.fs" />
+    <Compile Include="AttributeMetamodel\Details\Elements\AttributePool.fs" />
+    <Compile Include="AttributeMetamodel\Details\Elements\AttributeElement.fs" />
+    <Compile Include="AttributeMetamodel\Details\Elements\AttributeNode.fs" />
+    <Compile Include="AttributeMetamodel\Details\Elements\AttributeEdge.fs" />
+    <Compile Include="AttributeMetamodel\Details\Elements\AttributeAssociation.fs" />
+    <Compile Include="AttributeMetamodel\Details\Elements\AttributeGeneralization.fs" />
+    <Compile Include="AttributeMetamodel\Details\Elements\AttributeInstanceOf.fs" />
+    <Compile Include="AttributeMetamodel\Details\Elements\AttributeAttribute.fs" />
+    <Compile Include="AttributeMetamodel\Details\Elements\AttributeSlot.fs" />
+    <Compile Include="AttributeMetamodel\Details\Elements\AttributeModel.fs" />
+    <Compile Include="AttributeMetamodel\Details\Elements\AttributeRepository.fs" />
+    <Compile Include="AttributeMetamodel\Details\Elements\AttributeFactory.fs" />
+    <Compile Include="AttributeMetamodel\AttributeMetamodelRepoFactory.fs" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

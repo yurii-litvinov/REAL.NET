@@ -24,11 +24,11 @@ open FsUnitTyped
 [<TestFixture>]
 type CoreMetamodelConstraintsTests() =
 
-    let mutable repo = RepoFactory.Create ()
+    let mutable repo = CoreMetamodelRepoFactory.Create ()
 
     [<SetUp>]
     member this.Setup () =
-        repo <- RepoFactory.Create ()
+        repo <- CoreMetamodelRepoFactory.Create ()
 
     [<Test>]
     member this.``Each element shall be an instance of something, except instanceOf itself`` () =

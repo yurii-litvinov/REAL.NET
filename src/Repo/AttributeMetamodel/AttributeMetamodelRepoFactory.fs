@@ -12,22 +12,21 @@
 * See the License for the specific language governing permissions and
 * limitations under the License. *)
 
-namespace Repo.CoreMetamodel
+namespace Repo.AttributeMetamodel
 
 open Repo
-open Repo.CoreMetamodel
-open Repo.CoreMetamodel.Details
-open Repo.CoreMetamodel.Details.Elements
+open Repo.AttributeMetamodel.Details
+open Repo.AttributeMetamodel.Details.Elements
 
-/// Factory that creates core metamodel repository.
+/// Factory that creates attribute metamodel repository.
 [<AbstractClass; Sealed>]
-type CoreMetamodelRepoFactory =
+type AttributeMetamodelRepoFactory =
     /// Method that returns repository with Core Metamodel.
     static member Create() = 
-        let basicRepo = BasicMetamodel.RepoFactory.Create ()
-        let factory = CoreFactory(basicRepo)
-        let pool = CorePool(factory)
-        let repo = CoreRepository(pool, basicRepo)
-        CoreMetametamodelCreator.createIn repo
-        CoreMetamodelCreator.createIn repo
-        repo :> ICoreRepository
+        let coreRepo = CoreMetamodel.CoreMetamodelRepoFactory.Create ()
+        let factory = AttributeFactory(coreRepo)
+        let pool = AttributePool(factory)
+        let repo = AttributeRepository(pool, coreRepo)
+        AttributeMetamodelCreator.createIn repo
+        repo :> IAttributeRepository
+
