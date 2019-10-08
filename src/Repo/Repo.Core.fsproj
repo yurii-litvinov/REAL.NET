@@ -46,6 +46,11 @@
     <Compile Include="AttributeMetamodel\Details\Elements\AttributeRepository.fs" />
     <Compile Include="AttributeMetamodel\Details\Elements\AttributeFactory.fs" />
     <Compile Include="AttributeMetamodel\AttributeMetamodelRepoFactory.fs" />
+    <Compile Include="LanguageMetamodel\Consts.fs" />
+    <Compile Include="LanguageMetamodel\LanguageMetamodel.fs" />
+    <Compile Include="InfrastructureMetamodel\Consts.fs" />
+    <Compile Include="RepoFacade.fs" />
+    <Compile Include="RepoFactory.fs" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

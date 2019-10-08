@@ -45,5 +45,8 @@ type AttributeElement(element: ICoreElement, pool: AttributePool, repo: ICoreRep
         member this.Model: IAttributeModel =
             pool.WrapModel element.Model
 
+        member this.HasMetatype =
+            failwith "Not implemented"
+
         member this.Metatype =
             pool.Wrap element.Metatype
