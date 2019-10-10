@@ -65,8 +65,7 @@ and Model
             let unwrappedElement = (element :?> Element).UnderlyingElement
             /// TODO: Delete all attributes.
             let delete (element: IElement) = 
-                model.MarkElementDeleted unwrappedElement            
-                /// elementRepository.DeleteElement unwrappedElement
+                model.MarkElementDeleted unwrappedElement
                 for attribute in element.Attributes do
                     let unwrappedAttribute = (attribute :?> Attribute).UnderlyingNode
                     model.MarkElementDeleted unwrappedAttribute

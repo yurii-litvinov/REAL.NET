@@ -29,7 +29,8 @@ type [<AbstractClass>] VisualInfo
         member this.LinkToFile
             with get (): string = link
             and set (v: string): unit = link <- v
+
         member this.Type
-            with get (): TypeOfVisual = typeOfVisual             
+            with get (): TypeOfVisual = typeOfVisual
             and set (v: TypeOfVisual): unit = typeOfVisual <-v
 

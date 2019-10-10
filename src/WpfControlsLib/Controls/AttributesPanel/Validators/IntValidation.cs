@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace WpfControlsLib.Controls.AttributesPanel.Validators
@@ -12,7 +8,7 @@ namespace WpfControlsLib.Controls.AttributesPanel.Validators
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            if (Int32.TryParse(value.ToString(), out int result))
+            if (Int32.TryParse(value.ToString(), out int _))
             {
                 return new ValidationResult(true, null);
             }
