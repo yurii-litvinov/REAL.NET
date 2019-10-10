@@ -25,6 +25,8 @@
     xmlns:modelExplorer="clr-namespace:WpfControlsLib.Controls.ModelExplorer;assembly=WpfControlsLib"
     xmlns:palette="clr-namespace:WpfControlsLib.Controls.Palette;assembly=WpfControlsLib"
     xmlns:toolbar="clr-namespace:WpfControlsLib.Controls.Toolbar;assembly=WpfControlsLib"
+    xmlns:attributesPanel="clr-namespace:WpfControlsLib.Controls.AttributesPanel;assembly=WpfControlsLib"
+    xmlns:validators="clr-namespace:WpfEditor.View.Validators"
     Title="{Binding WindowTitle}"
     mc:Ignorable="d"
     Height="685" Width="936">
@@ -83,9 +85,9 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="65*"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto" MinHeight="50"/>
+                <RowDefinition Height="15*" MinHeight="50"/>
             </Grid.RowDefinitions>
 
             <!-- Toolbar -->
@@ -127,14 +129,8 @@
                 <modelExplorer:ModelExplorer x:Name="modelExplorer" Grid.Row="2"/>
 
                 <Label x:Name="selectedEntityLabel" Grid.Row="3" Content="Selected entity:" HorizontalAlignment="Stretch" />
-
-                <DataGrid x:Name="attributesView" Grid.Row="4" ItemsSource="{Binding Attributes}" AutoGenerateColumns="False" CellEditEnding="AttributesViewCellEditEnding">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Name}"/>
-                        <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Type}"/>
-                        <DataGridTextColumn Header="Value" IsReadOnly="False" Binding="{Binding Value}"/>
-                    </DataGrid.Columns>
-                </DataGrid>
+                <attributesPanel:AttributesPanel Grid.Row="4" DataContext="{Binding AttributesPanel}"/>
+                
             </Grid>
 
         </DockPanel>

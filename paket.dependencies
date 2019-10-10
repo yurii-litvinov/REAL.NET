@@ -14,6 +14,7 @@ nuget Microsoft.Msagl.GraphViewerGDI 1.0.2
 nuget StyleCop.Analyzers
 nuget System.ValueTuple
 nuget Newtonsoft.Json
+nuget System.Xml.XmlDocument
 
 
 group Tests

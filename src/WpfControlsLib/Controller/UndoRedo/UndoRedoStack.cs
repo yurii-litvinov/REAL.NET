@@ -14,7 +14,6 @@
 
 namespace WpfControlsLib.Controller.UndoRedo
 {
-    using System;
     using System.Collections.Generic;
     using EditorPluginInterfaces;
 

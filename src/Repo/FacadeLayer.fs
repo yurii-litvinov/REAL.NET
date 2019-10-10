@@ -18,6 +18,49 @@
 //type AttributeKind =
 //    /// Attribute whose value is a string.
 //    | String = 0
+/// Type of file which represents visual information
+type TypeOfVisual =
+    /// Xml file
+    | XML = 0
+
+    /// Just image connected to element
+    | Image = 1
+
+    /// No file provided
+    | NoFile = 2
+
+/// This interface represents information about how element is shown on screen.
+type IVisualInfo =
+    interface
+        /// Address to  file. 
+        abstract LinkToFile : string with get, set
+        
+        /// Type of linked file.
+        abstract Type : TypeOfVisual with get, set 
+    end
+
+/// This interface represents information about how node is shown on screen.
+type IVisualNodeInfo =
+    interface
+        inherit IVisualInfo
+
+        /// Position of node on screen.
+        abstract Position : (int * int) option with get, set          
+    end
+
+// This interface represents information about how edge is shown on screen.
+type IVisualEdgeInfo =
+    interface
+        inherit IVisualInfo
+
+        /// Coordinates of routing points without ends.
+        abstract RoutingPoints : (int * int) list with get, set
+    end
+
+/// Enumeration with all kinds of attributes supported by repository
+type AttributeKind =
+    /// Attribute whose value is a string.
+    | String = 0
 
 //    /// Attribute whose value is an integer.
 //    | Int = 1
@@ -38,7 +81,7 @@
 //    /// can be an object of another class defined on the same diagram. Note that in UML reference attributes and
 //    /// associations are the same thing from the point of view of abstract syntax (and our Core Metametamodel does not
 //    /// have a notion of attribute for that reason, they are modelled as associations). But concrete syntax (and,
-//    /// consequently, editors) shall distinquish these two cases.
+//    /// consequently, editors) shall distinguish these two cases.
 //    /// NOTE: Reference types are not supported in v1, so AttributeKind value shall never be Reference.
 //    | Reference = 5
 
@@ -115,10 +158,13 @@
 //        abstract AddAttribute: name: string * kind: AttributeKind * defaultValue: string -> unit
 //    end
 
-///// Node --- well, a node in a model.
+/// Node --- well, a node in a model.
 //type INode =
 //    interface
 //        inherit IElement
+//
+//       /// Info how element should be represented on screen
+//        abstract member VisualInfo: IVisualNodeInfo with get, set
 //    end
 
 ///// Edge --- an edge in a model. Note that here it can connect not only nodes, but edges too. It is needed to model
@@ -131,9 +177,12 @@
 //        /// Reference to an element connected to a beginning of an edge, null if no element is connected.
 //        abstract From: IElement with get, set
 
-//        /// Reference to an element connected to an end of an edge, null if no element is connected.
-//        abstract To: IElement with get, set
-//    end
+        /// Reference to an element connected to an end of an edge, null if no element is connected.
+      //  abstract To: IElement with get, set
+
+        /// Info how element should be represented on screen
+        //abstract member VisualInfo: IVisualEdgeInfo with get, set
+    //end
 
 ///// Model is one "graph", represented by one diagram on a scene. Has name, consists of nodes and edges.
 ///// NOTE: v1 does not support any notion of hierarchical decomposition, so models do not have notion of diagrams,
@@ -170,6 +219,9 @@
 
 //        /// Deletes given element from a model.
 //        abstract DeleteElement: element: IElement -> unit
+
+//        /// Restores given element to this model
+//        abstract RestoreElement: element: IElement -> unit
 
 //        /// Searches for an element with given name in a model. Throws if there is no such element or there is 
 //        /// more than one.

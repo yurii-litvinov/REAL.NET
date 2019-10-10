@@ -15,6 +15,7 @@
 namespace WpfControlsLib.Controls.Scene
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -57,7 +58,6 @@ namespace WpfControlsLib.Controls.Scene
 
             this.graphArea.VertexSelected += this.VertexSelectedAction;
             this.graphArea.EdgeSelected += this.EdgeSelectedAction;
-            this.zoomControl.Click += this.ClearSelection;
             this.zoomControl.MouseDown += this.OnSceneMouseDown;
             this.zoomControl.Drop += this.ZoomControlDrop;
         }
@@ -108,7 +108,23 @@ namespace WpfControlsLib.Controls.Scene
             this.Graph.ElementRemoved += (sender, args) => this.ElementRemoved?.Invoke(this, args);
             this.Graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVertex);
             this.Graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.EdgeViewModel);
+            this.graphArea.VertexMouseUp += (sender, args) => this.CheckThatForReconnection(args);
             this.InitGraphXLogicCore();
+        }
+
+        private void CheckThatForReconnection(VertexSelectedEventArgs args)
+        {
+            var vertexToCheck = args.VertexControl;
+            if (IsVertexVirtual(vertexToCheck))
+            {
+                var vertices = this.graphArea.VertexList.Select(x => x.Value).Where(x => !IsVertexVirtual(x));
+                var verticesToConnect = vertices.Where(x => IsCenterOfFirstVertexOnAnother(vertexToCheck, x));
+                if (verticesToConnect.Count() != 0)
+                {
+                    var vertexToConnect = verticesToConnect.First();
+                    ReconnectEdgeFromVirtualNodeToReal(vertexToCheck, vertexToConnect);
+                }
+            }
         }
 
         public void Clear() => this.Graph.DataGraph.Clear();
@@ -146,7 +162,7 @@ namespace WpfControlsLib.Controls.Scene
                 if (this.Graph.DataGraph.Vertices.ToList()[i].Name == name)
                 {
                     var vertex = this.Graph.DataGraph.Vertices.ToList()[i];
-                    this.NodeSelected?.Invoke(this, new NodeSelectedEventArgs {Node = vertex});
+                    this.NodeSelected?.Invoke(this, new NodeSelectedEventArgs { Node = vertex });
                     foreach (var ed in this.graphArea.VertexList)
                     {
                         if (ed.Key == vertex)
@@ -170,6 +186,7 @@ namespace WpfControlsLib.Controls.Scene
             }
         }
 
+        // removed for now
         private void ClearSelection(object sender, RoutedEventArgs e)
         {
             this.previosVertex = null;
@@ -201,10 +218,23 @@ namespace WpfControlsLib.Controls.Scene
             this.currentVertex = args.VertexControl;
             if (this.elementProvider.Element?.InstanceMetatype == Repo.Metatype.Edge)
             {
+                if (IsVertexVirtual(currentVertex))
+                {
+                    return;
+                }
                 if (this.previosVertex == null)
                 {
                     this.editorManager.CreateVirtualEdge(this.currentVertex, this.currentVertex.GetPosition());
                     this.previosVertex = this.currentVertex;
+                }
+                else if (this.previosVertex.GetDataVertex<NodeViewModel>().IsVirtual)
+                {
+                    var virtualEdgeData = new EdgeViewModel(previosVertex.GetDataVertex<NodeViewModel>(), currentVertex.GetDataVertex<NodeViewModel>());
+                    var virtualEdgeControl = new EdgeControl(previosVertex, currentVertex, virtualEdgeData);
+                    this.graphArea.AddEdge(virtualEdgeData, virtualEdgeControl);
+                    this.editorManager.DestroyVirtualEdge();
+                    this.previosVertex = null;
+                    this.ElementManipulationDone?.Invoke(this, EventArgs.Empty);
                 }
                 else
                 {
@@ -237,11 +267,82 @@ namespace WpfControlsLib.Controls.Scene
             {
                 args.VertexControl.ContextMenu = new ContextMenu();
                 var mi = new MenuItem { Header = "Delete item", Tag = args.VertexControl };
-                mi.Click += this.MenuItemClickedOnVertex;
+                if (IsVertexVirtual(args.VertexControl))
+                {
+                    mi.Click += (senderObj, eventArgs) => this.MenuItemClickedOnVirtualVertex(args.VertexControl, EventArgs.Empty);
+                }
+                else
+                {
+                    mi.Click += this.MenuItemClickedOnVertex;
+                }
                 args.VertexControl.ContextMenu.Items.Add(mi);
                 args.VertexControl.ContextMenu.IsOpen = true;
             }
         }
+
+        private bool IsVertexVirtual(VertexControl vertexControl) => vertexControl.GetDataVertex<NodeViewModel>().IsVirtual;
+
+        private bool IsVertexHasEdges(VertexControl vertexControl)
+        {
+            var edges = this.graphArea.EdgesList.Select(x => x.Value)
+                .Where(x => x.Target == vertexControl || x.Source == vertexControl);
+            return edges.Count() > 0;
+        }
+
+        private bool IsEdgeSourceVirtual(EdgeControl edgeControl) => IsVertexVirtual(edgeControl.Source);
+
+        private bool IsEdgeTargetVirtual(EdgeControl edgeControl) => IsVertexVirtual(edgeControl.Target);
+
+        private bool IsCenterOfFirstVertexOnAnother(VertexControl vertex1, VertexControl vertex2)
+        {
+            Point center = this.graphArea.TranslatePoint(vertex1.GetCenterPosition(), vertex1);
+            Point coordinates = vertex1.TranslatePoint(center, vertex2);
+            HitTestResult hit = VisualTreeHelper.HitTest(vertex2, coordinates);
+            return hit != null;
+        }
+
+        private void ReconnectEdgeFromVirtualNodeToReal(VertexControl virtualVertex, VertexControl vertexToConnect)
+        {
+            var dataNode = virtualVertex.GetDataVertex<NodeViewModel>();
+            var edgeControls = this.graphArea.EdgesList.Select(x => x.Value);
+            var edgesWhereSourceStack = new Stack<EdgeControl>(edgeControls.Where(x => x.Source == virtualVertex));
+            var edgesWhereTargetStack = new Stack<EdgeControl>(edgeControls.Where(x => x.Target == virtualVertex));
+            while (edgesWhereSourceStack.Count != 0)
+            {
+                var edge = edgesWhereSourceStack.Pop();
+                if (IsEdgeTargetVirtual(edge))
+                {
+                    var source = edge.Source;
+                    edge.Source = vertexToConnect;
+                    this.graphArea.RemoveVertex(source.GetDataVertex<NodeViewModel>());
+                }
+                else
+                {
+                    // add to model with rooting points? not done yet
+                    var source = edge.Source;
+                    edge.Source = vertexToConnect;
+                    this.graphArea.RemoveVertex(source.GetDataVertex<NodeViewModel>());
+                }
+            }
+            while (edgesWhereTargetStack.Count != 0)
+            {
+                var edge = edgesWhereTargetStack.Pop();
+                if (IsEdgeSourceVirtual(edge))
+                {
+                    var target = edge.Target;
+                    edge.Target = vertexToConnect;
+                    this.graphArea.RemoveVertex(target.GetDataVertex<NodeViewModel>());
+                }
+                else
+                {
+                    // add to model ? nor done yet
+                    var target = edge.Target;
+                    edge.Source = vertexToConnect;
+                    this.graphArea.RemoveVertex(target.GetDataVertex<NodeViewModel>());
+                    ; }
+            }
+        }
+
 
         private void EdgeSelectedAction(object sender, GraphX.Controls.Models.EdgeSelectedEventArgs args)
         {
@@ -265,16 +366,32 @@ namespace WpfControlsLib.Controls.Scene
             if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
             {
                 this.zoomControl.MouseMove -= this.OnEdgeMouseMove;
-                args.EdgeControl.ContextMenu = new ContextMenu();
-                var mi = new MenuItem { Header = "Delete item", Tag = args.EdgeControl };
-                mi.Click += this.MenuItemClickEdge;
-                args.EdgeControl.ContextMenu.Items.Add(mi);
-                args.EdgeControl.ContextMenu.IsOpen = true;
+                var edgeControl = args.EdgeControl;
+                edgeControl.ContextMenu = new ContextMenu();
+                var mi = new MenuItem { Header = "Delete item", Tag = edgeControl };
+                if (edgeControl.Source.GetDataVertex<NodeViewModel>().IsVirtual || edgeControl.Target.GetDataVertex<NodeViewModel>().IsVirtual)
+                {
+                    // TODO: real delete with virtual edge
+                    mi.Click += (senderObj, eventArgs) => MenuItemDeleteClickedOnVirtualEdge(edgeControl, EventArgs.Empty);
+                }
+                else
+                {
+                    mi.Click += this.MenuItemClickEdge;
+                    var miSource = new MenuItem { Header = "Unpin Source", Tag = edgeControl };
+                    miSource.Click += (senderObj, eventArgs) => UnpinEdgeFromVertex(edgeControl, true);
+                    var miTarget = new MenuItem { Header = "Unpin Target", Tag = edgeControl };
+                    miTarget.Click += (senderObj, eventArgs) => UnpinEdgeFromVertex(edgeControl, false);
+                    edgeControl.ContextMenu.Items.Add(miSource);
+                    edgeControl.ContextMenu.Items.Add(miTarget);
+                }
+
+                edgeControl.ContextMenu.Items.Add(mi);
+                edgeControl.ContextMenu.IsOpen = true;
+
                 if (dataEdge.RoutingPoints == null)
                 {
                     return;
                 }
-
                 var isRoutingPoint = dataEdge.RoutingPoints.Where(point => Geometry.GetDistance(point, mousePosition).CompareTo(3) <= 0).ToArray().Length != 0;
 
                 // Adding MenuItem to routing point in order to delete it.
@@ -283,8 +400,32 @@ namespace WpfControlsLib.Controls.Scene
                     var routingPoint = Array.Find(dataEdge.RoutingPoints, point => Geometry.GetDistance(point, mousePosition).CompareTo(3) <= 0);
                     var mi2 = new MenuItem { Header = "Delete routing point", Tag = routingPoint };
                     mi2.Click += this.MenuItemClickRoutingPoint;
-                    args.EdgeControl.ContextMenu.Items.Add(mi2);
+                    edgeControl.ContextMenu.Items.Add(mi2);
                 }
+            }
+        }
+
+        
+        private void UnpinEdgeFromVertex(EdgeControl edgeControl, bool isSource)
+        {
+            // to do : real remove form model
+            var vertexData = new NodeViewModel()
+            {
+                IsVirtual = true
+            };
+            var virtualVertex = new VertexControl(vertexData);
+            this.graphArea.AddVertex(vertexData, virtualVertex);
+            if (isSource)
+            {
+                var source = edgeControl.Source;                
+                virtualVertex.SetPosition(source.GetCenterPosition());
+                edgeControl.Source = virtualVertex;
+            }
+            else
+            {
+                var target = edgeControl.Target;
+                virtualVertex.SetPosition(target.GetCenterPosition());
+                edgeControl.Target = virtualVertex;
             }
         }
 
@@ -339,12 +480,38 @@ namespace WpfControlsLib.Controls.Scene
             this.graphArea.AddVertex(vertex, vc);
         }
 
+        public VertexControl AddVirtualVertexControl(NodeViewModel innerNodeData)
+        {
+            innerNodeData.IsVirtual = true;
+            var virtualControl = new VertexControl(innerNodeData);
+            this.position = this.zoomControl.TranslatePoint(Mouse.GetPosition(this.zoomControl), this.graphArea);
+            virtualControl.SetPosition(this.position);
+            this.graphArea.AddVertex(innerNodeData, virtualControl);
+            return virtualControl;
+        }
+
         private void AddNewEdgeControl(EdgeViewModel edgeViewModel)
         {
             var ec = new EdgeControl(this.previosVertex, this.currentVertex, edgeViewModel);
             this.graphArea.InsertEdge(edgeViewModel, ec);
             this.previosVertex = null;
             this.editorManager.DestroyVirtualEdge();
+        }
+
+        private void MenuItemDeleteClickedOnVirtualEdge(object sender, EventArgs args)
+        {
+            var edgeControl = sender as EdgeControl;
+            var source = edgeControl.Source;
+            var target = edgeControl.Target;
+            this.graphArea.RemoveEdge(edgeControl.GetDataEdge<EdgeViewModel>());
+            if (IsVertexVirtual(source))
+            {
+                this.graphArea.RemoveVertex(source.GetDataVertex<NodeViewModel>());
+            }
+            if (IsVertexVirtual(target))
+            {
+                this.graphArea.RemoveVertex(target.GetDataVertex<NodeViewModel>());
+            }
         }
 
         private void MenuItemClickRoutingPoint(object sender, EventArgs e)
@@ -360,6 +527,7 @@ namespace WpfControlsLib.Controls.Scene
         private void MenuItemClickedOnVertex(object sender, EventArgs e)
         {
             var vertex = this.currentVertex.GetDataVertex<NodeViewModel>();
+            
             var edges = this.Graph.DataGraph.Edges.ToArray();
 
             var edgesToRestore = this.graphArea.EdgesList.ToList()
@@ -379,6 +547,34 @@ namespace WpfControlsLib.Controls.Scene
             command.Add(new RemoveNodeCommand(this.model, vertex.Node));
             this.controller.Execute(command);
             this.DrawGraph();
+        }
+
+
+        private void MenuItemClickedOnVirtualVertex(object sender, EventArgs args)
+        {
+            var vertex = sender as VertexControl;
+            // to do working with model if necessary
+            var edges = this.graphArea.EdgesList.Select(x => x.Value)
+                .Where(x => x.Target == vertex || x.Source == vertex);
+            var deleteEdgesCommand = new CompositeCommand();
+            foreach (var edge in edges)
+            {
+                var anotherVertex = edge.Target == vertex ? edge.Source : edge.Target;
+                void removingEdge() => this.graphArea.RemoveEdge(edge.GetDataEdge<EdgeViewModel>());
+                void removingAnotherVertex() 
+                {
+                    if (IsVertexVirtual(anotherVertex))
+                    {
+                        this.graphArea.RemoveVertex(anotherVertex.GetDataVertex<NodeViewModel>());
+                    }
+                }
+                var command1 = new Toolbar.Command(removingEdge);
+                var command2 = new Toolbar.Command(removingAnotherVertex);
+                deleteEdgesCommand.Add(command1);
+                deleteEdgesCommand.Add(command2);
+            }
+            (deleteEdgesCommand as EditorPluginInterfaces.ICommand).Execute();
+            this.graphArea.RemoveVertex(vertex.GetDataVertex<NodeViewModel>());
         }
 
         private void MenuItemClickEdge(object sender, EventArgs e)
@@ -430,11 +626,21 @@ namespace WpfControlsLib.Controls.Scene
 
                 if (this.elementProvider.Element?.InstanceMetatype == Repo.Metatype.Edge)
                 {
+                    var vertexData = new NodeViewModel();
+                    var virtualVertex = this.AddVirtualVertexControl(vertexData);
                     if (this.previosVertex != null)
                     {
-                        this.previosVertex = null;
+                        var virtualEdgeData = new EdgeViewModel(previosVertex.GetDataVertex<NodeViewModel>(), virtualVertex.GetDataVertex<NodeViewModel>());
+                        var virtualEdgeControl = new EdgeControl(previosVertex, virtualVertex, virtualEdgeData);
+                        this.graphArea.AddEdge(virtualEdgeData, virtualEdgeControl);
                         this.editorManager.DestroyVirtualEdge();
+                        this.previosVertex = null;
                         this.ElementManipulationDone?.Invoke(this, EventArgs.Empty);
+                    }
+                    else
+                    {
+                        this.editorManager.CreateVirtualEdge(virtualVertex, virtualVertex.GetPosition());
+                        this.previosVertex = virtualVertex;
                     }
                 }
             }

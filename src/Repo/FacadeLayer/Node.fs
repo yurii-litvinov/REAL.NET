@@ -16,6 +16,7 @@
 
 //open Repo
 //open System
+open Repo.Visual
 
 ///// Implementation of a node in model.
 //type Node
@@ -27,5 +28,16 @@
 //        repo: DataLayer.IDataRepository
 //    ) =
 
-//    inherit Element(infrastructure, element, elementRepository, attributeRepository, repo)
-//    interface INode
+    inherit Element(infrastructure, element, elementRepository, attributeRepository)
+
+    let mutable visualInfo = info
+
+    new(infrastructure, element, elementRepository, attributeRepository) 
+        = Node(infrastructure, element, elementRepository, attributeRepository, VisualNodeInfo()) 
+
+    interface INode with
+        
+        member this.VisualInfo
+            with get () = visualInfo
+            and set (info) = visualInfo <- info
+ 

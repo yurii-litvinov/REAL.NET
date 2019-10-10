@@ -103,17 +103,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WpfControlsLib\WpfControlsLib.csproj">
-      <Project>{1DCB1D77-AB11-404C-BCE4-8EB7BF8F549D}</Project>
-      <Name>WpfControlsLib</Name>
-    </ProjectReference>
+    <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Repo\Repo.fsproj">
       <Project>{9e7065a4-ba5e-4752-84bf-54d5c00db60c}</Project>
       <Name>Repo</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

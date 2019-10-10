@@ -26,6 +26,7 @@ namespace WpfEditor.View
     using WpfControlsLib.Controls.ModelSelector;
     using WpfControlsLib.Controls.Scene;
     using WpfControlsLib.Controls.Toolbar;
+    using WpfControlsLib.Controls.AttributesPanel;
     using Palette = WpfControlsLib.Controls.Palette.Palette;
 
     /// <summary>
@@ -44,6 +45,8 @@ namespace WpfEditor.View
 
         public ToolbarViewModel Toolbar { get; } = new ToolbarViewModel();
 
+        public AttributesPanelViewModel AttributesPanel { get; } = new AttributesPanelViewModel();
+
         public string WindowTitle
         {
             get
@@ -55,7 +58,7 @@ namespace WpfEditor.View
                 return $"REAL.NET {fileName} {unsavedChanges}";
             }
         }
-
+        
         public MainWindow()
         {
             // TODO: Fix sequential coupling here.
@@ -81,8 +84,8 @@ namespace WpfEditor.View
             this.scene.ElementManipulationDone += (sender, args) => this.palette.ClearSelection();
             this.scene.ElementAdded += (sender, args) => this.modelExplorer.NewElement(args.Element);
             this.scene.ElementRemoved += (sender, args) => this.modelExplorer.RemoveElement(args.Element);
-            this.scene.NodeSelected += (sender, args) => this.attributesView.DataContext = args.Node;
-            this.scene.EdgeSelected += (sender, args) => this.attributesView.DataContext = args.Edge;
+            this.scene.NodeSelected += (sender, args) => this.AttributesPanel.Attributes = args.Node.Attributes;
+            this.scene.EdgeSelected += (sender, args) => this.AttributesPanel.Attributes = args.Edge.Attributes;
 
             this.scene.Init(this.model, this.controller, new PaletteAdapter(this.palette));
 

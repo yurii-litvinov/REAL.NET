@@ -13,7 +13,6 @@
  * limitations under the License. */
 
 using System;
-using System.Windows;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.ComponentModel;

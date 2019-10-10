@@ -89,6 +89,8 @@ namespace WpfControlsLib.ViewModel
             }
         }
 
+        public bool IsVirtual { get; set; } = false;
+
         public override string ToString()
         {
             return this.Name;

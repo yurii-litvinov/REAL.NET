@@ -36,7 +36,7 @@ namespace WpfControlsLib.Controls.Scene.Commands
             this.node = node;
         }
 
-        // Can not be undone because of naive implementation involving readding the same node will regenerate node 
+        // Can not be undone because of naive implementation involving reading the same node will regenerate node 
         // identity. Some support from repository is needed, but not implemented yet.
         bool ICommand.CanBeUndone => false;
 
