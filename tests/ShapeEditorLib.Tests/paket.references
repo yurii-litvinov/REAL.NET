@@ -1,7 +1,0 @@
-System.ValueTuple
-System.Xml.XmlDocument
-group Tests
-FsUnit
-FSharp.Core redirects: force
-NUnit
-NUnit3TestAdapter
