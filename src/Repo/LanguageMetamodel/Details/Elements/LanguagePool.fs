@@ -12,21 +12,21 @@
 * See the License for the specific language governing permissions and
 * limitations under the License. *)
 
-namespace Repo.AttributeMetamodel.Details.Elements
+namespace Repo.LanguageMetamodel.Details.Elements
 
+open Repo.LanguageMetamodel
 open Repo.AttributeMetamodel
-open Repo.CoreMetamodel
 
 open System.Collections.Generic
 
 /// Cache for wrapper objects. Allows to request wrapper object, store wrapped object, remove wrapped object.
 /// Does not provide any consistency checks.
-type AttributePool(factory: IAttributeFactory) =
-    let elementsPool = Dictionary<ICoreElement, IAttributeElement>() :> IDictionary<_, _>
-    let modelsPool = Dictionary<ICoreModel, IAttributeModel>() :> IDictionary<_, _>
+type LanguagePool(factory: ICoreFactory) =
+    let elementsPool = Dictionary<IAttributeElement, ILanguageElement>() :> IDictionary<_, _>
+    let modelsPool = Dictionary<IAttributeModel, ILanguageModel>() :> IDictionary<_, _>
 
     /// Wraps given CoreElement to AttributeElement. Creates new wrapper if needed, otherwise returns cached copy.
-    member this.Wrap (element: ICoreElement): IAttributeElement =
+    member this.Wrap (element: IAttributeElement): ILanguageElement =
         if elementsPool.ContainsKey element then
             elementsPool.[element]
         else 
@@ -35,12 +35,12 @@ type AttributePool(factory: IAttributeFactory) =
             wrapper
 
     /// Removes element from cache.
-    member this.UnregisterElement (element: ICoreElement): unit =
+    member this.UnregisterElement (element: IAttributeElement): unit =
         if not <| elementsPool.Remove element then 
             failwith "Removing non-existent element"
 
     /// Wraps given node to CoreModel. Creates new wrapper if needed, otherwise returns cached copy.
-    member this.WrapModel (model: ICoreModel): IAttributeModel =
+    member this.WrapModel (model: IAttributeModel): ILanguageModel =
         if modelsPool.ContainsKey model then
             modelsPool.[model]
         else 
@@ -49,7 +49,7 @@ type AttributePool(factory: IAttributeFactory) =
             wrapper
 
     /// Removes model from cache.
-    member this.UnregisterModel (model: ICoreModel): unit =
+    member this.UnregisterModel (model: IAttributeModel): unit =
         if not <| modelsPool.Remove model then 
             failwith "Removing non-existent model"
 
@@ -59,9 +59,9 @@ type AttributePool(factory: IAttributeFactory) =
         modelsPool.Clear ()
 
 /// Abstract factory that creates wrapper objects.
-and IAttributeFactory =
+and ICoreFactory =
     /// Creates AttributeElement wrapper by given CoreElement.
-    abstract CreateElement: element: ICoreElement -> pool: AttributePool -> IAttributeElement
+    abstract CreateElement: element: IAttributeElement -> pool: LanguagePool -> ILanguageElement
 
     /// Creates AttributeModel wrapper by given CoreModel.
-    abstract CreateModel: model: ICoreModel -> pool: AttributePool -> IAttributeModel
+    abstract CreateModel: model: IAttributeModel -> pool: LanguagePool -> ILanguageModel

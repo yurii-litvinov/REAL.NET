@@ -12,22 +12,22 @@
 * See the License for the specific language governing permissions and
 * limitations under the License. *)
 
-namespace Repo.AttributeMetamodel.Details.Elements
+namespace Repo.LanguageMetamodel.Details.Elements
 
 open Repo
+open Repo.LanguageMetamodel
 open Repo.AttributeMetamodel
-open Repo.CoreMetamodel
 
 /// Implementation of wrapper factory.
-type AttributeFactory(repo: ICoreRepository) =
-    interface IAttributeFactory with
+type LanguageFactory(repo: IAttributeRepository) =
+    interface ICoreFactory with
         member this.CreateElement element pool =
             match element with
-            | :? ICoreNode as n -> AttributeNode(n, pool, repo) :> IAttributeElement
-            | :? ICoreGeneralization as g -> AttributeGeneralization(g, pool, repo) :> IAttributeElement
-            | :? ICoreInstanceOf as i -> AttributeInstanceOf(i, pool, repo) :> IAttributeElement
-            | :? ICoreAssociation as a -> AttributeAssociation(a, pool, repo) :> IAttributeElement
+            | :? IAttributeNode as n -> LanguageNode(n, pool, repo) :> ILanguageElement
+            | :? IAttributeGeneralization as g -> LanguageGeneralization(g, pool, repo) :> ILanguageElement
+            | :? IAttributeInstanceOf as i -> LanguageInstanceOf(i, pool, repo) :> ILanguageElement
+            | :? IAttributeAssociation as a -> LanguageAssociation(a, pool, repo) :> ILanguageElement
             | _ -> failwith "Unknown subtype"
 
         member this.CreateModel model pool =
-            AttributeModel(model, pool, repo) :> IAttributeModel
+            LanguageModel(model, pool, repo) :> ILanguageModel

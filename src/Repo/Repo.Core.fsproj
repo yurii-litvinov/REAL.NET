@@ -48,9 +48,40 @@
     <Compile Include="AttributeMetamodel\AttributeMetamodelRepoFactory.fs" />
     <Compile Include="LanguageMetamodel\Consts.fs" />
     <Compile Include="LanguageMetamodel\LanguageMetamodel.fs" />
+    <Compile Include="LanguageMetamodel\Details\Elements\LanguagePool.fs" />
+    <Compile Include="LanguageMetamodel\Details\Elements\LanguageElement.fs" />
+    <Compile Include="LanguageMetamodel\Details\Elements\LanguageNode.fs" />
+    <Compile Include="LanguageMetamodel\Details\Elements\LanguageEdge.fs" />
+    <Compile Include="LanguageMetamodel\Details\Elements\LanguageAssociation.fs" />
+    <Compile Include="LanguageMetamodel\Details\Elements\LanguageGeneralization.fs" />
+    <Compile Include="LanguageMetamodel\Details\Elements\LanguageInstanceOf.fs" />
+    <Compile Include="LanguageMetamodel\Details\Elements\LanguageAttribute.fs" />
+    <Compile Include="LanguageMetamodel\Details\Elements\LanguageSlot.fs" />
+    <Compile Include="LanguageMetamodel\Details\Elements\LanguageModel.fs" />
+    <Compile Include="LanguageMetamodel\Details\Elements\LanguageRepository.fs" />
+    <Compile Include="LanguageMetamodel\Details\Elements\LanguageFactory.fs" />
     <Compile Include="InfrastructureMetamodel\Consts.fs" />
+    <Compile Include="InfrastructureMetamodel\InfrastructureMetamodel.fs" />
+    <Compile Include="InfrastructureMetamodel\Details\InfrastructureMetamodelCreator.fs" />
+    <Compile Include="InfrastructureMetamodel\Details\Elements\InfrastructurePool.fs" />
+    <Compile Include="InfrastructureMetamodel\Details\Elements\InfrastructureElement.fs" />
+    <Compile Include="InfrastructureMetamodel\Details\Elements\InfrastructureNode.fs" />
+    <Compile Include="InfrastructureMetamodel\Details\Elements\InfrastructureEdge.fs" />
+    <Compile Include="InfrastructureMetamodel\Details\Elements\InfrastructureAssociation.fs" />
+    <Compile Include="InfrastructureMetamodel\Details\Elements\InfrastructureGeneralization.fs" />
+    <Compile Include="InfrastructureMetamodel\Details\Elements\InfrastructureInstanceOf.fs" />
+    <Compile Include="InfrastructureMetamodel\Details\Elements\InfrastructureAttribute.fs" />
+    <Compile Include="InfrastructureMetamodel\Details\Elements\InfrastructureSlot.fs" />
+    <Compile Include="InfrastructureMetamodel\Details\Elements\InfrastructureModel.fs" />
+    <Compile Include="InfrastructureMetamodel\Details\Elements\InfrastructureRepository.fs" />
+    <Compile Include="InfrastructureMetamodel\Details\Elements\InfrastructureFactory.fs" />
+    <Compile Include="InfrastructureMetamodel\InfrastructureMetamodelRepoFactory.fs" />
     <Compile Include="RepoFacade.fs" />
     <Compile Include="RepoFactory.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="LanguageMetamodel\LanguageMetamodelRepoFactory.fs" />
+    <Compile Include="LanguageMetamodel\Details\LanguageMetamodelCreator.fs" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
