@@ -27,8 +27,11 @@ type AttributeElement(element: ICoreElement, pool: AttributePool, repo: ICoreRep
 
     interface IAttributeElement with
 
-        member this.OutgoingAssociations = 
-            failwith "Not implemented"
+        member this.OutgoingAssociations =
+            element.OutgoingEdges
+            |> Seq.choose(function | :? ICoreAssociation as a -> Some a | _ -> None)
+            |> Seq.map pool.Wrap
+            |> Seq.cast<IAttributeAssociation>
 
         member this.IncomingAssociations =
             failwith "Not implemented"
