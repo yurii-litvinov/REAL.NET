@@ -17,15 +17,34 @@ namespace Repo.CoreMetamodel
 /// Element, most general thing that can be in a model.
 type ICoreElement =
     interface
-        /// Outgoing edges for that element.
+        /// Outgoing edges (all of possible kinds) for that element.
         abstract OutgoingEdges: ICoreEdge seq with get
 
-        /// Incoming edges for that element.
+        /// Outgoing associations for that element.
+        abstract OutgoingAssociations: ICoreAssociation seq with get
+
+        /// Returns outgoing association with a given target name if there is exactly one such edge. 
+        /// Throws ElementNotFoundException if there is no edge with such name and MultipleElementsException 
+        /// if there are many.
+        abstract OutgoingAssociation: name: string -> ICoreAssociation
+
+        /// Incoming edges (all of possible kinds) for that element.
         abstract IncomingEdges: ICoreEdge seq with get
+
+        /// Incoming associations for that element.
+        abstract IncomingAssociations: ICoreAssociation seq with get
+
+        /// Returns incoming association with a given target name if there is exactly one such edge. 
+        /// Throws ElementNotFoundException if there is no edge with such name and MultipleElementsException 
+        /// if there are many.
+        abstract IncomingAssociation: name: string -> ICoreAssociation
 
         /// Returns false if an element is not contained in any model (true for upper metalayers where there is no
         /// notion of model or for "instanceOf" or "elements" edges).
         abstract IsContainedInSomeModel: bool with get
+
+        /// Returns a list of all parents of this element (direct or transitive). Element itself is not included.
+        abstract Generalizations: ICoreElement seq with get
 
         /// Returns a model to which this element belongs.
         abstract Model: ICoreModel with get
@@ -37,6 +56,11 @@ type ICoreElement =
         /// if this element is exactly one. Throws ElementNotFoundException if there is no metatype and
         /// MultipleElementsException if there are many.
         abstract Metatype: ICoreElement with get
+
+        /// Returns true if this element is an instance of a given element (possibly, indirect, i.e. instance of 
+        /// instance of element). Respects generalization hierarchhy.
+        abstract IsInstanceOf: element: ICoreElement -> bool
+
     end
 
 /// Node is a kind of element which can connect only to edge, corresponds to node of the model graph.
@@ -169,6 +193,9 @@ type ICoreRepository =
         /// Searches model in repository. 
         /// If there are none or more than one model with given name, throws an exception.
         abstract Model: name: string -> ICoreModel
+
+        /// Returns Core Metamodel.
+        abstract CoreMetamodel: ICoreModel with get
 
         /// Deletes given model and all its elements from repository.
         abstract DeleteModel: model : ICoreModel -> unit

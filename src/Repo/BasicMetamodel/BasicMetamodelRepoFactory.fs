@@ -18,7 +18,7 @@ open Repo.BasicMetamodel.Details
 
 /// Factory that creates basic metamodel repository.
 [<AbstractClass; Sealed>]
-type RepoFactory =
+type BasicMetamodelRepoFactory =
     /// Method that returns repository with Basic Metamodel.
     static member Create() = 
         let repo = Elements.BasicRepository ()

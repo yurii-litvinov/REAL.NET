@@ -24,7 +24,7 @@ open Repo.CoreMetamodel.Details.Elements
 type CoreMetamodelRepoFactory =
     /// Method that returns repository with Core Metamodel.
     static member Create() = 
-        let basicRepo = BasicMetamodel.RepoFactory.Create ()
+        let basicRepo = BasicMetamodel.BasicMetamodelRepoFactory.Create ()
         let factory = CoreFactory(basicRepo)
         let pool = CorePool(factory)
         let repo = CoreRepository(pool, basicRepo)

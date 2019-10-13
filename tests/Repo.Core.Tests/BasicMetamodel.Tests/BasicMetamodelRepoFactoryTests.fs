@@ -28,7 +28,7 @@ type BasicMetamodelRepoFactoryTests() =
 
     [<Test>]
     member this.CreateRepoTests () =
-        let repo = RepoFactory.Create ()
+        let repo = BasicMetamodelRepoFactory.Create ()
         repo.Nodes |> Seq.length |> shouldBeGreaterThan 0
         repo.Edges |> Seq.length |> shouldBeGreaterThan 0
         ()

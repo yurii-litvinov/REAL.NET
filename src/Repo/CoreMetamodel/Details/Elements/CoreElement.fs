@@ -14,6 +14,7 @@
 
 namespace Repo.CoreMetamodel.Details.Elements
 
+open Repo
 open Repo.CoreMetamodel
 open Repo.BasicMetamodel
 
@@ -39,11 +40,31 @@ type CoreElement(element: IBasicElement, pool: CorePool, repo: IBasicRepository)
             |> Seq.map pool.Wrap
             |> Seq.cast<ICoreEdge>
 
+        member this.OutgoingAssociations =
+            (this :> ICoreElement).OutgoingEdges
+            |> Seq.filter (fun e -> e :? ICoreAssociation)
+            |> Seq.cast<ICoreAssociation>
+
+        member this.OutgoingAssociation name =
+            (this :> ICoreElement).OutgoingAssociations
+            |> Seq.filter (fun e -> e.TargetName = name)
+            |> Helpers.exactlyOneElement name
+
         member this.IncomingEdges =
             repo.Edges 
             |> Seq.filter (fun e -> e.Target = element)
             |> Seq.map pool.Wrap
             |> Seq.cast<ICoreEdge>
+
+        member this.IncomingAssociations =
+            (this :> ICoreElement).IncomingEdges
+            |> Seq.filter (fun e -> e :? ICoreAssociation)
+            |> Seq.cast<ICoreAssociation>
+
+        member this.IncomingAssociation name =
+            (this :> ICoreElement).IncomingAssociations
+            |> Seq.filter (fun e -> e.TargetName = name)
+            |> Helpers.exactlyOneElement name
 
         member this.IsContainedInSomeModel =
             let modelMetatype = repo.Node Consts.metamodelModel
@@ -53,6 +74,17 @@ type CoreElement(element: IBasicElement, pool: CorePool, repo: IBasicRepository)
             |> Seq.filter (hasOutgoingEdgeTo element)
             |> Seq.isEmpty
             |> not
+
+        member this.Generalizations =
+            let outgoingEdges = (this :> ICoreElement).OutgoingEdges
+
+            let directGeneralizations = 
+                (this :> ICoreElement).OutgoingEdges
+                |> Seq.filter (fun e -> e :? ICoreGeneralization)
+                |> Seq.map (fun e -> e.Target)
+
+            let parentGeneralizations = directGeneralizations |> Seq.map (fun e -> e.Generalizations)
+            Seq.append directGeneralizations (Seq.concat parentGeneralizations)
 
         member this.Model: ICoreModel =
             let modelMetatype = repo.Node Consts.metamodelModel
@@ -69,3 +101,21 @@ type CoreElement(element: IBasicElement, pool: CorePool, repo: IBasicRepository)
 
         member this.Metatype =
             pool.Wrap element.Metatype
+
+        member this.IsInstanceOf element =
+            let this = this :> ICoreElement
+            
+            let generalizations = this.Metatype.Generalizations
+
+            if this.Metatype = element then
+                true
+            elif this.Metatype.Generalizations |> Seq.contains element then
+                true
+            elif this.Metatype = this then 
+                false
+            else
+                let metatype = this.Metatype
+                let generalizations = this.Metatype.Generalizations
+                let result = this.Metatype.IsInstanceOf element
+                             || generalizations |> Seq.exists (fun e -> e.IsInstanceOf element)
+                result

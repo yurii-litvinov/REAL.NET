@@ -20,13 +20,30 @@ open Repo.BasicMetamodel
 
 /// Implementation of wrapper factory.
 type CoreFactory(repo: IBasicRepository) =
+    let metaGeneralization () = 
+        if repo.HasNode CoreMetamodel.Consts.generalization then 
+            Some (repo.Node CoreMetamodel.Consts.generalization :> IBasicElement)
+        else 
+            None
+
+    let metametaGeneralization () = 
+        if repo.HasNode CoreMetamodel.Consts.metamodelGeneralization then 
+            Some (repo.Node CoreMetamodel.Consts.metamodelGeneralization :> IBasicElement)
+        else 
+            None
+
     interface ICoreFactory with
         member this.CreateElement element pool =
             match element with
             | :? IBasicNode as n -> CoreNode(n, pool, repo) :> ICoreElement
             | :? IBasicEdge as e ->
-                // TODO: Any generalization is instance of "the generalization", don't use search by name.
-                if e.TargetName = BasicMetamodel.Consts.generalization then
+                let metaGeneralization = metaGeneralization ()
+                let metametaGeneralization = metametaGeneralization ()
+                if metaGeneralization.IsSome 
+                    && metametaGeneralization.IsSome
+                    && e.Metatypes |> Seq.isEmpty |> not 
+                    && (e.Metatype = metaGeneralization.Value || e.Metatype = metametaGeneralization.Value)
+                then
                     CoreGeneralization(e, pool, repo) :> ICoreElement
                 elif e.TargetName = BasicMetamodel.Consts.instanceOf then
                     CoreInstanceOf(e, pool, repo) :> ICoreElement

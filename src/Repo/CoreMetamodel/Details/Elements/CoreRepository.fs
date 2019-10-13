@@ -47,6 +47,9 @@ type CoreRepository(pool: CorePool, repo: BasicMetamodel.IBasicRepository) =
             |> Seq.filter (fun m -> m.Name = name)
             |> Helpers.exactlyOneModel name
 
+        member this.CoreMetamodel =
+            (this :> ICoreRepository).Model Consts.coreMetamodel
+
         member this.InstantiateCoreMetamodel name =
             (this :> ICoreRepository).InstantiateModel name (pool.WrapModel (coreMetamodel ()))
 

@@ -16,3 +16,19 @@ namespace Repo.AttributeMetamodel.Details.Elements
 
 open Repo.AttributeMetamodel
 open Repo.CoreMetamodel
+
+type AttributeAttribute(node: ICoreNode, pool: AttributePool, repo: ICoreRepository) =
+    interface IAttributeAttribute with
+        /// Returns attribute name.
+        member this.Name =
+            node.Name
+
+        /// Returns a node that represents type of an attribute.
+        member this.Type =
+            (node.OutgoingAssociation "type").Target
+            |> pool.Wrap
+
+        /// Returns node representing default value of an attribute.
+        member this.DefaultValue =
+            (node.OutgoingAssociation "defaultValue").Target
+            |> pool.Wrap

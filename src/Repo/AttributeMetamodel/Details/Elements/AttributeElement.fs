@@ -14,13 +14,16 @@
 
 namespace Repo.AttributeMetamodel.Details.Elements
 
-
+open Repo
 open Repo.AttributeMetamodel
 open Repo.CoreMetamodel
 
 /// Implementation of Element.
 [<AbstractClass>]
 type AttributeElement(element: ICoreElement, pool: AttributePool, repo: ICoreRepository) =
+
+    let coreMetamodel = repo.Model CoreMetamodel.Consts.coreMetamodel
+    let coreAssociation = coreMetamodel.Node CoreMetamodel.Consts.association
 
     /// Returns underlying CoreElement.
     member this.UnderlyingElement = element
@@ -29,12 +32,17 @@ type AttributeElement(element: ICoreElement, pool: AttributePool, repo: ICoreRep
 
         member this.OutgoingAssociations =
             element.OutgoingEdges
-            |> Seq.choose(function | :? ICoreAssociation as a -> Some a | _ -> None)
+            |> Seq.choose (function | :? ICoreAssociation as a -> Some a | _ -> None)
+            |> Seq.filter (fun a -> a.IsInstanceOf coreAssociation)
             |> Seq.map pool.Wrap
             |> Seq.cast<IAttributeAssociation>
 
         member this.IncomingAssociations =
-            failwith "Not implemented"
+            element.IncomingEdges
+            |> Seq.choose (function | :? ICoreAssociation as a -> Some a | _ -> None)
+            |> Seq.filter (fun a -> a.IsInstanceOf coreAssociation)
+            |> Seq.map pool.Wrap
+            |> Seq.cast<IAttributeAssociation>
 
         member this.DirectSupertypes =
             failwith "Not implemented"

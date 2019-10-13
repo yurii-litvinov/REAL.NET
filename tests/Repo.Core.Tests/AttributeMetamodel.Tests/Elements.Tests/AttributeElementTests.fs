@@ -52,4 +52,5 @@ type AttributeElementTests() =
         let node2 = +"Node2"
         let edge = node1 ---> node2
         node1.OutgoingAssociations |> shouldContain edge
+        node1.OutgoingAssociations |> shouldHaveLength 1
         ()

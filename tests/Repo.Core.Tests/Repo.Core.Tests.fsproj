@@ -14,6 +14,7 @@
     <Compile Include="CoreMetamodel.Tests\Semantics.Tests\CoreMetamodelConstraintsTests.fs" />
     <Compile Include="CoreMetamodel.Tests\CoreMetamodelRepoFactoryTests.fs" />
     <Compile Include="CoreMetamodel.Tests\Elements.Tests\CorePoolTests.fs" />
+    <Compile Include="CoreMetamodel.Tests\Elements.Tests\CoreElementTests.fs" />
     <Compile Include="AttributeMetamodel.Tests\Elements.Tests\AttributeElementTests.fs" />
   </ItemGroup>
   <ItemGroup>
