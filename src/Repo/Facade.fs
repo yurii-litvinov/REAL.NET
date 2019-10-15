@@ -1,4 +1,4 @@
-﻿(* Copyright 2017-2019 Yurii Litvinov
+﻿(* Copyright 2017-2019 REAL.NET Group
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -13,6 +13,45 @@
 * limitations under the License. *)
 
 namespace Repo
+
+/// Type of file which represents visual information
+type TypeOfVisual =
+   /// Xml file
+   | XML = 0
+
+   /// Just image connected to element
+   | Image = 1
+
+   /// No file provided
+   | NoFile = 2
+
+/// This interface represents information about how element is shown on screen.
+type IVisualInfo =
+   interface
+       /// Address to  file. 
+       abstract LinkToFile : string with get, set
+       
+       /// Type of linked file.
+       abstract Type : TypeOfVisual with get, set 
+   end
+
+/// This interface represents information about how node is shown on screen.
+type IVisualNodeInfo =
+   interface
+       inherit IVisualInfo
+
+       /// Position of node on screen.
+       abstract Position : (int * int) option with get, set          
+   end
+
+// This interface represents information about how edge is shown on screen.
+type IVisualEdgeInfo =
+   interface
+       inherit IVisualInfo
+
+       /// Coordinates of routing points without ends.
+       abstract RoutingPoints : (int * int) list with get, set
+   end
 
 /// Enumeration with all kinds of attributes supported by repository
 type AttributeKind =
@@ -36,9 +75,9 @@ type AttributeKind =
    /// Complex attribute kind, reference to another node in the same (or some other) model. Attribute shall reference
    /// target node in tis case. Example of reference types usage is UML class diagram, where field of a class
    /// can be an object of another class defined on the same diagram. Note that in UML reference attributes and
-   /// associations are the same thing from the point of view of abstract syntax (and our Core Metametamodel does not
+   /// associations are the same thing from the point of view of abstract syntax (and our Core Metamodel does not
    /// have a notion of attribute for that reason, they are modelled as associations). But concrete syntax (and,
-   /// consequently, editors) shall distinquish these two cases.
+   /// consequently, editors) shall distinguish these two cases.
    /// NOTE: Reference types are not supported in v1, so AttributeKind value shall never be Reference.
    | Reference = 5
 
@@ -74,7 +113,11 @@ type IAttribute =
 
        /// String representation of a value of an attribute if it is an attribute of basic type.
        // NOTE: Actually we need a whole hierarchy of attribute classes.
-       abstract StringDefaultValue: string with get, set
+       abstract StringValue: string with get, set
+
+       /// Holds a reference to an element which is a value of this attribute if this attribute has complex type.
+       /// NOTE: Complex attribute values are not supported in v1, so it is always null.
+       abstract ReferenceValue: IElement with get, set
    end
 
 /// Element is a general term for nodes or edges.
@@ -83,14 +126,10 @@ and [<AllowNullLiteral>] IElement =
        /// Name of an element, to be displayed on a scene and in various menus. Does not need to be unique.
        abstract Name: string with get, set
 
-       /// Returns linguistic type of the element (i.e. is it node, edge, what kind of edge). Linguistic type is always present.
-       abstract LinguisticType: IElement with get
+       /// Returns type of the element.
+       abstract Class: IElement with get
 
-       /// Returns ontological type of the element (i.e. is it dog, street). Can be null if there is no ontological type for this element.
-       /// Can be equal to LinguisticType.
-       abstract OntologicalType: IElement with get
-
-       /// A list of all ontological attributes for that element.
+       /// A list of all logical attributes for that element.
        abstract Attributes: IAttribute seq with get
 
        /// True when this element can not be a type of other elements, so it shall not be shown in palette.
@@ -119,6 +158,9 @@ and [<AllowNullLiteral>] IElement =
 type INode =
    interface
        inherit IElement
+
+       /// Info how element should be represented on screen
+       abstract member VisualInfo: IVisualNodeInfo with get, set
    end
 
 /// Edge --- an edge in a model. Note that here it can connect not only nodes, but edges too. It is needed to model
@@ -133,6 +175,9 @@ type IEdge =
 
        /// Reference to an element connected to an end of an edge, null if no element is connected.
        abstract To: IElement with get, set
+
+       /// Info how element should be represented on screen
+       abstract member VisualInfo: IVisualEdgeInfo with get, set
    end
 
 /// Model is one "graph", represented by one diagram on a scene. Has name, consists of nodes and edges.
@@ -170,6 +215,9 @@ type IModel =
 
        /// Deletes given element from a model.
        abstract DeleteElement: element: IElement -> unit
+
+       /// Restores given element to this model
+       abstract RestoreElement: element: IElement -> unit
 
        /// Searches for an element with given name in a model. Throws if there is no such element or there is 
        /// more than one.

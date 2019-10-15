@@ -76,7 +76,15 @@
     <Compile Include="InfrastructureMetamodel\Details\Elements\InfrastructureRepository.fs" />
     <Compile Include="InfrastructureMetamodel\Details\Elements\InfrastructureFactory.fs" />
     <Compile Include="InfrastructureMetamodel\InfrastructureMetamodelRepoFactory.fs" />
-    <Compile Include="RepoFacade.fs" />
+    <Compile Include="Facade.fs" />
+    <Compile Include="Facade\FacadePool.fs" />
+    <Compile Include="Facade\Element.fs" />
+    <Compile Include="Facade\Edge.fs" />
+    <Compile Include="Facade\Node.fs" />
+    <Compile Include="Facade\Attribute.fs" />
+    <Compile Include="Facade\Model.fs" />
+    <Compile Include="Facade\Repo.fs" />
+    <Compile Include="Facade\FacadeFactory.fs" />
     <Compile Include="RepoFactory.fs" />
   </ItemGroup>
   <ItemGroup>

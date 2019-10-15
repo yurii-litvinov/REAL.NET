@@ -104,9 +104,6 @@ type CoreElement(element: IBasicElement, pool: CorePool, repo: IBasicRepository)
 
         member this.IsInstanceOf element =
             let this = this :> ICoreElement
-            
-            let generalizations = this.Metatype.Generalizations
-
             if this.Metatype = element then
                 true
             elif this.Metatype.Generalizations |> Seq.contains element then
@@ -114,8 +111,5 @@ type CoreElement(element: IBasicElement, pool: CorePool, repo: IBasicRepository)
             elif this.Metatype = this then 
                 false
             else
-                let metatype = this.Metatype
-                let generalizations = this.Metatype.Generalizations
-                let result = this.Metatype.IsInstanceOf element
-                             || generalizations |> Seq.exists (fun e -> e.IsInstanceOf element)
-                result
+                this.Metatype.IsInstanceOf element
+                || this.Metatype.Generalizations |> Seq.exists (fun e -> e.IsInstanceOf element)
