@@ -29,6 +29,7 @@ type AttributeElement(element: ICoreElement, pool: AttributePool, repo: ICoreRep
     let attributeMetamodel = repo.Model Consts.attributeMetamodel
     let attributeMetatype = attributeMetamodel.Node Consts.attribute
     let attributesAssociationMetatype = attributeMetamodel.Association Consts.attributesEdge
+    let slotsAssociationMetatype = attributeMetamodel.Association Consts.slotsEdge
     let typeAssociationMetatype = attributeMetamodel.Association Consts.typeEdge
 
     let wrap = pool.Wrap
@@ -38,6 +39,13 @@ type AttributeElement(element: ICoreElement, pool: AttributePool, repo: ICoreRep
 
     /// Returns underlying CoreElement.
     member this.UnderlyingElement = element
+
+    override this.ToString () = 
+        match element with
+        | :? ICoreNode as n -> n.Name
+        | :? ICoreAssociation as a -> a.TargetName
+        | :? ICoreGeneralization -> "generalization"
+        | _ -> "unknown"
 
     interface IAttributeElement with
 
@@ -81,10 +89,15 @@ type AttributeElement(element: ICoreElement, pool: AttributePool, repo: ICoreRep
             element ---> (attributeNode, attributesAssociationMetatype)
 
         member this.Slots =
-            failwith "Not implemented"
+            element.OutgoingAssociations
+            |> Seq.filter (fun a -> a.Metatype = (slotsAssociationMetatype :> ICoreElement))
+            |> Seq.map (fun a -> a.Target)
+            |> Seq.map pool.WrapSlot
 
         member this.Slot name =
-            failwith "Not implemented"
+            (this :> IAttributeElement).Slots 
+            |> Seq.filter (fun s -> s.Attribute.Name = name)
+            |> Helpers.exactlyOneElement name
 
         member this.Model: IAttributeModel =
             pool.WrapModel element.Model

@@ -26,24 +26,13 @@ type AttributeModel(model: CoreMetamodel.ICoreModel, pool: AttributePool, repo: 
     let attributeMetamodel = repo.Model Consts.attributeMetamodel
 
     let attributeMetamodelNode = attributeMetamodel.Node Consts.node
-   //let coreMetamodelGeneralization = repo.Node Consts.generalization
-   //let coreMetamodelAssociation = repo.Node Consts.association
-   //let coreMetamodelElementsEdge = (repo.Node Consts.model).OutgoingEdge Consts.elementsEdge
-   //let coreMetamodelModelEdge = 
-   //    (repo.Node Consts.element).OutgoingEdges 
-   //    |> Seq.filter (fun e -> e.TargetName = Consts.modelEdge)
-   //    |> Seq.filter (fun e -> e.Metatype :? BasicMetamodel.IBasicEdge)
-   //    |> Helpers.exactlyOneElement "models"
+    let slotMetatype = attributeMetamodel.Node Consts.slot
+    let slotsAssociationMetatype = attributeMetamodel.Association Consts.slotsEdge
+    let valueAssociationMetatype = attributeMetamodel.Association Consts.valueEdge
+    let attributeAssociationMetatype = attributeMetamodel.Association Consts.attributeEdge
 
-   //let (--/-->) source target = repo.CreateEdge source target Consts.instanceOfEdge |> ignore
-   //let (--->) source (target, targetName) =
-   //    repo.CreateEdge (unwrap source) (unwrap target) targetName
-   //let (~+) name = repo.CreateNode name
-   //let (++) model element =
-   //    let elementsEdge = repo.CreateEdge model element Consts.elementsEdge
-   //    elementsEdge --/--> coreMetamodelElementsEdge
-   //    let modelEdge = repo.CreateEdge element model Consts.modelEdge
-   //    modelEdge --/--> coreMetamodelModelEdge
+    let (--->) source (target, metatype) =
+        model.InstantiateAssociation (unwrap source) (unwrap target) metatype |> ignore
 
    /// Returns underlying BasicNode that is a root node for model.
     member this.UnderlyingModel = model
@@ -73,7 +62,19 @@ type AttributeModel(model: CoreMetamodel.ICoreModel, pool: AttributePool, repo: 
             wrap <| model.CreateAssociation (unwrap source) (unwrap target) targetName :?> IAttributeAssociation
 
         member this.InstantiateNode name metatype attributeValues =
+            let addSlot (node: IAttributeElement) (attribute: IAttributeAttribute) =
+                let value = attributeValues.[attribute.Name]
+                let slotNode = model.InstantiateNode name slotMetatype
+                node ---> (wrap slotNode, slotsAssociationMetatype)
+                wrap slotNode ---> (value, valueAssociationMetatype)
+                let unwrappedAttribute = (attribute :?> AttributeAttribute).UnderlyingElement
+                model.InstantiateAssociation slotNode unwrappedAttribute attributeAssociationMetatype |> ignore
+
             let node = model.InstantiateNode name (unwrap metatype :?> CoreMetamodel.ICoreNode)
+
+            metatype.Attributes
+            |> Seq.iter (addSlot (wrap node))
+
             pool.Wrap node :?> IAttributeNode
 
         member this.InstantiateAssociation source target metatype attributeValues =

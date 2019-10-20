@@ -18,6 +18,14 @@ open Repo.AttributeMetamodel
 open Repo.CoreMetamodel
 
 type AttributeAttribute(node: ICoreNode, pool: AttributePool, repo: ICoreRepository) =
+
+    /// Returns underlying Core element for this attribute.
+    member this.UnderlyingElement = node :> ICoreElement
+
+    override this.ToString () =
+        let this = this :> IAttributeAttribute
+        this.Name + ": " + this.Type.ToString ()
+
     interface IAttributeAttribute with
         /// Returns attribute name.
         member this.Name =

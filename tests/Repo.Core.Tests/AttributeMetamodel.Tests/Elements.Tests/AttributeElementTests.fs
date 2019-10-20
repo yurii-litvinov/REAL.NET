@@ -24,33 +24,21 @@ open FsUnitTyped
 [<TestFixture>]
 type AttributeElementTests() =
 
-    let mutable repo = (AttributeMetamodelRepoFactory.Create () :?> AttributeRepository).UnderlyingRepo
-    let mutable factory = AttributeFactory(repo)
-    let mutable pool = AttributePool(factory)
-    let mutable model = repo.InstantiateCoreMetamodel "TestModel"
+    let mutable repo = AttributeMetamodelRepoFactory.Create ()
+    let mutable model = repo.InstantiateAttributeMetamodel "TestModel"
 
-    let (~+) name = 
-        let unwrappedNode = model.CreateNode name
-        pool.Wrap (unwrappedNode)
+    let (~+) name = model.CreateNode name
 
     let (--->) (node1: IAttributeElement) (node2: IAttributeElement) =
-        let unwrappedNode1 = (node1 :?> AttributeElement).UnderlyingElement
-        let unwrappedNode2 = (node2 :?> AttributeElement).UnderlyingElement
-        let unwrappedAssociation = model.CreateAssociation unwrappedNode1 unwrappedNode2 "testEdge"
-        pool.Wrap unwrappedAssociation :?> IAttributeAssociation
+        model.CreateAssociation node1 node2 "testEdge"
 
     let (--|>) (node1: IAttributeElement) (node2: IAttributeElement) =
-        let unwrappedNode1 = (node1 :?> AttributeElement).UnderlyingElement
-        let unwrappedNode2 = (node2 :?> AttributeElement).UnderlyingElement
-        let unwrappedGeneralization = model.CreateGeneralization unwrappedNode1 unwrappedNode2
-        pool.Wrap unwrappedGeneralization |> ignore
+        model.CreateGeneralization node1 node2 |> ignore
 
     [<SetUp>]
     member this.Setup () =
-        repo <- (AttributeMetamodelRepoFactory.Create () :?> AttributeRepository).UnderlyingRepo
-        factory <- AttributeFactory(repo)
-        pool <- AttributePool(factory)
-        model <- repo.InstantiateCoreMetamodel "TestModel"
+        repo <- AttributeMetamodelRepoFactory.Create ()
+        model <- repo.InstantiateAttributeMetamodel "TestModel"
 
     [<Test>]
     member this.OutgoingAssociationsTest () =
@@ -88,3 +76,20 @@ type AttributeElementTests() =
         child --|> parent
 
         child.Attributes |> Seq.filter (fun a -> a.Name = "attribute") |> shouldHaveLength 1
+
+    [<Test>]
+    member this.SlotsTest () =
+        let node = +"Node"
+        let ``type`` = +"Type"
+        
+        node.AddAttribute "attribute" ``type``
+
+        let instanceModel = repo.InstantiateModel "InstanceModel" model
+
+        let value = instanceModel.InstantiateNode "Value" ``type`` Map.empty :> IAttributeElement
+        let instance = instanceModel.InstantiateNode "Instance" node (Map.empty.Add("attribute", value))
+        
+        instance.Slots |> shouldHaveLength 1
+
+        (instance.Slot "attribute").Value |> shouldEqual value
+        (instance.Slot "attribute").Attribute |> shouldEqual (Seq.head node.Attributes)
