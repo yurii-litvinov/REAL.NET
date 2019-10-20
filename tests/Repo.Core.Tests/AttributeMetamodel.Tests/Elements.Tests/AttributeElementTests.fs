@@ -70,7 +70,6 @@ type AttributeElementTests() =
         node.Attributes |> Seq.filter (fun a -> a.Name = "attribute") |> shouldHaveLength 1
 
     [<Test>]
-    [<Ignore("Not implemented")>]
     member this.AddingTwoAttributesWithTheSameNameAreNotAllowedTest () =
         let node = +"Node"
         let ``type`` = +"Type"
@@ -79,7 +78,6 @@ type AttributeElementTests() =
         (fun () -> node.AddAttribute "attribute" ``type``) |> shouldFail<AmbiguousAttributesException>
 
     [<Test>]
-    [<Ignore("Not implemented")>]
     member this.AttributesRespectGeneralizationTest () =
         let parent = +"Parent"
         let ``type`` = +"Type"

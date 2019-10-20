@@ -55,15 +55,27 @@ type AttributeElement(element: ICoreElement, pool: AttributePool, repo: ICoreRep
             |> Seq.cast<IAttributeAssociation>
 
         member this.DirectSupertypes =
-            failwith "Not implemented"
+            element.OutgoingEdges
+            |> Seq.filter (fun e -> e :? ICoreGeneralization)
+            |> Seq.map (fun e -> e.Target)
+            |> Seq.map wrap
 
         member this.Attributes =
-            element.OutgoingAssociations
-            |> Seq.filter (fun a -> a.Metatype = (attributesAssociationMetatype :> ICoreElement))
-            |> Seq.map (fun a -> a.Target)
-            |> Seq.map pool.WrapAttribute
+            let selfAttributes =
+                element.OutgoingAssociations
+                |> Seq.filter (fun a -> a.Metatype = (attributesAssociationMetatype :> ICoreElement))
+                |> Seq.map (fun a -> a.Target)
+                |> Seq.map pool.WrapAttribute
+
+            (this :> IAttributeElement).DirectSupertypes
+            |> Seq.map (fun e -> e.Attributes)
+            |> Seq.concat
+            |> Seq.append selfAttributes
 
         member this.AddAttribute name ``type`` =
+            if (this :> IAttributeElement).Attributes |> Seq.filter (fun a -> a.Name = name) |> Seq.length = 1 then
+                raise <| AmbiguousAttributesException(name)
+
             let attributeNode = (model ()).InstantiateNode name attributeMetatype
             attributeNode ---> (unwrap ``type``, typeAssociationMetatype)
             element ---> (attributeNode, attributesAssociationMetatype)
