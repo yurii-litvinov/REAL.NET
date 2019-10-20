@@ -27,8 +27,3 @@ type AttributeAttribute(node: ICoreNode, pool: AttributePool, repo: ICoreReposit
         member this.Type =
             (node.OutgoingAssociation "type").Target
             |> pool.Wrap
-
-        /// Returns node representing default value of an attribute.
-        member this.DefaultValue =
-            (node.OutgoingAssociation "defaultValue").Target
-            |> pool.Wrap

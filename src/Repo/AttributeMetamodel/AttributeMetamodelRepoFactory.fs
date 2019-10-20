@@ -21,7 +21,7 @@ open Repo.AttributeMetamodel.Details.Elements
 /// Factory that creates attribute metamodel repository.
 [<AbstractClass; Sealed>]
 type AttributeMetamodelRepoFactory =
-    /// Method that returns repository with Core Metamodel.
+    /// Method that returns repository with Attribute Metamodel.
     static member Create() = 
         let coreRepo = CoreMetamodel.CoreMetamodelRepoFactory.Create ()
         let factory = AttributeFactory(coreRepo)

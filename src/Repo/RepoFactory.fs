@@ -14,12 +14,17 @@
 
 namespace Repo
 
+open Repo.InfrastructureMetamodel
+open Repo.Facade
+
 /// Factory that creates pre-configured repository.
 [<AbstractClass; Sealed>]
 type RepoFactory =
     /// Method that returns initialized repository.
     static member Create() = 
-        //let data = ((RepoFactory.CreateEmpty (): IRepo) :?> FacadeLayer.Repo).UnderlyingRepo
+        let repo = InfrastructureMetamodelRepoFactory.Create ()
+        let factory = FacadeFactory(repo)
+        let pool = FacadePool(factory)
         //let (~+) (creator: DataLayer.IModelCreator) =
         //    creator.CreateIn data
 
@@ -30,8 +35,7 @@ type RepoFactory =
         ////Metamodels.FeatureMetamodelBuilder() |> add
         ////Metamodels.FeatureTestModelBuilder() |> add
 
-        //new FacadeLayer.Repo(data) :> IRepo
-        ()
+        new Facade.Repo(pool, repo) :> IRepo
 
     ///// Method that returns a new repository populated from a save file.
     //static member Load fileName =

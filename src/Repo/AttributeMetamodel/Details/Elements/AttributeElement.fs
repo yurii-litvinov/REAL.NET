@@ -24,6 +24,17 @@ type AttributeElement(element: ICoreElement, pool: AttributePool, repo: ICoreRep
 
     let coreMetamodel = repo.Model CoreMetamodel.Consts.coreMetamodel
     let coreAssociation = coreMetamodel.Node CoreMetamodel.Consts.association
+    let model () = element.Model
+
+    let attributeMetamodel = repo.Model Consts.attributeMetamodel
+    let attributeMetatype = attributeMetamodel.Node Consts.attribute
+    let attributesAssociationMetatype = attributeMetamodel.Association Consts.attributesEdge
+    let typeAssociationMetatype = attributeMetamodel.Association Consts.typeEdge
+
+    let wrap = pool.Wrap
+    let unwrap (element: IAttributeElement) = (element :?> AttributeElement).UnderlyingElement
+
+    let (--->) source (target, metatype) = (model ()).InstantiateAssociation source target metatype |> ignore
 
     /// Returns underlying CoreElement.
     member this.UnderlyingElement = element
@@ -31,26 +42,36 @@ type AttributeElement(element: ICoreElement, pool: AttributePool, repo: ICoreRep
     interface IAttributeElement with
 
         member this.OutgoingAssociations =
-            element.OutgoingEdges
-            |> Seq.choose (function | :? ICoreAssociation as a -> Some a | _ -> None)
+            element.OutgoingAssociations
             |> Seq.filter (fun a -> a.IsInstanceOf coreAssociation)
-            |> Seq.map pool.Wrap
+            |> Seq.map wrap
             |> Seq.cast<IAttributeAssociation>
 
         member this.IncomingAssociations =
             element.IncomingEdges
             |> Seq.choose (function | :? ICoreAssociation as a -> Some a | _ -> None)
             |> Seq.filter (fun a -> a.IsInstanceOf coreAssociation)
-            |> Seq.map pool.Wrap
+            |> Seq.map wrap
             |> Seq.cast<IAttributeAssociation>
 
         member this.DirectSupertypes =
             failwith "Not implemented"
 
         member this.Attributes =
-            failwith "Not implemented"
+            element.OutgoingAssociations
+            |> Seq.filter (fun a -> a.Metatype = (attributesAssociationMetatype :> ICoreElement))
+            |> Seq.map (fun a -> a.Target)
+            |> Seq.map pool.WrapAttribute
+
+        member this.AddAttribute name ``type`` =
+            let attributeNode = (model ()).InstantiateNode name attributeMetatype
+            attributeNode ---> (unwrap ``type``, typeAssociationMetatype)
+            element ---> (attributeNode, attributesAssociationMetatype)
 
         member this.Slots =
+            failwith "Not implemented"
+
+        member this.Slot name =
             failwith "Not implemented"
 
         member this.Model: IAttributeModel =

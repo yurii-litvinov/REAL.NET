@@ -16,3 +16,24 @@ namespace Repo.AttributeMetamodel.Details.Elements
 
 open Repo.AttributeMetamodel
 open Repo.CoreMetamodel
+
+type AttributeSlot(node: ICoreNode, pool: AttributePool, repo: ICoreRepository) =
+    let attributeMetamodel = repo.Model Consts.attributeMetamodel
+    let valueAssociation = (attributeMetamodel.Node Consts.slot).OutgoingAssociation Consts.valueEdge
+
+    let unwrap (element: IAttributeElement) = (element :?> AttributeElement).UnderlyingElement
+    
+    interface IAttributeSlot with
+        member this.Attribute =
+            (node.OutgoingAssociation "attribute").Target
+            |> pool.WrapAttribute
+
+        /// Returns a node that represents type of an attribute.
+        member this.Value
+            with get () =
+                (node.OutgoingAssociation "value").Target
+                |> pool.Wrap
+            and set v =
+                let oldValue = (node.OutgoingAssociation "value").Target
+                oldValue.Model.DeleteElement oldValue
+                node.Model.InstantiateAssociation node (unwrap v) valueAssociation |> ignore

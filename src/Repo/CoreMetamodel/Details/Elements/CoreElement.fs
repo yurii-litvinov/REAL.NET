@@ -87,10 +87,11 @@ type CoreElement(element: IBasicElement, pool: CorePool, repo: IBasicRepository)
             Seq.append directGeneralizations (Seq.concat parentGeneralizations)
 
         member this.Model: ICoreModel =
-            let modelMetatype = repo.Node Consts.metamodelModel
+            let modelMetametatype = repo.Node Consts.metamodelModel
+            let modelMetatype = repo.Node Consts.model
 
             repo.Nodes
-            |> Seq.filter (isInstanceOf modelMetatype)
+            |> Seq.filter (fun n -> isInstanceOf modelMetametatype n || isInstanceOf modelMetatype n)
             |> Seq.filter (hasOutgoingEdgeTo element)
             |> Seq.exactlyOne
             |> pool.WrapModel

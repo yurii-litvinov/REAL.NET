@@ -32,7 +32,6 @@
     <Compile Include="CoreMetamodel\CoreMetamodelRepoFactory.fs" />
     <Compile Include="AttributeMetamodel\Consts.fs" />
     <Compile Include="AttributeMetamodel\AttributeMetamodel.fs" />
-    <Compile Include="AttributeMetamodel\Details\AttributeMetamodelCreator.fs" />
     <Compile Include="AttributeMetamodel\Details\Elements\AttributePool.fs" />
     <Compile Include="AttributeMetamodel\Details\Elements\AttributeElement.fs" />
     <Compile Include="AttributeMetamodel\Details\Elements\AttributeNode.fs" />
@@ -45,6 +44,7 @@
     <Compile Include="AttributeMetamodel\Details\Elements\AttributeModel.fs" />
     <Compile Include="AttributeMetamodel\Details\Elements\AttributeRepository.fs" />
     <Compile Include="AttributeMetamodel\Details\Elements\AttributeFactory.fs" />
+    <Compile Include="AttributeMetamodel\Details\AttributeMetamodelCreator.fs" />
     <Compile Include="AttributeMetamodel\AttributeMetamodelRepoFactory.fs" />
     <Compile Include="LanguageMetamodel\Consts.fs" />
     <Compile Include="LanguageMetamodel\LanguageMetamodel.fs" />
@@ -60,6 +60,8 @@
     <Compile Include="LanguageMetamodel\Details\Elements\LanguageModel.fs" />
     <Compile Include="LanguageMetamodel\Details\Elements\LanguageRepository.fs" />
     <Compile Include="LanguageMetamodel\Details\Elements\LanguageFactory.fs" />
+    <Compile Include="LanguageMetamodel\Details\LanguageMetamodelCreator.fs" />
+    <Compile Include="LanguageMetamodel\LanguageMetamodelRepoFactory.fs" />
     <Compile Include="InfrastructureMetamodel\Consts.fs" />
     <Compile Include="InfrastructureMetamodel\InfrastructureMetamodel.fs" />
     <Compile Include="InfrastructureMetamodel\Details\InfrastructureMetamodelCreator.fs" />
@@ -86,10 +88,6 @@
     <Compile Include="Facade\Repo.fs" />
     <Compile Include="Facade\FacadeFactory.fs" />
     <Compile Include="RepoFactory.fs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="LanguageMetamodel\LanguageMetamodelRepoFactory.fs" />
-    <Compile Include="LanguageMetamodel\Details\LanguageMetamodelCreator.fs" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

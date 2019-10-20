@@ -31,3 +31,9 @@ type AttributeFactory(repo: ICoreRepository) =
 
         member this.CreateModel model pool =
             AttributeModel(model, pool, repo) :> IAttributeModel
+
+        member this.CreateAttribute element pool =
+            AttributeAttribute(element :?> ICoreNode, pool, repo) :> IAttributeAttribute
+
+        member this.CreateSlot element pool =
+            AttributeSlot(element :?> ICoreNode, pool, repo) :> IAttributeSlot

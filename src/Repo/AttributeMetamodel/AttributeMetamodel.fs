@@ -29,8 +29,14 @@ type IAttributeElement =
         /// A list of all attributes available for an element.
         abstract Attributes: IAttributeAttribute seq with get
 
+        /// Adds a new attribute to a node.
+        abstract AddAttribute: name: string -> ``type``: IAttributeElement -> unit
+
         /// A list of all slots for an element.
         abstract Slots: IAttributeSlot seq with get
+
+        /// Returns a slot with given name.
+        abstract Slot: name: string -> IAttributeSlot
 
         /// Returns a model to which this element belongs.
         abstract Model: IAttributeModel with get
@@ -43,16 +49,7 @@ type IAttributeElement =
         abstract Metatype: IAttributeElement with get
     end
 
-/// Attribute is like field in a class --- describes possible values of a field in instances. Has type 
-/// (a set of possible values), name and default value. Since default value can be an ontological instance of type,
-/// type can be of a higher metalevel (so "Type" association can cross metalayer boundaries).
-///
-/// In theory, DefaultValue in not an actual value, but a method to produce one in model instance, so we can avoid
-/// metalayer crossing in some situations (for example, enum elements are nice ways to represent enum values).
-///
-/// For reference attributes (i.e. attributes that have a class from the same model as a type) there is no way to 
-/// properly define default value other than something like null. If needed, "Type-object" pattern may be used
-/// in lower metalayer languages to avoid such problems and to achieve behavior of textual languages.
+/// Attribute describes possible values of a field in instances. Has type (a set of possible values) and name.
 and IAttributeAttribute =
     interface
         /// A type of an attribute. Restricts a set of possible values for corresponding slot.
@@ -60,9 +57,6 @@ and IAttributeAttribute =
 
         /// A name of an attribute.
         abstract Name: string with get
-
-        /// Default value for an attribute. Used when no value for an attribute is given during instantiation.
-        abstract DefaultValue: IAttributeElement with get
     end
 
 /// An instance of attribute. Contains actual value.

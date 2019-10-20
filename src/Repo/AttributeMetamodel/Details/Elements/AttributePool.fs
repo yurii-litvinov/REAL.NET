@@ -24,39 +24,59 @@ open System.Collections.Generic
 type AttributePool(factory: IAttributeFactory) =
     let elementsPool = Dictionary<ICoreElement, IAttributeElement>() :> IDictionary<_, _>
     let modelsPool = Dictionary<ICoreModel, IAttributeModel>() :> IDictionary<_, _>
+    let attributesPool = Dictionary<ICoreElement, IAttributeAttribute>() :> IDictionary<_, _>
+    let slotsPool = Dictionary<ICoreElement, IAttributeSlot>() :> IDictionary<_, _>
+
+    let wrap (pool: IDictionary<'a, 'b>) (factory: 'a -> 'b) (element: 'a): 'b =
+        if pool.ContainsKey element then
+            pool.[element]
+        else 
+            let wrapper = factory element
+            pool.Add(element, wrapper)
+            wrapper
+
+    let unregister (pool: IDictionary<'a, 'b>) (element: 'a) =
+        if not <| pool.Remove element then 
+            failwith "Removing non-existent element"
 
     /// Wraps given CoreElement to AttributeElement. Creates new wrapper if needed, otherwise returns cached copy.
     member this.Wrap (element: ICoreElement): IAttributeElement =
-        if elementsPool.ContainsKey element then
-            elementsPool.[element]
-        else 
-            let wrapper = factory.CreateElement element this
-            elementsPool.Add(element, wrapper)
-            wrapper
+        wrap elementsPool (fun e -> factory.CreateElement e this) element
 
     /// Removes element from cache.
     member this.UnregisterElement (element: ICoreElement): unit =
-        if not <| elementsPool.Remove element then 
-            failwith "Removing non-existent element"
+        unregister elementsPool element
+
+    /// Wraps given CoreElement to AttributeAttribute. Creates new wrapper if needed, otherwise returns cached copy.
+    member this.WrapAttribute (element: ICoreElement): IAttributeAttribute =
+        wrap attributesPool (fun e -> factory.CreateAttribute e this) element
+
+    /// Removes attribute from cache.
+    member this.UnregisterAttribute (element: ICoreElement): unit =
+        unregister attributesPool element
+
+    /// Wraps given CoreElement to AttributeSlot. Creates new wrapper if needed, otherwise returns cached copy.
+    member this.WrapSlot (element: ICoreElement): IAttributeSlot =
+        wrap slotsPool (fun e -> factory.CreateSlot e this) element
+
+    /// Removes slot from cache.
+    member this.UnregisterSlot (element: ICoreElement): unit =
+        unregister slotsPool element
 
     /// Wraps given node to CoreModel. Creates new wrapper if needed, otherwise returns cached copy.
     member this.WrapModel (model: ICoreModel): IAttributeModel =
-        if modelsPool.ContainsKey model then
-            modelsPool.[model]
-        else 
-            let wrapper = factory.CreateModel model this
-            modelsPool.Add(model, wrapper)
-            wrapper
+        wrap modelsPool (fun e -> factory.CreateModel e this) model
 
     /// Removes model from cache.
     member this.UnregisterModel (model: ICoreModel): unit =
-        if not <| modelsPool.Remove model then 
-            failwith "Removing non-existent model"
+        unregister modelsPool model
 
     /// Clears cached values, invalidating all references to Core elements.
     member this.Clear () =
         elementsPool.Clear ()
         modelsPool.Clear ()
+        attributesPool.Clear ()
+        slotsPool.Clear ()
 
 /// Abstract factory that creates wrapper objects.
 and IAttributeFactory =
@@ -65,3 +85,9 @@ and IAttributeFactory =
 
     /// Creates AttributeModel wrapper by given CoreModel.
     abstract CreateModel: model: ICoreModel -> pool: AttributePool -> IAttributeModel
+
+    /// Creates AttributeAttribute wrapper by given CoreElement.
+    abstract CreateAttribute: element: ICoreElement -> pool: AttributePool -> IAttributeAttribute
+
+    /// Creates AttributeSlot wrapper by given CoreElement.
+    abstract CreateSlot: element: ICoreElement -> pool: AttributePool -> IAttributeSlot

@@ -19,7 +19,7 @@ open Repo.InfrastructureMetamodel
 open Repo.LanguageMetamodel
 
 /// Implementation of core repository as a wrapper around basic repository.
-type AttributeRepository(pool: InfrastructurePool, repo: ILanguageRepository) =
+type InfrastructureRepository(pool: InfrastructurePool, repo: ILanguageRepository) =
 
     // Recalculated because repo is created empty and then filled with models.
     let infrastructureMetamodel () = repo.Model Consts.infrastructureMetamodel

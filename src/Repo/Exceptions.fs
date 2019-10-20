@@ -38,6 +38,9 @@ exception AttributeNotFoundException of attributeName: string
 /// Thrown when there is more than one attribute with given name.
 exception MultipleAttributesException of attributeName: string
 
+/// Thrown when adding an attribute will result in other attribute being hidden.
+exception AmbiguousAttributesException of attributeName: string
+
 /// Thrown if we are trying to do something wrong with a model. Most probably means incorrect model or
 /// internal error in repository.
 exception InvalidSemanticOperationException of errorMessage: string

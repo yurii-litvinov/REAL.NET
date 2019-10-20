@@ -84,11 +84,17 @@ type CoreModel(modelNode: BasicMetamodel.IBasicNode, pool: CorePool, repo: Basic
             pool.Wrap edge :?> ICoreAssociation
 
         member this.Elements =
-            let modelMetatype = repo.Node Consts.metamodelModel
-            let elementsMetatype = modelMetatype.OutgoingEdge Consts.elementsEdge :> BasicMetamodel.IBasicElement
+            let isElementsEdge (edge: Repo.BasicMetamodel.IBasicEdge) =
+                let modelMetametatype = repo.Node Consts.metamodelModel
+                let elementsMetametatype = 
+                    modelMetametatype.OutgoingEdge Consts.elementsEdge :> BasicMetamodel.IBasicElement
+                let modelMetatype = repo.Node Consts.model
+                let elementsMetatype = 
+                    modelMetatype.OutgoingEdge Consts.elementsEdge :> BasicMetamodel.IBasicElement
+                (edge.Metatype = elementsMetametatype) || (edge.Metatype = elementsMetatype)
 
             modelNode.OutgoingEdges
-            |> Seq.filter (fun e -> (e.Metatypes |> Seq.isEmpty |> not) && (e.Metatype = elementsMetatype))
+            |> Seq.filter (fun e -> (e.Metatypes |> Seq.isEmpty |> not) && (isElementsEdge e))
             |> Seq.map (fun e -> e.Target)
             |> Seq.map pool.Wrap
 

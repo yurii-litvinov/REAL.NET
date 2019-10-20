@@ -24,7 +24,7 @@ open FsUnitTyped
 [<TestFixture>]
 type AttributeElementTests() =
 
-    let mutable repo = CoreMetamodel.CoreMetamodelRepoFactory.Create ()
+    let mutable repo = (AttributeMetamodelRepoFactory.Create () :?> AttributeRepository).UnderlyingRepo
     let mutable factory = AttributeFactory(repo)
     let mutable pool = AttributePool(factory)
     let mutable model = repo.InstantiateCoreMetamodel "TestModel"
@@ -39,9 +39,15 @@ type AttributeElementTests() =
         let unwrappedAssociation = model.CreateAssociation unwrappedNode1 unwrappedNode2 "testEdge"
         pool.Wrap unwrappedAssociation :?> IAttributeAssociation
 
+    let (--|>) (node1: IAttributeElement) (node2: IAttributeElement) =
+        let unwrappedNode1 = (node1 :?> AttributeElement).UnderlyingElement
+        let unwrappedNode2 = (node2 :?> AttributeElement).UnderlyingElement
+        let unwrappedGeneralization = model.CreateGeneralization unwrappedNode1 unwrappedNode2
+        pool.Wrap unwrappedGeneralization |> ignore
+
     [<SetUp>]
     member this.Setup () =
-        repo <- CoreMetamodel.CoreMetamodelRepoFactory.Create ()
+        repo <- (AttributeMetamodelRepoFactory.Create () :?> AttributeRepository).UnderlyingRepo
         factory <- AttributeFactory(repo)
         pool <- AttributePool(factory)
         model <- repo.InstantiateCoreMetamodel "TestModel"
@@ -54,3 +60,33 @@ type AttributeElementTests() =
         node1.OutgoingAssociations |> shouldContain edge
         node1.OutgoingAssociations |> shouldHaveLength 1
         ()
+
+    [<Test>]
+    member this.AttributesTest () =
+        let node = +"Node"
+        let ``type`` = +"Type"
+        node.AddAttribute "attribute" ``type``
+
+        node.Attributes |> Seq.filter (fun a -> a.Name = "attribute") |> shouldHaveLength 1
+
+    [<Test>]
+    [<Ignore("Not implemented")>]
+    member this.AddingTwoAttributesWithTheSameNameAreNotAllowedTest () =
+        let node = +"Node"
+        let ``type`` = +"Type"
+        
+        node.AddAttribute "attribute" ``type``
+        (fun () -> node.AddAttribute "attribute" ``type``) |> shouldFail<AmbiguousAttributesException>
+
+    [<Test>]
+    [<Ignore("Not implemented")>]
+    member this.AttributesRespectGeneralizationTest () =
+        let parent = +"Parent"
+        let ``type`` = +"Type"
+            
+        parent.AddAttribute "attribute" ``type``
+
+        let child = +"Child"
+        child --|> parent
+
+        child.Attributes |> Seq.filter (fun a -> a.Name = "attribute") |> shouldHaveLength 1
