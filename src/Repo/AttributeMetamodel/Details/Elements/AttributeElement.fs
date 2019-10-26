@@ -55,6 +55,9 @@ type AttributeElement(element: ICoreElement, pool: AttributePool, repo: ICoreRep
             |> Seq.map wrap
             |> Seq.cast<IAttributeAssociation>
 
+        member this.OutgoingAssociation name =
+            element.OutgoingAssociation name |> wrap |> (fun a -> a :?> IAttributeAssociation)
+
         member this.IncomingAssociations =
             element.IncomingEdges
             |> Seq.choose (function | :? ICoreAssociation as a -> Some a | _ -> None)

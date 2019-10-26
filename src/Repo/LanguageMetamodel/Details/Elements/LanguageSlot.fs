@@ -16,3 +16,12 @@ namespace Repo.LanguageMetamodel.Details.Elements
 
 open Repo.LanguageMetamodel
 open Repo.AttributeMetamodel
+
+/// Implementation of Slot in Language metamodel.
+type LanguageSlot(node: IAttributeSlot, pool: LanguagePool, repo: IAttributeRepository) =
+    interface ILanguageSlot with
+        member this.Attribute = node.Attribute |> pool.WrapAttribute
+
+        member this.Value
+            with get () = node.Value |> pool.Wrap
+            and set v = node.Value <- (v :?> LanguageElement).UnderlyingElement

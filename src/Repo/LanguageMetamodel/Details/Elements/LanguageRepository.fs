@@ -38,7 +38,7 @@ type LanguageRepository(pool: LanguagePool, repo: IAttributeRepository) =
         member this.Model name = 
             repo.Model name |> wrap
 
-        member this.InstantiateAttributeMetamodel name =
+        member this.InstantiateLanguageMetamodel name =
             (this :> ILanguageRepository).InstantiateModel name (pool.WrapModel (attributeMetamodel ()))
 
         member this.InstantiateModel name metamodel = 

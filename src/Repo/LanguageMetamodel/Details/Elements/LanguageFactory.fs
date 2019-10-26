@@ -20,14 +20,23 @@ open Repo.AttributeMetamodel
 
 /// Implementation of wrapper factory.
 type LanguageFactory(repo: IAttributeRepository) =
-    interface ICoreFactory with
+    interface ILanguageFactory with
         member this.CreateElement element pool =
             match element with
-            | :? IAttributeNode as n -> LanguageNode(n, pool, repo) :> ILanguageElement
-            | :? IAttributeGeneralization as g -> LanguageGeneralization(g, pool, repo) :> ILanguageElement
-            | :? IAttributeInstanceOf as i -> LanguageInstanceOf(i, pool, repo) :> ILanguageElement
-            | :? IAttributeAssociation as a -> LanguageAssociation(a, pool, repo) :> ILanguageElement
+            | :? IAttributeNode as n -> LanguageNode(n, pool, repo) :> _
+            | :? IAttributeGeneralization as g -> LanguageGeneralization(g, pool, repo) :> _
+            | :? IAttributeInstanceOf as i -> LanguageInstanceOf(i, pool, repo) :> _
+            | :? IAttributeAssociation as a -> LanguageAssociation(a, pool, repo) :> _
             | _ -> failwith "Unknown subtype"
 
         member this.CreateModel model pool =
-            LanguageModel(model, pool, repo) :> ILanguageModel
+            LanguageModel(model, pool, repo) :> _
+
+        member this.CreateEnumeration element pool =
+            LanguageEnumeration(element :?> IAttributeNode, pool, repo) :> _
+
+        member this.CreateAttribute attribute pool =
+            LanguageAttribute(attribute, pool, repo) :> ILanguageAttribute
+
+        member this.CreateSlot element pool =
+            LanguageSlot(element, pool, repo) :> ILanguageSlot

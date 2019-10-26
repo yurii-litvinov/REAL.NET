@@ -16,3 +16,18 @@ namespace Repo.LanguageMetamodel.Details.Elements
 
 open Repo.LanguageMetamodel
 open Repo.AttributeMetamodel
+
+/// Implementation of Attribute.
+type LanguageAttribute(attribute: IAttributeAttribute, pool: LanguagePool, repo: IAttributeRepository) =
+
+    /// Returns underlying Attribute element for this attribute.
+    member this.UnderlyingAttribute = attribute
+
+    override this.ToString () =
+        let this = this :> ILanguageAttribute
+        this.Name + ": " + this.Type.ToString ()
+
+    interface ILanguageAttribute with
+        member this.Name = attribute.Name
+
+        member this.Type = attribute.Type |> pool.Wrap

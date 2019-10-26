@@ -17,6 +17,7 @@
     <Compile Include="CoreMetamodel.Tests\Elements.Tests\CoreElementTests.fs" />
     <Compile Include="AttributeMetamodel.Tests\Elements.Tests\AttributeElementTests.fs" />
     <Compile Include="AttributeMetamodel.Tests\Semantics.Tests\ModelCreationTests.fs" />
+    <Compile Include="LanguageMetamodel.Tests\Elements.Tests\LanguageEnumerationTests.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Repo\Repo.Core.fsproj" />

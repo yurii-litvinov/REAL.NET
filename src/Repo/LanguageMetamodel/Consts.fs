@@ -15,3 +15,31 @@
 module Repo.LanguageMetamodel.Consts
 
 let languageMetamodel = "LanguageMetamodel"
+
+let node = "LanguageMetamodel::Node"
+let element = "LanguageMetamodel::Element"
+let enumeration = "LanguageMetamodel::Enumeration"
+let edge = "LanguageMetamodel::Edge"
+let generalization = "LanguageMetamodel::Generalization"
+let association = "LanguageMetamodel::Association"
+let attribute = "LanguageMetamodel::Attribute"
+let slot = "LanguageMetamodel::Slot"
+let string = "LanguageMetamodel::String"
+let model = "LanguageMetamodel::Model"
+let repository = "LanguageMetamodel::Repository"
+
+let generalizationEdge = "generalization"
+let elementsEdge = "elements"
+let sourceEdge = "source"
+let targetEdge = "target"
+let nameEdge = "name"
+let modelEdge = "model"
+let targetNameEdge = "targetName"
+let modelsEdge = "models"
+let metamodelEdge = "metamodel"
+
+let attributesEdge = "attributes"
+let slotsEdge = "slots"
+let attributeEdge = "attribute"
+let valueEdge = "value"
+let typeEdge = "type"

@@ -24,27 +24,15 @@ type LanguageModel(model: IAttributeModel, pool: LanguagePool, repo: IAttributeR
     let unwrap (element: ILanguageElement) = (element :?> LanguageElement).UnderlyingElement
     let wrap element = pool.Wrap element
 
-    let attributeMetamodel = repo.Model Consts.attributeMetamodel
+    let attributeMetamodel = repo.Model AttributeMetamodel.Consts.attributeMetamodel
+    let languageModel = repo.Model LanguageMetamodel.Consts.languageMetamodel
 
-    let attributeMetamodelNode = attributeMetamodel.Node Consts.node
-   //let coreMetamodelGeneralization = repo.Node Consts.generalization
-   //let coreMetamodelAssociation = repo.Node Consts.association
-   //let coreMetamodelElementsEdge = (repo.Node Consts.model).OutgoingEdge Consts.elementsEdge
-   //let coreMetamodelModelEdge = 
-   //    (repo.Node Consts.element).OutgoingEdges 
-   //    |> Seq.filter (fun e -> e.TargetName = Consts.modelEdge)
-   //    |> Seq.filter (fun e -> e.Metatype :? BasicMetamodel.IBasicEdge)
-   //    |> Helpers.exactlyOneElement "models"
+    let attributeMetamodelNode = attributeMetamodel.Node AttributeMetamodel.Consts.node
+    
+    let enumerationNode = languageModel.Node LanguageMetamodel.Consts.enumeration
+    let stringNode = languageModel.Node LanguageMetamodel.Consts.string
 
-   //let (--/-->) source target = repo.CreateEdge source target Consts.instanceOfEdge |> ignore
-   //let (--->) source (target, targetName) =
-   //    repo.CreateEdge (unwrap source) (unwrap target) targetName
-   //let (~+) name = repo.CreateNode name
-   //let (++) model element =
-   //    let elementsEdge = repo.CreateEdge model element Consts.elementsEdge
-   //    elementsEdge --/--> coreMetamodelElementsEdge
-   //    let modelEdge = repo.CreateEdge element model Consts.modelEdge
-   //    modelEdge --/--> coreMetamodelModelEdge
+    let enumElementsAssociation = enumerationNode.OutgoingAssociation LanguageMetamodel.Consts.elementsEdge 
 
    /// Returns underlying BasicNode that is a root node for model.
     member this.UnderlyingModel = model
@@ -85,6 +73,15 @@ type LanguageModel(model: IAttributeModel, pool: LanguagePool, repo: IAttributeR
                     (unwrap metatype :?> IAttributeAssociation)
                     Map.empty
             wrap edge :?> ILanguageAssociation
+
+        member this.CreateEnumeration name elements =
+            let enumerationNode = model.InstantiateNode name enumerationNode Map.empty
+            elements
+            |> Seq.map (fun e -> model.InstantiateNode e stringNode Map.empty)
+            |> Seq.iter (fun n -> model.InstantiateAssociation enumerationNode n enumElementsAssociation Map.empty 
+                                  |> ignore)
+
+            enumerationNode |> pool.WrapEnumeration
 
         member this.Elements = model.Elements |> Seq.map wrap
 

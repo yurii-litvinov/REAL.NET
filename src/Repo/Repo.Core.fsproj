@@ -51,6 +51,7 @@
     <Compile Include="LanguageMetamodel\Details\Elements\LanguagePool.fs" />
     <Compile Include="LanguageMetamodel\Details\Elements\LanguageElement.fs" />
     <Compile Include="LanguageMetamodel\Details\Elements\LanguageNode.fs" />
+    <Compile Include="LanguageMetamodel\Details\Elements\LanguageEnumeration.fs" />
     <Compile Include="LanguageMetamodel\Details\Elements\LanguageEdge.fs" />
     <Compile Include="LanguageMetamodel\Details\Elements\LanguageAssociation.fs" />
     <Compile Include="LanguageMetamodel\Details\Elements\LanguageGeneralization.fs" />

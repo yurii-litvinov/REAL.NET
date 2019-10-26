@@ -26,7 +26,6 @@ open FsUnitTyped
 type ModelCreationTests() =
 
     [<Test>]
-    [<Ignore("Not implemented")>]
     member this.``There shall be possible to create two-level hierarchy based on Attribute Metamodel`` () =
         let repo = AttributeMetamodelRepoFactory.Create ()
         let metamodel = repo.InstantiateAttributeMetamodel "Metamodel"

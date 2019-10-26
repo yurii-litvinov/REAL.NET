@@ -21,7 +21,7 @@ open Repo.AttributeMetamodel
 [<AbstractClass>]
 type LanguageElement(element: IAttributeElement, pool: LanguagePool, repo: IAttributeRepository) =
 
-    /// Returns underlying CoreElement.
+    /// Returns underlying AttributeElement.
     member this.UnderlyingElement = element
 
     interface ILanguageElement with

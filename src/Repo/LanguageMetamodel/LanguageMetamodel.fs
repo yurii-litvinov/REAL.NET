@@ -44,15 +44,7 @@ type ILanguageElement =
     end
 
 /// Attribute is like field in a class --- describes possible values of a field in instances. Has type 
-/// (a set of possible values), name and default value. Since default value can be an ontological instance of type,
-/// type can be of a higher metalevel (so "Type" association can cross metalayer boundaries).
-///
-/// In theory, DefaultValue in not an actual value, but a method to produce one in model instance, so we can avoid
-/// metalayer crossing in some situations (for example, enum elements are nice ways to represent enum values).
-///
-/// For reference attributes (i.e. attributes that have a class from the same model as a type) there is no way to 
-/// properly define default value other than something like null. If needed, "Type-object" pattern may be used
-/// in lower metalayer languages to avoid such problems and to achieve behavior of textual languages.
+/// (a set of possible values) and name.
 and ILanguageAttribute =
     interface
         /// A type of an attribute. Restricts a set of possible values for corresponding slot.
@@ -60,9 +52,6 @@ and ILanguageAttribute =
 
         /// A name of an attribute.
         abstract Name: string with get
-
-        /// Default value for an attribute. Used when no value for an attribute is given during instantiation.
-        abstract DefaultValue: ILanguageElement with get
     end
 
 /// An instance of attribute. Contains actual value.
@@ -76,13 +65,27 @@ and ILanguageSlot =
     end
 
 /// Node is a kind of element which can connect only to edge, corresponds to node of the model graph.
-/// NOTE: Node can be seen as always unconnected edge.
 and ILanguageNode =
     interface
         inherit ILanguageElement
 
         /// Name of a node, possibly not unique.
         abstract Name: string with get, set
+    end
+
+/// Enumeration is a custom data type that consists of some named elements.
+and ILanguageEnumeration =
+    interface
+        inherit ILanguageElement
+
+        /// Name of an enumeration.
+        abstract Name: string with get, set
+
+        /// List of elements belonging to the enumeration.
+        abstract Elements: ILanguageNode seq with get
+
+        /// Adds a new enumeration element.
+        abstract AddElement: name: string -> unit
     end
 
 /// Edge is a kind of element which can connect to everything.
@@ -173,6 +176,9 @@ and ILanguageModel =
             -> attributeValues: Map<string, ILanguageElement>
             -> ILanguageAssociation
 
+        /// Creates a new enumeration in a model.
+        abstract CreateEnumeration: name: string -> elements: string seq -> ILanguageEnumeration
+
         /// Returns all elements in a model.
         abstract Elements: ILanguageElement seq with get
 
@@ -209,8 +215,8 @@ type ILanguageRepository =
         /// All models in a repository.
         abstract Models: ILanguageModel seq with get
 
-        /// Creates and returns a new model in repository based on Attribute Metamodel.
-        abstract InstantiateAttributeMetamodel: name: string -> ILanguageModel
+        /// Creates and returns a new model in repository based on Language Metamodel.
+        abstract InstantiateLanguageMetamodel: name: string -> ILanguageModel
 
         /// Creates and returns a new model in repository based on a given metamodel.
         abstract InstantiateModel: name: string -> metamodel: ILanguageModel -> ILanguageModel

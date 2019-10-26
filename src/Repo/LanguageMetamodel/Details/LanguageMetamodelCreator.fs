@@ -16,22 +16,49 @@
 module Repo.LanguageMetamodel.Details.LanguageMetamodelCreator
 
 open Repo.LanguageMetamodel
+open Repo.LanguageMetamodel.Details.Elements
 
 let createIn(repo: ILanguageRepository): unit =
+    let repo = (repo :?> LanguageRepository).UnderlyingRepo
 
+    let model = repo.InstantiateAttributeMetamodel Consts.languageMetamodel
 
-   //let builder = CoreSemanticsModelBuilder(repo, "AttributeMetamodel")
-   //let (--->) (source: IDataElement) (target, name) = builder +---> (source, target, name)
+    let (--->) source (target, name) = model.CreateAssociation source target name |> ignore
+    let (~+) name = model.CreateNode name
+    let (--|>) source target = model.CreateGeneralization source target |> ignore
 
-   //builder.ReinstantiateParentModel ()
-           
-   //let attribute = builder + "Attribute"
-   //let slot = builder + "Slot"
+    let model = +Consts.model
+    let repository = +Consts.repository
+    let element = +Consts.element
+    let node = +Consts.node
+    let enumeration = +Consts.enumeration
+    let edge = +Consts.edge
+    let generalization = +Consts.generalization
+    let association = +Consts.association
+    let attribute = +Consts.attribute
+    let slot = +Consts.slot
+    let stringNode = +Consts.string
 
-   //builder.Node "Element" ---> (attribute, "attributes")
-   //builder.Node "Element" ---> (slot, "slots")
-   //attribute ---> (builder.Node "String", "type")
-   //attribute ---> (builder.Node "String", "defaultValue")
-   //slot ---> (builder.Node "String", "value")
+    node --|> element
+    enumeration --|> element
+    edge --|> element
+    generalization --|> edge
+    association --|> edge
 
-   ()
+    repository ---> (model, Consts.modelsEdge)
+    model ---> (model, Consts.metamodelEdge)
+    model ---> (element, Consts.elementsEdge)
+    model ---> (stringNode, Consts.nameEdge)
+    element ---> (model, Consts.modelEdge)
+    edge ---> (element, Consts.sourceEdge)
+    edge ---> (element, Consts.targetEdge)
+    node ---> (stringNode, Consts.nameEdge)
+    enumeration ---> (stringNode, Consts.elementsEdge)
+    association ---> (stringNode, Consts.targetNameEdge)
+
+    element ---> (attribute, Consts.attributesEdge)
+    element ---> (slot, Consts.slotsEdge)
+    slot ---> (attribute, Consts.attributeEdge)
+    slot ---> (node, Consts.valueEdge)
+    attribute ---> (stringNode, Consts.nameEdge)
+    attribute ---> (node, Consts.typeEdge)
