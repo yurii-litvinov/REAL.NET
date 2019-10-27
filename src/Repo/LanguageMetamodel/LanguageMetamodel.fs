@@ -20,6 +20,11 @@ type ILanguageElement =
         /// Outgoing associations for that element.
         abstract OutgoingAssociations: ILanguageAssociation seq with get
 
+        /// Returns outgoing association with a given target name if there is exactly one such edge. 
+        /// Throws ElementNotFoundException if there is no edge with such name and MultipleElementsException 
+        /// if there are many.
+        abstract OutgoingAssociation: name: string -> ILanguageAssociation
+
         /// Incoming associations for that element.
         abstract IncomingAssociations: ILanguageAssociation seq with get
 

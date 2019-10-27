@@ -14,8 +14,6 @@
 
 namespace Repo.InfrastructureMetamodel.Details.Elements
 
-open Repo
-open Repo.InfrastructureMetamodel
 open Repo.LanguageMetamodel
 
 /// Implementation of wrapper factory.
@@ -23,11 +21,20 @@ type InfrastructureFactory(repo: ILanguageRepository) =
     interface IInfrastructureFactory with
         member this.CreateElement element pool =
             match element with
-            | :? ILanguageNode as n -> InfrastructureNode(n, pool, repo) :> IInfrastructureElement
-            | :? ILanguageGeneralization as g -> InfrastructureGeneralization(g, pool, repo) :> IInfrastructureElement
-            | :? ILanguageInstanceOf as i -> InfrastructureInstanceOf(i, pool, repo) :> IInfrastructureElement
-            | :? ILanguageAssociation as a -> InfrastructureAssociation(a, pool, repo) :> IInfrastructureElement
+            | :? ILanguageNode as n -> InfrastructureNode(n, pool, repo) :> _
+            | :? ILanguageGeneralization as g -> InfrastructureGeneralization(g, pool, repo) :> _
+            | :? ILanguageInstanceOf as i -> InfrastructureInstanceOf(i, pool, repo) :> _
+            | :? ILanguageAssociation as a -> InfrastructureAssociation(a, pool, repo) :> _
             | _ -> failwith "Unknown subtype"
 
         member this.CreateModel model pool =
-            InfrastructureModel(model, pool, repo) :> IInfrastructureModel
+            InfrastructureModel(model, pool, repo) :> _
+
+        member this.CreateEnumeration element pool =
+            InfrastructureEnumeration(element, pool, repo) :> _
+
+        member this.CreateAttribute attribute pool =
+            InfrastructureAttribute(attribute, pool, repo) :> _
+
+        member this.CreateSlot element pool =
+            InfrastructureSlot(element, pool, repo) :> _

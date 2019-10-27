@@ -69,6 +69,7 @@
     <Compile Include="InfrastructureMetamodel\Details\Elements\InfrastructurePool.fs" />
     <Compile Include="InfrastructureMetamodel\Details\Elements\InfrastructureElement.fs" />
     <Compile Include="InfrastructureMetamodel\Details\Elements\InfrastructureNode.fs" />
+    <Compile Include="InfrastructureMetamodel\Details\Elements\InfrastructureEnumeration.fs" />
     <Compile Include="InfrastructureMetamodel\Details\Elements\InfrastructureEdge.fs" />
     <Compile Include="InfrastructureMetamodel\Details\Elements\InfrastructureAssociation.fs" />
     <Compile Include="InfrastructureMetamodel\Details\Elements\InfrastructureGeneralization.fs" />

@@ -26,11 +26,18 @@ type LanguageElement(element: IAttributeElement, pool: LanguagePool, repo: IAttr
 
     interface ILanguageElement with
 
-        member this.OutgoingAssociations = 
-            failwith "Not implemented"
+        member this.OutgoingAssociations =
+            element.OutgoingAssociations 
+            |> Seq.map pool.Wrap 
+            |> Seq.cast<ILanguageAssociation>
+
+        member this.OutgoingAssociation name =
+            element.OutgoingAssociation name |> pool.Wrap :?> ILanguageAssociation
 
         member this.IncomingAssociations =
-            failwith "Not implemented"
+            element.IncomingAssociations 
+            |> Seq.map pool.Wrap 
+            |> Seq.cast<ILanguageAssociation>
 
         member this.DirectSupertypes =
             failwith "Not implemented"

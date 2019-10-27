@@ -14,14 +14,23 @@
 
 namespace Repo.InfrastructureMetamodel.Details.Elements
 
+open Repo
 open Repo.InfrastructureMetamodel
 open Repo.LanguageMetamodel
 
-/// Implementation of Slot.
-type InfrastructureSlot(node: ILanguageSlot, pool: InfrastructurePool, repo: ILanguageRepository) =
-    interface IInfrastructureSlot with
-        member this.Attribute = node.Attribute |> pool.WrapAttribute
+/// Implementation of Enumeration.
+type InfrastructureEnumeration(node: ILanguageEnumeration, pool: InfrastructurePool, repo: ILanguageRepository) =
+    inherit InfrastructureElement(node, pool, repo)
 
-        member this.Value
-            with get () = node.Value |> pool.Wrap
-            and set v = node.Value <- (v :?> InfrastructureElement).UnderlyingElement
+    interface IInfrastructureEnumeration with
+        member this.Name
+            with get () = node.Name
+            and set v = node.Name <- v
+
+        member this.AddElement name =
+            node.AddElement name
+
+        member this.Elements =
+            node.Elements
+            |> Seq.map pool.Wrap
+            |> Seq.cast<IInfrastructureNode>

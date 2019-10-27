@@ -86,6 +86,7 @@ type LanguagePool(factory: ILanguageFactory) =
         modelsPool.Clear ()
         attributesPool.Clear ()
         slotsPool.Clear ()
+        enumsPool.Clear ()
 
 /// Abstract factory that creates wrapper objects.
 and ILanguageFactory =

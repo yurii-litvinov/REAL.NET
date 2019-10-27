@@ -85,6 +85,21 @@ and IInfrastructureNode =
         abstract Name: string with get, set
     end
 
+/// Enumeration is a custom data type that consists of some named elements.
+and IInfrastructureEnumeration =
+    interface
+        inherit IInfrastructureElement
+
+        /// Name of an enumeration.
+        abstract Name: string with get, set
+
+        /// List of elements belonging to the enumeration.
+        abstract Elements: IInfrastructureNode seq with get
+
+        /// Adds a new enumeration element.
+        abstract AddElement: name: string -> unit
+    end
+
 /// Edge is a kind of element which can connect to everything.
 and IInfrastructureEdge =
     interface

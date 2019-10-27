@@ -14,5 +14,27 @@
 
 namespace Repo.InfrastructureMetamodel.Details.Elements
 
+open Repo
 open Repo.InfrastructureMetamodel
 open Repo.LanguageMetamodel
+
+/// Implementation of Attribute.
+type InfrastructureAttribute(attribute: ILanguageAttribute, pool: InfrastructurePool, repo: ILanguageRepository) =
+
+    let infrastructureMetamodel = repo.Model InfrastructureMetamodel.Consts.infrastructureMetamodel
+    let attributeMetatype = infrastructureMetamodel.Node InfrastructureMetamodel.Consts.attribute
+    let defaultValueEdge = attributeMetatype.OutgoingAssociation InfrastructureMetamodel.Consts.defaultValueEdge
+
+    /// Returns underlying Attribute element for this attribute.
+    member this.UnderlyingAttribute = attribute
+
+    override this.ToString () =
+        attribute.ToString ()
+
+    interface IInfrastructureAttribute with
+        member this.Name = attribute.Name
+
+        member this.Type = attribute.Type |> pool.Wrap
+
+        member this.DefaultValue =
+            failwith "Not implemented"

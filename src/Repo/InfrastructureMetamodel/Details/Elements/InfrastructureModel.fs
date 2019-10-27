@@ -24,28 +24,6 @@ type InfrastructureModel(model: ILanguageModel, pool: InfrastructurePool, repo: 
     let unwrap (element: IInfrastructureElement) = (element :?> InfrastructureElement).UnderlyingElement
     let wrap element = pool.Wrap element
 
-    //let attributeMetamodel = repo.Model Consts.attributeMetamodel
-
-    //let attributeMetamodelNode = attributeMetamodel.Node Consts.node
-   //let coreMetamodelGeneralization = repo.Node Consts.generalization
-   //let coreMetamodelAssociation = repo.Node Consts.association
-   //let coreMetamodelElementsEdge = (repo.Node Consts.model).OutgoingEdge Consts.elementsEdge
-   //let coreMetamodelModelEdge = 
-   //    (repo.Node Consts.element).OutgoingEdges 
-   //    |> Seq.filter (fun e -> e.TargetName = Consts.modelEdge)
-   //    |> Seq.filter (fun e -> e.Metatype :? BasicMetamodel.IBasicEdge)
-   //    |> Helpers.exactlyOneElement "models"
-
-   //let (--/-->) source target = repo.CreateEdge source target Consts.instanceOfEdge |> ignore
-   //let (--->) source (target, targetName) =
-   //    repo.CreateEdge (unwrap source) (unwrap target) targetName
-   //let (~+) name = repo.CreateNode name
-   //let (++) model element =
-   //    let elementsEdge = repo.CreateEdge model element Consts.elementsEdge
-   //    elementsEdge --/--> coreMetamodelElementsEdge
-   //    let modelEdge = repo.CreateEdge element model Consts.modelEdge
-   //    modelEdge --/--> coreMetamodelModelEdge
-
    /// Returns underlying BasicNode that is a root node for model.
     member this.UnderlyingModel = model
 
