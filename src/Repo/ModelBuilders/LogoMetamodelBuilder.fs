@@ -83,9 +83,9 @@ type LogoMetamodelBuilder() =
            penUp --|> abstractNode
            penDown --|> abstractNode
 
-           infrastructure.Element.AddAttribute forward "Expression" "AttributeKind.String" "100"
-           infrastructure.Element.AddAttribute backward "Expression" "AttributeKind.String" "100"
-           infrastructure.Element.AddAttribute left "Expression" "AttributeKind.String" "100"
-           infrastructure.Element.AddAttribute right "Expression" "AttributeKind.String" "100"
+           infrastructure.Element.AddAttribute forward "Expression" "AttributeKind.String" "0"
+           infrastructure.Element.AddAttribute backward "Expression" "AttributeKind.String" "0"
+           infrastructure.Element.AddAttribute left "Expression" "AttributeKind.String" "0"
+           infrastructure.Element.AddAttribute right "Expression" "AttributeKind.String" "0"
 
            ()
