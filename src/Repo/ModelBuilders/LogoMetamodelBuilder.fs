@@ -32,7 +32,7 @@ type LogoMetamodelBuilder() =
            let metamodelGeneralization = find "Generalization"
            let metamodelAssociation = find "Association"
            
-           let model = repo.CreateModel("AirSimMetamodel", metamodel)
+           let model = repo.CreateModel("LogoMetamodel", metamodel)
 
            /// Creates a node with given name and link to shape
            let (~+) (name, shape, isAbstract) =
@@ -83,9 +83,9 @@ type LogoMetamodelBuilder() =
            penUp --|> abstractNode
            penDown --|> abstractNode
 
-           infrastructure.Element.AddAttribute forward "Expression" "AttributeKind.String" "100"
-           infrastructure.Element.AddAttribute backward "Expression" "AttributeKind.String" "100"
-           infrastructure.Element.AddAttribute left "Expression" "AttributeKind.String" "100"
-           infrastructure.Element.AddAttribute right "Expression" "AttributeKind.String" "100"
+           infrastructure.Element.AddAttribute forward "Expression" "AttributeKind.String" "0"
+           infrastructure.Element.AddAttribute backward "Expression" "AttributeKind.String" "0"
+           infrastructure.Element.AddAttribute left "Expression" "AttributeKind.String" "0"
+           infrastructure.Element.AddAttribute right "Expression" "AttributeKind.String" "0"
 
            ()

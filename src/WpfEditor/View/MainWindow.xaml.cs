@@ -89,7 +89,7 @@ namespace WpfEditor.View
             this.InitToolbar();
 
             this.modelSelector.Init(this.model);
-            this.modelSelector.ChangeModel(2);
+            this.modelSelector.ChangeModel(4);
         }
 
         private void Reinit(object sender, EventArgs e)
