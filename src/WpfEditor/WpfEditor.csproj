@@ -172,6 +172,19 @@
   <ItemGroup>
     <Resource Include="View\Pictures\Toolbar\undo.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\LogoPictures\backward.png" />
+    <Resource Include="View\Pictures\LogoPictures\forward.png" />
+    <Resource Include="View\Pictures\LogoPictures\left.png" />
+    <Resource Include="View\Pictures\LogoPictures\penDown.png" />
+    <Resource Include="View\Pictures\LogoPictures\penUp.png" />
+    <Resource Include="View\Pictures\LogoPictures\right.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\LogoPictures\edge.png" />
+    <Resource Include="View\Pictures\LogoPictures\finalBlock.png" />
+    <Resource Include="View\Pictures\LogoPictures\initialBlock.png" />
+  </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>

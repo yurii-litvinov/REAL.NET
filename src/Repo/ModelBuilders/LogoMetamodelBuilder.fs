@@ -55,22 +55,22 @@ type LogoMetamodelBuilder() =
                edge.Target <- Some target
                edge.TargetName <- targetName
 
-               infrastructure.Element.SetAttributeValue edge "shape" "View/Pictures/Edge.png"
+               infrastructure.Element.SetAttributeValue edge "shape" "View/Pictures/LogoPictures/Edge.png"
                infrastructure.Element.SetAttributeValue edge "name" linkName
 
                edge
                
            let abstractNode = +("AbstractNode", "", true)
-           let startNode = +("InitialNode", "View/Pictures/initialBlock.png", false)
-           let finishNode = +("FinalNode", "View/Pictures/finalBlock.png", false)
+           let startNode = +("InitialNode", "View/Pictures/LogoPictures/initialBlock.png", false)
+           let finishNode = +("FinalNode", "View/Pictures/LogoPictures/finalBlock.png", false)
 
-           let forward = +("Forward", "", false)
-           let backward = +("Backward", "", false)
-           let right = +("Right" , "", false)
-           let left = +("Left", "", false)           
+           let forward = +("Forward", "View/Pictures/LogoPictures/forward.png", false)
+           let backward = +("Backward", "View/Pictures/LogoPictures/backward.png", false)
+           let right = +("Right" , "View/Pictures/LogoPictures/right.png", false)
+           let left = +("Left", "View/Pictures/LogoPictures/left.png", false)           
            
-           let penUp = +("PenUp", "", false)
-           let penDown = +("PenDown", "", false)
+           let penUp = +("PenUp", "View/Pictures/LogoPictures/penUp.png", false)
+           let penDown = +("PenDown", "View/Pictures/LogoPictures/penDown.png", false)
 
            let link = abstractNode ---> (abstractNode, "target", "Link")
 
