@@ -15,7 +15,7 @@
         </PathGeometry>
     </Window.Resources>
     <Canvas Background="White">
-        <controls:TurtleControl x:Name="turtleControl"/>
+        <controls:TurtleControl x:Name="turtleControl" Canvas.Left="10" Canvas.Top="10"/>
         <Path Stroke="Red" Data="{StaticResource geometryPath}" Canvas.Top="10" Canvas.Left="10"/>
         <Line X1="100" Y1="100" x:Name="Line1" Stroke="Black">
 
@@ -43,13 +43,13 @@
                                               />
                     <DoubleAnimationUsingPath Duration="0:0:0.5"
                                               SpeedRatio="0.1"
-                                              Storyboard.TargetName="TurtleControl"
+                                              Storyboard.TargetName="turtleControl"
                                               Storyboard.TargetProperty="(Canvas.Top)"
                                               RepeatBehavior="Forever"
                                               PathGeometry="{StaticResource geometryPath}" Source="Y"/>
                     <DoubleAnimationUsingPath Duration="0:0:0.5"
                                               SpeedRatio="0.1"
-                                              Storyboard.TargetName="TurtleControl"
+                                              Storyboard.TargetName="turtleControl"
                                               Storyboard.TargetProperty="(Canvas.Left)"
                                               RepeatBehavior="Forever"
                                               PathGeometry="{StaticResource geometryPath}" Source="X"/>
