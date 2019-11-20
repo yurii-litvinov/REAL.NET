@@ -7,57 +7,7 @@
         xmlns:controls="clr-namespace:LogoScene.Controls"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Window.Resources>
-        <PathGeometry x:Key="geometryPath">
-            <PathFigure IsClosed="True" StartPoint="10, 10">
-                <PolyLineSegment Points="220,10 220,175 10,175" />
-            </PathFigure>
-        </PathGeometry>
-    </Window.Resources>
-    <Canvas Background="White">
-        <controls:TurtleControl x:Name="turtleControl" Canvas.Left="10" Canvas.Top="10"/>
-        <Path Stroke="Red" Data="{StaticResource geometryPath}" Canvas.Top="10" Canvas.Left="10"/>
-        <Line X1="100" Y1="100" x:Name="Line1" Stroke="Black">
-
-        </Line>
-        <Button x:Name="buttonStop" Content="Button" Canvas.Left="590" Canvas.Top="170" Width="75"/>
-
-    </Canvas>
-    <Window.Triggers>
-        <EventTrigger RoutedEvent="Window.Loaded">
-            <BeginStoryboard Name="AnimateTrue">
-                <Storyboard>
-                    <DoubleAnimationUsingPath Duration="0:0:0.5"
-                                              SpeedRatio="0.1"
-                                              Storyboard.TargetName="Line1"
-                                              Storyboard.TargetProperty="X2"
-                                              RepeatBehavior="Forever"
-                                              PathGeometry="{StaticResource geometryPath}" Source="X" />
-
-                    <DoubleAnimationUsingPath Duration="0:0:0.5"
-                                              SpeedRatio="0.1"
-                                              Storyboard.TargetName="Line1"
-                                              Storyboard.TargetProperty="Y2"
-                                              RepeatBehavior="Forever"
-                                              PathGeometry="{StaticResource geometryPath}" Source="Y"
-                                              />
-                    <DoubleAnimationUsingPath Duration="0:0:0.5"
-                                              SpeedRatio="0.1"
-                                              Storyboard.TargetName="turtleControl"
-                                              Storyboard.TargetProperty="(Canvas.Top)"
-                                              RepeatBehavior="Forever"
-                                              PathGeometry="{StaticResource geometryPath}" Source="Y"/>
-                    <DoubleAnimationUsingPath Duration="0:0:0.5"
-                                              SpeedRatio="0.1"
-                                              Storyboard.TargetName="turtleControl"
-                                              Storyboard.TargetProperty="(Canvas.Left)"
-                                              RepeatBehavior="Forever"
-                                              PathGeometry="{StaticResource geometryPath}" Source="X"/>
-                </Storyboard>
-            </BeginStoryboard>
-        </EventTrigger>
-        <EventTrigger SourceName="buttonStop" RoutedEvent="Button.Click">
-            <StopStoryboard BeginStoryboardName="AnimateTrue"/>
-        </EventTrigger>
-    </Window.Triggers>
+    <Grid>
+        <controls:DrawingScene />
+    </Grid>
 </Window>
