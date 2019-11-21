@@ -22,11 +22,11 @@ namespace WpfEditor.View
     using EditorPluginInterfaces;
     using PluginManager;
     using Repo;
-    using WpfControlsLib.Constraints;
     using WpfControlsLib.Controls.Console;
     using WpfControlsLib.Controls.ModelSelector;
     using WpfControlsLib.Controls.Scene;
     using WpfControlsLib.Controls.Toolbar;
+    using WpfControlsLib.Controls.AttributesPanel;
     using Palette = WpfControlsLib.Controls.Palette.Palette;
 
     /// <summary>
@@ -39,9 +39,13 @@ namespace WpfEditor.View
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public event Action<string> OnModelChanged;
+
         public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();
 
         public ToolbarViewModel Toolbar { get; } = new ToolbarViewModel();
+
+        public AttributesPanelViewModel AttributesPanel { get; } = new AttributesPanelViewModel();
 
         public string WindowTitle
         {
@@ -54,7 +58,7 @@ namespace WpfEditor.View
                 return $"REAL.NET {fileName} {unsavedChanges}";
             }
         }
-
+        
         public MainWindow()
         {
             // TODO: Fix sequential coupling here.
@@ -80,8 +84,8 @@ namespace WpfEditor.View
             this.scene.ElementManipulationDone += (sender, args) => this.palette.ClearSelection();
             this.scene.ElementAdded += (sender, args) => this.modelExplorer.NewElement(args.Element);
             this.scene.ElementRemoved += (sender, args) => this.modelExplorer.RemoveElement(args.Element);
-            this.scene.NodeSelected += (sender, args) => this.attributesView.DataContext = args.Node;
-            this.scene.EdgeSelected += (sender, args) => this.attributesView.DataContext = args.Edge;
+            this.scene.NodeSelected += (sender, args) => this.AttributesPanel.Attributes = args.Node.Attributes;
+            this.scene.EdgeSelected += (sender, args) => this.AttributesPanel.Attributes = args.Edge.Attributes;
 
             this.scene.Init(this.model, this.controller, new PaletteAdapter(this.palette));
 
@@ -109,6 +113,7 @@ namespace WpfEditor.View
             this.model.ModelName = modelName;
             this.palette.InitPalette(this.model.ModelName);
             this.scene.Reload();
+            this.OnModelChanged?.Invoke(this.model.ModelName);
         }
 
         private void InitToolbar()
@@ -130,10 +135,17 @@ namespace WpfEditor.View
             foreach (var plugindir in pluginDirs)
             {
                 var dirs = new List<string>(System.IO.Directory.GetDirectories(plugindir + "/bin"));
-                var config = new PluginConfig(this.model, null, null, this.Console, null);
+                var config = new PluginConfig(this.model, null, null, this.Console, null, this.leftPanelGrid);
+                config.ChangeModelSelectorVisibility = (x) => { this.modelSelector.SelectorVisibility = x; };
+                config.ChangeModel = this.SelectModel;
                 foreach (var dir in dirs)
                 {
                     libs.LaunchPlugins(dir, config);
+                }
+
+                if (config.OnMainModelChanged != null)
+                {
+                    this.OnModelChanged += new Action<string>(config.OnMainModelChanged);
                 }
             }
         }
@@ -143,17 +155,6 @@ namespace WpfEditor.View
             foreach (Window w in Application.Current.Windows)
             {
                 w.Close();
-            }
-        }
-
-        private void ConstraintsButtonClick(object sender, RoutedEventArgs e)
-        {
-            var constraintsWindow = new ConstraintsWindow(this.model);
-            constraintsWindow.ShowDialog();
-
-            if (!this.model.ConstraintsCheck())
-            {
-                this.Console.ReportError(this.model.Constraints.ErrorMsg);
             }
         }
 

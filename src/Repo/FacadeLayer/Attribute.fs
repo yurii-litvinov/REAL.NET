@@ -37,6 +37,10 @@ type AttributeRepository() =
 
 /// Implements attribute wrapper.
 and Attribute(attributeNode: DataLayer.INode) =
+
+    /// Returns corresponding node from data layer
+    member this.UnderlyingNode = attributeNode 
+
     interface IAttribute with
         member this.Kind =
             let kindNode = Element.attribute attributeNode "kind"

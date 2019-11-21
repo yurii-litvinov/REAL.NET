@@ -19,8 +19,13 @@ namespace Repo.DataLayer
 type DataElement(``class``: IElement option, model: IModel) =
     let mutable outgoingEdges = []
     let mutable incomingEdges = []
+    let mutable isMarkedDeleted = false
 
     interface IElement with
+        member this.IsMarkedDeleted
+            with get () = isMarkedDeleted
+            and set (v) = isMarkedDeleted <- v 
+
         member this.Class: IElement =
             match ``class`` with
             | Some v -> v

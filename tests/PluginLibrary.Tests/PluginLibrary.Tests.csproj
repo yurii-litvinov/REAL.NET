@@ -41,6 +41,7 @@
     <OutputPath>bin\MonoRelease\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Content Include="app.config" />
@@ -50,17 +51,25 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="paket.references" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\src\EditorPluginInterfaces\EditorPluginInterfaces.csproj">
-      <Project>{6E5F1B5D-F165-4CEC-A240-8887EBD28E3B}</Project>
+      <Project>{6e5f1b5d-f165-4cec-a240-8887ebd28e3b}</Project>
       <Name>EditorPluginInterfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\PluginManager\PluginManager.csproj">
       <Project>{8b9c8d76-65b3-4a01-9d6f-b6192a823642}</Project>
       <Name>PluginManager</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="paket.references" />
+    <ProjectReference Include="..\..\src\plugins\SamplePlugin\SamplePlugin.csproj">
+      <Project>{c57410a1-a86f-418b-9ac7-38249450c497}</Project>
+      <Name>SamplePlugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Repo\Repo.fsproj">
+      <Project>{9e7065a4-ba5e-4752-84bf-54d5c00db60c}</Project>
+      <Name>Repo</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

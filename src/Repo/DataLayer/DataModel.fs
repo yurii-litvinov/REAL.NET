@@ -14,6 +14,9 @@
 
 namespace Repo.DataLayer
 
+open System
+open System.ComponentModel
+
 /// Implementation of model interface in data layer. Contains nodes and edges in list, implements
 /// CRUD operations and keeps consistency.
 type DataModel private (name: string, metamodel: IModel option) =
@@ -69,19 +72,25 @@ type DataModel private (name: string, metamodel: IModel option) =
             edges <- (edge :> IEdge) :: edges
             edge
 
-        member this.DeleteElement(element: IElement): unit =
-            match element with
-            | :? INode ->
-                nodes <- nodes |> List.except [element :?> INode]
-            | _ -> edges <- edges |> List.except [element :?> IEdge]
-            edges |> List.iter (fun e ->
-                if e.Source = Some element then e.Source <- None
-                if e.Target = Some element then e.Target <- None
-                )
+        member this.MarkElementDeleted(element: IElement): unit =           
+            let mark (element: IElement) = 
+                match element with
+                | :? INode -> let elementToDelete = nodes |> List.find (fun x -> x = (element :?> INode))
+                              elementToDelete.IsMarkedDeleted <- true
+                | _ ->        let elementToDelete = edges |> List.find (fun x -> x = (element :?> IEdge))
+                              elementToDelete.IsMarkedDeleted <- true                                                            
+            mark element
+        
+        member this.UnmarkDeletedElement(element: IElement): unit =
+             match element with
+                | :? INode -> let elementToRestore = nodes |> List.find (fun x -> x = (element :?> INode))
+                              elementToRestore.IsMarkedDeleted <- false
+                | _ ->        let elementToRestore = edges |> List.find (fun x -> x = (element :?> IEdge))
+                              elementToRestore.IsMarkedDeleted <- false 
 
         member this.Elements: IElement seq =
-            let nodes = (nodes |> Seq.cast<IElement>)
-            let edges = (edges |> Seq.cast<IElement>)
+            let nodes = (nodes |> List.filter (fun node -> not node.IsMarkedDeleted) |> Seq.cast<IElement>)
+            let edges = (edges |> List.filter (fun edge -> not edge.IsMarkedDeleted) |> Seq.cast<IElement>)
             Seq.append nodes edges
 
         member this.Metamodel
@@ -93,10 +102,10 @@ type DataModel private (name: string, metamodel: IModel option) =
         member val Name = name with get, set
 
         member this.Nodes: seq<INode> =
-            nodes |> Seq.ofList
+            nodes |> List.filter (fun node -> not node.IsMarkedDeleted) |> Seq.ofList
 
         member this.Edges: seq<IEdge> =
-            edges |> Seq.ofList
+            edges |> List.filter (fun edge -> not edge.IsMarkedDeleted) |> Seq.ofList
 
         member this.Properties
             with get () = properties

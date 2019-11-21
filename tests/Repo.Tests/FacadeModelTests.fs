@@ -73,6 +73,37 @@ let ``Model shall allow to create nodes`` () =
     node.Metatype |> should equal Metatype.Node
 
 [<Test>]
+let ``Model shall allow to delete elements``() =
+    let model = init()
+    let ``type`` = model.Metamodel.Nodes |> Seq.find (fun n -> n.Name = "Node")
+    let node = model.CreateElement ``type``
+    node.AddAttribute ("Attribute1", AttributeKind.String, "default") |> ignore
+    let unwrapped = (node :?> Element).UnderlyingElement
+    let attribute = node.Attributes |> Seq.find (fun u -> u.Name = "Attribute1")
+    let unwrappedAttribute = (attribute :?> Attribute).UnderlyingNode
+    model.DeleteElement node
+    model.Nodes |> should not' (contain node) 
+    unwrapped.IsMarkedDeleted |> should be True
+    unwrappedAttribute.IsMarkedDeleted |> should be True
+
+[<Test>]
+let ``Model shall allow to restore elements``() =
+    let model = init()
+    let ``type`` = model.Metamodel.Nodes |> Seq.find (fun n -> n.Name = "Node")
+    let node = model.CreateElement ``type``
+    node.AddAttribute ("Attribute1", AttributeKind.String, "default") |> ignore
+    node.AddAttribute ("Attribute2", AttributeKind.Int, "0") |> ignore
+    let unwrapped = (node :?> Element).UnderlyingElement
+    let attributes = node.Attributes |> Seq.filter (fun a -> a.Name = "Attribute1" || a.Name = "Attribute2")
+                     |> Seq.map (fun a -> (a :?> Attribute).UnderlyingNode)
+    model.DeleteElement node
+    model.Nodes |> should not' (contain node)
+    model.RestoreElement node
+    model.Nodes |> should contain node
+    unwrapped.IsMarkedDeleted |> should be False
+    attributes |> Seq.map (fun a -> a |> should be False) |> ignore
+
+[<Test>]
 let ``Model shall allow to list its nodes`` () =
     let repo = RepoFactory.Create ()
 

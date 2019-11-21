@@ -95,10 +95,14 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constraints\ConstraintItem.cs" />
     <Compile Include="Controller\CompositeCommand.cs" />
     <Compile Include="Controller\Controller.cs" />
     <Compile Include="Controller\UndoRedoAvailabilityChangedArgs.cs" />
+    <Compile Include="Controls\AttributesPanel\AttributesPanel.xaml.cs">
+      <DependentUpon>AttributesPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AttributesPanel\AttributesPanelViewModel.cs" />
+    <Compile Include="Controls\AttributesPanel\Validators\IntValidation.cs" />
     <Compile Include="Controls\Console\AppConsole.xaml.cs">
       <DependentUpon>AppConsole.xaml</DependentUpon>
     </Compile>
@@ -144,9 +148,6 @@
     </Compile>
     <Compile Include="Model\Graph.cs" />
     <Compile Include="Model\Model.cs" />
-    <Compile Include="Constraints\Constraints.cs" />
-    <Compile Include="Constraints\ConstraintsValues.cs" />
-    <Compile Include="Constraints\ConstraintsWindow.xaml.cs" />
     <Compile Include="Controls\Console\AppConsoleViewModel.cs" />
     <Compile Include="Controller\UndoRedo\UndoRedoStack.cs" />
     <Compile Include="Properties\AssemblyInternalsVisibleTo.cs" />
@@ -154,10 +155,9 @@
     <Compile Include="Controls\Scene\EdgeBlueprint.cs" />
     <Compile Include="Controls\Scene\EditorObjectManager.cs" />
     <Compile Include="Controls\Toolbar\ToolbarViewModel.cs" />
-    <Compile Include="Constraints\RepoInfo.cs" />
-    <Page Include="Constraints\ConstraintsWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="Controls\AttributesPanel\AttributesPanel.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Console\AppConsole.xaml">
       <SubType>Designer</SubType>
@@ -227,20 +227,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\EditorPluginInterfaces\EditorPluginInterfaces.csproj">
-      <Project>{6e5f1b5d-f165-4cec-a240-8887ebd28e3b}</Project>
-      <Name>EditorPluginInterfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PluginManager\PluginManager.csproj">
-      <Project>{8b9c8d76-65b3-4a01-9d6f-b6192a823642}</Project>
-      <Name>PluginManager</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Repo\Repo.fsproj">
-      <Project>{9e7065a4-ba5e-4752-84bf-54d5c00db60c}</Project>
-      <Name>Repo</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -305,6 +291,16 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Controls\Scene\Pictures\vertex.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EditorPluginInterfaces\EditorPluginInterfaces.csproj">
+      <Project>{6e5f1b5d-f165-4cec-a240-8887ebd28e3b}</Project>
+      <Name>EditorPluginInterfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Repo\Repo.fsproj">
+      <Project>{9e7065a4-ba5e-4752-84bf-54d5c00db60c}</Project>
+      <Name>Repo</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">

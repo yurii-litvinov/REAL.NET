@@ -25,5 +25,7 @@ namespace EditorPluginInterfaces
         /// Element.
         /// </summary>
         public Repo.IElement Element { get; set; }
+
+        public bool IsAllowed { get; set; }
     }
 }

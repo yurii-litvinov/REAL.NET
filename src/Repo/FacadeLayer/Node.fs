@@ -16,6 +16,7 @@ namespace Repo.FacadeLayer
 
 open Repo
 open System
+open Repo.Visual
 
 /// Implementation of a node in model.
 type Node
@@ -23,8 +24,20 @@ type Node
         infrastructure: InfrastructureSemanticLayer.InfrastructureSemantic,
         element: DataLayer.INode,
         elementRepository: IElementRepository,
-        attributeRepository: AttributeRepository
+        attributeRepository: AttributeRepository,
+        info: IVisualNodeInfo
     ) =
 
     inherit Element(infrastructure, element, elementRepository, attributeRepository)
-    interface INode
+
+    let mutable visualInfo = info
+
+    new(infrastructure, element, elementRepository, attributeRepository) 
+        = Node(infrastructure, element, elementRepository, attributeRepository, VisualNodeInfo()) 
+
+    interface INode with
+        
+        member this.VisualInfo
+            with get () = visualInfo
+            and set (info) = visualInfo <- info
+ 

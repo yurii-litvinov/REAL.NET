@@ -31,7 +31,6 @@ namespace WpfControlsLib.Model
         public Model()
         {
             this.Repo = global::Repo.RepoFactory.Create();
-            this.Constraints = new Constraints.Constraints();
         }
 
         public event EventHandler<VertexEventArgs> NewVertexAdded;
@@ -39,6 +38,8 @@ namespace WpfControlsLib.Model
         public event EventHandler<EdgeEventArgs> NewEdgeAdded;
 
         public event EventHandler<ElementEventArgs> ElementRemoved;
+
+        public event EventHandler<ElementEventArgs> ElementCheck;
 
         public event EventHandler<EventArgs> FileSaved;
 
@@ -49,8 +50,6 @@ namespace WpfControlsLib.Model
         /// (for example, when creating new or opening existing file).
         /// </summary>
         public event EventHandler<EventArgs> Reinit;
-
-        public Constraints.Constraints Constraints { get; set; }
 
         public string ModelName { get; set; }
 
@@ -134,14 +133,6 @@ namespace WpfControlsLib.Model
             this.Save();
         }
 
-        // TODO name
-        public bool ConstraintsCheck()
-        {
-            this.Constraints.Check(this.Repo.Model(this.ModelName).Edges, this.Repo.Model(this.ModelName).Nodes);
-            return true;
-
-        }
-
         public void CreateNode(Repo.IElement element)
         {
             if (string.IsNullOrEmpty(this.ModelName))
@@ -153,27 +144,13 @@ namespace WpfControlsLib.Model
 
             var model = this.Repo.Model(this.ModelName);
 
-            if (this.Constraints.AllowCreateOrExistNode(model.Nodes, "a" + element.Name.ToString())) // TODO something more pretty than +"a"
-            {
                 var newNode = model.CreateElement(element) as Repo.INode;
                 HasUnsavedChanges = true;
                 this.RaiseNewVertex(newNode);
-            }
-            else
-            {
-                this.Constraints.ErrorMsg = "Can't create new node according to constraints.";
-
-                // TODO
-            }
         }
 
         public void CreateEdge(Repo.IEdge edge, Repo.IElement source, Repo.IElement destination)
         {
-            if (this.Constraints.AllowCreateOrExistEdge(
-                    this.Repo.Model(this.ModelName).Edges, 
-                    source.Name, 
-                    destination.Name))
-            {
                 var model = this.Repo.Model(this.ModelName);
                 var newEdge = model.CreateElement(edge as Repo.IElement) as Repo.IEdge;
                 newEdge.Name = "a" + edge.Name;
@@ -181,13 +158,6 @@ namespace WpfControlsLib.Model
                 newEdge.To = destination;
                 HasUnsavedChanges = true;
                 this.RaiseNewEdge(newEdge, newEdge.From, newEdge.To);
-            }
-            else
-            {
-                this.Constraints.ErrorMsg = "Can't create new edge according to constraints.";
-
-                // TODO
-            }
         }
 
         public void RemoveElement(Repo.IElement element)
@@ -197,6 +167,9 @@ namespace WpfControlsLib.Model
             HasUnsavedChanges = true;
             this.RaiseElementRemoved(element);
         }
+
+        public void SetElementAllowed(Repo.IElement element, bool isAllowed)
+            => this.RaiseElementCheck(element, isAllowed);
 
         private void RaiseNewVertex(Repo.INode node)
         {
@@ -228,6 +201,18 @@ namespace WpfControlsLib.Model
             };
 
             this.ElementRemoved?.Invoke(this, args);
+        }
+
+        private void RaiseElementCheck(Repo.IElement element, bool isAllowed)
+        {
+            var args = new ElementEventArgs
+            {
+                Element = element,
+                IsAllowed = isAllowed
+            };
+
+
+            this.ElementCheck?.Invoke(this, args);
         }
     }
 }

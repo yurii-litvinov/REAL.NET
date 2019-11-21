@@ -123,64 +123,12 @@ let ``Data model shall allow deleting elements`` () =
     let generalization = model.CreateGeneralization(generalizationClass, node1, node2)
     model.Edges |> should contain generalization
 
-    model.DeleteElement generalization
+    model.MarkElementDeleted generalization
     model.Edges |> should not' (contain generalization)
 
-    model.DeleteElement node1
+    model.MarkElementDeleted node1
     model.Nodes |> should not' (contain node1)
     model.Nodes |> should contain node2
 
-    model.DeleteElement node2
+    model.MarkElementDeleted node2
     model.Nodes |> should not' (contain node2)
-
-[<Test>]
-let ``Data model shall disconnect edges on removing source or target`` () =
-    let model = DataModel("model") :> IModel
-    let node1 = model.CreateNode("node1", None)
-    let node2 = model.CreateNode("node2", node1)
-
-    let generalizationClass = model.CreateNode("generalization", None)
-    let generalization = model.CreateGeneralization(generalizationClass, node1, node2)
-    model.Edges |> should contain generalization
-    generalization.Source |> should equal (Some (node1 :> IElement))
-    generalization.Target |> should equal (Some (node2 :> IElement))
-
-    model.DeleteElement node1
-
-    generalization.Source |> should equal None
-    generalization.Target |> should equal (Some (node2 :> IElement))
-
-    model.DeleteElement node2
-
-    generalization.Source |> should equal None
-    generalization.Target |> should equal None
-
-[<Test>]
-let ``Data model shall disconnect edges on removing source or target edges`` () =
-    let model = DataModel("model") :> IModel
-    let generalizationClass = model.CreateNode("generalization", None)
-
-    let edge1 = model.CreateGeneralization(generalizationClass, None, None)
-    let edge2 = model.CreateGeneralization(generalizationClass, Some (edge1 :> IElement), None)
-    let edge3 = model.CreateGeneralization(generalizationClass, edge1, edge2)
-
-    model.Edges |> should contain edge1
-    model.Edges |> should contain edge2
-    model.Edges |> should contain edge3
-    edge3.Source |> should equal (Some (edge1 :> IElement))
-    edge3.Target |> should equal (Some (edge2 :> IElement))
-
-    model.DeleteElement edge1
-
-    edge3.Source |> should equal None
-    edge3.Target |> should equal (Some (edge2 :> IElement))
-    edge2.Source |> should equal None
-    edge2.Target |> should equal None
-
-[<Test>]
-let ``Data model properties shall allow to store some data`` () =
-    let model = DataModel("model") :> IModel
-
-    model.Properties <- model.Properties.Add ("key", "value")
-
-    model.Properties.["key"] |> should equal "value"

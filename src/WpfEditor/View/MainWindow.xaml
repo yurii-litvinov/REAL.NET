@@ -1,6 +1,5 @@
 ﻿<!-- 
 * Copyright 2017-2018 REAL.NET group
-
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -26,6 +25,8 @@
     xmlns:modelExplorer="clr-namespace:WpfControlsLib.Controls.ModelExplorer;assembly=WpfControlsLib"
     xmlns:palette="clr-namespace:WpfControlsLib.Controls.Palette;assembly=WpfControlsLib"
     xmlns:toolbar="clr-namespace:WpfControlsLib.Controls.Toolbar;assembly=WpfControlsLib"
+    xmlns:attributesPanel="clr-namespace:WpfControlsLib.Controls.AttributesPanel;assembly=WpfControlsLib"
+    xmlns:validators="clr-namespace:WpfEditor.View.Validators"
     Title="{Binding WindowTitle}"
     mc:Ignorable="d"
     Height="685" Width="936">
@@ -37,7 +38,7 @@
         <CommandBinding Command="SaveAs" CanExecute="OnCanExecuteForAlwaysExecutable" Executed="OnSaveAsExecuted" />
         <CommandBinding Command="Close" CanExecute="OnCanExecuteForAlwaysExecutable" Executed="OnQuitExecuted" />
     </Window.CommandBindings>
-    
+
     <Grid>
         <Grid.Resources>
             <ResourceDictionary>
@@ -53,13 +54,14 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" MinWidth="100"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
         <!-- Main menu -->
-        <Menu Grid.Row="0" Grid.ColumnSpan="3" IsMainMenu="True">
+        <Menu Grid.Row="0" Grid.ColumnSpan="4" IsMainMenu="True">
             <MenuItem Header="_File" >
                 <MenuItem Header="_New" Command="New"/>
                 <MenuItem Header="Open..." Command="Open"/>
@@ -70,21 +72,31 @@
             </MenuItem>
         </Menu>
 
+        <!-- LeftPanel -->
+        <Grid 
+            Grid.Row="1" 
+            Grid.Column="0"
+            x:Name="leftPanelGrid"
+            HorizontalAlignment="Left"/>
+
+
         <!-- Area and console -->
-        <Grid Grid.Row="1" Grid.Column="0">
+        <Grid Grid.Row="1" Grid.Column="1">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="65*"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto" MinHeight="50"/>
+                <RowDefinition Height="15*" MinHeight="50"/>
             </Grid.RowDefinitions>
 
             <!-- Toolbar -->
             <toolbar:ToolbarView x:Name="toolBar" Grid.Row="0" DataContext="{Binding Toolbar}"/>
 
             <!-- Scene area -->
-            <scene:Scene Grid.Row="1" x:Name="scene"/>
+            <Grid x:Name="sceneGrid"  Grid.Row="1">
+                <scene:Scene  x:Name="scene"/>
+            </Grid>
 
             <!-- GridSplitter for console -->
             <GridSplitter Grid.Row ="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5"/>
@@ -95,10 +107,10 @@
         </Grid>
 
         <!-- GridSplitter for RightPanel-->
-        <GridSplitter Grid.Row="1" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5"/>
+        <GridSplitter Grid.Row="1" Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="5"/>
 
         <!-- RightPanel -->
-        <DockPanel Grid.Row="1" Grid.Column="2">
+        <DockPanel Grid.Row="1" Grid.Column="3">
             <Grid x:Name="rightPanel">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -117,21 +129,8 @@
                 <modelExplorer:ModelExplorer x:Name="modelExplorer" Grid.Row="2"/>
 
                 <Label x:Name="selectedEntityLabel" Grid.Row="3" Content="Selected entity:" HorizontalAlignment="Stretch" />
-
-                <DataGrid x:Name="attributesView" Grid.Row="4" ItemsSource="{Binding Attributes}" AutoGenerateColumns="False" CellEditEnding="AttributesViewCellEditEnding">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Name}"/>
-                        <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Type}"/>
-                        <DataGridTextColumn Header="Value" IsReadOnly="False" Binding="{Binding Value}"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-
-                <Button 
-                    Grid.Row="5"
-                    Content="Constraints"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Bottom"
-                    Click="ConstraintsButtonClick" Height="26"/>
+                <attributesPanel:AttributesPanel Grid.Row="4" DataContext="{Binding AttributesPanel}"/>
+                
             </Grid>
 
         </DockPanel>

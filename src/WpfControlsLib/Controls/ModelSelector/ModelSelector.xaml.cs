@@ -15,13 +15,14 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
+using System.ComponentModel;
 
 namespace WpfControlsLib.Controls.ModelSelector
 {
     /// <summary>
     /// Lists all models in a repository and provides means to select a model for editing.
     /// </summary>
-    public partial class ModelSelector : UserControl
+    public partial class ModelSelector : UserControl, INotifyPropertyChanged
     {
         /// <summary>
         /// Names of all models in a repository that can be edited.
@@ -32,6 +33,8 @@ namespace WpfControlsLib.Controls.ModelSelector
         /// Event that is raised when model selection is changed (by user or programmatically).
         /// </summary>
         public event EventHandler<ModelSelectedEventArgs> ModelSelected;
+
+        private bool selectorVisibility = true;
 
         /// <summary>
         /// Creates a new instance of the <see cref="ModelSelector"/> class.
@@ -79,8 +82,26 @@ namespace WpfControlsLib.Controls.ModelSelector
             this.modelsComboBox.SelectedIndex = 0;
         }
 
+        /// <summary>
+        /// Shows if this element should be visible at the moment.
+        /// </summary>
+        public bool SelectorVisibility
+        {
+            get => selectorVisibility;
+            set
+            {
+                selectorVisibility = value;
+                OnPropertyChanged("SelectorVisibility");
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public void ChangeModel(int newModel)
             => this.modelsComboBox.SelectedIndex = newModel;
+
+        protected virtual void OnPropertyChanged(string propertyName) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         private void OnModelSelectionChanged(object sender, SelectionChangedEventArgs args)
             => this.ModelSelected?.Invoke(this,

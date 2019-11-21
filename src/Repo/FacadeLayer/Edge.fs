@@ -15,6 +15,7 @@
 namespace Repo.FacadeLayer
 
 open Repo
+open Repo.Visual
 
 /// Implementation of edge wrapper.
 type Edge
@@ -22,10 +23,16 @@ type Edge
         infrastructure: InfrastructureSemanticLayer.InfrastructureSemantic,
         element: DataLayer.IEdge,
         elementRepository: IElementRepository,
-        attributeRepository: AttributeRepository
+        attributeRepository: AttributeRepository,
+        info: IVisualEdgeInfo
     ) =
 
     inherit Element(infrastructure, element, elementRepository, attributeRepository)
+
+    let mutable visualInfo = info
+
+    new(infrastructure, element, elementRepository, attributeRepository) 
+        = Edge(infrastructure, element, elementRepository, attributeRepository, VisualEdgeInfo()) 
 
     interface IEdge with
         member this.From
@@ -47,3 +54,7 @@ type Edge
             and set (v: IElement): unit =
                 let dataElement = (v :?> Element).UnderlyingElement
                 element.Target <- Some dataElement
+        
+        member this.VisualInfo
+            with get () = visualInfo
+            and set (info) = visualInfo <- info

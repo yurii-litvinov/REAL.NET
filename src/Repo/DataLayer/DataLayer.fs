@@ -40,6 +40,9 @@ type IElement =
 
         /// Returns a model to which this element belongs.
         abstract Model: IModel with get
+
+        /// Is this element should be deleted or serialized
+        abstract IsMarkedDeleted: bool with get, set
     end
 
 /// Node is a kind of element which can connect only to edge, corresponds to node of the model graph.
@@ -130,8 +133,10 @@ and IModel =
         abstract Properties: Map<string, string> with get, set
 
         /// Deletes element from a model and unconnects related elements if needed.
-        abstract DeleteElement: element : IElement -> unit
+        abstract MarkElementDeleted: element : IElement -> unit
 
+        /// Restores element after deleting.
+        abstract UnmarkDeletedElement: element : IElement -> unit
     end
 
 /// Repository is a collection of models.

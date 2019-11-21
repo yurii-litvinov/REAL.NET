@@ -14,6 +14,8 @@ namespace WpfControlsLib.ViewModel
     {
         private Brush color = Brushes.Green;
         private IList<AttributeViewModel> attributes = new List<AttributeViewModel>();
+        private Brush borderColor = Brushes.White;
+        private bool isAllowed = true;
         private string picture = string.Empty;
 
         /// <summary>
@@ -44,6 +46,27 @@ namespace WpfControlsLib.ViewModel
             }
         }
 
+        public Brush BorderColor
+        {
+            get => this.borderColor;
+            set
+            {
+                this.borderColor = value;
+                this.OnPropertyChanged();
+            }
+        }
+
+        public bool IsAllowed
+        {
+            get => this.isAllowed;
+
+            set
+            {
+                this.BorderColor = value ? Brushes.White : Brushes.Red;
+                this.isAllowed = value;
+            }
+        }
+
         public IList<AttributeViewModel> Attributes
         {
             get => this.attributes;
@@ -65,6 +88,8 @@ namespace WpfControlsLib.ViewModel
                 this.OnPropertyChanged();
             }
         }
+
+        public bool IsVirtual { get; set; } = false;
 
         public override string ToString()
         {
