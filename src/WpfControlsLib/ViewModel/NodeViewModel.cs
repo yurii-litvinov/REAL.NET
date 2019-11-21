@@ -14,7 +14,7 @@ namespace WpfControlsLib.ViewModel
     {
         private Brush color = Brushes.Green;
         private IList<AttributeViewModel> attributes = new List<AttributeViewModel>();
-        private Brush borderColor = Brushes.White;
+        private Brush borderColor = Brushes.Black;
         private bool isAllowed = true;
         private string picture = string.Empty;
 

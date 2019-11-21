@@ -337,9 +337,9 @@ namespace WpfControlsLib.Controls.Scene
                 {
                     // add to model ? nor done yet
                     var target = edge.Target;
-                    edge.Source = vertexToConnect;
+                    edge.Target = vertexToConnect;
                     this.graphArea.RemoveVertex(target.GetDataVertex<NodeViewModel>());
-                    ; }
+                }
             }
         }
 
