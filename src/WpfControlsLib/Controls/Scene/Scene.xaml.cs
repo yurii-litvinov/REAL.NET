@@ -304,42 +304,29 @@ namespace WpfControlsLib.Controls.Scene
         private void ReconnectEdgeFromVirtualNodeToReal(VertexControl virtualVertex, VertexControl vertexToConnect)
         {
             var dataNode = virtualVertex.GetDataVertex<NodeViewModel>();
+            var vertexToConnectData = vertexToConnect.GetDataVertex<NodeViewModel>();
             var edgeControls = this.graphArea.EdgesList.Select(x => x.Value);
-            var edgesWhereSourceStack = new Stack<EdgeControl>(edgeControls.Where(x => x.Source == virtualVertex));
-            var edgesWhereTargetStack = new Stack<EdgeControl>(edgeControls.Where(x => x.Target == virtualVertex));
+            var edgesWhereSourceStack = new Stack<EdgeControl>(edgeControls.Where(x => IsEdgeSourceVirtual(x)));
+            var edgesWhereTargetStack = new Stack<EdgeControl>(edgeControls.Where(x => IsEdgeTargetVirtual(x)));
             while (edgesWhereSourceStack.Count != 0)
             {
                 var edge = edgesWhereSourceStack.Pop();
-                if (IsEdgeTargetVirtual(edge))
-                {
-                    var source = edge.Source;
-                    edge.Source = vertexToConnect;
-                    this.graphArea.RemoveVertex(source.GetDataVertex<NodeViewModel>());
-                }
-                else
-                {
-                    // add to model with rooting points? not done yet
-                    var source = edge.Source;
-                    edge.Source = vertexToConnect;
-                    this.graphArea.RemoveVertex(source.GetDataVertex<NodeViewModel>());
-                }
+                // add to model with rooting points? not done yet
+                var source = edge.Source;
+                edge.Source = vertexToConnect;
+                var innerEdge = edge.GetDataEdge<EdgeViewModel>();
+                innerEdge.Source = vertexToConnectData;
+                this.graphArea.RemoveVertex(source.GetDataVertex<NodeViewModel>());
             }
             while (edgesWhereTargetStack.Count != 0)
             {
                 var edge = edgesWhereTargetStack.Pop();
-                if (IsEdgeSourceVirtual(edge))
-                {
-                    var target = edge.Target;
-                    edge.Target = vertexToConnect;
-                    this.graphArea.RemoveVertex(target.GetDataVertex<NodeViewModel>());
-                }
-                else
-                {
-                    // add to model ? nor done yet
-                    var target = edge.Target;
-                    edge.Target = vertexToConnect;
-                    this.graphArea.RemoveVertex(target.GetDataVertex<NodeViewModel>());
-                }
+                // add to model ? nor done yet
+                var target = edge.Target;
+                edge.Target = vertexToConnect;
+                var innerEdge = edge.GetDataEdge<EdgeViewModel>();
+                innerEdge.Target = vertexToConnectData;
+                this.graphArea.RemoveVertex(target.GetDataVertex<NodeViewModel>());
             }
         }
 
@@ -405,7 +392,7 @@ namespace WpfControlsLib.Controls.Scene
             }
         }
 
-        
+
         private void UnpinEdgeFromVertex(EdgeControl edgeControl, bool isSource)
         {
             // to do : real remove form model
@@ -417,7 +404,7 @@ namespace WpfControlsLib.Controls.Scene
             this.graphArea.AddVertex(vertexData, virtualVertex);
             if (isSource)
             {
-                var source = edgeControl.Source;                
+                var source = edgeControl.Source;
                 virtualVertex.SetPosition(source.GetCenterPosition());
                 edgeControl.Source = virtualVertex;
             }
@@ -527,7 +514,7 @@ namespace WpfControlsLib.Controls.Scene
         private void MenuItemClickedOnVertex(object sender, EventArgs e)
         {
             var vertex = this.currentVertex.GetDataVertex<NodeViewModel>();
-            
+
             var edges = this.Graph.DataGraph.Edges.ToArray();
 
             var edgesToRestore = this.graphArea.EdgesList.ToList()
@@ -561,7 +548,7 @@ namespace WpfControlsLib.Controls.Scene
             {
                 var anotherVertex = edge.Target == vertex ? edge.Source : edge.Target;
                 void removingEdge() => this.graphArea.RemoveEdge(edge.GetDataEdge<EdgeViewModel>());
-                void removingAnotherVertex() 
+                void removingAnotherVertex()
                 {
                     if (IsVertexVirtual(anotherVertex))
                     {
