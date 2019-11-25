@@ -24,7 +24,6 @@ namespace LogoScene.Controls
         public DrawingScene()
         {
             InitializeComponent();
-            this.DataContext = new DrawingSceneViewModel();
         }
     }
 }

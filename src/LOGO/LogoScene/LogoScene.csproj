@@ -55,7 +55,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\Converters\TurtlePositionConverter.cs" />
+    <Compile Include="Models\Constants.cs" />
     <Compile Include="ViewModels\DrawingSceneViewModel.cs" />
+    <Compile Include="ViewModels\TurtleControlViewModel.cs" />
     <Page Include="Controls\DrawingScene.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -23,33 +23,50 @@ using System.Windows;
 
 namespace LogoScene.ViewModels
 {
-    public class DrawingSceneViewModel : INotifyPropertyChanged
+    public class TurtleControlViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public double TurtleX
+        public double TurtleWidth => Models.Constants.TurtleWidth;
+
+        public double TurtleHeight => Models.Constants.TurtleHeight;   
+
+        public Point StartPoint
         {
-            get => turtleX;
+            get => startPoint;
             set
             {
-                turtleX = value;
+                startPoint = value;
+                OnPropertyChanged();
+            }
+
+        }
+
+        public Point FinalPoint
+        {
+            get => startPoint;
+            set
+            {
+                finalPoint = value;
                 OnPropertyChanged();
             }
         }
 
-        public double TurtleY
+        public double SpeedRatio
         {
-            get => turtleY;
+            get => speedRatio;
             set
             {
-                turtleY = value;
+                speedRatio = value;
                 OnPropertyChanged();
             }
         }
 
-        private double turtleX = 200;
+        private double speedRatio = 0.3;
 
-        private double turtleY;
+        private Point startPoint = new Point(100, 100);
+
+        private Point finalPoint = new Point(100, 0);
 
         private void OnPropertyChanged([CallerMemberName]string prop = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
     }
