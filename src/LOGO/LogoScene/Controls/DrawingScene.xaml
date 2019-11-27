@@ -13,44 +13,11 @@
     </UserControl.DataContext>
 
     <Canvas Background="White" Height="450" Margin="0,0,0,-0.4" VerticalAlignment="Top">
-        <controls:TurtleControl x:Name="turtleControl" Canvas.Left="{Binding TurtleViewX, RelativeSource={RelativeSource Self}}" 
-                                Canvas.Top="{Binding TurtleViewY, RelativeSource={RelativeSource Self}}" />
+        <controls:TurtleControl x:Name="turtleControl" Canvas.Left="{Binding TurtleControlX}" 
+                                Canvas.Top="{Binding TurtleControlY}" 
+                                />
         
         <Line X1="100" Y1="0" X2="100" Y2="100" Stroke="Black"/>
         <Button x:Name="buttonStop" Content="Button" Canvas.Left="590" Canvas.Top="170" Width="75"/>
     </Canvas>
-    <UserControl.Triggers>
-        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-            <BeginStoryboard x:Name="AnimateTrue">
-                <Storyboard>
-                    <!--<DoubleAnimationUsingPath 
-                                              SpeedRatio="{Binding SpeedRatio}"
-                                              Storyboard.TargetProperty="(Canvas.Left)"
-                                              RepeatBehavior="1x"
-                                              PathGeometry="{StaticResource geometryPath}" Source="X"/>
-                    <DoubleAnimationUsingPath 
-                                              SpeedRatio="{Binding SpeedRatio}"
-                                              Storyboard.TargetProperty="(Canvas.Top)"
-                                              RepeatBehavior="1x"
-                                              PathGeometry="{StaticResource geometryPath}" Source="Y"/>-->
-                    <DoubleAnimation 
-                        SpeedRatio="{Binding SpeedRatio}"
-                        Storyboard.TargetName="turtleControl"
-                        Storyboard.TargetProperty="TurtleViewX"
-                        RepeatBehavior="1x"
-                        From="100"
-                        To="100"
-                        />
-                    <DoubleAnimation 
-                        SpeedRatio="{Binding SpeedRatio}"
-                        Storyboard.TargetName="turtleControl"
-                        Storyboard.TargetProperty="TurtleViewY"
-                        RepeatBehavior="1x"
-                        From="0"
-                        To="100"
-                        />
-                </Storyboard>
-            </BeginStoryboard>
-        </EventTrigger>
-    </UserControl.Triggers>
 </UserControl>

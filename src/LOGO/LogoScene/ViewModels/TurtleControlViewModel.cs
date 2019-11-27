@@ -23,51 +23,38 @@ using System.Windows;
 
 namespace LogoScene.ViewModels
 {
-    public class TurtleControlViewModel : INotifyPropertyChanged
+    public class TurtleControlViewModel : DependencyObject
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
         public double TurtleWidth => Models.Constants.TurtleWidth;
 
-        public double TurtleHeight => Models.Constants.TurtleHeight;   
+        public double TurtleHeight => Models.Constants.TurtleHeight;
 
-        public Point StartPoint
+        [Bindable(true)]
+        public double TurtleControlX
         {
-            get => startPoint;
-            set
-            {
-                startPoint = value;
-                OnPropertyChanged();
-            }
-
+            get => (double)GetValue(TurtleXProperty);
+            set => SetValue(TurtleXProperty, value);
         }
 
-        public Point FinalPoint
+        public static readonly DependencyProperty TurtleXProperty =
+            DependencyProperty.Register("TurtleControlX", typeof(double), typeof(TurtleControlViewModel), new PropertyMetadata(0.0));
+
+
+        [Bindable(true)]
+        public double TurtleControlY
         {
-            get => startPoint;
-            set
-            {
-                finalPoint = value;
-                OnPropertyChanged();
-            }
+            get => (double)GetValue(TurtleYProperty);
+            set => SetValue(TurtleYProperty, value);
         }
 
-        public double SpeedRatio
+        public static readonly DependencyProperty TurtleYProperty =
+            DependencyProperty.Register("TurtleControlY", typeof(double), typeof(TurtleControlViewModel), new PropertyMetadata(0.0));
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            get => speedRatio;
-            set
-            {
-                speedRatio = value;
-                OnPropertyChanged();
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        private double speedRatio = 0.3;
-
-        private Point startPoint = new Point(100, 100);
-
-        private Point finalPoint = new Point(100, 0);
-
-        private void OnPropertyChanged([CallerMemberName]string prop = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
     }
 }

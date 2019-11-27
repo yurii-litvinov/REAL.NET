@@ -59,6 +59,7 @@
     <Compile Include="Models\Constants.cs" />
     <Compile Include="ViewModels\DrawingSceneViewModel.cs" />
     <Compile Include="ViewModels\TurtleControlViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
     <Page Include="Controls\DrawingScene.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
