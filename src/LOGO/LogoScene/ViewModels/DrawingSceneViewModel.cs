@@ -25,25 +25,7 @@ namespace LogoScene.ViewModels
 {
     public class DrawingSceneViewModel : ViewModelBase
     {
-        public double TurtleX
-        {
-            get => turtleX;
-            set
-            {
-                turtleX = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public double TurtleY
-        {
-            get => turtleY;
-            set
-            {
-                turtleY = value;
-                OnPropertyChanged();
-            }
-        }
+        public TurtleControlViewModel TurtleViewModel { get; set; }
 
         public Point StartPoint
         {
@@ -75,14 +57,16 @@ namespace LogoScene.ViewModels
             }
         }
 
+        public DrawingSceneViewModel()
+        {
+            this.TurtleViewModel = new TurtleControlViewModel();
+            this.TurtleViewModel.MoveTurtle(this.StartPoint, this.FinalPoint);
+        }
+
         private double speedRatio = 0.3;
 
         private Point startPoint = new Point(100, 100);
 
         private Point finalPoint = new Point(100, 0);
-
-        private double turtleX;
-
-        private double turtleY;
     }
 }

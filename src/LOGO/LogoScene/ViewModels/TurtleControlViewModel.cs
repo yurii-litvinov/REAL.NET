@@ -13,48 +13,83 @@
  * limitations under the License. */
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace LogoScene.ViewModels
 {
-    public class TurtleControlViewModel : DependencyObject
+    public class TurtleControlViewModel : ViewModelBase
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler<EventArgs> TurtleMovingEnded;
+
+        public ICommand AnimationCompletedCommand { get; set; }
 
         public double TurtleWidth => Models.Constants.TurtleWidth;
 
         public double TurtleHeight => Models.Constants.TurtleHeight;
 
-        [Bindable(true)]
-        public double TurtleControlX
+        public Point Start
         {
-            get => (double)GetValue(TurtleXProperty);
-            set => SetValue(TurtleXProperty, value);
+            get => start;
+            set
+            {
+                start = value;
+                OnPropertyChanged();
+            }
         }
 
-        public static readonly DependencyProperty TurtleXProperty =
-            DependencyProperty.Register("TurtleControlX", typeof(double), typeof(TurtleControlViewModel), new PropertyMetadata(0.0));
-
-
-        [Bindable(true)]
-        public double TurtleControlY
+        public Point End
         {
-            get => (double)GetValue(TurtleYProperty);
-            set => SetValue(TurtleYProperty, value);
+            get => end;
+
+            set
+            {
+                end = value;
+                OnPropertyChanged();
+            }
         }
 
-        public static readonly DependencyProperty TurtleYProperty =
-            DependencyProperty.Register("TurtleControlY", typeof(double), typeof(TurtleControlViewModel), new PropertyMetadata(0.0));
-
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public double SpeedRatio
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            get => speedRatio;
+            set
+            {
+                speedRatio = value;
+                OnPropertyChanged();
+            }
         }
+
+        public bool IsMovingStarted
+        {
+            get => isMovingStarted;
+            set
+            {
+                isMovingStarted = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public void MoveTurtle(Point start, Point end)
+        {
+            this.start = start;
+            this.end = end;
+            IsMovingStarted = true;
+        }
+
+        public TurtleControlViewModel()
+        {
+            this.AnimationCompletedCommand = new RelayCommand(
+                (parameter) => { isMovingStarted = false; RaiseAnimationCompletedEvent(); });
+        }
+
+        private double speedRatio = 1;
+
+        private Point end = new Point(100, 100);
+
+        private Point start = new Point(100, 0);
+
+        private bool isMovingStarted = false;
+
+        private void RaiseAnimationCompletedEvent() => TurtleMovingEnded?.Invoke(this, e: EventArgs.Empty);
     }
 }
