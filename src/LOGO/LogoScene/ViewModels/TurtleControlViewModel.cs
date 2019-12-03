@@ -12,13 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
+using LogoScene.ViewModels.Animation;
 using System;
 using System.Windows;
 using System.Windows.Input;
 
 namespace LogoScene.ViewModels
 {
-    public class TurtleControlViewModel : ViewModelBase
+    public class TurtleControlViewModel : ViewModelBase, IAnimationCompletedHandler
     {
         public event EventHandler<EventArgs> TurtleMovingEnded;
 

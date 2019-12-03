@@ -61,6 +61,12 @@ namespace LogoScene.ViewModels
         {
             this.TurtleViewModel = new TurtleControlViewModel();
             this.TurtleViewModel.MoveTurtle(this.StartPoint, this.FinalPoint);
+            this.TurtleViewModel.TurtleMovingEnded += OnTurtleMovementEnded;
+        }
+
+        private void OnTurtleMovementEnded(object sender, EventArgs e)
+        {
+            this.TurtleViewModel.MoveTurtle(this.StartPoint, this.FinalPoint);
         }
 
         private double speedRatio = 0.3;

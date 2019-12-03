@@ -57,6 +57,7 @@
     </ApplicationDefinition>
     <Compile Include="Controls\Converters\TurtleXConverter.cs" />
     <Compile Include="Controls\Converters\TurtleYConverter.cs" />
+    <Compile Include="ViewModels\IAnimationCompletedHandler.cs" />
     <Compile Include="Models\Constants.cs" />
     <Compile Include="Models\PointOperations.cs" />
     <Compile Include="ViewModels\DrawingSceneViewModel.cs" />

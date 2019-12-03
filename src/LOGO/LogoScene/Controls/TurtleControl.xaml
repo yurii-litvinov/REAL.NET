@@ -23,7 +23,7 @@
                 <LineSegment Point="{Binding FinalPoint}"/>
             </PathFigure>
         </PathGeometry>
-        <Storyboard x:Key="TagAnimation">
+        <Storyboard x:Key="TagAnimation" Completed="OnStoryboardCompleted">
             <DoubleAnimation                 
                 SpeedRatio="1"
                 Storyboard.TargetName="hiddenButton"
@@ -62,24 +62,9 @@
         </MultiBinding>
     </Canvas.Top>
    
-    <!--<UserControl.Style>
-        <Style TargetType="{x:Type UserControl}">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding IsMovingStarted}" Value="True">
-                    <DataTrigger.EnterActions>
-                        <BeginStoryboard Storyboard="{StaticResource TagAnimation}">
-
-                            
-                        </BeginStoryboard>
-                    </DataTrigger.EnterActions>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-    </UserControl.Style>-->
     <i:Interaction.Triggers>
         <ei:DataTrigger Binding="{Binding IsMovingStarted}" Value="True">
             <ei:ControlStoryboardAction Storyboard="{StaticResource TagAnimation}" ControlStoryboardOption="Play"/>
-            <!--<ei:ChangePropertyAction PropertyName="{Binding IsMovingStarted}" Value="False"/>-->
         </ei:DataTrigger>
     </i:Interaction.Triggers>
 </UserControl>
