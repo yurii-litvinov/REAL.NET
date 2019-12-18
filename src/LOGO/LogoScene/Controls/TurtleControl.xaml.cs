@@ -17,8 +17,8 @@ namespace LogoScene.Controls
 
         private void OnStoryboardCompleted(object sender, EventArgs e)
         {
-            var viewModel = DataContext as IAnimationCompletedHandler;
-            viewModel.AnimationCompletedCommand.Execute(null);
+            var animationCompleted = DataContext as IAnimationCompletedHandler;
+            animationCompleted.AnimationCompletedCommand.Execute(null);
         }
     }
 }

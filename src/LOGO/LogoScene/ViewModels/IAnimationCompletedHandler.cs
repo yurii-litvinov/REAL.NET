@@ -12,18 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System.Windows.Input;
 
-namespace LogoScene.ViewModels
+namespace LogoScene.ViewModels.Animation
 {
-    public abstract class ViewModelBase : INotifyPropertyChanged
+    public interface IAnimationCompletedHandler
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        ICommand AnimationCompletedCommand { get; set; }
     }
 }

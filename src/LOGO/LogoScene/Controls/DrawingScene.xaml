@@ -14,7 +14,10 @@
 
     <Canvas Background="White" Height="450" Margin="0,0,0,-0.4" VerticalAlignment="Top">
         <controls:TurtleControl x:Name="turtleControl" DataContext="{Binding TurtleViewModel}"/>
-        <Line X1="100" Y1="0" X2="100" Y2="100" Stroke="Black"/>
+        <Line X1="100" Y1="0" X2="100" Y2="100" Stroke="Black" Canvas.Bottom="100" Canvas.Left="0"/>
+        <Line X1="100" Y1="0" X2="200" Y2="0" Stroke="Black" Canvas.Bottom="200" Canvas.Left="0"/>
+        <Line X1="200" Y1="100" X2="200" Y2="0" Stroke="Black" Canvas.Bottom="100" Canvas.Left="0"/>
+        <Line X1="200" Y1="0" X2="100" Y2="0" Stroke="Black" Canvas.Bottom="100" Canvas.Left="0"/>
         <Button x:Name="buttonStop" Content="Button" Canvas.Left="590" Canvas.Top="170" Width="75"/>
     </Canvas>
 </UserControl>

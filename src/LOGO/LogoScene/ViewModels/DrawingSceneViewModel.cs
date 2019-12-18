@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
+using LogoScene.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -59,20 +60,58 @@ namespace LogoScene.ViewModels
 
         public DrawingSceneViewModel()
         {
+            this.model = new DrawingScene();
+            this.commander = model.GetTurtleCommander();
+            this.turtleModel = commander.Turtle;
             this.TurtleViewModel = new TurtleControlViewModel();
-            this.TurtleViewModel.MoveTurtle(this.StartPoint, this.FinalPoint);
+            this.TurtleViewModel.InitModel(turtleModel);
             this.TurtleViewModel.TurtleMovingEnded += OnTurtleMovementEnded;
+            this.model.MovementOnDrawingSceneStarted += OnMovementStarted;
+            this.commander.RotationPerformed += OnRotation;
+            for (int i = 0; i < 4; i++)
+            {
+                this.model.GetTurtleCommander().MoveForward(100);
+                this.model.GetTurtleCommander().RotateRight(90);
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                this.model.GetTurtleCommander().RotateLeft(90);
+                this.model.GetTurtleCommander().MoveBackward(100);
+            }
         }
 
-        private void OnTurtleMovementEnded(object sender, EventArgs e)
+        private void OnMovementStarted(object sender, MovementEventArgs e)
         {
+            this.StartPoint = e.OldPosition;
+            this.FinalPoint = e.NewPosition;
+            MoveTurtle();
+        }
+
+        public void MoveTurtle(Point startPoint, Point finalPoint)
+        {
+            this.StartPoint = startPoint;
+            this.FinalPoint = finalPoint;
             this.TurtleViewModel.MoveTurtle(this.StartPoint, this.FinalPoint);
         }
+
+        public void MoveTurtle(Point destination) => MoveTurtle(this.StartPoint, destination);
+
+        public void MoveTurtle() => MoveTurtle(this.StartPoint, this.FinalPoint);
+
+        private void OnTurtleMovementEnded(object sender, EventArgs e) => this.model.NotifyMovementPermormed();
+
+        private void OnRotation(object sender, EventArgs e) => this.TurtleViewModel.UpdateAngle();
 
         private double speedRatio = 0.3;
 
         private Point startPoint = new Point(100, 100);
 
         private Point finalPoint = new Point(100, 0);
+
+        private readonly DrawingScene model;
+
+        private readonly ITurtleCommander commander;
+
+        private readonly ITurtle turtleModel;
     }
 }

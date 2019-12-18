@@ -55,11 +55,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\Converters\TurtleAngleConverter.cs" />
     <Compile Include="Controls\Converters\TurtleXConverter.cs" />
     <Compile Include="Controls\Converters\TurtleYConverter.cs" />
+    <Compile Include="Models\DataLayer\Turtle.cs" />
+    <Compile Include="Models\DataLayer\TurtleCommanderAsync.cs" />
+    <Compile Include="Models\DrawingScene.cs" />
+    <Compile Include="Models\ITurtle.cs" />
+    <Compile Include="Models\ITurtleCommander.cs" />
+    <Compile Include="Models\EventArgs\MovementEventArgs.cs" />
+    <Compile Include="Models\DataLayer\TurtleCommander.cs" />
     <Compile Include="ViewModels\IAnimationCompletedHandler.cs" />
-    <Compile Include="Models\Constants.cs" />
-    <Compile Include="Models\PointOperations.cs" />
+    <Compile Include="Models\Constants\Constants.cs" />
+    <Compile Include="Models\Operations\PointOperations.cs" />
     <Compile Include="ViewModels\DrawingSceneViewModel.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
     <Compile Include="ViewModels\TurtleControlViewModel.cs" />
@@ -108,6 +116,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="ArhitectureDiagrams\SimpleArchitecture.cd" />
     <None Include="paket.references" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

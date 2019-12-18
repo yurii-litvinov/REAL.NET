@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:LogoScene.Controls"
              xmlns:viewmodels="clr-namespace:LogoScene.ViewModels"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             xmlns:convertes="clr-namespace:LogoScene.Controls.Converters"
+             xmlns:converters="clr-namespace:LogoScene.Controls.Converters"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              mc:Ignorable="d" 
@@ -16,8 +16,9 @@
         <viewmodels:TurtleControlViewModel/>
     </UserControl.DataContext>
     <UserControl.Resources>
-        <convertes:TurtleXConverter x:Key="TurtleXFromTag"/>
-        <convertes:TurtleYConverter x:Key="TurtleYFromTag"/>
+        <converters:TurtleXConverter x:Key="TurtleXFromTag"/>
+        <converters:TurtleYConverter x:Key="TurtleYFromTag"/>
+        <converters:TurtleAngleConverter x:Key="AngleConverter"/>
         <PathGeometry x:Key="geometryPath">
             <PathFigure IsClosed="False" StartPoint="{Binding StartPoint}">
                 <LineSegment Point="{Binding FinalPoint}"/>
@@ -41,6 +42,10 @@
                 <sys:Double>0</sys:Double>
             </Button.Tag>
         </Button>
+        <Grid.RenderTransform>
+            <RotateTransform Angle="{Binding Angle, Converter={StaticResource AngleConverter}}"
+                             CenterX="{Binding CenterX}" CenterY="{Binding CenterY}"/>
+        </Grid.RenderTransform>
     </Grid>
     <UserControl.Tag>
         <sys:Double>0</sys:Double>
@@ -53,14 +58,14 @@
             <Binding ElementName="hiddenButton" Path="Tag"/>
         </MultiBinding>
     </Canvas.Left>
-    <Canvas.Top>
+    <Canvas.Bottom>
         <MultiBinding Converter="{StaticResource TurtleYFromTag}">
             <Binding Path="Start"/>
             <Binding Path="End"/>
             <Binding Path="SpeedRatio"/>
             <Binding ElementName="hiddenButton" Path="Tag" />
         </MultiBinding>
-    </Canvas.Top>
+    </Canvas.Bottom>
    
     <i:Interaction.Triggers>
         <ei:DataTrigger Binding="{Binding IsMovingStarted}" Value="True">

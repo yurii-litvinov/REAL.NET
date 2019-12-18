@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
+using LogoScene.Models;
 using LogoScene.ViewModels.Animation;
 using System;
 using System.Windows;
@@ -28,6 +29,20 @@ namespace LogoScene.ViewModels
         public double TurtleWidth => Models.Constants.TurtleWidth;
 
         public double TurtleHeight => Models.Constants.TurtleHeight;
+
+        public double CenterX => TurtleWidth / 2;
+
+        public double CenterY => TurtleHeight / 2;
+
+        public double Angle
+        {
+            get => angle;
+            set
+            {
+                angle = value;
+                OnPropertyChanged();
+            }
+        }
 
         public Point Start
         {
@@ -72,9 +87,17 @@ namespace LogoScene.ViewModels
 
         public void MoveTurtle(Point start, Point end)
         {
-            this.start = start;
-            this.end = end;
+            this.Start = start;
+            this.End = end;
             IsMovingStarted = true;
+        }
+
+        public void UpdateAngle() => this.Angle = turtleModel.Angle;
+
+        public void InitModel(ITurtle turtle)
+        {
+            this.turtleModel = turtle;
+            
         }
 
         public TurtleControlViewModel()
@@ -85,11 +108,15 @@ namespace LogoScene.ViewModels
 
         private double speedRatio = 1;
 
-        private Point end = new Point(100, 100);
+        private Point end = new Point(0, 0);
 
-        private Point start = new Point(100, 0);
+        private Point start = new Point(0, 0);
 
         private bool isMovingStarted = false;
+
+        ITurtle turtleModel;
+
+        private double angle = 90;
 
         private void RaiseAnimationCompletedEvent() => TurtleMovingEnded?.Invoke(this, e: EventArgs.Empty);
     }
