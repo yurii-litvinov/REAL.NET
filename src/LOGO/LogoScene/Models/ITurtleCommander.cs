@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LogoScene.Models.DataLayer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,12 @@ namespace LogoScene.Models
     {
         event EventHandler<MovementEventArgs> MovementStarted;
 
+        event EventHandler<RotationEventArgs> RotationStarted;
+
+        event EventHandler<PenActionEventArgs> PenActionStarted;
+
+        event EventHandler<SpeedUpdateEventArgs> SpeedUpdateStarted;
+
         event EventHandler<EventArgs> ActionPerformed;
 
         event EventHandler<EventArgs> MovementPerformed;
@@ -17,6 +24,8 @@ namespace LogoScene.Models
         event EventHandler<EventArgs> RotationPerformed;
 
         event EventHandler<EventArgs> PenActionPerformed;
+
+        event EventHandler<EventArgs> SpeedUpdatedPerformed;
 
         ITurtle Turtle { get; }
 

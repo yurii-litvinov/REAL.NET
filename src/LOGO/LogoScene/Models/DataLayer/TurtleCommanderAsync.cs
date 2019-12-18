@@ -4,6 +4,8 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LogoScene.Models.Log;
+using log4net;
 
 namespace LogoScene.Models.DataLayer
 {
@@ -11,7 +13,9 @@ namespace LogoScene.Models.DataLayer
     {
         private readonly TurtleCommander turtleCommander;
 
-        private readonly ConcurrentQueue<Action> actionQueue;        
+        private readonly ConcurrentQueue<Action> actionQueue;
+
+        private readonly ILog log = Logger.Log;
 
         private TurtleCommanderAsync(TurtleCommander turtleCommander)
         {
@@ -20,8 +24,8 @@ namespace LogoScene.Models.DataLayer
             this.ActionPerformed += OnActionPerformed;
         }
 
-        public TurtleCommanderAsync()        
-            : this(new TurtleCommander()){}
+        public TurtleCommanderAsync()
+            : this(new TurtleCommander()) { }
 
         public ITurtle Turtle => turtleCommander.Turtle;
 
@@ -92,12 +96,65 @@ namespace LogoScene.Models.DataLayer
             }
         }
 
+        public event EventHandler<EventArgs> SpeedUpdatedPerformed
+        {
+            add
+            {
+                turtleCommander.SpeedUpdatedPerformed += value;
+            }
+
+            remove
+            {
+                turtleCommander.SpeedUpdatedPerformed -= value;
+            }
+        }
+
+        public event EventHandler<RotationEventArgs> RotationStarted
+        {
+            add
+            {
+                ((ITurtleCommander)turtleCommander).RotationStarted += value;
+            }
+
+            remove
+            {
+                turtleCommander.RotationStarted -= value;
+            }
+        }
+
+        public event EventHandler<PenActionEventArgs> PenActionStarted
+        {
+            add
+            {
+                turtleCommander.PenActionStarted += value;
+            }
+
+            remove
+            {
+                turtleCommander.PenActionStarted -= value;
+            }
+        }
+
+        public event EventHandler<SpeedUpdateEventArgs> SpeedUpdateStarted
+        {
+            add
+            {
+                turtleCommander.SpeedUpdateStarted += value;
+            }
+
+            remove
+            {
+                turtleCommander.SpeedUpdateStarted -= value;
+            }
+        }
+
         public void MoveBackward(double distance)
         {
             lock (this)
             {
                 Action action = () => { turtleCommander.MoveBackward(distance); };
                 AddActionToQueue(action);
+                log.Info($"backward {distance}");
             }
         }
 
@@ -107,6 +164,7 @@ namespace LogoScene.Models.DataLayer
             {
                 Action action = () => turtleCommander.MoveForward(distance);
                 AddActionToQueue(action);
+                log.Info($"forward {distance}");
             }
         }
 
@@ -116,6 +174,7 @@ namespace LogoScene.Models.DataLayer
             {
                 Action action = () => turtleCommander.PenDown();
                 AddActionToQueue(action);
+                log.Info($"pen down");
             }
         }
 
@@ -125,6 +184,7 @@ namespace LogoScene.Models.DataLayer
             {
                 Action action = () => turtleCommander.PenUp();
                 AddActionToQueue(action);
+                log.Info($"pen up");
             }
         }
 
@@ -134,6 +194,7 @@ namespace LogoScene.Models.DataLayer
             {
                 Action action = () => turtleCommander.RotateLeft(degrees);
                 AddActionToQueue(action);
+                log.Info($"rotate left {degrees}");
             }
         }
 
@@ -143,6 +204,7 @@ namespace LogoScene.Models.DataLayer
             {
                 Action action = () => turtleCommander.RotateRight(degrees);
                 AddActionToQueue(action);
+                log.Info($"rotate right {degrees}");
             }
         }
 
@@ -152,10 +214,17 @@ namespace LogoScene.Models.DataLayer
             {
                 Action action = () => turtleCommander.SetSpeed(speed);
                 AddActionToQueue(action);
+                log.Info($"set speed {speed}");
             }
         }
 
         public void NotifyMovementPerformed() => this.turtleCommander.NotifyMovementPerformed();
+
+        public void NotifyRotationPerformed() => this.turtleCommander.NotifyRotationPerformed();
+
+        public void NotifySpeedUpdatedPerformed() => this.turtleCommander.NotifySpeedUpdatePerformed();
+
+        public void NotifyPenActionPerformed() => this.turtleCommander.NotifyPenActionPerformed();
 
         private void OnActionPerformed(object sender, EventArgs e)
         {
@@ -176,14 +245,14 @@ namespace LogoScene.Models.DataLayer
 
         private void AddActionToQueue(Action action)
         {
-                if (actionQueue.IsEmpty && !turtleCommander.InProgress)
-                {
-                    action?.Invoke();
-                }
-                else
-                {
-                    actionQueue.Enqueue(action);
-                }            
+            if (actionQueue.IsEmpty && !turtleCommander.InProgress)
+            {
+                action?.Invoke();
+            }
+            else
+            {
+                actionQueue.Enqueue(action);
+            }
         }
     }
 }

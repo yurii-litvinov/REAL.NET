@@ -6,6 +6,7 @@ NUGET
     FSharp.Core (4.7) - redirects: force
     GraphX (2.3.6)
       QuickGraphPCL
+    log4net (2.0.8)
     Microsoft.Msagl (1.0.2)
     Microsoft.Msagl.Drawing (1.0.2)
       Microsoft.Msagl (>= 1.0.2)

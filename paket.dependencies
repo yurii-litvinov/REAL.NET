@@ -7,6 +7,7 @@ clitool dotnet-fake
 
 nuget FSharp.Core redirects: force
 nuget GraphX
+nuget log4net
 nuget QuickGraphPCL 3.6.61114.2
 nuget Microsoft.Msagl 1.0.2
 nuget Microsoft.Msagl.Drawing 1.0.2

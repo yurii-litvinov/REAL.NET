@@ -19,7 +19,7 @@ namespace LogoScene.Controls.Converters
             Point end = (Point)values[1];
             double speed = (double)values[2];
             double tag = (double)values[3];
-            var lambda = tag * speed;
+            var lambda = tag;
             // position = (1-lambda)*start+lambda*end
             var position = PointOperations.Plus(PointOperations.ScalarMultiply(1 - lambda, start),
                 PointOperations.ScalarMultiply(lambda, end));

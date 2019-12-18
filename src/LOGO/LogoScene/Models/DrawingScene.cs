@@ -18,6 +18,10 @@ namespace LogoScene.Models
 
         public void NotifyMovementPermormed() => turtleCommander.NotifyMovementPerformed();
 
+        public void NotifyRotationPerformed() => turtleCommander.NotifyRotationPerformed();
+
+        public void NotifySpeedUpdatedPerformed() => turtleCommander.NotifySpeedUpdatedPerformed();
+
         private readonly TurtleCommanderAsync turtleCommander;
 
         private void RaiseMovementOnDrawingSceneStarted(object sender, MovementEventArgs e) => MovementOnDrawingSceneStarted?.Invoke(this, e);

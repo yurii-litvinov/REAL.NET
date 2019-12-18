@@ -26,7 +26,7 @@
         </PathGeometry>
         <Storyboard x:Key="TagAnimation" Completed="OnStoryboardCompleted">
             <DoubleAnimation                 
-                SpeedRatio="1"
+                SpeedRatio="{Binding SpeedRatio}"
                 Storyboard.TargetName="hiddenButton"
                 Storyboard.TargetProperty="Tag"
                 RepeatBehavior="1x"
@@ -69,7 +69,7 @@
    
     <i:Interaction.Triggers>
         <ei:DataTrigger Binding="{Binding IsMovingStarted}" Value="True">
-            <ei:ControlStoryboardAction Storyboard="{StaticResource TagAnimation}" ControlStoryboardOption="Play"/>
+            <ei:ControlStoryboardAction Storyboard="{DynamicResource TagAnimation}" ControlStoryboardOption="Play"/>
         </ei:DataTrigger>
     </i:Interaction.Triggers>
 </UserControl>

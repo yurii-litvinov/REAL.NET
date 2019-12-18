@@ -58,6 +58,9 @@
     <Compile Include="Controls\Converters\TurtleAngleConverter.cs" />
     <Compile Include="Controls\Converters\TurtleXConverter.cs" />
     <Compile Include="Controls\Converters\TurtleYConverter.cs" />
+    <Compile Include="Models\EventArgs\SpeedUpdateEventArgs.cs" />
+    <Compile Include="Models\EventArgs\PenActionEventArgs.cs" />
+    <Compile Include="Models\EventArgs\RotationEventArgs.cs" />
     <Compile Include="Models\DataLayer\Turtle.cs" />
     <Compile Include="Models\DataLayer\TurtleCommanderAsync.cs" />
     <Compile Include="Models\DrawingScene.cs" />
@@ -65,6 +68,7 @@
     <Compile Include="Models\ITurtleCommander.cs" />
     <Compile Include="Models\EventArgs\MovementEventArgs.cs" />
     <Compile Include="Models\DataLayer\TurtleCommander.cs" />
+    <Compile Include="Models\Log\Logger.cs" />
     <Compile Include="ViewModels\IAnimationCompletedHandler.cs" />
     <Compile Include="Models\Constants\Constants.cs" />
     <Compile Include="Models\Operations\PointOperations.cs" />
@@ -137,6 +141,17 @@
         </Reference>
         <Reference Include="System.Windows.Interactivity">
           <HintPath>..\..\..\packages\Expression.Interaction\lib\net46\System.Windows.Interactivity.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="log4net">
+          <HintPath>..\..\..\packages\log4net\lib\net45-full\log4net.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

@@ -23,6 +23,7 @@ namespace LogoScene.Models.DataLayer
             this.MovementPerformed += RaiseActionPerformed;
             this.RotationPerformed += RaiseActionPerformed;
             this.PenActionPerformed += RaiseActionPerformed;
+            this.SpeedUpdatedPerformed += RaiseActionPerformed;
         }
 
         public TurtleCommander()
@@ -37,7 +38,15 @@ namespace LogoScene.Models.DataLayer
 
         public event EventHandler<EventArgs> RotationPerformed;
 
+        public event EventHandler<EventArgs> SpeedUpdatedPerformed;
+
         public event EventHandler<MovementEventArgs> MovementStarted;
+
+        public event EventHandler<RotationEventArgs> RotationStarted;
+
+        public event EventHandler<PenActionEventArgs> PenActionStarted;
+
+        public event EventHandler<SpeedUpdateEventArgs> SpeedUpdateStarted;
 
         public void MoveBackward(double distance)
         {
@@ -60,13 +69,15 @@ namespace LogoScene.Models.DataLayer
         public void PenDown()
         {
             turtle.SetIsPenDown(true);
-            PenActionPerformed?.Invoke(this, EventArgs.Empty);
+            inProgress = true;
+            PenActionStarted?.Invoke(this, new PenActionEventArgs());
         }
 
         public void PenUp()
         {
             turtle.SetIsPenDown(false);
-            PenActionPerformed?.Invoke(this, EventArgs.Empty);
+            inProgress = true;
+            PenActionStarted?.Invoke(this, new PenActionEventArgs());
         }
 
         public void RotateLeft(double degrees)
@@ -76,7 +87,8 @@ namespace LogoScene.Models.DataLayer
                 throw new ArgumentException("degrees should be non-negative");
             }
             turtle.SetAngle(turtle.Angle + degrees);
-            RotationPerformed?.Invoke(this, EventArgs.Empty);
+            inProgress = true;
+            RotationStarted?.Invoke(this, new RotationEventArgs());
         }
 
         public void RotateRight(double degrees)
@@ -86,7 +98,8 @@ namespace LogoScene.Models.DataLayer
                 throw new ArgumentException("degrees should be non-negative");
             }
             turtle.SetAngle(turtle.Angle - degrees);
-            RotationPerformed?.Invoke(this, EventArgs.Empty);
+            inProgress = true;
+            RotationStarted?.Invoke(this, new RotationEventArgs());
         }
 
         public void SetSpeed(double speed)
@@ -96,14 +109,46 @@ namespace LogoScene.Models.DataLayer
                 throw new ArgumentException("speed should be non-negative");
             }
             turtle.SetSpeed(speed);
+            InProgress = true;
+            SpeedUpdateStarted?.Invoke(this, new SpeedUpdateEventArgs());
         }
 
         public void NotifyMovementPerformed()
         {
-            turtle.SetX(positionAfterMovement.X);
-            turtle.SetY(positionAfterMovement.Y);
-            inProgress = false;
-            MovementPerformed?.Invoke(this, EventArgs.Empty);
+            lock (this)
+            {
+                turtle.SetX(positionAfterMovement.X);
+                turtle.SetY(positionAfterMovement.Y);
+                inProgress = false;
+                MovementPerformed?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        public void NotifyRotationPerformed()
+        {
+            lock (this)
+            {
+                inProgress = false;
+                RotationPerformed?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        public void NotifySpeedUpdatePerformed()
+        {
+            lock (this)
+            {
+                inProgress = false;
+                SpeedUpdatedPerformed?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        public void NotifyPenActionPerformed()
+        {
+            lock (this)
+            {
+                inProgress = false;
+                PenActionPerformed?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         private void Move(double distance)

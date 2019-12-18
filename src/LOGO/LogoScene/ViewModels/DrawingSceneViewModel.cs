@@ -13,6 +13,7 @@
  * limitations under the License. */
 
 using LogoScene.Models;
+using LogoScene.Models.Log;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -60,31 +61,30 @@ namespace LogoScene.ViewModels
 
         public DrawingSceneViewModel()
         {
+            Logger.InitLogger();
             this.model = new DrawingScene();
             this.commander = model.GetTurtleCommander();
             this.turtleModel = commander.Turtle;
             this.TurtleViewModel = new TurtleControlViewModel();
             this.TurtleViewModel.InitModel(turtleModel);
             this.TurtleViewModel.TurtleMovingEnded += OnTurtleMovementEnded;
+            this.TurtleViewModel.TurtleRotationEnded += OnTurtleRotationEnded;
+            this.TurtleViewModel.TurtleSpeedUpdateEnded += OnTurtleSpeedUpdateEnded;
             this.model.MovementOnDrawingSceneStarted += OnMovementStarted;
-            this.commander.RotationPerformed += OnRotation;
+            this.commander.RotationStarted += OnRotationStarted;
+            this.commander.SpeedUpdateStarted += OnSpeedUpdateStarted;
+            this.commander.PenActionStarted += OnPenActionStarted;
             for (int i = 0; i < 4; i++)
             {
                 this.model.GetTurtleCommander().MoveForward(100);
                 this.model.GetTurtleCommander().RotateRight(90);
             }
+            commander.SetSpeed(4);
             for (int i = 0; i < 4; i++)
             {
                 this.model.GetTurtleCommander().RotateLeft(90);
                 this.model.GetTurtleCommander().MoveBackward(100);
             }
-        }
-
-        private void OnMovementStarted(object sender, MovementEventArgs e)
-        {
-            this.StartPoint = e.OldPosition;
-            this.FinalPoint = e.NewPosition;
-            MoveTurtle();
         }
 
         public void MoveTurtle(Point startPoint, Point finalPoint)
@@ -100,7 +100,25 @@ namespace LogoScene.ViewModels
 
         private void OnTurtleMovementEnded(object sender, EventArgs e) => this.model.NotifyMovementPermormed();
 
-        private void OnRotation(object sender, EventArgs e) => this.TurtleViewModel.UpdateAngle();
+        private void OnTurtleSpeedUpdateEnded(object sender, EventArgs e) => this.model.NotifySpeedUpdatedPerformed();
+
+        private void OnTurtleRotationEnded(object sender, EventArgs e) => this.model.NotifyRotationPerformed();
+
+        private void OnMovementStarted(object sender, MovementEventArgs e)
+        {
+            this.StartPoint = e.OldPosition;
+            this.FinalPoint = e.NewPosition;
+            MoveTurtle();
+        }
+
+        private void OnRotationStarted(object sender, RotationEventArgs e) => this.TurtleViewModel.UpdateAngle();
+
+        private void OnSpeedUpdateStarted(object sender, SpeedUpdateEventArgs e) => this.TurtleViewModel.UpdateSpeed();
+
+        private void OnPenActionStarted(object sender, PenActionEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
 
         private double speedRatio = 0.3;
 

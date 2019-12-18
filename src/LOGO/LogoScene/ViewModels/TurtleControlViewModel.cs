@@ -24,6 +24,10 @@ namespace LogoScene.ViewModels
     {
         public event EventHandler<EventArgs> TurtleMovingEnded;
 
+        public event EventHandler<EventArgs> TurtleRotationEnded;
+
+        public event EventHandler<EventArgs> TurtleSpeedUpdateEnded;
+
         public ICommand AnimationCompletedCommand { get; set; }
 
         public double TurtleWidth => Models.Constants.TurtleWidth;
@@ -92,12 +96,21 @@ namespace LogoScene.ViewModels
             IsMovingStarted = true;
         }
 
-        public void UpdateAngle() => this.Angle = turtleModel.Angle;
+        public void UpdateAngle()
+        {
+            this.Angle = turtleModel.Angle;
+            TurtleRotationEnded?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void UpdateSpeed()
+        {
+            this.SpeedRatio = turtleModel.Speed;
+            TurtleSpeedUpdateEnded?.Invoke(this, EventArgs.Empty);
+        }
 
         public void InitModel(ITurtle turtle)
         {
             this.turtleModel = turtle;
-            
         }
 
         public TurtleControlViewModel()
