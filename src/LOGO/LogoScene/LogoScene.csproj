@@ -75,6 +75,10 @@
     <Compile Include="ViewModels\RelayCommand.cs" />
     <Compile Include="ViewModels\TurtleControlViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="View\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Validators\IntValidation.cs" />
     <Page Include="Controls\DrawingScene.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -96,6 +100,18 @@
     <Page Include="MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Templates\EditorTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Templates\GeneralTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -134,6 +150,88 @@
       <Project>{5281400d-38c4-4ce6-a390-6ad7e4f9d440}</Project>
       <Name>TurtleManipulation</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\EditorPluginInterfaces\EditorPluginInterfaces.csproj">
+      <Project>{6e5f1b5d-f165-4cec-a240-8887ebd28e3b}</Project>
+      <Name>EditorPluginInterfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\PluginManager\PluginManager.csproj">
+      <Project>{8b9c8d76-65b3-4a01-9d6f-b6192a823642}</Project>
+      <Name>PluginManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Repo\Repo.fsproj">
+      <Project>{9e7065a4-ba5e-4752-84bf-54d5c00db60c}</Project>
+      <Name>Repo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\WpfControlsLib\WpfControlsLib.csproj">
+      <Project>{1dcb1d77-ab11-404c-bce4-8eb7bf8f549d}</Project>
+      <Name>WpfControlsLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\edge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\finalBlock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\functionBlock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\hover.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\if.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\initialBlock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\land.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\move.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\takeoff.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\timerBlock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\vertex.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\Toolbar\redo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\Toolbar\undo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\LogoPictures\backward.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\LogoPictures\edge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\LogoPictures\finalBlock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\LogoPictures\forward.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\LogoPictures\initialBlock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\LogoPictures\left.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\LogoPictures\penDown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\LogoPictures\penUp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\LogoPictures\right.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Choose>
@@ -155,8 +253,83 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
+        <Reference Include="FSharp.Core">
+          <HintPath>..\..\..\packages\FSharp.Core\lib\net45\FSharp.Core.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="Quickgraph">
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="GraphX.PCL.Common">
+          <HintPath>..\..\..\packages\GraphX\lib\net40-client\GraphX.PCL.Common.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="GraphX.PCL.Logic">
+          <HintPath>..\..\..\packages\GraphX\lib\net40-client\GraphX.PCL.Logic.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="GraphX.WPF.Controls">
+          <HintPath>..\..\..\packages\GraphX\lib\net40-client\GraphX.WPF.Controls.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
         <Reference Include="log4net">
           <HintPath>..\..\..\packages\log4net\lib\net45-full\log4net.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="QuickGraph">
+          <HintPath>..\..\..\packages\QuickGraphPCL\lib\net40-client\QuickGraph.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="QuickGraph.Data">
+          <HintPath>..\..\..\packages\QuickGraphPCL\lib\net40-client\QuickGraph.Data.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="QuickGraph.Graphviz">
+          <HintPath>..\..\..\packages\QuickGraphPCL\lib\net40-client\QuickGraph.Graphviz.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="QuickGraph.Serialization">
+          <HintPath>..\..\..\packages\QuickGraphPCL\lib\net40-client\QuickGraph.Serialization.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="mscorlib">
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="System.ValueTuple">
+          <HintPath>..\..\..\packages\System.ValueTuple\lib\net461\System.ValueTuple.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
