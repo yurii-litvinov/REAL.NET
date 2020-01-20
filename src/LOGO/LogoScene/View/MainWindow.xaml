@@ -94,7 +94,6 @@
             <!-- Toolbar -->
             <toolbar:ToolbarView x:Name="toolBar" Grid.Row="0" DataContext="{Binding Toolbar}" Height="30"/>
 
-          
             <Grid x:Name="sceneGrid"  Grid.Row="1">
                 <!-- Scene area -->
                 <TabControl Name="tabOfScenes">
