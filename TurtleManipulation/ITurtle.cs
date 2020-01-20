@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LogoScene.Models
+namespace Logo.TurtleManipulation
 {
     public interface ITurtle
     {
@@ -15,5 +15,7 @@ namespace LogoScene.Models
         double Y { get; }
 
         double Angle { get; }
+
+        bool IsPenDown { get; }
     }
 }

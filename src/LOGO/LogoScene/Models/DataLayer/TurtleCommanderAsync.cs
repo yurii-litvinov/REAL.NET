@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LogoScene.Models.Log;
 using log4net;
+using Logo.TurtleManipulation;
 
 namespace LogoScene.Models.DataLayer
 {
@@ -16,6 +17,8 @@ namespace LogoScene.Models.DataLayer
         private readonly ConcurrentQueue<Action> actionQueue;
 
         private readonly ILog log = Logger.Log;
+
+        private object objectToLock = new object();
 
         private TurtleCommanderAsync(TurtleCommander turtleCommander)
         {
@@ -29,7 +32,7 @@ namespace LogoScene.Models.DataLayer
 
         public ITurtle Turtle => turtleCommander.Turtle;
 
-        public bool InProgress => turtleCommander.InProgress;
+        public bool IsInProgress => turtleCommander.IsInProgress;
 
         public event EventHandler<EventArgs> PenActionPerformed
         {
@@ -44,7 +47,7 @@ namespace LogoScene.Models.DataLayer
             }
         }
 
-        public event EventHandler<MovementEventArgs> MovementStarted
+        public event EventHandler<LineEventArgs> MovementStarted
         {
             add
             {
@@ -150,75 +153,71 @@ namespace LogoScene.Models.DataLayer
 
         public void MoveBackward(double distance)
         {
-            lock (this)
+            lock (objectToLock)
             {
                 Action action = () => { turtleCommander.MoveBackward(distance); };
                 AddActionToQueue(action);
-                log.Info($"backward {distance}");
             }
         }
 
         public void MoveForward(double distance)
         {
-            lock (this)
+            lock (objectToLock)
             {
                 Action action = () => turtleCommander.MoveForward(distance);
                 AddActionToQueue(action);
-                log.Info($"forward {distance}");
             }
         }
 
         public void PenDown()
         {
-            lock (this)
+            lock (objectToLock)
             {
                 Action action = () => turtleCommander.PenDown();
                 AddActionToQueue(action);
-                log.Info($"pen down");
             }
         }
 
         public void PenUp()
         {
-            lock (this)
+            lock (objectToLock)
             {
                 Action action = () => turtleCommander.PenUp();
                 AddActionToQueue(action);
-                log.Info($"pen up");
             }
         }
 
         public void RotateLeft(double degrees)
         {
-            lock (this)
+            lock (objectToLock)
             {
                 Action action = () => turtleCommander.RotateLeft(degrees);
                 AddActionToQueue(action);
-                log.Info($"rotate left {degrees}");
             }
         }
 
         public void RotateRight(double degrees)
         {
-            lock (this)
+            lock (objectToLock)
             {
                 Action action = () => turtleCommander.RotateRight(degrees);
                 AddActionToQueue(action);
-                log.Info($"rotate right {degrees}");
             }
         }
 
         public void SetSpeed(double speed)
         {
-            lock (this)
+            lock (objectToLock)
             {
                 Action action = () => turtleCommander.SetSpeed(speed);
                 AddActionToQueue(action);
-                log.Info($"set speed {speed}");
             }
         }
 
-        public void NotifyMovementPerformed() => this.turtleCommander.NotifyMovementPerformed();
+        public void NotifyMovementPerformed()
+        {
+            this.turtleCommander.NotifyMovementPerformed();
+        }
 
         public void NotifyRotationPerformed() => this.turtleCommander.NotifyRotationPerformed();
 
@@ -245,13 +244,16 @@ namespace LogoScene.Models.DataLayer
 
         private void AddActionToQueue(Action action)
         {
-            if (actionQueue.IsEmpty && !turtleCommander.InProgress)
+            lock (this)
             {
-                action?.Invoke();
-            }
-            else
-            {
-                actionQueue.Enqueue(action);
+                if (actionQueue.IsEmpty && !turtleCommander.IsInProgress)
+                {
+                    action?.Invoke();
+                }
+                else
+                {
+                    actionQueue.Enqueue(action);
+                }
             }
         }
     }

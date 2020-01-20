@@ -12,24 +12,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
+using Logo.TurtleManipulation;
 using LogoScene.Models;
 using LogoScene.Models.Log;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Shapes;
 
 namespace LogoScene.ViewModels
 {
     public class DrawingSceneViewModel : ViewModelBase
     {
-        public TurtleControlViewModel TurtleViewModel { get; set; }
+        public TurtleControlViewModel TurtleViewModel { get; private set; }
 
-        public Point StartPoint
+        public ObservableCollection<LineAfterTurtle> LinesOnScene { get; private set; } = new ObservableCollection<LineAfterTurtle>();
+
+        public System.Windows.Input.ICommand ExecuteExample { get; }
+        
+        public bool IsLineAnimated
+        {
+            get => isLineAnimated;
+            set
+            {
+                isLineAnimated = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsLineVisible
+        {
+            get => isLineVisible;
+            set
+            {
+                isLineVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public DoublePoint StartPoint
         {
             get => startPoint;
             set
@@ -39,7 +66,7 @@ namespace LogoScene.ViewModels
             }
         }
 
-        public Point FinalPoint
+        public DoublePoint FinalPoint
         {
             get => finalPoint;
             set
@@ -71,61 +98,93 @@ namespace LogoScene.ViewModels
             this.TurtleViewModel.TurtleRotationEnded += OnTurtleRotationEnded;
             this.TurtleViewModel.TurtleSpeedUpdateEnded += OnTurtleSpeedUpdateEnded;
             this.model.MovementOnDrawingSceneStarted += OnMovementStarted;
+            this.model.LineAdded += OnLineAdded;
             this.commander.RotationStarted += OnRotationStarted;
             this.commander.SpeedUpdateStarted += OnSpeedUpdateStarted;
             this.commander.PenActionStarted += OnPenActionStarted;
-            for (int i = 0; i < 4; i++)
-            {
-                this.model.GetTurtleCommander().MoveForward(100);
-                this.model.GetTurtleCommander().RotateRight(90);
-            }
-            commander.SetSpeed(4);
-            for (int i = 0; i < 4; i++)
-            {
-                this.model.GetTurtleCommander().RotateLeft(90);
-                this.model.GetTurtleCommander().MoveBackward(100);
-            }
+            this.IsLineVisible = this.commander.Turtle.IsPenDown;
+            Action<object> act = (_) => { example(); };
+            this.ExecuteExample = new RelayCommand(act);
         }
 
-        public void MoveTurtle(Point startPoint, Point finalPoint)
+        private void example()
+        {
+            commander.RotateRight(30);
+            for (int i = 0; i < 3; i++)
+            {
+                this.model.GetTurtleCommander().MoveForward(100);
+                this.model.GetTurtleCommander().RotateRight(120);
+            }
+            commander.SetSpeed(4);
+            for (int i = 0; i < 3; i++)
+            {
+                this.model.GetTurtleCommander().RotateLeft(120);
+                this.model.GetTurtleCommander().MoveBackward(100);
+            }
+            commander.RotateLeft(30);
+        }
+
+        public void MoveTurtle(DoublePoint startPoint, DoublePoint finalPoint)
         {
             this.StartPoint = startPoint;
             this.FinalPoint = finalPoint;
             this.TurtleViewModel.MoveTurtle(this.StartPoint, this.FinalPoint);
         }
 
-        public void MoveTurtle(Point destination) => MoveTurtle(this.StartPoint, destination);
+        public void MoveTurtle(DoublePoint destination) => MoveTurtle(this.StartPoint, destination);
 
         public void MoveTurtle() => MoveTurtle(this.StartPoint, this.FinalPoint);
 
-        private void OnTurtleMovementEnded(object sender, EventArgs e) => this.model.NotifyMovementPermormed();
+        private void OnTurtleMovementEnded(object sender, EventArgs e)
+        {
+            IsLineAnimated = false;
+            this.model.NotifyMovementPerformed();
+        }
 
         private void OnTurtleSpeedUpdateEnded(object sender, EventArgs e) => this.model.NotifySpeedUpdatedPerformed();
 
         private void OnTurtleRotationEnded(object sender, EventArgs e) => this.model.NotifyRotationPerformed();
 
-        private void OnMovementStarted(object sender, MovementEventArgs e)
+        private void OnMovementStarted(object sender, LineEventArgs e)
         {
-            this.StartPoint = e.OldPosition;
-            this.FinalPoint = e.NewPosition;
+            this.StartPoint = e.StartPoint;
+            this.FinalPoint = e.EndPoint;
+            IsLineAnimated = true;
+            Logger.Log.Info($"{e.StartPoint} {e.EndPoint} {IsLineAnimated}");
             MoveTurtle();
         }
 
         private void OnRotationStarted(object sender, RotationEventArgs e) => this.TurtleViewModel.UpdateAngle();
 
-        private void OnSpeedUpdateStarted(object sender, SpeedUpdateEventArgs e) => this.TurtleViewModel.UpdateSpeed();
+        private void OnSpeedUpdateStarted(object sender, SpeedUpdateEventArgs e)
+        {
+            this.SpeedRatio = this.commander.Turtle.Speed;
+            this.TurtleViewModel.UpdateSpeed();
+        }
 
         private void OnPenActionStarted(object sender, PenActionEventArgs e)
         {
-            throw new NotImplementedException();
+            this.IsLineVisible = commander.Turtle.IsPenDown;
+            this.OnPenActionPerformed(this, EventArgs.Empty);
         }
 
-        private double speedRatio = 0.3;
+        private void OnPenActionPerformed(object sender, EventArgs e) => this.model.NotifyPenActionPerformed();
 
-        private Point startPoint = new Point(100, 100);
+        private void OnLineAdded(object sender, LineEventArgs e)
+        {
+            this.LinesOnScene.Add(new LineAfterTurtle(e.StartPoint, e.EndPoint));
+        }
 
-        private Point finalPoint = new Point(100, 0);
+        private double speedRatio = 1;
 
+        private DoublePoint startPoint = new DoublePoint(100, 100);
+
+        private DoublePoint finalPoint = new DoublePoint(100, 0);
+
+        private bool isLineAnimated;
+
+        private bool isLineVisible;
+        
         private readonly DrawingScene model;
 
         private readonly ITurtleCommander commander;

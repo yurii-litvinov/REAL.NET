@@ -1,15 +1,10 @@
-﻿using LogoScene.Models.DataLayer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
-namespace LogoScene.Models
+namespace Logo.TurtleManipulation
 {
     public interface ITurtleCommander
     {
-        event EventHandler<MovementEventArgs> MovementStarted;
+        event EventHandler<LineEventArgs> MovementStarted;
 
         event EventHandler<RotationEventArgs> RotationStarted;
 
@@ -29,7 +24,7 @@ namespace LogoScene.Models
 
         ITurtle Turtle { get; }
 
-        bool InProgress { get; }
+        bool IsInProgress { get; }
 
         void MoveForward(double distance);
 

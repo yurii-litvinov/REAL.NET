@@ -6,18 +6,83 @@
              xmlns:local="clr-namespace:LogoScene.Controls"
              xmlns:controls="clr-namespace:LogoScene.Controls"
              xmlns:viewmodels="clr-namespace:LogoScene.ViewModels"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:converters="clr-namespace:LogoScene.Controls.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.DataContext>
         <viewmodels:DrawingSceneViewModel/>
     </UserControl.DataContext>
-
-    <Canvas Background="White" Height="450" Margin="0,0,0,-0.4" VerticalAlignment="Top">
-        <controls:TurtleControl x:Name="turtleControl" DataContext="{Binding TurtleViewModel}"/>
-        <Line X1="100" Y1="0" X2="100" Y2="100" Stroke="Black" Canvas.Bottom="100" Canvas.Left="0"/>
-        <Line X1="100" Y1="0" X2="200" Y2="0" Stroke="Black" Canvas.Bottom="200" Canvas.Left="0"/>
-        <Line X1="200" Y1="100" X2="200" Y2="0" Stroke="Black" Canvas.Bottom="100" Canvas.Left="0"/>
-        <Line X1="200" Y1="0" X2="100" Y2="0" Stroke="Black" Canvas.Bottom="100" Canvas.Left="0"/>
-        <Button x:Name="buttonStop" Content="Button" Canvas.Left="590" Canvas.Top="170" Width="75"/>
-    </Canvas>
+    <UserControl.Resources>
+        <Storyboard x:Key="TagAnimation">
+            <DoubleAnimation                 
+                SpeedRatio="{Binding SpeedRatio}"
+                Storyboard.TargetProperty="Tag" 
+                Storyboard.TargetName="hiddenButton"
+                RepeatBehavior="1x"
+                From="0"
+                To="1"
+            />
+        </Storyboard>
+        <converters:XLineConverter x:Key="XLineConverter"/>
+        <converters:YLineConverter x:Key="YLineConverter"/>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:MinusConverter x:Key="MinusConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Border BorderThickness="2" BorderBrush="Black" Grid.Column="0" Grid.Row="0">
+            <Canvas Background="White" Height="450" Margin="0,0,0,0" VerticalAlignment="Top">
+                <Button Name="hiddenButton" Visibility="Visible" Content="{Binding Path=Tag, ElementName=turtleControl}" Width="100" Height="30" 
+                        Command="{Binding ExecuteExample}">
+                    <Button.Tag>
+                        <sys:Double>0</sys:Double>
+                    </Button.Tag>
+                </Button>
+                <Line X1="{Binding StartPoint.X}" Y1="{Binding StartPoint.Y, Converter={StaticResource MinusConverter}}" Canvas.Left="0" Canvas.Bottom="0" x:Name="AnimatedLine"
+                      Visibility="{Binding IsLineVisible, Converter={StaticResource BoolToVisibilityConverter}}" Stroke="Black" StrokeThickness="1">
+                    <Line.Tag>
+                        <sys:Double>0.0</sys:Double>
+                    </Line.Tag>
+                    <Line.X2>
+                        <MultiBinding Converter="{StaticResource XLineConverter}">
+                            <Binding Path="StartPoint"/>
+                            <Binding Path="FinalPoint"/>
+                            <Binding Path="Tag" ElementName="hiddenButton"/>
+                        </MultiBinding>
+                    </Line.X2>
+                    <Line.Y2>
+                        <MultiBinding Converter="{StaticResource YLineConverter}">
+                            <Binding Path="StartPoint"/>
+                            <Binding Path="FinalPoint"/>
+                            <Binding Path="Tag" ElementName="hiddenButton"/>
+                        </MultiBinding>
+                    </Line.Y2>
+                </Line>
+                <ItemsControl ItemsSource="{Binding LinesOnScene}" Canvas.Bottom="0" Canvas.Left="0">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Line Visibility="Visible"
+                          X1="{Binding X1}" Y1="{Binding Y1, Converter={StaticResource MinusConverter}}"
+                          X2="{Binding X2}" Y2="{Binding Y2, Converter={StaticResource MinusConverter}}"
+                      Stroke="Black" StrokeThickness="1"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <controls:TurtleControl x:Name="turtleControl" DataContext="{Binding TurtleViewModel}"/>
+                <i:Interaction.Triggers>
+                    <ei:DataTrigger Binding="{Binding IsLineAnimated}" Value="True">
+                        <ei:ControlStoryboardAction Storyboard="{DynamicResource TagAnimation}" ControlStoryboardOption="Play"/>
+                    </ei:DataTrigger>
+                </i:Interaction.Triggers>
+            </Canvas>
+        </Border>
+    </Grid>
 </UserControl>

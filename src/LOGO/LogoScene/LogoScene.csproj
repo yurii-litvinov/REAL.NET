@@ -55,24 +55,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Controls\Converters\MinusConverter.cs" />
     <Compile Include="Controls\Converters\TurtleAngleConverter.cs" />
     <Compile Include="Controls\Converters\TurtleXConverter.cs" />
     <Compile Include="Controls\Converters\TurtleYConverter.cs" />
-    <Compile Include="Models\EventArgs\SpeedUpdateEventArgs.cs" />
-    <Compile Include="Models\EventArgs\PenActionEventArgs.cs" />
-    <Compile Include="Models\EventArgs\RotationEventArgs.cs" />
+    <Compile Include="Controls\Converters\XLineConverter.cs" />
+    <Compile Include="Controls\Converters\YLineConverter.cs" />
     <Compile Include="Models\DataLayer\Turtle.cs" />
     <Compile Include="Models\DataLayer\TurtleCommanderAsync.cs" />
-    <Compile Include="Models\DrawingScene.cs" />
-    <Compile Include="Models\ITurtle.cs" />
-    <Compile Include="Models\ITurtleCommander.cs" />
-    <Compile Include="Models\EventArgs\MovementEventArgs.cs" />
+    <Compile Include="Models\DataLayer\DrawingScene.cs" />
     <Compile Include="Models\DataLayer\TurtleCommander.cs" />
     <Compile Include="Models\Log\Logger.cs" />
     <Compile Include="ViewModels\IAnimationCompletedHandler.cs" />
     <Compile Include="Models\Constants\Constants.cs" />
-    <Compile Include="Models\Operations\PointOperations.cs" />
+    <Compile Include="Operations\PointOperations.cs" />
     <Compile Include="ViewModels\DrawingSceneViewModel.cs" />
+    <Compile Include="ViewModels\LineAfterTurtle.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
     <Compile Include="ViewModels\TurtleControlViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
@@ -129,6 +128,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\TurtleManipulation\TurtleManipulation.csproj">
+      <Project>{5281400d-38c4-4ce6-a390-6ad7e4f9d440}</Project>
+      <Name>TurtleManipulation</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Choose>

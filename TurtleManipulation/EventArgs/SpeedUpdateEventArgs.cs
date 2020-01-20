@@ -1,4 +1,4 @@
-﻿namespace LogoScene.Models
+﻿namespace Logo.TurtleManipulation
 {
     public class SpeedUpdateEventArgs
     {

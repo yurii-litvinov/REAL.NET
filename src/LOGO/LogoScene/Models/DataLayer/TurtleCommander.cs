@@ -1,6 +1,7 @@
-﻿using LogoScene.Models.DataLayer;
+﻿using Logo.TurtleManipulation;
+using LogoScene.Models.DataLayer;
 using System;
-using System.Windows;
+using System.Drawing;
 
 namespace LogoScene.Models.DataLayer
 {
@@ -8,18 +9,18 @@ namespace LogoScene.Models.DataLayer
     {
         public ITurtle Turtle => turtle;
 
-        public bool InProgress { get => inProgress; private set => inProgress = value; }
+        public bool IsInProgress { get => inProgress; private set => inProgress = value; }
 
         private readonly Turtle turtle;
 
-        private Point positionAfterMovement;
+        private DoublePoint positionAfterMovement;
 
         private volatile bool inProgress;
 
         public TurtleCommander(Turtle turtle)
         {
             this.turtle = turtle;
-            this.positionAfterMovement = new Point();
+            this.positionAfterMovement = new DoublePoint(0, 0);
             this.MovementPerformed += RaiseActionPerformed;
             this.RotationPerformed += RaiseActionPerformed;
             this.PenActionPerformed += RaiseActionPerformed;
@@ -40,7 +41,7 @@ namespace LogoScene.Models.DataLayer
 
         public event EventHandler<EventArgs> SpeedUpdatedPerformed;
 
-        public event EventHandler<MovementEventArgs> MovementStarted;
+        public event EventHandler<LineEventArgs> MovementStarted;
 
         public event EventHandler<RotationEventArgs> RotationStarted;
 
@@ -109,7 +110,7 @@ namespace LogoScene.Models.DataLayer
                 throw new ArgumentException("speed should be non-negative");
             }
             turtle.SetSpeed(speed);
-            InProgress = true;
+            IsInProgress = true;
             SpeedUpdateStarted?.Invoke(this, new SpeedUpdateEventArgs());
         }
 
@@ -158,10 +159,10 @@ namespace LogoScene.Models.DataLayer
             var angleInRadians = turtle.Angle * Math.PI / 180;
             var newX = oldX + Math.Cos(angleInRadians) * distance;
             var newY = oldY + Math.Sin(angleInRadians) * distance;
-            var oldPosition = new Point(oldX, oldY);
-            positionAfterMovement = new Point(newX, newY);
+            var oldPosition = new DoublePoint(oldX, oldY);
+            positionAfterMovement = new DoublePoint(newX, newY);
             inProgress = true;
-            MovementStarted?.Invoke(this, new MovementEventArgs(oldPosition, positionAfterMovement));
+            MovementStarted?.Invoke(this, new LineEventArgs(oldPosition, positionAfterMovement));
         }
 
         private void RaiseActionPerformed(object sender, EventArgs e) => ActionPerformed?.Invoke(this, EventArgs.Empty);

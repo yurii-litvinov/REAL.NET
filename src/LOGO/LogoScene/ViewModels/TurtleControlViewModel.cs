@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
+using Logo.TurtleManipulation;
 using LogoScene.Models;
 using LogoScene.ViewModels.Animation;
 using System;
@@ -48,7 +49,7 @@ namespace LogoScene.ViewModels
             }
         }
 
-        public Point Start
+        public DoublePoint Start
         {
             get => start;
             set
@@ -58,7 +59,7 @@ namespace LogoScene.ViewModels
             }
         }
 
-        public Point End
+        public DoublePoint End
         {
             get => end;
 
@@ -89,7 +90,7 @@ namespace LogoScene.ViewModels
             }
         }
 
-        public void MoveTurtle(Point start, Point end)
+        public void MoveTurtle(DoublePoint start, DoublePoint end)
         {
             this.Start = start;
             this.End = end;
@@ -117,13 +118,15 @@ namespace LogoScene.ViewModels
         {
             this.AnimationCompletedCommand = new RelayCommand(
                 (parameter) => { isMovingStarted = false; RaiseAnimationCompletedEvent(); });
+            this.Start = new DoublePoint(100, 100);
+            this.End = new DoublePoint(100, 100);
         }
 
         private double speedRatio = 1;
 
-        private Point end = new Point(0, 0);
+        private DoublePoint end = new DoublePoint(0, 0);
 
-        private Point start = new Point(0, 0);
+        private DoublePoint start = new DoublePoint(0, 0);
 
         private bool isMovingStarted = false;
 
