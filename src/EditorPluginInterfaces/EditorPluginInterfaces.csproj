@@ -79,20 +79,4 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
-      <ItemGroup>
-        <Reference Include="Microsoft.Expression.Interactions">
-          <HintPath>..\..\packages\System.Windows.Interactivity.WPF\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="System.Windows.Interactivity">
-          <HintPath>..\..\packages\System.Windows.Interactivity.WPF\lib\net40\System.Windows.Interactivity.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
 </Project>
