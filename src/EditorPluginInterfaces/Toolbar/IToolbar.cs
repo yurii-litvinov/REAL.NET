@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using EditorPluginInterfaces.Toolbar;
+using System.Collections.Generic;
 
-namespace EditorPluginInterfaces.Toolbar
+namespace EditorPluginInterfaces
 {
     /// <summary>
     /// Interface that is abstraction of editor's toolbar 

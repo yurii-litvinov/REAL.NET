@@ -40,8 +40,7 @@
         </Grid.RowDefinitions>
         <Border BorderThickness="2" BorderBrush="Black" Grid.Column="0" Grid.Row="0">
             <Canvas Background="White" Height="450" Margin="0,0,0,0" VerticalAlignment="Top">
-                <Button Name="hiddenButton" Visibility="Visible" Content="{Binding Path=Tag, ElementName=turtleControl}" Width="100" Height="30" 
-                        Command="{Binding ExecuteExample}">
+                <Button Name="hiddenButton" Visibility="Hidden" Width="100" Height="30">
                     <Button.Tag>
                         <sys:Double>0</sys:Double>
                     </Button.Tag>

@@ -5,7 +5,7 @@ source https://api.nuget.org/v3/index.json
 
 clitool dotnet-fake
 
-nuget FSharp.Core redirects: force
+nuget FSharp.Core 4.7.0 restriction: >= net461
 nuget GraphX
 nuget log4net
 nuget QuickGraphPCL 3.6.61114.2
@@ -13,7 +13,7 @@ nuget Microsoft.Msagl 1.0.2
 nuget Microsoft.Msagl.Drawing 1.0.2
 nuget Microsoft.Msagl.GraphViewerGDI 1.0.2
 nuget StyleCop.Analyzers
-nuget System.ValueTuple
+nuget System.ValueTuple 4.4.0 restriction: >= net461
 nuget Newtonsoft.Json
 nuget System.Windows.Interactivity.WPF
 nuget Expression.Interaction

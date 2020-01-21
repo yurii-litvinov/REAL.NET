@@ -12,19 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
+using EditorPluginInterfaces;
 using Logo.TurtleManipulation;
 using LogoScene.Models;
 using LogoScene.Models.Log;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Shapes;
 
 namespace LogoScene.ViewModels
 {
@@ -34,8 +27,6 @@ namespace LogoScene.ViewModels
 
         public ObservableCollection<LineAfterTurtle> LinesOnScene { get; private set; } = new ObservableCollection<LineAfterTurtle>();
 
-        public System.Windows.Input.ICommand ExecuteExample { get; }
-        
         public bool IsLineAnimated
         {
             get => isLineAnimated;
@@ -86,6 +77,8 @@ namespace LogoScene.ViewModels
             }
         }
 
+        public ITurtleCommander TurtleCommander => commander;
+
         public DrawingSceneViewModel()
         {
             Logger.InitLogger();
@@ -103,25 +96,6 @@ namespace LogoScene.ViewModels
             this.commander.SpeedUpdateStarted += OnSpeedUpdateStarted;
             this.commander.PenActionStarted += OnPenActionStarted;
             this.IsLineVisible = this.commander.Turtle.IsPenDown;
-            Action<object> act = (_) => { example(); };
-            this.ExecuteExample = new RelayCommand(act);
-        }
-
-        private void example()
-        {
-            commander.RotateRight(30);
-            for (int i = 0; i < 3; i++)
-            {
-                this.model.GetTurtleCommander().MoveForward(100);
-                this.model.GetTurtleCommander().RotateRight(120);
-            }
-            commander.SetSpeed(4);
-            for (int i = 0; i < 3; i++)
-            {
-                this.model.GetTurtleCommander().RotateLeft(120);
-                this.model.GetTurtleCommander().MoveBackward(100);
-            }
-            commander.RotateLeft(30);
         }
 
         public void MoveTurtle(DoublePoint startPoint, DoublePoint finalPoint)
@@ -184,7 +158,7 @@ namespace LogoScene.ViewModels
         private bool isLineAnimated;
 
         private bool isLineVisible;
-        
+
         private readonly DrawingScene model;
 
         private readonly ITurtleCommander commander;

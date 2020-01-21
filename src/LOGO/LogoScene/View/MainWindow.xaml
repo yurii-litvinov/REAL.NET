@@ -100,7 +100,7 @@
                     <TabItem>
                         <TabItem.Header>Interpreter</TabItem.Header>
                         <TabItem.Content>
-                            <controls:DrawingScene/>
+                            <controls:DrawingScene DataContext="{Binding DrawingScene}"/>
                         </TabItem.Content>
                     </TabItem>
                     <TabItem>

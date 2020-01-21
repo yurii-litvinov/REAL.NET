@@ -28,6 +28,7 @@ namespace WpfEditor.View
     using WpfControlsLib.Controls.Toolbar;
     using WpfControlsLib.Controls.AttributesPanel;
     using Palette = WpfControlsLib.Controls.Palette.Palette;
+    using LogoScene.ViewModels;
 
     /// <summary>
     /// Main window of the application, launches on application startup.
@@ -35,7 +36,10 @@ namespace WpfEditor.View
     internal partial class MainWindow : INotifyPropertyChanged
     {
         private readonly WpfControlsLib.Model.Model model;
+
         private readonly WpfControlsLib.Controller.Controller controller;
+
+        private LogoScene.ProgramRunner.ProgramRunner programRunner;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -44,6 +48,8 @@ namespace WpfEditor.View
         public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();
 
         public ToolbarViewModel Toolbar { get; } = new ToolbarViewModel();
+
+        public DrawingSceneViewModel DrawingScene { get; } = new DrawingSceneViewModel();
 
         public AttributesPanelViewModel AttributesPanel { get; } = new AttributesPanelViewModel();
 
@@ -94,6 +100,8 @@ namespace WpfEditor.View
 
             this.modelSelector.Init(this.model);
             this.modelSelector.ChangeModel(0);
+
+            InitProgramRunner();
         }
 
         private void Reinit(object sender, EventArgs e)
@@ -120,7 +128,7 @@ namespace WpfEditor.View
         {
             this.Console.Messages.Add("Initializing ToolBar");
             var sample = new WpfControlsLib.Controls.Toolbar.StandardButtonsAndMenus.SampleButtonsCollection(this.Console, this.controller);
-            var buttons = sample.SampleButtons;
+            var buttons = sample.SampleButtons;            
             foreach (var button in buttons)
             {
                 this.Toolbar.AddButton(button);
@@ -246,6 +254,11 @@ namespace WpfEditor.View
             {
                 model.SaveAs(dialog.FileName);
             }
+        }
+
+        private void InitProgramRunner()
+        {
+            programRunner = new LogoScene.ProgramRunner.ProgramRunner(this.DrawingScene.TurtleCommander, this.Toolbar, this.Console);
         }
     }
 }
