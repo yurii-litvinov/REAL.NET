@@ -93,8 +93,9 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <None Include="paket.references" />
-    <Compile Include="Logo\LogoTests.fs" />
+    <Compile Include="Logo\LogoParserTests.fs" />
     <Content Include="App.config" />
+    <Compile Include="LogoTests.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -105,5 +106,17 @@
       <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
       <Private>True</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Interpreters\Interpreters.fsproj">
+      <Name>Interpreters</Name>
+      <Project>{522a914e-b787-43b6-9630-b169c8c3441b}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Repo\Repo.fsproj">
+      <Name>Repo</Name>
+      <Project>{9e7065a4-ba5e-4752-84bf-54d5c00db60c}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
 </Project>

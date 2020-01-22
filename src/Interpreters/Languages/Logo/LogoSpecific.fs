@@ -71,7 +71,34 @@ type LogoBackward(distance: double) =
 type LogoLeft(degrees: double) =
     inherit LogoCommand()
 
-    override this.Description = "left" + degrees.ToString()
+    override this.Description = "left " + degrees.ToString()
 
     member this.Degrees = degrees
+
+type LogoRight(degrees: double) =
+    inherit LogoCommand()
+
+    override this.Description = "right " + degrees.ToString()
+
+type LogoPenUp() =
+    inherit LogoCommand()
+
+    override this.Description = "pen up"
+
+type LogoPenDown() =
+    inherit LogoCommand()
+
+    override this.Description = "pen down"
+
+type LogoSetSpeed(speed: double) =
+    inherit LogoCommand()
+
+    override this.Description = "set speed"
+
+    member this.Speed = speed
+
+type LogoContext() =
+    class
+        member this.LogoCommands : ResizeArray<LogoCommand> = new ResizeArray<LogoCommand>()
+    end
 

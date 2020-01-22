@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>6d47aecb-8f36-427c-b24b-5c4c8d8a16d0</ProjectGuid>
+    <ProjectGuid>522a914e-b787-43b6-9630-b169c8c3441b</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Interpreters</RootNamespace>
     <AssemblyName>Interpreters</AssemblyName>
@@ -43,21 +43,28 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Main\Variable.fs" />
     <Compile Include="Main\Common.fs" />
     <Compile Include="Main\VariableSet.fs" />
-    <Compile Include="Main\Variable.fs" />
-    <Compile Include="Interpeter.fs" />
-    <Content Include="paket.references" />
-    <Compile Include="Languages\LogoSpecific.fs" />
-    <Compile Include="Languages\TurtleCommand.fs" />
-    <Compile Include="Languages\Logo\LogoParser.fs" />
+    <Compile Include="Interpreter.fs" />
     <Compile Include="Languages\Parser.fs" />
+    <Compile Include="Languages\Logo\LogoSpecific.fs" />
+    <Compile Include="Languages\Logo\TurtleCommand.fs" />
+    <Compile Include="Languages\Logo\LogoParser.fs" />
+    <Compile Include="Languages\Logo\LogoInterpeter.fs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="FSharp.Core">
+      <HintPath>..\..\packages\FSharp.Core.4.7.0\lib\net45\FSharp.Core.dll</HintPath>
+    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.ValueTuple">
+      <HintPath>..\..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Repo\Repo.fsproj">
@@ -73,15 +80,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
-      <ItemGroup>
-        <Reference Include="FSharp.Core">
-          <HintPath>..\..\packages\FSharp.Core\lib\net45\FSharp.Core.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
 </Project>

@@ -1,6 +1,5 @@
-﻿module TurtleCommand
+﻿module Languages.Logo.TurtleCommand
 
-open System
 open Languages.Logo.LogoSpecific
 
 type LCommand =
@@ -8,9 +7,10 @@ type LCommand =
     | LBackward of double
     | LLeft of double
     | LRight of double
-    | PenDown
-    | PenUp
-    | SetSpeed of double
+    | LPenDown
+    | LPenUp
+    | LSetSpeed of double
+    | LNoCommand
 
 let (*) x (y, z) = (x * y, x * z)
 
