@@ -1,4 +1,4 @@
-﻿namespace Interpretes
+﻿namespace Interpreters
 
     open Interpreters.Common
 
@@ -33,6 +33,20 @@
                     member this.ToList: Variable list = 
                         raise (System.NotImplementedException())  
             end
+    
+    module VariableSet =
+        
+        open VariableList
+        
+        type VariableSetFactory =
+            struct
+                static member CreateVariableSet (variables: seq<Variable>) = new VariableList(variables) :> IVariableSet
+            
+                static member CreateVariableSet variables = new VariableList(variables) :> IVariableSet
+            end 
+            
+
+
     
         
  

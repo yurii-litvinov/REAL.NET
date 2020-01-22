@@ -5,7 +5,7 @@ source https://api.nuget.org/v3/index.json
 
 clitool dotnet-fake
 
-nuget FSharp.Core 4.7.0 restriction: >= net461
+nuget FSharp.Core redirects: force
 nuget GraphX
 nuget log4net
 nuget QuickGraphPCL 3.6.61114.2
@@ -25,9 +25,9 @@ framework: net461
 source https://api.nuget.org/v3/index.json
 
 nuget NSubstitute
-nuget NUnit redirects: force
+nuget NUnit
 nuget NUnit3TestAdapter
-nuget FsUnit
+nuget FsUnit redirects: force
 
 
 group TestRunners
@@ -36,7 +36,6 @@ framework: net461
 source https://api.nuget.org/v3/index.json
 
 nuget NUnit.Console
-
 
 group FakeBuild
 

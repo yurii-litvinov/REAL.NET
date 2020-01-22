@@ -3,7 +3,7 @@ NUGET
   remote: https://api.nuget.org/v3/index.json
     dotnet-fake (5.18.3) - clitool: true
     Expression.Interaction (3.0.40218)
-    FSharp.Core (4.7)
+    FSharp.Core (4.7) - redirects: force
     GraphX (2.3.6)
       QuickGraphPCL
     log4net (2.0.8)
@@ -607,14 +607,14 @@ RESTRICTION: == net461
 NUGET
   remote: https://api.nuget.org/v3/index.json
     Castle.Core (4.4)
-    FSharp.Core (4.7)
-    FsUnit (3.8)
+    FSharp.Core (4.7) - redirects: force
+    FsUnit (3.8) - redirects: force
       FSharp.Core (>= 4.2.3)
       NUnit (>= 3.12 < 4.0)
     NSubstitute (4.2.1)
       Castle.Core (>= 4.4)
       System.Threading.Tasks.Extensions (>= 4.3)
-    NUnit (3.12) - redirects: force
+    NUnit (3.12)
     NUnit3TestAdapter (3.16.1)
     System.Runtime.CompilerServices.Unsafe (4.7)
     System.Threading.Tasks.Extensions (4.5.3)
