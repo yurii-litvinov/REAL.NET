@@ -26,16 +26,41 @@ type Context = { Commands: LCommand list; Model: IModel}
         let findAllEdgesTo (model: IModel) (element: IElement) =
             model.Edges |> Seq.filter (fun (e: IEdge) -> e.To = element) 
 
-let parseForward (parsing: Parsing<Context> option) =
-    match parsing with
-    | None -> None
-    | Some (set, context, element) -> 
-        if (element.Name = "Forward") 
-            then let distance = Helper.findAttributeValueByName element Helper.attributeNameToFind |> Helper.stringToDouble 
-                 let command = LForward distance
-                 let newContext = {Commands = command :: context.Commands; Model = context.Model}
-                 let edges = Helper.findAllEdgesFrom context.Model element
-                 if Seq.length edges > 1 then None
-                 else let edge = Seq.exactlyOne edges
-                      (set, newContext, edge.To) |> Some
-            else None
+    module AvailibleParsers =
+
+        open Interpreters
+
+        let parseForward (parsing: Parsing<Context> option) : Parsing<Context> option =
+            match parsing with
+            | None -> None
+            | Some (set, context, element) -> 
+                if (element.Class.Name = "Forward") 
+                    then let distanceString = Helper.findAttributeValueByName element Helper.attributeNameToFind
+                         let distance = distanceString |> Helper.stringToDouble
+                         let command = LForward distance
+                         let newContext = {Commands = command :: context.Commands; Model = context.Model}
+                         let edges = Helper.findAllEdgesFrom context.Model element
+                         if Seq.length edges > 1 then None
+                         else let edge = Seq.exactlyOne edges
+                              (set, newContext, edge.To) |> Some
+                    else None
+
+        let parseRight (parsing: Parsing<Context> option) : Parsing<Context> option =
+            match parsing with
+            | None -> None
+            | Some(set, context, element) -> 
+                if (element.Class.Name = "Right")
+                    then let degreesString = Helper.findAttributeValueByName element Helper.attributeNameToFind
+                         let degrees = degreesString |> Helper.stringToDouble
+                         let command = LRight degrees
+                         let newContext = {Commands = command :: context.Commands; Model = context.Model}
+                         let edges = Helper.findAllEdgesFrom context.Model element
+                         if Seq.length edges > 1 then None
+                         else let edge = Seq.exactlyOne edges
+                              (set, newContext, edge.To) |> Some
+                else None
+
+open AvailibleParsers
+open Interpreters
+
+let parseMovement: Parser<Context> = parseForward >>+ parseRight

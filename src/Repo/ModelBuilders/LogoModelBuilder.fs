@@ -47,21 +47,40 @@ type LogoModelBuilder() =
                 aLink.Source <- Some source
                 aLink.Target <- Some target
                 target
-            
-            let initialNode1 = infrastructure.Instantiate model metamodelInitialNode
-            let finalNode1 = infrastructure.Instantiate model metamodelFinalNode
-            let forward1 = infrastructure.Instantiate model metamodelForward
-            let backward1 = infrastructure.Instantiate model metamodelBackward
-            let right1 = infrastructure.Instantiate model metamodelRight
-            let left1 = infrastructure.Instantiate model metamodelLeft
-            let penUp1 = infrastructure.Instantiate model metamodelPenUp
-            let penDown1 = infrastructure.Instantiate model metamodelPenDown
 
-            infrastructure.Element.SetAttributeValue forward1 "Expression" "100"
-            infrastructure.Element.SetAttributeValue backward1 "Expression" "50"
-            infrastructure.Element.SetAttributeValue left1 "Expression" "45"
-            infrastructure.Element.SetAttributeValue right1 "Expression" "135"
+            let createForward distance = 
+                let forward = infrastructure.Instantiate model metamodelForward 
+                do infrastructure.Element.SetAttributeValue forward "Expression" distance
+                forward
 
-            initialNode1 --> left1 --> penUp1--> forward1 --> penDown1--> right1 --> backward1 --> finalNode1 |> ignore
+            let createBackward distance =
+                let backward = infrastructure.Instantiate model metamodelBackward
+                do infrastructure.Element.SetAttributeValue backward "Expression" distance
+                backward
+
+            let createRight degrees =
+                let right = infrastructure.Instantiate model metamodelRight
+                infrastructure.Element.SetAttributeValue right "Expression" degrees
+                right
+
+            let createLeft degrees =
+                let left = infrastructure.Instantiate model metamodelLeft
+                infrastructure.Element.SetAttributeValue left "Expression" degrees
+                left
+
+            let createPenUp() = infrastructure.Instantiate model metamodelPenUp
+
+            let createPenDown() = infrastructure.Instantiate model metamodelPenDown
+
+            let initialNode = infrastructure.Instantiate model metamodelInitialNode
+
+            let finalNode = infrastructure.Instantiate model metamodelFinalNode
+
+            let forwards = [for i in [1..4] -> createForward "100,0"]
+
+            let rights = [for i in [1..4] -> createRight "90,0"] 
+
+            initialNode --> forwards.[0] --> rights.[0] --> forwards.[1] --> rights.[1] --> forwards.[2] --> rights.[2]
+                --> forwards.[3] --> rights.[3] --> finalNode |> ignore
 
             0 |> ignore
