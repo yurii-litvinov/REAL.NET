@@ -14,21 +14,21 @@
 
 namespace WpfEditor.View
 {
+    using EditorPluginInterfaces;
+    using LogoScene.ViewModels;
+    using PluginManager;
+    using Repo;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
-    using EditorPluginInterfaces;
-    using PluginManager;
-    using Repo;
+    using WpfControlsLib.Controls.AttributesPanel;
     using WpfControlsLib.Controls.Console;
     using WpfControlsLib.Controls.ModelSelector;
     using WpfControlsLib.Controls.Scene;
     using WpfControlsLib.Controls.Toolbar;
-    using WpfControlsLib.Controls.AttributesPanel;
     using Palette = WpfControlsLib.Controls.Palette.Palette;
-    using LogoScene.ViewModels;
 
     /// <summary>
     /// Main window of the application, launches on application startup.
@@ -64,7 +64,7 @@ namespace WpfEditor.View
                 return $"REAL.NET {fileName} {unsavedChanges}";
             }
         }
-        
+
         public MainWindow()
         {
             // TODO: Fix sequential coupling here.
@@ -128,7 +128,7 @@ namespace WpfEditor.View
         {
             this.Console.Messages.Add("Initializing ToolBar");
             var sample = new WpfControlsLib.Controls.Toolbar.StandardButtonsAndMenus.SampleButtonsCollection(this.Console, this.controller);
-            var buttons = sample.SampleButtons;            
+            var buttons = sample.SampleButtons;
             foreach (var button in buttons)
             {
                 this.Toolbar.AddButton(button);

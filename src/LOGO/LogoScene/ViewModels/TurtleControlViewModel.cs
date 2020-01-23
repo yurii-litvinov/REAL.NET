@@ -13,10 +13,8 @@
  * limitations under the License. */
 
 using Logo.TurtleManipulation;
-using LogoScene.Models;
 using LogoScene.ViewModels.Animation;
 using System;
-using System.Windows;
 using System.Windows.Input;
 
 namespace LogoScene.ViewModels
@@ -129,8 +127,7 @@ namespace LogoScene.ViewModels
         private DoublePoint start = new DoublePoint(0, 0);
 
         private bool isMovingStarted = false;
-
-        ITurtle turtleModel;
+        private ITurtle turtleModel;
 
         private double angle = 90;
 

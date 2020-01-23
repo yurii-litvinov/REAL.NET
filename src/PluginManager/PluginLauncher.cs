@@ -14,12 +14,12 @@
 
 namespace PluginManager
 {
+    using EditorPluginInterfaces;
     using System;
-    using System.Linq;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
-    using EditorPluginInterfaces;
 
     /// <summary>
     /// Class that is responsible for launching and managing plugins.
@@ -35,7 +35,7 @@ namespace PluginManager
         /// Gets list of plugins
         /// </summary>
         private readonly List<IPlugin<T>> pluginsList = new List<IPlugin<T>>();
-       
+
         /// <summary>
         /// Launch plugins from this directory
         /// </summary>
@@ -57,7 +57,7 @@ namespace PluginManager
                 var types = assembly.GetTypes();
                 foreach (var type in types)
                 {
-                    if (type.IsAbstract 
+                    if (type.IsAbstract
                         || type.GetInterfaces().All(x => x.Name != "IPlugin`1")
                         || type.GetConstructor(Type.EmptyTypes) == null)
                     {

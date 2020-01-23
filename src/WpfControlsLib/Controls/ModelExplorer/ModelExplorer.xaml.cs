@@ -14,8 +14,8 @@
 
 using System;
 using System.Collections.ObjectModel;
-using System.Windows.Controls;
 using System.Linq;
+using System.Windows.Controls;
 
 namespace WpfControlsLib.Controls.ModelExplorer
 {
@@ -50,18 +50,18 @@ namespace WpfControlsLib.Controls.ModelExplorer
                 // TODO: Quite ugly.
                 var source = (sp.Children[2] as TextBlock)?.Text;
                 var target = (sp.Children[4] as TextBlock)?.Text;
-                this.EdgeSelected?.Invoke(this, new EdgeSelectedEventArgs {Source = source, Target = target});
+                this.EdgeSelected?.Invoke(this, new EdgeSelectedEventArgs { Source = source, Target = target });
             }
             else
             {
                 var name = (sp.Children[2] as TextBlock)?.Text;
-                this.NodeSelected?.Invoke(this, new NodeSelectedEventArgs {NodeName = name});
+                this.NodeSelected?.Invoke(this, new NodeSelectedEventArgs { NodeName = name });
             }
         }
 
         public void NewElement(Repo.IElement element)
             => this.Elements.Add(element.Metatype == Repo.Metatype.Node
-                ? (ModelExplorerElement) new ModelExplorerNode(element)
+                ? (ModelExplorerElement)new ModelExplorerNode(element)
                 : new ModelExplorerEdge(element));
 
         public void RemoveElement(Repo.IElement element)

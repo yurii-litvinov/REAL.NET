@@ -9,7 +9,7 @@
         }
 
         public DoublePoint Start { get; }
-        
+
         public DoublePoint End { get; }
 
         public override string ToString()

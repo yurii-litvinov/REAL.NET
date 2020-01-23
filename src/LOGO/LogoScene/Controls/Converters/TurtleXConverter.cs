@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Data;
-using Logo.TurtleManipulation;
+﻿using Logo.TurtleManipulation;
 using LogoScene.Models;
 using LogoScene.Operations;
+using System;
+using System.Globalization;
+using System.Windows.Data;
 
 namespace LogoScene.Controls.Converters
 {
     public class TurtleXConverter : IMultiValueConverter
-    {        
+    {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             DoublePoint start = (DoublePoint)values[0];

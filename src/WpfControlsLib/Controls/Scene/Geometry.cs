@@ -20,7 +20,7 @@ namespace WpfControlsLib.Controls.Scene
     /// <summary>
     /// Utility for handling various geometry-related tasks like determining distance between point and line.
     /// </summary>
-    static class Geometry
+    internal static class Geometry
     {
         private const double delta = 3;
 

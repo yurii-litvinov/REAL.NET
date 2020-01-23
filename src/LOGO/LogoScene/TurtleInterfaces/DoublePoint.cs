@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Logo.TurtleManipulation
+﻿namespace Logo.TurtleManipulation
 {
     public struct DoublePoint
     {

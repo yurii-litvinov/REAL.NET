@@ -20,7 +20,7 @@ namespace WpfControlsLib.Controls.Scene.Commands
     /// <summary>
     /// Removes node from a model. Does not trigger deletion of connected edges.
     /// </summary>
-    class RemoveNodeCommand : ICommand
+    internal class RemoveNodeCommand : ICommand
     {
         private IModel model;
         private Repo.IElement node;

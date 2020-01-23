@@ -19,7 +19,7 @@ namespace WpfControlsLib.Controls.Scene.Commands
     /// <summary>
     /// Creates a new edge between two nodes.
     /// </summary>
-    class CreateEdgeCommand : ICommand
+    internal class CreateEdgeCommand : ICommand
     {
         private IModel model;
         private Repo.IElement type;

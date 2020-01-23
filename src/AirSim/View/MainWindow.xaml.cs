@@ -14,16 +14,16 @@
 
 namespace AirSim.View
 {
+    using AirSimLib;
+    using EditorPluginInterfaces;
+    using PluginManager;
+    using Repo;
     using System;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
-    using AirSimLib;
-    using EditorPluginInterfaces;
-    using PluginManager;
-    using Repo;
     using WpfControlsLib.Controls.Console;
     using WpfControlsLib.Controls.ModelSelector;
     using WpfControlsLib.Controls.Scene;

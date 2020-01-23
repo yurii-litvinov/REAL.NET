@@ -19,7 +19,7 @@ namespace WpfControlsLib.Controls.Scene.Commands
     /// <summary>
     /// Creates a new node somewhere on a scene.
     /// </summary>
-    class CreateNodeCommand : ICommand
+    internal class CreateNodeCommand : ICommand
     {
         private IModel model;
         private Repo.IElement type;

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using LogoScene.ViewModels.Animation;
+using System;
 using System.Windows.Controls;
-using LogoScene.ViewModels.Animation;
 
 namespace LogoScene.Controls
 {

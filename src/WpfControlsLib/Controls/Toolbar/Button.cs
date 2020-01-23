@@ -14,9 +14,9 @@
 
 namespace WpfControlsLib.Controls.Toolbar
 {
-    using System;
     using EditorPluginInterfaces;
     using EditorPluginInterfaces.Toolbar;
+    using System;
 
     /// <summary>
     /// Class that implements IButton interface
@@ -73,10 +73,10 @@ namespace WpfControlsLib.Controls.Toolbar
         /// </summary>
         public bool IsEnabled { get; private set; }
 
-    /// <summary>
-    /// Sets this button enabled
-    /// </summary>
-    public void SetEnabled()
+        /// <summary>
+        /// Sets this button enabled
+        /// </summary>
+        public void SetEnabled()
         {
             this.IsEnabled = true;
             this.ThrowButtonEnabledChanged();

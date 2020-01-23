@@ -1,7 +1,5 @@
 ﻿using Logo.TurtleManipulation;
-using LogoScene.Models.DataLayer;
 using System;
-using System.Drawing;
 
 namespace LogoScene.Models.DataLayer
 {

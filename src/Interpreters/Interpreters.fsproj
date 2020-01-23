@@ -43,11 +43,10 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Main\Variable.fs" />
-    <Compile Include="Main\Common.fs" />
-    <Compile Include="Main\VariableSet.fs" />
+    <Compile Include="CommonTypes.fs" />
     <Compile Include="Interpreter.fs" />
-    <Compile Include="Languages\Parser.fs" />
+    <Compile Include="Parser.fs" />
+    <Compile Include="Common\VariableSet.fs" />
     <Compile Include="Languages\Logo\LogoSpecific.fs" />
     <Compile Include="Languages\Logo\TurtleCommand.fs" />
     <Compile Include="Languages\Logo\LogoParser.fs" />

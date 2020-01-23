@@ -13,7 +13,6 @@
  * limitations under the License. */
 
 using Logo.TurtleManipulation;
-using System.Windows;
 
 namespace LogoScene.ViewModels
 {

@@ -14,6 +14,12 @@
 
 namespace WpfControlsLib.Controls.Scene
 {
+    using GraphX.Controls;
+    using GraphX.Controls.Models;
+    using GraphX.PCL.Common.Enums;
+    using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
+    using GraphX.PCL.Logic.Models;
+    using QuickGraph;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -21,12 +27,6 @@ namespace WpfControlsLib.Controls.Scene
     using System.Windows.Controls;
     using System.Windows.Input;
     using System.Windows.Media;
-    using GraphX.Controls;
-    using GraphX.Controls.Models;
-    using GraphX.PCL.Common.Enums;
-    using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
-    using GraphX.PCL.Logic.Models;
-    using QuickGraph;
     using WpfControlsLib.Controller;
     using WpfControlsLib.Controls.Scene.Commands;
     using WpfControlsLib.Controls.Scene.EventArguments;

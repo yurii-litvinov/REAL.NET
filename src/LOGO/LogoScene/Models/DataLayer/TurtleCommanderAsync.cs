@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LogoScene.Models.Log;
-using log4net;
+﻿using log4net;
 using Logo.TurtleManipulation;
+using LogoScene.Models.Log;
+using System;
+using System.Collections.Concurrent;
 
 namespace LogoScene.Models.DataLayer
 {

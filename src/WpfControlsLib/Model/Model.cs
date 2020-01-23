@@ -14,8 +14,8 @@
 
 namespace WpfControlsLib.Model
 {
-    using System;
     using EditorPluginInterfaces;
+    using System;
 
     /// <summary>
     /// Model in MVC architecture. Wraps repository, provides operations like adding or removing models, edges and
@@ -70,7 +70,8 @@ namespace WpfControlsLib.Model
         {
             get => hasUnsavedChanges;
 
-            private set {
+            private set
+            {
                 if (hasUnsavedChanges && !value)
                 {
                     hasUnsavedChanges = value;
@@ -144,20 +145,20 @@ namespace WpfControlsLib.Model
 
             var model = this.Repo.Model(this.ModelName);
 
-                var newNode = model.CreateElement(element) as Repo.INode;
-                HasUnsavedChanges = true;
-                this.RaiseNewVertex(newNode);
+            var newNode = model.CreateElement(element) as Repo.INode;
+            HasUnsavedChanges = true;
+            this.RaiseNewVertex(newNode);
         }
 
         public void CreateEdge(Repo.IEdge edge, Repo.IElement source, Repo.IElement destination)
         {
-                var model = this.Repo.Model(this.ModelName);
-                var newEdge = model.CreateElement(edge as Repo.IElement) as Repo.IEdge;
-                newEdge.Name = "a" + edge.Name;
-                newEdge.From = source;
-                newEdge.To = destination;
-                HasUnsavedChanges = true;
-                this.RaiseNewEdge(newEdge, newEdge.From, newEdge.To);
+            var model = this.Repo.Model(this.ModelName);
+            var newEdge = model.CreateElement(edge as Repo.IElement) as Repo.IEdge;
+            newEdge.Name = "a" + edge.Name;
+            newEdge.From = source;
+            newEdge.To = destination;
+            HasUnsavedChanges = true;
+            this.RaiseNewEdge(newEdge, newEdge.From, newEdge.To);
         }
 
         public void RemoveElement(Repo.IElement element)

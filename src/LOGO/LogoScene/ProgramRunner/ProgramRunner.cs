@@ -1,14 +1,11 @@
 ﻿using EditorPluginInterfaces;
+using Interpreters;
 using Logo.TurtleManipulation;
-using System;
+using Repo;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Repo;
-using Interpreters;
-using static Languages.Logo.LogoSpecific;
 using static Languages.Logo.LogoInterpeter;
+using static Languages.Logo.LogoSpecific;
 
 
 namespace LogoScene.ProgramRunner

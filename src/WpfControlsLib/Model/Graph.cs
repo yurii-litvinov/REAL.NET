@@ -14,12 +14,12 @@
 
 namespace WpfControlsLib.Model
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using GraphX.PCL.Common;
     using QuickGraph;
     using Repo;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using ViewModel;
     using WpfControlsLib.Controls.Scene.EventArguments;
 
@@ -110,7 +110,7 @@ namespace WpfControlsLib.Model
                 }
 
                 this.DataGraph.AddEdge(newEdge);
-                this.ElementAdded?.Invoke(this, new ElementAddedEventArgs {Element = edge});
+                this.ElementAdded?.Invoke(this, new ElementAddedEventArgs { Element = edge });
             }
 
             this.DrawGraph?.Invoke(this, EventArgs.Empty);

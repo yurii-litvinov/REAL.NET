@@ -20,7 +20,7 @@ namespace WpfControlsLib.Controls.Scene.Commands
     /// <summary>
     /// Removes an edge.
     /// </summary>
-    class RemoveEdgeCommand : ICommand
+    internal class RemoveEdgeCommand : ICommand
     {
         private IModel model;
         private Repo.IElement edge;

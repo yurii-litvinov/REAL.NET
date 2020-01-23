@@ -14,19 +14,19 @@
 
 namespace WpfEditor.View
 {
+    using EditorPluginInterfaces;
+    using PluginManager;
+    using Repo;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
-    using EditorPluginInterfaces;
-    using PluginManager;
-    using Repo;
+    using WpfControlsLib.Controls.AttributesPanel;
     using WpfControlsLib.Controls.Console;
     using WpfControlsLib.Controls.ModelSelector;
     using WpfControlsLib.Controls.Scene;
     using WpfControlsLib.Controls.Toolbar;
-    using WpfControlsLib.Controls.AttributesPanel;
     using Palette = WpfControlsLib.Controls.Palette.Palette;
 
     /// <summary>
@@ -58,7 +58,7 @@ namespace WpfEditor.View
                 return $"REAL.NET {fileName} {unsavedChanges}";
             }
         }
-        
+
         public MainWindow()
         {
             // TODO: Fix sequential coupling here.

@@ -12,12 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-using System.Linq;
-
 namespace SamplePlugin
 {
-    using System;
     using EditorPluginInterfaces;
+    using System;
 
     /// <summary>
     /// This class is a sample plugin and is also used in unit tests to check plugin loading.

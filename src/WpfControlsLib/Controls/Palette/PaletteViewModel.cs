@@ -75,7 +75,7 @@ namespace WpfControlsLib.Controls.Palette
                 var element = new PaletteElement
                 {
                     Name = type.Name,
-                    Image = "pack://application:,,,/" 
+                    Image = "pack://application:,,,/"
                             + (type.Shape == string.Empty ? "View/Pictures/vertex.png" : type.Shape),
                     Element = type
                 };

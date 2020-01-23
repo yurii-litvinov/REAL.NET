@@ -14,13 +14,12 @@
 
 namespace PluginLibrary.Tests
 {
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Windows.Controls;
     using EditorPluginInterfaces;
     using NSubstitute;
     using NUnit.Framework;
     using PluginManager;
+    using System.Collections.Generic;
+    using System.IO;
 
     [TestFixture]
     public class PluginLaunchTest
@@ -30,7 +29,7 @@ namespace PluginLibrary.Tests
         {
             var libs = new PluginLauncher<PluginConfig>();
             var folder = Path.Combine(
-                TestContext.CurrentContext.TestDirectory, 
+                TestContext.CurrentContext.TestDirectory,
                 "../../../../src/plugins/SamplePlugin/bin"
                 );
             var dirs = new List<string>(Directory.GetDirectories(folder));

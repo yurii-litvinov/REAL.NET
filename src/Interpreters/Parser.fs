@@ -1,7 +1,6 @@
 ﻿namespace Interpreters
 
 open Repo
-open Interpreters.Common
 
 type Parsing<'T> = 
     IVariableSet * 'T * IElement

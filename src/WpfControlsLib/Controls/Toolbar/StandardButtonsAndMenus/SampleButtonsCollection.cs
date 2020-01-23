@@ -1,9 +1,9 @@
 ﻿namespace WpfControlsLib.Controls.Toolbar.StandardButtonsAndMenus
 {
-    using System.Collections.Generic;
     using Controller;
     using EditorPluginInterfaces;
     using EditorPluginInterfaces.Toolbar;
+    using System.Collections.Generic;
 
     public class SampleButtonsCollection
     {

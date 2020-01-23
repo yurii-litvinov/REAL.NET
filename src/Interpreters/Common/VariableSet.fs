@@ -1,7 +1,5 @@
 ﻿namespace Interpreters
 
-    open Interpreters.Common
-
     module VariableList =
 
         type VariableList(variables: Variable list) =

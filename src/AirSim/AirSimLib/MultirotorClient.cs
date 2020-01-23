@@ -16,9 +16,7 @@ namespace AirSim.AirSimLib
 {
     using System;
     using System.Drawing;
-    using System.IO;
     using System.Runtime.InteropServices;
-    using Microsoft.Win32.SafeHandles;
 
     /// <summary>
     /// DLL library wrapper

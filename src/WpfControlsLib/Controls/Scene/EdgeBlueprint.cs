@@ -12,12 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
+using GraphX.Controls;
+using GraphX.Controls.Models;
 using System;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using GraphX.Controls;
-using GraphX.Controls.Models;
 
 namespace WpfControlsLib.Controls.Scene
 {

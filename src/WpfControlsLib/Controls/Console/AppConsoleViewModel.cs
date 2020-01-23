@@ -12,8 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-using System.Collections.ObjectModel;
 using EditorPluginInterfaces;
+using System.Collections.ObjectModel;
 
 namespace WpfControlsLib.Controls.Console
 {

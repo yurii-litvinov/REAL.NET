@@ -1,9 +1,9 @@
 ﻿namespace WpfControlsLib.Controls.Toolbar
 {
-    using System;
-    using System.ComponentModel;
     using EditorPluginInterfaces;
     using EditorPluginInterfaces.Toolbar;
+    using System;
+    using System.ComponentModel;
 
     public class ButtonWrapper : IButton, INotifyPropertyChanged
     {

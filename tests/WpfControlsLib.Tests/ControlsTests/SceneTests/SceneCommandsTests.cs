@@ -14,11 +14,11 @@
 
 namespace WpfControlsLib.Tests.ControlsTests.SceneTests
 {
-    using NUnit.Framework;
-    using WpfControlsLib.Model;
-    using WpfControlsLib.Controls.Scene.Commands;
     using EditorPluginInterfaces;
+    using NUnit.Framework;
     using System.Linq;
+    using WpfControlsLib.Controls.Scene.Commands;
+    using WpfControlsLib.Model;
 
     [TestFixture]
     public class SceneCommandsTests

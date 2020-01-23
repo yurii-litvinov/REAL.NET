@@ -1,7 +1,5 @@
 ﻿module Languages.Logo.LogoInterpeter
 
-open Interpreters.Common
-
 open Repo
 
 open Languages.Logo

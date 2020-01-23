@@ -1,13 +1,11 @@
 ﻿module LogoParserTests
 
-open NUnit
 open NUnit.Framework
 open FsUnit
 
 open Repo
-open Interpreters.VariableSet
-open Interpreters.Parser
 open Interpreters
+open Interpreters.VariableSet
 open Languages.Logo.LogoParser
 open Languages.Logo.TurtleCommand
 

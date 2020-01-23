@@ -1,8 +1,7 @@
 ﻿using Logo.TurtleManipulation;
 using LogoScene.Models.DataLayer;
-using System.Collections.Generic;
 using System;
-using System.Windows;
+using System.Collections.Generic;
 
 namespace LogoScene.Models
 {
@@ -14,7 +13,7 @@ namespace LogoScene.Models
 
         public event EventHandler<LineEventArgs> MovementOnDrawingSceneStarted;
 
-        public event EventHandler<LineEventArgs> LineAdded; 
+        public event EventHandler<LineEventArgs> LineAdded;
 
         public DrawingScene()
         {

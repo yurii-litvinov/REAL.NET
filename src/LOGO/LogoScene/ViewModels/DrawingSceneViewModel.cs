@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-using EditorPluginInterfaces;
 using Logo.TurtleManipulation;
 using LogoScene.Models;
 using LogoScene.Models.Log;

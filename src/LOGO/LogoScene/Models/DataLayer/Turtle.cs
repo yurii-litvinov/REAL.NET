@@ -26,10 +26,10 @@ namespace LogoScene.Models.DataLayer
         public Turtle(double x, double y, double angle, bool isPenDown)
             : this(x, y, angle, isPenDown, 1) { }
 
-        public void SetX(double newX) => this.X = newX; 
+        public void SetX(double newX) => this.X = newX;
 
-        public void SetY(double newY) => this.Y = newY; 
-        
+        public void SetY(double newY) => this.Y = newY;
+
         public void SetSpeed(double newSpeed) => this.Speed = newSpeed;
 
         public void SetIsPenDown(bool isPenDown) => this.IsPenDown = isPenDown;
