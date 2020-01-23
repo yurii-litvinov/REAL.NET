@@ -43,54 +43,28 @@ let secondForward = next firstRight
 let emtyVariableSet = VariableSetFactory.CreateVariableSet([])
 
 [<Test>]
-let ``forward should be parsed``() = 
+let ``forward should be parsed correctly``() = 
     let context = {Commands = []; Model = model}
     let (parsing: Parsing<Context>) = (emtyVariableSet, context, firstForward)
     let wrapped = Some parsing
     AvailibleParsers.parseForward wrapped |> should not' (equal None)
-
-[<Test>]
-let ``parsing forward should return next element``() = 
-    let context = {Commands = []; Model = model}
-    let (parsing: Parsing<Context>) = (emtyVariableSet, context, firstForward)
-    let wrapped = Some parsing
     let parsed = (AvailibleParsers.parseForward wrapped).Value
     Parsing.element parsed |> should be (equal firstRight)
-
-[<Test>]
-let ``parsing forward should return correct distance``() = 
-    let context = {Commands = []; Model = model}
-    let (parsing: Parsing<Context>) = (emtyVariableSet, context, firstForward)
-    let wrapped = Some parsing
-    let parsed = (AvailibleParsers.parseForward wrapped).Value
     let newContext = Parsing.context parsed
     let command = newContext.Commands.Head
     command |> should be (equal (LForward 100.0))
 
 [<Test>]
-let ``right should be parsed``() = 
+let ``right should be parsed correctly``() = 
     let context = {Commands = [LForward 100.0]; Model = model}
     let (parsing: Parsing<Context>) = (emtyVariableSet, context, firstRight)
     let wrapped = Some parsing
     AvailibleParsers.parseRight wrapped |> should not' (equal None)
-
-[<Test>]
-let ``parsing right should return next element``() = 
-    let context = {Commands = [LForward 100.0]; Model = model}
-    let (parsing: Parsing<Context>) = (emtyVariableSet, context, firstRight)
-    let wrapped = Some parsing
     let parsed = (AvailibleParsers.parseRight wrapped).Value
     Parsing.element parsed |> should be (equal secondForward)
-
-[<Test>]
-let ``parsing right should return correct degrees``() = 
-    let context = {Commands = [LForward 100.0]; Model = model}
-    let (parsing: Parsing<Context>) = (emtyVariableSet, context, firstRight)
-    let wrapped = Some parsing
-    let parsed = (AvailibleParsers.parseRight wrapped).Value
     let newContext = Parsing.context parsed
     let command = newContext.Commands.Head
-    command |> should be (equal (LRight 90.0))
+    command |> should be (equal (LRight 90.0))  
 
 [<Test>]
 let ``complex movement parsing``() =

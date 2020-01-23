@@ -6,7 +6,7 @@ open Repo
 
 open Languages.Logo
 
-open LogoParser
+open Languages.Logo.LogoParser
 
 open LogoSpecific
 
