@@ -35,7 +35,7 @@ namespace LogoScene.ProgramRunner
             // TODO: remove hardcode
             Repo.IModel model = repo.Model("LogoModel");
             var list = RunProgram(model);
-            var command = new WpfControlsLib.Controls.Toolbar.Command(() => { runCommandList(list); });
+            var command = new WpfControlsLib.Controls.Toolbar.Command(() => { RunCommandList(list); });
             var pictureLocation = "pack://application:,,,/" + "View/Pictures/Toolbar/play.png";
             var button = new WpfControlsLib.Controls.Toolbar.Button(command, "Run program", pictureLocation);
             toolbar.AddButton(button);
@@ -51,7 +51,7 @@ namespace LogoScene.ProgramRunner
             return commandList;
         }
 
-        private void runCommandList(List<LogoCommand> list)
+        private void RunCommandList(List<LogoCommand> list)
         {
             foreach (var command in list)
             {
@@ -68,24 +68,6 @@ namespace LogoScene.ProgramRunner
                 }
                 else { }
             }
-            
-        }
-
-        private void example()
-        {
-            commander.RotateRight(30);
-            for (int i = 0; i < 3; i++)
-            {
-                this.commander.MoveForward(100);
-                this.commander.RotateRight(120);
-            }
-            commander.SetSpeed(4);
-            for (int i = 0; i < 3; i++)
-            {
-                this.commander.RotateLeft(120);
-                this.commander.MoveBackward(100);
-            }
-            commander.RotateLeft(30);
         }
     }
 }
