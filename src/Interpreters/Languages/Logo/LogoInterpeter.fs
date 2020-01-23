@@ -28,9 +28,9 @@ type LogoRunner(model: IModel) =
         
         let isFinal (element: IElement) = element.Class.Name = "FinalNode"
         
-        let initialNode = model.Elements |> Seq.filter (fun e -> e.Class.Name = "InitialNode") |> Seq.exactlyOne
+        let getInitialNode() = model.Elements |> Seq.filter (fun e -> e.Class.Name = "InitialNode") |> Seq.exactlyOne
         
-        let finalNode = model.Elements |> Seq.filter (fun e -> e.Class.Name = "FinalNode") |> Seq.exactlyOne
+        let getFinalNode() = model.Elements |> Seq.filter (fun e -> e.Class.Name = "FinalNode") |> Seq.exactlyOne
 
         let findAllEdgesFrom (element: IElement) =
             model.Edges |> Seq.filter (fun (e: IEdge) -> e.From = element)
@@ -45,12 +45,12 @@ type LogoRunner(model: IModel) =
             member this.Run()  =
                 let rec run (p: Parsing<Context> option) =
                     match p with
-                    | Some (set, context, element) as result when element = finalNode -> result
+                    | Some (set, context, element) as result when element = getFinalNode() -> result
                     | None -> failwith "can not be parsed"
                     | _ -> p |> LogoParser.parseLogo |> run
                 let emtyVariableSet = Interpreters.VariableSet.VariableSetFactory.CreateVariableSet([])
                 let context = {Commands = []; Model = model}
-                let (wrapped: Parsing<Context> option) = (emtyVariableSet, context, next initialNode) |> Some
+                let (wrapped: Parsing<Context> option) = (emtyVariableSet, context, getInitialNode() |> next) |> Some
                 let result = run wrapped
                 let context = result.Value |> Parsing.context
                 commandList <- context.Commands

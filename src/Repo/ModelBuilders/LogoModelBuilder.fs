@@ -78,9 +78,16 @@ type LogoModelBuilder() =
 
             let forwards = [for i in [1..4] -> createForward "100"]
 
-            let rights = [for i in [1..4] -> createRight "90"] 
+            let rights = [for i in [1..4] -> createRight "90"]
+            
+            let left = createLeft "90"
 
-            initialNode --> forwards.[0] --> rights.[0] --> forwards.[1] --> rights.[1] --> forwards.[2] --> rights.[2]
-                --> forwards.[3] --> rights.[3] --> finalNode |> ignore
+            let backward = createBackward "100"
+
+            initialNode 
+            --> forwards.[0] --> rights.[0] --> forwards.[1] --> rights.[1] --> forwards.[2] --> rights.[2]
+            --> forwards.[3] --> rights.[3]
+            --> left --> backward
+            --> finalNode |> ignore
 
             0 |> ignore

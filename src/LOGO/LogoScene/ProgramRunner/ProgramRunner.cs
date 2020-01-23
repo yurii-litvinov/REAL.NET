@@ -12,11 +12,11 @@ namespace LogoScene.ProgramRunner
 {
     public class ProgramRunner
     {
-        private ITurtleCommander commander;
+        private readonly ITurtleCommander commander;
 
-        private IToolbar toolbar;
+        private readonly IToolbar toolbar;
 
-        private IConsole console;
+        private readonly IConsole console;
 
         public ProgramRunner(ITurtleCommander commander, IToolbar toolbar, IConsole console)
         {
@@ -31,8 +31,8 @@ namespace LogoScene.ProgramRunner
             var repo = RepoFactory.Create();
             // TODO: remove hardcode
             Repo.IModel model = repo.Model("LogoModel");
-            var list = RunProgram(model);
-            var command = new WpfControlsLib.Controls.Toolbar.Command(() => { RunCommandList(list); });
+            var command = new WpfControlsLib.Controls.Toolbar.Command(() => 
+            { var list = RunProgram(model); RunCommandList(list); });
             var pictureLocation = "pack://application:,,,/" + "View/Pictures/Toolbar/play.png";
             var button = new WpfControlsLib.Controls.Toolbar.Button(command, "Run program", pictureLocation);
             toolbar.AddButton(button);
@@ -58,10 +58,20 @@ namespace LogoScene.ProgramRunner
                     var forward = (LogoForward)command;
                     this.commander.MoveForward(forward.Distance);
                 }
+                else if (command is LogoBackward)
+                {
+                    var backward = (LogoBackward)command;
+                    this.commander.MoveBackward(backward.Distance);
+                }
                 else if (command is LogoRight)
                 {
                     var right = (LogoRight)command;
                     this.commander.RotateRight(right.Degrees);
+                }
+                else if (command is LogoLeft)
+                {
+                    var left = (LogoLeft)command;
+                    this.commander.RotateLeft(left.Degrees);
                 }
                 else { }
             }
