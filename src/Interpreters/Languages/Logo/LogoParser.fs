@@ -64,3 +64,5 @@ open AvailibleParsers
 open Interpreters
 
 let parseMovement: Parser<Context> = parseForward >>+ parseRight
+
+let parseLogo = parseMovement

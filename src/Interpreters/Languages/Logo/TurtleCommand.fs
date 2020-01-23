@@ -26,4 +26,17 @@ let forward distance (turtle: LogoTurtle) (stats: LogoStats) =
     (newTurtle, st)
 
 
+let convertToLogoCommand (command: LCommand) : LogoCommand =
+    match command with 
+    | LForward d -> new LogoForward(d) :> LogoCommand
+    | LBackward d -> new LogoBackward(d) :> LogoCommand
+    | LRight d -> new LogoRight(d) :> LogoCommand
+    | LLeft d -> new LogoLeft(d) :> LogoCommand
+    | LPenUp -> new LogoPenUp() :> LogoCommand
+    | LPenDown -> new LogoPenDown() :> LogoCommand
+    | LSetSpeed s -> new LogoSetSpeed(s) :> LogoCommand
+    | _ -> failwith "unknown command"
+
+
+
     

@@ -82,5 +82,28 @@ let ``parsing right should return next element``() =
     let parsed = (AvailibleParsers.parseRight wrapped).Value
     Parsing.element parsed |> should be (equal secondForward)
 
+[<Test>]
+let ``parsing right should return correct degrees``() = 
+    let context = {Commands = [LForward 100.0]; Model = model}
+    let (parsing: Parsing<Context>) = (emtyVariableSet, context, firstRight)
+    let wrapped = Some parsing
+    let parsed = (AvailibleParsers.parseRight wrapped).Value
+    let newContext = Parsing.context parsed
+    let command = newContext.Commands.Head
+    command |> should be (equal (LRight 90.0))
+
+[<Test>]
+let ``complex movement parsing``() =
+    let context = {Commands = []; Model = model}
+    let (parsing: Parsing<Context>) = (emtyVariableSet, context, firstForward)
+    let wrapped = Some parsing
+    let parsedOnce = (parseMovement wrapped).Value
+    let parsedTwice = (parseMovement (Some parsedOnce)).Value
+    let newElement = Parsing.element parsedTwice 
+    newElement |> should equal secondForward
+    let newContext = Parsing.context parsedTwice
+    newContext.Commands |> should be (equal [LRight 90.0; LForward 100.0])
+
+
 
 

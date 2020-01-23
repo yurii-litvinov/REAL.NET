@@ -6,35 +6,59 @@ open Repo
 
 open Languages.Logo
 
+open LogoParser
+
 open LogoSpecific
 
 open Interpreters
 
-type LogoInterpreter(model: IModel) =
+open TurtleCommand
+
+type LogoContext(list) = 
     class
-         interface IInterpeter<LogoContext> with
-             member this.BreakPoints
-                 with get (): IElement list = 
-                     raise (System.NotImplementedException())
-                 and set (v: IElement list): unit = 
-                     raise (System.NotImplementedException())
+        interface ILogoContext with
+            member this.LogoCommands = List.toSeq list
+    end
 
-             member this.CurrentElement: IElement = 
-                 raise (System.NotImplementedException())
+type LogoRunner(model: IModel) =
+    class
+        let mutable currentModel = model
 
-             member this.Debug: unit = 
-                 raise (System.NotImplementedException())
-             member this.Run: unit = 
-                 raise (System.NotImplementedException())
+        let mutable commandList = []
 
-             member this.SpicificContext: LogoContext = 
-                 raise (System.NotImplementedException())
+        let isInitial (element: IElement) = element.Class.Name = "InitialNode"
+        
+        let isFinal (element: IElement) = element.Class.Name = "FinalNode"
+        
+        let initialNode = model.Elements |> Seq.filter (fun e -> e.Class.Name = "InitialNode") |> Seq.exactlyOne
+        
+        let finalNode = model.Elements |> Seq.filter (fun e -> e.Class.Name = "FinalNode") |> Seq.exactlyOne
 
-             member this.Step: unit = 
-                 raise (System.NotImplementedException())
-
-             member this.StepInto: unit = 
-                 raise (System.NotImplementedException())  
+        let findAllEdgesFrom (element: IElement) =
+            model.Edges |> Seq.filter (fun (e: IEdge) -> e.From = element)
             
+        let next (element: IElement) = let edge = findAllEdgesFrom element |> Seq.exactlyOne in edge.To
+
+        interface IProgramRunner<ILogoContext> with
+            member this.Model: IModel = currentModel
+
+            member this.SetModel(model: IModel): unit = currentModel <- model
+
+            member this.Run()  =
+                let rec run (p: Parsing<Context> option) =
+                    match p with
+                    | Some (set, context, element) as result when element = finalNode -> result
+                    | None -> failwith "can not be parsed"
+                    | _ -> p |> LogoParser.parseLogo |> run
+                let emtyVariableSet = Interpreters.VariableSet.VariableSetFactory.CreateVariableSet([])
+                let context = {Commands = []; Model = model}
+                let (wrapped: Parsing<Context> option) = (emtyVariableSet, context, next initialNode) |> Some
+                let result = run wrapped
+                let context = result.Value |> Parsing.context
+                commandList <- context.Commands
+
+            member this.SpicificContext: ILogoContext = 
+                let convertedList = List.map convertToLogoCommand commandList
+                new LogoContext(convertedList) :> ILogoContext
     end
 

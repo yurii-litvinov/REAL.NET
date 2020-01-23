@@ -80,6 +80,8 @@ type LogoRight(degrees: double) =
 
     override this.Description = "right " + degrees.ToString()
 
+    member this.Degrees = degrees
+
 type LogoPenUp() =
     inherit LogoCommand()
 
@@ -97,8 +99,10 @@ type LogoSetSpeed(speed: double) =
 
     member this.Speed = speed
 
-type LogoContext() =
-    class
-        member this.LogoCommands : ResizeArray<LogoCommand> = new ResizeArray<LogoCommand>()
+type ILogoContext =
+    interface
+        abstract member LogoCommands: seq<LogoCommand> with get 
     end
+
+
 
