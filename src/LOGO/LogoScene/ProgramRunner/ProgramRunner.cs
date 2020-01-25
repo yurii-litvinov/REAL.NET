@@ -4,9 +4,8 @@ using Logo.TurtleManipulation;
 using Repo;
 using System.Collections.Generic;
 using System.Linq;
-using static Languages.Logo.LogoInterpeter;
-using static Languages.Logo.LogoSpecific;
-
+using static Interpreters.Logo.LogoInterpeter;
+using static Interpreters.Logo.LogoSpecific;
 
 namespace LogoScene.ProgramRunner
 {

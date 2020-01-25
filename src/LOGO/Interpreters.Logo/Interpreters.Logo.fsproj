@@ -5,15 +5,15 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>522a914e-b787-43b6-9630-b169c8c3441b</ProjectGuid>
+    <ProjectGuid>1d57e43c-c29e-4ea5-be01-028d73781637</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Interpreters</RootNamespace>
-    <AssemblyName>Interpreters</AssemblyName>
+    <RootNamespace>Interpreters.Logo</RootNamespace>
+    <AssemblyName>Interpreters.Logo</AssemblyName>
     <UseStandardResourceNames>true</UseStandardResourceNames>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <WarningsAsErrors>3239;$(WarningsAsErrors)</WarningsAsErrors>
-    <Name>Interpreters</Name>
+    <Name>Interpreters.Logo</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,10 +50,10 @@
   -->
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="CommonTypes.fs" />
-    <Compile Include="Interpreter.fs" />
-    <Compile Include="Parser.fs" />
-    <Compile Include="Common\VariableSet.fs" />
+    <Compile Include="Logo\LogoSpecific.fs" />
+    <Compile Include="Logo\TurtleCommand.fs" />
+    <Compile Include="Logo\LogoParser.fs" />
+    <Compile Include="Logo\LogoInterpeter.fs" />
     <Content Include="app.config" />
     <None Include="paket.references" />
   </ItemGroup>
@@ -63,10 +63,17 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.ValueTuple">
-      <HintPath>..\..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
+      <HintPath>..\..\..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <ProjectReference Include="..\Repo\Repo.fsproj">
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Interpreters\Interpreters.fsproj">
+      <Name>Interpreters</Name>
+      <Project>{522a914e-b787-43b6-9630-b169c8c3441b}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Repo\Repo.fsproj">
       <Name>Repo</Name>
       <Project>{9e7065a4-ba5e-4752-84bf-54d5c00db60c}</Project>
       <Private>True</Private>
@@ -76,7 +83,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="FSharp.Core">
-          <HintPath>..\..\packages\FSharp.Core\lib\net45\FSharp.Core.dll</HintPath>
+          <HintPath>..\..\..\packages\FSharp.Core\lib\net45\FSharp.Core.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

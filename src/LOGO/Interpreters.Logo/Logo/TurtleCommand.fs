@@ -1,6 +1,6 @@
-﻿module Languages.Logo.TurtleCommand
+﻿module Interpreters.Logo.TurtleCommand
 
-open Languages.Logo.LogoSpecific
+open Interpreters.Logo.LogoSpecific
 
 type LCommand =
     | LForward of double

@@ -1,8 +1,8 @@
-﻿module Languages.Logo.LogoParser
+﻿module Interpreters.Logo.LogoParser
 
 open Interpreters.Parser
 
-open Languages.Logo.TurtleCommand
+open Interpreters.Logo.TurtleCommand
 
 open Repo
 
@@ -33,7 +33,7 @@ type Context = { Commands: LCommand list; Model: IModel}
         let parseForward (parsing: Parsing<Context> option) : Parsing<Context> option =
             match parsing with
             | None -> None
-            | Some (set, context, element) -> 
+            | Some {Variables = set; Context = context; Element = element} -> 
                 if (element.Class.Name = "Forward") 
                     then let distanceString = Helper.findAttributeValueByName element Helper.attributeNameToFind
                          let distance = distanceString |> Helper.stringToDouble
@@ -42,13 +42,14 @@ type Context = { Commands: LCommand list; Model: IModel}
                          let edges = Helper.findAllEdgesFrom context.Model element
                          if Seq.length edges > 1 then None
                          else let edge = Seq.exactlyOne edges
-                              (set, newContext, edge.To) |> Some
+                              let parsed = {Variables = set; Context = newContext; Element = edge.To} 
+                              parsed |> Some
                     else None
 
         let parseBackward (parsing: Parsing<Context> option) : Parsing<Context> option =
             match parsing with
             | None -> None
-            | Some (set, context, element) -> 
+            | Some {Variables = set; Context = context; Element = element} -> 
                 if (element.Class.Name = "Backward") 
                     then let distanceString = Helper.findAttributeValueByName element Helper.attributeNameToFind
                          let distance = distanceString |> Helper.stringToDouble
@@ -57,13 +58,14 @@ type Context = { Commands: LCommand list; Model: IModel}
                          let edges = Helper.findAllEdgesFrom context.Model element
                          if Seq.length edges > 1 then None
                          else let edge = Seq.exactlyOne edges
-                              (set, newContext, edge.To) |> Some
+                              let parsed = {Variables = set; Context = newContext; Element = edge.To} 
+                              parsed |> Some
                     else None
 
         let parseRight (parsing: Parsing<Context> option) : Parsing<Context> option =
             match parsing with
             | None -> None
-            | Some(set, context, element) -> 
+            | Some {Variables = set; Context = context; Element = element} -> 
                 if (element.Class.Name = "Right")
                     then let degreesString = Helper.findAttributeValueByName element Helper.attributeNameToFind
                          let degrees = degreesString |> Helper.stringToDouble
@@ -72,13 +74,14 @@ type Context = { Commands: LCommand list; Model: IModel}
                          let edges = Helper.findAllEdgesFrom context.Model element
                          if Seq.length edges > 1 then None
                          else let edge = Seq.exactlyOne edges
-                              (set, newContext, edge.To) |> Some
+                              let parsed = {Variables = set; Context = newContext; Element = edge.To} 
+                              parsed |> Some
                 else None
         
         let parseLeft (parsing: Parsing<Context> option) : Parsing<Context> option =
             match parsing with
             | None -> None
-            | Some(set, context, element) -> 
+            | Some {Variables = set; Context = context; Element = element} -> 
                 if (element.Class.Name = "Left")
                     then let degreesString = Helper.findAttributeValueByName element Helper.attributeNameToFind
                          let degrees = degreesString |> Helper.stringToDouble
@@ -87,7 +90,8 @@ type Context = { Commands: LCommand list; Model: IModel}
                          let edges = Helper.findAllEdgesFrom context.Model element
                          if Seq.length edges > 1 then None
                          else let edge = Seq.exactlyOne edges
-                              (set, newContext, edge.To) |> Some
+                              let parsed = {Variables = set; Context = newContext; Element = edge.To} 
+                              parsed |> Some
                 else None
 
 open AvailibleParsers

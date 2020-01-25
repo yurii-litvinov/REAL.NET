@@ -168,6 +168,10 @@
       <Project>{1dcb1d77-ab11-404c-bce4-8eb7bf8f549d}</Project>
       <Name>WpfControlsLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Interpreters.Logo\Interpreters.Logo.fsproj">
+      <Project>{1d57e43c-c29e-4ea5-be01-028d73781637}</Project>
+      <Name>Interpreters.Logo</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="View\Pictures\edge.png" />

@@ -1,10 +1,10 @@
-﻿module Languages.Logo.LogoInterpeter
+﻿module Interpreters.Logo.LogoInterpeter
 
 open Repo
 
-open Languages.Logo
+open Interpreters.Logo
 
-open Languages.Logo.LogoParser
+open Interpreters.Logo.LogoParser
 
 open LogoSpecific
 
@@ -45,12 +45,12 @@ type LogoRunner(model: IModel) =
             member this.Run()  =
                 let rec run (p: Parsing<Context> option) =
                     match p with
-                    | Some (set, context, element) as result when element = getFinalNode() -> result
+                    | Some { Variables = set; Context = context; Element = element} as result when element = getFinalNode() -> result
                     | None -> failwith "can not be parsed"
                     | _ -> p |> LogoParser.parseLogo |> run
                 let emtyVariableSet = Interpreters.VariableSet.VariableSetFactory.CreateVariableSet([])
                 let context = {Commands = []; Model = model}
-                let (wrapped: Parsing<Context> option) = (emtyVariableSet, context, getInitialNode() |> next) |> Some
+                let (wrapped: Parsing<Context> option) = {Variables = emtyVariableSet; Context = context; Element = getInitialNode() |> next} |> Some
                 let result = run wrapped
                 let context = result.Value |> Parsing.context
                 commandList <- context.Commands

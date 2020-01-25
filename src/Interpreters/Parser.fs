@@ -3,15 +3,15 @@
 open Repo
 
 type Parsing<'T> = 
-    IVariableSet * 'T * IElement
+    { Variables: IVariableSet; Context: 'T; Element: IElement }
 
 module Parsing =
 
-    let set (p: Parsing<'T>) = let (s, _, _) = p in s
+    let variables (p: Parsing<'T>) = p.Variables
 
-    let context (p: Parsing<'T>) = let (_, c, _) = p in c
+    let context (p: Parsing<'T>) = p.Context
 
-    let element (p: Parsing<'T>) = let (_, _, e) = p in e
+    let element (p: Parsing<'T>) = p.Element
 
 type Parser<'T> = Parsing<'T> option -> Parsing<'T> option
 

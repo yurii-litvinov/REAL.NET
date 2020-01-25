@@ -1,4 +1,4 @@
-﻿namespace Interpreters.Tests.AssemblyInfo
+﻿namespace Interpreters.Logo.AssemblyInfo
 
 open System.Reflection
 open System.Runtime.CompilerServices
@@ -7,11 +7,11 @@ open System.Runtime.InteropServices
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[<assembly: AssemblyTitle("Interpeters.Tests")>]
+[<assembly: AssemblyTitle("Interpreters.Logo")>]
 [<assembly: AssemblyDescription("")>]
 [<assembly: AssemblyConfiguration("")>]
 [<assembly: AssemblyCompany("")>]
-[<assembly: AssemblyProduct("Interpeters.Tests")>]
+[<assembly: AssemblyProduct("Interpreters.Logo")>]
 [<assembly: AssemblyCopyright("Copyright ©  2020")>]
 [<assembly: AssemblyTrademark("")>]
 [<assembly: AssemblyCulture("")>]
@@ -22,7 +22,7 @@ open System.Runtime.InteropServices
 [<assembly: ComVisible(false)>]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[<assembly: Guid("9568fc45-75cc-4160-93c6-2b2adea566b7")>]
+[<assembly: Guid("1d57e43c-c29e-4ea5-be01-028d73781637")>]
 
 // Version information for an assembly consists of the following four values:
 //
