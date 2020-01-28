@@ -1,11 +1,10 @@
 ﻿using EditorPluginInterfaces;
-using Interpreters;
+using Interpreters.Logo.LogoInterpeter;
 using Logo.TurtleManipulation;
 using Repo;
 using System.Collections.Generic;
 using System.Linq;
-using static Interpreters.Logo.LogoInterpeter;
-using static Interpreters.Logo.LogoSpecific;
+using Interpreters.Logo.LogoSpecific;
 
 namespace LogoScene.ProgramRunner
 {
@@ -39,7 +38,7 @@ namespace LogoScene.ProgramRunner
 
         private List<LogoCommand> RunProgram(Repo.IModel model)
         {
-            IProgramRunner<ILogoContext> runner = new LogoRunner(model);
+            var runner = new LogoRunner(model);
             runner.Run();
             ILogoContext context = runner.SpicificContext;
             var commandList = context.LogoCommands.ToList();

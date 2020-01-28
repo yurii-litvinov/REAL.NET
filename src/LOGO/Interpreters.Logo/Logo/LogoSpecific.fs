@@ -1,4 +1,4 @@
-﻿module Interpreters.Logo.LogoSpecific
+﻿namespace Interpreters.Logo.LogoSpecific
 
 open System
 

@@ -152,10 +152,6 @@
       <Project>{6e5f1b5d-f165-4cec-a240-8887ebd28e3b}</Project>
       <Name>EditorPluginInterfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Interpreters\Interpreters.fsproj">
-      <Project>{522a914e-b787-43b6-9630-b169c8c3441b}</Project>
-      <Name>Interpreters</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\PluginManager\PluginManager.csproj">
       <Project>{8b9c8d76-65b3-4a01-9d6f-b6192a823642}</Project>
       <Name>PluginManager</Name>
