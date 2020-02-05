@@ -2,11 +2,6 @@
 
 open Repo
 
-type SomeType =
-    interface
-        abstract One : int
-    end
-
 type Parsing<'T> = 
     { Variables: IVariableSet; Context: 'T; Element: IElement }    
 

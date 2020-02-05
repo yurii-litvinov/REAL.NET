@@ -8,6 +8,8 @@
 
         double Y { get; }
 
+        DoublePoint Position { get; }
+
         double Angle { get; }
 
         bool IsPenDown { get; }

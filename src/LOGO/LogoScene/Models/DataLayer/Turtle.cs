@@ -14,6 +14,8 @@ namespace LogoScene.Models.DataLayer
 
         public bool IsPenDown { get; private set; }
 
+        public DoublePoint Position => new DoublePoint(this.X, this.Y);
+
         public Turtle(double x, double y, double angle, bool isPenDown, double speed)
         {
             this.X = x;
@@ -45,6 +47,12 @@ namespace LogoScene.Models.DataLayer
                 newAngle += 360;
             }
             this.Angle = newAngle;
+        }
+
+        public void SetPosition(DoublePoint position)
+        {
+            this.X = position.X;
+            this.Y = position.Y;
         }
     }
 }
