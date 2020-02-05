@@ -365,9 +365,9 @@ namespace WpfControlsLib.Controls.Scene
                 {
                     mi.Click += this.MenuItemClickEdge;
                     var miSource = new MenuItem { Header = "Unpin Source", Tag = edgeControl };
-                    miSource.Click += (senderObj, eventArgs) => UnpinEdgeFromVertex(edgeControl, true);
+                    miSource.Click += (senderObj, eventArgs) => UnpinEdgeFromVertexAndPinToVirtualVertex(edgeControl, true);
                     var miTarget = new MenuItem { Header = "Unpin Target", Tag = edgeControl };
-                    miTarget.Click += (senderObj, eventArgs) => UnpinEdgeFromVertex(edgeControl, false);
+                    miTarget.Click += (senderObj, eventArgs) => UnpinEdgeFromVertexAndPinToVirtualVertex(edgeControl, false);
                     edgeControl.ContextMenu.Items.Add(miSource);
                     edgeControl.ContextMenu.Items.Add(miTarget);
                 }
@@ -393,15 +393,12 @@ namespace WpfControlsLib.Controls.Scene
         }
 
 
-        private void UnpinEdgeFromVertex(EdgeControl edgeControl, bool isSource)
+        private void UnpinEdgeFromVertexAndPinToVirtualVertex(EdgeControl edgeControl, bool isSource)
         {
             // to do : real remove form model
-            var vertexData = new NodeViewModel()
-            {
-                IsVirtual = true
-            };
-            var virtualVertex = new VertexControl(vertexData);
-            this.graphArea.AddVertex(vertexData, virtualVertex);
+            var virtualVertexData = new VirtualVertexData();
+            var virtualVertex = new VertexControl(virtualVertexData);
+            this.graphArea.AddVertex(virtualVertexData, virtualVertex);
             if (isSource)
             {
                 var source = edgeControl.Source;
@@ -460,14 +457,15 @@ namespace WpfControlsLib.Controls.Scene
             }
         }
 
-        private void AddNewVertexControl(NodeViewModel vertex)
+        private VertexControl AddNewVertexControl(NodeViewModel vertex)
         {
             var vc = new VertexControl(vertex);
             vc.SetPosition(this.position);
             this.graphArea.AddVertex(vertex, vc);
+            return vc;
         }
 
-        public VertexControl AddVirtualVertexControl(NodeViewModel innerNodeData)
+        private VertexControl AddVirtualVertexControl(NodeViewModel innerNodeData)
         {
             innerNodeData.IsVirtual = true;
             var virtualControl = new VertexControl(innerNodeData);
@@ -613,7 +611,7 @@ namespace WpfControlsLib.Controls.Scene
 
                 if (this.elementProvider.Element?.InstanceMetatype == Repo.Metatype.Edge)
                 {
-                    var vertexData = new NodeViewModel();
+                    var vertexData = new VirtualVertexData();
                     var virtualVertex = this.AddVirtualVertexControl(vertexData);
                     if (this.previosVertex != null)
                     {
