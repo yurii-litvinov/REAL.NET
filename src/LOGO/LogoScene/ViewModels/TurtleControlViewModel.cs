@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-using Logo.TurtleManipulation;
+using Logo.TurtleInterfaces;
 using LogoScene.ViewModels.Animation;
 using System;
 using System.Windows.Input;

@@ -1,12 +1,12 @@
 ﻿using log4net;
-using Logo.TurtleManipulation;
+using Logo.TurtleInterfaces;
 using LogoScene.Models.Log;
 using System;
 using System.Collections.Concurrent;
 
 namespace LogoScene.Models.DataLayer
 {
-    internal class TurtleCommanderAsync : ITurtleCommander
+    internal class TurtleCommanderAsync : ITurtleCommanderAsync
     {
         private readonly TurtleCommander turtleCommander;
 
@@ -112,7 +112,7 @@ namespace LogoScene.Models.DataLayer
         {
             add
             {
-                ((ITurtleCommander)turtleCommander).RotationStarted += value;
+                ((ITurtleCommanderAsync)turtleCommander).RotationStarted += value;
             }
 
             remove

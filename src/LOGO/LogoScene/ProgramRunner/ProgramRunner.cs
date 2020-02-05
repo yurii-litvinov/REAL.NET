@@ -1,6 +1,6 @@
 ﻿using EditorPluginInterfaces;
 using Interpreters.Logo.LogoInterpeter;
-using Logo.TurtleManipulation;
+using Logo.TurtleInterfaces;
 using Repo;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +10,13 @@ namespace LogoScene.ProgramRunner
 {
     public class ProgramRunner
     {
-        private readonly ITurtleCommander commander;
+        private readonly ITurtleCommanderAsync commander;
 
         private readonly IToolbar toolbar;
 
         private readonly IConsole console;
 
-        public ProgramRunner(ITurtleCommander commander, IToolbar toolbar, IConsole console)
+        public ProgramRunner(ITurtleCommanderAsync commander, IToolbar toolbar, IConsole console)
         {
             this.commander = commander;
             this.toolbar = toolbar;

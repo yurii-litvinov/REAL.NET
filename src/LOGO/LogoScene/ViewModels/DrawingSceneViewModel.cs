@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-using Logo.TurtleManipulation;
+using Logo.TurtleInterfaces;
 using LogoScene.Models;
 using LogoScene.Models.Log;
 using System;
@@ -76,7 +76,7 @@ namespace LogoScene.ViewModels
             }
         }
 
-        public ITurtleCommander TurtleCommander => commander;
+        public ITurtleCommanderAsync TurtleCommander => commander;
 
         public DrawingSceneViewModel()
         {
@@ -160,7 +160,7 @@ namespace LogoScene.ViewModels
 
         private readonly DrawingScene model;
 
-        private readonly ITurtleCommander commander;
+        private readonly ITurtleCommanderAsync commander;
 
         private readonly ITurtle turtleModel;
     }

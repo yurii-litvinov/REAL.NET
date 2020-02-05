@@ -1,9 +1,9 @@
-﻿using Logo.TurtleManipulation;
+﻿using Logo.TurtleInterfaces;
 using System;
 
 namespace LogoScene.Models.DataLayer
 {
-    internal class TurtleCommander : ITurtleCommander
+    internal class TurtleCommander : ITurtleCommanderAsync
     {
         public ITurtle Turtle => turtle;
 

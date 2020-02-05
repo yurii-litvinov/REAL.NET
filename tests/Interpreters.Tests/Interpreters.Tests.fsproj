@@ -6,15 +6,15 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>9568fc45-75cc-4160-93c6-2b2adea566b7</ProjectGuid>
+    <ProjectGuid>03a2352f-3c0c-4db2-929f-d822c4964bd5</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Interpeters.Tests</RootNamespace>
-    <AssemblyName>Interpeters.Tests</AssemblyName>
+    <RootNamespace>Interpreters.Tests</RootNamespace>
+    <AssemblyName>Interpreters.Tests</AssemblyName>
     <UseStandardResourceNames>true</UseStandardResourceNames>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <WarningsAsErrors>3239;$(WarningsAsErrors)</WarningsAsErrors>
-    <Name>Interpeters.Tests</Name>
+    <Name>Interpreters.Tests</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -59,10 +59,9 @@
   -->
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="VariableTests.fs" />
     <None Include="paket.references" />
-    <Compile Include="Logo\LogoParserTests.fs" />
     <Content Include="App.config" />
-    <Compile Include="LogoTests.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -70,11 +69,9 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.ValueTuple">
-      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
+      <HintPath>..\..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
       <Private>True</Private>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\src\Interpreters\Interpreters.fsproj">
       <Name>Interpreters</Name>
       <Project>{522a914e-b787-43b6-9630-b169c8c3441b}</Project>

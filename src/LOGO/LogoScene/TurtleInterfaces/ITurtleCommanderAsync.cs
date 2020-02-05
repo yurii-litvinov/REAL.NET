@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Logo.TurtleManipulation
+namespace Logo.TurtleInterfaces
 {
-    public interface ITurtleCommander
+    public interface ITurtleCommanderAsync : ITurtleCommander
     {
         event EventHandler<LineEventArgs> MovementStarted;
 
@@ -22,22 +22,6 @@ namespace Logo.TurtleManipulation
 
         event EventHandler<EventArgs> SpeedUpdatedPerformed;
 
-        ITurtle Turtle { get; }
-
         bool IsInProgress { get; }
-
-        void MoveForward(double distance);
-
-        void MoveBackward(double distance);
-
-        void RotateLeft(double degrees);
-
-        void RotateRight(double degrees);
-
-        void SetSpeed(double speed);
-
-        void PenDown();
-
-        void PenUp();
     }
 }

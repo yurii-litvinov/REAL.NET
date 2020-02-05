@@ -1,4 +1,4 @@
-﻿using Logo.TurtleManipulation;
+﻿using Logo.TurtleInterfaces;
 using LogoScene.Models.DataLayer;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ namespace LogoScene.Models
 {
     internal class DrawingScene
     {
-        public ITurtleCommander GetTurtleCommander() => turtleCommander;
+        public ITurtleCommanderAsync GetTurtleCommander() => turtleCommander;
 
         public IEnumerable<OrientedLine> Lines => lines;
 

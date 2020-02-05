@@ -53,6 +53,7 @@
     <Compile Include="Variable.fs" />
     <Compile Include="IVariableSet.fs" />
     <Compile Include="Interpreter.fs" />
+    <Compile Include="Exceptions.fs" />
     <Compile Include="Parser.fs" />
     <Compile Include="Common\VariableList.fs" />
     <Compile Include="Common\VariableSet.fs" />

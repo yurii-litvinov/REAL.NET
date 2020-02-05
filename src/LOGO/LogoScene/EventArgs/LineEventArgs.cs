@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Logo.TurtleManipulation
+namespace Logo.TurtleInterfaces
 {
     public class LineEventArgs : EventArgs
     {

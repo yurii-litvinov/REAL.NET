@@ -70,6 +70,7 @@
     <Compile Include="EventArgs\SpeedUpdateEventArgs.cs" />
     <Compile Include="TurtleInterfaces\ITurtle.cs" />
     <Compile Include="TurtleInterfaces\ITurtleCommander.cs" />
+    <Compile Include="TurtleInterfaces\ITurtleCommanderAsync.cs" />
     <Compile Include="Models\DataLayer\Turtle.cs" />
     <Compile Include="Models\DataLayer\TurtleCommanderAsync.cs" />
     <Compile Include="Models\DataLayer\DrawingScene.cs" />

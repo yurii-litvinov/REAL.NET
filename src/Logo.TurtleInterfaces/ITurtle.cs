@@ -1,4 +1,4 @@
-﻿namespace Logo.TurtleManipulation
+﻿namespace Logo.TurtleInterfaces
 {
     public interface ITurtle
     {

@@ -101,7 +101,7 @@ NUGET
     Fake.Testing.Common (5.19)
       Fake.Core.Trace (>= 5.19)
       FSharp.Core (>= 4.7)
-    FParsec (1.1)
+    FParsec (1.1.1)
       FSharp.Core (>= 4.3.4)
     FSharp.Control.Reactive (4.2)
       FSharp.Core (>= 4.2.3)
