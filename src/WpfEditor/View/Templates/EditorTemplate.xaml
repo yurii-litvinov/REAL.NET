@@ -39,7 +39,7 @@
 
     <SolidColorBrush x:Key="EdgeArrowBrush" Color="Black" po:Freeze="true" />
 
-    <!-- VERTEX CONTROL -->
+    <!-- VERTEX CONTROL --><!--
     <Style TargetType="{x:Type controls:VertexControl}">
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="ShowLabel" Value="True"/>
@@ -57,7 +57,7 @@
 
         </Setter>
 
-        <!-- VERTEX DRAGGING CONTROL -->
+        --><!-- VERTEX DRAGGING CONTROL --><!--
         <Setter Property="controls:DragBehaviour.IsDragEnabled" Value="False" />
         <Setter Property="controls:DragBehaviour.UpdateEdgesOnMove" Value="True" />
 
@@ -90,7 +90,7 @@
         </Setter>
     </Style>
 
-    <!-- EDGE CONTROL -->
+    --><!-- EDGE CONTROL --><!--
     <Style TargetType="{x:Type controls:EdgeControl}">
         <Setter Property="Template">
             <Setter.Value>
@@ -126,6 +126,6 @@
                 <Setter Property="StrokeThickness" Value="2"/>
             </Trigger>
         </Style.Triggers>
-    </Style>
+    </Style>-->
 
 </ResourceDictionary>

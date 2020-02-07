@@ -10,13 +10,14 @@ namespace WpfControlsLib.Controls.Scene
 {
     public class VirtualVertexData : NodeViewModel
     {
-        private string picture = "Controls/Scene/Pictures/vertex.png";
+        private string picture = @"View/Pictures/vertex.png";
 
         public VirtualVertexData() : base()
         {
             this.IsVirtual = true;
-            this.Picture = "pack://application:,,,/" + this.picture;
-            this.BorderColor = Brushes.Red;
+            this.Picture = this.picture;
+            this.BorderColor = Brushes.Black;
+            this.Color = Brushes.Gray;
         }
 
         public static bool IsVirtualVertex(NodeViewModel node) => node is VirtualVertexData;

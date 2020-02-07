@@ -78,7 +78,7 @@ namespace WpfControlsLib.ViewModel
             }
         }
 
-        public string Picture
+        public virtual string Picture
         {
             get => "pack://application:,,,/" + this.picture;
 

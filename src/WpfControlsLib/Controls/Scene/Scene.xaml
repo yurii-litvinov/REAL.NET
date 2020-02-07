@@ -23,6 +23,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
+        <Grid.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="GeneralTemplate.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
+        </Grid.Resources>
         <Border BorderThickness="1"  Margin="2">
             <graphx:ZoomControl x:Name="zoomControl" AllowDrop="True">
                 <scene:GraphArea AllowDrop="True" x:Name="graphArea" />

@@ -172,36 +172,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="View\Pictures\edge.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="View\Pictures\finalBlock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="View\Pictures\functionBlock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="View\Pictures\hover.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="View\Pictures\if.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="View\Pictures\initialBlock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="View\Pictures\land.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="View\Pictures\move.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="View\Pictures\takeoff.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="View\Pictures\timerBlock.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="View\Pictures\vertex.png" />
   </ItemGroup>
   <ItemGroup>

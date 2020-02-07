@@ -180,10 +180,22 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Scene\EditorTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Scene\GeneralTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\Scene\Scene.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Resource Include="Controls\Scene\Templates\GeneralTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Resource>
     <Page Include="Controls\Toolbar\ToolbarView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -191,14 +203,6 @@
     <Compile Include="ViewModel\EdgeViewModel.cs" />
     <Compile Include="ViewModel\NodeViewModel.cs" />
     <Compile Include="Controls\Scene\GraphArea.cs" />
-    <Page Include="View\Templates\EditorTemplate.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\Templates\GeneralTemplate.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -249,48 +253,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\edge.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\enginesBackwardBlock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\enginesForwardBlock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\enginesStopBlock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\finalBlock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\hover.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\if.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\initialBlock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\land.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\move.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\star1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\star2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\takeoff.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\timerBlock.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Controls\Scene\Pictures\vertex.png" />
   </ItemGroup>
   <ItemGroup>
@@ -303,6 +265,7 @@
       <Name>Repo</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>

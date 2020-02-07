@@ -18,7 +18,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="http://schemas.panthernet.ru/graphx/"
     xmlns:scene="clr-namespace:WpfControlsLib.Controls.Scene;assembly=WpfControlsLib">
-    
+
     <!-- VERTEX CONTROL -->
     <Style TargetType="{x:Type controls:VertexControl}">
         <!-- VERTEX DRAGGING CONTROL -->
@@ -27,30 +27,21 @@
         <Setter Property="Background" Value="{Binding Color}"/>
         <Setter Property="VertexShape" Value="None"/>
         <Setter Property= "ShowLabel" Value="True"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type controls:VertexControl}">
-                    <Grid>
-                        <Border BorderThickness="4"
-                            BorderBrush="{Binding BorderColor}"
-                            CornerRadius="14">
-                            <Image Source="{Binding Picture}" Margin="0" Width="80" Stretch="UniformToFill">
-                            </Image>
-                        </Border>
-                        <controls:VertexLabelControl 
-                            x:Name="PART_vertexLabel" 
-                            Content="{Binding Name}" 
-                            LabelPositionSide="Bottom" 
-                            FontFamily="Lucida Sans Regular" />
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
+       
         <Style.Triggers>
             <DataTrigger Binding="{Binding IsVirtual}" Value="true">
-                <Setter Property="Width" Value="15pt"/>
-                <Setter Property="Height" Value="15pt"/>
-                <Setter Property="VertexShape" Value="Circle"/>
+                <Setter Property="VertexShape" Value="None"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type controls:VertexControl}">
+                            <Grid>
+                                <Border BorderBrush="Black" BorderThickness="1">
+                                    <Rectangle Margin="0" Width="3pt" Height="3pt" Visibility="Visible" Fill="{Binding Color}"/>
+                                </Border>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </DataTrigger>
 
             <DataTrigger Binding="{Binding IsVirtual}" Value="false">
