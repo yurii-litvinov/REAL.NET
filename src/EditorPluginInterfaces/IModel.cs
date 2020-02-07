@@ -45,7 +45,7 @@ namespace EditorPluginInterfaces
         /// Creates a new node in a model.
         /// </summary>
         /// <param name="element">Metatype of created node.</param>
-        void CreateNode(Repo.IElement element);
+        Repo.INode CreateNode(Repo.IElement element);
 
         /// <summary>
         /// Creates a new edge in a model.
@@ -53,7 +53,7 @@ namespace EditorPluginInterfaces
         /// <param name="edge">Metatype of an edge.</param>
         /// <param name="source">Node that will be a source of an edge.</param>
         /// <param name="destination">Node that will be destination of an edge.</param>
-        void CreateEdge(Repo.IEdge edge, Repo.IElement source, Repo.IElement destination);
+        Repo.IEdge CreateEdge(Repo.IEdge edge, Repo.IElement source, Repo.IElement destination);
 
         /// <summary>
         /// Removes an adge or node from a model.

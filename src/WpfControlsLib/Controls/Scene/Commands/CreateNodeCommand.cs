@@ -23,6 +23,7 @@ namespace WpfControlsLib.Controls.Scene.Commands
     {
         private IModel model;
         private Repo.IElement type;
+        private Repo.IElement element;
 
         /// <summary>
         /// Initializes a new instance of a <see cref="CreateNodeCommand"/> class.
@@ -37,9 +38,12 @@ namespace WpfControlsLib.Controls.Scene.Commands
 
         bool ICommand.CanBeUndone => true;
 
-        void ICommand.Execute() => this.model.CreateNode(this.type as Repo.INode);
+        void ICommand.Execute()
+        {
+            this.element = this.model.CreateNode(this.type as Repo.INode);
+        }
 
         // TODO: This shall also trigger the deletion of connected edges.
-        void ICommand.Undo() => this.model.RemoveElement(this.type);
+        void ICommand.Undo() => this.model.RemoveElement(this.element);
     }
 }

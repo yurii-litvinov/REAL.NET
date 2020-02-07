@@ -134,7 +134,7 @@ namespace WpfControlsLib.Model
             this.Save();
         }
 
-        public void CreateNode(Repo.IElement element)
+        public Repo.INode CreateNode(Repo.IElement element)
         {
             if (string.IsNullOrEmpty(this.ModelName))
             {
@@ -148,9 +148,10 @@ namespace WpfControlsLib.Model
             var newNode = model.CreateElement(element) as Repo.INode;
             HasUnsavedChanges = true;
             this.RaiseNewVertex(newNode);
+            return newNode;
         }
 
-        public void CreateEdge(Repo.IEdge edge, Repo.IElement source, Repo.IElement destination)
+        public Repo.IEdge CreateEdge(Repo.IEdge edge, Repo.IElement source, Repo.IElement destination)
         {
             var model = this.Repo.Model(this.ModelName);
             var newEdge = model.CreateElement(edge as Repo.IElement) as Repo.IEdge;
@@ -159,6 +160,7 @@ namespace WpfControlsLib.Model
             newEdge.To = destination;
             HasUnsavedChanges = true;
             this.RaiseNewEdge(newEdge, newEdge.From, newEdge.To);
+            return newEdge;
         }
 
         public void RemoveElement(Repo.IElement element)

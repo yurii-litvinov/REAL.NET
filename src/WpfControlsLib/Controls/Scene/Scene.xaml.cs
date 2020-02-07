@@ -467,7 +467,6 @@ namespace WpfControlsLib.Controls.Scene
 
         private VertexControl AddVirtualVertexControl(NodeViewModel innerNodeData)
         {
-            innerNodeData.IsVirtual = true;
             var virtualControl = new VertexControl(innerNodeData);
             this.position = this.zoomControl.TranslatePoint(Mouse.GetPosition(this.zoomControl), this.graphArea);
             virtualControl.SetPosition(this.position);
