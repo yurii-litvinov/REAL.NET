@@ -112,6 +112,7 @@ AppPackages/
 
 # VSCode
 .vscode/
+.ionide
 
 # Others
 sql/
