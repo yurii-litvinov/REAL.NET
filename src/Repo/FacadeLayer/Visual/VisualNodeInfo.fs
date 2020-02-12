@@ -21,7 +21,7 @@ type VisualNodeInfo
     (
         link: string,
         ``type``: TypeOfVisual,
-        position : (int * int) option
+        position : VisualPoint
     ) =
 
     inherit VisualInfo(link, ``type``)
@@ -29,9 +29,9 @@ type VisualNodeInfo
     let mutable position = position
 
     /// Instantiates instance of class with default values.
-    new() = VisualNodeInfo("", TypeOfVisual.NoFile, None)
+    new() = VisualNodeInfo("", TypeOfVisual.NoFile, VisualPoint.Default)
 
     interface IVisualNodeInfo with
         member this.Position
-            with get (): (int * int) option = position             
-            and set (v: (int * int) option): unit = position <- v
+            with get () = position             
+            and set v: unit = position <- v

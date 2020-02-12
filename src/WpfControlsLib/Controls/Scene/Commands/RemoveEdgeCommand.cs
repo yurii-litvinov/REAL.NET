@@ -22,7 +22,7 @@ namespace WpfControlsLib.Controls.Scene.Commands
     /// </summary>
     internal class RemoveEdgeCommand : ICommand
     {
-        private IModel model;
+        private ISceneModel model;
         private Repo.IElement edge;
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace WpfControlsLib.Controls.Scene.Commands
         /// </summary>
         /// <param name="model">Model from which an edge shall be removed.</param>
         /// <param name="edge">Edge that shall be removed.</param>
-        public RemoveEdgeCommand(IModel model, Repo.IElement edge)
+        public RemoveEdgeCommand(ISceneModel model, Repo.IElement edge)
         {
             this.model = model;
             this.edge = edge;

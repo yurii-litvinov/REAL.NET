@@ -60,7 +60,7 @@
     <Compile Include="EdgeEventArgs.cs" />
     <Compile Include="ElementEventArgs.cs" />
     <Compile Include="IConsole.cs" />
-    <Compile Include="IModel.cs" />
+    <Compile Include="ISceneModel.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="IPalette.cs" />
     <Compile Include="PluginConfig.cs" />

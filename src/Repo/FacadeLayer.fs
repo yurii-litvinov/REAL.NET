@@ -35,13 +35,28 @@ type IVisualInfo =
         abstract Type : TypeOfVisual with get, set 
     end
 
+/// Point with double coordinates.
+type VisualPoint(x: double, y: double) =
+    struct
+        /// Returns x coordinate of a point.
+        member this.X = x
+
+        /// Returns y coordinate of a point.
+        member this.Y = y
+
+        override this.ToString() = (x, y).ToString()
+
+        /// Returns point with zero coordinates
+        static member Default = new VisualPoint(0.0, 0.0)
+    end
+
 /// This interface represents information about how node is shown on screen.
 type IVisualNodeInfo =
     interface
         inherit IVisualInfo
 
-        /// Position of node on screen.
-        abstract Position : (int * int) option with get, set          
+        /// Position of node on screen or scene.
+        abstract Position : VisualPoint with get, set          
     end
 
 // This interface represents information about how edge is shown on screen.
@@ -50,7 +65,7 @@ type IVisualEdgeInfo =
         inherit IVisualInfo
 
         /// Coordinates of routing points without ends.
-        abstract RoutingPoints : (int * int) list with get, set
+        abstract RoutingPoints : ResizeArray<VisualPoint>  with get, set
     end
 
 /// Enumeration with all kinds of attributes supported by repository

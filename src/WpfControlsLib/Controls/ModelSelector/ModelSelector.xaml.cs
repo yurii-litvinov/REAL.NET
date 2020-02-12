@@ -50,7 +50,7 @@ namespace WpfControlsLib.Controls.ModelSelector
         /// sufficiently low in metalevel hierarchy (i.e. are instances of InfrastructureMetamodel).
         /// </summary>
         /// <param name="dataModel">Model with repository containing models.</param>
-        public void Init(WpfControlsLib.Model.Model dataModel)
+        public void Init(WpfControlsLib.Model.SceneModel dataModel)
         {
             bool IsBasedOnInfrastructureMetamodel(Repo.IModel model)
             {

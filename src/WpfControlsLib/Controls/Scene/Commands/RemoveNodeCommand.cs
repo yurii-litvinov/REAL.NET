@@ -22,7 +22,7 @@ namespace WpfControlsLib.Controls.Scene.Commands
     /// </summary>
     internal class RemoveNodeCommand : ICommand
     {
-        private IModel model;
+        private ISceneModel model;
         private Repo.IElement node;
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace WpfControlsLib.Controls.Scene.Commands
         /// </summary>
         /// <param name="model">Model from which a node shall be removed.</param>
         /// <param name="node">Node that shall be removed.</param>
-        public RemoveNodeCommand(IModel model, Repo.IElement node)
+        public RemoveNodeCommand(ISceneModel model, Repo.IElement node)
         {
             this.model = model;
             this.node = node;

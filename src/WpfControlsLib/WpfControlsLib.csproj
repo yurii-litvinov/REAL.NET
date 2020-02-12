@@ -125,6 +125,7 @@
     </Compile>
     <Compile Include="Controls\Palette\PaletteElement.cs" />
     <Compile Include="Controls\Palette\PaletteViewModel.cs" />
+    <Compile Include="Controls\Scene\PointExtensions.cs" />
     <Compile Include="Controls\Scene\Commands\CreateNodeCommand.cs" />
     <Compile Include="Controls\Scene\Commands\RemoveNodeCommand.cs" />
     <Compile Include="Controls\Scene\Commands\RemoveEdgeCommand.cs" />
@@ -148,7 +149,7 @@
       <DependentUpon>ToolbarView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\Graph.cs" />
-    <Compile Include="Model\Model.cs" />
+    <Compile Include="Model\SceneModel.cs" />
     <Compile Include="Controls\Console\AppConsoleViewModel.cs" />
     <Compile Include="Controller\UndoRedo\UndoRedoStack.cs" />
     <Compile Include="Properties\AssemblyInternalsVisibleTo.cs" />
@@ -179,14 +180,6 @@
     <Page Include="Controls\Palette\Palette.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Scene\EditorTemplate.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\Scene\GeneralTemplate.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Scene\Scene.xaml">
       <SubType>Designer</SubType>
