@@ -25,7 +25,7 @@ namespace EditorPluginInterfaces
         /// <summary>
         /// Model of the editor, allows to manipulate repository and keep consistence with editor.
         /// </summary>
-        public IModel Model { get; }
+        public ISceneModel Model { get; }
 
         /// <summary>
         /// Scene's reference that should be given to plugin
@@ -78,7 +78,7 @@ namespace EditorPluginInterfaces
         /// <param name="palette">Palette</param>
         /// <param name="leftPanelGrid">Grid where left panel elements are located. Empty by default, but plugins can 
         ///     use it to add some new tools.</param>
-        public PluginConfig(IModel model, IScene scene, IToolbar toolbar, IConsole console, IPalette palette, Grid leftPanelGrid)
+        public PluginConfig(ISceneModel model, IScene scene, IToolbar toolbar, IConsole console, IPalette palette, Grid leftPanelGrid)
         {
             this.Model = model;
             this.Scene = scene;

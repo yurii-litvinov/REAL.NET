@@ -26,7 +26,7 @@
         <Grid.Resources>
             <ResourceDictionary>
                 <ResourceDictionary.MergedDictionaries>
-                    <ResourceDictionary Source="GeneralTemplate.xaml"/>
+                    <ResourceDictionary Source="Templates/GeneralTemplate.xaml"/>
                 </ResourceDictionary.MergedDictionaries>
             </ResourceDictionary>
         </Grid.Resources>

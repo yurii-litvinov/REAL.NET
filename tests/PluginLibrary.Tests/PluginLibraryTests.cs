@@ -34,7 +34,7 @@ namespace PluginLibrary.Tests
                 );
             var dirs = new List<string>(Directory.GetDirectories(folder));
             var console = Substitute.For<IConsole>();
-            var model = Substitute.For<IModel>();
+            var model = Substitute.For<ISceneModel>();
             var config = new PluginConfig(model, null, null, console, null, null);
             foreach (var dir in dirs)
             {

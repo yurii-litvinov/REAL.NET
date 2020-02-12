@@ -14,6 +14,7 @@
 
 namespace WpfControlsLib.Model
 {
+    using EditorPluginInterfaces;
     using GraphX.PCL.Common;
     using QuickGraph;
     using Repo;
@@ -24,7 +25,7 @@ namespace WpfControlsLib.Model
     using WpfControlsLib.Controls.Scene.EventArguments;
 
     /// <summary>
-    /// Represents diagram as GraphX graph. Wraps <see cref="Model"/> and synchronizes changes in repo and in GraphX
+    /// Represents diagram as GraphX graph. Wraps <see cref="SceneModel"/> and synchronizes changes in repo and in GraphX
     /// graph representation.
     ///
     /// Also this class serves as a factory and container for ViewModels for various parts of visual model
@@ -33,9 +34,9 @@ namespace WpfControlsLib.Model
     /// </summary>
     public class Graph
     {
-        private readonly Model model;
+        private readonly ISceneModel model;
 
-        internal Graph(Model repoModel)
+        internal Graph(SceneModel repoModel)
         {
             this.model = repoModel;
             this.DataGraph = new BidirectionalGraph<NodeViewModel, EdgeViewModel>();

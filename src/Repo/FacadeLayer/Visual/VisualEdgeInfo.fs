@@ -21,7 +21,7 @@ type VisualEdgeInfo
     (
         link: string,
         ``type``: TypeOfVisual,
-        routingPoints : (int * int) list
+        routingPoints : VisualPoint seq
     ) =
 
     inherit VisualInfo(link, ``type``)
@@ -33,5 +33,5 @@ type VisualEdgeInfo
 
     interface IVisualEdgeInfo with
         member this.RoutingPoints
-            with get () = routingPoints             
+            with get () = new ResizeArray<VisualPoint>(routingPoints)             
             and set (v) = routingPoints <- v       

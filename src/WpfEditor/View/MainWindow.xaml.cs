@@ -34,7 +34,7 @@ namespace WpfEditor.View
     /// </summary>
     internal partial class MainWindow : INotifyPropertyChanged
     {
-        private readonly WpfControlsLib.Model.Model model;
+        private readonly WpfControlsLib.Model.SceneModel model;
         private readonly WpfControlsLib.Controller.Controller controller;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -65,7 +65,7 @@ namespace WpfEditor.View
             this.DataContext = this;
             this.InitializeComponent();
 
-            this.model = new WpfControlsLib.Model.Model();
+            this.model = new WpfControlsLib.Model.SceneModel();
 
             this.model.Reinit += this.Reinit;
 

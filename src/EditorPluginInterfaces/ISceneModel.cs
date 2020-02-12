@@ -19,7 +19,7 @@ namespace EditorPluginInterfaces
     /// <summary>
     /// Interface of a model in editor that allows to manipulate repository maintaining consistency with editor.
     /// </summary>
-    public interface IModel
+    public interface ISceneModel
     {
         /// <summary>
         /// Model name.
@@ -37,6 +37,16 @@ namespace EditorPluginInterfaces
         event EventHandler<EdgeEventArgs> NewEdgeAdded;
 
         /// <summary>
+        /// Element was deleted from model.
+        /// </summary>
+        event EventHandler<ElementEventArgs> ElementRemoved;
+
+        /// <summary>
+        /// Element that should be checked from model.
+        /// </summary>
+        event EventHandler<ElementEventArgs> ElementCheck;
+
+        /// <summary>
         /// Repository. Can be used for queries, but shall not be used for direct manipulation of a model.
         /// </summary>
         Repo.IRepo Repo { get; }
@@ -44,16 +54,23 @@ namespace EditorPluginInterfaces
         /// <summary>
         /// Creates a new node in a model.
         /// </summary>
-        /// <param name="element">Metatype of created node.</param>
-        Repo.INode CreateNode(Repo.IElement element);
+        /// <param name="nodeType">Metatype of created node.</param>
+        /// <param name="position">Position of node on scene.</param>
+        Repo.INode CreateNode(Repo.IElement nodeType, Repo.VisualPoint position);
 
         /// <summary>
         /// Creates a new edge in a model.
         /// </summary>
-        /// <param name="edge">Metatype of an edge.</param>
+        /// <param name="edgeType">Metatype of an edge.</param>
         /// <param name="source">Node that will be a source of an edge.</param>
         /// <param name="destination">Node that will be destination of an edge.</param>
-        Repo.IEdge CreateEdge(Repo.IEdge edge, Repo.IElement source, Repo.IElement destination);
+        Repo.IEdge CreateEdge(Repo.IEdge edgeType, Repo.IElement source, Repo.IElement destination);
+
+        /// <summary>
+        /// Restores element after this element being deleted.
+        /// </summary>
+        /// <param name="element">Element to restore.</param>
+        void RestoreElement(Repo.IElement element);
 
         /// <summary>
         /// Removes an adge or node from a model.

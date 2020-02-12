@@ -24,11 +24,11 @@ namespace WpfControlsLib.Model
     /// This class is a ground truth about visual model currently edited and is supposed to be used by all tools and
     /// parts of an editor who need to listen for visual model changes and/or modify visual model.
     /// </summary>
-    public class Model : IModel
+    public class SceneModel : ISceneModel
     {
         private bool hasUnsavedChanges = false;
 
-        public Model()
+        public SceneModel()
         {
             this.Repo = global::Repo.RepoFactory.Create();
         }
@@ -134,7 +134,7 @@ namespace WpfControlsLib.Model
             this.Save();
         }
 
-        public Repo.INode CreateNode(Repo.IElement element)
+        public Repo.INode CreateNode(Repo.IElement element, Repo.VisualPoint position)
         {
             if (string.IsNullOrEmpty(this.ModelName))
             {
@@ -146,6 +146,7 @@ namespace WpfControlsLib.Model
             var model = this.Repo.Model(this.ModelName);
 
             var newNode = model.CreateElement(element) as Repo.INode;
+            newNode.VisualInfo.Position = position;
             HasUnsavedChanges = true;
             this.RaiseNewVertex(newNode);
             return newNode;
@@ -161,6 +162,23 @@ namespace WpfControlsLib.Model
             HasUnsavedChanges = true;
             this.RaiseNewEdge(newEdge, newEdge.From, newEdge.To);
             return newEdge;
+        }
+
+        public void RestoreElement(Repo.IElement element)
+        {
+            var model = this.Repo.Model(this.ModelName);
+            model.RestoreElement(element);
+            // Raising new element
+            HasUnsavedChanges = true;
+            if (element is Repo.INode)
+            {
+                this.RaiseNewVertex(element as Repo.INode);
+            }
+            else if (element is Repo.IEdge)
+            {
+                var edge = element as Repo.IEdge;
+                this.RaiseNewEdge(edge, edge.From, edge.To);
+            }
         }
 
         public void RemoveElement(Repo.IElement element)
@@ -192,7 +210,6 @@ namespace WpfControlsLib.Model
                 Source = prevVer,
                 Target = ctrlVer
             };
-
             this.NewEdgeAdded?.Invoke(this, args);
         }
 
@@ -213,7 +230,6 @@ namespace WpfControlsLib.Model
                 Element = element,
                 IsAllowed = isAllowed
             };
-
 
             this.ElementCheck?.Invoke(this, args);
         }

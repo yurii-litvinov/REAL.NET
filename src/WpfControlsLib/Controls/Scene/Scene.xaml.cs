@@ -14,6 +14,7 @@
 
 namespace WpfControlsLib.Controls.Scene
 {
+    using EditorPluginInterfaces;
     using GraphX.Controls;
     using GraphX.Controls.Models;
     using GraphX.PCL.Common.Enums;
@@ -44,7 +45,7 @@ namespace WpfControlsLib.Controls.Scene
         private EdgeControl edgeControl;
         private Point position;
 
-        private Model model;
+        private ISceneModel model;
         private Controller controller;
         private IElementProvider elementProvider;
 
@@ -97,7 +98,7 @@ namespace WpfControlsLib.Controls.Scene
             logic.EdgeCurvingEnabled = false;
         }
 
-        public void Init(Model model, Controller controller, IElementProvider elementProvider)
+        public void Init(SceneModel model, Controller controller, IElementProvider elementProvider)
         {
             this.controller = controller;
             this.model = model;
@@ -105,11 +106,29 @@ namespace WpfControlsLib.Controls.Scene
             this.Graph = new Graph(model);
             this.Graph.DrawGraph += (sender, args) => this.DrawGraph();
             this.Graph.ElementAdded += (sender, args) => this.ElementAdded?.Invoke(this, args);
-            this.Graph.ElementRemoved += (sender, args) => this.ElementRemoved?.Invoke(this, args);
+            this.Graph.ElementRemoved += OnElementRemoved;
             this.Graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVertex);
             this.Graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.EdgeViewModel);
             this.graphArea.VertexMouseUp += (sender, args) => this.CheckThatForReconnection(args);
             this.InitGraphXLogicCore();
+        }
+
+        private void OnElementRemoved(object sender, ElementRemovedEventArgs e)
+        {
+            var element = e.Element;
+            if (element.Metatype == Repo.Metatype.Node)
+            {
+                var node = this.graphArea.VertexList.Where(x => x.Key.Node == element)
+                    .Select(x => x.Key).First();
+                this.graphArea.RemoveVertex(node);
+            }
+            else if (element.Metatype == Repo.Metatype.Edge)
+            {
+                var edge = this.graphArea.EdgesList.Where( x => x.Key.Edge == element)
+                    .Select(x => x.Key).First();
+                this.graphArea.RemoveEdge(edge);
+            }
+            this.ElementRemoved?.Invoke(this, e);
         }
 
         private void CheckThatForReconnection(VertexSelectedEventArgs args)
@@ -208,7 +227,7 @@ namespace WpfControlsLib.Controls.Scene
             if (element.Metatype == Repo.Metatype.Node)
             {
                 this.position = this.zoomControl.TranslatePoint(e.GetPosition(this.zoomControl), this.graphArea);
-                this.CreateNewNode(element);
+                this.CreateNewNode(element, position.ToVisualPoint());
                 this.ElementManipulationDone?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -460,7 +479,8 @@ namespace WpfControlsLib.Controls.Scene
         private VertexControl AddNewVertexControl(NodeViewModel vertex)
         {
             var vc = new VertexControl(vertex);
-            vc.SetPosition(this.position);
+            var position = vertex.Node.VisualInfo.Position;            
+            vc.SetPosition(position.ToWindowsPoint());
             this.graphArea.AddVertex(vertex, vc);
             return vc;
         }
@@ -476,7 +496,11 @@ namespace WpfControlsLib.Controls.Scene
 
         private void AddNewEdgeControl(EdgeViewModel edgeViewModel)
         {
-            var ec = new EdgeControl(this.previosVertex, this.currentVertex, edgeViewModel);
+            var sourceList = this.graphArea.VertexList.Where(x => x.Key == edgeViewModel.Source);
+            var source = sourceList.Select(x => x.Value).First();
+            var target = this.graphArea.VertexList.Where(x => x.Key == edgeViewModel.Target)
+                .Select(x => x.Value).First();
+            var ec = new EdgeControl(source, target, edgeViewModel);
             this.graphArea.InsertEdge(edgeViewModel, ec);
             this.previosVertex = null;
             this.editorManager.DestroyVirtualEdge();
@@ -530,7 +554,6 @@ namespace WpfControlsLib.Controls.Scene
 
             command.Add(new RemoveNodeCommand(this.model, vertex.Node));
             this.controller.Execute(command);
-            this.DrawGraph();
         }
 
 
@@ -604,7 +627,7 @@ namespace WpfControlsLib.Controls.Scene
                 if (this.elementProvider.Element?.InstanceMetatype == Repo.Metatype.Node)
                 {
                     this.position = position;
-                    this.CreateNewNode(this.elementProvider.Element);
+                    this.CreateNewNode(this.elementProvider.Element, position.ToVisualPoint());
                     this.ElementManipulationDone?.Invoke(this, EventArgs.Empty);
                 }
 
@@ -630,9 +653,9 @@ namespace WpfControlsLib.Controls.Scene
             }
         }
 
-        private void CreateNewNode(Repo.IElement element)
+        private void CreateNewNode(Repo.IElement elementType, Repo.VisualPoint position)
         {
-            var command = new CreateNodeCommand(this.model, element);
+            var command = new CreateNodeCommand(this.model, elementType, position);
             this.controller.Execute(command);
         }
     }

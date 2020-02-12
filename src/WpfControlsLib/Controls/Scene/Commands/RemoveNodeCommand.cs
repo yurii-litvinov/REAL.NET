@@ -22,7 +22,7 @@ namespace WpfControlsLib.Controls.Scene.Commands
     /// </summary>
     internal class RemoveNodeCommand : ICommand
     {
-        private IModel model;
+        private ISceneModel model;
         private Repo.IElement node;
 
         /// <summary>
@@ -30,18 +30,16 @@ namespace WpfControlsLib.Controls.Scene.Commands
         /// </summary>
         /// <param name="model">Model from which a node shall be removed.</param>
         /// <param name="node">Node that shall be removed.</param>
-        public RemoveNodeCommand(IModel model, Repo.IElement node)
+        public RemoveNodeCommand(ISceneModel model, Repo.IElement node)
         {
             this.model = model;
             this.node = node;
         }
 
-        // Can not be undone because of naive implementation involving reading the same node will regenerate node 
-        // identity. Some support from repository is needed, but not implemented yet.
-        bool ICommand.CanBeUndone => false;
+        bool ICommand.CanBeUndone => true;
 
         void ICommand.Execute() => this.model.RemoveElement(this.node);
 
-        void ICommand.Undo() => throw new NotImplementedException();
+        void ICommand.Undo() => this.model.RestoreElement(this.node);
     }
 }

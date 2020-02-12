@@ -22,7 +22,7 @@ namespace WpfControlsLib.Controls.Scene.Commands
     /// </summary>
     internal class RemoveEdgeCommand : ICommand
     {
-        private IModel model;
+        private ISceneModel model;
         private Repo.IElement edge;
 
         /// <summary>
@@ -30,19 +30,16 @@ namespace WpfControlsLib.Controls.Scene.Commands
         /// </summary>
         /// <param name="model">Model from which an edge shall be removed.</param>
         /// <param name="edge">Edge that shall be removed.</param>
-        public RemoveEdgeCommand(IModel model, Repo.IElement edge)
+        public RemoveEdgeCommand(ISceneModel model, Repo.IElement edge)
         {
             this.model = model;
             this.edge = edge;
         }
 
-        // Can not be undone because if we try to restore edge between two nodes, these two nodes shall be stored 
-        // somehow, but they may also be deleted and restored, so naive implementation won't find them again.
-        // Some support from repository is needed, but not implemented yet.
-        bool ICommand.CanBeUndone => false;
+        bool ICommand.CanBeUndone => true;
 
         void ICommand.Execute() => this.model.RemoveElement(this.edge);
 
-        void ICommand.Undo() => throw new NotImplementedException();
+        void ICommand.Undo() => this.model.RestoreElement(this.edge);
     }
 }
