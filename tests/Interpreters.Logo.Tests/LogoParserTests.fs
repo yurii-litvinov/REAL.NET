@@ -44,8 +44,8 @@ let ``forward should be parsed correctly``() =
     let context = {Commands = []; Model = model}
     let (parsing: Parsing<Context>) = { Variables = emtyVariableSet; Context = context; Element = firstForward }
     let wrapped = Some parsing
-    AvailibleParsers.parseForward wrapped |> should not' (equal None)
-    let parsed = (AvailibleParsers.parseForward wrapped).Value
+    AvailableParsers.parseForward wrapped |> should not' (equal None)
+    let parsed = (AvailableParsers.parseForward wrapped).Value
     Parsing.element parsed |> should be (equal firstRight)
     let newContext = Parsing.context parsed
     let command = newContext.Commands.Head
@@ -56,8 +56,8 @@ let ``right should be parsed correctly``() =
     let context = {Commands = [LForward 100.0]; Model = model}
     let (parsing: Parsing<Context>) = { Variables = emtyVariableSet; Context = context; Element = firstRight }
     let wrapped = Some parsing
-    AvailibleParsers.parseRight wrapped |> should not' (equal None)
-    let parsed = (AvailibleParsers.parseRight wrapped).Value
+    AvailableParsers.parseRight wrapped |> should not' (equal None)
+    let parsed = (AvailableParsers.parseRight wrapped).Value
     Parsing.element parsed |> should be (equal secondForward)
     let newContext = Parsing.context parsed
     let command = newContext.Commands.Head

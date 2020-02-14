@@ -12,6 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
+using Repo;
+
 namespace WpfControlsLib.Model
 {
     using EditorPluginInterfaces;
@@ -170,13 +172,12 @@ namespace WpfControlsLib.Model
             model.RestoreElement(element);
             // Raising new element
             HasUnsavedChanges = true;
-            if (element is Repo.INode)
+            if (element is INode node)
             {
-                this.RaiseNewVertex(element as Repo.INode);
+                this.RaiseNewVertex(node);
             }
-            else if (element is Repo.IEdge)
+            else if (element is IEdge edge)
             {
-                var edge = element as Repo.IEdge;
                 this.RaiseNewEdge(edge, edge.From, edge.To);
             }
         }
@@ -189,6 +190,7 @@ namespace WpfControlsLib.Model
             this.RaiseElementRemoved(element);
         }
 
+        
         public void SetElementAllowed(Repo.IElement element, bool isAllowed)
             => this.RaiseElementCheck(element, isAllowed);
 

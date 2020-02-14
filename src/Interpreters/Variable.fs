@@ -17,8 +17,7 @@ type VariableMutability =
     | Immutable = 1
 
 type PlaceOfCreation = 
-    | PlaceOfCreation of IModel * IElement
-    | EmptyPlace
+    | PlaceOfCreation of IModel option * IElement option
     
 type MetaData = {Mutability: VariableMutability; PlaceOfCreation: PlaceOfCreation} with
     member this.IsMutable = this.Mutability = VariableMutability.Mutable 
@@ -27,6 +26,9 @@ type Variable = { Name: string; Value: VariableValue; Meta: MetaData } with
     static member (==) (x, y) = x.Value = y.Value
 
     member this.IsMutable = this.Meta.IsMutable
+
+module PlaceOfCreation =
+    let empty = PlaceOfCreation(None, None)
 
 module RegularType =
     
@@ -63,10 +65,8 @@ module VariableValue =
 
 module MetaData =
 
-    let createMeta isMutable (place: (IModel * IElement) option) =
-        let toPlace = function
-            | None -> EmptyPlace
-            | Some(m, e) -> PlaceOfCreation(m, e)
+    let createMeta isMutable (place: (IModel option * IElement option)) =
+        let toPlace = PlaceOfCreation
         match isMutable with
         | true -> {Mutability = VariableMutability.Mutable; PlaceOfCreation = (toPlace place)}
         | _ -> {Mutability = VariableMutability.Immutable; PlaceOfCreation = (toPlace place)}

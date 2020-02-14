@@ -26,7 +26,7 @@ type Context = { Commands: LCommand list; Model: IModel}
         let findAllEdgesTo (model: IModel) (element: IElement) =
             model.Edges |> Seq.filter (fun (e: IEdge) -> e.To = element) 
 
-    module AvailibleParsers =
+    module AvailableParsers =
 
         open Interpreters
 
@@ -94,7 +94,12 @@ type Context = { Commands: LCommand list; Model: IModel}
                               parsed |> Some
                 else None
 
-open AvailibleParsers
+        let parseRepeat (parsing: Parsing<Context> option) : Parsing<Context> option =
+            match parsing with
+            | None -> None
+            | Some p -> Some p
+
+open AvailableParsers
 open Interpreters
 
 let parseMovement: Parser<Context> = parseForward >>+ parseRight >>+ parseBackward >>+ parseLeft

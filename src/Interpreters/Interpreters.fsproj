@@ -56,7 +56,7 @@
     <Compile Include="Exceptions.fs" />
     <Compile Include="Parser.fs" />
     <Compile Include="Common\VariableList.fs" />
-    <Compile Include="Common\VariableSet.fs" />
+    <Compile Include="VariableSet.fs" />
     <Content Include="app.config" />
     <None Include="paket.references" />
   </ItemGroup>
