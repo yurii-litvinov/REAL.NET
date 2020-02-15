@@ -77,7 +77,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Compile Include="DataModelTests.fs" />
-    <Compile Include="DataRepoTest.fs" />
+    <Compile Include="DataRepoTests.fs" />
     <Compile Include="DataElementTests.fs" />
     <Compile Include="CoreMetametamodelBuilderTests.fs" />
     <Compile Include="CoreSemanticLayerTests.fs" />
@@ -87,6 +87,7 @@
     <Compile Include="FacadeModelTests.fs" />
     <Compile Include="FacadeAttributeTests.fs" />
     <Compile Include="FacadeNodeTests.fs" />
+    <Compile Include="VisualInfoTests.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

@@ -82,20 +82,16 @@ let ``Model shall allow to delete elements``() =
     model.Nodes |> should not' (contain node) 
 
 [<Test>]
-let ``Model shall allow to restore elements``() =
+let ``Model shall allow to add or restore elements``() =
     let model = init()
     let ``type`` = model.Metamodel.Nodes |> Seq.find (fun n -> n.Name = "Node")
     let node = model.CreateElement ``type``
     node.AddAttribute ("Attribute1", AttributeKind.String, "default") |> ignore
     node.AddAttribute ("Attribute2", AttributeKind.Int, "0") |> ignore
-    let unwrapped = (node :?> Element).UnderlyingElement
-    let attributes = node.Attributes |> Seq.filter (fun a -> a.Name = "Attribute1" || a.Name = "Attribute2")
-                     |> Seq.map (fun a -> (a :?> Attribute).UnderlyingNode)
     model.RemoveElement node
     model.Nodes |> should not' (contain node)
     model.AddElement node
     model.Nodes |> should contain node
-    attributes |> Seq.map (fun a -> a |> should be False) |> ignore
 
 [<Test>]
 let ``Model shall allow to list its nodes`` () =
