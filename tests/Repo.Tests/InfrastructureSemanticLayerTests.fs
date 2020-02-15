@@ -55,7 +55,7 @@ let ``Instantiation shall preserve linguistic attributes`` () =
     let repo, infrastructure, model, _, element = initForModel ()
 
     let outgoingAssociations = CoreSemanticLayer.Element.outgoingAssociations element
-    outgoingAssociations |> Seq.map (fun a -> (a.Target.Value :?> INode).Name) |> should contain "shape"
+    outgoingAssociations |> Seq.map (fun a -> (a.Target.Value :?> IDataNode).Name) |> should contain "shape"
     let attributes = infrastructure.Element.Attributes element
     attributes |> should not' (be Empty)
     infrastructure.Element.AttributeValue element "shape" |> should equal "View/Pictures/vertex.png"

@@ -169,7 +169,7 @@ namespace WpfControlsLib.Model
         public void RestoreElement(Repo.IElement element)
         {
             var model = this.Repo.Model(this.ModelName);
-            model.RestoreElement(element);
+            model.AddElement(element);
             // Raising new element
             HasUnsavedChanges = true;
             if (element is INode node)
@@ -185,7 +185,7 @@ namespace WpfControlsLib.Model
         public void RemoveElement(Repo.IElement element)
         {
             var model = this.Repo.Model(this.ModelName);
-            model.DeleteElement(element);
+            model.RemoveElement(element);
             HasUnsavedChanges = true;
             this.RaiseElementRemoved(element);
         }

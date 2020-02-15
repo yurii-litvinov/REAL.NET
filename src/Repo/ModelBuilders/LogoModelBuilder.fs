@@ -42,7 +42,7 @@ type LogoModelBuilder() =
             let model = repo.CreateModel ("LogoModel", metamodel)  
 
             /// Creates a link between source and target and returns target
-            let (-->) (source: IElement) target =
+            let (-->) (source: IDataElement) target =
                 let aLink = infrastructure.Instantiate model link :?> IAssociation
                 aLink.Source <- Some source
                 aLink.Target <- Some target

@@ -1,4 +1,4 @@
-﻿(* Copyright 2017 Yurii Litvinov
+﻿(* Copyright 2020 REAL.NET group
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ open Repo.InfrastructureSemanticLayer
 
 ///Model repository. Holds all already created wrappers for data models, creates them as needed.
 type ModelRepository(infrastructure: InfrastructureSemantic, elementRepository: IElementRepository) =
-    let models = Dictionary<DataLayer.IModel, Model>()
-    member this.GetModel (data: DataLayer.IModel) =
+    let models = Dictionary<DataLayer.IDataModel, Model>()
+    member this.GetModel (data: DataLayer.IDataModel) =
         if models.ContainsKey data then
             models.[data] :> IModel
         else
@@ -37,7 +37,7 @@ type ModelRepository(infrastructure: InfrastructureSemantic, elementRepository: 
 and Model
     (
         infrastructure: InfrastructureSemantic,
-        model: DataLayer.IModel,
+        model: DataLayer.IDataModel,
         elementRepository: IElementRepository,
         repository: ModelRepository
     ) =
@@ -60,25 +60,15 @@ and Model
             let ``type`` = (repository.GetModel <| this.UnderlyingModel.Metamodel).FindElement typeName
             (this :> IModel).CreateElement ``type``
 
-        member this.DeleteElement element =
+        member this.RemoveElement element =
             // TODO: Clean up the memory and check correctness (for example, check for "class" relations)
             let unwrappedElement = (element :?> Element).UnderlyingElement
-            /// TODO: Delete all attributes.
-            let delete (element: IElement) = 
-                model.MarkElementDeleted unwrappedElement
-                for attribute in element.Attributes do
-                    let unwrappedAttribute = (attribute :?> Attribute).UnderlyingNode
-                    model.MarkElementDeleted unwrappedAttribute
-            delete element
+            // TODO: Delete all attributes.
+            this.UnderlyingModel.RemoveElement unwrappedElement
 
-        member this.RestoreElement element = 
+        member this.AddElement element = 
             let unwrappedElement = (element :?> Element).UnderlyingElement
-            let restore (element: IElement) =
-                model.UnmarkDeletedElement unwrappedElement
-                for attribute in element.Attributes do
-                    let unwrappedAttribute = (attribute :?> Attribute).UnderlyingNode
-                    model.UnmarkDeletedElement unwrappedAttribute
-            restore element
+            this.UnderlyingModel.AddElement unwrappedElement
 
         member this.FindElement name =
             let matchingElements =

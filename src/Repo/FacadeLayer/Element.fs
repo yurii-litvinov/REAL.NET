@@ -19,19 +19,19 @@ open Repo
 /// Repository with wrappers for elements (nodes or edges). Contains already created wrappers and creates new wrappers
 /// when needed.
 type IElementRepository =
-    abstract GetElement: element: DataLayer.IElement -> IElement
-    abstract DeleteElement: element: DataLayer.IElement -> unit
+    abstract GetElement: element: DataLayer.IDataElement -> IElement
+    abstract DeleteElement: element: DataLayer.IDataElement -> unit
 
 /// Implementation of an element wrapper.
 and [<AbstractClass>] Element
     (
         infrastructureSemantic: InfrastructureSemanticLayer.InfrastructureSemantic
-        , element: DataLayer.IElement
+        , element: DataLayer.IDataElement
         , repository: IElementRepository
         , attributeRepository: AttributeRepository
     ) =
 
-    let findMetatype (element : DataLayer.IElement) =
+    let findMetatype (element : DataLayer.IDataElement) =
         if infrastructureSemantic.Metamodel.IsNode element then
             Metatype.Node
         elif infrastructureSemantic.Metamodel.IsEdge element then
@@ -47,7 +47,7 @@ and [<AbstractClass>] Element
         member this.Name
             with get (): string =
                 match element with
-                | :? DataLayer.INode as n-> n.Name
+                | :? DataLayer.IDataNode as n-> n.Name
                 | _ ->
                     if infrastructureSemantic.Element.HasAttribute element "name" then
                         infrastructureSemantic.Element.AttributeValue element "name"
@@ -56,7 +56,7 @@ and [<AbstractClass>] Element
 
             and set (v: string): unit =
                 match element with
-                | :? DataLayer.INode as n-> n.Name <- v
+                | :? DataLayer.IDataNode as n-> n.Name <- v
                 | _ ->
                     if infrastructureSemantic.Element.HasAttribute element "name" then
                         infrastructureSemantic.Element.SetAttributeValue element "name" v

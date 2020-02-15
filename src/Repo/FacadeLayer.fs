@@ -229,10 +229,10 @@ type IModel =
         abstract CreateElement: typeName: string -> IElement
 
         /// Deletes given element from a model.
-        abstract DeleteElement: element: IElement -> unit
+        abstract RemoveElement: element: IElement -> unit
 
         /// Restores given element to this model
-        abstract RestoreElement: element: IElement -> unit
+        abstract AddElement: element: IElement -> unit
 
         /// Searches for an element with given name in a model. Throws if there is no such element or there is 
         /// more than one.

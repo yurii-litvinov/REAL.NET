@@ -72,22 +72,22 @@ type InfrastructureMetamodel(repo: IRepo) =
     member this.IsFromInfrastructureMetamodel element =
         CoreSemanticLayer.Element.containingModel element = infrastructureMetamodel
 
-    member this.IsNode (element: IElement) =
+    member this.IsNode (element: IDataElement) =
         if this.IsFromInfrastructureMetamodel element then
             // Kind of hack, here we know that all nodes supposed to be instantiated have linguistic attributes, like
             // "isAbstract". Actually, they are instances of "Node supposed to be instantiated" class, so it shall
             // be stated explicitly in metamodel hierarchy.
-            element :? INode && CoreSemanticLayer.Element.hasAttribute element "isAbstract"
+            element :? IDataNode && CoreSemanticLayer.Element.hasAttribute element "isAbstract"
         else
             CoreSemanticLayer.Element.isInstanceOf this.Node element
 
-    member this.IsAssociation (element: IElement) =
+    member this.IsAssociation (element: IDataElement) =
         if this.IsFromInfrastructureMetamodel element then
             element :? IAssociation  && CoreSemanticLayer.Element.hasAttribute element "isAbstract"
         else
             CoreSemanticLayer.Element.isInstanceOf edge element
 
-    member this.IsGeneralization (element: IElement) =
+    member this.IsGeneralization (element: IDataElement) =
         if this.IsFromInfrastructureMetamodel element then
             element :? IGeneralization
         else
@@ -116,7 +116,7 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel) =
                     // attribute associations can not be an instance of "attributes" association since they are on the same
                     // metalevel and need to be instances of Language Metamodel associations (or else we break instantiation
                     // chain from Core Metamodel). So we use hidden knowledge about such associations.
-                    | :? INode as n when infrastructureMetamodel.IsFromInfrastructureMetamodel n ->
+                    | :? IDataNode as n when infrastructureMetamodel.IsFromInfrastructureMetamodel n ->
                         a.TargetName = n.Name
                     | _ -> match a.Class with
                            | :? IAssociation -> isAttributeAssociation (a.Class :?> IAssociation)
@@ -128,8 +128,8 @@ type ElementHelper(infrastructureMetamodel: InfrastructureMetamodel) =
         |> Seq.filter isAttributeAssociation
         |> Seq.map (fun l -> l.Target)
         |> Seq.choose id
-        |> Seq.filter (fun e -> e :? DataLayer.INode)
-        |> Seq.cast<DataLayer.INode>
+        |> Seq.filter (fun e -> e :? DataLayer.IDataNode)
+        |> Seq.cast<DataLayer.IDataNode>
 
     /// Returns true if this element has given attribute ignoring generalization hierarchy.
     let thisElementHasAttribute element name =
@@ -284,7 +284,7 @@ module private Operations =
         else
             Seq.head attributeLinks
 
-    let private copySimpleAttribute (elementHelper: ElementHelper) element (``class``: IElement) name =
+    let private copySimpleAttribute (elementHelper: ElementHelper) element (``class``: IDataElement) name =
         let attributeClassNode = CoreSemanticLayer.Element.attribute ``class`` name
         let attributeAssociation =
             match name with
@@ -296,7 +296,7 @@ module private Operations =
         let defaultValue = CoreSemanticLayer.Element.attributeValue ``class`` name
         CoreSemanticLayer.Element.addAttribute element name attributeClassNode attributeAssociation defaultValue
 
-    let private addAttribute (element: IElement) (elementHelper: ElementHelper) (attributeClass: INode)  =
+    let private addAttribute (element: IDataElement) (elementHelper: ElementHelper) (attributeClass: IDataNode)  =
         let model = CoreSemanticLayer.Element.containingModel element
         if elementHelper.HasAttribute element attributeClass.Name then
             let valueFromClass = CoreSemanticLayer.Element.attributeValue attributeClass "stringValue"
@@ -311,22 +311,22 @@ module private Operations =
             copySimpleAttribute elementHelper attributeNode attributeClass "isInstantiable"
 
     /// Creates a new instance of a given class in a given model, with default values for attributes.
-    let instantiate (elementHelper: ElementHelper) (model: IModel) (``class``: IElement) =
+    let instantiate (elementHelper: ElementHelper) (model: IDataModel) (``class``: IDataElement) =
         if elementHelper.AttributeValue ``class`` "isAbstract" <> "false" then
             raise (InvalidSemanticOperationException "Trying to instantiate abstract node")
 
         let name =
             match ``class`` with
-            | :? INode as n -> "a" + n.Name
+            | :? IDataNode as n -> "a" + n.Name
             | :? IAssociation as a -> a.TargetName
             | _ -> raise (InvalidSemanticOperationException
                     "Trying to instantiate something that should not be instantiated")
 
         let newElement =
             if elementHelper.AttributeValue ``class`` "instanceMetatype" = "Metatype.Node" then
-                model.CreateNode(name, ``class``) :> IElement
+                model.CreateNode(name, ``class``) :> IDataElement
             else
-                model.CreateAssociation(``class``, None, None, name) :> IElement
+                model.CreateAssociation(``class``, None, None, name) :> IDataElement
 
         let attributes =
             elementHelper.Attributes ``class``
@@ -341,7 +341,7 @@ type InfrastructureSemantic(repo: IRepo) =
     let infrastructureMetamodel = InfrastructureMetamodel(repo)
     let elementHelper = ElementHelper(infrastructureMetamodel)
 
-    member this.Instantiate (model: IModel) (``class``: IElement) =
+    member this.Instantiate (model: IDataModel) (``class``: IDataElement) =
         Operations.instantiate elementHelper model ``class``
 
     member this.Metamodel = infrastructureMetamodel

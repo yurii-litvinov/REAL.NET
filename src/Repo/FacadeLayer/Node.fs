@@ -22,7 +22,7 @@ open Repo.Visual
 type Node
     (
         infrastructure: InfrastructureSemanticLayer.InfrastructureSemantic,
-        element: DataLayer.INode,
+        element: DataLayer.IDataNode,
         elementRepository: IElementRepository,
         attributeRepository: AttributeRepository,
         info: IVisualNodeInfo

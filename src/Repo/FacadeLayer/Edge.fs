@@ -21,7 +21,7 @@ open Repo.Visual
 type Edge
     (
         infrastructure: InfrastructureSemanticLayer.InfrastructureSemantic,
-        element: DataLayer.IEdge,
+        element: DataLayer.IDataEdge,
         elementRepository: IElementRepository,
         attributeRepository: AttributeRepository,
         info: IVisualEdgeInfo

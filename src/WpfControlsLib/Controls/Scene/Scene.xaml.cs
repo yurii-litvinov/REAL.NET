@@ -40,7 +40,7 @@ namespace WpfControlsLib.Controls.Scene
     public partial class Scene : UserControl
     {
         private readonly EditorObjectManager editorManager;
-        private VertexControl previosVertex;
+        private VertexControl previousVertex;
         private VertexControl currentVertex;
         private EdgeControl edgeControl;
         private Point position;
@@ -138,9 +138,10 @@ namespace WpfControlsLib.Controls.Scene
             {
                 var vertices = this.graphArea.VertexList.Select(x => x.Value).Where(x => !IsVertexVirtual(x));
                 var verticesToConnect = vertices.Where(x => IsCenterOfFirstVertexOnAnother(vertexToCheck, x));
-                if (verticesToConnect.Count() != 0)
+                var vertexControls = verticesToConnect.ToList();
+                if (vertexControls.Count != 0)
                 {
-                    var vertexToConnect = verticesToConnect.First();
+                    var vertexToConnect = vertexControls.First();
                     ReconnectEdgeFromVirtualNodeToReal(vertexToCheck, vertexToConnect);
                 }
             }
@@ -208,7 +209,7 @@ namespace WpfControlsLib.Controls.Scene
         // removed for now
         private void ClearSelection(object sender, RoutedEventArgs e)
         {
-            this.previosVertex = null;
+            this.previousVertex = null;
             this.currentVertex = null;
             this.graphArea.GetAllVertexControls().ToList().ForEach(
                 x => x.GetDataVertex<NodeViewModel>().Color = Brushes.Green);
@@ -241,18 +242,18 @@ namespace WpfControlsLib.Controls.Scene
                 {
                     return;
                 }
-                if (this.previosVertex == null)
+                if (this.previousVertex == null)
                 {
                     this.editorManager.CreateVirtualEdge(this.currentVertex, this.currentVertex.GetPosition());
-                    this.previosVertex = this.currentVertex;
+                    this.previousVertex = this.currentVertex;
                 }
-                else if (this.previosVertex.GetDataVertex<NodeViewModel>().IsVirtual)
+                else if (this.previousVertex.GetDataVertex<NodeViewModel>().IsVirtual)
                 {
-                    var virtualEdgeData = new EdgeViewModel(previosVertex.GetDataVertex<NodeViewModel>(), currentVertex.GetDataVertex<NodeViewModel>());
-                    var virtualEdgeControl = new EdgeControl(previosVertex, currentVertex, virtualEdgeData);
+                    var virtualEdgeData = new EdgeViewModel(previousVertex.GetDataVertex<NodeViewModel>(), currentVertex.GetDataVertex<NodeViewModel>());
+                    var virtualEdgeControl = new EdgeControl(previousVertex, currentVertex, virtualEdgeData);
                     this.graphArea.AddEdge(virtualEdgeData, virtualEdgeControl);
                     this.editorManager.DestroyVirtualEdge();
-                    this.previosVertex = null;
+                    this.previousVertex = null;
                     this.ElementManipulationDone?.Invoke(this, EventArgs.Empty);
                 }
                 else
@@ -260,7 +261,7 @@ namespace WpfControlsLib.Controls.Scene
                     var command = new Commands.CreateEdgeCommand(
                         this.model,
                         this.elementProvider.Element,
-                        (this.previosVertex?.Vertex as NodeViewModel)?.Node,
+                        (this.previousVertex?.Vertex as NodeViewModel)?.Node,
                         (this.currentVertex?.Vertex as NodeViewModel)?.Node);
                     this.controller.Execute(command);
                     this.ElementManipulationDone?.Invoke(this, EventArgs.Empty);
@@ -277,9 +278,9 @@ namespace WpfControlsLib.Controls.Scene
                 Color = Brushes.Green);
 
             this.currentVertex.GetDataVertex<NodeViewModel>().Color = Brushes.LightBlue;
-            if (this.previosVertex != null)
+            if (this.previousVertex != null)
             {
-                this.previosVertex.GetDataVertex<NodeViewModel>().Color = Brushes.Yellow;
+                this.previousVertex.GetDataVertex<NodeViewModel>().Color = Brushes.Yellow;
             }
 
             if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
@@ -299,13 +300,13 @@ namespace WpfControlsLib.Controls.Scene
             }
         }
 
-        private bool IsVertexVirtual(VertexControl vertexControl) => vertexControl.GetDataVertex<NodeViewModel>().IsVirtual;
+        private static bool IsVertexVirtual(VertexControl vertexControl) => vertexControl.GetDataVertex<NodeViewModel>().IsVirtual;
 
         private bool IsVertexHasEdges(VertexControl vertexControl)
         {
             var edges = this.graphArea.EdgesList.Select(x => x.Value)
                 .Where(x => x.Target == vertexControl || x.Source == vertexControl);
-            return edges.Count() > 0;
+            return edges.Any();
         }
 
         private bool IsEdgeSourceVirtual(EdgeControl edgeControl) => IsVertexVirtual(edgeControl.Source);
@@ -325,8 +326,8 @@ namespace WpfControlsLib.Controls.Scene
             var dataNode = virtualVertex.GetDataVertex<NodeViewModel>();
             var vertexToConnectData = vertexToConnect.GetDataVertex<NodeViewModel>();
             var edgeControls = this.graphArea.EdgesList.Select(x => x.Value);
-            var edgesWhereSourceStack = new Stack<EdgeControl>(edgeControls.Where(x => IsEdgeSourceVirtual(x)));
-            var edgesWhereTargetStack = new Stack<EdgeControl>(edgeControls.Where(x => IsEdgeTargetVirtual(x)));
+            var edgesWhereSourceStack = new Stack<EdgeControl>(edgeControls.Where(IsEdgeSourceVirtual));
+            var edgesWhereTargetStack = new Stack<EdgeControl>(edgeControls.Where(IsEdgeTargetVirtual));
             while (edgesWhereSourceStack.Count != 0)
             {
                 var edge = edgesWhereSourceStack.Pop();
@@ -502,7 +503,7 @@ namespace WpfControlsLib.Controls.Scene
                 .Select(x => x.Value).First();
             var ec = new EdgeControl(source, target, edgeViewModel);
             this.graphArea.InsertEdge(edgeViewModel, ec);
-            this.previosVertex = null;
+            this.previousVertex = null;
             this.editorManager.DestroyVirtualEdge();
         }
 
@@ -535,6 +536,9 @@ namespace WpfControlsLib.Controls.Scene
         private void MenuItemClickedOnVertex(object sender, EventArgs e)
         {
             var vertex = this.currentVertex.GetDataVertex<NodeViewModel>();
+            // saving position
+            var vertexPosition = currentVertex.GetPosition();
+            vertex.Node.VisualInfo.Position = vertexPosition.ToVisualPoint();
 
             var edges = this.Graph.DataGraph.Edges.ToArray();
 
@@ -551,7 +555,7 @@ namespace WpfControlsLib.Controls.Scene
                     command.Add(new RemoveEdgeCommand(this.model, edge.Edge));
                 }
             }
-
+            
             command.Add(new RemoveNodeCommand(this.model, vertex.Node));
             this.controller.Execute(command);
         }
@@ -635,19 +639,19 @@ namespace WpfControlsLib.Controls.Scene
                 {
                     var vertexData = new VirtualVertexData();
                     var virtualVertex = this.AddVirtualVertexControl(vertexData);
-                    if (this.previosVertex != null)
+                    if (this.previousVertex != null)
                     {
-                        var virtualEdgeData = new EdgeViewModel(previosVertex.GetDataVertex<NodeViewModel>(), virtualVertex.GetDataVertex<NodeViewModel>());
-                        var virtualEdgeControl = new EdgeControl(previosVertex, virtualVertex, virtualEdgeData);
+                        var virtualEdgeData = new EdgeViewModel(previousVertex.GetDataVertex<NodeViewModel>(), virtualVertex.GetDataVertex<NodeViewModel>());
+                        var virtualEdgeControl = new EdgeControl(previousVertex, virtualVertex, virtualEdgeData);
                         this.graphArea.AddEdge(virtualEdgeData, virtualEdgeControl);
                         this.editorManager.DestroyVirtualEdge();
-                        this.previosVertex = null;
+                        this.previousVertex = null;
                         this.ElementManipulationDone?.Invoke(this, EventArgs.Empty);
                     }
                     else
                     {
                         this.editorManager.CreateVirtualEdge(virtualVertex, virtualVertex.GetPosition());
-                        this.previosVertex = virtualVertex;
+                        this.previousVertex = virtualVertex;
                     }
                 }
             }

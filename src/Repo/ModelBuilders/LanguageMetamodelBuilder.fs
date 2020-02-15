@@ -30,10 +30,10 @@ type LanguageMetamodelBuilder() =
             let languageMetamodel = repo.CreateModel("LanguageMetamodel", coreMetamodel)
 
             let (~+) name = languageMetamodel.CreateNode(name, metamodelNode)
-            let (--|>) (source: IElement) target =
+            let (--|>) (source: IDataElement) target =
                 languageMetamodel.CreateGeneralization(metamodelGeneralization, source, target) |> ignore
 
-            let (--->) (source: IElement) (target, name) =
+            let (--->) (source: IDataElement) (target, name) =
                 languageMetamodel.CreateAssociation(metamodelAssociation, source, target, name) |> ignore
 
             let element = +"Element"

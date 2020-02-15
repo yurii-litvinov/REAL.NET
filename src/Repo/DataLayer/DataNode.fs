@@ -15,15 +15,15 @@
 namespace Repo.DataLayer
 
 /// Implementation of a node in model.
-type DataNode private (name: string, Function: Option<IElement>, ``class``: IElement option, model: IModel) =
+type DataNode private (name: string, Function: Option<IDataElement>, ``class``: IDataElement option, model: IDataModel) =
     inherit DataElement(``class``, model)
 
     let mutable name = name
     
-    new (name: string, funtion: Option<IElement>, model: IModel) = DataNode(name, funtion, None, model)
-    new (name: string, ``class``: IElement, model: IModel) = DataNode(name, None, Some ``class``, model)
+    new (name: string, funtion: Option<IDataElement>, model: IDataModel) = DataNode(name, funtion, None, model)
+    new (name: string, ``class``: IDataElement, model: IDataModel) = DataNode(name, None, Some ``class``, model)
 
-    interface INode with
+    interface IDataNode with
         member __.Name
             with get(): string = name
             and set v = name <- v
