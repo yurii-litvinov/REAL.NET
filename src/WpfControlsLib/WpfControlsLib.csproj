@@ -125,6 +125,7 @@
     </Compile>
     <Compile Include="Controls\Palette\PaletteElement.cs" />
     <Compile Include="Controls\Palette\PaletteViewModel.cs" />
+    <Compile Include="Controls\Scene\Commands\MoveNodeCommand.cs" />
     <Compile Include="Controls\Scene\PointExtensions.cs" />
     <Compile Include="Controls\Scene\Commands\CreateNodeCommand.cs" />
     <Compile Include="Controls\Scene\Commands\RemoveNodeCommand.cs" />

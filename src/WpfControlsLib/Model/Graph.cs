@@ -44,6 +44,7 @@ namespace WpfControlsLib.Model
             this.model.NewEdgeAdded += (sender, args) => this.CreateEdge(args.Edge, args.Source, args.Target);
             this.model.ElementRemoved += (sender, args) => this.RemoveElement(args.Element);
             this.model.ElementCheck += (sender, args) => this.CheckElement(args.Element, args.IsAllowed);
+            this.model.NodeVisualChanged += OnNodeVisualChanged;
         }
 
         public event EventHandler DrawGraph;
@@ -56,6 +57,10 @@ namespace WpfControlsLib.Model
 
         public event EventHandler<DataEdgeArgs> AddNewEdgeControl;
 
+        public event EventHandler<DataVertexArgs> NodeVisualChanged;
+
+        public event EventHandler<DataEdgeArgs> EdgeVisualChanged;
+        
         public BidirectionalGraph<NodeViewModel, EdgeViewModel> DataGraph { get; }
 
         // Should be replaced
@@ -215,6 +220,14 @@ namespace WpfControlsLib.Model
                 var nodeViewModel = this.DataGraph.Vertices.First(x => x.Node == element);
                 nodeViewModel.IsAllowed = isAllowed;
             }
+        }
+        
+        
+        private void OnNodeVisualChanged(object sender, VertexEventArgs e)
+        {
+            var node = e.Node;
+            var nodeData = this.DataGraph.Vertices.First(x => x.Node == e.Node);
+            this.NodeVisualChanged?.Invoke(this, new DataVertexArgs(){DataVertex = nodeData});
         }
 
         public class DataVertexArgs : EventArgs

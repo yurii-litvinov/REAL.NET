@@ -12,6 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
+using Repo;
+using Repo.FacadeLayer;
+
 namespace EditorPluginInterfaces
 {
     using System;
@@ -21,6 +24,13 @@ namespace EditorPluginInterfaces
     /// </summary>
     public class EdgeEventArgs : EventArgs
     {
+        public EdgeEventArgs(IEdge edge, IElement source = null, IElement target = null)
+        {
+            Edge = edge;
+            Source = source;
+            Target = target;
+        }
+
         /// <summary>
         /// Metatype of an edge.
         /// TODO: Nobody cares about metatype, give us actual created edge!

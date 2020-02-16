@@ -14,6 +14,8 @@
 
 namespace Repo
 
+open System
+
 /// Type of file which represents visual information
 type TypeOfVisual =
     /// Xml file
@@ -46,26 +48,37 @@ type VisualPoint(x: double, y: double) =
 
         override this.ToString() = (x, y).ToString()
 
-        /// Returns point with zero coordinates
+        /// Returns point with zero coordinates.
         static member Default = new VisualPoint(0.0, 0.0)
+        
+        /// ValueType equality operator for C# compability.
+        static member op_Equality (point1: VisualPoint, point2: VisualPoint) = point1 = point2
+        
+        /// ValueType inequality operator for C# compability.
+        static member op_Inequality (point1: VisualPoint, point2: VisualPoint) = not (VisualPoint.op_Equality(point1, point2))
+        
+        /// Returns vector sum of 2 points.
+        static member op_Addition (point1: VisualPoint, point2: VisualPoint) = new VisualPoint(point1.X + point2.X, point2.X + point2.Y)
     end
 
 /// This interface represents information about how node is shown on screen.
 type IVisualNodeInfo =
     interface
-        inherit IVisualInfo
-
         /// Position of node on screen or scene.
-        abstract Position : VisualPoint with get, set          
+        abstract Position : VisualPoint with get, set
+        
+        /// Returns a copy of this info.
+        abstract Copy : unit -> IVisualNodeInfo
     end
 
 // This interface represents information about how edge is shown on screen.
 type IVisualEdgeInfo =
     interface
-        inherit IVisualInfo
-
         /// Coordinates of routing points without ends.
-        abstract RoutingPoints : ResizeArray<VisualPoint>  with get, set
+        abstract RoutingPoints : array<VisualPoint>  with get, set
+        
+        /// Returns a copy of this info.
+        abstract Copy : unit -> IVisualEdgeInfo
     end
 
 /// Enumeration with all kinds of attributes supported by repository

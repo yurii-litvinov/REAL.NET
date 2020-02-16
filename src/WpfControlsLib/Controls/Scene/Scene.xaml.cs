@@ -109,8 +109,36 @@ namespace WpfControlsLib.Controls.Scene
             this.Graph.ElementRemoved += OnElementRemoved;
             this.Graph.AddNewVertexControl += (sender, args) => this.AddNewVertexControl(args.DataVertex);
             this.Graph.AddNewEdgeControl += (sender, args) => this.AddNewEdgeControl(args.EdgeViewModel);
-            this.graphArea.VertexMouseUp += (sender, args) => this.CheckThatForReconnection(args);
+            this.Graph.NodeVisualChanged += OnNodeVisualChanged;
+            this.graphArea.VertexMouseUp += this.OnVertexMouseUp;
             this.InitGraphXLogicCore();
+        }
+
+        private void OnVertexMouseUp(object sender, VertexSelectedEventArgs args)
+        {
+            var vertexControl = args.VertexControl;
+            // only for real vertices?
+            if (!IsVertexVirtual(vertexControl))
+            {
+                var vertexData = vertexControl.GetDataVertex<NodeViewModel>();
+                var innerNode = vertexData.Node;
+                var currentPosition = vertexControl.GetPosition().ToVisualPoint();
+                var repoPosition = innerNode.VisualInfo.Position;
+                if (currentPosition != repoPosition)
+                {
+                    var command = new MoveNodeCommand(model, innerNode, currentPosition);
+                    this.controller.Execute(command);
+                }
+            }
+            this.CheckThatForReconnection(args);
+        }
+        
+        private void OnNodeVisualChanged(object sender, Graph.DataVertexArgs e)
+        {
+            var vertexData = e.DataVertex;
+            var info = vertexData.Node.VisualInfo;
+            var vertexControl = this.graphArea.VertexList[vertexData];
+            vertexControl.SetPosition(info.Position.ToWindowsPoint());
         }
 
         private void OnElementRemoved(object sender, ElementRemovedEventArgs e)
@@ -571,16 +599,16 @@ namespace WpfControlsLib.Controls.Scene
             foreach (var edge in edges)
             {
                 var anotherVertex = edge.Target == vertex ? edge.Source : edge.Target;
-                void removingEdge() => this.graphArea.RemoveEdge(edge.GetDataEdge<EdgeViewModel>());
-                void removingAnotherVertex()
+                void RemovingEdge() => this.graphArea.RemoveEdge(edge.GetDataEdge<EdgeViewModel>());
+                void RemovingAnotherVertex()
                 {
                     if (IsVertexVirtual(anotherVertex))
                     {
                         this.graphArea.RemoveVertex(anotherVertex.GetDataVertex<NodeViewModel>());
                     }
                 }
-                var command1 = new Toolbar.Command(removingEdge);
-                var command2 = new Toolbar.Command(removingAnotherVertex);
+                var command1 = new Toolbar.Command(RemovingEdge);
+                var command2 = new Toolbar.Command(RemovingAnotherVertex);
                 deleteEdgesCommand.Add(command1);
                 deleteEdgesCommand.Add(command2);
             }
@@ -605,6 +633,14 @@ namespace WpfControlsLib.Controls.Scene
         private void DrawGraph()
         {
             this.graphArea.GenerateGraph(this.Graph.DataGraph);
+            // TODO remember positions of controls. It's only vertices for now. Although, it seems like a temporary decision
+            foreach (var vertexControl in this.graphArea.VertexList.Values)
+            {
+                var vertexData = vertexControl.GetDataVertex<NodeViewModel>();
+                var positionToRemember = vertexControl.GetPosition().ToVisualPoint();
+                var command = new MoveNodeCommand(this.model, vertexData.Node, positionToRemember);
+                command.Execute();
+            }
             this.zoomControl.ZoomToFill();
         }
 

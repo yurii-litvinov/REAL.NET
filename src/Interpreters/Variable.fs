@@ -97,7 +97,8 @@ module Variable =
         if (not variable.IsMutable) then invalidOp "Variable is immutable"
         elif (VariableValue.isTypesEqual newValue variable.Value) then {variable with Value = newValue}
         else invalidOp "Not equal types"
-
+    
+    let forceChangeValue (newValue: VariableValue) (variable: Variable) = {variable with Value = newValue}
     
     
 

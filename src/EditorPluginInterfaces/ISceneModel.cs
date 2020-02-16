@@ -12,6 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
+using Repo;
+using Repo.Visual;
+
 namespace EditorPluginInterfaces
 {
     using System;
@@ -40,6 +43,16 @@ namespace EditorPluginInterfaces
         /// Element was deleted from model.
         /// </summary>
         event EventHandler<ElementEventArgs> ElementRemoved;
+
+        /// <summary>
+        /// Node's scene visual representation changed
+        /// </summary>
+        event EventHandler<VertexEventArgs> NodeVisualChanged;
+
+        /// <summary>
+        /// Edge's scene visual representation changed
+        /// </summary>
+        event EventHandler<EdgeEventArgs> EdgeVisualChanged; 
 
         /// <summary>
         /// Element that should be checked from model.
@@ -73,9 +86,23 @@ namespace EditorPluginInterfaces
         void RestoreElement(Repo.IElement element);
 
         /// <summary>
-        /// Removes an adge or node from a model.
+        /// Removes an edge or node from a model.
         /// </summary>
         /// <param name="element">Element to remove from model.</param>
         void RemoveElement(Repo.IElement element);
+
+        /// <summary>
+        /// Notifies that visual representation of this node changed 
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="nodeVisual"></param>
+        void UpdateNodeVisual(INode node, in IVisualNodeInfo nodeVisual);
+
+        /// <summary>
+        /// Notifies that visual representation of this node changed 
+        /// </summary>
+        /// <param name="edge"></param>
+        /// <param name="edgeVisual"></param>
+        void UpdateEdgeVisual(IEdge edge, in IVisualEdgeInfo edgeVisual);
     }
 }

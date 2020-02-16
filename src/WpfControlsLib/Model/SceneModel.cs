@@ -40,6 +40,9 @@ namespace WpfControlsLib.Model
         public event EventHandler<EdgeEventArgs> NewEdgeAdded;
 
         public event EventHandler<ElementEventArgs> ElementRemoved;
+        
+        public event EventHandler<VertexEventArgs> NodeVisualChanged;
+        public event EventHandler<EdgeEventArgs> EdgeVisualChanged;
 
         public event EventHandler<ElementEventArgs> ElementCheck;
 
@@ -76,12 +79,12 @@ namespace WpfControlsLib.Model
             {
                 if (hasUnsavedChanges && !value)
                 {
-                    hasUnsavedChanges = value;
+                    hasUnsavedChanges = false;
                     FileSaved?.Invoke(this, EventArgs.Empty);
                 }
                 else if (!hasUnsavedChanges && value)
                 {
-                    hasUnsavedChanges = value;
+                    hasUnsavedChanges = true;
                     UnsavedChanges?.Invoke(this, EventArgs.Empty);
                 }
             }
@@ -190,49 +193,47 @@ namespace WpfControlsLib.Model
             this.RaiseElementRemoved(element);
         }
 
-        
+        public void UpdateNodeVisual(INode node, in IVisualNodeInfo nodeVisual)
+        {
+            node.VisualInfo = nodeVisual;
+            this.NodeVisualChanged?.Invoke(this, new VertexEventArgs(node));
+        }
+
+        public void UpdateEdgeVisual(IEdge edge, in IVisualEdgeInfo edgeVisual)
+        {
+            edge.VisualInfo = edgeVisual;
+            this.EdgeVisualChanged?.Invoke(this, new EdgeEventArgs(edge));
+        }
+
         public void SetElementAllowed(Repo.IElement element, bool isAllowed)
             => this.RaiseElementCheck(element, isAllowed);
 
         private void RaiseNewVertex(Repo.INode node)
         {
-            var args = new VertexEventArgs
-            {
-                Node = node
-            };
-
+            var args = new VertexEventArgs(node);
             this.NewVertexAdded?.Invoke(this, args);
         }
 
         private void RaiseNewEdge(Repo.IEdge edge, Repo.IElement prevVer, Repo.IElement ctrlVer)
         {
             var args = new EdgeEventArgs
-            {
-                Edge = edge,
-                Source = prevVer,
-                Target = ctrlVer
-            };
+            (
+                edge,
+                prevVer,
+                ctrlVer
+            );
             this.NewEdgeAdded?.Invoke(this, args);
         }
 
         private void RaiseElementRemoved(Repo.IElement element)
         {
-            var args = new ElementEventArgs
-            {
-                Element = element
-            };
-
+            var args = new ElementEventArgs(element);
             this.ElementRemoved?.Invoke(this, args);
         }
 
         private void RaiseElementCheck(Repo.IElement element, bool isAllowed)
         {
-            var args = new ElementEventArgs
-            {
-                Element = element,
-                IsAllowed = isAllowed
-            };
-
+            var args = new ElementEventArgs(element, isAllowed);
             this.ElementCheck?.Invoke(this, args);
         }
     }
