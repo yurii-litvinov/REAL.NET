@@ -38,6 +38,8 @@ type LogoModelBuilder() =
             let metamodelLeft = Model.findNode metamodel "Left"
             let metamodelPenUp = Model.findNode metamodel "PenUp"
             let metamodelPenDown = Model.findNode metamodel "PenDown"
+            
+            let metamodelRepeat = Model.findNode metamodel "Repeat"
 
             let model = repo.CreateModel ("LogoModel", metamodel)  
 
@@ -50,24 +52,28 @@ type LogoModelBuilder() =
 
             let createForward distance = 
                 let forward = infrastructure.Instantiate model metamodelForward 
-                do infrastructure.Element.SetAttributeValue forward "Expression" distance
+                do infrastructure.Element.SetAttributeValue forward "Distance" distance
                 forward
 
             let createBackward distance =
                 let backward = infrastructure.Instantiate model metamodelBackward
-                do infrastructure.Element.SetAttributeValue backward "Expression" distance
+                do infrastructure.Element.SetAttributeValue backward "Distance" distance
                 backward
 
             let createRight degrees =
                 let right = infrastructure.Instantiate model metamodelRight
-                infrastructure.Element.SetAttributeValue right "Expression" degrees
+                infrastructure.Element.SetAttributeValue right "Degrees" degrees
                 right
 
             let createLeft degrees =
                 let left = infrastructure.Instantiate model metamodelLeft
-                infrastructure.Element.SetAttributeValue left "Expression" degrees
+                infrastructure.Element.SetAttributeValue left "Degrees" degrees
                 left
 
+            let createRepeat count =
+                let repeat = infrastructure.Instantiate model metamodelRepeat
+                infrastructure.Element.SetAttributeValue repeat "Count" count
+            
             let createPenUp() = infrastructure.Instantiate model metamodelPenUp
 
             let createPenDown() = infrastructure.Instantiate model metamodelPenDown

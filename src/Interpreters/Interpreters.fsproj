@@ -54,11 +54,14 @@
     <Compile Include="IVariableSet.fs" />
     <Compile Include="Interpreter.fs" />
     <Compile Include="Exceptions.fs" />
+    <Compile Include="Expressions\ExpressionParser.fs" />
+    <Compile Include="Expressions\ExpressionParsers\StringExpressionParser.fs" />
     <Compile Include="Parser.fs" />
     <Compile Include="Common\VariableList.fs" />
     <Compile Include="VariableSet.fs" />
     <Content Include="app.config" />
     <None Include="paket.references" />
+    <Compile Include="InterpreterHelper.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

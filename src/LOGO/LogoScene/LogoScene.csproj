@@ -150,10 +150,6 @@
       <Project>{6e5f1b5d-f165-4cec-a240-8887ebd28e3b}</Project>
       <Name>EditorPluginInterfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Logo.TurtleInterfaces\Logo.TurtleInterfaces.csproj">
-      <Project>{69309937-d690-4365-85d8-698c30fceff4}</Project>
-      <Name>Logo.TurtleInterfaces</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\PluginManager\PluginManager.csproj">
       <Project>{8b9c8d76-65b3-4a01-9d6f-b6192a823642}</Project>
       <Name>PluginManager</Name>
@@ -169,6 +165,10 @@
     <ProjectReference Include="..\Interpreters.Logo\Interpreters.Logo.fsproj">
       <Project>{1d57e43c-c29e-4ea5-be01-028d73781637}</Project>
       <Name>Interpreters.Logo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Logo.TurtleInterfaces\Logo.TurtleInterfaces.csproj">
+      <Project>{69309937-d690-4365-85d8-698c30fceff4}</Project>
+      <Name>Logo.TurtleInterfaces</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

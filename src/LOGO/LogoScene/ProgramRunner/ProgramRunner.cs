@@ -40,7 +40,7 @@ namespace LogoScene.ProgramRunner
         {
             var runner = new LogoRunner(model);
             runner.Run();
-            ILogoContext context = runner.SpicificContext;
+            ILogoContext context = runner.SpecificContext;
             var commandList = context.LogoCommands.ToList();
             commandList.Reverse();
             return commandList;

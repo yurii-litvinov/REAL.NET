@@ -1,15 +1,15 @@
-﻿namespace Interpreters
+﻿namespace Interpreterers
 
 open Repo
 
-type IPeformerCommand =
+type IPerformerCommand =
     interface
         abstract member Description: string with get
     end
 
 type IProgramRunner<'T> =
     interface
-        abstract member SpicificContext: 'T with get
+        abstract member SpecificContext: 'T with get
 
         abstract member Run: unit -> unit
 
@@ -18,7 +18,7 @@ type IProgramRunner<'T> =
         abstract member SetModel: model: IModel -> unit
     end
 
-type IInterpeter<'T> = 
+type IInterpreter<'T> = 
     interface
         inherit IProgramRunner<'T>
 

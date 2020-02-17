@@ -71,6 +71,8 @@ type LogoMetamodelBuilder() =
            
            let penUp = +("PenUp", "View/Pictures/LogoPictures/penUp.png", false)
            let penDown = +("PenDown", "View/Pictures/LogoPictures/penDown.png", false)
+           
+           let repeat = +("Repeat", "View/Pictures/LogoPictures/repeat.png", false)
 
            let link = abstractNode ---> (abstractNode, "target", "Link")
 
@@ -82,10 +84,13 @@ type LogoMetamodelBuilder() =
            left --|> abstractNode
            penUp --|> abstractNode
            penDown --|> abstractNode
+           repeat --|> abstractNode
 
-           infrastructure.Element.AddAttribute forward "Expression" "AttributeKind.String" "0"
-           infrastructure.Element.AddAttribute backward "Expression" "AttributeKind.String" "0"
-           infrastructure.Element.AddAttribute left "Expression" "AttributeKind.String" "0"
-           infrastructure.Element.AddAttribute right "Expression" "AttributeKind.String" "0"
+           infrastructure.Element.AddAttribute forward "Distance" "AttributeKind.Double" "0"
+           infrastructure.Element.AddAttribute backward "Distance" "AttributeKind.Double" "0"
+           infrastructure.Element.AddAttribute left "Degrees" "AttributeKind.Double" "0"
+           infrastructure.Element.AddAttribute right "Degrees" "AttributeKind.Double" "0"
+           
+           infrastructure.Element.AddAttribute repeat "Count" "AttributeKind.Int" "0"
 
            ()

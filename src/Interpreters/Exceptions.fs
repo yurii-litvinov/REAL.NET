@@ -26,12 +26,12 @@ type ParserException(message: string, place: PlaceOfCreation) =
         member this.ElementWhereRaised = 
             match place with
             | PlaceOfCreation(_, Some e) -> e
-            | _ -> invalidOp "No model"
+            | _ -> invalidOp "No element"
     end
 
 module ParserException =
     
-    let raise message = new ParserException(message)
+    let raiseException message = new ParserException(message) |> raise
 
-    let raiseWithPlace message place = new ParserException(message, place)
+    let raiseWithPlace (message: string) (place: PlaceOfCreation) =  new ParserException(message) |> raise 
 

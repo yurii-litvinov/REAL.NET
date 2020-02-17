@@ -27,6 +27,7 @@
     
     <Grid>
         <Grid.Resources>
+            <!-- Style for buttons on toolbar -->
             <Style TargetType="Button">
                 <Style.Resources>
                     <Style TargetType="Image">

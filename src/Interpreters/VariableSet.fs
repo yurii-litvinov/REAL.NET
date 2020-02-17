@@ -2,7 +2,7 @@
 
     module VariableSet =
         
-        open Interpeters.Common
+        open Interpreters.Common
         
         type VariableSetFactory =
             struct
