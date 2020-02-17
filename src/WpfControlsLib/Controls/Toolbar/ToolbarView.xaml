@@ -24,16 +24,27 @@
     d:DesignWidth="300"
     mc:Ignorable="d"
     d:DataContext="{toolbar:ToolbarViewModel}">
-
+    
     <Grid>
-        <ToolBarTray Background="White">
+        <Grid.Resources>
+            <Style TargetType="Button">
+                <Style.Resources>
+                    <Style TargetType="Image">
+                        <Style.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Style.Resources>
+            </Style>
+        </Grid.Resources>
+            <ToolBarTray Background="White">
             <ToolBar x:Name="PicToolbar" Band="0" ItemsSource="{Binding ButtonsToShow}">
                 <ToolBar.ItemTemplate>
                     <DataTemplate>
                         <Button Width="16" Height="16" Margin="3" ToolTip="{Binding Description}" Command="{Binding WinInputCommand}" IsEnabled="{Binding IsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
-                            <Button.Background>
-                                <ImageBrush ImageSource="{Binding Image}"/>
-                            </Button.Background>
+                            <Image Source="{Binding Image}"/>
                         </Button>
                     </DataTemplate>
                 </ToolBar.ItemTemplate>

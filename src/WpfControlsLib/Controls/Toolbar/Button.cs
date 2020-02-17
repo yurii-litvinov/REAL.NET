@@ -28,25 +28,15 @@ namespace WpfControlsLib.Controls.Toolbar
         /// </summary>
         /// <param name="command">Command</param>
         /// <param name="description">Description of command</param>
-        /// <param name="image">Image to attach</param
+        /// <param name="image">Image to attach</param>
         /// <param name="isEnabled">Is this button should be enabled</param>
-        public Button(ICommand command, string description, string image, bool isEnabled)
+        public Button(ICommand command, string description, string image, bool isEnabled = true)
         {
             this.Command = command;
             this.Description = description;
             this.Image = image;
             this.IsEnabled = isEnabled;
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Button"/> class.
-        /// Default : isEnabled = true
-        /// </summary>
-        /// <param name="command">Command</param>
-        /// <param name="description">Description of command</param>
-        /// <param name="image">Image to attach</param
-        public Button(ICommand command, string description, string image)
-            : this(command, description, image, true) { }
 
         /// <summary>
         /// Throws when button's visibility changed
