@@ -29,9 +29,14 @@ let findAllEdgesFrom (element: IElement) =
 let findAllEdgesTo (element: IElement) =
     model.Edges |> Seq.filter (fun (e: IEdge) -> e.To = element) 
 
-let next (element: IElement) = let edge = findAllEdgesFrom element |> Seq.exactlyOne in edge.To
+let hasAttribute name (element: IElement) =
+        element.Attributes |> Seq.filter (fun x -> x.Name = name) |> Seq.isEmpty |> not
 
-let firstForward = next initialNode
+let next (element: IElement) = let edge = findAllEdgesFrom element |> Seq.filter ((hasAttribute "Tag") >> not) |> Seq.exactlyOne in edge.To
+
+let repeat = next initialNode
+
+let firstForward = next repeat
 
 let firstRight = next firstForward
 
@@ -41,8 +46,8 @@ let emtyVariableSet = VariableSetFactory.CreateVariableSet([])
 
 [<Test>]
 let ``forward should be parsed correctly``() = 
-    let context = {Commands = []; Model = model}
-    let (parsing: Parsing<Context>) = { Variables = emtyVariableSet; Context = context; Element = firstForward }
+    let context = {Commands = []}
+    let (parsing: Parsing<Context>) = { Variables = emtyVariableSet; Context = context; Model = model; Element = firstForward }
     let wrapped = Some parsing
     AvailableParsers.parseForward wrapped |> should not' (equal None)
     let parsed = (AvailableParsers.parseForward wrapped).Value
@@ -53,8 +58,8 @@ let ``forward should be parsed correctly``() =
 
 [<Test>]
 let ``right should be parsed correctly``() = 
-    let context = {Commands = [LForward 100.0]; Model = model}
-    let (parsing: Parsing<Context>) = { Variables = emtyVariableSet; Context = context; Element = firstRight }
+    let context = {Commands = [LForward 100.0]}
+    let (parsing: Parsing<Context>) = { Variables = emtyVariableSet; Context = context; Model = model; Element = firstRight }
     let wrapped = Some parsing
     AvailableParsers.parseRight wrapped |> should not' (equal None)
     let parsed = (AvailableParsers.parseRight wrapped).Value
@@ -65,8 +70,8 @@ let ``right should be parsed correctly``() =
 
 [<Test>]
 let ``complex movement parsing``() =
-    let context = {Commands = []; Model = model}
-    let (parsing: Parsing<Context>) = { Variables = emtyVariableSet; Context = context; Element = firstForward}
+    let context = {Commands = []}
+    let (parsing: Parsing<Context>) = { Variables = emtyVariableSet; Context = context; Model = model; Element = firstForward}
     let wrapped = Some parsing
     let parsedOnce = (parseMovement wrapped).Value
     let parsedTwice = (parseMovement (Some parsedOnce)).Value

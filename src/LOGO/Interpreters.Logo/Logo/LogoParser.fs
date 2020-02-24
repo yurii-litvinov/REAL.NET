@@ -6,12 +6,7 @@ open Interpreters.Logo.TurtleCommand
 
 open Repo
 
-open System
 open Interpreters
-open Interpreters
-open Interpreters
-open Interpreters
-open Repo.FacadeLayer
 
 type Context = { Commands: LCommand list} 
 
@@ -45,7 +40,6 @@ module private Helper =
         element.Attributes |> Seq.filter (fun x -> x.Name = name) |> Seq.isEmpty |> not
     
 module AvailableParsers =
-
 
     let parseForward (parsing: Parsing<Context> option) : Parsing<Context> option =
         match parsing with
@@ -144,7 +138,7 @@ module AvailableParsers =
                             else
                                 let countVarOption = vars |> Seq.filter (fun x -> x.Name = "repeatI") |> Seq.tryExactlyOne
                                 match countVarOption with
-                                | None -> ParserException.raiseWithPlace "No count found" (PlaceOfCreation(Some model, Some element))
+                                | None -> ParserException.raiseWithPlace "No correct count variable found" (PlaceOfCreation(Some model, Some element))
                                 | Some ({Value = value} as countVar) ->
                                     match value with
                                     | Regular (Int intVal) ->
