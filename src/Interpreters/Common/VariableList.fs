@@ -41,6 +41,8 @@ type VariableList(variables: Variable list) =
                                   raise (System.NotImplementedException())
             
             member this.Drop(): IVariableSet = new VariableList(variables.Tail) :> IVariableSet
+            
+            member this.Filter filter = List.filter filter variables
 
             member this.ToList: Variable list = variables                  
     end

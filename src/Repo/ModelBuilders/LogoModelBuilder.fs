@@ -28,6 +28,7 @@ type LogoModelBuilder() =
             let metamodelAbstractNode = Model.findNode metamodel "AbstractNode"
 
             let link = Model.findAssociationWithSource metamodelAbstractNode "target"
+            let taggedLink = Model.findAssociationWithSource metamodelAbstractNode "taggedTarget"
 
             let metamodelInitialNode = Model.findNode metamodel "InitialNode"
             let metamodelFinalNode = Model.findNode metamodel "FinalNode"
@@ -43,12 +44,19 @@ type LogoModelBuilder() =
 
             let model = repo.CreateModel ("LogoModel", metamodel)  
 
-            /// Creates a link between source and target and returns target
+            /// Creates a link between source and target and returns target.
             let (-->) (source: IDataElement) target =
                 let aLink = infrastructure.Instantiate model link :?> IAssociation
                 aLink.Source <- Some source
                 aLink.Target <- Some target
                 target
+                
+            /// Creates a tagged link between source and target and return it.   
+            let (+->) (source: IDataElement) target =
+                let aLink = infrastructure.Instantiate model taggedLink :?> IAssociation
+                aLink.Source <- Some source
+                aLink.Target <- Some target
+                aLink
 
             let createForward distance = 
                 let forward = infrastructure.Instantiate model metamodelForward 
@@ -73,6 +81,7 @@ type LogoModelBuilder() =
             let createRepeat count =
                 let repeat = infrastructure.Instantiate model metamodelRepeat
                 infrastructure.Element.SetAttributeValue repeat "Count" count
+                repeat
             
             let createPenUp() = infrastructure.Instantiate model metamodelPenUp
 
@@ -89,11 +98,16 @@ type LogoModelBuilder() =
             let left = createLeft "90"
 
             let backward = createBackward "100"
+            
+            let repeat = createRepeat "2"
 
-            initialNode 
+            initialNode --> repeat
             --> forwards.[0] --> rights.[0] --> forwards.[1] --> rights.[1] --> forwards.[2] --> rights.[2]
             --> forwards.[3] --> rights.[3]
-            --> left --> backward
-            --> finalNode |> ignore
+            --> left --> backward --> repeat
+            |> ignore
 
+            let exit = repeat +-> finalNode
+            infrastructure.Element.SetAttributeValue exit "Tag" "Exit"
+            
             0 |> ignore

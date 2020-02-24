@@ -210,6 +210,9 @@
   <ItemGroup>
     <Resource Include="View\Pictures\Toolbar\play.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\LogoPictures\repeat.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">

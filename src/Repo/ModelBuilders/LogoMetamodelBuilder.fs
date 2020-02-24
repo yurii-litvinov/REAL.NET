@@ -75,6 +75,7 @@ type LogoMetamodelBuilder() =
            let repeat = +("Repeat", "View/Pictures/LogoPictures/repeat.png", false)
 
            let link = abstractNode ---> (abstractNode, "target", "Link")
+           let taggedLink = abstractNode ---> (abstractNode, "taggedTarget", "TaggedLink")
 
            startNode --|> abstractNode
            finishNode --|> abstractNode           
@@ -92,5 +93,6 @@ type LogoMetamodelBuilder() =
            infrastructure.Element.AddAttribute right "Degrees" "AttributeKind.Double" "0"
            
            infrastructure.Element.AddAttribute repeat "Count" "AttributeKind.Int" "0"
-
+           
+           infrastructure.Element.AddAttribute taggedLink "Tag" "AttributeKind.String" ""
            ()

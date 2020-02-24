@@ -13,6 +13,8 @@ type IVariableSet =
         abstract member FindByName: name: string -> Variable
 
         abstract member FindAllByName: name: string -> Variable list
+        
+        abstract member Filter: (Variable -> bool) -> Variable list
 
         abstract member ChangeValue: v: Variable -> newValue: VariableValue -> IVariableSet
 

@@ -25,7 +25,7 @@ type Parser<'T> = Parsing<'T> option -> Parsing<'T> option
 
 module Parser =
     /// Combines two parsers: tries to parse using first parser, then second.
-    let combineParsers parser1 parser2 = 
+    let combine parser1 parser2 = 
         let combine' p1 p2 parsing =
             if parsing = None then None
             else match p1 parsing with
@@ -34,7 +34,7 @@ module Parser =
         combine' parser1 parser2
 
     /// Infix variant of combine.
-    let (>>+) parser1 parser2 = combineParsers parser1 parser2
+    let (>>+) parser1 parser2 = combine parser1 parser2
 
 
 

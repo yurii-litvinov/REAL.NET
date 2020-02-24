@@ -7,6 +7,11 @@ open Interpreters.Logo.TurtleCommand
 open Repo
 
 open System
+open Interpreters
+open Interpreters
+open Interpreters
+open Interpreters
+open Repo.FacadeLayer
 
 type Context = { Commands: LCommand list} 
 
@@ -23,7 +28,9 @@ module private Helper =
     
     let degreesName = "Degrees"
 
-    let stringToDouble x = Double.Parse x
+    let stringToDouble expr = double expr
+    
+    let stringToInt expr = int expr
 
     let findAllEdgesFrom (model: IModel) (element: IElement) =
         model.Edges |> Seq.filter (fun (e: IEdge) -> e.From = element)
@@ -31,11 +38,14 @@ module private Helper =
     let next (model: IModel) (element: IElement) = findAllEdgesFrom model element |> Seq.exactlyOne
     
     let findAllEdgesTo (model: IModel) (element: IElement) =
-        model.Edges |> Seq.filter (fun (e: IEdge) -> e.To = element) 
-
+        model.Edges |> Seq.filter (fun (e: IEdge) -> e.To = element)
+        
+    
+    let hasAttribute name (element: IElement) =
+        element.Attributes |> Seq.filter (fun x -> x.Name = name) |> Seq.isEmpty |> not
+    
 module AvailableParsers =
 
-    open Interpreters
 
     let parseForward (parsing: Parsing<Context> option) : Parsing<Context> option =
         match parsing with
@@ -104,12 +114,52 @@ module AvailableParsers =
     let parseRepeat (parsing: Parsing<Context> option) : Parsing<Context> option =
         match parsing with
         | None -> None
-        | Some ({Variables = set; Context = context; Model = model; Element = element} as p) -> ParserException.raiseException "e"
-                
-
-open Interpreters
+        | Some ({Variables = set; Context = context; Model = model; Element = element} as p) ->
+            if (element.Class.Name = "Repeat") then
+                let filter (var: Variable) =
+                    match var.Meta.PlaceOfCreation with
+                    | PlaceOfCreation(_, Some element) -> true
+                    | _ -> false
+                let edges = Helper.findAllEdgesFrom model element
+                let exitOption = edges |> Seq.filter (Helper.hasAttribute "Tag") |> Seq.tryExactlyOne
+                match exitOption with
+                    | None -> ParserException.raiseWithPlace "No exit found" (PlaceOfCreation(Some model, Some element))
+                    | Some exitEdge ->
+                        let exit = exitEdge.To
+                        let nextElementOption = edges |> Seq.except [exitEdge] |> Seq.tryExactlyOne
+                        match nextElementOption with
+                        | None -> ParserException.raiseWithPlace "No next element found" (PlaceOfCreation(Some model, Some element))
+                        | Some nextElementEdge ->
+                            let nextElement = nextElementEdge.To
+                            let vars = set.Filter filter
+                            if vars.IsEmpty then
+                                let countString = Helper.findAttributeValueByName element "Count"
+                                let count = countString |> Helper.stringToInt
+                                if (count = 0) then
+                                    Some {p with Element = exit}
+                                else
+                                    let i = Variable.createInt "repeatI" count (Some model, Some element)
+                                    let newSet = set.Add i
+                                    Some {p with Variables = newSet; Element = nextElement}
+                            else
+                                let countVarOption = vars |> Seq.filter (fun x -> x.Name = "repeatI") |> Seq.tryExactlyOne
+                                match countVarOption with
+                                | None -> ParserException.raiseWithPlace "No count found" (PlaceOfCreation(Some model, Some element))
+                                | Some ({Value = value} as countVar) ->
+                                    match value with
+                                    | Regular (Int intVal) ->
+                                        if (intVal = 1) then
+                                            let newSet = set.Remove countVar
+                                            Some {p with Element = exit; Variables = newSet}
+                                        else
+                                            let newVal = VariableValue.createInt (intVal - 1)
+                                            let newSet = set.ChangeValue countVar newVal
+                                            Some {p with Element = nextElement; Variables = newSet}
+                                    | _ -> None
+                else None
+                    
 open AvailableParsers
 
 let parseMovement: Parser<Context> = parseForward >>+ parseRight >>+ parseBackward >>+ parseLeft
 
-let parseLogo = parseMovement
+let parseLogo = parseMovement >>+ parseRepeat
