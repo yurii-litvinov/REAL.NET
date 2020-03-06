@@ -80,40 +80,50 @@ module VariableValue =
     let createBoolean x = x |> RegularType.createBoolean |> Regular
 
 module MetaData =
-
+    /// Creates meta data.
     let createMeta isMutable (place: (IModel option * IElement option)) =
         let toPlace = PlaceOfCreation
         match isMutable with
         | true -> {Mutability = VariableMutability.Mutable; PlaceOfCreation = (toPlace place)}
         | _ -> {Mutability = VariableMutability.Immutable; PlaceOfCreation = (toPlace place)}
 
+    /// Makes data immutable.
     let makeImmutable (data: MetaData) = {data with Mutability = VariableMutability.Immutable}
 
+    /// Makes data mutable.
     let makeMutable (data: MetaData) = {data with Mutability = VariableMutability.Mutable}
 
 module Variable =
-
+    /// Checks is given variable regular.
     let isRegular variable = VariableValue.isRegular variable.Value
 
+    /// Checks given variables' types for equality.
     let isTypesEqual xVariable yVariable = VariableValue.isTypesEqual xVariable.Value yVariable.Value
 
+    /// Checks given variable for mutability.
     let isMutable (x: Variable) = x.IsMutable
 
+    /// Makes variable mutable.
     let makeMutable variable = {variable with Meta = MetaData.makeMutable variable.Meta}
     
+    /// Makes variable immutable.
     let makeImmutable variable = {variable with Meta = MetaData.makeImmutable variable.Meta} 
 
+    /// Creates int variable with given name, value and meta.
     let createInt name x place = {Name = name; Value = (VariableValue.createInt x); Meta = MetaData.createMeta true place}
     
+    /// Creates double variable with given name, value and meta.
     let createDouble name x place = {Name = name; Value = (VariableValue.createDouble x); Meta = MetaData.createMeta true place}
 
+    /// Creates boolean variable with given name, value and meta.
     let createBoolean name x place = {Name = name; Value = (VariableValue.createBoolean x); Meta = MetaData.createMeta true place}
 
+    /// Changes value of given variable.
     let changeValue (newValue: VariableValue) (variable: Variable) =
         if (not variable.IsMutable) then invalidOp "Variable is immutable"
         elif (VariableValue.isTypesEqual newValue variable.Value) then {variable with Value = newValue}
         else invalidOp "Not equal types"
-    
+    /// Changes value of given value in spite of constraints.
     let forceChangeValue (newValue: VariableValue) (variable: Variable) = {variable with Value = newValue}
     
     
