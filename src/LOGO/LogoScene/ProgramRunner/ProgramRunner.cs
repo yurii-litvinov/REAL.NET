@@ -35,10 +35,7 @@ namespace LogoScene.ProgramRunner
 
         private void AddButtons()
         {
-            var command = new WpfControlsLib.Controls.Toolbar.Command(() => 
-            {
-                LaunchProgram();
-            });
+            var command = new WpfControlsLib.Controls.Toolbar.Command(LaunchProgram);
             var pictureLocation = "pack://application:,,,/" + "View/Pictures/Toolbar/play.png";
             var button = new WpfControlsLib.Controls.Toolbar.Button(command, "Run program", pictureLocation);
             toolbar.AddButton(button);

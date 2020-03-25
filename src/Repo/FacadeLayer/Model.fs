@@ -67,10 +67,15 @@ and Model
             // TODO: Clean up the memory and check correctness (for example, check for "class" relations)
             let unwrappedElement = (element :?> Element).UnderlyingElement
             // TODO: Delete all attributes.
+            infrastructure.Element.Attributes unwrappedElement
+            |> Seq.map (fun x -> x.IsMarkedDeleted <- true) |> ignore
             unwrappedElement.IsMarkedDeleted <- true
 
         member this.RestoreElement element = 
             let unwrappedElement = (element :?> Element).UnderlyingElement
+            // restoring attributes
+            infrastructure.Element.Attributes unwrappedElement
+            |> Seq.map (fun x -> x.IsMarkedDeleted <- false) |> ignore
             unwrappedElement.IsMarkedDeleted <- false
 
         member this.FindElement name =

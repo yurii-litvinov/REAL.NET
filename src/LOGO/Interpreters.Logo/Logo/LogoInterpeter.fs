@@ -29,9 +29,13 @@ type LogoRunner(model: IModel) =
         
         let isFinal (element: IElement) = element.Class.Name = "FinalNode"
         
-        let getInitialNode() = model.Elements |> Seq.filter (fun e -> e.Class.Name = "InitialNode") |> Seq.exactlyOne
-        
-        let getFinalNode() = model.Elements |> Seq.filter (fun e -> e.Class.Name = "FinalNode") |> Seq.exactlyOne
+        let getInitialNode() =
+            try model.Elements |> Seq.filter isInitial |> Seq.exactlyOne
+            with :? ArgumentException -> ParserException.raiseException "Can't find initial node"
+            
+        let getFinalNode() =
+            try model.Elements |> Seq.filter isFinal |> Seq.exactlyOne
+            with :? ArgumentException -> ParserException.raiseException "Can't find final node"
 
         let findAllEdgesFrom (element: IElement) =
             model.Edges |> Seq.filter (fun (e: IEdge) -> e.From = element)
@@ -50,7 +54,8 @@ type LogoRunner(model: IModel) =
             let context = Context.createContext
             let firstBlock = 
                 try getInitialNode() |> next
-                with :? ArgumentException -> ParserException.raiseException "Can't detect initial node or there are more than one edge from it"
+                with :? ArgumentException ->
+                    ParserException.raiseWithPlace "More than one edge from initial node" (PlaceOfCreation (Some model, getInitialNode() |> Some))
             let (wrapped: Parsing<Context> option) = {Variables = emtyVariableSet; Context = context; Model = model; Element = firstBlock} |> Some
             let result = run wrapped
             let context = result.Value |> Parsing.context
