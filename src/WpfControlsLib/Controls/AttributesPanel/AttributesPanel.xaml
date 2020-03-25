@@ -52,6 +52,28 @@
                                                     </Setter.Value>
                                                 </Setter>
                                             </DataTrigger>
+                                            <DataTrigger Binding="{Binding Path=Type}" Value="Double">
+                                                <Setter Property="ContentTemplate">
+                                                    <Setter.Value>
+                                                        <DataTemplate>
+                                                            <TextBox>
+                                                                <TextBox.Text>
+                                                                    <Binding>
+                                                                        <Binding.Path>DataContext.Value</Binding.Path>
+                                                                        <Binding.RelativeSource>
+                                                                            <RelativeSource AncestorType="DataGridCell"/>
+                                                                        </Binding.RelativeSource>
+                                                                        <Binding.ValidationRules>
+                                                                            <validators:DoubleValidation/>
+                                                                            <ExceptionValidationRule/>
+                                                                        </Binding.ValidationRules>
+                                                                    </Binding>
+                                                                </TextBox.Text>
+                                                            </TextBox>
+                                                        </DataTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </DataTrigger>
                                             <DataTrigger Binding="{Binding Path=Type}" Value="Boolean">
                                                 <Setter Property="ContentTemplate">
                                                     <Setter.Value>

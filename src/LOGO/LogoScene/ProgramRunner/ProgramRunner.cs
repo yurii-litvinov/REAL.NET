@@ -5,6 +5,8 @@ using Repo;
 using System.Collections.Generic;
 using System.Linq;
 using Interpreters.Logo.LogoSpecific;
+using Interpreters;
+using System;
 
 namespace LogoScene.ProgramRunner
 {
@@ -16,30 +18,56 @@ namespace LogoScene.ProgramRunner
 
         private readonly IConsole console;
 
-        public ProgramRunner(ITurtleCommanderAsync commander, IToolbar toolbar, IConsole console)
+        private readonly IRepo repo;
+
+        private IModel model;
+
+        public ProgramRunner(ITurtleCommanderAsync commander, IToolbar toolbar, IConsole console, IRepo repo)
         {
             this.commander = commander;
             this.toolbar = toolbar;
             this.console = console;
+            this.repo = repo;
             AddButtons();
         }
 
+        public void SetModel(string modelName) => this.model = repo.Model(modelName);
+
         private void AddButtons()
         {
-            var repo = RepoFactory.Create();
-            // TODO: remove hardcode
-            Repo.IModel model = repo.Model("LogoModel");
             var command = new WpfControlsLib.Controls.Toolbar.Command(() => 
-            { var list = RunProgram(model); RunCommandList(list); });
+            {
+                LaunchProgram();
+            });
             var pictureLocation = "pack://application:,,,/" + "View/Pictures/Toolbar/play.png";
             var button = new WpfControlsLib.Controls.Toolbar.Button(command, "Run program", pictureLocation);
             toolbar.AddButton(button);
         }
 
+        private void LaunchProgram()
+        {
+            if (model == null)
+            {
+                console.ReportError("No model selected");
+            }
+            else
+            {
+                var list = RunProgram(this.model);
+                RunCommandList(list);
+            }
+        }
+
         private List<LogoCommand> RunProgram(Repo.IModel model)
         {
             var runner = new LogoRunner(model);
-            runner.Run();
+            try
+            {
+                runner.Run();
+            }
+            catch (ParserException e)
+            {
+                console.ReportError(e.Message);
+            }
             ILogoContext context = runner.SpecificContext;
             var commandList = context.LogoCommands.ToList();
             commandList.Reverse();

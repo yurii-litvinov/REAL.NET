@@ -78,24 +78,6 @@ type DataModel private (name: string, metamodel: IDataModel option) =
             edges <- (edge :> IDataEdge) :: edges
             edge
 
-        member this.AddElement(element: IDataElement): unit =
-            match element with
-            | :? IDataNode -> nodes <- (element :?> IDataNode) :: nodes
-            | :? IDataEdge ->
-                let edge = element :?> IDataEdge
-                match edge.Source with
-                | Some source -> if (List.contains source (getElements())) then
-                                    source.AddOutgoingEdge edge
-                                 else invalidOp "Edge's source is not in model"
-                | None -> ()
-                match edge.Target with
-                | Some target -> if (List.contains target (getElements())) then
-                                    target.AddIncomingEdge edge
-                                    else invalidOp "Edge's target is not in model"
-                | None -> ()
-                edges <- edge :: edges
-            | _ -> invalidOp " Unknown type of element"
-        
         member this.RemoveElement(element: IDataElement): unit =
             let delete (element: IDataElement) =
                 match element with
@@ -107,15 +89,14 @@ type DataModel private (name: string, metamodel: IDataModel option) =
                 | :? IDataEdge  ->
                     let edge = element :?> IDataEdge
                     if (List.contains edge edges) then
+                        match edge.Source with
+                        | Some source -> source.DeleteOutgoingEdge edge
+                        | _ -> ()
+                        match edge.Target with
+                        | Some source -> source.DeleteIncomingEdge edge
+                        | _ -> ()
                         edges <- List.except [edge] edges
                     else invalidOp "Model does not contain this element"
-                    match edge.Source with
-                    | Some source -> source.DeleteOutgoingEdge edge
-                    | _ -> ()
-                    match edge.Target with
-                    | Some source -> source.DeleteIncomingEdge edge
-                    | _ -> ()
-                    edges <- List.except [edge] edges
                 | _ -> invalidOp "Unknown type of element"
             delete element
         

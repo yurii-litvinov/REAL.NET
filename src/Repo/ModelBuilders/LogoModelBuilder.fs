@@ -101,10 +101,11 @@ type LogoModelBuilder() =
             
             let repeat = createRepeat "2"
 
-            initialNode --> repeat
-            --> forwards.[0] --> rights.[0] --> forwards.[1] --> rights.[1] --> forwards.[2] --> rights.[2]
-            --> forwards.[3] --> rights.[3]
-            --> left --> backward --> repeat
+            initialNode --> 
+            repeat --> 
+            forwards.[0] --> rights.[0] --> forwards.[1] --> rights.[1] --> forwards.[2] --> rights.[2] --> 
+            forwards.[3] --> rights.[3] --> 
+            left --> backward --> repeat
             |> ignore
 
             let exit = repeat +-> finalNode

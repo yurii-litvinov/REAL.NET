@@ -13,6 +13,8 @@
  * limitations under the License. */
 
 using Repo;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace WpfControlsLib.Model
 {
@@ -42,6 +44,7 @@ namespace WpfControlsLib.Model
         public event EventHandler<ElementEventArgs> ElementRemoved;
         
         public event EventHandler<VertexEventArgs> NodeVisualChanged;
+
         public event EventHandler<EdgeEventArgs> EdgeVisualChanged;
 
         public event EventHandler<ElementEventArgs> ElementCheck;
@@ -172,7 +175,7 @@ namespace WpfControlsLib.Model
         public void RestoreElement(Repo.IElement element)
         {
             var model = this.Repo.Model(this.ModelName);
-            model.AddElement(element);
+            model.RestoreElement(element);
             // Raising new element
             HasUnsavedChanges = true;
             if (element is INode node)
@@ -188,7 +191,9 @@ namespace WpfControlsLib.Model
         public void RemoveElement(Repo.IElement element)
         {
             var model = this.Repo.Model(this.ModelName);
+            var a = model.Elements.Count();
             model.RemoveElement(element);
+            var b = model.Elements.Count();
             HasUnsavedChanges = true;
             this.RaiseElementRemoved(element);
         }

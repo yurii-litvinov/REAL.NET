@@ -245,7 +245,7 @@ type IModel =
         abstract RemoveElement: element: IElement -> unit
 
         /// Restores given element to this model
-        abstract AddElement: element: IElement -> unit
+        abstract RestoreElement: element: IElement -> unit
 
         /// Searches for an element with given name in a model. Throws if there is no such element or there is 
         /// more than one.

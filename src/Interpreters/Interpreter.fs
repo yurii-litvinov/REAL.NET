@@ -1,4 +1,4 @@
-﻿namespace Interpreterers
+﻿namespace Interpreters
 
 open Repo
 

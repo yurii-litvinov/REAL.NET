@@ -10,8 +10,8 @@ open Interpreters.Logo.LogoSpecific
 
 open Interpreters
 
-open Interpreterers
 open TurtleCommand
+open System
 
 type LogoContext(list) = 
     class
@@ -48,7 +48,10 @@ type LogoRunner(model: IModel) =
                 | _ -> p |> LogoParser.parseLogo |> run
             let emtyVariableSet = Interpreters.VariableSet.VariableSetFactory.CreateVariableSet([])
             let context = Context.createContext
-            let (wrapped: Parsing<Context> option) = {Variables = emtyVariableSet; Context = context; Model = model; Element = getInitialNode() |> next} |> Some
+            let firstBlock = 
+                try getInitialNode() |> next
+                with :? ArgumentException -> ParserException.raiseException "Can't detect initial node or there are more than one edge from it"
+            let (wrapped: Parsing<Context> option) = {Variables = emtyVariableSet; Context = context; Model = model; Element = firstBlock} |> Some
             let result = run wrapped
             let context = result.Value |> Parsing.context
             commandList <- context.Commands

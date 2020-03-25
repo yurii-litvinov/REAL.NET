@@ -27,6 +27,8 @@ type DataElement(``class``: IDataElement option, model: IDataModel) =
             | Some v -> v
             | None -> this :> IDataElement
 
+        member this.IsMarkedDeleted with get() = isMarkedDeleted and set(value) = isMarkedDeleted <- value
+
         member this.OutgoingEdges =
             Seq.ofList outgoingEdges
 

@@ -90,7 +90,7 @@ let ``Model shall allow to add or restore elements``() =
     node.AddAttribute ("Attribute2", AttributeKind.Int, "0") |> ignore
     model.RemoveElement node
     model.Nodes |> should not' (contain node)
-    model.AddElement node
+    model.RestoreElement node
     model.Nodes |> should contain node
 
 [<Test>]

@@ -20,6 +20,9 @@ type IDataElement =
         /// Type of an element.
         abstract Class: IDataElement with get
 
+        /// Is this element should be stored or deleted.
+        abstract IsMarkedDeleted: bool with get, set
+
         /// Outgoing edges for that element.
         abstract OutgoingEdges: IDataEdge seq with get
 
@@ -129,9 +132,6 @@ and IDataModel =
         /// A map of custom model properties.
         abstract Properties: Map<string, string> with get, set
 
-        /// Adds an element to the model.
-        abstract AddElement: element: IDataElement -> unit 
-        
         /// Removes element from a model.
         abstract RemoveElement: element: IDataElement -> unit
     end

@@ -97,11 +97,10 @@ namespace WpfEditor.View
 
             this.InitAndLaunchPlugins();
             this.InitToolbar();
+            this.InitProgramRunner();
 
             this.modelSelector.Init(this.model);
             this.modelSelector.ChangeModel(0);
-
-            InitProgramRunner();
         }
 
         private void Reinit(object sender, EventArgs e)
@@ -122,6 +121,7 @@ namespace WpfEditor.View
             this.palette.InitPalette(this.model.ModelName);
             this.scene.Reload();
             this.OnModelChanged?.Invoke(this.model.ModelName);
+            this.programRunner.SetModel(modelName);
         }
 
         private void InitToolbar()
@@ -258,7 +258,7 @@ namespace WpfEditor.View
 
         private void InitProgramRunner()
         {
-            programRunner = new LogoScene.ProgramRunner.ProgramRunner(this.DrawingScene.TurtleCommander, this.Toolbar, this.Console);
+            programRunner = new LogoScene.ProgramRunner.ProgramRunner(this.DrawingScene.TurtleCommander, this.Toolbar, this.Console, this.model.Repo);
         }
     }
 }

@@ -22,6 +22,7 @@ open Repo.InfrastructureSemanticLayer
 ///Model repository. Holds all already created wrappers for data models, creates them as needed.
 type ModelRepository(infrastructure: InfrastructureSemantic, elementRepository: IElementRepository) =
     let models = Dictionary<DataLayer.IDataModel, Model>()
+
     member this.GetModel (data: DataLayer.IDataModel) =
         if models.ContainsKey data then
             models.[data] :> IModel
@@ -41,6 +42,8 @@ and Model
         elementRepository: IElementRepository,
         repository: ModelRepository
     ) =
+
+    let isDeleted (element: DataLayer.IDataElement) = element.IsMarkedDeleted
 
     /// Initializing infrastructural properties of a model
     do
@@ -64,11 +67,11 @@ and Model
             // TODO: Clean up the memory and check correctness (for example, check for "class" relations)
             let unwrappedElement = (element :?> Element).UnderlyingElement
             // TODO: Delete all attributes.
-            this.UnderlyingModel.RemoveElement unwrappedElement
+            unwrappedElement.IsMarkedDeleted <- true
 
-        member this.AddElement element = 
+        member this.RestoreElement element = 
             let unwrappedElement = (element :?> Element).UnderlyingElement
-            this.UnderlyingModel.AddElement unwrappedElement
+            unwrappedElement.IsMarkedDeleted <- false
 
         member this.FindElement name =
             let matchingElements =
@@ -84,12 +87,14 @@ and Model
         member this.Nodes =
             model.Nodes
             |> Seq.filter infrastructure.Metamodel.IsNode
+            |> Seq.filter (isDeleted >> not)
             |> Seq.map elementRepository.GetElement
             |> Seq.cast<INode>
 
         member this.Edges =
             model.Edges
             |> Seq.filter infrastructure.Metamodel.IsAssociation
+            |> Seq.filter (isDeleted >> not)
             |> Seq.map elementRepository.GetElement
             |> Seq.cast<IEdge>
 
