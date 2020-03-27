@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="VariableTests.fs" />
+    <Compile Include="LexerTests.fs" />
     <None Include="paket.references" />
     <Content Include="App.config" />
   </ItemGroup>

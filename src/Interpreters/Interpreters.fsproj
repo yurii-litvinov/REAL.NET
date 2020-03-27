@@ -56,6 +56,9 @@
     <Compile Include="Exceptions.fs" />
     <Compile Include="Expressions\ExpressionParser.fs" />
     <Compile Include="Expressions\ExpressionParsers\StringExpressionParser.fs" />
+    <Compile Include="Expressions\TypeTransform.fs" />
+    <Compile Include="Expressions\Lexems.fs" />
+    <Compile Include="Expressions\Lexer.fs" />
     <Compile Include="ExpressionParserBuilder.fs" />
     <Compile Include="Parser.fs" />
     <Compile Include="Common\VariableList.fs" />
