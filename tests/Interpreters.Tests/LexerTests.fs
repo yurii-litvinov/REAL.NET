@@ -3,123 +3,184 @@
 open FsUnit
 open NUnit.Framework
 
+open Interpreters
 open Interpreters.Expressions.Lexer
-open NUnit.Framework.Internal
+open Interpreters.Expressions
+open StringPatterns
 
 [<Test>]
 let ``int validation test``() =
-    let pattern = StringPatterns.intPattern
     let firstString = "123 456"
     match firstString with
-    | FirstRegex pattern matching -> matching |> should equal "123"
+    | IntToken matching -> matching |> should equal (IntConst 123, " 456")    
     | _ -> Assert.Fail "No matching first string"
     let secondString = "-456 789"
     match secondString with
-    | FirstRegex pattern matching -> matching |> should equal "-456"
+    | IntToken matching -> matching |> should equal (IntConst -456, " 789")
     | _ -> Assert.Fail "No matching second string"
     let thirdString = "x123"
     match thirdString with
-    | FirstRegex pattern _ -> Assert.Fail "Should not be matched"
+    | IntToken _ -> Assert.Fail "Should not be matched"
     | _ -> ignore 0
 
 [<Test>]
 let ``double validation test``() = 
-    let pattern = StringPatterns.doublePattern
     let firstString = "123.001 456"
     match firstString with
-    | FirstRegex pattern matching -> matching |> should equal "123.001"
+    | DoubleToken matching -> matching |> should equal (DoubleConst 123.001, " 456")
     | _ -> Assert.Fail "No matching in first string"
     let secondString = "-123.456 a"
     match secondString with
-    | FirstRegex pattern matching -> matching |> should equal "-123.456"
+    | DoubleToken matching -> matching |> should equal (DoubleConst -123.456, " a")
     | _ -> Assert.Fail "No matching in second string"
     let thirdString = "124 456"
     match thirdString with
-    | FirstRegex pattern m -> Assert.Fail <| "Should not be matched" + m.ToString()
+    | DoubleToken m -> Assert.Fail <| "Should not be matched" + m.ToString()
     | _ -> ignore 0
 
 [<Test>]
 let ``bool validation test``() =
-    let pattern = StringPatterns.boolPattern
-    let trueString = "true"
+    let trueString = "true 123"
     match trueString with
-    | FirstRegex pattern matching -> matching |> should equal "true"
+    | BoolToken matching -> matching |> should equal (BoolConst true, " 123")
     | _ -> Assert.Fail "No matching in true string"
-    let falseString = "false"
+    let falseString = "false 456"
     match falseString with
-    | FirstRegex pattern matching -> matching |> should equal "false"
+    | BoolToken matching -> matching |> should equal (BoolConst false, " 456")
     | _ -> Assert.Fail "No matching with false string"
-    let someString = "MyString"
+    let someString = "MyString false"
     match someString with
-    | FirstRegex pattern _ -> Assert.Fail "Should not be matched"
+    | BoolToken _ -> Assert.Fail "Should not be matched"
     | _ -> ignore 0
     
 [<Test>]
 let ``name validation test``() =
-    let pattern = StringPatterns.namePattern
     let firstString = "var1 + var2"
     match firstString with
-    | FirstRegex pattern matching -> matching |> should equal "var1"
+    | NameToken matching -> matching |> should equal (Name "var1", " + var2")
     | _ -> Assert.Fail "No matching with first string"
     let secondString = "_myVariable1ef / 1234"
     match secondString with
-    | FirstRegex pattern matching -> matching |> should equal "_myVariable1ef"
+    | NameToken matching -> matching |> should equal (Name "_myVariable1ef", " / 1234")
     | _ -> Assert.Fail "No matching with second string"
     let thirdString = "_123"
     match thirdString with
-    | FirstRegex pattern _ -> Assert.Fail "Should not be matched"
+    | NameToken _ -> Assert.Fail "Should not be matched"
     | _ -> ignore 0
   
 [<Test>]
 let ``string validation test``() =
-    let pattern = StringPatterns.stringPattern
     let quote = "\""
-    let firstString = quote + "String" + quote + "Some other info"
+    let firstString = quote + "String" + quote + " Some \"other\" info"
     match firstString with
-    | FirstRegex pattern matching -> matching |> should equal (quote + "String" + quote)
+    | StringToken matching -> matching |> should equal (StringConst (quote + "String" + quote), " Some \"other\" info")
     | _ -> Assert.Fail "No matching in first string"
     let secondString = quote + "String"
     match secondString with
-    | FirstRegex pattern _ -> Assert.Fail "Should not be matched"
-    | _ -> ignore 0
-    
-[<Test>]
-let ``new operator pattern test``() =
-    let pattern = StringPatterns.newPattern
-    let newString = "new"
-    match newString with
-    | FirstRegex pattern matching -> matching |> should equal "new"
-    | _ -> Assert.Fail "No matching in new operator"
-    let notStrString = "notStr"
-    match notStrString with
-    | FirstRegex pattern _ -> Assert.Fail "Should not be matched"
+    | StringToken _ -> Assert.Fail "Should not be matched"
     | _ -> ignore 0
     
 [<Test>]
 let ``type pattern test``() =
-    let pattern = StringPatterns.typePattern
-    let intString = "int"
+    let intString = "int a"
     match intString with
-    | FirstRegex pattern matching -> matching |> should equal "int"
+    | TypeToken matching -> matching |> should equal (TypeSelection PrimitiveTypes.Int, " a")
     | _ -> Assert.Fail "No int type matching"
-    let doubleString = "double"
+    let doubleString = "double b"
     match doubleString with
-    | FirstRegex pattern matching -> matching |> should equal "double"
+    | TypeToken matching -> matching |> should equal (TypeSelection PrimitiveTypes.Double, " b")
     | _ -> Assert.Fail "No double type matching"
-    let boolString = "bool"
+    let boolString = "bool c"
     match boolString with
-    | FirstRegex pattern matching -> matching |> should equal "bool"
+    | TypeToken matching -> matching |> should equal (TypeSelection PrimitiveTypes.Bool, " c")
     | _ -> Assert.Fail "No bool type matching"
-    let stringString = "string"
+    let stringString = "string d"
     match stringString with
-    | FirstRegex pattern matching -> matching |> should equal "string"
+    | TypeToken matching -> matching |> should equal (TypeSelection PrimitiveTypes.String, " d")
     | _ -> Assert.Fail "No string type matching"
     let someString = "someType"
     match someString with
-    | FirstRegex pattern matching -> Assert.Fail "Should not be matched"
+    | TypeToken _ -> Assert.Fail "Should not be matched"
     | _ -> ignore 0
     
+[<Test>]
+let ``new operator pattern test``() =
+    let newString = "new int"
+    match newString with
+    | NewToken matching -> matching |> should equal (NewOperator, " int")
+    | _ -> Assert.Fail "No matching in new operator"
+    let notStrString = "notStr"
+    match notStrString with
+    | NewToken _ -> Assert.Fail "Should not be matched"
+    | _ -> ignore 0
     
+[<Test>]
+let ``bin operators validation test``() =
+    let plusString = "+ -some"
+    match plusString with
+    | BinOpToken matching -> matching |> should equal (PlusOp, " -some")
+    | _ -> Assert.Fail "No matching plus"
+    let minusString = "- + some"
+    match minusString with
+    | BinOpToken matching -> matching |> should equal (MinusOp, " + some")
+    | _ -> Assert.Fail "No matching minus"
+    let multiplyString = "* some"
+    match multiplyString with
+    | BinOpToken matching -> matching |> should equal (MultiplyOp, " some")
+    | _ -> Assert.Fail "No matching multiply"
+    let divideString = "/ some"
+    match divideString with
+    | BinOpToken matching -> matching |> should equal (DivideOp, " some")
+    | _ -> Assert.Fail "No matching divide"
+    let equalityString = "== some"
+    match equalityString with
+    | BinOpToken matching -> matching |> should equal (EqualityOp, " some")
+    | _ -> Assert.Fail "No matching equality"
+    let inequalityString = "!= some"
+    match inequalityString with
+    | BinOpToken matching -> matching |> should equal (InequalityOp, " some")
+    | _ -> Assert.Fail "No matching inequality"
+
+[<Test>]    
+let ``unary operator validation test``() =
+    let negativeString = "-a + b"
+    match negativeString with
+    | UnOperatorToken matching -> matching |> should equal (Negative, "a + b")
+    | _ -> Assert.Fail "No matching negative operator"
+    let notString = "!ab cd"
+    match notString with
+    | UnOperatorToken matching -> matching |> should equal (Not, "ab cd")
+    | _ -> Assert.Fail "No matching logical not operator"
     
+[<Test>]
+let ``brackets validation test``() =
+    let openRoundString = "(test"
+    match openRoundString with
+    | BracketToken matching -> matching |> should equal (OpeningRoundBracket, "test")
+    | _ -> Assert.Fail "No matching opening round bracket"
+    let closeRoundString = ")tested some code"
+    match closeRoundString with
+    | BracketToken matching -> matching |> should equal (ClosingRoundBracket, "tested some code")
+    | _ -> Assert.Fail "No matching closing round bracket"
+    let openSquareString = "[test"
+    match openSquareString with
+    | BracketToken matching -> matching |> should equal (OpeningSquareBracket, "test")
+    | _ -> Assert.Fail "No matching opening square bracket"
+    let closeSquareString = "]tested some code"
+    match closeSquareString with
+    | BracketToken matching -> matching |> should equal (ClosingSquareBracket, "tested some code")
+    | _ -> Assert.Fail "No matching closing square bracket"
+    let openCurlyString = "{test"
+    match openCurlyString with
+    | BracketToken matching -> matching |> should equal (OpeningCurlyBracket, "test")
+    | _ -> Assert.Fail "No matching opening curly bracket"
+    let closeCurlyString = "}tested some code"
+    match closeCurlyString with
+    | BracketToken matching -> matching |> should equal (ClosingCurlyBracket, "tested some code")
+    | _ -> Assert.Fail "No matching closing curly bracket"
     
-    
+let ``comma validation test``() =
+    let commaString = ", some test"
+    match commaString with
+    | CommaToken matching -> matching |> should equal (Comma, " some test")
+    | _ -> Assert.Fail "No matching comma"

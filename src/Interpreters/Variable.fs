@@ -30,9 +30,9 @@ type MetaData = {Mutability: VariableMutability; PlaceOfCreation: PlaceOfCreatio
 /// Represents a variable, contains name, value and meta.
 type Variable = { Name: string; Value: VariableValue; Meta: MetaData } with
     /// Checks values of given variables for equality.
-    static member (==) (x, y) = x.Value = y.Value
+    static member ( == ) (x, y) = x.Value = y.Value
 
-    /// Checks variable's mutability.
+    /// Checks variable for mutability.
     member this.IsMutable = this.Meta.IsMutable
 
 module PlaceOfCreation =
