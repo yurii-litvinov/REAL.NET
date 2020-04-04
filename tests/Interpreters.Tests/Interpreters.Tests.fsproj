@@ -61,6 +61,7 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="VariableTests.fs" />
     <Compile Include="LexerTests.fs" />
+    <Compile Include="SyntaxParsersTests.fs" />
     <None Include="paket.references" />
     <Content Include="App.config" />
   </ItemGroup>

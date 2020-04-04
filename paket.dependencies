@@ -18,6 +18,7 @@ nuget Newtonsoft.Json
 nuget System.Windows.Interactivity.WPF
 nuget Expression.Interaction
 nuget System.Xml.XmlDocument
+nuget System.Collections.Immutable
 
 group Tests
 

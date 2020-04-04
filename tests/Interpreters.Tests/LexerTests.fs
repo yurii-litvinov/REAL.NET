@@ -4,6 +4,7 @@ open FsUnit
 open NUnit.Framework
 
 open Interpreters
+open Interpreters.Expressions.Lexemes
 open Interpreters.Expressions.Lexer
 open Interpreters.Expressions
 open StringPatterns
@@ -21,7 +22,7 @@ let ``int validation test``() =
     let thirdString = "x123"
     match thirdString with
     | IntToken _ -> Assert.Fail "Should not be matched"
-    | _ -> ignore 0
+    | _ -> ignore 0  
 
 [<Test>]
 let ``double validation test``() = 
@@ -57,11 +58,11 @@ let ``bool validation test``() =
 let ``name validation test``() =
     let firstString = "var1 + var2"
     match firstString with
-    | NameToken matching -> matching |> should equal (Name "var1", " + var2")
+    | NameToken matching -> matching |> should equal (VariableName "var1", " + var2")
     | _ -> Assert.Fail "No matching with first string"
     let secondString = "_myVariable1ef / 1234"
     match secondString with
-    | NameToken matching -> matching |> should equal (Name "_myVariable1ef", " / 1234")
+    | NameToken matching -> matching |> should equal (VariableName "_myVariable1ef", " / 1234")
     | _ -> Assert.Fail "No matching with second string"
     let thirdString = "_123"
     match thirdString with
@@ -118,38 +119,66 @@ let ``new operator pattern test``() =
 let ``bin operators validation test``() =
     let plusString = "+ -some"
     match plusString with
-    | BinOpToken matching -> matching |> should equal (PlusOp, " -some")
+    | BinOpToken matching -> matching |> should equal (BinOp PlusOp, " -some")
     | _ -> Assert.Fail "No matching plus"
     let minusString = "- + some"
     match minusString with
-    | BinOpToken matching -> matching |> should equal (MinusOp, " + some")
+    | BinOpToken matching -> matching |> should equal (BinOp MinusOp, " + some")
     | _ -> Assert.Fail "No matching minus"
     let multiplyString = "* some"
     match multiplyString with
-    | BinOpToken matching -> matching |> should equal (MultiplyOp, " some")
+    | BinOpToken matching -> matching |> should equal (BinOp MultiplyOp, " some")
     | _ -> Assert.Fail "No matching multiply"
     let divideString = "/ some"
     match divideString with
-    | BinOpToken matching -> matching |> should equal (DivideOp, " some")
+    | BinOpToken matching -> matching |> should equal (BinOp DivideOp, " some")
     | _ -> Assert.Fail "No matching divide"
     let equalityString = "== some"
     match equalityString with
-    | BinOpToken matching -> matching |> should equal (EqualityOp, " some")
+    | BinOpToken matching -> matching |> should equal (BinOp EqualityOp, " some")
     | _ -> Assert.Fail "No matching equality"
     let inequalityString = "!= some"
     match inequalityString with
-    | BinOpToken matching -> matching |> should equal (InequalityOp, " some")
+    | BinOpToken matching -> matching |> should equal (BinOp InequalityOp, " some")
     | _ -> Assert.Fail "No matching inequality"
+    let biggerString = "> some"
+    match biggerString with
+    | BinOpToken matching -> matching |> should equal (BinOp BiggerOp, " some")
+    | _ -> Assert.Fail "No matching bigger"
+    let lessString = "< some"
+    match lessString with
+    | BinOpToken matching -> matching |> should equal (BinOp LessOp, " some")
+    | _ -> Assert.Fail "No matching less"
+    let biggerOrLessString = ">= some"
+    match biggerOrLessString with
+    | BinOpToken matching -> matching |> should equal (BinOp BiggerOrEqualOp, " some")
+    | _ -> Assert.Fail "No matching bigger or equal"
+    let lessOrEqualString = "<= some"
+    match lessOrEqualString with
+    | BinOpToken matching -> matching |> should equal (BinOp LessOrEqualOp, " some")
+    | _ -> Assert.Fail "No matching less or equal"
+    let assignmentString = "= b"
+    match assignmentString with
+    | BinOpToken matching -> matching |> should equal (BinOp AssigmentOp, " b")
+    | _ -> Assert.Fail "No matching assigment"
+    let andString = "&& a"
+    match andString with
+    | BinOpToken matching -> matching |> should equal (BinOp AndOp, " a")
+    | _ -> Assert.Fail "No matching and"
+    let orString = "|| b"
+    match orString with
+    | BinOpToken matching -> matching |> should equal (BinOp OrOp, " b")
+    | _ -> Assert.Fail "No matching or"
 
 [<Test>]    
 let ``unary operator validation test``() =
     let negativeString = "-a + b"
     match negativeString with
-    | UnOperatorToken matching -> matching |> should equal (Negative, "a + b")
+    | UnOpToken matching -> matching |> should equal (UnOp Negative, "a + b")
     | _ -> Assert.Fail "No matching negative operator"
     let notString = "!ab cd"
     match notString with
-    | UnOperatorToken matching -> matching |> should equal (Not, "ab cd")
+    | UnOpToken matching -> matching |> should equal (UnOp Not, "ab cd")
     | _ -> Assert.Fail "No matching logical not operator"
     
 [<Test>]
@@ -184,3 +213,22 @@ let ``comma validation test``() =
     match commaString with
     | CommaToken matching -> matching |> should equal (Comma, " some test")
     | _ -> Assert.Fail "No matching comma"
+
+[<Test>]    
+let ``complex tests``() =
+    let complexArythmeticExpressionString = "(a + b) + (-c) - d + fe[1+i]"
+    complexArythmeticExpressionString |> Lexer.parseString
+    |> should equivalent [ OpeningRoundBracket; VariableName("a"); BinOp PlusOp; VariableName("b"); ClosingRoundBracket; 
+                           BinOp PlusOp; OpeningRoundBracket; UnOp Negative; VariableName("c"); ClosingRoundBracket;
+                           BinOp MinusOp; VariableName("d"); BinOp PlusOp;
+                           VariableName("fe"); OpeningSquareBracket; IntConst(1); BinOp PlusOp; VariableName("i"); ClosingSquareBracket ]
+    let logicalExpressionString = "a && !b || arr[c]"
+    logicalExpressionString |> Lexer.parseString
+    |> should equivalent [ VariableName("a"); BinOp AndOp; UnOp Not; VariableName("b"); BinOp OrOp; VariableName("arr");
+                           OpeningSquareBracket; VariableName("c"); ClosingSquareBracket; ]
+    let initArrayString = "arr = new int[5]{1, 2, 3, 4, 5}"
+    initArrayString |> Lexer.parseString
+    |> should equivalent [ VariableName("arr"); BinOp AssigmentOp; NewOperator; TypeSelection(PrimitiveTypes.Int); OpeningSquareBracket
+                           IntConst(5); ClosingSquareBracket; OpeningCurlyBracket;
+                           IntConst(1); Comma; IntConst(2); Comma; IntConst(3); Comma;
+                           IntConst(4); Comma; IntConst(5); ClosingCurlyBracket ]

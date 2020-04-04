@@ -1,6 +1,41 @@
-﻿namespace Interpreters.Expressions
+﻿module Interpreters.Expressions.Lexemes
 
 open Interpreters
+
+type BinOp =
+    /// Operator +.
+    | PlusOp
+    /// Operator -.
+    | MinusOp
+    /// Operator *.
+    | MultiplyOp
+    /// Operator /.
+    | DivideOp
+    /// Operator ==.
+    | EqualityOp
+    /// Operator !=.
+    | InequalityOp
+    /// Operator >.
+    | BiggerOp
+    /// Operator <.
+    | LessOp
+    /// Operator >=.
+    | BiggerOrEqualOp
+    /// Operator <=.
+    | LessOrEqualOp
+    /// Logical and.
+    | AndOp
+    /// Logical or.
+    | OrOp
+    /// Assigment operator =.
+    | AssigmentOp
+
+type UnOp =
+     // Unary operators.
+    /// Negative operator -, for example, -a.
+    | Negative
+    /// Operator !, logical not.
+    | Not
     
 /// Type which represents token.
 type Terminal =
@@ -16,34 +51,15 @@ type Terminal =
     // ---------------
     // Types and variables.
     /// Variable.
-    | Name of string
+    | VariableName of string
+    /// Function.
+    | FunctionName of string
     /// Type declaration, such as int, double, string or bool
     | TypeSelection of PrimitiveTypes
     /// New operator.
     | NewOperator
-    // ----------------
-    // Binary Operators
-    /// Operator +.
-    | PlusOp
-    /// Operator -.
-    | MinusOp
-    /// Operator *.
-    | MultiplyOp
-    /// Operator /.
-    | DivideOp
-    /// Operator ==.
-    | EqualityOp
-    /// Operator !=.
-    | InequalityOp
-    /// Assigment operator =.
-    | AssigmentOp
-    // ----------------
-    // Unary operators.
-    /// Negative operator -, for example, -a.
-    | Negative
-    /// Operator !, logical not.
-    | Not
-    // ----------------
+    | BinOp of BinOp
+    | UnOp of UnOp
     // Brackets.
     /// (.
     | OpeningRoundBracket

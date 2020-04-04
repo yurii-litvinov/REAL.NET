@@ -8,6 +8,7 @@ type RegularType =
     | Int of int
     | Double of double
     | Boolean of bool
+    | String of string
 
 /// Represents a value, could be regular or complex
 type VariableValue = 
@@ -46,7 +47,16 @@ module RegularType =
         | (Int _, Int _) -> true
         | (Boolean _, Boolean _) -> true
         | (Double _, Double _) -> true
+        | (String _, String _) -> true
         | _ -> false // notice: not implemented for other types
+    
+    /// Gets the type of regular value.    
+    let getType xValue =
+        match xValue with
+        | Int _ -> PrimitiveTypes.Int
+        | Boolean _ -> PrimitiveTypes.Bool
+        | Double _ -> PrimitiveTypes.Double
+        | String _ -> PrimitiveTypes.String
     
     /// Creates wrapped int value.
     let createInt x = Int x
@@ -56,6 +66,9 @@ module RegularType =
     
     /// Creates wrapped boolean value.
     let createBoolean x = Boolean x
+    
+    /// Creates wrapped string value.
+    let createString x = String x
 
 module VariableValue =
     /// Checks is given type regular.
@@ -78,7 +91,10 @@ module VariableValue =
 
     /// Creates wrapped boolean value.
     let createBoolean x = x |> RegularType.createBoolean |> Regular
-
+    
+    /// Creates wrapped string value.
+    let createString x = x |> RegularType.createString |> Regular
+    
 module MetaData =
     /// Creates meta data.
     let createMeta isMutable (place: (IModel option * IElement option)) =
@@ -117,6 +133,9 @@ module Variable =
 
     /// Creates boolean variable with given name, value and meta.
     let createBoolean name x place = {Name = name; Value = (VariableValue.createBoolean x); Meta = MetaData.createMeta true place}
+    
+    /// Creates string variable with given name, value and meta.
+    let createString name x place = {Name = name; Value = (VariableValue.createString x); Meta = MetaData.createMeta true place}
 
     /// Changes value of given variable.
     let changeValue (newValue: VariableValue) (variable: Variable) =

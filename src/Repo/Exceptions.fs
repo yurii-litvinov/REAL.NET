@@ -36,7 +36,7 @@ exception MultipleElementsException of elementName: string
 exception AttributeNotFoundException of attributeName: string
 
 /// Thrown when there is more than one attribute with given name.
-exception MultipleAtributesException of attributeName: string
+exception MultipleAttributesException of attributeName: string
 
 /// Thrown if we are trying to do something wrong with a model. Most probably means incorrect model or
 /// internal error in repository.
