@@ -68,6 +68,14 @@ let ``name validation test``() =
     match thirdString with
     | NameToken _ -> Assert.Fail "Should not be matched"
     | _ -> ignore 0
+    let functionString = "func(123)"
+    match functionString with
+    | NameToken matching -> matching |> should equal (FunctionName "func", "(123)")
+    | _ -> Assert.Fail "No matching function"
+    let arrayString = "arr[123]"
+    match arrayString with
+    | NameToken matching -> matching |> should equal (ArrayName "arr", "[123]")
+    | _ -> Assert.Fail "No matching array"
   
 [<Test>]
 let ``string validation test``() =
@@ -218,17 +226,18 @@ let ``comma validation test``() =
 let ``complex tests``() =
     let complexArythmeticExpressionString = "(a + b) + (-c) - d + fe[1+i]"
     complexArythmeticExpressionString |> Lexer.parseString
-    |> should equivalent [ OpeningRoundBracket; VariableName("a"); BinOp PlusOp; VariableName("b"); ClosingRoundBracket; 
-                           BinOp PlusOp; OpeningRoundBracket; UnOp Negative; VariableName("c"); ClosingRoundBracket;
-                           BinOp MinusOp; VariableName("d"); BinOp PlusOp;
-                           VariableName("fe"); OpeningSquareBracket; IntConst(1); BinOp PlusOp; VariableName("i"); ClosingSquareBracket ]
-    let logicalExpressionString = "a && !b || arr[c]"
+    |> should equal [ OpeningRoundBracket; VariableName("a"); BinOp PlusOp; VariableName("b"); ClosingRoundBracket; 
+                      BinOp PlusOp; OpeningRoundBracket; UnOp Negative; VariableName("c"); ClosingRoundBracket;
+                      BinOp MinusOp; VariableName("d"); BinOp PlusOp;
+                      ArrayName("fe"); OpeningSquareBracket; IntConst(1); BinOp PlusOp; VariableName("i"); ClosingSquareBracket ]
+    let logicalExpressionString = "f(a) && !b || arr[c]"
     logicalExpressionString |> Lexer.parseString
-    |> should equivalent [ VariableName("a"); BinOp AndOp; UnOp Not; VariableName("b"); BinOp OrOp; VariableName("arr");
-                           OpeningSquareBracket; VariableName("c"); ClosingSquareBracket; ]
+    |> should equal [ FunctionName("f"); OpeningRoundBracket; VariableName("a"); ClosingRoundBracket;
+                      BinOp AndOp; UnOp Not; VariableName("b"); BinOp OrOp; ArrayName("arr");
+                      OpeningSquareBracket; VariableName("c"); ClosingSquareBracket; ]
     let initArrayString = "arr = new int[5]{1, 2, 3, 4, 5}"
     initArrayString |> Lexer.parseString
-    |> should equivalent [ VariableName("arr"); BinOp AssigmentOp; NewOperator; TypeSelection(PrimitiveTypes.Int); OpeningSquareBracket
-                           IntConst(5); ClosingSquareBracket; OpeningCurlyBracket;
-                           IntConst(1); Comma; IntConst(2); Comma; IntConst(3); Comma;
-                           IntConst(4); Comma; IntConst(5); ClosingCurlyBracket ]
+    |> should equal [ VariableName("arr"); BinOp AssigmentOp; NewOperator; TypeSelection(PrimitiveTypes.Int); OpeningSquareBracket
+                      IntConst(5); ClosingSquareBracket; OpeningCurlyBracket;
+                      IntConst(1); Comma; IntConst(2); Comma; IntConst(3); Comma;
+                      IntConst(4); Comma; IntConst(5); ClosingCurlyBracket ]

@@ -12,7 +12,7 @@ type AbstractSyntaxNode =
     | Minus of AbstractSyntaxNode * AbstractSyntaxNode
     | Multiply of AbstractSyntaxNode * AbstractSyntaxNode
     | Divide of AbstractSyntaxNode * AbstractSyntaxNode
-    | Assigment of Variable * AbstractSyntaxNode
+    | Assigment of AbstractSyntaxNode * AbstractSyntaxNode
     | Equality of AbstractSyntaxNode * AbstractSyntaxNode
     | Inequality of AbstractSyntaxNode * AbstractSyntaxNode
     | LogicalOr of AbstractSyntaxNode * AbstractSyntaxNode
@@ -20,6 +20,6 @@ type AbstractSyntaxNode =
     | Variable of string 
     | IndexAt of string * AbstractSyntaxNode
     | ArrayDeclaration of PrimitiveTypes * int * AbstractSyntaxNode list
-      
+    
   
 

@@ -54,6 +54,8 @@ type Terminal =
     | VariableName of string
     /// Function.
     | FunctionName of string
+    /// Array.
+    | ArrayName of string
     /// Type declaration, such as int, double, string or bool
     | TypeSelection of PrimitiveTypes
     /// New operator.

@@ -1,6 +1,8 @@
 ﻿module Interpreters.Expressions.SyntaxParser
 
+open Interpreters.Expressions
 open System.Collections.Immutable
+open System.Reflection
 open Interpreters.Expressions.Lexemes
 
 let prior op =
@@ -19,11 +21,17 @@ let prior op =
     | OrOp -> 2
     | AssigmentOp -> 0
 
-let private convertBinToAST op =
+let private getConstructor op =
     match op with
     | PlusOp -> AST.Plus
     | MinusOp -> AST.Minus
-    
+    | DivideOp -> AST.Divide
+    | MultiplyOp -> AST.Multiply
+    | AndOp -> AST.LogicalAnd
+    | OrOp -> AST.LogicalOr
+    | EqualityOp -> AST.Equality
+    | InequalityOp -> AST.Inequality
+    | _ -> failwith "Not implemented"
 
 module Helper =
     let toPostfix lexemes = 
@@ -49,7 +57,8 @@ module Helper =
                     let rec toOutput stack (output: ImmutableQueue<_>) =
                         match stack with
                         | BinOp op2 :: t when (prior op2) >= (prior op1) -> toOutput t (output.Enqueue(BinOp op2))
-                        | _ -> (stack, output)
+                        | FunctionName _ as f :: t -> toOutput t (output.Enqueue(f))
+                        | _ -> (stack, output) // TODO unary operator
                     let (newStack, newOutput) = toOutput stack output
                     toPostfix' tail (BinOp op1 :: newStack) newOutput
                 | OpeningRoundBracket as b -> toPostfix' tail (b :: stack) output
@@ -87,10 +96,33 @@ module Helper =
                 | DoubleConst x -> fromPostfixToTree' tail (AST.ConstOfDouble x :: stack)
                 | BoolConst x -> fromPostfixToTree' tail (AST.ConstOfBool x :: stack)
                 | StringConst x -> fromPostfixToTree' tail (AST.ConstOfString x :: stack)
-    
+                | VariableName x -> fromPostfixToTree' tail (AST.Variable x :: stack)
+                | BinOp AssigmentOp ->
+                    match stack with
+                    | right :: left :: stackEnd ->
+                        match left with
+                        | AST.Variable _ as var -> fromPostfixToTree' tail (AST.Assigment(var, right) :: stackEnd)
+                        | _ -> "Left part of assigment is not variable" |> SyntaxParserException |> raise
+                    | _ -> "No operands for assigment" |> SyntaxParserException |> raise
+                | FunctionName func ->
+                    let funcNode = AST.Function(func, List.rev stack)
+                    fromPostfixToTree' tail [funcNode]
+                | ArrayName arr ->
+                    match stack with
+                    | index :: stackEnd -> fromPostfixToTree' tail (AST.IndexAt(arr, index) :: stackEnd)
+                    | _ -> "No index is found" |> SyntaxParserException |> raise
+                | BinOp op ->
+                    match stack with
+                    | right :: left :: stackEnd -> fromPostfixToTree' tail (getConstructor op (left, right) :: stackEnd)
+                    | _ -> "No operands for " + op.ToString() |> SyntaxParserException |> raise
+            | _ ->
+                match stack with
+                | [ node ] -> node
+                | _ -> "Can't recognize" |> SyntaxParserException |> raise
         fromPostfixToTree' lexemes []             
-                        
+    
         
-let parseLexems lexemes =
-    Helper.toPostfix lexemes
+let parseLexemes lexemes =
+    let postfix =  Helper.toPostfix lexemes
+    postfix |> Helper.fromPostfixToTree
     
