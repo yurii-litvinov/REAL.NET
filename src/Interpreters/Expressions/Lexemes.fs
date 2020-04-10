@@ -33,7 +33,7 @@ type BinOp =
 type UnOp =
      // Unary operators.
     /// Negative operator -, for example, -a.
-    | Negative
+    | NegativeOp
     /// Operator !, logical not.
     | Not
     

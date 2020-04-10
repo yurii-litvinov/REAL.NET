@@ -1,6 +1,7 @@
 ﻿module Interpreters.Expressions.SyntaxParser
 
 open Interpreters.Expressions
+open Interpreters.Expressions
 open System.Collections.Immutable
 open System.Reflection
 open Interpreters.Expressions.Lexemes
@@ -20,6 +21,11 @@ let prior op =
     | AndOp -> 3
     | OrOp -> 2
     | AssigmentOp -> 0
+    
+let priorUn op =
+    match op with
+    | NegativeOp -> 9
+    | Not -> 9
 
 let private getConstructor op =
     match op with
@@ -33,8 +39,13 @@ let private getConstructor op =
     | InequalityOp -> AST.Inequality
     | _ -> failwith "Not implemented"
 
+let private getUnOpConstructor op =
+    match op with
+    | Not -> AST.LogicalNot
+    | NegativeOp -> AST.Negative
+    
 module Helper =
-    let toPostfix lexemes = 
+    let toPostfix lexemes =
         let rec toPostfix' lexemes stack (output: ImmutableQueue<_>) =
             match lexemes with
             | lexeme :: tail ->
@@ -45,20 +56,31 @@ module Helper =
                 | StringConst _ as c -> toPostfix' tail stack (output.Enqueue(c)) 
                 | VariableName _ as n -> toPostfix' tail stack (output.Enqueue(n))
                 | FunctionName _ as n -> toPostfix' tail (n :: stack) output
+                | ArrayName _ as n -> toPostfix' tail (n :: stack) output
                 | Comma ->
                     let rec toOutput stack (output: ImmutableQueue<_>) =
                         match stack with
                         | h :: t when h = OpeningRoundBracket -> (h :: t, output)
+                        | h :: t when h = OpeningCurlyBracket -> (h :: t, output)
                         | h :: t -> toOutput t (output.Enqueue(h))
                         | _ -> "There is no opening bracket or comma" |> SyntaxParserException |> raise
                     let (newStack, newOutput) = toOutput stack output
                     toPostfix' tail newStack newOutput
+                | UnOp op1 ->
+                    let rec toOutput stack (output: ImmutableQueue<_>) =
+                        match stack with
+                        | UnOp op2 :: t when (priorUn op2) >= (priorUn op1) -> toOutput t (output.Enqueue(UnOp op2))
+                        | FunctionName _ as f :: t -> toOutput t (output.Enqueue(f))
+                        | _ -> (stack, output)
+                    let (newStack, newOutput) = toOutput stack output
+                    toPostfix' tail (UnOp op1 :: newStack) newOutput
                 | BinOp op1 ->
                     let rec toOutput stack (output: ImmutableQueue<_>) =
                         match stack with
                         | BinOp op2 :: t when (prior op2) >= (prior op1) -> toOutput t (output.Enqueue(BinOp op2))
                         | FunctionName _ as f :: t -> toOutput t (output.Enqueue(f))
-                        | _ -> (stack, output) // TODO unary operator
+                        | UnOp _ as unOp :: t -> toOutput t (output.Enqueue(unOp))
+                        | _ -> (stack, output) 
                     let (newStack, newOutput) = toOutput stack output
                     toPostfix' tail (BinOp op1 :: newStack) newOutput
                 | OpeningRoundBracket as b -> toPostfix' tail (b :: stack) output
@@ -67,14 +89,36 @@ module Helper =
                         match stack with
                         | OpeningRoundBracket :: t -> (t, output)
                         | h :: t -> toOutput t (output.Enqueue(h))
-                        | _ -> "There is no opening bracket" |> SyntaxParserException |> raise
+                        | _ -> "There is no opening round bracket" |> SyntaxParserException |> raise
                     let (newStack, newOutput) = toOutput stack output
                     toPostfix' tail newStack newOutput
-                | _ -> failwith "Not implemented yet"
+                | OpeningSquareBracket as b -> toPostfix' tail (b :: stack) output
+                | ClosingSquareBracket ->
+                    let rec toOutput stack (output: ImmutableQueue<_>) =
+                        match stack with
+                        | OpeningSquareBracket :: t -> (t, output)
+                        | h :: t -> toOutput t (output.Enqueue(h))
+                        | _ -> "There is no opening square bracket" |> SyntaxParserException |> raise
+                    let (newStack, newOutput) = toOutput stack output
+                    toPostfix' tail newStack newOutput
+                | NewOperator as newOp -> toPostfix' tail (newOp :: stack) output
+                | TypeSelection _ as sel -> toPostfix' tail (sel :: stack) output
+                | OpeningCurlyBracket as b -> toPostfix' tail (b :: stack) output
+                | ClosingCurlyBracket ->
+                    let rec toOutput stack (output: ImmutableQueue<_>) =
+                        match stack with
+                        | OpeningCurlyBracket :: t -> (t, output)
+                        | h :: t -> toOutput t (output.Enqueue(h))
+                        | _ -> "There is no opening curly bracket" |> SyntaxParserException |> raise
+                    let (newStack, newOutput) = toOutput stack output
+                    toPostfix' tail newStack newOutput
+                
             | _ ->
                 let rec toOutput stack (output: ImmutableQueue<_>) =
                     match stack with
-                    | h :: _ when h = OpeningRoundBracket || h = ClosingRoundBracket -> "Missed bracket" |> SyntaxParserException |> raise
+                    | h :: _ when h = OpeningRoundBracket || h = ClosingRoundBracket -> "Missed round bracket" |> SyntaxParserException |> raise
+                    | h :: _ when h = OpeningSquareBracket || h = ClosingSquareBracket -> "Missed square bracket" |> SyntaxParserException |> raise
+                    | h :: _ when h = OpeningCurlyBracket || h = ClosingCurlyBracket -> "Missed curly bracket" |> SyntaxParserException |> raise
                     | h :: t -> toOutput t (output.Enqueue(h))
                     | _ -> output
                 let queue = toOutput stack output
@@ -85,7 +129,15 @@ module Helper =
                              toList' (queue.Dequeue()) (element :: list)
                     toList' queue [] |> List.rev
                 queue |> toList
-        toPostfix' lexemes [] ImmutableQueue.Empty
+                
+        let assigments = lexemes |> List.indexed |> List.filter (fun (_, el) -> el = BinOp AssigmentOp)
+        match assigments with
+        | [] -> toPostfix' lexemes [] ImmutableQueue.Empty
+        | [ (index, el) ] -> let (l1, l2) = List.splitAt index lexemes
+                             let postfix1 = toPostfix' l1 [] ImmutableQueue.Empty
+                             let postfix2 = toPostfix' (List.tail l2) [] ImmutableQueue.Empty
+                             postfix1 @ postfix2 @ [ el ]
+        | _ -> "Assigment is more than one time" |> SyntaxParserException |> raise
         
     let fromPostfixToTree lexemes =
         let rec fromPostfixToTree' lexemes stack =
@@ -102,7 +154,9 @@ module Helper =
                     | right :: left :: stackEnd ->
                         match left with
                         | AST.Variable _ as var -> fromPostfixToTree' tail (AST.Assigment(var, right) :: stackEnd)
-                        | _ -> "Left part of assigment is not variable" |> SyntaxParserException |> raise
+                        | AST.IndexAt _ as index -> fromPostfixToTree' tail (AST.Assigment(index, right) :: stackEnd)
+                        // NOTICE left part another type?
+                        | _ -> "Left part of assigment is not variable or array index" |> SyntaxParserException |> raise
                     | _ -> "No operands for assigment" |> SyntaxParserException |> raise
                 | FunctionName func ->
                     let funcNode = AST.Function(func, List.rev stack)
@@ -111,6 +165,10 @@ module Helper =
                     match stack with
                     | index :: stackEnd -> fromPostfixToTree' tail (AST.IndexAt(arr, index) :: stackEnd)
                     | _ -> "No index is found" |> SyntaxParserException |> raise
+                | UnOp op ->
+                    match stack with
+                    | operand :: stackEnd -> fromPostfixToTree' tail (getUnOpConstructor op operand :: stackEnd)
+                    | _ -> "No operand for " + op.ToString() |> SyntaxParserException |> raise
                 | BinOp op ->
                     match stack with
                     | right :: left :: stackEnd -> fromPostfixToTree' tail (getConstructor op (left, right) :: stackEnd)

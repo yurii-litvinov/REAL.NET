@@ -15,8 +15,10 @@ type AbstractSyntaxNode =
     | Assigment of AbstractSyntaxNode * AbstractSyntaxNode
     | Equality of AbstractSyntaxNode * AbstractSyntaxNode
     | Inequality of AbstractSyntaxNode * AbstractSyntaxNode
+    | Negative of AbstractSyntaxNode
     | LogicalOr of AbstractSyntaxNode * AbstractSyntaxNode
     | LogicalAnd of AbstractSyntaxNode * AbstractSyntaxNode
+    | LogicalNot of AbstractSyntaxNode
     | Variable of string 
     | IndexAt of string * AbstractSyntaxNode
     | ArrayDeclaration of PrimitiveTypes * int * AbstractSyntaxNode list

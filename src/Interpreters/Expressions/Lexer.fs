@@ -131,7 +131,7 @@ module StringPatterns =
         if (input.Length >= 2) then
             match input.[0] with
             | '!' -> Some(Not |> UnOp, eatMatching "!" input)
-            | '-' when (input.[1] <> ' ') -> Some(Negative |> UnOp, eatMatching "-" input)
+            | '-' when (input.[1] <> ' ') -> Some(NegativeOp |> UnOp, eatMatching "-" input)
             | _ -> None
         else
             None

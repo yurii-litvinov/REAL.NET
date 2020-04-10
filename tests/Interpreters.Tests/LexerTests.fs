@@ -182,7 +182,7 @@ let ``bin operators validation test``() =
 let ``unary operator validation test``() =
     let negativeString = "-a + b"
     match negativeString with
-    | UnOpToken matching -> matching |> should equal (UnOp Negative, "a + b")
+    | UnOpToken matching -> matching |> should equal (UnOp NegativeOp, "a + b")
     | _ -> Assert.Fail "No matching negative operator"
     let notString = "!ab cd"
     match notString with
@@ -227,7 +227,7 @@ let ``complex tests``() =
     let complexArythmeticExpressionString = "(a + b) + (-c) - d + fe[1+i]"
     complexArythmeticExpressionString |> Lexer.parseString
     |> should equal [ OpeningRoundBracket; VariableName("a"); BinOp PlusOp; VariableName("b"); ClosingRoundBracket; 
-                      BinOp PlusOp; OpeningRoundBracket; UnOp Negative; VariableName("c"); ClosingRoundBracket;
+                      BinOp PlusOp; OpeningRoundBracket; UnOp NegativeOp; VariableName("c"); ClosingRoundBracket;
                       BinOp MinusOp; VariableName("d"); BinOp PlusOp;
                       ArrayName("fe"); OpeningSquareBracket; IntConst(1); BinOp PlusOp; VariableName("i"); ClosingSquareBracket ]
     let logicalExpressionString = "f(a) && !b || arr[c]"
