@@ -37,6 +37,9 @@ type UnOp =
     /// Operator !, logical not.
     | Not
     
+type ExtraInfo =
+    | NumberOfArgs of int
+    
 /// Type which represents token.
 type Terminal =
     // Constants
@@ -79,5 +82,6 @@ type Terminal =
     // Special symbols    
     /// Comma ,.
     | Comma
+    | ExtraInfo of ExtraInfo
   
     
