@@ -6,8 +6,6 @@ open NUnit.Framework
 open Interpreters
 open Interpreters.Expressions
 open Interpreters.Expressions.Lexemes
-open Interpreters.Expressions.Lexemes
-open Interpreters.Expressions.Lexemes
 open Interpreters.Expressions.SyntaxParser
 
 [<Test>]
@@ -73,13 +71,19 @@ let ``assigment to postfix test``() =
 let ``array declaration to postfix test``() =
     let lexemes = [ NewOperator; TypeSelection PrimitiveTypes.Int; OpeningSquareBracket; IntConst(2); ClosingSquareBracket; OpeningCurlyBracket; IntConst(1); Comma; IntConst(3); ClosingCurlyBracket ]
     let postfix = lexemes |> Helper.toPostfixExtended 
-    postfix |> should equal [ IntConst(2); IntConst(1); IntConst(3); ExtraInfo(NumberOfArgs 1); TypeSelection PrimitiveTypes.Int; NewOperator ]
+    postfix |> should equal [ IntConst(2); IntConst(1); IntConst(3); ExtraInfo(NumberOfArgs 2); TypeSelection PrimitiveTypes.Int; NewOperator ]
     
 [<Test>]
 let ``extended postfix test``() =
     let lexemes = [ FunctionName("f"); OpeningRoundBracket; IntConst(1); ClosingRoundBracket ]
     let postfix = lexemes |> Helper.toPostfixExtended
     postfix |> should equal [ IntConst(1); ExtraInfo(NumberOfArgs(1)); FunctionName("f") ]
+    
+[<Test>]
+let ``array declaration test``() =
+    let lexemes = [ NewOperator; TypeSelection PrimitiveTypes.Int; OpeningSquareBracket; IntConst(2); BinOp PlusOp; IntConst(4); ClosingSquareBracket; OpeningCurlyBracket; IntConst(0); Comma; IntConst(1); ClosingCurlyBracket ]
+    let postfix = lexemes |> Helper.toPostfixExtended
+    postfix |> should equal [ IntConst(2); IntConst(4); BinOp PlusOp; IntConst(0); IntConst(1); ExtraInfo(NumberOfArgs(2)); TypeSelection PrimitiveTypes.Int; NewOperator ]
     
 open AST
 
@@ -109,4 +113,25 @@ let ``tree with logical expressions test``() =
                                         Equality(LogicalNot(Variable("a")), Variable("b")),
                                         ConstOfBool(true)         
                                     ))
+
+[<Test>]
+let ``tree with function test``() =
+    let lexemes = [ FunctionName("func"); OpeningRoundBracket; ClosingRoundBracket ]
+    let tree = lexemes |> SyntaxParser.parseLexemes
+    tree |> should equal (Function("func", []))
+    let lexemes2 = [ FunctionName("func"); OpeningRoundBracket; VariableName("a"); ClosingRoundBracket ]
+    let tree2 = lexemes2 |> SyntaxParser.parseLexemes
+    tree2 |> should equal (Function("func", [ Variable("a") ]))
+    let lexemes3 = [ FunctionName("func"); OpeningRoundBracket; FunctionName("f"); OpeningRoundBracket; VariableName("a"); ClosingRoundBracket; Comma
+                     FunctionName("g"); OpeningRoundBracket; VariableName("b"); ClosingRoundBracket; ClosingRoundBracket ]
+    let tree3 = lexemes3 |> SyntaxParser.parseLexemes
+    tree3 |> should equal (Function("func", [ Function("f", [ Variable("a") ]); Function("g", [ Variable("b") ]) ]))
     
+[<Test>]
+let ``array declaration to tree test``() =
+    let lexemes = [ VariableName("a"); BinOp AssigmentOp; NewOperator; TypeSelection PrimitiveTypes.Int; OpeningSquareBracket; IntConst(2); ClosingSquareBracket;
+                    OpeningCurlyBracket; IntConst(0); Comma; IntConst(1); ClosingCurlyBracket ]
+    let tree = SyntaxParser.parseLexemes lexemes
+    tree |> should equal (Assigment(Variable("a"),
+                                    ArrayDeclaration(PrimitiveTypes.Int, ConstOfInt(2), [ ConstOfInt(0); ConstOfInt(1) ])   
+                                   ))

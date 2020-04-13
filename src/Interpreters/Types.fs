@@ -7,3 +7,13 @@ type PrimitiveTypes =
     | Bool = 3
     | String = 4
     
+type ArrayTypes =
+    | IntArray = 0
+    | DoubleArray = 1
+    | BoolArray = 2
+    | StringArray = 3
+    
+type Types =
+    | PrimitiveTypes
+    | ArrayTypes
+    

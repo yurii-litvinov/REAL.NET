@@ -1,5 +1,6 @@
 ﻿module Interpreters.Expressions.SyntaxParser
 
+open Interpreters
 open Interpreters.Expressions
 open Interpreters.Expressions.ExpressionParsers
 open System.Collections.Immutable
@@ -75,9 +76,9 @@ module Helper =
             | FunctionName _ as n :: tail ->
                 let info = calculateNumberOfArgs tail |> NumberOfArgs |> ExtraInfo
                 insertNumberOfArgs' tail (info :: n :: output)
-            | NewOperator :: (TypeSelection _ as t) :: tail ->
-                let info = calculateNumberOfArgs tail |> NumberOfArgs |> ExtraInfo
-                insertNumberOfArgs' tail (info :: t :: NewOperator :: output)
+            | OpeningCurlyBracket _ as b :: tail ->
+                let info = calculateNumberOfArgs (b :: tail) |> NumberOfArgs |> ExtraInfo
+                insertNumberOfArgs' tail (b :: info :: output)
             | h :: t -> insertNumberOfArgs' t (h :: output)
             | [] -> List.rev output
         insertNumberOfArgs' lexemes []
@@ -109,6 +110,7 @@ module Helper =
                         match stack with
                         | UnOp op2 :: t when (priorUn op2) >= (priorUn op1) -> toOutput t (output.Enqueue(UnOp op2))
                         | (ExtraInfo(NumberOfArgs _) as i) :: (FunctionName _ as f) :: t -> toOutput t (output.Enqueue(i).Enqueue(f))
+                        | ArrayName _ as arr :: t -> toOutput t (output.Enqueue(arr))
                         | _ -> (stack, output)
                     let (newStack, newOutput) = toOutput stack output
                     toPostfix' tail (UnOp op1 :: newStack) newOutput
@@ -117,6 +119,7 @@ module Helper =
                         match stack with
                         | BinOp op2 :: t when (prior op2) >= (prior op1) -> toOutput t (output.Enqueue(BinOp op2))
                         | (ExtraInfo(NumberOfArgs _) as i) :: (FunctionName _ as f) :: t -> toOutput t (output.Enqueue(i).Enqueue(f))
+                        | ArrayName _ as arr :: t -> toOutput t (output.Enqueue(arr))
                         | UnOp _ as unOp :: t -> toOutput t (output.Enqueue(unOp))
                         | _ -> (stack, output) 
                     let (newStack, newOutput) = toOutput stack output
@@ -172,10 +175,10 @@ module Helper =
         let assigments = extended |> List.indexed |> List.filter (fun (_, el) -> el = BinOp AssigmentOp)
         match assigments with
         | [] -> toPostfix' extended [] ImmutableQueue.Empty
-        | [ (index, el) ] -> let (l1, l2) = List.splitAt index lexemes
-                             let postfix1 = toPostfix' l1 [] ImmutableQueue.Empty
-                             let postfix2 = toPostfix' (List.tail l2) [] ImmutableQueue.Empty
-                             postfix1 @ postfix2 @ [ el ]
+        | [ (index, _) ] -> let (l1, l2) = List.splitAt index extended
+                            let postfix1 = toPostfix' l1 [] ImmutableQueue.Empty
+                            let postfix2 = toPostfix' (List.tail l2) [] ImmutableQueue.Empty
+                            postfix1 @ postfix2 @ [ BinOp AssigmentOp ]
         | _ -> "Assigment is more than one time" |> SyntaxParserException |> raise
         
     let toPostfix lexemes =
@@ -184,7 +187,7 @@ module Helper =
             | ExtraInfo _ -> true
             | _ -> false
         lexemes |> toPostfixExtended |> List.filter (isInfo >> not)         
-        
+    
     let fromPostfixToTree lexemes =
         let rec fromPostfixToTree' lexemes stack =
             match lexemes with
@@ -195,6 +198,8 @@ module Helper =
                 | BoolConst x -> fromPostfixToTree' tail (AST.ConstOfBool x :: stack)
                 | StringConst x -> fromPostfixToTree' tail (AST.ConstOfString x :: stack)
                 | VariableName x -> fromPostfixToTree' tail (AST.Variable x :: stack)
+                | ExtraInfo (NumberOfArgs n) -> fromPostfixToTree' tail (AST.Temp(AST.ArgsNumber n) :: stack)
+                | TypeSelection t -> fromPostfixToTree' tail (AST.Temp(AST.TypeNode t) :: stack) 
                 | BinOp AssigmentOp ->
                     match stack with
                     | right :: left :: stackEnd ->
@@ -205,8 +210,31 @@ module Helper =
                         | _ -> "Left part of assigment is not variable or array index" |> SyntaxParserException |> raise
                     | _ -> "No operands for assigment" |> SyntaxParserException |> raise
                 | FunctionName func ->
-                    let funcNode = AST.Function(func, List.rev stack)
-                    fromPostfixToTree' tail [funcNode]
+                    match stack with
+                    | AST.Temp(AST.ArgsNumber n) :: stackEnd ->
+                        if (List.length stackEnd >= n) then
+                            let (args, newStack) = List.splitAt n stackEnd
+                            let funcNode = AST.Function(func, List.rev args)
+                            fromPostfixToTree' tail (funcNode :: newStack)
+                        else "Not enough operands in" + func |> SyntaxParserException |> raise
+                    | _ -> failwith "Unexpected error: can't find number of args value"
+                | NewOperator ->
+                    match stack with
+                    | AST.Temp(AST.TypeNode t) :: AST.Temp(AST.ArgsNumber n) :: stackEnd ->
+                        if (List.length stackEnd >= n) then
+                            let (args, newStack) = List.splitAt n stackEnd
+                            match newStack with
+                            | node :: stackRes ->
+                                let newNode = AST.ArrayDeclaration(t, node, List.rev args)
+                                fromPostfixToTree' tail (newNode :: stackRes)
+                            | [] -> "No array index" |> SyntaxParserException |> raise
+                        else "Not enough init values for array" |> SyntaxParserException |> raise 
+                    | AST.Temp(AST.TypeNode t) :: node :: stackEnd ->
+                        let newNode = AST.ArrayDeclaration(t, node, [])
+                        fromPostfixToTree' tail (newNode :: stackEnd)
+                    | AST.Temp(AST.TypeNode _) :: [] ->
+                        "No array index" |> SyntaxParserException |> raise
+                    | _ -> "No type described" |> SyntaxParserException |> raise
                 | ArrayName arr ->
                     match stack with
                     | index :: stackEnd -> fromPostfixToTree' tail (AST.IndexAt(arr, index) :: stackEnd)
@@ -219,6 +247,14 @@ module Helper =
                     match stack with
                     | right :: left :: stackEnd -> fromPostfixToTree' tail (getConstructor op (left, right) :: stackEnd)
                     | _ -> "No operands for " + op.ToString() |> SyntaxParserException |> raise
+                | OpeningRoundBracket -> failwith "Unexpected error: opening round bracket in postfix form"
+                | ClosingRoundBracket -> failwith "Unexpected error: closing round bracket in postfix form"
+                | OpeningSquareBracket -> failwith "Unexpected error: opening square bracket in postfix form"
+                | ClosingSquareBracket -> failwith "Unexpected error: closing square bracket in postfix form"
+                | OpeningCurlyBracket -> failwith "Unexpected error: opening curly bracket in postfix form" 
+                | ClosingCurlyBracket -> failwith "Unexpected error: closing curly bracket in postfix form" 
+                | Comma -> failwith "Unexpected error: comma in postfix form"
+                   
             | _ ->
                 match stack with
                 | [ node ] -> node
@@ -227,6 +263,6 @@ module Helper =
     
         
 let parseLexemes lexemes =
-    let postfix =  Helper.toPostfix lexemes
+    let postfix =  Helper.toPostfixExtended lexemes
     postfix |> Helper.fromPostfixToTree
     

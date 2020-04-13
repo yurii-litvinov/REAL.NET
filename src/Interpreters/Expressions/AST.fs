@@ -2,6 +2,10 @@
 
 open Interpreters
 
+type ExtraNode =
+    | ArgsNumber of int
+    | TypeNode of PrimitiveTypes
+
 type AbstractSyntaxNode =
     | ConstOfInt of int
     | ConstOfDouble of double
@@ -21,7 +25,7 @@ type AbstractSyntaxNode =
     | LogicalNot of AbstractSyntaxNode
     | Variable of string 
     | IndexAt of string * AbstractSyntaxNode
-    | ArrayDeclaration of PrimitiveTypes * int * AbstractSyntaxNode list
-    
+    | ArrayDeclaration of PrimitiveTypes * AbstractSyntaxNode * AbstractSyntaxNode list
+    | Temp of ExtraNode
   
 
