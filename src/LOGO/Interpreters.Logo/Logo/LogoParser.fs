@@ -141,7 +141,7 @@ module AvailableParsers =
                                 | None -> ParserException.raiseWithPlace "No correct count variable found" (PlaceOfCreation(Some model, Some element))
                                 | Some ({Value = value} as countVar) ->
                                     match value with
-                                    | Regular (Int intVal) ->
+                                    | RegularValue (Int intVal) ->
                                         if (intVal = 1) then
                                             let newSet = set.Remove countVar
                                             Some {p with Element = exit; Variables = newSet}

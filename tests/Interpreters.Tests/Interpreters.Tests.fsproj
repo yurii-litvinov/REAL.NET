@@ -62,8 +62,10 @@
     <Compile Include="VariableTests.fs" />
     <Compile Include="LexerTests.fs" />
     <Compile Include="SyntaxParsersTests.fs" />
+    <Compile Include="StringToASTTests.fs" />
     <None Include="paket.references" />
     <Content Include="App.config" />
+    <Compile Include="EvaluatorTests.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

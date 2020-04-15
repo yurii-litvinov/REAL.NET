@@ -11,6 +11,8 @@ type IVariableSet =
         abstract member RemoveAll: v: Variable -> IVariableSet
 
         abstract member FindByName: name: string -> Variable
+        
+        abstract member TryFindByName: name: string -> Variable option
 
         abstract member FindAllByName: name: string -> Variable list
         

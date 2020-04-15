@@ -16,6 +16,9 @@ type VariableList(variables: Variable list) =
 
             member this.FindByName(name: string): Variable = 
                 List.find (fun x-> x.Name = name) variables
+                
+            member this.TryFindByName(name: string): Variable option =
+                List.tryFind (fun x-> x.Name = name) variables
 
             member this.Remove(v: Variable): IVariableSet = 
                 let rec remove v variables =

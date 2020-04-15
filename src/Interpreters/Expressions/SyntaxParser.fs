@@ -181,13 +181,6 @@ module Helper =
                             postfix1 @ postfix2 @ [ BinOp AssigmentOp ]
         | _ -> "Assigment is more than one time" |> SyntaxParserException |> raise
         
-    let toPostfix lexemes =
-        let isInfo x =
-            match x with
-            | ExtraInfo _ -> true
-            | _ -> false
-        lexemes |> toPostfixExtended |> List.filter (isInfo >> not)         
-    
     let fromPostfixToTree lexemes =
         let rec fromPostfixToTree' lexemes stack =
             match lexemes with

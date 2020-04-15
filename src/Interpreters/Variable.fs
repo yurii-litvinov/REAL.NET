@@ -2,18 +2,8 @@
 
 open System
 open Repo
+open System.Collections.Immutable    
 
-/// Represents primitive types, such as int, double and boolean
-type RegularType = 
-    | Int of int
-    | Double of double
-    | Boolean of bool
-    | String of string
-
-/// Represents a value, could be regular or complex
-type VariableValue = 
-    | Regular of RegularType
-    | Complex
 
 /// Mutability of variable.
 type VariableMutability =
@@ -35,66 +25,17 @@ type Variable = { Name: string; Value: VariableValue; Meta: MetaData } with
 
     /// Checks variable for mutability.
     member this.IsMutable = this.Meta.IsMutable
+    
+    override this.ToString() = this.Name + " " + this.Value.ToString()
 
 module PlaceOfCreation =
     /// Creates none block PlaceOfCreation.
     let empty = PlaceOfCreation(None, None)
+    
+    let extract place =
+        match place with
+        | PlaceOfCreation (x, y) -> (x, y)
 
-module RegularType =
-    /// Checks that types of given values are equal.
-    let isTypesEqual xValue yValue = 
-        match (xValue, yValue) with
-        | (Int _, Int _) -> true
-        | (Boolean _, Boolean _) -> true
-        | (Double _, Double _) -> true
-        | (String _, String _) -> true
-        | _ -> false // notice: not implemented for other types
-    
-    /// Gets the type of regular value.    
-    let getType xValue =
-        match xValue with
-        | Int _ -> PrimitiveTypes.Int
-        | Boolean _ -> PrimitiveTypes.Bool
-        | Double _ -> PrimitiveTypes.Double
-        | String _ -> PrimitiveTypes.String
-    
-    /// Creates wrapped int value.
-    let createInt x = Int x
-
-    /// Creates wrapped double value.
-    let createDouble x = Double x
-    
-    /// Creates wrapped boolean value.
-    let createBoolean x = Boolean x
-    
-    /// Creates wrapped string value.
-    let createString x = String x
-
-module VariableValue =
-    /// Checks is given type regular.
-    let isRegular (value: VariableValue) =
-        match value with
-        | Regular _ -> true
-        | _ -> false
-    
-    /// Checks that types of given values are equal.
-    let isTypesEqual xValue yValue =   
-        match (xValue, yValue) with
-        | (Regular xv, Regular yv) -> RegularType.isTypesEqual xv yv
-        | _ -> new NotImplementedException() |> raise
-    
-    /// Creates wrapped int value.
-    let createInt x = x |> RegularType.createInt |> Regular
-
-    /// Creates wrapped double value.
-    let createDouble x = x |> RegularType.createDouble |> Regular
-
-    /// Creates wrapped boolean value.
-    let createBoolean x = x |> RegularType.createBoolean |> Regular
-    
-    /// Creates wrapped string value.
-    let createString x = x |> RegularType.createString |> Regular
-    
 module MetaData =
     /// Creates meta data.
     let createMeta isMutable (place: (IModel option * IElement option)) =
@@ -115,6 +56,8 @@ module Variable =
 
     /// Checks given variables' types for equality.
     let isTypesEqual xVariable yVariable = VariableValue.isTypesEqual xVariable.Value yVariable.Value
+    
+    let getType variable = VariableValue.getType variable.Value 
 
     /// Checks given variable for mutability.
     let isMutable (x: Variable) = x.IsMutable
@@ -125,17 +68,20 @@ module Variable =
     /// Makes variable immutable.
     let makeImmutable variable = {variable with Meta = MetaData.makeImmutable variable.Meta} 
 
-    /// Creates int variable with given name, value and meta.
+    /// Creates int variable with given name, value and standard meta.
     let createInt name x place = {Name = name; Value = (VariableValue.createInt x); Meta = MetaData.createMeta true place}
     
-    /// Creates double variable with given name, value and meta.
+    /// Creates double variable with given name, value and standard meta.
     let createDouble name x place = {Name = name; Value = (VariableValue.createDouble x); Meta = MetaData.createMeta true place}
 
-    /// Creates boolean variable with given name, value and meta.
+    /// Creates boolean variable with given name, value and standard meta.
     let createBoolean name x place = {Name = name; Value = (VariableValue.createBoolean x); Meta = MetaData.createMeta true place}
     
-    /// Creates string variable with given name, value and meta.
+    /// Creates string variable with given name, value and standard meta.
     let createString name x place = {Name = name; Value = (VariableValue.createString x); Meta = MetaData.createMeta true place}
+    
+    /// Create variable with given name, value and standard meta
+    let createVar name x place = {Name = name; Value = x; Meta = MetaData.createMeta true place}
 
     /// Changes value of given variable.
     let changeValue (newValue: VariableValue) (variable: Variable) =

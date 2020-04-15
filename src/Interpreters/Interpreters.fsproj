@@ -50,11 +50,16 @@
   -->
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Types.fs" />
+    <Compile Include="ExpressionType.fs" />
+    <Compile Include="RegularType.fs" />
+    <Compile Include="ArrType.fs" />
+    <Compile Include="VariableValue.fs" />
     <Compile Include="Variable.fs" />
     <Compile Include="IVariableSet.fs" />
     <Compile Include="Interpreter.fs" />
     <Compile Include="Exceptions.fs" />
+    <Compile Include="Common\VariableList.fs" />
+    <Compile Include="VariableSet.fs" />
     <Compile Include="Expressions\ExpressionsExceptions.fs" />
     <Compile Include="Expressions\ExpressionParser.fs" />
     <Compile Include="Expressions\ExpressionParsers\StringExpressionParser.fs" />
@@ -63,10 +68,10 @@
     <Compile Include="Expressions\Lexer.fs" />
     <Compile Include="Expressions\AST.fs" />
     <Compile Include="Expressions\SyntaxParser.fs" />
+    <Compile Include="Expressions\EnvironmentOfExpressions.fs" />
+    <Compile Include="Expressions\Evaluator.fs" />
     <Compile Include="ExpressionParserBuilder.fs" />
     <Compile Include="Parser.fs" />
-    <Compile Include="Common\VariableList.fs" />
-    <Compile Include="VariableSet.fs" />
     <Content Include="app.config" />
     <None Include="paket.references" />
     <Compile Include="InterpreterHelper.fs" />
