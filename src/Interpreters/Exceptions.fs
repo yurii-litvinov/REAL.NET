@@ -1,5 +1,9 @@
 ﻿namespace Interpreters
 
+/// Thrown if type error occurs.
+type TypeException(message: string) =
+    inherit System.Exception(message)   
+
 type ParserException(message: string, place: PlaceOfCreation) =
     class
         inherit System.Exception(message)

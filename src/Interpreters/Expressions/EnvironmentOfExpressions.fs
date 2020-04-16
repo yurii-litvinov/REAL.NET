@@ -29,6 +29,8 @@ type EnvironmentOfExpressions(vars: IVariableSet, functions: FunctionCollection,
             let newVars = vars.ChangeValue var newVal
             EnvironmentOfExpressions(newVars, this.Functions, this.State, this.Place)
             
+        member this.NewState state = EnvironmentOfExpressions(this.Variables, this.Functions, state)
+            
         override this.ToString() = "Vars: " + (this.Variables.ToList.ToString()) + " State: " + this.State.ToString()
     end
     

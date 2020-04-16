@@ -6,13 +6,11 @@ type LexerException(input: string) =
 
 /// Thrown if syntax error occurs.
 type SyntaxParserException(input: string) =
-    inherit System.Exception(input)
-
-/// Thrown if type error occurs.
-type TypeException(message: string) =
-    inherit System.Exception(message)    
+    inherit System.Exception(input) 
     
 /// Thrown when evaluator fails.
-type EvaluatorException(message: string) =
-    inherit System.Exception(message)
+type EvaluatorException(message: string, innerException: exn) =
+    inherit System.Exception(message, innerException)
+    
+    new(message) = EvaluatorException(message, null)
 

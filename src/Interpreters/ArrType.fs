@@ -1,6 +1,5 @@
 ﻿namespace Interpreters
 
-open System
 open System.Collections.Immutable
 
 type ArrType =
@@ -70,15 +69,44 @@ module ArrType =
         | BoolArray _ -> ArrayTypes.BoolArray
         | StringArray _ -> ArrayTypes.StringArray
         
+    let getElementType v =
+        match v with
+        | IntArray _ -> PrimitiveTypes.Int
+        | DoubleArray _ -> PrimitiveTypes.Double
+        | BoolArray _ -> PrimitiveTypes.Bool
+        | StringArray _ -> PrimitiveTypes.String
+    
     let isTypesEqual x y = getType x = getType y
     
-    let changeValueAtIndex i newVal (arr: ImmutableArray<_>)  =
-        if (arr.Length > i) then arr.SetItem(i, newVal)
-        else IndexOutOfRangeException() |> raise
+    let changeValueAtIndex i newVal arr  =
+            match (arr, newVal) with
+            | (IntArray a, Int x) ->
+                if (i < a.Length) then a.SetItem(i, x) |> IntArray
+                else System.IndexOutOfRangeException() |> raise    
+            | (DoubleArray a, Double x) ->
+                if (i < a.Length) then a.SetItem(i, x) |> DoubleArray
+                else System.IndexOutOfRangeException() |> raise
+            | (BoolArray a, Bool x) ->
+                if (i < a.Length) then a.SetItem(i, x) |> BoolArray
+                else System.IndexOutOfRangeException() |> raise
+            | (StringArray a, String x) ->
+                if (i < a.Length) then a.SetItem(i, x) |> StringArray
+                else System.IndexOutOfRangeException() |> raise
+            | _ -> "Try to insert element of another type" |> invalidOp |> raise
         
     let getValueAtIndex i arr =
-        NotImplementedException() |> raise
+        match arr with
+        | IntArray a -> a.[i] |> Int
+        | DoubleArray a -> a.[i] |> Double
+        | BoolArray a -> a.[i] |> Bool
+        | StringArray a -> a.[i] |> String
         
+    let toList arr =
+        match arr with
+        | IntArray a -> [ for i in a -> i |> Int]
+        | DoubleArray a -> [ for i in a -> i |> Double]
+        | BoolArray a -> [ for i in a -> i |> Bool]
+        | StringArray a -> [ for i in a -> i |> String]
     
         
 

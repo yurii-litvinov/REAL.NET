@@ -2,6 +2,7 @@
 
 open System
 open Interpreters
+open Interpreters
 open Interpreters.Expressions.AST
 
 let private plus a b =
@@ -40,6 +41,15 @@ let private not' v =
     | RegularValue(Bool b) -> not b |> Bool |> RegularValue
     | _ -> "Not used for not boolean type" |> TypeException |> raise
     
+let private negative a =
+    match a with
+    | RegularValue ar ->
+        match ar with
+        | Int x -> (-x) |> Int |> RegularValue
+        | Double x -> (-x) |> Double |> RegularValue
+        | _ -> "Not int or double to negate" |> TypeException |> raise
+    | _ -> "This type could not be negate" |> TypeException |> raise
+    
 let private and' a b =
     match (a, b) with
     | (RegularValue(Bool x), RegularValue(Bool y)) -> (x && y) |> Bool |> RegularValue
@@ -51,8 +61,40 @@ let private or' a b =
     | _ -> "And used for not boolean type" |> TypeException |> raise
     
 let private arrDecl ``type`` size init = 
-    NotImplementedException() |> raise
-
+    match size with
+    | RegularValue (Int 0) ->
+        match ``type`` with
+        | PrimitiveTypes.Int -> VariableValue.initArr 0 (VariableValue.createInt 1)
+        | PrimitiveTypes.Double -> VariableValue.initArr 0 (VariableValue.createDouble 1.0)
+        | PrimitiveTypes.Bool -> VariableValue.initArr 0 (VariableValue.createBoolean true)
+        | PrimitiveTypes.String -> VariableValue.initArr 0 (VariableValue.createString "")
+        | _ -> failwith "Unknown type"
+    | RegularValue (Int 1) ->
+        match init with
+        | [ RegularValue _ as i ] ->
+            if (VariableValue.getType i = (PrimitiveCase ``type``)) then VariableValue.initArr 1 i
+            else "Type of init is not correct" |> TypeException |> raise
+        | _ -> "Type is not regular or init values are not correct" |> EvaluatorException |> raise
+    | RegularValue (Int n) ->
+        match init with
+        | [ RegularValue _ as i ] ->
+            if (VariableValue.getType i = (PrimitiveCase ``type``)) then VariableValue.initArr n i
+            else "Type is not regular or init values are not correct" |> EvaluatorException |> raise
+        | list when (List.length list = n) ->
+            let arr = VariableValue.tryCreateArr list
+            match arr with
+            | Some a -> a
+            | None -> "Not correct init values" |> EvaluatorException |> raise
+        | _ -> "Count of init elements is not correct" |> EvaluatorException |> raise
+    | _ -> "Size is not int" |> TypeException |> raise
+    
+let rec private function' funcList args state =
+    match funcList with
+    | (argsType, _, f) :: _ when argsType = (List.map (fun x -> VariableValue.getType x) args) ->
+        f args state 
+    | _ :: t -> function' t args state
+    | [] -> "Can't find function with this type or count of arguments" |> EvaluatorException |> raise
+    
 let evaluate (env: EnvironmentOfExpressions) (node: AbstractSyntaxNode) =
     let wrap a = (env, a)
     let unwrap (env, a) = a
@@ -62,7 +104,7 @@ let evaluate (env: EnvironmentOfExpressions) (node: AbstractSyntaxNode) =
         | ConstOfBool v -> VariableValue.createBoolean v |> wrap
         | ConstOfDouble v -> VariableValue.createDouble v |> wrap
         | ConstOfString v -> VariableValue.createString v |> wrap
-        | Variable(name) as v ->
+        | Variable(name) ->
             let var = env.Variables.TryFindByName(name)
             match var with
             | Some x -> x.Value |> wrap
@@ -71,7 +113,10 @@ let evaluate (env: EnvironmentOfExpressions) (node: AbstractSyntaxNode) =
         | Minus(a, b) -> minus (evaluate' a |> unwrap) (evaluate' b |> unwrap) |> wrap
         | Multiply(a, b) -> mult (evaluate' a |> unwrap) (evaluate' b |> unwrap) |> wrap
         | Divide(a, b) -> divide (evaluate' a |> unwrap) (evaluate' b |> unwrap) |> wrap
-        | ArrayDeclaration(``type``, size, init) -> arrDecl ``type`` size init |> raise
+        | ArrayDeclaration(``type``, size, init) ->
+            let s = (evaluate' size |> unwrap)
+            let initVals = List.map (fun a -> evaluate' a |> unwrap) init
+            arrDecl ``type`` s initVals |> wrap
         | Assigment(x, value) ->
             match x with
             | Variable varName ->
@@ -82,11 +127,55 @@ let evaluate (env: EnvironmentOfExpressions) (node: AbstractSyntaxNode) =
                 | None -> let right = (evaluate' value |> unwrap)
                           let v = Variable.createVar varName right (env.Place |> PlaceOfCreation.extract)
                           (env.AddVariable v, Void)
-            | IndexAt _ -> NotImplementedException() |> raise
+            | IndexAt(arrName, index) ->
+                let i = (evaluate' index |> unwrap)
+                let v = (evaluate' value |> unwrap)
+                match i with
+                | RegularValue (Int n) ->
+                    match env.Variables.TryFindByName arrName with
+                    | Some arr ->
+                            match arr.Value with
+                            | ArrayValue a ->
+                                if (VariableValue.getType v = (PrimitiveCase (ArrType.getElementType a))) then
+                                    let newArrOption = VariableValue.tryChangeValueAtIndex n v arr.Value
+                                    match newArrOption with
+                                    | Some newArr ->
+                                        let newEnv = env.ChangeValue arr newArr
+                                        (newEnv, Void)
+                                    | None -> 
+                                        "Array index assigment error: index out of range exception"
+                                        |> EvaluatorException |> raise
+                                else "Array type and type of value to assign are mismatched" |> TypeException |> raise
+                            | _ -> "Not array" |> EvaluatorException |> raise
+                    | None -> "Can't find array with this name" |> EvaluatorException |> raise
+                | _ -> "Index of array is not int" |> TypeException |> raise
             | _ -> failwith "Unexpected error: left part type"
         | Equality(a, b) -> (equal (evaluate' a |> unwrap) (evaluate' b |> unwrap)) |> wrap
         | Inequality(a, b) -> (notEqual (evaluate' a |> unwrap) (evaluate' b |> unwrap)) |> wrap
         | LogicalNot v -> (not' (evaluate' v |> unwrap)) |> wrap
         | LogicalAnd(a, b) -> (and' (evaluate' a |> unwrap) (evaluate' b |> unwrap)) |> wrap
         | LogicalOr(a, b) -> (or' (evaluate' a |> unwrap) (evaluate' b |> unwrap)) |> wrap
+        | Negative a -> negative (evaluate' a |> unwrap) |> wrap
+        | IndexAt(arrName, index) ->
+            let iOption = (evaluate' index |> unwrap)
+            match iOption with
+            | RegularValue (Int n) ->
+                match env.Variables.TryFindByName arrName with
+                | Some arr ->
+                    if VariableValue.isArray arr.Value then
+                        match VariableValue.tryGetValueAtIndex n arr.Value with
+                        | Some a -> (env, a)
+                        | _ -> "Index out of range" |> EvaluatorException |> raise
+                    else "It is not array" |> TypeException |> raise
+                | None -> "Can't find array with this name" |> EvaluatorException |> raise
+            | _ -> "Index is not int" |> TypeException |> raise
+        | Function(funcName, args) ->
+            match env.Functions.TryFind funcName with
+            | Some funcList -> 
+                let (result, newState) = function' funcList (List.map (fun x -> (evaluate' x) |> unwrap) args) env.State
+                let newEnv = env.NewState(newState)
+                (newEnv, result)
+            | None -> "Can't find function with this name" |> EvaluatorException |> raise
+        | Temp _ -> failwith "Unexpected error: temp data in evaluator"    
+         
     evaluate' node
