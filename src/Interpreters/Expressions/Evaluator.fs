@@ -10,31 +10,55 @@ let private plus a b =
     | (RegularValue(Int x), RegularValue(Int y)) -> x + y |> Int |> RegularValue 
     | (RegularValue(Double x), RegularValue(Double y)) -> x + y |> Double |> RegularValue 
     | (RegularValue(String x), RegularValue(String y)) -> x + y |> String |> RegularValue 
-    | _ -> "Plus is not supported for this types" |> invalidOp
+    | _ -> "Plus is not supported for this types" |> TypeException |> raise
     
 let private minus a b =
     match (a, b) with
     | (RegularValue(Int x), RegularValue(Int y)) -> x - y |> Int |> RegularValue 
     | (RegularValue(Double x), RegularValue(Double y)) -> x - y |> Double |> RegularValue 
-    | _ -> "Minus is not supported for this types" |> invalidOp
+    | _ -> "Minus is not supported for this types" |> TypeException |> raise
 
 let private mult a b =
     match (a, b) with
     | (RegularValue(Int x), RegularValue(Int y)) -> x * y |> Int |> RegularValue 
     | (RegularValue(Double x), RegularValue(Double y)) -> x * y |> Double |> RegularValue 
-    | _ -> "Multiply is not supported for this types" |> invalidOp
+    | _ -> "Multiply is not supported for this types" |> TypeException |> raise
     
 let private divide a b =
     try
         match (a, b) with
         | (RegularValue(Int x), RegularValue(Int y)) -> x / y |> Int |> RegularValue 
         | (RegularValue(Double x), RegularValue(Double y)) -> x / y |> Double |> RegularValue 
-        | _ -> "Divide is not supported for this types" |> invalidOp
+        | _ -> "Divide is not supported for this types" |> TypeException |> raise
     with :? DivideByZeroException -> "Divide by zero" |> EvaluatorException |> raise
     
 let private equal a b = a = b |> Bool |> RegularValue
 
 let private notEqual a b = a <> b |> Bool |> RegularValue
+
+let private bigger a b =
+    match (a, b) with
+    | (RegularValue(Int x), RegularValue(Int y)) -> x > y |> Bool |> RegularValue 
+    | (RegularValue(Double x), RegularValue(Double y)) -> x > y |> Bool |> RegularValue 
+    | _ -> "Can't compare this types" |> TypeException |> raise
+    
+let private biggerOrEqual a b =
+    match (a, b) with
+    | (RegularValue(Int x), RegularValue(Int y)) -> x >= y |> Bool |> RegularValue 
+    | (RegularValue(Double x), RegularValue(Double y)) -> x >= y |> Bool |> RegularValue 
+    | _ -> "Can't compare this types" |> TypeException |> raise
+    
+let private less a b =
+    match (a, b) with
+    | (RegularValue(Int x), RegularValue(Int y)) -> x < y |> Bool |> RegularValue 
+    | (RegularValue(Double x), RegularValue(Double y)) -> x < y |> Bool |> RegularValue 
+    | _ -> "Can't compare this types" |> TypeException |> raise
+    
+let private lessOrEqual a b =
+    match (a, b) with
+    | (RegularValue(Int x), RegularValue(Int y)) -> x <= y |> Bool |> RegularValue 
+    | (RegularValue(Double x), RegularValue(Double y)) -> x <= y |> Bool |> RegularValue 
+    | _ -> "Can't compare this types" |> TypeException |> raise
 
 let private not' v =
     match v with
@@ -64,24 +88,24 @@ let private arrDecl ``type`` size init =
     match size with
     | RegularValue (Int 0) ->
         match ``type`` with
-        | PrimitiveTypes.Int -> VariableValue.initArr 0 (VariableValue.createInt 1)
-        | PrimitiveTypes.Double -> VariableValue.initArr 0 (VariableValue.createDouble 1.0)
-        | PrimitiveTypes.Bool -> VariableValue.initArr 0 (VariableValue.createBoolean true)
-        | PrimitiveTypes.String -> VariableValue.initArr 0 (VariableValue.createString "")
+        | PrimitiveTypes.Int -> ExpressionValue.initArr 0 (ExpressionValue.createInt 1)
+        | PrimitiveTypes.Double -> ExpressionValue.initArr 0 (ExpressionValue.createDouble 1.0)
+        | PrimitiveTypes.Bool -> ExpressionValue.initArr 0 (ExpressionValue.createBoolean true)
+        | PrimitiveTypes.String -> ExpressionValue.initArr 0 (ExpressionValue.createString "")
         | _ -> failwith "Unknown type"
     | RegularValue (Int 1) ->
         match init with
         | [ RegularValue _ as i ] ->
-            if (VariableValue.getType i = (PrimitiveCase ``type``)) then VariableValue.initArr 1 i
+            if (ExpressionValue.getType i = (PrimitiveCase ``type``)) then ExpressionValue.initArr 1 i
             else "Type of init is not correct" |> TypeException |> raise
         | _ -> "Type is not regular or init values are not correct" |> EvaluatorException |> raise
     | RegularValue (Int n) ->
         match init with
         | [ RegularValue _ as i ] ->
-            if (VariableValue.getType i = (PrimitiveCase ``type``)) then VariableValue.initArr n i
+            if (ExpressionValue.getType i = (PrimitiveCase ``type``)) then ExpressionValue.initArr n i
             else "Type is not regular or init values are not correct" |> EvaluatorException |> raise
         | list when (List.length list = n) ->
-            let arr = VariableValue.tryCreateArr list
+            let arr = ExpressionValue.tryCreateArr list
             match arr with
             | Some a -> a
             | None -> "Not correct init values" |> EvaluatorException |> raise
@@ -90,7 +114,7 @@ let private arrDecl ``type`` size init =
     
 let rec private function' funcList args state =
     match funcList with
-    | (argsType, _, f) :: _ when argsType = (List.map (fun x -> VariableValue.getType x) args) ->
+    | (argsType, _, f) :: _ when argsType = (List.map (fun x -> ExpressionValue.getType x) args) ->
         f args state 
     | _ :: t -> function' t args state
     | [] -> "Can't find function with this type or count of arguments" |> EvaluatorException |> raise
@@ -100,10 +124,10 @@ let evaluate (env: EnvironmentOfExpressions) (node: AbstractSyntaxNode) =
     let unwrap (env, a) = a
     let rec evaluate' node =
         match node with
-        | ConstOfInt v -> VariableValue.createInt v |> wrap
-        | ConstOfBool v -> VariableValue.createBoolean v |> wrap
-        | ConstOfDouble v -> VariableValue.createDouble v |> wrap
-        | ConstOfString v -> VariableValue.createString v |> wrap
+        | ConstOfInt v -> ExpressionValue.createInt v |> wrap
+        | ConstOfBool v -> ExpressionValue.createBoolean v |> wrap
+        | ConstOfDouble v -> ExpressionValue.createDouble v |> wrap
+        | ConstOfString v -> ExpressionValue.createString v |> wrap
         | Variable(name) ->
             let var = env.Variables.TryFindByName(name)
             match var with
@@ -136,8 +160,8 @@ let evaluate (env: EnvironmentOfExpressions) (node: AbstractSyntaxNode) =
                     | Some arr ->
                             match arr.Value with
                             | ArrayValue a ->
-                                if (VariableValue.getType v = (PrimitiveCase (ArrType.getElementType a))) then
-                                    let newArrOption = VariableValue.tryChangeValueAtIndex n v arr.Value
+                                if (ExpressionValue.getType v = (PrimitiveCase (ArrType.getElementType a))) then
+                                    let newArrOption = ExpressionValue.tryChangeValueAtIndex n v arr.Value
                                     match newArrOption with
                                     | Some newArr ->
                                         let newEnv = env.ChangeValue arr newArr
@@ -152,6 +176,10 @@ let evaluate (env: EnvironmentOfExpressions) (node: AbstractSyntaxNode) =
             | _ -> failwith "Unexpected error: left part type"
         | Equality(a, b) -> (equal (evaluate' a |> unwrap) (evaluate' b |> unwrap)) |> wrap
         | Inequality(a, b) -> (notEqual (evaluate' a |> unwrap) (evaluate' b |> unwrap)) |> wrap
+        | Bigger(a, b) -> (bigger (evaluate' a |> unwrap) (evaluate' b |> unwrap)) |> wrap
+        | BiggerOrEqual(a, b) -> (biggerOrEqual (evaluate' a |> unwrap) (evaluate' b |> unwrap)) |> wrap
+        | Less(a, b) -> (less (evaluate' a |> unwrap) (evaluate' b |> unwrap)) |> wrap
+        | LessOrEqual(a, b) -> (lessOrEqual (evaluate' a |> unwrap) (evaluate' b |> unwrap)) |> wrap
         | LogicalNot v -> (not' (evaluate' v |> unwrap)) |> wrap
         | LogicalAnd(a, b) -> (and' (evaluate' a |> unwrap) (evaluate' b |> unwrap)) |> wrap
         | LogicalOr(a, b) -> (or' (evaluate' a |> unwrap) (evaluate' b |> unwrap)) |> wrap
@@ -162,8 +190,8 @@ let evaluate (env: EnvironmentOfExpressions) (node: AbstractSyntaxNode) =
             | RegularValue (Int n) ->
                 match env.Variables.TryFindByName arrName with
                 | Some arr ->
-                    if VariableValue.isArray arr.Value then
-                        match VariableValue.tryGetValueAtIndex n arr.Value with
+                    if ExpressionValue.isArray arr.Value then
+                        match ExpressionValue.tryGetValueAtIndex n arr.Value with
                         | Some a -> (env, a)
                         | _ -> "Index out of range" |> EvaluatorException |> raise
                     else "It is not array" |> TypeException |> raise

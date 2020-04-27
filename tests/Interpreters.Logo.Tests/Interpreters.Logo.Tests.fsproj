@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Content Include="App.config" />
+    <Compile Include="Helper.fs" />
     <Compile Include="LogoParserTests.fs" />
     <None Include="paket.references" />
   </ItemGroup>

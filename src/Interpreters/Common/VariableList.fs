@@ -31,7 +31,7 @@ type VariableList(variables: Variable list) =
             member this.RemoveAll(v: Variable): IVariableSet = 
                 new VariableList(List.filter ((=) v) variables) :> IVariableSet
 
-            member this.ChangeValue(v: Variable) (newValue: VariableValue): IVariableSet = 
+            member this.ChangeValue(v: Variable) (newValue: ExpressionValue): IVariableSet = 
                 let rec change list result =
                     match list with
                     | h :: t -> 
@@ -40,7 +40,7 @@ type VariableList(variables: Variable list) =
                     | [] -> invalidOp "there is no such variable"
                 new VariableList(change variables []) :> IVariableSet
             
-            member this.ChangeValueByName(name: string) (newValue: VariableValue): IVariableSet = 
+            member this.ChangeValueByName(name: string) (newValue: ExpressionValue): IVariableSet = 
                                   raise (System.NotImplementedException())
             
             member this.Drop(): IVariableSet = new VariableList(variables.Tail) :> IVariableSet

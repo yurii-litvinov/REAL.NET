@@ -31,11 +31,11 @@ type LogoRunner(model: IModel) =
         
         let getInitialNode() =
             try model.Elements |> Seq.filter isInitial |> Seq.exactlyOne
-            with :? ArgumentException -> ParserException.raiseException "Can't find initial node"
+            with :? ArgumentException -> ParserException.raiseWithMessage "Can't find initial node"
             
         let getFinalNode() =
             try model.Elements |> Seq.filter isFinal |> Seq.exactlyOne
-            with :? ArgumentException -> ParserException.raiseException "Can't find final node"
+            with :? ArgumentException -> ParserException.raiseWithMessage "Can't find final node"
 
         let findAllEdgesFrom (element: IElement) =
             model.Edges |> Seq.filter (fun (e: IEdge) -> e.From = element)

@@ -1,5 +1,6 @@
 ﻿namespace Interpreters
 
+open Interpreters.Expressions
 open Repo
 
 /// State that should be parsed.
@@ -35,6 +36,35 @@ module Parser =
 
     /// Infix variant of combine.
     let (>>+) parser1 parser2 = combine parser1 parser2
+    
+    module AvailableParsers =
+        let parseExpression (parsing: Parsing<_> option) =
+            match parsing with
+            | None -> None
+            | Some ({Variables = set; Element = element; Model = model} as p) ->
+                if (element.Class.Name = "Expression") then
+                    let attributeName = "ExpressionValue"
+                    let expr = ElementHelper.getAttributeValue attributeName element
+                    match ElementHelper.tryNext model element with
+                    | Some nextElement ->
+                        let env = EnvironmentOfExpressions.initWithSetAndPlace set (PlaceOfCreation(Some model, Some element))
+                        let parser = StringExpressionParser.Create()
+                        let exprArr = expr.Split(';')
+                        let apply envRes expr =
+                            match envRes with
+                            | Error e -> Error e
+                            | Ok env ->
+                                match parser.TryParse env expr with
+                                | Ok (newEnv, _) -> Ok newEnv
+                                | Error e -> Error e
+                        let res = Array.fold apply (Ok env) exprArr 
+                        match res with
+                        | Ok newEnv ->
+                            Some { p with Element = nextElement; Variables = newEnv.Variables }
+                        | Error e -> ParserException.raiseAll e.Message (PlaceOfCreation(Some model, Some element)) e
+                    | None -> ParserException.raiseWithPlace "No next element found" (PlaceOfCreation(Some model, Some element))
+                else None
+
 
 
 

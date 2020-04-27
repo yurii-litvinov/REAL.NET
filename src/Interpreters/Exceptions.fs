@@ -4,11 +4,13 @@
 type TypeException(message: string) =
     inherit System.Exception(message)   
 
-type ParserException(message: string, place: PlaceOfCreation) =
+type ParserException(message: string, place: PlaceOfCreation, innerException) =
     class
-        inherit System.Exception(message)
+        inherit System.Exception(message, innerException)
 
-        new(message) = new ParserException(message, PlaceOfCreation.empty)
+        new(message, place) = new ParserException(message, place, null)
+        
+        new(message) = new ParserException(message, PlaceOfCreation.empty, null)
 
         member this.PlaceWhereRaised = place
 
@@ -35,7 +37,11 @@ type ParserException(message: string, place: PlaceOfCreation) =
 
 module ParserException =
     
-    let raiseException message = new ParserException(message) |> raise
+    let raiseAll message place innerException = new ParserException(message, place, innerException) |> raise
+    
+    let raiseWithMessage message = new ParserException(message) |> raise
+    
+    let raiseWithInner message (innerException: exn) = new ParserException(message, PlaceOfCreation.empty, innerException) |> raise
 
     let raiseWithPlace (message: string) (place: PlaceOfCreation) =  new ParserException(message) |> raise 
 

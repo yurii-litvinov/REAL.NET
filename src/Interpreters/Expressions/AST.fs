@@ -19,6 +19,10 @@ type AbstractSyntaxNode =
     | Assigment of AbstractSyntaxNode * AbstractSyntaxNode
     | Equality of AbstractSyntaxNode * AbstractSyntaxNode
     | Inequality of AbstractSyntaxNode * AbstractSyntaxNode
+    | BiggerOrEqual of AbstractSyntaxNode * AbstractSyntaxNode
+    | Bigger of AbstractSyntaxNode * AbstractSyntaxNode
+    | LessOrEqual of AbstractSyntaxNode * AbstractSyntaxNode
+    | Less of AbstractSyntaxNode * AbstractSyntaxNode
     | Negative of AbstractSyntaxNode
     | LogicalOr of AbstractSyntaxNode * AbstractSyntaxNode
     | LogicalAnd of AbstractSyntaxNode * AbstractSyntaxNode

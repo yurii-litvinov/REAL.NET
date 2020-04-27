@@ -1,13 +1,10 @@
-﻿namespace Interpreters.Expressions
+﻿namespace Interpreters
 
-open System
 open Interpreters
 
-type State = State of string
+type FunctionCollection = Map<string, (ExpressionType list * ExpressionType * (ExpressionValue list -> IStateConsole -> (ExpressionValue * IStateConsole))) list>
 
-type FunctionCollection = Map<string, (ExpressionType list * ExpressionType * (VariableValue list -> State -> (VariableValue * State))) list>
-
-type EnvironmentOfExpressions(vars: IVariableSet, functions: FunctionCollection, state: State, place: PlaceOfCreation) =
+type EnvironmentOfExpressions(vars: IVariableSet, functions: FunctionCollection, state: IStateConsole, place: PlaceOfCreation) =
     struct
         new(vars, functions, state) = EnvironmentOfExpressions(vars, functions, state, PlaceOfCreation (None, None)) 
         
@@ -32,6 +29,11 @@ type EnvironmentOfExpressions(vars: IVariableSet, functions: FunctionCollection,
         member this.NewState state = EnvironmentOfExpressions(this.Variables, this.Functions, state)
             
         override this.ToString() = "Vars: " + (this.Variables.ToList.ToString()) + " State: " + this.State.ToString()
+        
+        interface IPrintable<EnvironmentOfExpressions> with
+            member this.State = this.State
+            
+            member this.NewState state = this.NewState state
     end
     
 module StandardFunctions =
@@ -61,7 +63,7 @@ module StandardFunctions =
             let functionEval v =
                 match v with
                 | [ RegularValue (Double value) ] ->
-                    let rounded = Math.Round(value) |> (int)
+                    let rounded = System.Math.Round(value) |> (int)
                     rounded |> Int |> RegularValue
                 | _ -> "Not double" |> TypeException |> raise
             (functionArgs, PrimitiveCase PrimitiveTypes.Int, wrap functionEval)
@@ -77,6 +79,13 @@ module EnvironmentOfExpressions =
     let getStandardEnvironment =
         let vars = VariableSet.VariableSetFactory.CreateVariableSet([])
         let functions = StandardFunctions.getAllFunctions
-        let state = State("")
+        let state = StateConsole.empty
         EnvironmentOfExpressions(vars, functions, state)
+        
+    let initWithSet vars = EnvironmentOfExpressions(vars, StandardFunctions.getAllFunctions, StateConsole.empty)
+    
+    let initWithSetAndPlace vars place = EnvironmentOfExpressions(vars, StandardFunctions.getAllFunctions, StateConsole.empty, place)
+    
+    let init vars state place = EnvironmentOfExpressions(vars, StandardFunctions.getAllFunctions, state, place)
+        
            

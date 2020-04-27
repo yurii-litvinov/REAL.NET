@@ -1,8 +1,6 @@
 ﻿module Interpreters.Expressions.SyntaxParser
 
-open Interpreters
 open Interpreters.Expressions
-open Interpreters.Expressions.ExpressionParsers
 open System.Collections.Immutable
 open Interpreters.Expressions.Lexemes
 
@@ -37,7 +35,11 @@ let private getConstructor op =
     | OrOp -> AST.LogicalOr
     | EqualityOp -> AST.Equality
     | InequalityOp -> AST.Inequality
-    | _ -> failwith "Not implemented"
+    | LessOp -> AST.Less
+    | LessOrEqualOp -> AST.LessOrEqual
+    | BiggerOp -> AST.Bigger
+    | BiggerOrEqualOp -> AST.BiggerOrEqual
+    | AssigmentOp -> failwith "Not supported"
 
 let private getUnOpConstructor op =
     match op with

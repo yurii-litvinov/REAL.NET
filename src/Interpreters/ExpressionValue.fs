@@ -3,24 +3,24 @@
 open System
 
 /// Represents a value, could be regular or complex
-type VariableValue = 
+type ExpressionValue = 
     | RegularValue of RegularType
     | ArrayValue of ArrType
     | Void
 
-module VariableValue =
+module ExpressionValue =
     /// Checks is given type regular.
-    let isRegular (value: VariableValue) =
+    let isRegular (value: ExpressionValue) =
         match value with
         | RegularValue _ -> true
         | _ -> false
     
-    let isArray (value: VariableValue) =
+    let isArray (value: ExpressionValue) =
         match value with
         | ArrayValue _ -> true
         | _ -> false
         
-    let isVoid (value: VariableValue) = value = Void
+    let isVoid (value: ExpressionValue) = value = Void
     
     let getType value =
         match value with

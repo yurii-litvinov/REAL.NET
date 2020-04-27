@@ -336,7 +336,7 @@ module private Operations =
 
         newElement
 
-/// Helper class that provides low-level operations with a model conforming to Infrastructure Metmodel.
+/// Helper class that provides low-level operations with a model conforming to Infrastructure Metamodel.
 type InfrastructureSemantic(repo: IRepo) =
     let infrastructureMetamodel = InfrastructureMetamodel(repo)
     let elementHelper = ElementHelper(infrastructureMetamodel)

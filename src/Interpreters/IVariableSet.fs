@@ -18,9 +18,9 @@ type IVariableSet =
         
         abstract member Filter: (Variable -> bool) -> Variable list
 
-        abstract member ChangeValue: v: Variable -> newValue: VariableValue -> IVariableSet
+        abstract member ChangeValue: v: Variable -> newValue: ExpressionValue -> IVariableSet
 
-        abstract member ChangeValueByName: name: string -> newValue: VariableValue -> IVariableSet
+        abstract member ChangeValueByName: name: string -> newValue: ExpressionValue -> IVariableSet
 
         abstract member Drop: unit -> IVariableSet
 

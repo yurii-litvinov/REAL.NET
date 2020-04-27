@@ -73,6 +73,7 @@ type LogoMetamodelBuilder() =
            let penDown = +("PenDown", "View/Pictures/LogoPictures/penDown.png", false)
            
            let repeat = +("Repeat", "View/Pictures/LogoPictures/repeat.png", false)
+           let expression = +("Expression", "View/Pictures/LogoPictures/star1.png", false)
 
            let link = abstractNode ---> (abstractNode, "target", "Link")
            let taggedLink = abstractNode ---> (abstractNode, "taggedTarget", "TaggedLink")
@@ -86,13 +87,15 @@ type LogoMetamodelBuilder() =
            penUp --|> abstractNode
            penDown --|> abstractNode
            repeat --|> abstractNode
+           expression --|> abstractNode
 
-           infrastructure.Element.AddAttribute forward "Distance" "AttributeKind.Double" "0"
-           infrastructure.Element.AddAttribute backward "Distance" "AttributeKind.Double" "0"
-           infrastructure.Element.AddAttribute left "Degrees" "AttributeKind.Double" "0"
-           infrastructure.Element.AddAttribute right "Degrees" "AttributeKind.Double" "0"
+           infrastructure.Element.AddAttribute forward "Distance" "AttributeKind.String" "0"
+           infrastructure.Element.AddAttribute backward "Distance" "AttributeKind.String" "0"
+           infrastructure.Element.AddAttribute left "Degrees" "AttributeKind.String" "0"
+           infrastructure.Element.AddAttribute right "Degrees" "AttributeKind.String" "0"
            
-           infrastructure.Element.AddAttribute repeat "Count" "AttributeKind.Int" "0"
+           infrastructure.Element.AddAttribute repeat "Count" "AttributeKind.String" "0"
+           infrastructure.Element.AddAttribute expression "ExpressionValue" "AttributeKind.String" ""
            
            infrastructure.Element.AddAttribute taggedLink "Tag" "AttributeKind.String" ""
            ()

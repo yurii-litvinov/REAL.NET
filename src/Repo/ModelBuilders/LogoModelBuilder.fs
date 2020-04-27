@@ -41,6 +41,7 @@ type LogoModelBuilder() =
             let metamodelPenDown = Model.findNode metamodel "PenDown"
             
             let metamodelRepeat = Model.findNode metamodel "Repeat"
+            let metamodelExpression = Model.findNode metamodel "Expression"
 
             let model = repo.CreateModel ("LogoModel", metamodel)  
 
@@ -82,6 +83,11 @@ type LogoModelBuilder() =
                 let repeat = infrastructure.Instantiate model metamodelRepeat
                 infrastructure.Element.SetAttributeValue repeat "Count" count
                 repeat
+                
+            let createExpression expr =
+                let expression = infrastructure.Instantiate model metamodelExpression
+                infrastructure.Element.SetAttributeValue expression "ExpressionValue" expr
+                expression
             
             let createPenUp() = infrastructure.Instantiate model metamodelPenUp
 
@@ -91,17 +97,20 @@ type LogoModelBuilder() =
 
             let finalNode = infrastructure.Instantiate model metamodelFinalNode
 
-            let forwards = [for i in [1..4] -> createForward "100"]
+            let forwards = [ for _ in [1..4] -> createForward "a" ]
 
-            let rights = [for i in [1..4] -> createRight "90"]
+            let rights = [ for _ in [1..4] -> createRight "b" ]
             
-            let left = createLeft "90"
+            let left = createLeft "b"
 
-            let backward = createBackward "100"
+            let backward = createBackward "a"
             
             let repeat = createRepeat "2"
+            
+            let expression = createExpression "a = 100.0; b = 90.0"
 
-            initialNode --> 
+            initialNode -->
+            expression -->
             repeat --> 
             forwards.[0] --> rights.[0] --> forwards.[1] --> rights.[1] --> forwards.[2] --> rights.[2] --> 
             forwards.[3] --> rights.[3] --> 

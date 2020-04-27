@@ -7,32 +7,65 @@ open Repo
 open Interpreters
 open Interpreters.VariableSet
 open Interpreters.Logo.LogoParser
+open Interpreters.Logo.Tests
 open Interpreters.Logo.TurtleCommand
 
 let repo = RepoFactory.Create()
 
-let metamodel = repo.Model "LogoMetamodel"
+let metamodelName = "LogoMetamodel"
 
-let model = repo.Model "LogoModel"
+open Helper
 
-let isInitial (element: IElement) = element.Class.Name = "InitialNode"
+let initModel() =
+    let model = getModel()
+    let initialNode = createInitialNode()
+    let finalNode = createFinalNode()
 
-let isFinal (element: IElement) = element.Class.Name = "FinalNode"
+    let forwards = [ for _ in [1..4] -> createForward "100.0" ]
+
+    let rights = [ for _ in [1..4] -> createRight "90.0" ]
+    
+    let left = createLeft "90.0"
+
+    let backward = createBackward "100.0"
+    
+    let repeat = createRepeat "2"
+
+    initialNode --> 
+    repeat --> 
+    forwards.[0] --> rights.[0] --> forwards.[1] --> rights.[1] --> forwards.[2] --> rights.[2] --> 
+    forwards.[3] --> rights.[3] --> 
+    left --> backward --> repeat
+    |> ignore
+
+    let exit = repeat +-> finalNode
+    do setAttribute exit "Tag" "Exit"
+    model
+
+let model =
+    resetModel()
+    initModel()
+
+let elements = List.ofSeq model.Elements
 
 let initialNode = model.Elements |> Seq.filter (fun e -> e.Class.Name = "InitialNode") |> Seq.exactlyOne
 
 let finalNode = model.Elements |> Seq.filter (fun e -> e.Class.Name = "FinalNode") |> Seq.exactlyOne
 
-let findAllEdgesFrom (element: IElement) =
-    model.Edges |> Seq.filter (fun (e: IEdge) -> e.From = element) 
+let isInitial (element: IElement) = element.Class.Name = "InitialNode"
 
-let findAllEdgesTo (element: IElement) =
-    model.Edges |> Seq.filter (fun (e: IEdge) -> e.To = element) 
+let isFinal (element: IElement) = element.Class.Name = "FinalNode"
 
-let hasAttribute name (element: IElement) =
-        element.Attributes |> Seq.filter (fun x -> x.Name = name) |> Seq.isEmpty |> not
+let findAllEdgesFrom (element: IElement) = ElementHelper.outgoingEdges model element
 
-let next (element: IElement) = let edge = findAllEdgesFrom element |> Seq.filter ((hasAttribute "Tag") >> not) |> Seq.exactlyOne in edge.To
+let findAllEdgesTo (element: IElement) = ElementHelper.incomingEdges model element
+
+let hasAttribute name (element: IElement) = ElementHelper.hasAttribute name element
+
+let next (element: IElement) =
+    let allEdges = element |> ElementHelper.outgoingEdges model
+    let edge = allEdges |> Seq.filter (hasAttribute "Tag" >> not) |> Seq.exactlyOne
+    edge.To
 
 let repeat = next initialNode
 

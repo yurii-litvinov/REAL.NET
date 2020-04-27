@@ -19,7 +19,7 @@ type MetaData = {Mutability: VariableMutability; PlaceOfCreation: PlaceOfCreatio
     member this.IsMutable = this.Mutability = VariableMutability.Mutable 
 
 /// Represents a variable, contains name, value and meta.
-type Variable = { Name: string; Value: VariableValue; Meta: MetaData } with
+type Variable = { Name: string; Value: ExpressionValue; Meta: MetaData } with
     /// Checks values of given variables for equality.
     static member ( == ) (x, y) = x.Value = y.Value
 
@@ -52,12 +52,12 @@ module MetaData =
 
 module Variable =
     /// Checks is given variable regular.
-    let isRegular variable = VariableValue.isRegular variable.Value
+    let isRegular variable = ExpressionValue.isRegular variable.Value
 
     /// Checks given variables' types for equality.
-    let isTypesEqual xVariable yVariable = VariableValue.isTypesEqual xVariable.Value yVariable.Value
+    let isTypesEqual xVariable yVariable = ExpressionValue.isTypesEqual xVariable.Value yVariable.Value
     
-    let getType variable = VariableValue.getType variable.Value 
+    let getType variable = ExpressionValue.getType variable.Value 
 
     /// Checks given variable for mutability.
     let isMutable (x: Variable) = x.IsMutable
@@ -69,27 +69,27 @@ module Variable =
     let makeImmutable variable = {variable with Meta = MetaData.makeImmutable variable.Meta} 
 
     /// Creates int variable with given name, value and standard meta.
-    let createInt name x place = {Name = name; Value = (VariableValue.createInt x); Meta = MetaData.createMeta true place}
+    let createInt name x place = {Name = name; Value = (ExpressionValue.createInt x); Meta = MetaData.createMeta true place}
     
     /// Creates double variable with given name, value and standard meta.
-    let createDouble name x place = {Name = name; Value = (VariableValue.createDouble x); Meta = MetaData.createMeta true place}
+    let createDouble name x place = {Name = name; Value = (ExpressionValue.createDouble x); Meta = MetaData.createMeta true place}
 
     /// Creates boolean variable with given name, value and standard meta.
-    let createBoolean name x place = {Name = name; Value = (VariableValue.createBoolean x); Meta = MetaData.createMeta true place}
+    let createBoolean name x place = {Name = name; Value = (ExpressionValue.createBoolean x); Meta = MetaData.createMeta true place}
     
     /// Creates string variable with given name, value and standard meta.
-    let createString name x place = {Name = name; Value = (VariableValue.createString x); Meta = MetaData.createMeta true place}
+    let createString name x place = {Name = name; Value = (ExpressionValue.createString x); Meta = MetaData.createMeta true place}
     
     /// Create variable with given name, value and standard meta
     let createVar name x place = {Name = name; Value = x; Meta = MetaData.createMeta true place}
 
     /// Changes value of given variable.
-    let changeValue (newValue: VariableValue) (variable: Variable) =
+    let changeValue (newValue: ExpressionValue) (variable: Variable) =
         if (not variable.IsMutable) then invalidOp "Variable is immutable"
-        elif (VariableValue.isTypesEqual newValue variable.Value) then {variable with Value = newValue}
+        elif (ExpressionValue.isTypesEqual newValue variable.Value) then {variable with Value = newValue}
         else invalidOp "Not equal types"
     /// Changes value of given value in spite of constraints.
-    let forceChangeValue (newValue: VariableValue) (variable: Variable) = {variable with Value = newValue}
+    let forceChangeValue (newValue: ExpressionValue) (variable: Variable) = {variable with Value = newValue}
     
     
 

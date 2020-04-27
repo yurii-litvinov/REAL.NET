@@ -176,6 +176,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="View\Pictures\LogoPictures\star1.png" />
     <Resource Include="View\Pictures\vertex.png" />
   </ItemGroup>
   <ItemGroup>
