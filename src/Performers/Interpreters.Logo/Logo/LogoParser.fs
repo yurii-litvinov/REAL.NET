@@ -28,7 +28,10 @@ module private Helper =
         match parser.TryParse env expr with
         | Ok (_, v) -> match TypeConversion.tryDouble v with
                        | Some x -> Ok x
-                       | _ -> TypeException("Type is not double") :> exn |> Error
+                       | _ ->
+                           match TypeConversion.tryInt v with
+                           | Some x -> (Ok (double x))
+                           | _ -> TypeException("Type is not double") :> exn |> Error
         | Error e -> Error e
     
     let tryExprToInt env expr =

@@ -12,6 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
+using System.Linq;
+using WpfControlsLib.Controls.Scene.EventArguments;
+using WpfControlsLib.ViewModel;
+
 namespace WpfEditor.View
 {
     using EditorPluginInterfaces;
@@ -90,8 +94,8 @@ namespace WpfEditor.View
             this.scene.ElementManipulationDone += (sender, args) => this.palette.ClearSelection();
             this.scene.ElementAdded += (sender, args) => this.modelExplorer.NewElement(args.Element);
             this.scene.ElementRemoved += (sender, args) => this.modelExplorer.RemoveElement(args.Element);
-            this.scene.NodeSelected += (sender, args) => this.AttributesPanel.Attributes = args.Node.Attributes;
-            this.scene.EdgeSelected += (sender, args) => this.AttributesPanel.Attributes = args.Edge.Attributes;
+            this.scene.NodeSelected += OnNodeSelectedShowAttributesOnPanel;
+            this.scene.EdgeSelected += OnEdgeSelectedShowAttributesOnPanel;
 
             this.scene.Init(this.model, this.controller, new PaletteAdapter(this.palette));
 
@@ -102,6 +106,23 @@ namespace WpfEditor.View
             this.modelSelector.Init(this.model);
             this.modelSelector.ChangeModel(0);
         }
+
+        private List<AttributeViewModel> FilterAttributes(IEnumerable<AttributeViewModel> attributes)
+        {
+            return 
+                attributes.Where(x => 
+                x.Name != "instanceMetatype" &&
+                x.Name != "isAbstract" &&
+                x.Name != "shape").ToList();
+        }
+
+        private void OnEdgeSelectedShowAttributesOnPanel(object sender, EdgeSelectedEventArgs args) => 
+            this.AttributesPanel.Attributes = FilterAttributes(args.Edge.Attributes);
+
+
+        private void OnNodeSelectedShowAttributesOnPanel(object sender, NodeSelectedEventArgs args) => 
+            this.AttributesPanel.Attributes = FilterAttributes(args.Node.Attributes);
+
 
         private void Reinit(object sender, EventArgs e)
         {

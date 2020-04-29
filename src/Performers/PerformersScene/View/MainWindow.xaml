@@ -30,7 +30,7 @@
     xmlns:controls="clr-namespace:LogoScene.Controls"
     Title="{Binding WindowTitle}"
     mc:Ignorable="d"
-    Height="685" Width="936">
+    Height="800" Width="1200">
 
     <Window.CommandBindings>
         <CommandBinding Command="New" CanExecute="OnCanExecuteForAlwaysExecutable" Executed="OnNewExecuted" />
