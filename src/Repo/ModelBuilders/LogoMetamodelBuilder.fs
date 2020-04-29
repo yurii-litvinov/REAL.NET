@@ -89,12 +89,12 @@ type LogoMetamodelBuilder() =
            repeat --|> abstractNode
            expression --|> abstractNode
 
-           infrastructure.Element.AddAttribute forward "Distance" "AttributeKind.String" "0"
-           infrastructure.Element.AddAttribute backward "Distance" "AttributeKind.String" "0"
-           infrastructure.Element.AddAttribute left "Degrees" "AttributeKind.String" "0"
-           infrastructure.Element.AddAttribute right "Degrees" "AttributeKind.String" "0"
+           infrastructure.Element.AddAttribute forward "Distance" "AttributeKind.String" "0.0"
+           infrastructure.Element.AddAttribute backward "Distance" "AttributeKind.String" "0.0"
+           infrastructure.Element.AddAttribute left "Degrees" "AttributeKind.String" "0.0"
+           infrastructure.Element.AddAttribute right "Degrees" "AttributeKind.String" "0.0"
            
-           infrastructure.Element.AddAttribute repeat "Count" "AttributeKind.String" "0"
+           infrastructure.Element.AddAttribute repeat "Count" "AttributeKind.String" "0.0"
            infrastructure.Element.AddAttribute expression "ExpressionValue" "AttributeKind.String" ""
            
            infrastructure.Element.AddAttribute taggedLink "Tag" "AttributeKind.String" ""

@@ -97,24 +97,18 @@ type LogoModelBuilder() =
 
             let finalNode = infrastructure.Instantiate model metamodelFinalNode
 
-            let forwards = [ for _ in [1..4] -> createForward "a" ]
+            let forwards = [ for _ in [ 0 ] -> createForward "a" ]
 
-            let rights = [ for _ in [1..4] -> createRight "b" ]
+            let rights = [ for _ in [ 0  ] -> createRight "b" ]
             
-            let left = createLeft "b"
-
-            let backward = createBackward "a"
-            
-            let repeat = createRepeat "2"
+            let repeat = createRepeat "4"
             
             let expression = createExpression "a = 100.0; b = 90.0"
 
             initialNode -->
             expression -->
             repeat --> 
-            forwards.[0] --> rights.[0] --> forwards.[1] --> rights.[1] --> forwards.[2] --> rights.[2] --> 
-            forwards.[3] --> rights.[3] --> 
-            left --> backward --> repeat
+            forwards.[0] --> rights.[0] --> repeat
             |> ignore
 
             let exit = repeat +-> finalNode

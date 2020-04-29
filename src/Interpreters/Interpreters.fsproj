@@ -57,8 +57,8 @@
     <Compile Include="TypeConversion.fs" />
     <Compile Include="Variable.fs" />
     <Compile Include="IVariableSet.fs" />
-    <Compile Include="Interpreter.fs" />
     <Compile Include="Exceptions.fs" />
+    <Compile Include="Interpreter.fs" />
     <Compile Include="Common\VariableList.fs" />
     <Compile Include="VariableSet.fs" />
     <Compile Include="StateConsole.fs" />

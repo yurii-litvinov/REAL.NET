@@ -43,5 +43,10 @@ module ParserException =
     
     let raiseWithInner message (innerException: exn) = new ParserException(message, PlaceOfCreation.empty, innerException) |> raise
 
-    let raiseWithPlace (message: string) (place: PlaceOfCreation) =  new ParserException(message) |> raise 
+    let raiseWithPlace (message: string) (place: PlaceOfCreation) =  new ParserException(message) |> raise
+    
+type InterpreterException(message, innerException: exn) =
+    inherit System.Exception(message, innerException)
+    
+    new(message) = InterpreterException(message, null)
 

@@ -112,6 +112,16 @@ namespace LogoScene.Models.DataLayer
             SpeedUpdateStarted?.Invoke(this, new SpeedUpdateEventArgs());
         }
 
+        public void ResetTurtle()
+        {
+            IsInProgress = false;
+            turtle.SetX(100);
+            turtle.SetY(100);
+            positionAfterMovement = new DoublePoint(100, 100);
+            turtle.SetAngle(90);
+            turtle.SetIsPenDown(true);
+        }
+
         public void NotifyMovementPerformed()
         {
             lock (this)
@@ -162,6 +172,8 @@ namespace LogoScene.Models.DataLayer
             inProgress = true;
             MovementStarted?.Invoke(this, new LineEventArgs(oldPosition, positionAfterMovement));
         }
+
+        public void Stop() => inProgress = false;
 
         private void RaiseActionPerformed(object sender, EventArgs e) => ActionPerformed?.Invoke(this, EventArgs.Empty);
     }

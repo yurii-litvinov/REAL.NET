@@ -10,12 +10,12 @@ namespace LogoScene.Models.DataLayer
     {
         private readonly TurtleCommander turtleCommander;
 
-        private readonly ConcurrentQueue<Action> actionQueue;
+        private volatile ConcurrentQueue<Action> actionQueue;
 
         private readonly ILog log = Logger.Log;
 
-        private object objectToLock = new object();
-
+        private readonly object objectToLock = new object();
+        
         private TurtleCommanderAsync(TurtleCommander turtleCommander)
         {
             this.turtleCommander = turtleCommander;
@@ -32,127 +32,73 @@ namespace LogoScene.Models.DataLayer
 
         public event EventHandler<EventArgs> PenActionPerformed
         {
-            add
-            {
-                turtleCommander.PenActionPerformed += value;
-            }
+            add => turtleCommander.PenActionPerformed += value;
 
-            remove
-            {
-                turtleCommander.PenActionPerformed -= value;
-            }
+            remove => turtleCommander.PenActionPerformed -= value;
         }
 
         public event EventHandler<LineEventArgs> MovementStarted
         {
-            add
-            {
-                turtleCommander.MovementStarted += value;
-            }
+            add => turtleCommander.MovementStarted += value;
 
-            remove
-            {
-                turtleCommander.MovementStarted -= value;
-            }
+            remove => turtleCommander.MovementStarted -= value;
         }
 
         public event EventHandler<EventArgs> ActionPerformed
         {
-            add
-            {
-                turtleCommander.ActionPerformed += value;
-            }
+            add => turtleCommander.ActionPerformed += value;
 
-            remove
-            {
-                turtleCommander.ActionPerformed -= value;
-            }
+            remove => turtleCommander.ActionPerformed -= value;
         }
 
         public event EventHandler<EventArgs> MovementPerformed
         {
-            add
-            {
-                turtleCommander.MovementPerformed += value;
-            }
+            add => turtleCommander.MovementPerformed += value;
 
-            remove
-            {
-                turtleCommander.MovementPerformed -= value;
-            }
+            remove => turtleCommander.MovementPerformed -= value;
         }
 
         public event EventHandler<EventArgs> RotationPerformed
         {
-            add
-            {
-                turtleCommander.RotationPerformed += value;
-            }
+            add => turtleCommander.RotationPerformed += value;
 
-            remove
-            {
-                turtleCommander.RotationPerformed -= value;
-            }
+            remove => turtleCommander.RotationPerformed -= value;
         }
 
         public event EventHandler<EventArgs> SpeedUpdatedPerformed
         {
-            add
-            {
-                turtleCommander.SpeedUpdatedPerformed += value;
-            }
+            add => turtleCommander.SpeedUpdatedPerformed += value;
 
-            remove
-            {
-                turtleCommander.SpeedUpdatedPerformed -= value;
-            }
+            remove => turtleCommander.SpeedUpdatedPerformed -= value;
         }
 
         public event EventHandler<RotationEventArgs> RotationStarted
         {
-            add
-            {
-                ((ITurtleCommanderAsync)turtleCommander).RotationStarted += value;
-            }
+            add => turtleCommander.RotationStarted += value;
 
-            remove
-            {
-                turtleCommander.RotationStarted -= value;
-            }
+            remove => turtleCommander.RotationStarted -= value;
         }
 
         public event EventHandler<PenActionEventArgs> PenActionStarted
         {
-            add
-            {
-                turtleCommander.PenActionStarted += value;
-            }
+            add => turtleCommander.PenActionStarted += value;
 
-            remove
-            {
-                turtleCommander.PenActionStarted -= value;
-            }
+            remove => turtleCommander.PenActionStarted -= value;
         }
 
         public event EventHandler<SpeedUpdateEventArgs> SpeedUpdateStarted
         {
-            add
-            {
-                turtleCommander.SpeedUpdateStarted += value;
-            }
+            add => turtleCommander.SpeedUpdateStarted += value;
 
-            remove
-            {
-                turtleCommander.SpeedUpdateStarted -= value;
-            }
+            remove => turtleCommander.SpeedUpdateStarted -= value;
         }
 
         public void MoveBackward(double distance)
         {
             lock (objectToLock)
             {
-                Action action = () => { turtleCommander.MoveBackward(distance); };
-                AddActionToQueue(action);
+                void Action() => turtleCommander.MoveBackward(distance);
+                AddActionToQueue(Action);
             }
         }
 
@@ -160,8 +106,8 @@ namespace LogoScene.Models.DataLayer
         {
             lock (objectToLock)
             {
-                Action action = () => turtleCommander.MoveForward(distance);
-                AddActionToQueue(action);
+                void Action() => turtleCommander.MoveForward(distance);
+                AddActionToQueue(Action);
             }
         }
 
@@ -169,8 +115,8 @@ namespace LogoScene.Models.DataLayer
         {
             lock (objectToLock)
             {
-                Action action = () => turtleCommander.PenDown();
-                AddActionToQueue(action);
+                void Action() => turtleCommander.PenDown();
+                AddActionToQueue(Action);
             }
         }
 
@@ -178,8 +124,8 @@ namespace LogoScene.Models.DataLayer
         {
             lock (objectToLock)
             {
-                Action action = () => turtleCommander.PenUp();
-                AddActionToQueue(action);
+                void Action() => turtleCommander.PenUp();
+                AddActionToQueue(Action);
             }
         }
 
@@ -187,8 +133,8 @@ namespace LogoScene.Models.DataLayer
         {
             lock (objectToLock)
             {
-                Action action = () => turtleCommander.RotateLeft(degrees);
-                AddActionToQueue(action);
+                void Action() => turtleCommander.RotateLeft(degrees);
+                AddActionToQueue(Action);
             }
         }
 
@@ -196,8 +142,8 @@ namespace LogoScene.Models.DataLayer
         {
             lock (objectToLock)
             {
-                Action action = () => turtleCommander.RotateRight(degrees);
-                AddActionToQueue(action);
+                void Action() => turtleCommander.RotateRight(degrees);
+                AddActionToQueue(Action);
             }
         }
 
@@ -205,8 +151,8 @@ namespace LogoScene.Models.DataLayer
         {
             lock (objectToLock)
             {
-                Action action = () => turtleCommander.SetSpeed(speed);
-                AddActionToQueue(action);
+                void Action() => turtleCommander.SetSpeed(speed);
+                AddActionToQueue(Action);
             }
         }
 
@@ -221,14 +167,27 @@ namespace LogoScene.Models.DataLayer
 
         public void NotifyPenActionPerformed() => this.turtleCommander.NotifyPenActionPerformed();
 
+        public void Stop()
+        {
+            lock (objectToLock)
+            {
+                actionQueue = new ConcurrentQueue<Action>();
+            }
+        }
+
+        public void ResetTurtle()
+        {
+            turtleCommander.ResetTurtle();
+            
+        }
+
         private void OnActionPerformed(object sender, EventArgs e)
         {
-            lock (this)
+            lock (objectToLock)
             {
                 if (!actionQueue.IsEmpty)
                 {
-                    Action action;
-                    var attempt = actionQueue.TryDequeue(out action);
+                    var attempt = actionQueue.TryDequeue(out var action);
                     if (!attempt)
                     {
                         throw new SystemException("can't get action from queue");
@@ -240,7 +199,7 @@ namespace LogoScene.Models.DataLayer
 
         private void AddActionToQueue(Action action)
         {
-            lock (this)
+            lock (objectToLock)
             {
                 if (actionQueue.IsEmpty && !turtleCommander.IsInProgress)
                 {

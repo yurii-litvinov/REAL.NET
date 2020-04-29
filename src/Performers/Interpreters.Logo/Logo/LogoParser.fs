@@ -8,6 +8,7 @@ open Repo
 
 open Interpreters
 open Interpreters.Expressions
+open Repo.FacadeLayer
 
 type Context = { Commands: LCommand list} 
 
@@ -48,6 +49,17 @@ module private Helper =
     
 module AvailableParsers =
 
+    let parseInitialNode (parsing: Parsing<_> Option) =
+        match parsing with
+        | None -> None
+        | Some ({ Model = model; Element = element } as p) ->
+            if (element.Class.Name = "InitialNode") then
+                match ElementHelper.tryNext model element with
+                | None -> ParserException.raiseWithPlace "Can't determine next element from initial node" (PlaceOfCreation(Some model, Some element))
+                | Some nextElement -> Some { p with Element = nextElement }
+            else None
+            
+    
     let parseForward (parsing: Parsing<Context> option) : Parsing<Context> option =
         match parsing with
         | None -> None
@@ -185,4 +197,4 @@ open AvailableParsers
 
 let parseMovement: Parser<Context> = parseForward >>+ parseRight >>+ parseBackward >>+ parseLeft
 
-let parseLogo = parseMovement >>+ parseRepeat >>+ parseExpression
+let parseLogo = parseInitialNode >>+ parseMovement >>+ parseRepeat >>+ parseExpression

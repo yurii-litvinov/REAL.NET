@@ -133,6 +133,14 @@ namespace WpfEditor.View
             {
                 this.Toolbar.AddButton(button);
             }
+            var command = new Command(() =>
+            {
+                this.programRunner.StopProgram();
+                this.DrawingScene.ResetScene();
+            });
+            var pictureLocation = "pack://application:,,,/" + "View/Pictures/Toolbar/reset_scene.jpg";
+            var buttonReset = new WpfControlsLib.Controls.Toolbar.Button(command, "Reset scene", pictureLocation);
+            this.Toolbar.AddButton(buttonReset);
         }
 
         private void InitAndLaunchPlugins()
@@ -140,12 +148,14 @@ namespace WpfEditor.View
             var libs = new PluginLauncher<PluginConfig>();
             const string folder = "../../../../plugins";
             var pluginDirs = new List<string>(System.IO.Directory.GetDirectories(folder));
-            foreach (var plugindir in pluginDirs)
+            foreach (var pluginDir in pluginDirs)
             {
-                var dirs = new List<string>(System.IO.Directory.GetDirectories(plugindir + "/bin"));
-                var config = new PluginConfig(this.model, null, null, this.Console, null, this.leftPanelGrid);
-                config.ChangeModelSelectorVisibility = (x) => { this.modelSelector.SelectorVisibility = x; };
-                config.ChangeModel = this.SelectModel;
+                var dirs = new List<string>(System.IO.Directory.GetDirectories(pluginDir + "/bin"));
+                var config = new PluginConfig(this.model, null, null, this.Console, null, this.leftPanelGrid)
+                {
+                    ChangeModelSelectorVisibility = (x) => { this.modelSelector.SelectorVisibility = x; },
+                    ChangeModel = this.SelectModel
+                };
                 foreach (var dir in dirs)
                 {
                     libs.LaunchPlugins(dir, config);

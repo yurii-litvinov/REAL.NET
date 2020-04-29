@@ -80,10 +80,9 @@
       <Project>{522a914e-b787-43b6-9630-b169c8c3441b}</Project>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\LOGO\Interpreters.Logo\Interpreters.Logo.fsproj">
-      <Name>Interpreters.Logo</Name>
+    <ProjectReference Include="..\..\src\Performers\Interpreters.Logo\Interpreters.Logo.fsproj">
       <Project>{1d57e43c-c29e-4ea5-be01-028d73781637}</Project>
-      <Private>True</Private>
+      <Name>Interpreters.Logo</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\Repo\Repo.fsproj">
       <Name>Repo</Name>

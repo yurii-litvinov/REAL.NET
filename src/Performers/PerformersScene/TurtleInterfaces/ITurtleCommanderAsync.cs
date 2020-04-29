@@ -23,5 +23,7 @@ namespace Logo.TurtleInterfaces
         event EventHandler<EventArgs> SpeedUpdatedPerformed;
 
         bool IsInProgress { get; }
+
+        void Stop();
     }
 }

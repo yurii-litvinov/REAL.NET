@@ -2,7 +2,7 @@
 namespace System
 open System.Reflection
 
-[<assembly: AssemblyTitleAttribute("Interpreters")>]
+[<assembly: AssemblyTitleAttribute("Interpreters.Logo")>]
 [<assembly: AssemblyProductAttribute("REAL.NET")>]
 [<assembly: AssemblyDescriptionAttribute("Domain-specific modeling toolkit")>]
 [<assembly: AssemblyVersionAttribute("0.1")>]
@@ -11,7 +11,7 @@ open System.Reflection
 do ()
 
 module internal AssemblyVersionInformation =
-    let [<Literal>] AssemblyTitle = "Interpreters"
+    let [<Literal>] AssemblyTitle = "Interpreters.Logo"
     let [<Literal>] AssemblyProduct = "REAL.NET"
     let [<Literal>] AssemblyDescription = "Domain-specific modeling toolkit"
     let [<Literal>] AssemblyVersion = "0.1"

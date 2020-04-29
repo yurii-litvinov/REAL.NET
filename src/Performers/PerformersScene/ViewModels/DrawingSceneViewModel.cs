@@ -22,9 +22,9 @@ namespace LogoScene.ViewModels
 {
     public class DrawingSceneViewModel : ViewModelBase
     {
-        public TurtleControlViewModel TurtleViewModel { get; private set; }
+        public TurtleControlViewModel TurtleViewModel { get; }
 
-        public ObservableCollection<LineAfterTurtle> LinesOnScene { get; private set; } = new ObservableCollection<LineAfterTurtle>();
+        public ObservableCollection<LineAfterTurtle> LinesOnScene { get; } = new ObservableCollection<LineAfterTurtle>();
 
         public bool IsLineAnimated
         {
@@ -97,8 +97,23 @@ namespace LogoScene.ViewModels
             this.IsLineVisible = this.commander.Turtle.IsPenDown;
         }
 
-        public void MoveTurtle(DoublePoint startPoint, DoublePoint finalPoint)
+        private bool isReseted = true;
+        
+        public void ResetScene()
         {
+            this.TurtleCommander.Stop();
+            this.TurtleCommander.ResetTurtle();
+            this.LinesOnScene.Clear();
+            this.IsLineVisible = turtleModel.IsPenDown;
+            this.TurtleViewModel.ResetTurtle();
+            this.FinalPoint = turtleModel.Position;
+            this.StartPoint = turtleModel.Position;
+            this.isReseted = true;
+        }
+
+        private void MoveTurtle(DoublePoint startPoint, DoublePoint finalPoint)
+        {
+            isReseted = false;
             this.StartPoint = startPoint;
             this.FinalPoint = finalPoint;
             this.TurtleViewModel.MoveTurtle(this.StartPoint, this.FinalPoint);
@@ -106,7 +121,7 @@ namespace LogoScene.ViewModels
 
         public void MoveTurtle(DoublePoint destination) => MoveTurtle(this.StartPoint, destination);
 
-        public void MoveTurtle() => MoveTurtle(this.StartPoint, this.FinalPoint);
+        private void MoveTurtle() => MoveTurtle(this.StartPoint, this.FinalPoint);
 
         private void OnTurtleMovementEnded(object sender, EventArgs e)
         {
@@ -145,7 +160,12 @@ namespace LogoScene.ViewModels
 
         private void OnLineAdded(object sender, LineEventArgs e)
         {
-            this.LinesOnScene.Add(new LineAfterTurtle(e.StartPoint, e.EndPoint));
+            if (!isReseted)
+            {
+                this.LinesOnScene.Add(new LineAfterTurtle(e.StartPoint, e.EndPoint));
+            }
+
+            isReseted = false;
         }
 
         private double speedRatio = 1;

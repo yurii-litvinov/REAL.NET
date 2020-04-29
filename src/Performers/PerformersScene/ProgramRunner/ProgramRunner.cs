@@ -22,6 +22,10 @@ namespace LogoScene.ProgramRunner
 
         private IModel model;
 
+        private volatile bool isStopped = false;
+        
+        private LogoRunner runner;
+        
         public ProgramRunner(ITurtleCommanderAsync commander, IToolbar toolbar, IConsole console, IRepo repo)
         {
             this.commander = commander;
@@ -32,13 +36,23 @@ namespace LogoScene.ProgramRunner
         }
 
         public void SetModel(string modelName) => this.model = repo.Model(modelName);
+        
+        public void StopProgram()
+        {
+            this.runner.Stop();
+            this.commander.Stop();
+        }
 
         private void AddButtons()
         {
             var command = new WpfControlsLib.Controls.Toolbar.Command(LaunchProgram);
             var pictureLocation = "pack://application:,,,/" + "View/Pictures/Toolbar/play.png";
-            var button = new WpfControlsLib.Controls.Toolbar.Button(command, "Run program", pictureLocation);
-            toolbar.AddButton(button);
+            var buttonRun = new WpfControlsLib.Controls.Toolbar.Button(command, "Run program", pictureLocation);
+            toolbar.AddButton(buttonRun);
+            var commandStop = new WpfControlsLib.Controls.Toolbar.Command(StopProgram);
+            var pictureLocationStop = "pack://application:,,,/" + "View/Pictures/Toolbar/stop.png";
+            var buttonStop = new WpfControlsLib.Controls.Toolbar.Button(commandStop, "Stop program", pictureLocationStop);
+            toolbar.AddButton(buttonStop);
         }
 
         private void LaunchProgram()
@@ -56,7 +70,7 @@ namespace LogoScene.ProgramRunner
 
         private List<LogoCommand> RunProgram(Repo.IModel model)
         {
-            var runner = new LogoRunner(model);
+            runner = new LogoRunner(model);
             try
             {
                 runner.Run();
@@ -70,7 +84,7 @@ namespace LogoScene.ProgramRunner
             commandList.Reverse();
             return commandList;
         }
-
+        
         private void RunCommandList(List<LogoCommand> list)
         {
             foreach (var command in list)

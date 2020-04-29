@@ -112,6 +112,15 @@ namespace LogoScene.ViewModels
             this.turtleModel = turtle;
         }
 
+        public void ResetTurtle()
+        {
+            this.IsMovingStarted = false;
+            this.SpeedRatio = 1.0;
+            this.Start = new DoublePoint(100, 100);
+            this.End = new DoublePoint(100, 100);
+            this.Angle = 90.0;
+        }
+
         public TurtleControlViewModel()
         {
             this.AnimationCompletedCommand = new RelayCommand(
@@ -127,6 +136,7 @@ namespace LogoScene.ViewModels
         private DoublePoint start = new DoublePoint(0, 0);
 
         private bool isMovingStarted = false;
+        
         private ITurtle turtleModel;
 
         private double angle = 90;

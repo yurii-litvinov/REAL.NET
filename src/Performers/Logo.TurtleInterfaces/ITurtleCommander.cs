@@ -23,5 +23,7 @@ namespace Logo.TurtleInterfaces
         void RotateRight(double degrees);
 
         void SetSpeed(double speed);
+
+        void ResetTurtle();
     }
 }
