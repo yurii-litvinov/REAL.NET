@@ -1,4 +1,7 @@
-﻿namespace Logo.TurtleInterfaces
+﻿using Logo.TurtleInterfaces;
+using DoublePoint = PerformersScene.Models.DoublePoint;
+
+namespace PerformersScene.TurtleInterfaces
 {
     public interface ITurtle
     {

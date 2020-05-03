@@ -97,9 +97,8 @@ namespace WpfControlsLib.Model
                 var source = this.DataGraph.Vertices.First(v => v.Node == sourceNode);
                 var target = this.DataGraph.Vertices.First(v => v.Node == targetNode);
 
-                var newEdge = new EdgeViewModel(source, target, Convert.ToDouble(false))
+                var newEdge = new EdgeViewModel(edge, source, target, Convert.ToDouble(false))
                 {
-                    Edge = edge,
                     EdgeType = EdgeViewModel.EdgeTypeEnum.Association
                 };
                 var attributeInfos = edge.Attributes.Select(x => new AttributeViewModel(x, x.Name, x.Kind.ToString())
@@ -122,7 +121,7 @@ namespace WpfControlsLib.Model
             this.DrawGraph?.Invoke(this, EventArgs.Empty);
         }
 
-        public void CreateEdge(IEdge edge, IElement prevVer, IElement ctrlVer)
+        private void CreateEdge(IEdge edge, IElement prevVer, IElement ctrlVer)
         {
             _ = prevVer ?? throw new ArgumentNullException(nameof(prevVer));
             _ = ctrlVer ?? throw new ArgumentNullException(nameof(prevVer));
@@ -133,10 +132,7 @@ namespace WpfControlsLib.Model
             _ = sourceViewModel ?? throw new InvalidOperationException();
             _ = targetViewModel ?? throw new InvalidOperationException();
 
-            var newEdge = new EdgeViewModel(sourceViewModel, targetViewModel, Convert.ToDouble(true))
-            {
-                Edge = edge
-            };
+            var newEdge = new EdgeViewModel(edge, sourceViewModel, targetViewModel, Convert.ToDouble(true));
 
             this.DataGraph.AddEdge(newEdge);
 

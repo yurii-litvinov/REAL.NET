@@ -1,7 +1,7 @@
 ﻿using log4net;
 using log4net.Config;
 
-namespace LogoScene.Models.Log
+namespace PerformersScene.Models.Log
 {
     public static class Logger
     {

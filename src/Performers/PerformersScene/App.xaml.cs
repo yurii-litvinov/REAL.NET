@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace LogoScene
+namespace PerformersScene
 {
     /// <summary>
     /// Логика взаимодействия для App.xaml

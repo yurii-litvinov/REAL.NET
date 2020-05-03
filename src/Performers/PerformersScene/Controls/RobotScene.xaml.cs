@@ -5,9 +5,9 @@ namespace PerformersScene.Controls
     /// <summary>
     /// Логика взаимодействия для DrawingScene.xaml
     /// </summary>
-    public partial class DrawingScene : UserControl
+    public partial class RobotScene : UserControl
     {
-        public DrawingScene()
+        public RobotScene()
         {
             InitializeComponent();
         }

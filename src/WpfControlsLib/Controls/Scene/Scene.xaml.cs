@@ -621,7 +621,6 @@ namespace WpfControlsLib.Controls.Scene
             var edge = this.edgeControl.GetDataEdge<EdgeViewModel>();
             var command = new RemoveEdgeCommand(this.model, edge.Edge);
             this.controller.Execute(command);
-            this.DrawGraph();
         }
 
         private void OnEdgeMouseUp(object sender, MouseButtonEventArgs e)

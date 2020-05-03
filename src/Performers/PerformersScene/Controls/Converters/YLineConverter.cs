@@ -1,10 +1,11 @@
 ﻿using Logo.TurtleInterfaces;
-using LogoScene.Operations;
 using System;
 using System.Globalization;
 using System.Windows.Data;
+using PerformersScene.Operations;
+using DoublePoint = PerformersScene.Models.DoublePoint;
 
-namespace LogoScene.Controls.Converters
+namespace PerformersScene.Controls.Converters
 {
     public class YLineConverter : IMultiValueConverter
     {

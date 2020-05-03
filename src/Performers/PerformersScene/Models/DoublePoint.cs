@@ -1,6 +1,6 @@
-﻿namespace Logo.TurtleInterfaces
+﻿namespace PerformersScene.Models
 {
-    public struct DoublePoint
+    public readonly struct DoublePoint
     {
         public DoublePoint(double x, double y)
         {

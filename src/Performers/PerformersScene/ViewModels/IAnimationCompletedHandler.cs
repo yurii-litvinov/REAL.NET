@@ -14,7 +14,7 @@
 
 using System.Windows.Input;
 
-namespace LogoScene.ViewModels.Animation
+namespace PerformersScene.ViewModels.Animation
 {
     public interface IAnimationCompletedHandler
     {

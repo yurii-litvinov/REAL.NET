@@ -1,6 +1,7 @@
 ﻿using Logo.TurtleInterfaces;
+using ITurtle = PerformersScene.TurtleInterfaces.ITurtle;
 
-namespace LogoScene.Models.DataLayer
+namespace PerformersScene.Models.DataLayer
 {
     internal class Turtle : ITurtle
     {

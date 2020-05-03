@@ -8,7 +8,7 @@ namespace Logo.TurtleInterfaces
 {
     public interface ITurtleCommander
     {
-        ITurtle Turtle { get; }
+        PerformersScene.TurtleInterfaces.ITurtle Turtle { get; }
 
         void MoveBackward(double distance);
 

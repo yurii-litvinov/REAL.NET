@@ -19,7 +19,7 @@ using WpfControlsLib.ViewModel;
 namespace WpfEditor.View
 {
     using EditorPluginInterfaces;
-    using LogoScene.ViewModels;
+    using PerformersScene.ViewModels;
     using PluginManager;
     using Repo;
     using System;
@@ -43,7 +43,7 @@ namespace WpfEditor.View
 
         private readonly WpfControlsLib.Controller.Controller controller;
 
-        private LogoScene.ProgramRunner.ProgramRunner programRunner;
+        private PerformersScene.ProgramRunner.ProgramRunner programRunner;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -54,6 +54,8 @@ namespace WpfEditor.View
         public ToolbarViewModel Toolbar { get; } = new ToolbarViewModel();
 
         public DrawingSceneViewModel DrawingScene { get; } = new DrawingSceneViewModel();
+        
+        public RobotSceneViewModel RobotScene { get; } = new RobotSceneViewModel();
 
         public AttributesPanelViewModel AttributesPanel { get; } = new AttributesPanelViewModel();
 
@@ -289,7 +291,7 @@ namespace WpfEditor.View
 
         private void InitProgramRunner()
         {
-            programRunner = new LogoScene.ProgramRunner.ProgramRunner(this.DrawingScene.TurtleCommander, this.Toolbar, this.Console, this.model.Repo);
+            programRunner = new PerformersScene.ProgramRunner.ProgramRunner(this.DrawingScene.TurtleCommander, this.Toolbar, this.Console, this.model.Repo);
         }
     }
 }

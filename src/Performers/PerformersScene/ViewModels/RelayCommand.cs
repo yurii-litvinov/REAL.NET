@@ -15,7 +15,7 @@
 using System;
 using System.Windows.Input;
 
-namespace LogoScene.ViewModels
+namespace PerformersScene.ViewModels
 {
 
     public class RelayCommand : ICommand

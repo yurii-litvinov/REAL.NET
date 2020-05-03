@@ -13,11 +13,13 @@
  * limitations under the License. */
 
 using Logo.TurtleInterfaces;
-using LogoScene.ViewModels.Animation;
 using System;
 using System.Windows.Input;
+using PerformersScene.ViewModels.Animation;
+using DoublePoint = PerformersScene.Models.DoublePoint;
+using ITurtle = PerformersScene.TurtleInterfaces.ITurtle;
 
-namespace LogoScene.ViewModels
+namespace PerformersScene.ViewModels
 {
     public class TurtleControlViewModel : ViewModelBase, IAnimationCompletedHandler
     {

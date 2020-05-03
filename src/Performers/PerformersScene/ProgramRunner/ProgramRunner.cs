@@ -8,7 +8,7 @@ using Interpreters.Logo.LogoSpecific;
 using Interpreters;
 using System;
 
-namespace LogoScene.ProgramRunner
+namespace PerformersScene.ProgramRunner
 {
     public class ProgramRunner
     {
@@ -42,7 +42,7 @@ namespace LogoScene.ProgramRunner
             this.runner.Stop();
             this.commander.Stop();
         }
-
+        
         private void AddButtons()
         {
             var command = new WpfControlsLib.Controls.Toolbar.Command(LaunchProgram);
@@ -90,25 +90,29 @@ namespace LogoScene.ProgramRunner
             foreach (var command in list)
             {
                 // clumsy: fix it
-                if (command is LogoForward)
+                if (command is LogoForward forward)
                 {
-                    var forward = (LogoForward)command;
                     this.commander.MoveForward(forward.Distance);
                 }
-                else if (command is LogoBackward)
+                else if (command is LogoBackward backward)
                 {
-                    var backward = (LogoBackward)command;
                     this.commander.MoveBackward(backward.Distance);
                 }
-                else if (command is LogoRight)
+                else if (command is LogoRight right)
                 {
-                    var right = (LogoRight)command;
                     this.commander.RotateRight(right.Degrees);
                 }
-                else if (command is LogoLeft)
+                else if (command is LogoLeft left)
                 {
-                    var left = (LogoLeft)command;
                     this.commander.RotateLeft(left.Degrees);
+                }
+                else if (command is LogoPenUp)
+                {
+                    this.commander.PenUp();
+                }
+                else if (command is LogoPenDown)
+                {
+                    this.commander.PenDown();
                 }
                 else { }
             }

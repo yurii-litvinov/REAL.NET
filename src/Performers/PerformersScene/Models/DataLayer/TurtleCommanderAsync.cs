@@ -1,10 +1,11 @@
 ﻿using log4net;
 using Logo.TurtleInterfaces;
-using LogoScene.Models.Log;
 using System;
 using System.Collections.Concurrent;
+using PerformersScene.Models.Log;
+using ITurtle = PerformersScene.TurtleInterfaces.ITurtle;
 
-namespace LogoScene.Models.DataLayer
+namespace PerformersScene.Models.DataLayer
 {
     internal class TurtleCommanderAsync : ITurtleCommanderAsync
     {

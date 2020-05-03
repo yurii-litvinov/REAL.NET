@@ -1,8 +1,8 @@
-﻿using LogoScene.ViewModels.Animation;
-using System;
+﻿using System;
 using System.Windows.Controls;
+using PerformersScene.ViewModels.Animation;
 
-namespace LogoScene.Controls
+namespace PerformersScene.Controls
 {
     /// <summary>
     /// Логика взаимодействия для TurtleControl.xaml

@@ -1,9 +1,9 @@
 ﻿using Logo.TurtleInterfaces;
-using LogoScene.Models.DataLayer;
 using System;
 using System.Collections.Generic;
+using PerformersScene.Models.DataLayer;
 
-namespace LogoScene.Models
+namespace PerformersScene.Models
 {
     internal class DrawingScene
     {

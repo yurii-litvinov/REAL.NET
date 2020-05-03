@@ -15,7 +15,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace LogoScene.ViewModels
+namespace PerformersScene.ViewModels
 {
     public abstract class ViewModelBase : INotifyPropertyChanged
     {

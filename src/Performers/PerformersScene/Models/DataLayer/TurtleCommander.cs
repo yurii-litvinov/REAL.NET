@@ -1,7 +1,8 @@
 ﻿using Logo.TurtleInterfaces;
 using System;
+using ITurtle = PerformersScene.TurtleInterfaces.ITurtle;
 
-namespace LogoScene.Models.DataLayer
+namespace PerformersScene.Models.DataLayer
 {
     internal class TurtleCommander : ITurtleCommanderAsync
     {

@@ -1,5 +1,6 @@
 ﻿module Interpreters.Logo.LogoParser
 
+open System.Runtime.Remoting.Contexts
 open Interpreters.Parser
 
 open Interpreters.Logo.TurtleCommand
@@ -61,7 +62,32 @@ module AvailableParsers =
                 | None -> ParserException.raiseWithPlace "Can't determine next element from initial node" (PlaceOfCreation(Some model, Some element))
                 | Some nextElement -> Some { p with Element = nextElement }
             else None
+    
+    let parsePenDown (parsing: Parsing<_> Option) =
+        match parsing with
+        | None -> None
+        | Some ({ Context = context; Model = model; Element = element } as p) ->
+            if (element.Class.Name = "PenDown") then
+                match ElementHelper.tryNext model element with
+                | None -> ParserException.raiseWithPlace "Can't determine next element" (PlaceOfCreation(Some model, Some element))
+                | Some nextElement ->
+                    let command = LPenDown
+                    let newContext = {context with Commands = command :: context.Commands}
+                    Some { p with Context = newContext; Element = nextElement }
+            else None
             
+    let parsePenUp (parsing: Parsing<_> Option) =
+        match parsing with
+        | None -> None
+        | Some ({ Context = context; Model = model; Element = element } as p) ->
+            if (element.Class.Name = "PenUp") then
+                match ElementHelper.tryNext model element with
+                | None -> ParserException.raiseWithPlace "Can't determine next element" (PlaceOfCreation(Some model, Some element))
+                | Some nextElement ->
+                    let command = LPenUp
+                    let newContext = {context with Commands = command :: context.Commands}
+                    Some { p with Context = newContext; Element = nextElement }
+            else None
     
     let parseForward (parsing: Parsing<Context> option) : Parsing<Context> option =
         match parsing with
@@ -160,7 +186,7 @@ module AvailableParsers =
                         let exit = exitEdge.To
                         let nextElementOption = edges |> Seq.except [exitEdge] |> Seq.tryExactlyOne
                         match nextElementOption with
-                        | None -> ParserException.raiseWithPlace "No next element found" (PlaceOfCreation(Some model, Some element))
+                        | None -> ParserException.raiseWithPlace "Can't determine next element" (PlaceOfCreation(Some model, Some element))
                         | Some nextElementEdge ->
                             let nextElement = nextElementEdge.To
                             let vars = set.Filter filter
@@ -200,4 +226,5 @@ open AvailableParsers
 
 let parseMovement: Parser<Context> = parseForward >>+ parseRight >>+ parseBackward >>+ parseLeft
 
-let parseLogo = parseInitialNode >>+ parseMovement >>+ parseRepeat >>+ parseExpression
+let parseLogo = parseInitialNode >>+ parseMovement >>+ parseRepeat >>+ parseExpression >>+ parsePenDown >>+ parsePenUp 
+    

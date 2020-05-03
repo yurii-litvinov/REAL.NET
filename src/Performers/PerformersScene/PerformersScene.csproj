@@ -60,6 +60,9 @@
     <Compile Include="Controls\DrawingScene.xaml.cs">
       <DependentUpon>DrawingScene.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\RobotScene.xaml.cs">
+      <DependentUpon>RobotScene.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\TurtleControl.xaml.cs">
       <DependentUpon>TurtleControl.xaml</DependentUpon>
     </Compile>
@@ -69,9 +72,12 @@
     <Compile Include="EventArgs\SpeedUpdateEventArgs.cs" />
     <Compile Include="Models\Constants\Constants.cs" />
     <Compile Include="Models\DataLayer\DrawingScene.cs" />
+    <Compile Include="Models\DataLayer\RobotScene.cs" />
     <Compile Include="Models\DataLayer\Turtle.cs" />
     <Compile Include="Models\DataLayer\TurtleCommander.cs" />
     <Compile Include="Models\DataLayer\TurtleCommanderAsync.cs" />
+    <Compile Include="Models\DoublePoint.cs" />
+    <Compile Include="Models\IntPoint.cs" />
     <Compile Include="Models\Log\Logger.cs" />
     <Compile Include="Operations\PointOperations.cs" />
     <Compile Include="ProgramRunner\ProgramRunner.cs" />
@@ -88,12 +94,22 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="RobotInterfaces\Cell.cs" />
+    <Compile Include="RobotInterfaces\Direction.cs" />
+    <Compile Include="RobotInterfaces\IRobot.cs" />
+    <Compile Include="RobotInterfaces\IRobotCommander.cs" />
+    <Compile Include="RobotInterfaces\IRobotMaze.cs" />
+    <Compile Include="RobotInterfaces\Robot.cs" />
+    <Compile Include="RobotInterfaces\RobotMaze.cs" />
+    <Compile Include="TurtleInterfaces\ITurtle.cs" />
+    <Compile Include="TurtleInterfaces\ITurtleCommander.cs" />
     <Compile Include="TurtleInterfaces\ITurtleCommanderAsync.cs" />
     <Compile Include="TurtleInterfaces\OrientedLine.cs" />
     <Compile Include="ViewModels\DrawingSceneViewModel.cs" />
     <Compile Include="ViewModels\IAnimationCompletedHandler.cs" />
-    <Compile Include="ViewModels\LineAfterTurtle.cs" />
+    <Compile Include="ViewModels\LineViewModel.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
+    <Compile Include="ViewModels\RobotSceneViewModel.cs" />
     <Compile Include="ViewModels\TurtleControlViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
@@ -118,6 +134,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Controls\DrawingScene.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\RobotScene.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -187,10 +207,6 @@
     <ProjectReference Include="..\Interpreters.Logo\Interpreters.Logo.fsproj">
       <Project>{1d57e43c-c29e-4ea5-be01-028d73781637}</Project>
       <Name>Interpreters.Logo</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Logo.TurtleInterfaces\Logo.TurtleInterfaces.csproj">
-      <Project>{69309937-d690-4365-85d8-698c30fceff4}</Project>
-      <Name>Logo.TurtleInterfaces</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

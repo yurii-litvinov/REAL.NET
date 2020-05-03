@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LogoScene.Properties
+namespace PerformersScene.Properties
 {
 
 

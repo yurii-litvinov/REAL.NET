@@ -27,7 +27,7 @@
     xmlns:toolbar="clr-namespace:WpfControlsLib.Controls.Toolbar;assembly=WpfControlsLib"
     xmlns:attributesPanel="clr-namespace:WpfControlsLib.Controls.AttributesPanel;assembly=WpfControlsLib"
     xmlns:validators="clr-namespace:WpfEditor.View.Validators"
-    xmlns:controls="clr-namespace:LogoScene.Controls"
+    xmlns:controls="clr-namespace:PerformersScene.Controls"
     Title="{Binding WindowTitle}"
     mc:Ignorable="d"
     Height="800" Width="1200">
@@ -90,15 +90,21 @@
                 <!-- Scene area -->
                 <TabControl Name="tabOfScenes">
                     <TabItem>
-                        <TabItem.Header>Interpreter</TabItem.Header>
+                        <TabItem.Header>Editor</TabItem.Header>
+                        <TabItem.Content>
+                            <scene:Scene x:Name="scene"/>
+                        </TabItem.Content>
+                    </TabItem>
+                    <TabItem>
+                        <TabItem.Header>Logo Interpreter</TabItem.Header>
                         <TabItem.Content>
                             <controls:DrawingScene DataContext="{Binding DrawingScene}"/>
                         </TabItem.Content>
                     </TabItem>
                     <TabItem>
-                        <TabItem.Header>Editor</TabItem.Header>
+                        <TabItem.Header>Robot Interpreter</TabItem.Header>
                         <TabItem.Content>
-                            <scene:Scene x:Name="scene"/>
+                            <controls:RobotScene DataContext="{Binding RobotScene}"/>
                         </TabItem.Content>
                     </TabItem>
                 </TabControl>

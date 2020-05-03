@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="PerformersScene.Controls.RobotScene"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:PerformersScene.Controls"
+             xmlns:controls="clr-namespace:PerformersScene.Controls"
+             xmlns:viewmodels="clr-namespace:PerformersScene.ViewModels"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:converters="clr-namespace:PerformersScene.Controls.Converters"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <viewmodels:RobotSceneViewModel />
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <converters:XLineConverter x:Key="XLineConverter" />
+        <converters:YLineConverter x:Key="YLineConverter" />
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters:MinusConverter x:Key="MinusConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <Border BorderThickness="2" BorderBrush="Black" Grid.Column="0" Grid.Row="0">
+            <Canvas Background="White" Height="450" Margin="0,0,0,0" VerticalAlignment="Top">
+                <ItemsControl ItemsSource="{Binding MazeLines}" Canvas.Bottom="0" Canvas.Left="0">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Line Visibility="Visible"
+                                  X1="{Binding X1}" Y1="{Binding Y1, Converter={StaticResource MinusConverter}}"
+                                  X2="{Binding X2}" Y2="{Binding Y2, Converter={StaticResource MinusConverter}}"
+                                  Stroke="{Binding LineColor}" StrokeThickness="{Binding Thickness}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <TextBlock Text="{Binding MazeLines.Count}" />
+            </Canvas>
+        </Border>
+    </Grid>
+</UserControl>

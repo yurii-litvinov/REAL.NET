@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace LogoScene.Controls.Converters
+namespace PerformersScene.Controls.Converters
 {
     public class TurtleAngleConverter : IValueConverter
     {

@@ -1,7 +1,8 @@
 ﻿using Logo.TurtleInterfaces;
+using DoublePoint = PerformersScene.Models.DoublePoint;
 
 
-namespace LogoScene.Operations
+namespace PerformersScene.Operations
 {
     public static class PointOperations
     {

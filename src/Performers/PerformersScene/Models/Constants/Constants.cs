@@ -11,12 +11,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License. */
-namespace LogoScene.Models
+namespace PerformersScene.Models
 {
     public static class Constants
     {
         public static double TurtleWidth = 36;
 
         public static double TurtleHeight = 50;
+
+        public static int MazeSideLength = 50;
+
+        public static int RobotWidth = 20;
+
+        public static int RobotHeight = 20;
     }
 }

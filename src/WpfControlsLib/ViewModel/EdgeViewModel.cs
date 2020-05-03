@@ -20,17 +20,20 @@ namespace WpfControlsLib.ViewModel
 
         private string text;
 
-        public EdgeViewModel(NodeViewModel source, NodeViewModel target, double weight = 1)
+        public EdgeViewModel(IEdge edge, NodeViewModel source, NodeViewModel target, double weight = 1)
             : base(source, target, weight)
         {
+            this.Edge = edge;
             this.Angle = 90;
+            // TO remove this hack, color should be saved in Repo
+            if (this.Edge?.Class.Name == "TaggedLink")
+            {
+                this.Color = Brushes.Green;
+            }
         }
 
-        public EdgeViewModel()
-            : base(null, null, 1)
-        {
-            this.Angle = 90;
-        }
+        public EdgeViewModel(NodeViewModel source, NodeViewModel target, double weight = 1)
+            : this(null, source, target, weight){ }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -73,7 +76,7 @@ namespace WpfControlsLib.ViewModel
 
         public int IndexOfInflectionPoint { get; set; }
 
-        public IEdge Edge { get; set; }
+        public IEdge Edge { get; }
 
         public string Text
         {

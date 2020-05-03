@@ -97,21 +97,4 @@ type LogoModelBuilder() =
 
             let finalNode = infrastructure.Instantiate model metamodelFinalNode
 
-            let forwards = [ for _ in [ 0 ] -> createForward "a" ]
-
-            let rights = [ for _ in [ 0  ] -> createRight "b" ]
-            
-            let repeat = createRepeat "4"
-            
-            let expression = createExpression "a = 100.0; b = 90.0"
-
-            initialNode -->
-            expression -->
-            repeat --> 
-            forwards.[0] --> rights.[0] --> repeat
-            |> ignore
-
-            let exit = repeat +-> finalNode
-            infrastructure.Element.SetAttributeValue exit "Tag" "Exit"
-            
             0 |> ignore

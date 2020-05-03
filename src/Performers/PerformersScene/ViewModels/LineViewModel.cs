@@ -12,11 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
+using System.Windows.Media;
 using Logo.TurtleInterfaces;
+using DoublePoint = PerformersScene.Models.DoublePoint;
 
-namespace LogoScene.ViewModels
+namespace PerformersScene.ViewModels
 {
-    public class LineAfterTurtle : ViewModelBase
+    public class LineViewModel : ViewModelBase
     {
         private double x1;
 
@@ -25,11 +27,35 @@ namespace LogoScene.ViewModels
         private double x2;
 
         private double y2;
+        
+        private Brush lineColor = Brushes.Black;
+        
+        private double thickness = 1;
 
-        public LineAfterTurtle()
+        public Brush LineColor
+        {
+            get => lineColor;
+            set
+            {
+                lineColor = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double Thickness
+        {
+            get => thickness;
+            set
+            {
+                thickness = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public LineViewModel()
             : this(new DoublePoint(0, 0), new DoublePoint(0, 0)) { }
 
-        public LineAfterTurtle(DoublePoint start, DoublePoint end)
+        public LineViewModel(DoublePoint start, DoublePoint end)
         {
             this.X1 = start.X;
             this.Y1 = start.Y;
@@ -37,7 +63,7 @@ namespace LogoScene.ViewModels
             this.Y2 = end.Y;
         }
 
-        public LineAfterTurtle(double x1, double y1, double x2, double y2)
+        public LineViewModel(double x1, double y1, double x2, double y2)
         {
             this.X1 = x1;
             this.Y1 = y1;

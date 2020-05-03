@@ -13,18 +13,20 @@
  * limitations under the License. */
 
 using Logo.TurtleInterfaces;
-using LogoScene.Models;
-using LogoScene.Models.Log;
 using System;
 using System.Collections.ObjectModel;
+using PerformersScene.Models;
+using PerformersScene.Models.Log;
+using DoublePoint = PerformersScene.Models.DoublePoint;
+using ITurtle = PerformersScene.TurtleInterfaces.ITurtle;
 
-namespace LogoScene.ViewModels
+namespace PerformersScene.ViewModels
 {
     public class DrawingSceneViewModel : ViewModelBase
     {
         public TurtleControlViewModel TurtleViewModel { get; }
 
-        public ObservableCollection<LineAfterTurtle> LinesOnScene { get; } = new ObservableCollection<LineAfterTurtle>();
+        public ObservableCollection<LineViewModel> LinesOnScene { get; } = new ObservableCollection<LineViewModel>();
 
         public bool IsLineAnimated
         {
@@ -97,7 +99,7 @@ namespace LogoScene.ViewModels
             this.IsLineVisible = this.commander.Turtle.IsPenDown;
         }
 
-        private bool isReseted = true;
+        private bool isReset = true;
         
         public void ResetScene()
         {
@@ -108,12 +110,12 @@ namespace LogoScene.ViewModels
             this.TurtleViewModel.ResetTurtle();
             this.FinalPoint = turtleModel.Position;
             this.StartPoint = turtleModel.Position;
-            this.isReseted = true;
+            this.isReset = true;
         }
 
         private void MoveTurtle(DoublePoint startPoint, DoublePoint finalPoint)
         {
-            isReseted = false;
+            isReset = false;
             this.StartPoint = startPoint;
             this.FinalPoint = finalPoint;
             this.TurtleViewModel.MoveTurtle(this.StartPoint, this.FinalPoint);
@@ -160,12 +162,12 @@ namespace LogoScene.ViewModels
 
         private void OnLineAdded(object sender, LineEventArgs e)
         {
-            if (!isReseted)
+            if (!isReset)
             {
-                this.LinesOnScene.Add(new LineAfterTurtle(e.StartPoint, e.EndPoint));
+                this.LinesOnScene.Add(new LineViewModel(e.StartPoint, e.EndPoint));
             }
 
-            isReseted = false;
+            isReset = false;
         }
 
         private double speedRatio = 1;

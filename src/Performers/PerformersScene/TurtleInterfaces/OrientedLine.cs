@@ -1,16 +1,16 @@
 ﻿namespace Logo.TurtleInterfaces
 {
-    public struct OrientedLine
+    public readonly struct OrientedLine
     {
-        public OrientedLine(DoublePoint start, DoublePoint end)
+        public OrientedLine(PerformersScene.Models.DoublePoint start, PerformersScene.Models.DoublePoint end)
         {
             Start = start;
             End = end;
         }
 
-        public DoublePoint Start { get; }
+        public PerformersScene.Models.DoublePoint Start { get; }
 
-        public DoublePoint End { get; }
+        public PerformersScene.Models.DoublePoint End { get; }
 
         public override string ToString()
         {
