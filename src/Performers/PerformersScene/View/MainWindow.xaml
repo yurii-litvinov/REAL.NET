@@ -101,7 +101,7 @@
                             <controls:DrawingScene DataContext="{Binding DrawingScene}"/>
                         </TabItem.Content>
                     </TabItem>
-                    <TabItem>
+                    <TabItem IsSelected="True">
                         <TabItem.Header>Robot Interpreter</TabItem.Header>
                         <TabItem.Content>
                             <controls:RobotScene DataContext="{Binding RobotScene}"/>

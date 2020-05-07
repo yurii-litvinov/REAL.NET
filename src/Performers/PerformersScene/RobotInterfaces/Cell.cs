@@ -1,4 +1,4 @@
-﻿namespace RobotInterfaces
+﻿namespace PerformersScene.RobotInterfaces
 {
     public readonly struct Cell
     {

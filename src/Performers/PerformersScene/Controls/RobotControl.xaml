@@ -1,0 +1,78 @@
+﻿<UserControl x:Class="PerformersScene.Controls.RobotControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:PerformersScene.Controls"
+             xmlns:viewModels="clr-namespace:PerformersScene.ViewModels"
+             xmlns:converters="clr-namespace:PerformersScene.Controls.Converters"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             mc:Ignorable="d"
+             d:DesignHeight="50" d:DesignWidth="36"
+             Height="{Binding RobotHeight}" Width="{Binding RobotWidth}">
+
+    <UserControl.DataContext>
+        <viewModels:RobotControlViewModel />
+    </UserControl.DataContext>
+    <UserControl.Tag>
+        <Binding Path="Tag" ElementName="HiddenButton" />
+    </UserControl.Tag>
+    <UserControl.Resources>
+        <converters:XConverter x:Key="RobotXFromTag" />
+        <converters:YConverter x:Key="RobotYFromTag" />
+        <converters:TurtleAngleConverter x:Key="AngleConverter" />
+        <Storyboard x:Key="TagAnimation" Completed="OnStoryboardCompleted">
+            <DoubleAnimation
+                SpeedRatio="{Binding SpeedRatio}"
+                Storyboard.TargetName="HiddenButton"
+                Storyboard.TargetProperty="Tag"
+                RepeatBehavior="1x"
+                From="0"
+                To="1" />
+        </Storyboard>
+    </UserControl.Resources>
+    <Grid HorizontalAlignment="Center" Height="Auto" VerticalAlignment="Center" Width="Auto">
+        <Path
+            Data="M79.762002,0.5 C95.922959,0.5 109.024,13.60082 109.024,29.761499 109.024,37.336819 106.14535,44.239803 101.42226,49.436272 L100.74989,50.141483 102.76976,50.665909 C112.02019,53.212646 120.6821,57.593994 128.4716,63.471367 L128.61357,63.583454 128.71359,63.295246 C131.51758,55.82864 138.87055,50.5 147.5,50.5 158.5457,50.5 167.5,59.230446 167.5,70 167.5,79.423363 160.64436,87.28553 151.5307,89.103828 L151.4121,89.124481 153.03836,91.862823 C162.07695,107.76751 167.357,126.9576 167.357,147.6185 167.357,163.07391 164.40238,177.70631 159.13004,190.75609 L158.35182,192.62379 158.68219,192.83029 C164.00223,196.33459 167.5,202.26903 167.5,209 167.5,219.76955 158.5457,228.5 147.5,228.5 143.35787,228.5 139.50983,227.27228 136.31781,225.16971 L136.24701,225.11809 135.43617,225.89693 C121.25267,239.19043 103.36694,247.119 83.928498,247.119 64.490068,247.119 46.604329,239.19043 32.420827,225.89693 L31.671004,225.1767 30.870727,225.67693 C27.84679,227.46837 24.296958,228.5 20.500001,228.5 9.4543058,228.5 0.5000011,219.76955 0.5,209 0.5000011,202.26903 3.9977764,196.33459 9.3178093,192.83029 L9.5347206,192.69472 8.7269537,190.75609 C3.4546193,177.70631 0.50000107,163.07391 0.5,147.6185 0.50000054,126.68929 5.9180833,107.26932 15.172683,91.244835 L16.4624,89.102272 15.50169,88.886086 C6.8746964,86.721954 0.5000011,79.086815 0.5,70 0.5000011,59.230446 9.4543058,50.5 20.500001,50.5 29.129449,50.5 36.482415,55.82864 39.286405,63.295246 L39.361196,63.510757 41.098664,62.212898 C46.711053,58.200878 52.75171,54.953453 59.11942,52.591347 L60.763986,52.007893 60.086892,51.421391 C54.197465,46.068649 50.500001,38.346863 50.500001,29.761499 50.500001,13.60082 63.601045,0.5 79.762002,0.5 z"
+            Stretch="Fill" Stroke="Black" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center"
+            Fill="#FFF4F4F5">
+            <Path.RenderTransform>
+                <RotateTransform Angle="{Binding Angle, Converter={StaticResource AngleConverter}}"
+                                 CenterX="{Binding CenterX}" CenterY="{Binding CenterY}" />
+            </Path.RenderTransform>
+        </Path>
+        <Button Name="HiddenButton" Visibility="Hidden" Width="100" Height="30"
+                Content="{Binding Tag, ElementName=HiddenButton}">
+            <Button.Tag>
+                <system:Double>0</system:Double>
+            </Button.Tag>
+        </Button>
+
+    </Grid>
+    <Canvas.Left>
+        <MultiBinding Converter="{StaticResource RobotXFromTag}">
+            <Binding Path="Start" />
+            <Binding Path="End" />
+            <Binding Path="SpeedRatio" />
+            <Binding Path="Tag" ElementName="HiddenButton" />
+            <Binding Path="Shift"/>
+        </MultiBinding>
+    </Canvas.Left>
+    <Canvas.Bottom>
+        <MultiBinding Converter="{StaticResource RobotYFromTag}">
+            <Binding Path="Start" />
+            <Binding Path="End" />
+            <Binding Path="SpeedRatio" />
+            <Binding Path="Tag" ElementName="HiddenButton" />
+            <Binding Path="Shift"/>
+        </MultiBinding>
+    </Canvas.Bottom>
+
+    <i:Interaction.Triggers>
+        <ei:DataTrigger Binding="{Binding IsMovingStarted}" Value="True">
+            <ei:ControlStoryboardAction Storyboard="{DynamicResource TagAnimation}" ControlStoryboardOption="Play" />
+        </ei:DataTrigger>
+    </i:Interaction.Triggers>
+</UserControl>

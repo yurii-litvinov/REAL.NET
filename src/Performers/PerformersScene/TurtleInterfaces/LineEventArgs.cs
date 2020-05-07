@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Logo.TurtleInterfaces;
 
-namespace Logo.TurtleInterfaces
+namespace PerformersScene.TurtleInterfaces
 {
-    public class LineEventArgs : EventArgs
+    public class LineEventArgs : System.EventArgs
     {
         public PerformersScene.Models.DoublePoint StartPoint => Line.Start;
 

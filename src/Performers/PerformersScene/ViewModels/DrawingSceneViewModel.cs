@@ -17,6 +17,7 @@ using System;
 using System.Collections.ObjectModel;
 using PerformersScene.Models;
 using PerformersScene.Models.Log;
+using PerformersScene.TurtleInterfaces;
 using DoublePoint = PerformersScene.Models.DoublePoint;
 using ITurtle = PerformersScene.TurtleInterfaces.ITurtle;
 

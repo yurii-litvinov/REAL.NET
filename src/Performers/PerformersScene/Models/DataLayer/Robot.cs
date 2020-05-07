@@ -1,8 +1,6 @@
-﻿using System.Drawing;
-using System.Windows;
-using PerformersScene.Models;
+﻿using PerformersScene.RobotInterfaces;
 
-namespace RobotInterfaces
+namespace PerformersScene.Models.DataLayer
 {
     public class Robot : IRobot
     {
@@ -10,16 +8,16 @@ namespace RobotInterfaces
 
         private Robot(Direction robotDirection, IntPoint position)
         {
-            RobotDirection = robotDirection;
+            Direction = robotDirection;
             Position = position;
         }
 
-        public Direction RobotDirection { get; }
+        public Direction Direction { get; }
 
         public IntPoint Position { get; }
         
         public IRobot NewDirection(Direction direction) => CreateRobot(direction, this.Position);
 
-        public IRobot NewPosition(IntPoint position) => CreateRobot(RobotDirection, position);
+        public IRobot NewPosition(IntPoint position) => CreateRobot(Direction, position);
     }
 }

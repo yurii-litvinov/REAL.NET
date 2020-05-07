@@ -1,7 +1,6 @@
-﻿using PerformersScene.Models;
-using PerformersScene.RobotInterfaces;
+﻿using PerformersScene.RobotInterfaces;
 
-namespace RobotInterfaces
+namespace PerformersScene.Models.DataLayer
 {
     public class RobotMaze : IRobotMaze
     {

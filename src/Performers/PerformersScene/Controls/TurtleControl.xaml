@@ -16,21 +16,16 @@
         <viewmodels:TurtleControlViewModel/>
     </UserControl.DataContext>
     <UserControl.Tag>
-        <Binding Path="Tag" ElementName="hiddenButton"/>
+        <Binding Path="Tag" ElementName="HiddenButton"/>
     </UserControl.Tag>
     <UserControl.Resources>
-        <converters:TurtleXConverter x:Key="TurtleXFromTag"/>
-        <converters:TurtleYConverter x:Key="TurtleYFromTag"/>
+        <converters:XConverter x:Key="TurtleXFromTag"/>
+        <converters:YConverter x:Key="TurtleYFromTag"/>
         <converters:TurtleAngleConverter x:Key="AngleConverter"/>
-        <PathGeometry x:Key="geometryPath">
-            <PathFigure IsClosed="False" StartPoint="{Binding StartPoint}">
-                <LineSegment Point="{Binding FinalPoint}"/>
-            </PathFigure>
-        </PathGeometry>
         <Storyboard x:Key="TagAnimation" Completed="OnStoryboardCompleted">
             <DoubleAnimation                 
                 SpeedRatio="{Binding SpeedRatio}"
-                Storyboard.TargetName="hiddenButton"
+                Storyboard.TargetName="HiddenButton"
                 Storyboard.TargetProperty="Tag"
                 RepeatBehavior="1x"
                 From="0"
@@ -45,7 +40,7 @@
                              CenterX="{Binding CenterX}" CenterY="{Binding CenterY}"/>
             </Path.RenderTransform>
         </Path>
-            <Button Name="hiddenButton" Visibility="Hidden" Width="100" Height="30" Content="{Binding Tag, ElementName=hiddenButton}">
+            <Button Name="HiddenButton" Visibility="Hidden" Width="100" Height="30" Content="{Binding Tag, ElementName=HiddenButton}">
             <Button.Tag>
                 <sys:Double>0</sys:Double>
             </Button.Tag>
@@ -57,7 +52,8 @@
             <Binding Path="Start"/>
             <Binding Path="End"/>
             <Binding Path="SpeedRatio"/>
-            <Binding Path="Tag" ElementName="hiddenButton"/>
+            <Binding Path="Tag" ElementName="HiddenButton"/>
+            <Binding Path="Shift"/>
         </MultiBinding>
     </Canvas.Left>
     <Canvas.Bottom>
@@ -65,7 +61,8 @@
             <Binding Path="Start"/>
             <Binding Path="End"/>
             <Binding Path="SpeedRatio"/>
-            <Binding Path="Tag" ElementName="hiddenButton"/>
+            <Binding Path="Tag" ElementName="HiddenButton"/>
+            <Binding Path="Shift"/>
         </MultiBinding>
     </Canvas.Bottom>
    

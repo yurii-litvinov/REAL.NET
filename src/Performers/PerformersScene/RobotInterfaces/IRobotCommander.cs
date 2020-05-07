@@ -1,15 +1,18 @@
-﻿namespace RobotInterfaces
+﻿namespace PerformersScene.RobotInterfaces
 {
     public interface IRobotCommander
     {
-        IRobot Robot { get; }
+        
+        IRobot RobotPerformer { get; }
 
         void MoveForward();
 
         void MoveBackward();
 
-        void Left();
+        void RotateLeft();
 
-        void Right();
+        void RotateRight();
+
+        void ResetRobot();
     }
 }

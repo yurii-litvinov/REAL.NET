@@ -53,12 +53,15 @@
     <Compile Include="Controls\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Controls\Converters\MinusConverter.cs" />
     <Compile Include="Controls\Converters\TurtleAngleConverter.cs" />
-    <Compile Include="Controls\Converters\TurtleXConverter.cs" />
-    <Compile Include="Controls\Converters\TurtleYConverter.cs" />
+    <Compile Include="Controls\Converters\XConverter.cs" />
+    <Compile Include="Controls\Converters\YConverter.cs" />
     <Compile Include="Controls\Converters\XLineConverter.cs" />
     <Compile Include="Controls\Converters\YLineConverter.cs" />
     <Compile Include="Controls\DrawingScene.xaml.cs">
       <DependentUpon>DrawingScene.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\RobotControl.xaml.cs">
+      <DependentUpon>RobotControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\RobotScene.xaml.cs">
       <DependentUpon>RobotScene.xaml</DependentUpon>
@@ -66,12 +69,11 @@
     <Compile Include="Controls\TurtleControl.xaml.cs">
       <DependentUpon>TurtleControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="EventArgs\LineEventArgs.cs" />
-    <Compile Include="EventArgs\PenActionEventArgs.cs" />
-    <Compile Include="EventArgs\RotationEventArgs.cs" />
-    <Compile Include="EventArgs\SpeedUpdateEventArgs.cs" />
     <Compile Include="Models\Constants\Constants.cs" />
     <Compile Include="Models\DataLayer\DrawingScene.cs" />
+    <Compile Include="Models\DataLayer\Robot.cs" />
+    <Compile Include="Models\DataLayer\RobotCommander.cs" />
+    <Compile Include="Models\DataLayer\RobotMaze.cs" />
     <Compile Include="Models\DataLayer\RobotScene.cs" />
     <Compile Include="Models\DataLayer\Turtle.cs" />
     <Compile Include="Models\DataLayer\TurtleCommander.cs" />
@@ -79,6 +81,7 @@
     <Compile Include="Models\DoublePoint.cs" />
     <Compile Include="Models\IntPoint.cs" />
     <Compile Include="Models\Log\Logger.cs" />
+    <Compile Include="Models\RobotPositionCalculator.cs" />
     <Compile Include="Operations\PointOperations.cs" />
     <Compile Include="ProgramRunner\ProgramRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -98,18 +101,23 @@
     <Compile Include="RobotInterfaces\Direction.cs" />
     <Compile Include="RobotInterfaces\IRobot.cs" />
     <Compile Include="RobotInterfaces\IRobotCommander.cs" />
+    <Compile Include="RobotInterfaces\IRobotCommanderAsync.cs" />
     <Compile Include="RobotInterfaces\IRobotMaze.cs" />
-    <Compile Include="RobotInterfaces\Robot.cs" />
-    <Compile Include="RobotInterfaces\RobotMaze.cs" />
+    <Compile Include="RobotInterfaces\RobotEvent.cs" />
     <Compile Include="TurtleInterfaces\ITurtle.cs" />
     <Compile Include="TurtleInterfaces\ITurtleCommander.cs" />
     <Compile Include="TurtleInterfaces\ITurtleCommanderAsync.cs" />
+    <Compile Include="TurtleInterfaces\LineEventArgs.cs" />
     <Compile Include="TurtleInterfaces\OrientedLine.cs" />
+    <Compile Include="TurtleInterfaces\PenActionEventArgs.cs" />
+    <Compile Include="TurtleInterfaces\RotationEventArgs.cs" />
+    <Compile Include="TurtleInterfaces\SpeedUpdateEventArgs.cs" />
     <Compile Include="ViewModels\DrawingSceneViewModel.cs" />
     <Compile Include="ViewModels\IAnimationCompletedHandler.cs" />
     <Compile Include="ViewModels\LineViewModel.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
     <Compile Include="ViewModels\RobotSceneViewModel.cs" />
+    <Compile Include="ViewModels\RobotControlViewModel.cs" />
     <Compile Include="ViewModels\TurtleControlViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
@@ -137,6 +145,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\RobotControl.xaml" />
     <Page Include="Controls\RobotScene.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

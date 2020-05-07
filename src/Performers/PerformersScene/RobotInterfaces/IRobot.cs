@@ -1,11 +1,10 @@
-﻿using System.Windows;
-using PerformersScene.Models;
+﻿using PerformersScene.Models;
 
-namespace RobotInterfaces
+namespace PerformersScene.RobotInterfaces
 {
     public interface IRobot
     {
-        Direction RobotDirection { get; }
+        Direction Direction { get; }
         
         IntPoint Position { get; }
 

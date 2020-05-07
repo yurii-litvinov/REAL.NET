@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using PerformersScene.Models;
+using PerformersScene.Models.Constants;
 using PerformersScene.Models.DataLayer;
-using RobotInterfaces;
+using PerformersScene.RobotInterfaces;
 using IRobotMaze = PerformersScene.RobotInterfaces.IRobotMaze;
 
 namespace PerformersScene.ViewModels
@@ -14,9 +16,39 @@ namespace PerformersScene.ViewModels
     {
         public RobotSceneViewModel()
         {
+            RobotViewModel = new RobotControlViewModel();
+            RobotViewModel.AnimationCompleted += OnAnimationCompleted; 
             MazeLines.Add(new LineViewModel());
             maze = InitMaze();
             GenerateLines();
+            var robot = Robot.CreateRobot(Direction.Up, new IntPoint(0, 0));
+            robotCommander = new RobotCommander(robot);
+            robotCommander.MovementStarted += OnMovementStarted;
+            robotCommander.RotationStarted += OnRotationStarted;
+            
+            robotCommander.MoveForward();
+            robotCommander.RotateRight();
+            robotCommander.MoveForward();
+            robotCommander.RotateLeft();
+            robotCommander.MoveForward();
+            robotCommander.MoveBackward();
+        }
+
+        private void OnAnimationCompleted(object sender, EventArgs e)
+        {
+            robotCommander.NotifyActionDone();
+        }
+
+        private void OnRotationStarted(object sender, RobotEvent e)
+        {
+            var direction = e.RobotData.Direction;
+            RobotViewModel.SetDirection(direction);
+        }
+
+        private void OnMovementStarted(object sender, RobotEvent e)
+        {
+            var position = e.RobotData.Position;
+            RobotViewModel.MoveRobot(position);
         }
 
         private IRobotMaze InitMaze()
@@ -41,11 +73,15 @@ namespace PerformersScene.ViewModels
 
         public ObservableCollection<LineViewModel> MazeLines { get; } = new ObservableCollection<LineViewModel>();
 
+        public RobotControlViewModel RobotViewModel { get; } 
+
         private RobotScene model;
 
         private readonly IRobotMaze maze;
 
-        private readonly double lineLength = Constants.MazeSideLength;
+        private readonly double lineLength = RobotConstants.MazeSideLength;
+        
+        private readonly RobotCommander robotCommander;
 
         private static Brush GetColor(bool isWall) => isWall ? Brushes.Black : Brushes.Gray;
 

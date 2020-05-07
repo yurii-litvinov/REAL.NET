@@ -3,6 +3,7 @@ using Logo.TurtleInterfaces;
 using System;
 using System.Collections.Concurrent;
 using PerformersScene.Models.Log;
+using PerformersScene.TurtleInterfaces;
 using ITurtle = PerformersScene.TurtleInterfaces.ITurtle;
 
 namespace PerformersScene.Models.DataLayer
@@ -179,7 +180,6 @@ namespace PerformersScene.Models.DataLayer
         public void ResetTurtle()
         {
             turtleCommander.ResetTurtle();
-            
         }
 
         private void OnActionPerformed(object sender, EventArgs e)

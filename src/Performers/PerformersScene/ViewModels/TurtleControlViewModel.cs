@@ -15,6 +15,7 @@
 using Logo.TurtleInterfaces;
 using System;
 using System.Windows.Input;
+using PerformersScene.Models.Constants;
 using PerformersScene.ViewModels.Animation;
 using DoublePoint = PerformersScene.Models.DoublePoint;
 using ITurtle = PerformersScene.TurtleInterfaces.ITurtle;
@@ -31,9 +32,9 @@ namespace PerformersScene.ViewModels
 
         public ICommand AnimationCompletedCommand { get; set; }
 
-        public double TurtleWidth => Models.Constants.TurtleWidth;
+        public double TurtleWidth => TurtleConstants.TurtleWidth;
 
-        public double TurtleHeight => Models.Constants.TurtleHeight;
+        public double TurtleHeight => TurtleConstants.TurtleHeight;
 
         public double CenterX => TurtleWidth / 2;
 
@@ -66,6 +67,16 @@ namespace PerformersScene.ViewModels
             set
             {
                 end = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public DoublePoint Shift
+        {
+            get => shift;
+            set
+            {
+                shift = value;
                 OnPropertyChanged();
             }
         }
@@ -142,6 +153,8 @@ namespace PerformersScene.ViewModels
         private ITurtle turtleModel;
 
         private double angle = 90;
+        
+        private DoublePoint shift = new DoublePoint(TurtleConstants.TurtleWidth / 2, TurtleConstants.TurtleHeight / 2);
 
         private void RaiseAnimationCompletedEvent() => TurtleMovingEnded?.Invoke(this, e: EventArgs.Empty);
     }
