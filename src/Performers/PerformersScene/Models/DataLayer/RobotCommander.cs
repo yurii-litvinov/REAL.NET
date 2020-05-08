@@ -5,12 +5,7 @@ using PerformersScene.RobotInterfaces;
 
 namespace PerformersScene.Models.DataLayer
 {
-    public interface IRobotCommander
-    {
-        void Stop();
-    }
-
-    public class RobotCommander : IRobotCommanderAsync, IRobotCommander
+    public class RobotCommander : IRobotCommanderAsync
     {
         private volatile ConcurrentQueue<Action> actionQueue;
 

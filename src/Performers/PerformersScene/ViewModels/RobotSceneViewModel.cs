@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows;
 using System.Windows.Media;
-using System.Windows.Shapes;
 using PerformersScene.Models;
 using PerformersScene.Models.Constants;
 using PerformersScene.Models.DataLayer;
 using PerformersScene.RobotInterfaces;
+using IRobotCommander = PerformersScene.RobotInterfaces.IRobotCommander;
 using IRobotMaze = PerformersScene.RobotInterfaces.IRobotMaze;
 
 namespace PerformersScene.ViewModels
@@ -33,6 +31,8 @@ namespace PerformersScene.ViewModels
             robotCommander.MoveForward();
             robotCommander.MoveBackward();
         }
+
+        public IRobotCommander GetRobotCommander() => robotCommander;
 
         private void OnAnimationCompleted(object sender, EventArgs e)
         {

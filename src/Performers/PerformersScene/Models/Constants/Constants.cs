@@ -23,10 +23,10 @@ namespace PerformersScene.Models.Constants
 
     public static class RobotConstants
     {
-        public static double MazeSideLength = 50;
+        public static double MazeSideLength = 80;
 
-        public static double RobotWidth = 20;
+        public static double RobotWidth = 40;
 
-        public static double RobotHeight = 20;
+        public static double RobotHeight = 40;
     }
 }
