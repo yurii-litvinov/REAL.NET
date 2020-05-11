@@ -94,6 +94,8 @@
     <Compile Include="ModelBuilders\CoreMetametamodelBuilder.fs" />
     <Compile Include="ModelBuilders\LogoMetamodelBuilder.fs" />
     <Compile Include="ModelBuilders\LogoModelBuilder.fs" />
+    <Compile Include="ModelBuilders\RobotPerformerMetamodelBuilder.fs" />
+    <Compile Include="ModelBuilders\RobotPerformerModelBuilder.fs" />
     <Compile Include="FacadeLayer.fs" />
     <Compile Include="FacadeLayer\Visual\VisualNodeInfo.fs" />
     <Compile Include="FacadeLayer\Visual\VisualEdgeInfo.fs" />

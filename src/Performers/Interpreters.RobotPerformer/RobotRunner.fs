@@ -1,30 +1,33 @@
-﻿namespace Interpreters.Logo.LogoInterpeter
-
-open Repo
-
-open Interpreters.Logo
-
-open Interpreters.Logo.LogoParser
-
-open Interpreters.Logo.LogoSpecific
-
-open Interpreters
-
-open TurtleCommand
+﻿namespace Interpreters.RobotPerformer
 
 open System
+open Repo
+open Interpreters
+open Interpreters.RobotPerformer.DataLayer
 
-type LogoContext(list) = 
-    class
-        interface ILogoContext with
-            member this.LogoCommands = List.toSeq list
+type IRobotContext =
+    interface
+        abstract member WrappedCommands: seq<RobotCommand>
+        
+        abstract member Robot: Robot
     end
 
-type LogoRunner(model: IModel) =
-    class
-        let mutable currentModel = model
+type RobotContext(robot: Robot, commands: RCommand list) =
+    let wrappedCommands = List.map DataLayer.CommandGenerator.generateCommand commands
+    
+    interface IRobotContext with
+        member this.WrappedCommands = wrappedCommands |> Seq.ofList
+        
+        member this.Robot = robot
+        
 
-        let mutable commandList = []
+type RobotRunner(model: IModel, horizontalLines, verticalLines) =
+     class
+        let mutable currentModel = model
+        
+        let mutable robot = Robot(IntPoint(0, 0), Direction.Up)
+        
+        let maze = Maze(horizontalLines, verticalLines)
 
         let isInitial (element: IElement) = element.Class.Name = "InitialNode"
         
@@ -47,7 +50,7 @@ type LogoRunner(model: IModel) =
             try
                 let initialNode = getInitialNode()
                 let emptyVariableSet = Interpreters.VariableSet.VariableSetFactory.CreateVariableSet([])
-                let context = Context.createContext
+                let context = Context.createContext maze robot
                 { Variables = emptyVariableSet; Context = context; Model = model; Element = initialNode } |> Some
             with :? ArgumentException -> None
         
@@ -61,7 +64,7 @@ type LogoRunner(model: IModel) =
                 | Some { Element = element } when element = getFinalNode() ->
                     InterpreterException("Try to parse final node") |> raise
                 | _ ->
-                    let result = p |> LogoParser.parseLogo
+                    let result = p |> RobotParser.parseRobot
                     if Option.isNone result then failwith "Not parsed: possible unknown operator" else result
             
         member this.Model: IModel = currentModel
@@ -98,22 +101,21 @@ type LogoRunner(model: IModel) =
                         run()
             currentParsing <- tryGetInitialParsing()
             let result = run()
-            let context = result.Value |> Parsing.context
-            commandList <- context.Commands
-
-            member this.SpecificContext: ILogoContext = 
+            currentParsing <- result
+            
+            member this.SpecificContext =
                 match currentParsing with
                 | None -> invalidOp "No results: this program was not started"
                 | Some p ->
-                    let commandList = List.map convertToLogoCommand p.Context.Commands
-                    new LogoContext(commandList) :> ILogoContext
-                
+                    let commandList = p.Context.Commands
+                    RobotContext(robot, commandList) :> IRobotContext
+            
             member this.IsEnded =
                 match currentParsing with
                 | None -> false
                 | Some p -> isFinal p.Element 
 
-        interface IProgramRunner<ILogoContext> with
+        interface IProgramRunner<IRobotContext> with
             member this.Model: IModel = this.Model
 
             member this.SetModel(model: IModel): unit = currentModel <- model
@@ -124,12 +126,9 @@ type LogoRunner(model: IModel) =
             
             member this.Stop() = this.Stop()
             
-            member this.SpecificContext: ILogoContext = this.SpecificContext
+            member this.SpecificContext = this.SpecificContext
             
             member this.CurrentElement = this.CurrentElement
             
             member this.IsEnded = this.IsEnded
     end
-
-
-    

@@ -217,6 +217,10 @@
       <Project>{1d57e43c-c29e-4ea5-be01-028d73781637}</Project>
       <Name>Interpreters.Logo</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Interpreters.RobotPerformer\Interpreters.RobotPerformer.fsproj">
+      <Project>{4edb0f77-b888-42eb-b2cc-afb03e02d5ce}</Project>
+      <Name>Interpreters.RobotPerformer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Choose>

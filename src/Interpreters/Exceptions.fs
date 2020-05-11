@@ -4,13 +4,14 @@
 type TypeException(message: string) =
     inherit System.Exception(message)   
 
-type ParserException(message: string, place: PlaceOfCreation, innerException) =
+[<AbstractClass>]
+type ExceptionWithPlace(message: string, place: PlaceOfCreation, innerException) =
     class
         inherit System.Exception(message, innerException)
 
-        new(message, place) = new ParserException(message, place, null)
+        new(message, place) = ExceptionWithPlace(message, place, null)
         
-        new(message) = new ParserException(message, PlaceOfCreation.empty, null)
+        new(message) = ExceptionWithPlace(message, PlaceOfCreation.empty, null)
 
         member this.PlaceWhereRaised = place
 
@@ -35,6 +36,18 @@ type ParserException(message: string, place: PlaceOfCreation, innerException) =
             | _ -> invalidOp "No element"
     end
 
+
+type ParserException(message: string, place: PlaceOfCreation, innerException: exn) =
+    class
+        inherit ExceptionWithPlace(message, place, innerException)
+
+        new(message, place) = new ParserException(message, place, null)
+        
+        new(message) = new ParserException(message, PlaceOfCreation.empty, null)
+
+    end
+
+    
 module ParserException =
     
     let raiseAll message place innerException = new ParserException(message, place, innerException) |> raise
@@ -44,9 +57,17 @@ module ParserException =
     let raiseWithInner message (innerException: exn) = new ParserException(message, PlaceOfCreation.empty, innerException) |> raise
 
     let raiseWithPlace (message: string) (place: PlaceOfCreation) =  new ParserException(message) |> raise
+
+type OperatorException(message, place, innerException) =
+    inherit ExceptionWithPlace(message, place, innerException)
+    
+    new(message, place) = OperatorException(message, place, null)
+        
+    new(message) = OperatorException(message, PlaceOfCreation.empty, null)
     
 type InterpreterException(message, innerException: exn) =
     inherit System.Exception(message, innerException)
     
     new(message) = InterpreterException(message, null)
+    
 

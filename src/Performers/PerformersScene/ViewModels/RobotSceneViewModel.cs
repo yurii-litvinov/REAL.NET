@@ -15,24 +15,23 @@ namespace PerformersScene.ViewModels
         public RobotSceneViewModel()
         {
             RobotViewModel = new RobotControlViewModel();
-            RobotViewModel.AnimationCompleted += OnAnimationCompleted; 
+            RobotViewModel.AnimationCompleted += OnAnimationCompleted;
             MazeLines.Add(new LineViewModel());
-            maze = InitMaze();
+            Maze = InitMaze();
             GenerateLines();
             var robot = Robot.CreateRobot(Direction.Up, new IntPoint(0, 0));
             robotCommander = new RobotCommander(robot);
             robotCommander.MovementStarted += OnMovementStarted;
             robotCommander.RotationStarted += OnRotationStarted;
-            
-            robotCommander.MoveForward();
-            robotCommander.RotateRight();
-            robotCommander.MoveForward();
-            robotCommander.RotateLeft();
-            robotCommander.MoveForward();
-            robotCommander.MoveBackward();
+            robotCommander.RobotReset += OnRobotReset;
         }
 
-        public IRobotCommander GetRobotCommander() => robotCommander;
+        private void OnRobotReset(object sender, EventArgs e)
+        {
+            RobotViewModel.ResetRobot();
+        }
+
+        public IRobotCommanderAsync RobotCommander => robotCommander;
 
         private void OnAnimationCompleted(object sender, EventArgs e)
         {
@@ -77,7 +76,7 @@ namespace PerformersScene.ViewModels
 
         private RobotScene model;
 
-        private readonly IRobotMaze maze;
+        public IRobotMaze Maze { get; }
 
         private readonly double lineLength = RobotConstants.MazeSideLength;
         
@@ -91,8 +90,8 @@ namespace PerformersScene.ViewModels
         {
             double initialX = 100;
             double initialY = 100;
-            var width = maze.Width;
-            var height = maze.Height;
+            var width = Maze.Width;
+            var height = Maze.Height;
             for (int i = 0; i < height; i++)
             {
                 for (int j = 0; j < width; j++)
@@ -103,8 +102,8 @@ namespace PerformersScene.ViewModels
                         X2 = initialX + (j + 1) * lineLength,
                         Y1 = initialY + i * lineLength,
                         Y2 = initialY + i * lineLength,
-                        LineColor = GetColor(maze.HorizontalLines[i, j].IsWall),
-                        Thickness = GetThickness(maze.HorizontalLines[i, j].IsWall)
+                        LineColor = GetColor(Maze.HorizontalLines[i, j].IsWall),
+                        Thickness = GetThickness(Maze.HorizontalLines[i, j].IsWall)
                     };
                     MazeLines.Add(horizontalLine);
                     var verticalLine = new LineViewModel
@@ -113,8 +112,8 @@ namespace PerformersScene.ViewModels
                         X2 = initialX + j * lineLength,
                         Y1 = initialY + i * lineLength,
                         Y2 = initialY + (i + 1) * lineLength,
-                        LineColor = GetColor(maze.VerticalLines[j, i].IsWall),
-                        Thickness = GetThickness(maze.VerticalLines[j, i].IsWall)
+                        LineColor = GetColor(Maze.VerticalLines[j, i].IsWall),
+                        Thickness = GetThickness(Maze.VerticalLines[j, i].IsWall)
                     };
                     MazeLines.Add(verticalLine);
                 }
@@ -128,8 +127,8 @@ namespace PerformersScene.ViewModels
                     X2 = initialX + (j + 1) * lineLength,
                     Y1 = initialY + height * lineLength,
                     Y2 = initialY + height * lineLength,
-                    LineColor = GetColor(maze.HorizontalLines[height, j].IsWall),
-                    Thickness = GetThickness(maze.HorizontalLines[height, j].IsWall)
+                    LineColor = GetColor(Maze.HorizontalLines[height, j].IsWall),
+                    Thickness = GetThickness(Maze.HorizontalLines[height, j].IsWall)
                 };
                 MazeLines.Add(horizontalLine);   
             }
@@ -142,11 +141,17 @@ namespace PerformersScene.ViewModels
                     X2 = initialX + width * lineLength,
                     Y1 = initialY + i * lineLength,
                     Y2 = initialY + (i + 1) * lineLength,
-                    LineColor = GetColor(maze.VerticalLines[width, i].IsWall),
-                    Thickness = GetThickness(maze.VerticalLines[width, i].IsWall),
+                    LineColor = GetColor(Maze.VerticalLines[width, i].IsWall),
+                    Thickness = GetThickness(Maze.VerticalLines[width, i].IsWall),
                 };
                 MazeLines.Add(verticalLine);   
             }
+        }
+
+        public void ResetScene()
+        {
+            this.robotCommander.ResetRobot();
+            this.RobotViewModel.ResetRobot();
         }
     }
 }

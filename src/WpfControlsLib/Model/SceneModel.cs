@@ -61,6 +61,8 @@ namespace WpfControlsLib.Model
 
         public string ModelName { get; set; }
 
+        public string MetaModelName => Repo.Model(ModelName).Metamodel.Name;
+        
         public string ErrorMessage { get; set; }
 
         public Repo.IRepo Repo { get; private set; }

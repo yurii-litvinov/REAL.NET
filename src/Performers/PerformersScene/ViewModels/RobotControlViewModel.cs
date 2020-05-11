@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Windows.Input;
 using PerformersScene.Models;
 using PerformersScene.Models.Constants;
-using PerformersScene.Models.DataLayer;
 using PerformersScene.Operations;
 using PerformersScene.RobotInterfaces;
 using PerformersScene.ViewModels.Animation;
@@ -104,8 +103,6 @@ namespace PerformersScene.ViewModels
         private readonly DoublePoint initial;
 
         private bool isMovingStarted;
-        
-        private RobotCommander robotCommander;
 
         public void MoveRobot(IntPoint newPosition)
         {
@@ -141,5 +138,12 @@ namespace PerformersScene.ViewModels
 
         public DoublePoint Shift { get; } =
             new DoublePoint(RobotConstants.RobotWidth / 2, RobotConstants.RobotHeight / 2);
+
+        public void ResetRobot()
+        {
+            Angle = 90;
+            Start = initial;
+            End = initial;
+        }
     }
 }

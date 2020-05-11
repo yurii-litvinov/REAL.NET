@@ -15,7 +15,9 @@ type IProgramRunner<'T> =
         
         abstract member Run: unit -> unit
        
-        abstract member Step : unit -> unit
+        abstract member Step: unit -> unit
+        
+        abstract member IsEnded: bool
         
         abstract member Stop: unit -> unit
 

@@ -13,6 +13,7 @@
  * limitations under the License. */
 
 using System.Linq;
+using System.Runtime.CompilerServices;
 using WpfControlsLib.Controls.Scene.EventArguments;
 using WpfControlsLib.ViewModel;
 
@@ -44,6 +45,12 @@ namespace WpfEditor.View
         private readonly WpfControlsLib.Controller.Controller controller;
 
         private PerformersScene.ProgramRunner.ProgramRunner programRunner;
+        
+        private bool isRobotSceneVisible = true;
+        
+        private bool isTurtleSceneVisible = true;
+        
+        private bool isFocusedOnEditor = true;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -58,6 +65,41 @@ namespace WpfEditor.View
         public RobotSceneViewModel RobotScene { get; } = new RobotSceneViewModel();
 
         public AttributesPanelViewModel AttributesPanel { get; } = new AttributesPanelViewModel();
+
+        public bool IsRobotSceneVisible
+        {
+            get => isRobotSceneVisible;
+            set
+            {
+                isRobotSceneVisible = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        public bool IsTurtleSceneVisible
+        {
+            get => isTurtleSceneVisible;
+            set
+            {
+                isTurtleSceneVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsFocusedOnEditor
+        {
+            get => isFocusedOnEditor;
+            set
+            {
+                isFocusedOnEditor = value;
+                OnPropertyChanged();
+            }
+        } 
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         public string WindowTitle
         {
@@ -145,6 +187,23 @@ namespace WpfEditor.View
             this.scene.Reload();
             this.OnModelChanged?.Invoke(this.model.ModelName);
             this.programRunner.SetModel(modelName);
+            if (model.MetaModelName == "LogoMetamodel")
+            {
+                IsRobotSceneVisible = false;
+                IsTurtleSceneVisible = true;
+            }
+            else if (model.MetaModelName == "RobotPerformerMetamodel")
+            {
+                IsRobotSceneVisible = true;
+                IsTurtleSceneVisible = false;
+            }
+            else
+            {
+                IsRobotSceneVisible = false;
+                IsTurtleSceneVisible = false;
+            }
+
+            IsFocusedOnEditor = true;
         }
 
         private void InitToolbar()
@@ -160,6 +219,7 @@ namespace WpfEditor.View
             {
                 this.programRunner.StopProgram();
                 this.DrawingScene.ResetScene();
+                this.RobotScene.ResetScene();
             });
             var pictureLocation = "pack://application:,,,/" + "View/Pictures/Toolbar/reset_scene.jpg";
             var buttonReset = new WpfControlsLib.Controls.Toolbar.Button(command, "Reset scene", pictureLocation);
@@ -291,7 +351,7 @@ namespace WpfEditor.View
 
         private void InitProgramRunner()
         {
-            programRunner = new PerformersScene.ProgramRunner.ProgramRunner(this.DrawingScene.TurtleCommander, this.Toolbar, this.Console, this.model.Repo);
+            programRunner = new PerformersScene.ProgramRunner.ProgramRunner(this.Toolbar, this.Console, this.model.Repo, this.DrawingScene.TurtleCommander, this.RobotScene.RobotCommander, this.RobotScene.Maze);
         }
     }
 }

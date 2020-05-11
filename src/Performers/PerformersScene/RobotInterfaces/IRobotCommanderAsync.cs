@@ -9,6 +9,8 @@ namespace PerformersScene.RobotInterfaces
         event EventHandler<RobotEvent> RotationStarted;
 
         event EventHandler<EventArgs> ActionDone;
+
+        event EventHandler<EventArgs> RobotReset; 
         
         void Stop();
     }

@@ -28,6 +28,7 @@
     xmlns:attributesPanel="clr-namespace:WpfControlsLib.Controls.AttributesPanel;assembly=WpfControlsLib"
     xmlns:validators="clr-namespace:WpfEditor.View.Validators"
     xmlns:controls="clr-namespace:PerformersScene.Controls"
+    xmlns:converters="clr-namespace:PerformersScene.Controls.Converters"
     Title="{Binding WindowTitle}"
     mc:Ignorable="d"
     Height="800" Width="1200">
@@ -39,6 +40,9 @@
         <CommandBinding Command="SaveAs" CanExecute="OnCanExecuteForAlwaysExecutable" Executed="OnSaveAsExecuted" />
         <CommandBinding Command="Close" CanExecute="OnCanExecuteForAlwaysExecutable" Executed="OnQuitExecuted" />
     </Window.CommandBindings>
+    <Window.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -72,7 +76,6 @@
             x:Name="leftPanelGrid"
             HorizontalAlignment="Left"/>
 
-
         <!-- Area and console -->
         <Grid Grid.Row="1" Grid.Column="1">
 
@@ -89,19 +92,19 @@
             <Grid x:Name="sceneGrid"  Grid.Row="1">
                 <!-- Scene area -->
                 <TabControl Name="tabOfScenes">
-                    <TabItem>
+                    <TabItem IsSelected="{Binding IsFocusedOnEditor}" >
                         <TabItem.Header>Editor</TabItem.Header>
                         <TabItem.Content>
                             <scene:Scene x:Name="scene"/>
                         </TabItem.Content>
                     </TabItem>
-                    <TabItem>
+                    <TabItem Visibility="{Binding IsTurtleSceneVisible, Converter={StaticResource BoolToVisibilityConverter}}">
                         <TabItem.Header>Logo Interpreter</TabItem.Header>
                         <TabItem.Content>
                             <controls:DrawingScene DataContext="{Binding DrawingScene}"/>
                         </TabItem.Content>
                     </TabItem>
-                    <TabItem IsSelected="True">
+                    <TabItem Visibility="{Binding IsRobotSceneVisible, Converter={StaticResource BoolToVisibilityConverter}}">
                         <TabItem.Header>Robot Interpreter</TabItem.Header>
                         <TabItem.Content>
                             <controls:RobotScene DataContext="{Binding RobotScene}"/>

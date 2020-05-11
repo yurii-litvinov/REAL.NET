@@ -1,6 +1,4 @@
-﻿using PerformersScene.Models;
-
-namespace PerformersScene.RobotInterfaces
+﻿namespace PerformersScene.RobotInterfaces
 {
     public interface IRobotMaze
     {
@@ -11,7 +9,5 @@ namespace PerformersScene.RobotInterfaces
         Side[,] HorizontalLines { get; }
         
         int Height { get; }
-        
-        Cell GetCell(IntPoint position);
     }
 }

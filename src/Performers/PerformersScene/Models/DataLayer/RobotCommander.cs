@@ -16,6 +16,8 @@ namespace PerformersScene.Models.DataLayer
         private IRobot initialState;
         
         private volatile IRobot robotPerformer;
+        
+        public event EventHandler<EventArgs> RobotReset;
 
         public RobotCommander(IRobot robotPerformer)
         {
@@ -63,16 +65,12 @@ namespace PerformersScene.Models.DataLayer
             {
                 case Direction.Up:
                     return Robot.CreateRobot(Direction.Left, position);
-                    break;
                 case Direction.Down:
                     return Robot.CreateRobot(Direction.Right, position);
-                    break;
                 case Direction.Right:
                     return Robot.CreateRobot(Direction.Up, position);
-                    break;
                 case Direction.Left:
                     return Robot.CreateRobot(Direction.Down, position);
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -85,16 +83,12 @@ namespace PerformersScene.Models.DataLayer
             {
                 case Direction.Up:
                     return Robot.CreateRobot(Direction.Right, position);
-                    break;
                 case Direction.Down:
                     return Robot.CreateRobot(Direction.Left, position);
-                    break;
                 case Direction.Right:
                     return Robot.CreateRobot(Direction.Down, position);
-                    break;
                 case Direction.Left:
                     return Robot.CreateRobot(Direction.Up, position);
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -175,6 +169,7 @@ namespace PerformersScene.Models.DataLayer
             {
                 isInProgress = false;
                 RobotPerformer = initialState;
+                RobotReset?.Invoke(this, EventArgs.Empty);
             }
         }
 

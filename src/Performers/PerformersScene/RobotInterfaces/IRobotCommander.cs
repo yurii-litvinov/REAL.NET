@@ -2,7 +2,6 @@
 {
     public interface IRobotCommander
     {
-        
         IRobot RobotPerformer { get; }
 
         void MoveForward();

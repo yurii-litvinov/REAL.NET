@@ -1,5 +1,6 @@
 ﻿using EditorPluginInterfaces;
 using Interpreters.Logo.LogoInterpeter;
+using Interpreters.RobotPerformer;
 using Logo.TurtleInterfaces;
 using Repo;
 using System.Collections.Generic;
@@ -7,12 +8,18 @@ using System.Linq;
 using Interpreters.Logo.LogoSpecific;
 using Interpreters;
 using System;
+using System.Security.Cryptography;
+using PerformersScene.RobotInterfaces;
 
 namespace PerformersScene.ProgramRunner
 {
     public class ProgramRunner
     {
-        private readonly ITurtleCommanderAsync commander;
+        private IRobotCommanderAsync robotCommander;
+
+        private readonly IRobotMaze maze;
+
+        private readonly ITurtleCommanderAsync logoCommander;
 
         private readonly IToolbar toolbar;
 
@@ -23,12 +30,19 @@ namespace PerformersScene.ProgramRunner
         private IModel model;
 
         private volatile bool isStopped = false;
+
+        private IProgramRunner<ILogoContext> logoRunner;
+
+        private IProgramRunner<IRobotContext> robotRunner;
         
-        private LogoRunner runner;
-        
-        public ProgramRunner(ITurtleCommanderAsync commander, IToolbar toolbar, IConsole console, IRepo repo)
+        private bool isToStartFromInitialState;
+
+        public ProgramRunner(IToolbar toolbar, IConsole console, IRepo repo, ITurtleCommanderAsync logoCommander,
+            IRobotCommanderAsync robotCommander, IRobotMaze maze)
         {
-            this.commander = commander;
+            this.robotCommander = robotCommander;
+            this.maze = maze;
+            this.logoCommander = logoCommander;
             this.toolbar = toolbar;
             this.console = console;
             this.repo = repo;
@@ -36,13 +50,15 @@ namespace PerformersScene.ProgramRunner
         }
 
         public void SetModel(string modelName) => this.model = repo.Model(modelName);
-        
+
         public void StopProgram()
         {
-            this.runner.Stop();
-            this.commander.Stop();
+            this.logoRunner?.Stop();
+            this.logoCommander.Stop();
+            this.robotRunner?.Stop();
+            this.robotCommander.Stop();
         }
-        
+
         private void AddButtons()
         {
             var command = new WpfControlsLib.Controls.Toolbar.Command(LaunchProgram);
@@ -51,7 +67,8 @@ namespace PerformersScene.ProgramRunner
             toolbar.AddButton(buttonRun);
             var commandStop = new WpfControlsLib.Controls.Toolbar.Command(StopProgram);
             var pictureLocationStop = "pack://application:,,,/" + "View/Pictures/Toolbar/stop.png";
-            var buttonStop = new WpfControlsLib.Controls.Toolbar.Button(commandStop, "Stop program", pictureLocationStop);
+            var buttonStop =
+                new WpfControlsLib.Controls.Toolbar.Button(commandStop, "Stop program", pictureLocationStop);
             toolbar.AddButton(buttonStop);
         }
 
@@ -63,58 +80,159 @@ namespace PerformersScene.ProgramRunner
             }
             else
             {
-                var list = RunProgram(this.model);
-                RunCommandList(list);
+                RunProgram(model);
             }
         }
 
-        private List<LogoCommand> RunProgram(Repo.IModel model)
+        private void RunProgram(IModel model)
         {
-            runner = new LogoRunner(model);
+            var metamodelName = model.Metamodel.Name;
+            if (metamodelName == "LogoMetamodel")
+            {
+                var list = RunLogoProgram(this.model);
+                RunLogoCommandList(list);
+            }
+
+            if (metamodelName == "RobotPerformerMetamodel")
+            {
+                if (isToStartFromInitialState)
+                {
+                    isToStartFromInitialState = false;
+                    robotCommander.ResetRobot();
+                }
+                RunRobotProgram(this.model);
+            }
+            else
+            {
+                console.ReportError("Unknown language " + metamodelName);
+            }
+        }
+
+        private void RaiseProgramReset()
+        {
+            isToStartFromInitialState = true;
+        }
+
+
+        private List<LogoCommand> RunLogoProgram(Repo.IModel model)
+        {
+            logoRunner = new LogoRunner(model);
             try
             {
-                runner.Run();
+                logoRunner.Run();
             }
             catch (ParserException e)
             {
                 console.ReportError(e.Message);
             }
-            ILogoContext context = runner.SpecificContext;
+            catch (OperatorException e)
+            {
+                console.ReportError(e.Message);
+                console.SendMessage(e.Message);
+            }
+            catch (InterpreterException e)
+            {
+                console.ReportError(e.Message);
+            }
+
+            var context = logoRunner.SpecificContext;
             var commandList = context.LogoCommands.ToList();
             commandList.Reverse();
             return commandList;
         }
-        
-        private void RunCommandList(List<LogoCommand> list)
+
+        private void RunLogoCommandList(List<LogoCommand> list)
         {
             foreach (var command in list)
             {
-                // clumsy: fix it
-                if (command is LogoForward forward)
+                switch (command)
                 {
-                    this.commander.MoveForward(forward.Distance);
+                    // clumsy: fix it
+                    case LogoForward forward:
+                        this.logoCommander.MoveForward(forward.Distance);
+                        break;
+                    case LogoBackward backward:
+                        this.logoCommander.MoveBackward(backward.Distance);
+                        break;
+                    case LogoRight right:
+                        this.logoCommander.RotateRight(right.Degrees);
+                        break;
+                    case LogoLeft left:
+                        this.logoCommander.RotateLeft(left.Degrees);
+                        break;
+                    case LogoPenUp _:
+                        this.logoCommander.PenUp();
+                        break;
+                    case LogoPenDown _:
+                        this.logoCommander.PenDown();
+                        break;
                 }
-                else if (command is LogoBackward backward)
+            }
+        }
+
+        private void RunRobotProgram(IModel modelToRun)
+        {
+            bool[,] ToBool(Side[,] lines)
+            {
+                var booleans = new bool[lines.GetLength(0), lines.GetLength(1)];
+                for (int i = 0; i < lines.GetLength(0); i++)
                 {
-                    this.commander.MoveBackward(backward.Distance);
+                    for (int j = 0; j < lines.GetLength(1); j++)
+                    {
+                        booleans[i, j] = lines[i, j].IsWall;
+                    }
                 }
-                else if (command is LogoRight right)
+
+                return booleans;
+            }
+
+            robotRunner = new RobotRunner(modelToRun, ToBool(maze.HorizontalLines), ToBool(maze.VerticalLines));
+            try
+            {
+                while (!robotRunner.IsEnded)
                 {
-                    this.commander.RotateRight(right.Degrees);
+                    robotRunner.Step();
+                    var context = robotRunner.SpecificContext;
+                    var command = context.WrappedCommands.First();
+                    RunRobotCommand(command);
                 }
-                else if (command is LogoLeft left)
-                {
-                    this.commander.RotateLeft(left.Degrees);
-                }
-                else if (command is LogoPenUp)
-                {
-                    this.commander.PenUp();
-                }
-                else if (command is LogoPenDown)
-                {
-                    this.commander.PenDown();
-                }
-                else { }
+            }
+            catch (ParserException e)
+            {
+                console.ReportError(e.Message);
+                RaiseProgramReset();
+            }
+            catch (OperatorException e)
+            {
+                console.ReportError(e.Message);
+                console.SendMessage(e.Message);
+                RaiseProgramReset();
+            }
+            catch (InterpreterException e)
+            {
+                console.ReportError(e.Message);
+                RaiseProgramReset();
+            }
+        }
+
+        private void RunRobotCommand(RobotCommand command)
+        {
+            switch (command)
+            {
+                case RobotBackward robotBackward:
+                    this.robotCommander.MoveBackward();
+                    break;
+                case RobotForward robotForward:
+                    this.robotCommander.MoveForward();
+                    break;
+                case RobotLeft robotLeft:
+                    this.robotCommander.RotateLeft();
+                    break;
+                case RobotRight robotRight:
+                    this.robotCommander.RotateRight();
+                    break;
+                case RobotNoCommand _:
+                    break;
             }
         }
     }
