@@ -121,7 +121,7 @@ namespace WpfEditor.View
 
             this.model = new WpfControlsLib.Model.SceneModel();
 
-            this.model.Reinit += this.Reinit;
+            this.model.Reinit += this.OnNewInit;
 
             this.model.FileSaved += (_, __) => NotifyTitleChanged();
             this.model.UnsavedChanges += (_, __) => NotifyTitleChanged();
@@ -168,7 +168,7 @@ namespace WpfEditor.View
             this.AttributesPanel.Attributes = FilterAttributes(args.Node.Attributes);
 
 
-        private void Reinit(object sender, EventArgs e)
+        private void OnNewInit(object sender, EventArgs e)
         {
             this.SelectModel(this.modelSelector.ModelNames[2]);
         }

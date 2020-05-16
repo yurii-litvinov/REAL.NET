@@ -15,7 +15,7 @@ namespace PerformersScene.ProgramRunner
 {
     public class ProgramRunner
     {
-        private IRobotCommanderAsync robotCommander;
+        private readonly IRobotCommanderAsync robotCommander;
 
         private readonly IRobotMaze maze;
 
@@ -175,7 +175,7 @@ namespace PerformersScene.ProgramRunner
             bool[,] ToBool(Side[,] lines)
             {
                 var booleans = new bool[lines.GetLength(0), lines.GetLength(1)];
-                for (int i = 0; i < lines.GetLength(0); i++)
+                for (var i = 0; i < lines.GetLength(0); i++)
                 {
                     for (int j = 0; j < lines.GetLength(1); j++)
                     {
@@ -219,16 +219,16 @@ namespace PerformersScene.ProgramRunner
         {
             switch (command)
             {
-                case RobotBackward robotBackward:
+                case RobotBackward _:
                     this.robotCommander.MoveBackward();
                     break;
-                case RobotForward robotForward:
+                case RobotForward _:
                     this.robotCommander.MoveForward();
                     break;
-                case RobotLeft robotLeft:
+                case RobotLeft _:
                     this.robotCommander.RotateLeft();
                     break;
-                case RobotRight robotRight:
+                case RobotRight _:
                     this.robotCommander.RotateRight();
                     break;
                 case RobotNoCommand _:

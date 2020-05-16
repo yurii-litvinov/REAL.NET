@@ -13,7 +13,7 @@ namespace PerformersScene.Models.DataLayer
 
         private readonly object objectToLock = new object();
 
-        private IRobot initialState;
+        private readonly IRobot initialState;
         
         private volatile IRobot robotPerformer;
         

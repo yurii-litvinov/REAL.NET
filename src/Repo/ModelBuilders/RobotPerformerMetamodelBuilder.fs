@@ -55,21 +55,21 @@ type RobotPerformerMetamodelBuilder() =
                edge.Target <- Some target
                edge.TargetName <- targetName
 
-               infrastructure.Element.SetAttributeValue edge "shape" "View/Pictures/LogoPictures/Edge.png"
+               infrastructure.Element.SetAttributeValue edge "shape" "View/Pictures/ProgramIcons/Edge.png"
                infrastructure.Element.SetAttributeValue edge "name" linkName
 
                edge
                
            let abstractNode = +("AbstractNode", "", true)
-           let startNode = +("InitialNode", "View/Pictures/LogoPictures/initialBlock.png", false)
-           let finishNode = +("FinalNode", "View/Pictures/LogoPictures/finalBlock.png", false)
+           let startNode = +("InitialNode", "View/Pictures/ProgramIcons/initialBlock.png", false)
+           let finishNode = +("FinalNode", "View/Pictures/ProgramIcons/finalBlock.png", false)
 
-           let forward = +("Forward", "View/Pictures/LogoPictures/forward.png", false)
-           let backward = +("Backward", "View/Pictures/LogoPictures/backward.png", false)
-           let right = +("Right" , "View/Pictures/LogoPictures/right.png", false)
-           let left = +("Left", "View/Pictures/LogoPictures/left.png", false)           
-           let repeat = +("Repeat", "View/Pictures/LogoPictures/repeat.png", false)
-           let expression = +("Expression", "View/Pictures/LogoPictures/star1.png", false)
+           let forward = +("Forward", "View/Pictures/ProgramIcons/forward.png", false)
+           let backward = +("Backward", "View/Pictures/ProgramIcons/backward.png", false)
+           let right = +("Right" , "View/Pictures/ProgramIcons/right.png", false)
+           let left = +("Left", "View/Pictures/ProgramIcons/left.png", false)           
+           let repeat = +("Repeat", "View/Pictures/ProgramIcons/repeat.png", false)
+           let expression = +("Expression", "View/Pictures/ProgramIcons/functionBlock.png", false)
 
            let link = abstractNode ---> (abstractNode, "target", "Link")
            let taggedLink = abstractNode ---> (abstractNode, "taggedTarget", "TaggedLink")

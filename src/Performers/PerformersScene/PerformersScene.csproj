@@ -168,17 +168,8 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="View\Pictures\LogoPictures\backward.png" />
-    <Resource Include="View\Pictures\LogoPictures\edge.png" />
-    <Resource Include="View\Pictures\LogoPictures\finalBlock.png" />
-    <Resource Include="View\Pictures\LogoPictures\forward.png" />
-    <Resource Include="View\Pictures\LogoPictures\initialBlock.png" />
-    <Resource Include="View\Pictures\LogoPictures\left.png" />
-    <Resource Include="View\Pictures\LogoPictures\penDown.png" />
-    <Resource Include="View\Pictures\LogoPictures\penUp.png" />
-    <Resource Include="View\Pictures\LogoPictures\repeat.png" />
-    <Resource Include="View\Pictures\LogoPictures\right.png" />
-    <Resource Include="View\Pictures\LogoPictures\star1.png" />
+    <Resource Include="View\Pictures\ProgramIcons\edge.png" />
+    <Resource Include="View\Pictures\ProgramIcons\star1.png" />
     <Resource Include="View\Pictures\Toolbar\play.png" />
     <Resource Include="View\Pictures\Toolbar\redo.png" />
     <Resource Include="View\Pictures\Toolbar\reset_scene.jpg" />
@@ -221,6 +212,22 @@
       <Project>{4edb0f77-b888-42eb-b2cc-afb03e02d5ce}</Project>
       <Name>Interpreters.RobotPerformer</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\ProgramIcons\backward.png" />
+    <Resource Include="View\Pictures\ProgramIcons\finalBlock.png" />
+    <Resource Include="View\Pictures\ProgramIcons\forward.png" />
+    <Resource Include="View\Pictures\ProgramIcons\functionBlock.png" />
+    <Resource Include="View\Pictures\ProgramIcons\initialBlock.png" />
+    <Resource Include="View\Pictures\ProgramIcons\left.png" />
+    <Resource Include="View\Pictures\ProgramIcons\right.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\ProgramIcons\penDown.png" />
+    <Resource Include="View\Pictures\ProgramIcons\penUp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\ProgramIcons\repeat.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Choose>

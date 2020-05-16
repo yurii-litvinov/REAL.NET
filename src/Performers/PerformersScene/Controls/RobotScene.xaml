@@ -40,7 +40,6 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <TextBlock Text="{Binding MazeLines.Count}" />
                 <controls:RobotControl DataContext="{Binding RobotViewModel}"/>
             </Canvas>
         </Border>

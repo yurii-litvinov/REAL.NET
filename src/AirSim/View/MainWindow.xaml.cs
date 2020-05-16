@@ -35,11 +35,13 @@ namespace AirSim.View
     internal partial class MainWindow
     {
         private readonly WpfControlsLib.Model.SceneModel model = new WpfControlsLib.Model.SceneModel();
+        
         private readonly WpfControlsLib.Controller.Controller controller = new WpfControlsLib.Controller.Controller();
 
         public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();
 
         private CancellationToken cancellationToken;
+        
         private CancellationTokenSource token;
 
         public MainWindow()
