@@ -5,6 +5,7 @@ using Repo;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace WpfControlsLib.ViewModel
 {
@@ -30,6 +31,11 @@ namespace WpfControlsLib.ViewModel
             {
                 this.Color = Brushes.Green;
             }
+            else
+            {
+                this.Color = defaultEdgeBrush;    
+            }
+            
         }
 
         public EdgeViewModel(NodeViewModel source, NodeViewModel target, double weight = 1)

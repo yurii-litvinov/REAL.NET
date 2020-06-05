@@ -169,56 +169,9 @@ module AvailableParsers =
                      | Error e -> ParserException.raiseAll e.Message (PlaceOfCreation(Some model, Some element)) e 
             else None
 
-    let parseRepeat (parsing: Parsing<Context> option) : Parsing<Context> option =
-        match parsing with
-        | None -> None
-        | Some ({Variables = set; Context = context; Model = model; Element = element} as p) ->
-            if (element.Class.Name = "Repeat") then
-                let filter (var: Variable) =
-                    match var.Meta.PlaceOfCreation with
-                    | PlaceOfCreation(_, Some e) when e = element -> true
-                    | _ -> false
-                let edges = Helper.findAllEdgesFrom model element
-                let exitOption = edges |> Seq.filter (Helper.hasAttribute "Tag") |> Seq.tryExactlyOne
-                match exitOption with
-                    | None -> ParserException.raiseWithPlace "No exit found" (PlaceOfCreation(Some model, Some element))
-                    | Some exitEdge ->
-                        let exit = exitEdge.To
-                        let nextElementOption = edges |> Seq.except [exitEdge] |> Seq.tryExactlyOne
-                        match nextElementOption with
-                        | None -> ParserException.raiseWithPlace "Can't determine next element" (PlaceOfCreation(Some model, Some element))
-                        | Some nextElementEdge ->
-                            let nextElement = nextElementEdge.To
-                            let vars = set.Filter filter
-                            if vars.IsEmpty then
-                                let countString = Helper.findAttributeValueByName element "Count"
-                                let env = EnvironmentOfExpressions.initWithSetAndPlace set (PlaceOfCreation(Some model, Some element))
-                                let countRes = countString |> Helper.tryExprToInt env 
-                                match countRes with
-                                | Ok count ->
-                                    if (count = 0) then
-                                        Some {p with Element = exit}
-                                    else
-                                        let i = Variable.createInt "repeatI" count (Some model, Some element)
-                                        let newSet = set.Add i
-                                        Some {p with Variables = newSet; Element = nextElement}
-                                | Error e -> ParserException.raiseAll e.Message (PlaceOfCreation(Some model, Some element)) e
-                            else
-                                let countVarOption = vars |> Seq.filter (fun x -> x.Name = "repeatI") |> Seq.tryExactlyOne
-                                match countVarOption with
-                                | None -> ParserException.raiseWithPlace "No correct count variable found" (PlaceOfCreation(Some model, Some element))
-                                | Some ({Value = value} as countVar) ->
-                                    match value with
-                                    | RegularValue (Int intVal) ->
-                                        if (intVal = 1) then
-                                            let newSet = set.Remove countVar
-                                            Some {p with Element = exit; Variables = newSet}
-                                        else
-                                            let newVal = ExpressionValue.createInt (intVal - 1)
-                                            let newSet = set.ChangeValue countVar newVal
-                                            Some {p with Element = nextElement; Variables = newSet}
-                                    | _ -> None
-                else None
+    let parseRepeat = Interpreters.Parser.AvailableParsers.parseRepeat
+    
+    let parseIfElse = Interpreters.Parser.AvailableParsers.parseIfElse
                 
     let parseExpression = Interpreters.Parser.AvailableParsers.parseExpression
                         
@@ -226,5 +179,5 @@ open AvailableParsers
 
 let parseMovement: Parser<Context> = parseForward >>+ parseRight >>+ parseBackward >>+ parseLeft
 
-let parseLogo = parseInitialNode >>+ parseMovement >>+ parseRepeat >>+ parseExpression >>+ parsePenDown >>+ parsePenUp 
+let parseLogo = parseInitialNode >>+ parseMovement >>+ parseRepeat >>+ parseExpression >>+ parsePenDown >>+ parsePenUp >>+ parseIfElse
     

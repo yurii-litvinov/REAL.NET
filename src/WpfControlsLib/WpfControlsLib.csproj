@@ -101,11 +101,31 @@
     <Compile Include="Controls\AttributesPanel\AttributesPanel.xaml.cs">
       <DependentUpon>AttributesPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\AttributesPanel\AttributesPanelLanguageResource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AttributesPanelLanguageResource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AttributesPanel\AttributesPanelLanguageResource.ru-RU.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AttributesPanelLanguageResource.ru-RU.resx</DependentUpon>
+    </Compile>
     <Compile Include="Controls\AttributesPanel\AttributesPanelViewModel.cs" />
     <Compile Include="Controls\AttributesPanel\Validators\DoubleValidation.cs" />
     <Compile Include="Controls\AttributesPanel\Validators\IntValidation.cs" />
     <Compile Include="Controls\Console\AppConsole.xaml.cs">
       <DependentUpon>AppConsole.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Console\ConsoleLanguageResource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ConsoleLanguageResource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Console\ConsoleLanguageResource.ru-RU.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ConsoleLanguageResource.ru-RU.resx</DependentUpon>
     </Compile>
     <Compile Include="Controls\ModelExplorer\ModelElementTemplateSelector.cs" />
     <Compile Include="Controls\ModelExplorer\ModelExplorer.xaml.cs">
@@ -113,6 +133,16 @@
     </Compile>
     <Compile Include="Controls\ModelExplorer\ModelExplorerEdge.cs" />
     <Compile Include="Controls\ModelExplorer\ModelExplorerElement.cs" />
+    <Compile Include="Controls\ModelExplorer\ModelExplorerLanguageResource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ModelExplorerLanguageResource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ModelExplorer\ModelExplorerLanguageResource.ru-RU.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ModelExplorerLanguageResource.ru-RU.resx</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ModelExplorer\ModelExplorerNode.cs" />
     <Compile Include="Controls\ModelSelector\ModelSelector.xaml.cs">
       <DependentUpon>ModelSelector.xaml</DependentUpon>
@@ -213,8 +243,32 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
+    <EmbeddedResource Include="Controls\AttributesPanel\AttributesPanelLanguageResource.resx">
       <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AttributesPanelLanguageResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\AttributesPanel\AttributesPanelLanguageResource.ru-RU.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AttributesPanelLanguageResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Console\ConsoleLanguageResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ConsoleLanguageResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Console\ConsoleLanguageResource.ru-RU.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ConsoleLanguageResource.ru-RU.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ModelExplorer\ModelExplorerLanguageResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ModelExplorerLanguageResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ModelExplorer\ModelExplorerLanguageResource.ru-RU.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ModelExplorerLanguageResource.ru-RU.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="paket.references" />

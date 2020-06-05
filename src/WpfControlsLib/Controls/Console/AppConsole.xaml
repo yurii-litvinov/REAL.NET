@@ -23,10 +23,10 @@
              d:DataContext="{console:AppConsoleViewModel}">
     <Grid>
         <TabControl TabStripPlacement="Bottom">
-            <TabItem Header="Messages">
+            <TabItem Header="{Binding MessagesName}">
                 <ListBox ItemsSource="{Binding Messages}"/>
             </TabItem>
-            <TabItem Header="Errors">
+            <TabItem Header="{Binding ErrorsName}">
                 <ListBox ItemsSource="{Binding Errors}"/>
             </TabItem>
         </TabControl>

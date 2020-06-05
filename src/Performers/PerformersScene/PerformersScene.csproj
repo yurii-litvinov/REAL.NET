@@ -123,12 +123,30 @@
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\MainWindowLanguageResource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MainWindowLanguageResource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="View\MainWindowLanguageResource.ru-RU.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MainWindowLanguageResource.ru-RU.resx</DependentUpon>
+    </Compile>
     <Compile Include="View\Validators\IntValidation.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\MainWindowLanguageResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MainWindowLanguageResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\MainWindowLanguageResource.ru-RU.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MainWindowLanguageResource.ru-RU.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -228,6 +246,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="View\Pictures\ProgramIcons\repeat.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\ProgramIcons\ifBlock.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Choose>

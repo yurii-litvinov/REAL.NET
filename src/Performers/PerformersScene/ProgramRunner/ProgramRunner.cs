@@ -93,7 +93,7 @@ namespace PerformersScene.ProgramRunner
                 RunLogoCommandList(list);
             }
 
-            if (metamodelName == "RobotPerformerMetamodel")
+            else if (metamodelName == "RobotPerformerMetamodel")
             {
                 if (isToStartFromInitialState)
                 {
@@ -104,7 +104,7 @@ namespace PerformersScene.ProgramRunner
             }
             else
             {
-                console.ReportError("Unknown language " + metamodelName);
+                console.ReportError("Unknown language! " + metamodelName);
             }
         }
 

@@ -25,6 +25,7 @@ namespace WpfControlsLib.Controls.ModelExplorer
         }
 
         public string Name => this.Element.Name;
+        
         public string Image => "pack://application:,,,/" + this.Element.Shape;
     }
 }

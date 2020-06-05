@@ -84,7 +84,14 @@ namespace WpfControlsLib.ViewModel
 
             set
             {
-                this.picture = value;
+                if (value == string.Empty)
+                {
+                    picture = @"View/Pictures/vertex.png";
+                }
+                else
+                {
+                    this.picture = value;    
+                }
                 this.OnPropertyChanged();
             }
         }

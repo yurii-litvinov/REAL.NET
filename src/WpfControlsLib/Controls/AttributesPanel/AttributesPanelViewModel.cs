@@ -24,5 +24,11 @@ namespace WpfControlsLib.Controls.AttributesPanel
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public string NameName => AttributesPanelLanguageResource.Name;
+
+        public string TypeName => AttributesPanelLanguageResource.Type;
+
+        public string ValueName => AttributesPanelLanguageResource.Value;
     }
 }

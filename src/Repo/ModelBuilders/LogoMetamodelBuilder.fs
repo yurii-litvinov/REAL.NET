@@ -74,6 +74,7 @@ type LogoMetamodelBuilder() =
            
            let repeat = +("Repeat", "View/Pictures/ProgramIcons/repeat.png", false)
            let expression = +("Expression", "View/Pictures/ProgramIcons/functionBlock.png", false)
+           let ifElse = +("IfElse", "View/Pictures/ProgramIcons/ifBlock.png", false)
 
            let link = abstractNode ---> (abstractNode, "target", "Link")
            let taggedLink = abstractNode ---> (abstractNode, "taggedTarget", "TaggedLink")
@@ -88,6 +89,7 @@ type LogoMetamodelBuilder() =
            penDown --|> abstractNode
            repeat --|> abstractNode
            expression --|> abstractNode
+           ifElse --|> abstractNode
 
            infrastructure.Element.AddAttribute forward "Distance" "AttributeKind.String" "100"
            infrastructure.Element.AddAttribute backward "Distance" "AttributeKind.String" "100"
@@ -96,6 +98,7 @@ type LogoMetamodelBuilder() =
            
            infrastructure.Element.AddAttribute repeat "Count" "AttributeKind.String" "1"
            infrastructure.Element.AddAttribute expression "ExpressionValue" "AttributeKind.String" ""
+           infrastructure.Element.AddAttribute ifElse "ExpressionValue" "AttributeKind.String" ""
            
            infrastructure.Element.AddAttribute taggedLink "Tag" "AttributeKind.String" ""
            ()

@@ -14,6 +14,8 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <WarningsAsErrors>3239;$(WarningsAsErrors)</WarningsAsErrors>
     <Name>Interpreters.RobotPerformer</Name>
+    <Win32Resource>
+    </Win32Resource>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,37 +50,6 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Compile Include="AssemblyInfo.fs" />
-    <Content Include="app.config" />
-    <None Include="paket.references" />
-    <Compile Include="RobotCommands.fs" />
-    <Compile Include="DataLayer\Robot.fs" />
-    <Compile Include="DataLayer\RobotParser.fs" />
-    <Compile Include="DataLayer\CommandGenerator.fs" />
-    <Compile Include="RobotRunner.fs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="mscorlib" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.ValueTuple">
-      <HintPath>..\..\..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Interpreters\Interpreters.fsproj">
-      <Name>Interpreters</Name>
-      <Project>{522a914e-b787-43b6-9630-b169c8c3441b}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Repo\Repo.fsproj">
-      <Project>{9e7065a4-ba5e-4752-84bf-54d5c00db60c}</Project>
-      <Name>Repo</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
@@ -145,4 +116,37 @@
       </ItemGroup>
     </When>
   </Choose>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.fs" />
+    <Content Include="app.config" />
+    <Compile Include="Resources\Resources.fs" />
+    <None Include="paket.references" />
+    <Compile Include="RobotCommands.fs" />
+    <Compile Include="DataLayer\Robot.fs" />
+    <Compile Include="DataLayer\RobotParser.fs" />
+    <Compile Include="DataLayer\CommandGenerator.fs" />
+    <Compile Include="RobotRunner.fs" />
+    <EmbeddedResource Include="LanguageResource.resx" />
+    <EmbeddedResource Include="LanguageResource.ru-RU.resx" />
+    
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.ValueTuple">
+      <HintPath>..\..\..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <ProjectReference Include="..\..\Interpreters\Interpreters.fsproj">
+      <Name>Interpreters</Name>
+      <Project>{522a914e-b787-43b6-9630-b169c8c3441b}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Repo\Repo.fsproj">
+      <Project>{9e7065a4-ba5e-4752-84bf-54d5c00db60c}</Project>
+      <Name>Repo</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

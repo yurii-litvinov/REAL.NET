@@ -30,5 +30,9 @@ namespace WpfControlsLib.Controls.Console
         public void ReportError(string error) => this.Errors.Add(error);
 
         public void SendMessage(string message) => this.Messages.Add(message);
+
+        public string ErrorsName => ConsoleLanguageResource.Errors;
+
+        public string MessagesName => ConsoleLanguageResource.Messages;
     }
 }

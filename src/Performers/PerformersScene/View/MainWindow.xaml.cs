@@ -12,8 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using PerformersScene.View;
 using WpfControlsLib.Controls.Scene.EventArguments;
 using WpfControlsLib.ViewModel;
 
@@ -113,8 +115,20 @@ namespace WpfEditor.View
             }
         }
 
+        public string LogoInterpreterName => MainWindowLanguageResource.LogoInterpreterName;
+        public string EditorName => MainWindowLanguageResource.EditorName;
+        public string RobotInterpreterName => MainWindowLanguageResource.RobotInterpreterName;
+
+        private void SetLanguage()
+        {
+            var info = CultureInfo.GetCultureInfo("ru-RU");
+            CultureInfo.CurrentCulture = info;
+            CultureInfo.CurrentUICulture = info;
+        }
+        
         public MainWindow()
         {
+            SetLanguage();
             // TODO: Fix sequential coupling here.
             this.DataContext = this;
             this.InitializeComponent();
@@ -353,5 +367,7 @@ namespace WpfEditor.View
         {
             programRunner = new PerformersScene.ProgramRunner.ProgramRunner(this.Toolbar, this.Console, this.model.Repo, this.DrawingScene.TurtleCommander, this.RobotScene.RobotCommander, this.RobotScene.Maze);
         }
+
+        public string AttributesName => MainWindowLanguageResource.AttributesName;
     }
 }

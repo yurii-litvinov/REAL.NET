@@ -93,6 +93,7 @@
     <Compile Include="ModelBuilders\AirSimModelBuilder.fs" />
     <Compile Include="ModelBuilders\CoreMetametamodelBuilder.fs" />
     <Compile Include="ModelBuilders\LogoMetamodelBuilder.fs" />
+    <Compile Include="ModelBuilders\PerformerBaseMetamodelBuilder.fs" />
     <Compile Include="ModelBuilders\LogoModelBuilder.fs" />
     <Compile Include="ModelBuilders\RobotPerformerMetamodelBuilder.fs" />
     <Compile Include="ModelBuilders\RobotPerformerModelBuilder.fs" />

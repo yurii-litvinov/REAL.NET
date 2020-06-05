@@ -1,20 +1,42 @@
 ﻿<UserControl x:Class="WpfControlsLib.Controls.AttributesPanel.AttributesPanel"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:WpfControlsLib.Controls.AttributesPanel"
              xmlns:validators="clr-namespace:WpfControlsLib.Controls.AttributesPanel.Validators"
-             mc:Ignorable="d" 
-             d:DataContext="local:AttributesViewModel"
+             mc:Ignorable="d"
+             d:DataContext="local:AttributesPanelViewModel"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-
+    <Grid x:Name="Grid">
+        <Grid.Resources>
+            <ResourceDictionary />
+        </Grid.Resources>
         <DataGrid ItemsSource="{Binding Attributes}" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding Name}"/>
-                <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Type}"/>
-                <DataGridTemplateColumn Header="Value" IsReadOnly="False">
+                <DataGridTextColumn IsReadOnly="True" Binding="{Binding Name}">
+                    <DataGridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Label
+                                Content="{Binding DataContext.NameName, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Type}">
+                    <DataGridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Label
+                                Content="{Binding DataContext.TypeName, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
+                <DataGridTemplateColumn IsReadOnly="False">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <Label
+                                Content="{Binding DataContext.ValueName, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ContentControl>
@@ -25,7 +47,8 @@
                                                 <Setter Property="ContentTemplate">
                                                     <Setter.Value>
                                                         <DataTemplate>
-                                                            <TextBox Text="{Binding DataContext.Value, RelativeSource={RelativeSource AncestorType=DataGridCell}}"/>
+                                                            <TextBox
+                                                                Text="{Binding DataContext.Value, RelativeSource={RelativeSource AncestorType=DataGridCell}}" />
                                                         </DataTemplate>
                                                     </Setter.Value>
                                                 </Setter>
@@ -39,11 +62,11 @@
                                                                     <Binding>
                                                                         <Binding.Path>DataContext.Value</Binding.Path>
                                                                         <Binding.RelativeSource>
-                                                                            <RelativeSource AncestorType="DataGridCell"/>
+                                                                            <RelativeSource AncestorType="DataGridCell" />
                                                                         </Binding.RelativeSource>
                                                                         <Binding.ValidationRules>
-                                                                            <validators:IntValidation/>
-                                                                            <ExceptionValidationRule/>
+                                                                            <validators:IntValidation />
+                                                                            <ExceptionValidationRule />
                                                                         </Binding.ValidationRules>
                                                                     </Binding>
                                                                 </TextBox.Text>
@@ -61,11 +84,11 @@
                                                                     <Binding>
                                                                         <Binding.Path>DataContext.Value</Binding.Path>
                                                                         <Binding.RelativeSource>
-                                                                            <RelativeSource AncestorType="DataGridCell"/>
+                                                                            <RelativeSource AncestorType="DataGridCell" />
                                                                         </Binding.RelativeSource>
                                                                         <Binding.ValidationRules>
-                                                                            <validators:DoubleValidation/>
-                                                                            <ExceptionValidationRule/>
+                                                                            <validators:DoubleValidation />
+                                                                            <ExceptionValidationRule />
                                                                         </Binding.ValidationRules>
                                                                     </Binding>
                                                                 </TextBox.Text>
@@ -78,7 +101,8 @@
                                                 <Setter Property="ContentTemplate">
                                                     <Setter.Value>
                                                         <DataTemplate>
-                                                            <CheckBox IsChecked ="{Binding DataContext.Value, RelativeSource={RelativeSource AncestorType=DataGridCell}}"/>
+                                                            <CheckBox
+                                                                IsChecked="{Binding DataContext.Value, RelativeSource={RelativeSource AncestorType=DataGridCell}}" />
                                                         </DataTemplate>
                                                     </Setter.Value>
                                                 </Setter>

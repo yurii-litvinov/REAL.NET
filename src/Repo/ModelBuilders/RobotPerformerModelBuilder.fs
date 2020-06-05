@@ -40,6 +40,7 @@ type RobotPerformerModelBuilder() =
             
             let metamodelRepeat = Model.findNode metamodel "Repeat"
             let metamodelExpression = Model.findNode metamodel "Expression"
+            let metamodelIfElse = Model.findNode metamodel "IfElse"
 
             let model = repo.CreateModel ("RobotPerformerModel", metamodel)  
 
@@ -82,6 +83,11 @@ type RobotPerformerModelBuilder() =
                 let expression = infrastructure.Instantiate model metamodelExpression
                 infrastructure.Element.SetAttributeValue expression "ExpressionValue" expr
                 expression
+                
+            let createIfElse expr =
+                let ifElse = infrastructure.Instantiate model metamodelIfElse
+                infrastructure.Element.SetAttributeValue ifElse "ExpressionValue" expr
+                ifElse
             
             let initialNode = infrastructure.Instantiate model metamodelInitialNode
 
@@ -97,6 +103,9 @@ type RobotPerformerModelBuilder() =
             
             let finalNode = infrastructure.Instantiate model metamodelFinalNode
             
-            initialNode --> forward1 --> right --> forward2 --> left --> backward --> finalNode |> ignore
+            let ifElse = createIfElse "2 > 1"
+            
+            initialNode --> ifElse --> forward1 --> right --> forward2 --> left --> backward --> finalNode |> ignore
+            ifElse +-> finalNode |> ignore
 
             0 |> ignore

@@ -62,7 +62,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="0" Content="Elements:" HorizontalAlignment="Stretch"/>
+        <Label Grid.Row="0" Content="{Binding ElementsName}" HorizontalAlignment="Stretch"/>
         <ListBox x:Name="elementsListBox"
                  Grid.Row="1"
                  ItemsSource="{Binding Elements}"

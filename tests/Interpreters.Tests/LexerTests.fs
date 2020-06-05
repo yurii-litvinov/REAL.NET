@@ -41,9 +41,9 @@ let ``double validation test``() =
 
 [<Test>]
 let ``bool validation test``() =
-    let trueString = "true 123"
+    let trueString = "true"
     match trueString with
-    | BoolToken matching -> matching |> should equal (BoolConst true, " 123")
+    | BoolToken matching -> matching |> should equal (BoolConst true, "")
     | _ -> Assert.Fail "No matching in true string"
     let falseString = "false 456"
     match falseString with

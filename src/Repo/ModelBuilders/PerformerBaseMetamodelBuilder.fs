@@ -20,7 +20,7 @@ open Repo.InfrastructureSemanticLayer
 open Repo.CoreSemanticLayer
 
 /// Initializes repository with AirSim Metamodel
-type RobotPerformerMetamodelBuilder() =
+type PerformerBaseMetamodelBuilder() =
    interface IModelBuilder with
        member this.Build(repo: IRepo): unit =
            let infrastructure = InfrastructureSemanticLayer.InfrastructureSemantic(repo)
@@ -32,7 +32,7 @@ type RobotPerformerMetamodelBuilder() =
            let metamodelGeneralization = find "Generalization"
            let metamodelAssociation = find "Association"
            
-           let model = repo.CreateModel("RobotPerformerMetamodel", metamodel)
+           let model = repo.CreateModel("PerformerBaseMetamodel", metamodel)
 
            /// Creates a node with given name and link to shape
            let (~+) (name, shape, isAbstract) =
@@ -60,35 +60,29 @@ type RobotPerformerMetamodelBuilder() =
 
                edge
                
-           let abstractNode = +("AbstractNode", "", true)
+           let abstractNode = +("AbstractNode", "", false)
            let startNode = +("InitialNode", "View/Pictures/ProgramIcons/initialBlock.png", false)
            let finishNode = +("FinalNode", "View/Pictures/ProgramIcons/finalBlock.png", false)
 
-           let forward = +("Forward", "View/Pictures/ProgramIcons/forward.png", false)
-           let backward = +("Backward", "View/Pictures/ProgramIcons/backward.png", false)
-           let right = +("Right" , "View/Pictures/ProgramIcons/right.png", false)
-           let left = +("Left", "View/Pictures/ProgramIcons/left.png", false)           
            let repeat = +("Repeat", "View/Pictures/ProgramIcons/repeat.png", false)
            let expression = +("Expression", "View/Pictures/ProgramIcons/functionBlock.png", false)
-           let ifElse = +("IfElse", "View/Pictures/ProgramIcons/ifBlock.png", false)
+           let ifElse = +("IfElse", "View/Pictures/ProgramIcons/ifBlock.png", false) 
 
            let link = abstractNode ---> (abstractNode, "target", "Link")
            let taggedLink = abstractNode ---> (abstractNode, "taggedTarget", "TaggedLink")
+           
+           let abstractCommand = +("CommandBase", "", false) 
 
            startNode --|> abstractNode
            finishNode --|> abstractNode           
-           forward --|> abstractNode
-           backward --|> abstractNode
-           right --|> abstractNode
-           left --|> abstractNode
            repeat --|> abstractNode
            expression --|> abstractNode
            ifElse --|> abstractNode
+           abstractCommand --|> abstractNode
 
            infrastructure.Element.AddAttribute repeat "Count" "AttributeKind.String" "1"
            infrastructure.Element.AddAttribute expression "ExpressionValue" "AttributeKind.String" ""
-           infrastructure.Element.AddAttribute ifElse
-               "ExpressionValue" "AttributeKind.String" ""
+           infrastructure.Element.AddAttribute ifElse "ExpressionValue" "AttributeKind.String" "true"
            
            infrastructure.Element.AddAttribute taggedLink "Tag" "AttributeKind.String" ""
            ()

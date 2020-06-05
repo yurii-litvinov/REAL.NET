@@ -2,6 +2,7 @@
 
 open Interpreters
 open Interpreters.Parser
+open Interpreters.RobotPerformer
 open Repo
 
 type RCommand =
@@ -47,6 +48,10 @@ module Helper =
         | Direction.Down -> Direction.Up
         | _ -> failwith "Unknown direction"
 
+    let resourceSet = Resources.getResources()
+
+    let getResource key = Resources.getString resourceSet key
+
 module RobotParser =
     module AvailableParsers =
         let parseForward (p: Parsing<Context> option) =
@@ -68,7 +73,7 @@ module RobotParser =
                                   Element = nextElement }
                             |> Some
                     else
-                        OperatorException("Can't move because of wall", PlaceOfCreation(Some model, Some element))
+                        OperatorException(Helper.getResource "Can't move because of wall", PlaceOfCreation(Some model, Some element))
                         |> raise
                 else
                     None
@@ -92,7 +97,7 @@ module RobotParser =
                                   Element = nextElement }
                             |> Some
                     else
-                        OperatorException("Can't move because of wall", PlaceOfCreation(Some model, Some element))
+                        OperatorException(Helper.getResource "Can't move because of wall", PlaceOfCreation(Some model, Some element))
                         |> raise
                 else
                     None
@@ -157,5 +162,9 @@ module RobotParser =
                     None
 
         let parseMovement = parseForward >>+ parseBackward >>+ parseLeft >>+ parseRight
+        
+        let parseRepeat = Interpreters.Parser.AvailableParsers.parseRepeat
+        
+        let parseIfElse = Interpreters.Parser.AvailableParsers.parseIfElse
 
-    let parseRobot = AvailableParsers.parseMovement >>+ AvailableParsers.parseInitialNode
+    let parseRobot = AvailableParsers.parseMovement >>+ AvailableParsers.parseInitialNode >>+ AvailableParsers.parseRepeat >>+ AvailableParsers.parseIfElse

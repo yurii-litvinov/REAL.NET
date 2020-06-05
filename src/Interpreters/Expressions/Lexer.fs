@@ -75,7 +75,9 @@ module StringPatterns =
         | Some x ->
             let newX = x.Substring(0, x.Length - 1)
             Some((TypeTransform.tryBool newX).Value |> BoolConst, eatMatching newX input)
-        | _ -> None
+        | _ -> if input = "true" then Some(true |> BoolConst, "")
+               elif input = "false" then Some(false |> BoolConst, "")
+               else None
 
     let (|TypeToken|_|) input =
         let matched = returnMatchOptionWrapper typeRegex input

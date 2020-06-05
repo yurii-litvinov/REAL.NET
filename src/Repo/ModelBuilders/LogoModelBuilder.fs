@@ -96,5 +96,16 @@ type LogoModelBuilder() =
             let initialNode = infrastructure.Instantiate model metamodelInitialNode
 
             let finalNode = infrastructure.Instantiate model metamodelFinalNode
+            
+            let expression = createExpression "a = 60; b = 40"
+            
+            let forward = createForward "a + b"
+            
+            let right = createRight "90"            
+            
+            let repeat = createRepeat "4"
+            
+            initialNode --> expression --> repeat --> forward --> right --> repeat |> ignore
+            repeat +-> finalNode |> ignore
 
             0 |> ignore

@@ -36,6 +36,7 @@ namespace WpfControlsLib.Controls.ModelExplorer
             = new ObservableCollection<ModelExplorerElement>();
 
         public EventHandler<NodeSelectedEventArgs> NodeSelected;
+        
         public EventHandler<EdgeSelectedEventArgs> EdgeSelected;
 
         private void ElementInBoxSelectedAction(object sender, EventArgs e)
@@ -85,5 +86,7 @@ namespace WpfControlsLib.Controls.ModelExplorer
             public string Source { get; set; }
             public string Target { get; set; }
         }
+
+        public string ElementsName => ModelExplorerLanguageResource.ElementsName;
     }
 }

@@ -12,6 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
+using System.Globalization;
+
 namespace WpfEditor.View
 {
     using EditorPluginInterfaces;
@@ -59,8 +61,15 @@ namespace WpfEditor.View
             }
         }
 
+        private void SetLanguage()
+        {
+            CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+        }
+        
         public MainWindow()
         {
+            this.SetLanguage();
             // TODO: Fix sequential coupling here.
             this.DataContext = this;
             this.InitializeComponent();
