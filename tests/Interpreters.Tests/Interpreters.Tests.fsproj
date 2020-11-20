@@ -104,7 +104,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="System.Collections.Immutable">
-          <HintPath>..\..\packages\System.Collections.Immutable\lib\netstandard1.3\System.Collections.Immutable.dll</HintPath>
+          <HintPath>..\..\packages\System.Collections.Immutable\lib\net461\System.Collections.Immutable.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -137,29 +137,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="System.Runtime.CompilerServices.Unsafe">
-          <HintPath>..\..\packages\System.Runtime.CompilerServices.Unsafe\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
-      <ItemGroup>
-        <Reference Include="FSharp.Core">
-          <HintPath>..\..\packages\tests\FSharp.Core\lib\net45\FSharp.Core.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
-      <ItemGroup>
-        <Reference Include="FsUnit.NUnit">
-          <HintPath>..\..\packages\tests\FsUnit\lib\net46\FsUnit.NUnit.dll</HintPath>
+          <HintPath>..\..\packages\System.Runtime.CompilerServices.Unsafe\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

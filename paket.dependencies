@@ -29,6 +29,7 @@ nuget NSubstitute
 nuget NUnit
 nuget NUnit3TestAdapter
 nuget FsUnit redirects: force
+nuget FSharp.Core redirects: force
 
 
 group TestRunners
