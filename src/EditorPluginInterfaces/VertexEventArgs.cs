@@ -12,6 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
+using Repo;
+
 namespace EditorPluginInterfaces
 {
     using System;
@@ -21,9 +23,14 @@ namespace EditorPluginInterfaces
     /// </summary>
     public class VertexEventArgs : EventArgs
     {
+        public VertexEventArgs(INode node)
+        {
+            this.Node = node;
+        }
+
         /// <summary>
         /// Newly created node.
         /// </summary>
-        public Repo.INode Node { get; set; }
+        public Repo.INode Node { get; }
     }
 }

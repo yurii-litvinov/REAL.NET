@@ -21,11 +21,17 @@ namespace EditorPluginInterfaces
     /// </summary>
     public class ElementEventArgs : EventArgs
     {
+        public ElementEventArgs(Repo.IElement element, bool isAllowed = false)
+        {
+            this.Element = element;
+            this.IsAllowed = isAllowed;
+        }
+
         /// <summary>
         /// Element.
         /// </summary>
-        public Repo.IElement Element { get; set; }
+        public Repo.IElement Element { get; }
 
-        public bool IsAllowed { get; set; }
+        public bool IsAllowed { get; }
     }
 }

@@ -23,7 +23,7 @@ open Repo.CoreSemanticLayer
 /// Holds references to attribute wrappers and elements.
 type AttributeRepository() =
     let attributes = Dictionary<_, _>()
-    member this.GetAttribute (attributeNode: DataLayer.INode) =
+    member this.GetAttribute (attributeNode: DataLayer.IDataNode) =
         if attributes.ContainsKey attributeNode then
             attributes.[attributeNode] :> IAttribute
         else
@@ -31,12 +31,12 @@ type AttributeRepository() =
             attributes.Add(attributeNode, newAttribute)
             newAttribute :> IAttribute
 
-    member this.DeleteAttribute (node: DataLayer.INode) =
+    member this.DeleteAttribute (node: DataLayer.IDataNode) =
         if attributes.ContainsKey node then
             attributes.Remove(node) |> ignore
 
 /// Implements attribute wrapper.
-and Attribute(attributeNode: DataLayer.INode) =
+and Attribute(attributeNode: DataLayer.IDataNode) =
 
     /// Returns corresponding node from data layer
     member this.UnderlyingNode = attributeNode 

@@ -1,4 +1,4 @@
-﻿(* Copyright 2017-2018 REAL.NET group
+﻿(* Copyright 2017-2019 REAL.NET group
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ type AirSimMetamodelBuilder() =
             let model = repo.CreateModel("AirSimMetamodel", metamodel)
 
             let (~+) (name, shape, isAbstract) =
-                let node = infrastructure.Instantiate model metamodelNode :?> INode
+                let node = infrastructure.Instantiate model metamodelNode :?> IDataNode
                 node.Name <- name
                 infrastructure.Element.SetAttributeValue node "shape" shape
                 infrastructure.Element.SetAttributeValue node "isAbstract" (if isAbstract then "true" else "false")
@@ -42,10 +42,10 @@ type AirSimMetamodelBuilder() =
 
                 node
 
-            let (--|>) (source: IElement) target =
+            let (--|>) (source: IDataElement) target =
                 model.CreateGeneralization(metamodelGeneralization, source, target) |> ignore
 
-            let (--->) (source: IElement) (target, targetName, linkName) =
+            let (--->) (source: IDataElement) (target, targetName, linkName) =
                 let edge = infrastructure.Instantiate model metamodelAssociation :?> IAssociation
                 edge.Source <- Some source
                 edge.Target <- Some target

@@ -112,6 +112,10 @@ AppPackages/
 
 # VSCode
 .vscode/
+.ionide/
+
+# JetBrains IDE
+.idea/
 
 # Others
 sql/

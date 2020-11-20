@@ -41,9 +41,9 @@ let ``Every model element shall have correct type`` () =
     Seq.length repo.Models |> should equal 1
 
     let model = repo.Models |> Seq.head
-    let node = model.Nodes |> Seq.find (fun n -> n.Name = "Node") :> IElement
-    let generalization = model.Nodes |> Seq.find (fun n -> n.Name = "Generalization") :> IElement
-    let association = model.Nodes |> Seq.find (fun n -> n.Name = "Association") :> IElement
+    let node = model.Nodes |> Seq.find (fun n -> n.Name = "Node") :> IDataElement
+    let generalization = model.Nodes |> Seq.find (fun n -> n.Name = "Generalization") :> IDataElement
+    let association = model.Nodes |> Seq.find (fun n -> n.Name = "Association") :> IDataElement
 
     model |> (fun m -> m.Nodes) |> Seq.iter (fun e -> e.Class |> should equal node)
     model |> (fun m -> m.Edges) |> Seq.iter (fun e -> (e.Class = generalization || e.Class = association) |> should be True)

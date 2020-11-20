@@ -19,27 +19,40 @@ namespace WpfControlsLib.Controls.Scene.Commands
     /// <summary>
     /// Creates a new node somewhere on a scene.
     /// </summary>
-    class CreateNodeCommand : ICommand
+    internal class CreateNodeCommand : ICommand
     {
-        private IModel model;
+        private ISceneModel model;
         private Repo.IElement type;
+        private Repo.INode node;
+        private Repo.VisualPoint position;
 
         /// <summary>
         /// Initializes a new instance of a <see cref="CreateNodeCommand"/> class.
         /// </summary>
         /// <param name="model">Model to which a new node shall be added.</param>
         /// <param name="type">Type of a new node (element from metamodel).</param>
-        public CreateNodeCommand(IModel model, Repo.IElement type)
+        public CreateNodeCommand(ISceneModel model, Repo.IElement type, Repo.VisualPoint position)
         {
             this.model = model;
             this.type = type;
+            this.position = position;
         }
 
         bool ICommand.CanBeUndone => true;
 
-        void ICommand.Execute() => this.model.CreateNode(this.type as Repo.INode);
+        void ICommand.Execute()
+        {
+            if (node == null)
+            {
+                this.node = this.model.CreateNode(this.type as Repo.INode, this.position);
+            }
+            else
+            {
+                this.model.RestoreElement(node);
+            }
+        }
 
         // TODO: This shall also trigger the deletion of connected edges.
-        void ICommand.Undo() => this.model.RemoveElement(this.type);
+        void ICommand.Undo() => this.model.RemoveElement(this.node);
     }
 }

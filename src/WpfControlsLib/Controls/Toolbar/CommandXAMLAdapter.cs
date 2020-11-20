@@ -1,7 +1,7 @@
 ﻿namespace WpfControlsLib.Controls.Toolbar
 {
-    using System;
     using EditorPluginInterfaces;
+    using System;
 
     public class CommandXAMLAdapter : System.Windows.Input.ICommand
     {

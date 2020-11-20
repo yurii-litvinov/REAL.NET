@@ -22,7 +22,7 @@ namespace WpfControlsLib.Controls.Palette
     /// </summary>
     public class PaletteViewModel
     {
-        private WpfControlsLib.Model.Model model;
+        private WpfControlsLib.Model.SceneModel model;
         private Repo.IElement selectedElement;
         private bool isInSelect;
 
@@ -75,7 +75,7 @@ namespace WpfControlsLib.Controls.Palette
                 var element = new PaletteElement
                 {
                     Name = type.Name,
-                    Image = "pack://application:,,,/" 
+                    Image = "pack://application:,,,/"
                             + (type.Shape == string.Empty ? "View/Pictures/vertex.png" : type.Shape),
                     Element = type
                 };
@@ -88,7 +88,7 @@ namespace WpfControlsLib.Controls.Palette
         /// Sets a model for a palette.
         /// </summary>
         /// <param name="model">Model (with repository) to use to populate a palette.</param>
-        public void SetModel(WpfControlsLib.Model.Model model) => this.model = model;
+        public void SetModel(WpfControlsLib.Model.SceneModel model) => this.model = model;
 
         private void Select(Repo.IElement element)
             => this.Elements.ToList().ForEach(e => e.IsSelected = e.Element == element);

@@ -14,8 +14,8 @@
 
 namespace WpfControlsLib.Controller
 {
-    using System;
     using EditorPluginInterfaces;
+    using System;
 
     /// <summary>
     /// Controller in MVC architecture. Handles commands and manages undo-redo state. Model modification is only

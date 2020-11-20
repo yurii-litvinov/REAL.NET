@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using GraphX.PCL.Common.Models;
+using Repo;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
-using GraphX.PCL.Common.Models;
-using Repo;
 
 namespace WpfControlsLib.ViewModel
 {
@@ -14,7 +14,7 @@ namespace WpfControlsLib.ViewModel
     {
         private Brush color = Brushes.Green;
         private IList<AttributeViewModel> attributes = new List<AttributeViewModel>();
-        private Brush borderColor = Brushes.White;
+        private Brush borderColor = Brushes.Black;
         private bool isAllowed = true;
         private string picture = string.Empty;
 
@@ -78,7 +78,7 @@ namespace WpfControlsLib.ViewModel
             }
         }
 
-        public string Picture
+        public virtual string Picture
         {
             get => "pack://application:,,,/" + this.picture;
 
@@ -89,7 +89,7 @@ namespace WpfControlsLib.ViewModel
             }
         }
 
-        public bool IsVirtual { get; set; } = false;
+        public bool IsVirtual { get; protected set; } = false;
 
         public override string ToString()
         {

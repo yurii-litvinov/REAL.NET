@@ -19,19 +19,16 @@ open Repo
 /// Implements class - representation of node on screen
 type VisualNodeInfo
     (
-        link: string,
-        ``type``: TypeOfVisual,
-        position : (int * int) option
+        position : VisualPoint
     ) =
-
-    inherit VisualInfo(link, ``type``)
-
     let mutable position = position
+    
+    new() = new VisualNodeInfo(VisualPoint.Default)
 
     /// Instantiates instance of class with default values.
-    new() = VisualNodeInfo("", TypeOfVisual.NoFile, None)
-
     interface IVisualNodeInfo with
         member this.Position
-            with get (): (int * int) option = position             
-            and set (v: (int * int) option): unit = position <- v
+            with get () = position             
+            and set v: unit = position <- v
+
+        member this.Copy() = new VisualNodeInfo(position) :> IVisualNodeInfo

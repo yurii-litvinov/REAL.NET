@@ -21,12 +21,12 @@ namespace WpfControlsLib.Controls.ModelExplorer
     /// Template selector that selects data template for model explorer element list based on a type of an element
     /// --- node or edge.
     /// </summary>
-    internal class ModelElementTemplateSelector: DataTemplateSelector
+    internal class ModelElementTemplateSelector : DataTemplateSelector
     {
         public DataTemplate NodeTemplate { get; set; }
         public DataTemplate EdgeTemplate { get; set; }
 
-        public override DataTemplate SelectTemplate(object item, DependencyObject container) 
+        public override DataTemplate SelectTemplate(object item, DependencyObject container)
             => item is ModelExplorerNode ? this.NodeTemplate : this.EdgeTemplate;
     }
 }

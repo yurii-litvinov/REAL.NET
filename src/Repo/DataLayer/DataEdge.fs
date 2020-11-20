@@ -1,4 +1,4 @@
-﻿(* Copyright 2017 Yurii Litvinov
+﻿ (* Copyright 2017 Yurii Litvinov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@ namespace Repo.DataLayer
 
 /// Implementation of Edge abstraction.
 [<AbstractClass>]
-type DataEdge (``class``: IElement option, source: IElement option, target: IElement option, model: IModel) =
+type DataEdge (``class``: IDataElement option, source: IDataElement option, target: IDataElement option, model: IDataModel) =
     inherit DataElement(``class``, model)
 
     let mutable source = source
     let mutable target = target
 
-    interface IEdge with
+    interface IDataEdge with
         member this.Source
             with get () = source
             and set v =

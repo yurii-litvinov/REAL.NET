@@ -19,22 +19,22 @@ type DataRepo() =
     let mutable models = []
 
     interface IRepo with
-        member this.CreateModel(name: string): IModel =
-            let model = DataModel(name) :> IModel
+        member this.CreateModel(name: string): IDataModel =
+            let model = DataModel(name) :> IDataModel
             models <- model :: models
             model
 
-        member this.CreateModel(name: string, metamodel: IModel): IModel =
-            let model = DataModel(name, metamodel) :> IModel
+        member this.CreateModel(name: string, metamodel: IDataModel): IDataModel =
+            let model = DataModel(name, metamodel) :> IDataModel
             models <- model :: models
             model
 
-        member this.DeleteModel(model: IModel): unit =
+        member this.DeleteModel(model: IDataModel): unit =
             if models |> List.exists (fun m -> m.Metamodel = model &&  m <> model) then
                 raise (Repo.DeletingUsedModel(model.Name))
             models <- models |> List.filter (fun m -> not (m.Equals(model)))
 
-        member this.Models: seq<IModel> =
+        member this.Models: seq<IDataModel> =
             Seq.ofList models |> Seq.cast
 
         member this.Clear () =

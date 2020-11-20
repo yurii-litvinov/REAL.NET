@@ -66,9 +66,9 @@ namespace WpfControlsLib.Controls.Palette
                 return (w32Mouse.X, w32Mouse.Y);
             }
 
-            var dragDropWindow = new DragAndDropFeedback {Image = image};
+            var dragDropWindow = new DragAndDropFeedback { Image = image };
 
-            void Handler(object sender, GiveFeedbackEventArgs args) 
+            void Handler(object sender, GiveFeedbackEventArgs args)
                 => (dragDropWindow.Left, dragDropWindow.Top) = GetAbsoluteCursorPos();
 
             // First run to init window coordinates.

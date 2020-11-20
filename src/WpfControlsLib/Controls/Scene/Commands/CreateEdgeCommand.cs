@@ -19,10 +19,11 @@ namespace WpfControlsLib.Controls.Scene.Commands
     /// <summary>
     /// Creates a new edge between two nodes.
     /// </summary>
-    class CreateEdgeCommand : ICommand
+    internal class CreateEdgeCommand : ICommand
     {
-        private IModel model;
+        private ISceneModel model;
         private Repo.IElement type;
+        private Repo.IEdge edge;
         private Repo.IElement source;
         private Repo.IElement destination;
 
@@ -33,7 +34,7 @@ namespace WpfControlsLib.Controls.Scene.Commands
         /// <param name="type">Type of a new edge (element from metamodel).</param>
         /// <param name="source">Source node for an edge.</param>
         /// <param name="destination">Destination node for an edge.</param>
-        public CreateEdgeCommand(IModel model, Repo.IElement type, Repo.IElement source, Repo.IElement destination)
+        public CreateEdgeCommand(ISceneModel model, Repo.IElement type, Repo.IElement source, Repo.IElement destination)
         {
             this.model = model;
             this.type = type;
@@ -43,13 +44,18 @@ namespace WpfControlsLib.Controls.Scene.Commands
 
         bool ICommand.CanBeUndone => true;
 
-        void ICommand.Execute() =>
-            this.model.CreateEdge(
-                this.type as Repo.IEdge,
-                this.source,
-                this.destination
-                );
+        void ICommand.Execute()
+        {
+            if (edge == null)
+            {
+                this.edge = this.model.CreateEdge(this.type as Repo.IEdge, this.source, this.destination);
+            }
+            else
+            {
+                this.model.RestoreElement(edge);
+            }
+        }
 
-        void ICommand.Undo() => this.model.RemoveElement(this.type);
+        void ICommand.Undo() => this.model.RemoveElement(this.edge);
     }
 }

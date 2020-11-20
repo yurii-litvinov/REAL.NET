@@ -14,8 +14,8 @@
 
 namespace WpfControlsLib.Controller.UndoRedo
 {
-    using System.Collections.Generic;
     using EditorPluginInterfaces;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Class for undo/redo commands.

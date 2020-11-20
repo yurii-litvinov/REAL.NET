@@ -14,8 +14,8 @@
 
 namespace WpfControlsLib.Controls.Toolbar
 {
-    using System;
     using EditorPluginInterfaces;
+    using System;
 
     /// <summary>
     /// Class that implements pattern Command

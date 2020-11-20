@@ -46,7 +46,7 @@ type RobotsTestModelBuilder() =
             let timer = infrastructure.Instantiate model metamodelTimer
             infrastructure.Element.SetAttributeValue timer "delay" "3000"
 
-            let (-->) (src: IElement) dst =
+            let (-->) (src: IDataElement) dst =
                 let aLink = infrastructure.Instantiate model link :?> IAssociation
                 aLink.Source <- Some src
                 aLink.Target <- Some dst

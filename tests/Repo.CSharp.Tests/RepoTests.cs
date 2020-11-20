@@ -14,9 +14,8 @@
 
 namespace Repo.CSharp.Tests
 {
-    using System.Collections.Generic;
-    using System.Linq;
     using NUnit.Framework;
+    using System.Linq;
 
     [TestFixture]
     public class PluginLaunchTest

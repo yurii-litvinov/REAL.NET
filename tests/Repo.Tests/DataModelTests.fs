@@ -21,8 +21,8 @@ open Repo.DataLayer
 
 [<Test>]
 let ``Data model shall have name and metamodel`` () =
-    let metamodel = DataModel("metamodel") :> IModel
-    let model = DataModel("model", metamodel) :> IModel
+    let metamodel = DataModel("metamodel") :> IDataModel
+    let model = DataModel("model", metamodel) :> IDataModel
 
     metamodel.Name |> should equal "metamodel"
     model.Name |> should equal "model"
@@ -32,8 +32,8 @@ let ``Data model shall have name and metamodel`` () =
 
 [<Test>]
 let ``Data model shall allow changing name`` () =
-    let metamodel = DataModel("metamodel") :> IModel
-    let model = DataModel("model", metamodel) :> IModel
+    let metamodel = DataModel("metamodel") :> IDataModel
+    let model = DataModel("model", metamodel) :> IDataModel
 
     metamodel.Name |> should equal "metamodel"
     model.Name |> should equal "model"
@@ -45,7 +45,7 @@ let ``Data model shall allow changing name`` () =
 
 [<Test>]
 let ``Data model shall allow creating nodes`` () =
-    let model = DataModel("model") :> IModel
+    let model = DataModel("model") :> IDataModel
     let node = model.CreateNode("node1", None)
     model.Nodes |> should contain node
 
@@ -56,7 +56,7 @@ let ``Data model shall allow creating nodes`` () =
 
 [<Test>]
 let ``Data model shall allow creating edges`` () =
-    let model = DataModel("model") :> IModel
+    let model = DataModel("model") :> IDataModel
     let node1 = model.CreateNode("node1", None)
     let node2 = model.CreateNode("node2", None)
 
@@ -71,13 +71,13 @@ let ``Data model shall allow creating edges`` () =
 
     Seq.length model.Edges |> should equal 2
 
-    Seq.append (model.Nodes |> Seq.cast<IElement>) (model.Edges |> Seq.cast<IElement>) |> should equal model.Elements
+    Seq.append (model.Nodes |> Seq.cast<IDataElement>) (model.Edges |> Seq.cast<IDataElement>) |> should equal model.Elements
 
 [<Test>]
 let ``Data model shall allow creating unconnected associations`` () =
-    let model = DataModel("model") :> IModel
-    let node1 = model.CreateNode("node1", None) :> IElement
-    let node2 = model.CreateNode("node2", None) :> IElement
+    let model = DataModel("model") :> IDataModel
+    let node1 = model.CreateNode("node1", None) :> IDataElement
+    let node2 = model.CreateNode("node2", None) :> IDataElement
 
     let associationClass = model.CreateNode("association", None)
 
@@ -93,9 +93,9 @@ let ``Data model shall allow creating unconnected associations`` () =
 
 [<Test>]
 let ``Data model shall allow creating unconnected generalizations`` () =
-    let model = DataModel("model") :> IModel
-    let node1 = model.CreateNode("node1", None) :> IElement
-    let node2 = model.CreateNode("node2", None) :> IElement
+    let model = DataModel("model") :> IDataModel
+    let node1 = model.CreateNode("node1", None) :> IDataElement
+    let node2 = model.CreateNode("node2", None) :> IDataElement
 
     let generalizationClass = model.CreateNode("generalization", None)
 
@@ -111,7 +111,7 @@ let ``Data model shall allow creating unconnected generalizations`` () =
 
 [<Test>]
 let ``Data model shall allow deleting elements`` () =
-    let model = DataModel("model") :> IModel
+    let model = DataModel("model") :> IDataModel
     let node1 = model.CreateNode("node1", None)
     model.Nodes |> should contain node1
 
@@ -123,12 +123,12 @@ let ``Data model shall allow deleting elements`` () =
     let generalization = model.CreateGeneralization(generalizationClass, node1, node2)
     model.Edges |> should contain generalization
 
-    model.MarkElementDeleted generalization
+    model.RemoveElement generalization
     model.Edges |> should not' (contain generalization)
 
-    model.MarkElementDeleted node1
+    model.RemoveElement node1
     model.Nodes |> should not' (contain node1)
     model.Nodes |> should contain node2
 
-    model.MarkElementDeleted node2
+    model.RemoveElement node2
     model.Nodes |> should not' (contain node2)

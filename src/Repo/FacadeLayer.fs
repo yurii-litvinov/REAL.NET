@@ -14,6 +14,8 @@
 
 namespace Repo
 
+open System
+
 /// Type of file which represents visual information
 type TypeOfVisual =
     /// Xml file
@@ -35,22 +37,48 @@ type IVisualInfo =
         abstract Type : TypeOfVisual with get, set 
     end
 
+/// Point with double coordinates.
+type VisualPoint(x: double, y: double) =
+    struct
+        /// Returns x coordinate of a point.
+        member this.X = x
+
+        /// Returns y coordinate of a point.
+        member this.Y = y
+
+        override this.ToString() = (x, y).ToString()
+
+        /// Returns point with zero coordinates.
+        static member Default = new VisualPoint(0.0, 0.0)
+        
+        /// ValueType equality operator for C# compability.
+        static member op_Equality (point1: VisualPoint, point2: VisualPoint) = point1 = point2
+        
+        /// ValueType inequality operator for C# compability.
+        static member op_Inequality (point1: VisualPoint, point2: VisualPoint) = not (VisualPoint.op_Equality(point1, point2))
+        
+        /// Returns vector sum of 2 points.
+        static member op_Addition (point1: VisualPoint, point2: VisualPoint) = new VisualPoint(point1.X + point2.X, point2.X + point2.Y)
+    end
+
 /// This interface represents information about how node is shown on screen.
 type IVisualNodeInfo =
     interface
-        inherit IVisualInfo
-
-        /// Position of node on screen.
-        abstract Position : (int * int) option with get, set          
+        /// Position of node on screen or scene.
+        abstract Position : VisualPoint with get, set
+        
+        /// Returns a copy of this info.
+        abstract Copy : unit -> IVisualNodeInfo
     end
 
 // This interface represents information about how edge is shown on screen.
 type IVisualEdgeInfo =
     interface
-        inherit IVisualInfo
-
         /// Coordinates of routing points without ends.
-        abstract RoutingPoints : (int * int) list with get, set
+        abstract RoutingPoints : array<VisualPoint>  with get, set
+        
+        /// Returns a copy of this info.
+        abstract Copy : unit -> IVisualEdgeInfo
     end
 
 /// Enumeration with all kinds of attributes supported by repository
@@ -214,7 +242,7 @@ type IModel =
         abstract CreateElement: typeName: string -> IElement
 
         /// Deletes given element from a model.
-        abstract DeleteElement: element: IElement -> unit
+        abstract RemoveElement: element: IElement -> unit
 
         /// Restores given element to this model
         abstract RestoreElement: element: IElement -> unit

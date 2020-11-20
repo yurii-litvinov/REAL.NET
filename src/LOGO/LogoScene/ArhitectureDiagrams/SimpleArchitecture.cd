@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="LogoScene.ViewModels.DrawingSceneViewModel">
+    <Position X="0.5" Y="1.75" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAACAAQAAQAEAIEAAAAAAAAAAAAhIAAAAQAAAAIAAg=</HashCode>
+      <FileName>ViewModels\DrawingSceneViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LogoScene.ViewModels.TurtleControlViewModel">
+    <Position X="2.75" Y="1.75" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAIAAAASACAAAAAgAEAAAAAAAAAABAAQAAQAEgAAEAA=</HashCode>
+      <FileName>ViewModels\TurtleControlViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LogoScene.ViewModels.ViewModelBase" Collapsed="true">
+    <Position X="1.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\ViewModelBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LogoScene.Models.DrawingScene">
+    <Position X="8.5" Y="1.25" Width="3" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="LogoScene.Models.DrawingScene.TurtleCommander" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Models\DrawingScene.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAIAAAAAAAAQAAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Models\DrawingScene.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="LogoScene.Models.ITurtle">
+    <Position X="7" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAEAAAAAAYAA=</HashCode>
+      <FileName>Models\ITurtle.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="LogoScene.Models.ITurtleCommander">
+    <Position X="5.25" Y="0.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQgAAAAAAAAAABAAAoEABAAAAAAAAAAEIAA=</HashCode>
+      <FileName>Models\ITurtleCommander.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

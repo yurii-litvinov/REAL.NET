@@ -14,10 +14,11 @@
 
 namespace WpfControlsLib.Controls.Toolbar
 {
+    using EditorPluginInterfaces;
+    using EditorPluginInterfaces.Toolbar;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using EditorPluginInterfaces.Toolbar;
 
     /// <summary>
     /// ViewModel for toolbar control, allows to register some commands and show them as buttons. Can be used from

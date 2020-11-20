@@ -19,19 +19,17 @@ open Repo
 /// Implements class - representation of edge on screen
 type VisualEdgeInfo
     (
-        link: string,
-        ``type``: TypeOfVisual,
-        routingPoints : (int * int) list
+        routingPoints : VisualPoint seq
     ) =
-
-    inherit VisualInfo(link, ``type``)
-
     let mutable routingPoints = routingPoints
 
-    /// Instantiates instance of class with default values.
-    new() = VisualEdgeInfo("", TypeOfVisual.NoFile, [])
-
+    new() = new VisualEdgeInfo([||])
+    
     interface IVisualEdgeInfo with
         member this.RoutingPoints
-            with get () = routingPoints             
-            and set (v) = routingPoints <- v       
+            with get () = Array.ofSeq routingPoints             
+            and set (v) = routingPoints <- v
+            
+        member this.Copy() =
+            let points = (this :> IVisualEdgeInfo).RoutingPoints
+            new VisualEdgeInfo(Array.copy points) :> IVisualEdgeInfo    

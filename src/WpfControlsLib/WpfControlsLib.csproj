@@ -102,6 +102,7 @@
       <DependentUpon>AttributesPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\AttributesPanel\AttributesPanelViewModel.cs" />
+    <Compile Include="Controls\AttributesPanel\Validators\DoubleValidation.cs" />
     <Compile Include="Controls\AttributesPanel\Validators\IntValidation.cs" />
     <Compile Include="Controls\Console\AppConsole.xaml.cs">
       <DependentUpon>AppConsole.xaml</DependentUpon>
@@ -125,6 +126,8 @@
     </Compile>
     <Compile Include="Controls\Palette\PaletteElement.cs" />
     <Compile Include="Controls\Palette\PaletteViewModel.cs" />
+    <Compile Include="Controls\Scene\Commands\MoveNodeCommand.cs" />
+    <Compile Include="Controls\Scene\PointExtensions.cs" />
     <Compile Include="Controls\Scene\Commands\CreateNodeCommand.cs" />
     <Compile Include="Controls\Scene\Commands\RemoveNodeCommand.cs" />
     <Compile Include="Controls\Scene\Commands\RemoveEdgeCommand.cs" />
@@ -138,6 +141,7 @@
     <Compile Include="Controls\Scene\Scene.xaml.cs">
       <DependentUpon>Scene.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Scene\VirtualVertexData.cs" />
     <Compile Include="Controls\Toolbar\Button.cs" />
     <Compile Include="Controls\Toolbar\ButtonWrapper.cs" />
     <Compile Include="Controls\Toolbar\Command.cs" />
@@ -147,7 +151,7 @@
       <DependentUpon>ToolbarView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\Graph.cs" />
-    <Compile Include="Model\Model.cs" />
+    <Compile Include="Model\SceneModel.cs" />
     <Compile Include="Controls\Console\AppConsoleViewModel.cs" />
     <Compile Include="Controller\UndoRedo\UndoRedoStack.cs" />
     <Compile Include="Properties\AssemblyInternalsVisibleTo.cs" />
@@ -183,6 +187,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Resource Include="Controls\Scene\Templates\GeneralTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Resource>
     <Page Include="Controls\Toolbar\ToolbarView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -190,14 +198,6 @@
     <Compile Include="ViewModel\EdgeViewModel.cs" />
     <Compile Include="ViewModel\NodeViewModel.cs" />
     <Compile Include="Controls\Scene\GraphArea.cs" />
-    <Page Include="View\Templates\EditorTemplate.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\Templates\GeneralTemplate.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -246,48 +246,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\edge.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\enginesBackwardBlock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\enginesForwardBlock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\enginesStopBlock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\finalBlock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\hover.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\if.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\initialBlock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\land.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\move.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\star1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\star2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\takeoff.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Scene\Pictures\timerBlock.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Controls\Scene\Pictures\vertex.png" />

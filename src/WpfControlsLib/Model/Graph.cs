@@ -14,17 +14,18 @@
 
 namespace WpfControlsLib.Model
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    using EditorPluginInterfaces;
     using GraphX.PCL.Common;
     using QuickGraph;
     using Repo;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using ViewModel;
     using WpfControlsLib.Controls.Scene.EventArguments;
 
     /// <summary>
-    /// Represents diagram as GraphX graph. Wraps <see cref="Model"/> and synchronizes changes in repo and in GraphX
+    /// Represents diagram as GraphX graph. Wraps <see cref="SceneModel"/> and synchronizes changes in repo and in GraphX
     /// graph representation.
     ///
     /// Also this class serves as a factory and container for ViewModels for various parts of visual model
@@ -33,9 +34,9 @@ namespace WpfControlsLib.Model
     /// </summary>
     public class Graph
     {
-        private readonly Model model;
+        private readonly ISceneModel model;
 
-        internal Graph(Model repoModel)
+        internal Graph(SceneModel repoModel)
         {
             this.model = repoModel;
             this.DataGraph = new BidirectionalGraph<NodeViewModel, EdgeViewModel>();
@@ -43,6 +44,7 @@ namespace WpfControlsLib.Model
             this.model.NewEdgeAdded += (sender, args) => this.CreateEdge(args.Edge, args.Source, args.Target);
             this.model.ElementRemoved += (sender, args) => this.RemoveElement(args.Element);
             this.model.ElementCheck += (sender, args) => this.CheckElement(args.Element, args.IsAllowed);
+            this.model.NodeVisualChanged += OnNodeVisualChanged;
         }
 
         public event EventHandler DrawGraph;
@@ -55,6 +57,10 @@ namespace WpfControlsLib.Model
 
         public event EventHandler<DataEdgeArgs> AddNewEdgeControl;
 
+        public event EventHandler<DataVertexArgs> NodeVisualChanged;
+
+        public event EventHandler<DataEdgeArgs> EdgeVisualChanged;
+        
         public BidirectionalGraph<NodeViewModel, EdgeViewModel> DataGraph { get; }
 
         // Should be replaced
@@ -110,7 +116,7 @@ namespace WpfControlsLib.Model
                 }
 
                 this.DataGraph.AddEdge(newEdge);
-                this.ElementAdded?.Invoke(this, new ElementAddedEventArgs {Element = edge});
+                this.ElementAdded?.Invoke(this, new ElementAddedEventArgs { Element = edge });
             }
 
             this.DrawGraph?.Invoke(this, EventArgs.Empty);
@@ -214,6 +220,14 @@ namespace WpfControlsLib.Model
                 var nodeViewModel = this.DataGraph.Vertices.First(x => x.Node == element);
                 nodeViewModel.IsAllowed = isAllowed;
             }
+        }
+        
+        
+        private void OnNodeVisualChanged(object sender, VertexEventArgs e)
+        {
+            var node = e.Node;
+            var nodeData = this.DataGraph.Vertices.First(x => x.Node == e.Node);
+            this.NodeVisualChanged?.Invoke(this, new DataVertexArgs(){DataVertex = nodeData});
         }
 
         public class DataVertexArgs : EventArgs

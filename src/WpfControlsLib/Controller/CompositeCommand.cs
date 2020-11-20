@@ -21,7 +21,7 @@ namespace WpfControlsLib.Controller
     /// <summary>
     /// Command that is composed of elementary commands that shall be executed and undone as one command.
     /// </summary>
-    class CompositeCommand : ICommand
+    internal class CompositeCommand : ICommand
     {
         private IList<ICommand> commands = new List<ICommand>();
 

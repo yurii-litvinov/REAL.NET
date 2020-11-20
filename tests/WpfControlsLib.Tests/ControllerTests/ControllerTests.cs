@@ -14,9 +14,9 @@
 
 namespace WpfControlsLib.Tests
 {
-    using System;
-    using NUnit.Framework;
     using EditorPluginInterfaces;
+    using NUnit.Framework;
+    using System;
     using WpfControlsLib.Controller;
 
     [TestFixture]

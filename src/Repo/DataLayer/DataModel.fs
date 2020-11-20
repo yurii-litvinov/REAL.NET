@@ -19,30 +19,36 @@ open System.ComponentModel
 
 /// Implementation of model interface in data layer. Contains nodes and edges in list, implements
 /// CRUD operations and keeps consistency.
-type DataModel private (name: string, metamodel: IModel option) =
+type DataModel private (name: string, metamodel: IDataModel option) =
 
     let mutable nodes = []
     let mutable edges = []
+    
+    let getElements() =
+                    let castNode (node: IDataNode) = node :> IDataElement
+                    let castEdge (edge: IDataEdge) = edge :> IDataElement
+                    (List.map castNode nodes) @ (List.map castEdge edges)
 
     let mutable properties = Map.empty
 
     new(name: string) = DataModel(name, None)
-    new(name: string, metamodel: IModel) = DataModel(name, Some metamodel)
+    new(name: string, metamodel: IDataModel) = DataModel(name, Some metamodel)
 
-    interface IModel with
-        member this.CreateNode(name, (func: Option<IElement>)) =
-            let node = DataNode(name, func, this) :> INode
+    interface IDataModel with
+        
+        member this.CreateNode(name, (func: Option<IDataElement>)) =
+            let node = DataNode(name, func, this) :> IDataNode
             nodes <- node :: nodes
             node
 
-        member this.CreateNode(name, (``class``:IElement)) =
-            let node = DataNode(name, ``class``, this) :> INode
+        member this.CreateNode(name, (``class``:IDataElement)) =
+            let node = DataNode(name, ``class``, this) :> IDataNode
             nodes <- node :: nodes
             node
 
         member this.CreateAssociation(``class``, source, target, targetName) =
             let edge = new DataAssociation(``class``, source, target, targetName, this) :> IAssociation
-            edges <- (edge :> IEdge) :: edges
+            edges <- (edge :> IDataEdge) :: edges
             if source.IsSome then
                 source.Value.AddOutgoingEdge edge
             if target.IsSome then
@@ -51,7 +57,7 @@ type DataModel private (name: string, metamodel: IModel option) =
 
         member this.CreateAssociation(``class``, source, target, targetName) =
             let edge = new DataAssociation(``class``, Some source, Some target, targetName, this) :> IAssociation
-            edges <- (edge :> IEdge) :: edges
+            edges <- (edge :> IDataEdge) :: edges
             source.AddOutgoingEdge edge
             target.AddIncomingEdge edge
             edge
@@ -62,50 +68,54 @@ type DataModel private (name: string, metamodel: IModel option) =
                 source.Value.AddOutgoingEdge edge
             if target.IsSome then
                 target.Value.AddIncomingEdge edge
-            edges <- (edge :> IEdge) :: edges
+            edges <- (edge :> IDataEdge) :: edges
             edge
 
         member this.CreateGeneralization(``class``, source, target) =
             let edge = new DataGeneralization(``class``, Some source, Some target, this) :> IGeneralization
             source.AddOutgoingEdge edge
             target.AddIncomingEdge edge
-            edges <- (edge :> IEdge) :: edges
+            edges <- (edge :> IDataEdge) :: edges
             edge
 
-        member this.MarkElementDeleted(element: IElement): unit =           
-            let mark (element: IElement) = 
+        member this.RemoveElement(element: IDataElement): unit =
+            let delete (element: IDataElement) =
                 match element with
-                | :? INode -> let elementToDelete = nodes |> List.find (fun x -> x = (element :?> INode))
-                              elementToDelete.IsMarkedDeleted <- true
-                | _ ->        let elementToDelete = edges |> List.find (fun x -> x = (element :?> IEdge))
-                              elementToDelete.IsMarkedDeleted <- true                                                            
-            mark element
+                | :? IDataNode  ->
+                    let node = element :?> IDataNode
+                    if (List.contains node nodes) then
+                        nodes <- List.except [node] nodes
+                    else invalidOp "Model does not contain this element"
+                | :? IDataEdge  ->
+                    let edge = element :?> IDataEdge
+                    if (List.contains edge edges) then
+                        match edge.Source with
+                        | Some source -> source.DeleteOutgoingEdge edge
+                        | _ -> ()
+                        match edge.Target with
+                        | Some source -> source.DeleteIncomingEdge edge
+                        | _ -> ()
+                        edges <- List.except [edge] edges
+                    else invalidOp "Model does not contain this element"
+                | _ -> invalidOp "Unknown type of element"
+            delete element
         
-        member this.UnmarkDeletedElement(element: IElement): unit =
-             match element with
-                | :? INode -> let elementToRestore = nodes |> List.find (fun x -> x = (element :?> INode))
-                              elementToRestore.IsMarkedDeleted <- false
-                | _ ->        let elementToRestore = edges |> List.find (fun x -> x = (element :?> IEdge))
-                              elementToRestore.IsMarkedDeleted <- false 
-
-        member this.Elements: IElement seq =
-            let nodes = (nodes |> List.filter (fun node -> not node.IsMarkedDeleted) |> Seq.cast<IElement>)
-            let edges = (edges |> List.filter (fun edge -> not edge.IsMarkedDeleted) |> Seq.cast<IElement>)
-            Seq.append nodes edges
-
         member this.Metamodel
-            with get(): IModel =
+            with get(): IDataModel =
                 match metamodel with
                 | Some v -> v
-                | None -> this :> IModel
+                | None -> this :> IDataModel
 
         member val Name = name with get, set
 
-        member this.Nodes: seq<INode> =
-            nodes |> List.filter (fun node -> not node.IsMarkedDeleted) |> Seq.ofList
+        member this.Nodes: seq<IDataNode> = nodes |> Seq.ofList
 
-        member this.Edges: seq<IEdge> =
-            edges |> List.filter (fun edge -> not edge.IsMarkedDeleted) |> Seq.ofList
+        member this.Edges: seq<IDataEdge> = edges |> Seq.ofList
+            
+         member this.Elements: IDataElement seq =
+            let nodes = ((this :> IDataModel).Nodes |> Seq.cast<IDataElement>)
+            let edges = ((this :> IDataModel).Edges |> Seq.cast<IDataElement>)
+            Seq.append nodes edges
 
         member this.Properties
             with get () = properties

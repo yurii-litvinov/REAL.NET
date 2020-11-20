@@ -14,16 +14,16 @@
 
 namespace AirSim.View
 {
+    using AirSimLib;
+    using EditorPluginInterfaces;
+    using PluginManager;
+    using Repo;
     using System;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
-    using AirSimLib;
-    using EditorPluginInterfaces;
-    using PluginManager;
-    using Repo;
     using WpfControlsLib.Controls.Console;
     using WpfControlsLib.Controls.ModelSelector;
     using WpfControlsLib.Controls.Scene;
@@ -34,7 +34,7 @@ namespace AirSim.View
     /// </summary>
     internal partial class MainWindow
     {
-        private readonly WpfControlsLib.Model.Model model = new WpfControlsLib.Model.Model();
+        private readonly WpfControlsLib.Model.SceneModel model = new WpfControlsLib.Model.SceneModel();
         private readonly WpfControlsLib.Controller.Controller controller = new WpfControlsLib.Controller.Controller();
 
         public AppConsoleViewModel Console { get; } = new AppConsoleViewModel();

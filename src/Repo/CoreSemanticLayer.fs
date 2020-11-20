@@ -43,10 +43,10 @@ module Element =
 
     /// Does a breadth-first search from a given element following given interesting edges until element matching
     /// given predicate is found.
-    let private bfs (element: IElement) (isInterestingEdge: IEdge -> bool) (isWhatWeSearch: IElement -> bool) =
-        let queue = Queue<IElement>()
+    let private bfs (element: IDataElement) (isInterestingEdge: IDataEdge -> bool) (isWhatWeSearch: IDataElement -> bool) =
+        let queue = Queue<IDataElement>()
         queue.Enqueue element
-        let visited = HashSet<IElement>()
+        let visited = HashSet<IDataElement>()
         let rec doBfs () =
             if queue.Count = 0 then
                 None
@@ -67,17 +67,17 @@ module Element =
         doBfs ()
 
     /// Returns true if given element is generalization edge.
-    let private isGeneralization (e: IElement) = e :? IGeneralization
+    let private isGeneralization (e: IDataElement) = e :? IGeneralization
 
     /// Returns true if given element is association edge.
-    let private isAssociation (e: IElement) = e :? IAssociation
+    let private isAssociation (e: IDataElement) = e :? IAssociation
 
     /// Returns a model containing given element.
-    let containingModel (element: IElement) =
+    let containingModel (element: IDataElement) =
         element.Model
 
     /// Returns all outgoing edges for an element.
-    let outgoingEdges (element: IElement) =
+    let outgoingEdges (element: IDataElement) =
         element.OutgoingEdges
 
     /// Returns all outgoing generalizations for an element.
@@ -124,7 +124,7 @@ module Element =
         if result.IsNone then
             raise (InvalidSemanticOperationException <| sprintf "Attribute link for attribute %s is unconnected" name)
         match result.Value with
-        | :? INode as result -> result
+        | :? IDataNode as result -> result
         | _ -> raise (InvalidSemanticOperationException
             <| sprintf "Attribute %s is not a node (which is possible but not used and not supported in v1)" name)
 
@@ -133,7 +133,7 @@ module Element =
         (attribute element name).Name
 
     /// Adds a new attribute with a given value to an element.
-    let addAttribute element name (``class``: IElement) attributeAssociationClass value =
+    let addAttribute element name (``class``: IDataElement) attributeAssociationClass value =
         let model = containingModel element
         let attributeNode = model.CreateNode(value, ``class``)
         model.CreateAssociation(attributeAssociationClass, element, attributeNode, name) |> ignore
@@ -144,7 +144,7 @@ module Element =
         let strictAtribute = strictElementAttributes element |> Seq.tryFind (fun attr -> attr.TargetName = name)
         if strictAtribute.IsSome then
             match strictAtribute.Value.Target with
-            | Some(e) when (e :? INode) -> (e :?> INode).Name <- value
+            | Some(e) when (e :? IDataNode) -> (e :?> IDataNode).Name <- value
             | _ -> raise (InvalidSemanticOperationException
                 <| sprintf "Attribute %s is not connected or not a node" name)
         else
@@ -154,10 +154,10 @@ module Element =
             let parentWithAttribute = parentWithAttribute.Value
             let parentAttributeEdge =
                 strictElementAttributes parentWithAttribute |> Seq.find (fun a -> a.TargetName = name)
-            if parentAttributeEdge.Target.IsNone || not (parentAttributeEdge.Target.Value :? INode) then
+            if parentAttributeEdge.Target.IsNone || not (parentAttributeEdge.Target.Value :? IDataNode) then
                 raise (InvalidSemanticOperationException
                     <| sprintf "Attribute %s is not connected or not a node" name)
-            let parentAttributeNode = parentAttributeEdge.Target.Value :?> INode
+            let parentAttributeNode = parentAttributeEdge.Target.Value :?> IDataNode
             addAttribute element name parentAttributeNode.Class parentAttributeEdge.Class value
 
     /// Returns true if an attribute with given name is present in given element.
@@ -166,11 +166,11 @@ module Element =
 
     /// Returns true if 'descendant' is a (possibly indirect) descendant of a 'parent', in terms of generalization
     /// hierarchy.
-    let rec isDescendantOf (parent: IElement) (descendant: IElement) =
+    let rec isDescendantOf (parent: IDataElement) (descendant: IDataElement) =
         bfs descendant isGeneralization ((=) parent) |> Option.isSome
 
     /// Returns true if an 'instance' is a (possibly indirect) instance of a 'class'.
-    let rec isInstanceOf (``class``: IElement) (instance: IElement) =
+    let rec isInstanceOf (``class``: IDataElement) (instance: IDataElement) =
         if instance.Class = ``class`` || isDescendantOf ``class`` instance.Class then
             true
         elif instance.Class = instance then
@@ -182,23 +182,23 @@ module Element =
 module Node =
     /// Returns name of a node.
     /// Throws InvalidSemanticOperationException if given element is not node so it does not have a name.
-    let name (element: IElement) =
-        if not <| element :? INode then
+    let name (element: IDataElement) =
+        if not <| element :? IDataNode then
             raise (InvalidSemanticOperationException "Only nodes have a name in REAL.NET")
-        (element :?> INode).Name
+        (element :?> IDataNode).Name
 
     /// Sets name of a node.
     /// Throws InvalidSemanticOperationException if given element is not node so it does not have a name.
-    let setName name (element: IElement) =
-        if not <| element :? INode then
+    let setName name (element: IDataElement) =
+        if not <| element :? IDataNode then
             raise (InvalidSemanticOperationException "Only nodes have a name in REAL.NET")
-        (element :?> INode).Name <- name
+        (element :?> IDataNode).Name <- name
 
 /// Helper functions for working with models.
 module Model =
     /// Searches for a given node in a given model by name. Assumes that it exists and there is only one node with
     /// that name.
-    let findNode (model: IModel) name =
+    let findNode (model: IDataModel) name =
         let nodes = model.Nodes |> Seq.filter (fun m -> m.Name = name)
 
         if Seq.isEmpty nodes then
@@ -210,7 +210,7 @@ module Model =
             Seq.head nodes
 
     /// Searches for a given node in a given model by name, returns None if not found or found more than one.
-    let tryFindNode (model: IModel) name =
+    let tryFindNode (model: IDataModel) name =
         let nodes = model.Nodes |> Seq.filter (fun m -> m.Name = name)
         if Seq.isEmpty nodes || Seq.length nodes <> 1 then
             None
@@ -219,7 +219,7 @@ module Model =
 
     /// Searches for a given association in a given model by target name and additional predicate. Assumes that it
     /// exists and there is only one such association. Throws InvalidSemanticOperationException if not.
-    let private findAssociationIn (edges: IEdge seq) targetName =
+    let private findAssociationIn (edges: IDataEdge seq) targetName =
         let associations =
             edges
             |> Seq.filter
@@ -236,10 +236,10 @@ module Model =
 
     /// Searches for a given association in a given model by target name. Assumes that it exists and there is only one
     /// association with that name. Throws InvalidSemanticOperationException if not.
-    let findAssociation (model: IModel) targetName =
+    let findAssociation (model: IDataModel) targetName =
         findAssociationIn model.Edges targetName
 
     /// Searches for a given association starting in a given element with a given name. Assumes that it exists and
     /// there is only one association with that name. Throws InvalidSemanticOperationException if not.
-    let findAssociationWithSource (element: IElement) targetName =
+    let findAssociationWithSource (element: IDataElement) targetName =
         findAssociationIn element.OutgoingEdges targetName

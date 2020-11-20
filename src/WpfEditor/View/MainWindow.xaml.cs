@@ -14,19 +14,19 @@
 
 namespace WpfEditor.View
 {
+    using EditorPluginInterfaces;
+    using PluginManager;
+    using Repo;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
-    using EditorPluginInterfaces;
-    using PluginManager;
-    using Repo;
+    using WpfControlsLib.Controls.AttributesPanel;
     using WpfControlsLib.Controls.Console;
     using WpfControlsLib.Controls.ModelSelector;
     using WpfControlsLib.Controls.Scene;
     using WpfControlsLib.Controls.Toolbar;
-    using WpfControlsLib.Controls.AttributesPanel;
     using Palette = WpfControlsLib.Controls.Palette.Palette;
 
     /// <summary>
@@ -34,7 +34,7 @@ namespace WpfEditor.View
     /// </summary>
     internal partial class MainWindow : INotifyPropertyChanged
     {
-        private readonly WpfControlsLib.Model.Model model;
+        private readonly WpfControlsLib.Model.SceneModel model;
         private readonly WpfControlsLib.Controller.Controller controller;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -58,14 +58,14 @@ namespace WpfEditor.View
                 return $"REAL.NET {fileName} {unsavedChanges}";
             }
         }
-        
+
         public MainWindow()
         {
             // TODO: Fix sequential coupling here.
             this.DataContext = this;
             this.InitializeComponent();
 
-            this.model = new WpfControlsLib.Model.Model();
+            this.model = new WpfControlsLib.Model.SceneModel();
 
             this.model.Reinit += this.Reinit;
 
@@ -93,7 +93,7 @@ namespace WpfEditor.View
             this.InitToolbar();
 
             this.modelSelector.Init(this.model);
-            this.modelSelector.ChangeModel(2);
+            this.modelSelector.ChangeModel(4);
         }
 
         private void Reinit(object sender, EventArgs e)

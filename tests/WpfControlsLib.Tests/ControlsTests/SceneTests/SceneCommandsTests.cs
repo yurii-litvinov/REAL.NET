@@ -14,16 +14,16 @@
 
 namespace WpfControlsLib.Tests.ControlsTests.SceneTests
 {
-    using NUnit.Framework;
-    using WpfControlsLib.Model;
-    using WpfControlsLib.Controls.Scene.Commands;
     using EditorPluginInterfaces;
+    using NUnit.Framework;
     using System.Linq;
+    using WpfControlsLib.Controls.Scene.Commands;
+    using WpfControlsLib.Model;
 
     [TestFixture]
     public class SceneCommandsTests
     {
-        private Model model;
+        private SceneModel model;
         private Repo.IModel testModel;
         private Repo.INode testNodeType;
         private Repo.IEdge testEdgeType;
@@ -31,7 +31,7 @@ namespace WpfControlsLib.Tests.ControlsTests.SceneTests
         [SetUp]
         public void Init()
         {
-            model = new Model();
+            model = new SceneModel();
             testModel = model.Repo.CreateModel("testModel", "RobotsMetamodel");
             model.ModelName = testModel.Name;
             testNodeType = testModel.Metamodel.FindElement("FinalNode") as Repo.INode;
@@ -41,7 +41,7 @@ namespace WpfControlsLib.Tests.ControlsTests.SceneTests
         [Test]
         public void AddingNodeOnSceneShouldResultInAddingNodeInRepo()
         {
-            ICommand command = new CreateNodeCommand(model, testNodeType);
+            ICommand command = new CreateNodeCommand(model, testNodeType, new Repo.VisualPoint(0, 0));
 
             command.Execute();
 

@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Microsoft.Msagl.Drawing;
+using Repo;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Microsoft.Msagl.Drawing;
-using Repo;
 
 namespace MsAglWinFormsEditor
 {
@@ -80,13 +79,13 @@ namespace MsAglWinFormsEditor
             /*switch (edgeData.Shape)
             {
                 case "":*/
-                    edge.Attr.Color = Color.Black;
-                    /*break;
-                default:
-                    edge.Attr.Color = Color.Chocolate;
-                    break;
-            }
-            */
+            edge.Attr.Color = Color.Black;
+            /*break;
+        default:
+            edge.Attr.Color = Color.Chocolate;
+            break;
+    }
+    */
         }
 
         private void AddEdges()
@@ -103,14 +102,14 @@ namespace MsAglWinFormsEditor
             /*switch (nodeData.Shape)
             {
                 case "":*/
-                    newNode.Attr.FillColor = Color.IndianRed;
-                    newNode.Attr.Shape = Shape.Box;
-                    /*break;
-                default:
-                    newNode.Attr.FillColor = Color.ForestGreen;
-                    newNode.Attr.Shape = Shape.Ellipse;
-                    break;
-            }*/
+            newNode.Attr.FillColor = Color.IndianRed;
+            newNode.Attr.Shape = Shape.Box;
+            /*break;
+        default:
+            newNode.Attr.FillColor = Color.ForestGreen;
+            newNode.Attr.Shape = Shape.Ellipse;
+            break;
+    }*/
         }
 
         private void AddNodes()

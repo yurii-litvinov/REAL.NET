@@ -31,7 +31,7 @@ let ``Generalizations shall be listed as edges in metamodel`` () =
     let generalization = infrastructureModel.Nodes |> Seq.find (fun n -> n.Name = "Generalization")
     let model = repo.Model "RobotsMetamodel"
 
-    let rawEdges = model.Edges |> Seq.map (fun e -> (e :?> FacadeLayer.Element).UnderlyingElement :?> DataLayer.IEdge)
+    let rawEdges = model.Edges |> Seq.map (fun e -> (e :?> FacadeLayer.Element).UnderlyingElement :?> DataLayer.IDataEdge)
     let rawGeneralization = (generalization :?> FacadeLayer.Element).UnderlyingElement
     let rawGeneralizations = rawEdges |> Seq.filter (fun e -> e.Class = rawGeneralization)
     let someRawGeneralization = rawGeneralizations |> Seq.head
@@ -44,7 +44,7 @@ let ``Generalizations shall be listed as edges in metamodel`` () =
     let someWrappedGeneralization =
         model.Edges
         |> Seq.find
-            (fun e -> (e :?> FacadeLayer.Edge).UnderlyingElement = (someRawGeneralization :> DataLayer.IElement))
+            (fun e -> (e :?> FacadeLayer.Edge).UnderlyingElement = (someRawGeneralization :> DataLayer.IDataElement))
 
     someWrappedGeneralization.Class |> should sameAs generalization
 

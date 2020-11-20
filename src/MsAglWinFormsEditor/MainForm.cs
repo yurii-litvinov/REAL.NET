@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Microsoft.Msagl.Core.Geometry.Curves;
+using Microsoft.Msagl.Core.Layout;
+using Microsoft.Msagl.Drawing;
+using Microsoft.Msagl.GraphViewerGdi;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -6,10 +10,6 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Windows.Forms;
-using Microsoft.Msagl.Core.Geometry.Curves;
-using Microsoft.Msagl.Core.Layout;
-using Microsoft.Msagl.Drawing;
-using Microsoft.Msagl.GraphViewerGdi;
 using Edge = Microsoft.Msagl.Drawing.Edge;
 using Node = Microsoft.Msagl.Drawing.Node;
 using Point = Microsoft.Msagl.Core.Geometry.Point;
@@ -176,7 +176,7 @@ namespace MsAglWinFormsEditor
 
         private ICurve NodeBoundaryDelegate(Node node)
         {
-            var image = (Image) this.imagesHashtable[node.Id];
+            var image = (Image)this.imagesHashtable[node.Id];
             double width = image.Width;
             double height = image.Height;
 
@@ -215,7 +215,7 @@ namespace MsAglWinFormsEditor
         private bool DrawNode(Node node, object graphics)
         {
             var graphic = (Graphics)graphics;
-            var image = (Image) this.imagesHashtable[node.Id];
+            var image = (Image)this.imagesHashtable[node.Id];
             using (Matrix matrix = graphic.Transform)
             {
                 using (Matrix matrixClone = matrix.Clone())

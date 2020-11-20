@@ -47,7 +47,7 @@ namespace WpfControlsLib.Controls.Palette
         /// Sets a model from which palette will be populated.
         /// </summary>
         /// <param name="model">A model with repository from which palette will take elements.</param>
-        public void SetModel(WpfControlsLib.Model.Model model)
+        public void SetModel(WpfControlsLib.Model.SceneModel model)
             => this.paletteViewModel.SetModel(model);
 
         /// <summary>
