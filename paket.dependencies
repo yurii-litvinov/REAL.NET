@@ -25,11 +25,11 @@ group Tests
 framework: net461
 source https://api.nuget.org/v3/index.json
 
+nuget FSharp.Core redirects: force
 nuget NSubstitute
 nuget NUnit
 nuget NUnit3TestAdapter
 nuget FsUnit redirects: force
-nuget FSharp.Core redirects: force
 
 
 group TestRunners
