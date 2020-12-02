@@ -12,14 +12,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
+using GraphX.Common.Enums;
+using GraphX.Logic.Algorithms.OverlapRemoval;
+using GraphX.Logic.Models;
+
 namespace WpfControlsLib.Controls.Scene
 {
     using EditorPluginInterfaces;
     using GraphX.Controls;
     using GraphX.Controls.Models;
-    using GraphX.PCL.Common.Enums;
-    using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
-    using GraphX.PCL.Logic.Models;
     using QuickGraph;
     using System;
     using System.Collections.Generic;

@@ -1,9 +1,9 @@
-﻿using GraphX.PCL.Common.Models;
-using Repo;
+﻿using Repo;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
+using GraphX.Common.Models;
 
 namespace WpfControlsLib.ViewModel
 {

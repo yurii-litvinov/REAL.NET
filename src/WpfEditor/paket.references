@@ -1,3 +1,5 @@
 GraphX
-FSharp.Core
 System.ValueTuple
+
+group Legacy
+    FSharp.Core

@@ -1,5 +1,6 @@
+FSharp.Core redirects: force
+Microsoft.NETCore.Platforms
+NETStandard.Library
 group Tests
-FsUnit
-FSharp.Core
 NUnit
-NUnit3TestAdapter
+FsUnit

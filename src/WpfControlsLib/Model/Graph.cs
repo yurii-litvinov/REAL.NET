@@ -12,10 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
+using GraphX.Common;
+
 namespace WpfControlsLib.Model
 {
     using EditorPluginInterfaces;
-    using GraphX.PCL.Common;
     using QuickGraph;
     using Repo;
     using System;

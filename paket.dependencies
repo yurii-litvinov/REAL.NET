@@ -5,9 +5,13 @@ source https://api.nuget.org/v3/index.json
 
 clitool dotnet-fake
 
-nuget FSharp.Core redirects: force
+nuget FSharp.Core 5.0.0 redirects: force
+nuget FsUnit 4.0.2 restriction: >= net461
 nuget GraphX
 nuget log4net
+nuget Microsoft.NETCore.Platforms 1.1.0 restriction: >= net461
+nuget NETStandard.Library 2.0.3 restriction: >= net461
+nuget NUnit 3.12.0 restriction: >= net461
 nuget QuickGraphPCL 3.6.61114.2
 nuget Microsoft.Msagl 1.0.2
 nuget Microsoft.Msagl.Drawing 1.0.2
@@ -22,31 +26,36 @@ nuget System.Collections.Immutable
 
 group Tests
 
-framework: net461
-source https://api.nuget.org/v3/index.json
+    framework: net461
+    source https://api.nuget.org/v3/index.json
 
-nuget NSubstitute
-nuget NUnit
-nuget NUnit3TestAdapter
-nuget FsUnit redirects: force
+    nuget NSubstitute
+    nuget NUnit
+    nuget NUnit3TestAdapter
+    nuget FsUnit   
 
 
 group TestRunners
+    framework: net461
+    source https://api.nuget.org/v3/index.json
+    
+    nuget NUnit.Console
 
-framework: net461
-source https://api.nuget.org/v3/index.json
+group Legacy
+    framework: net461
+    source https://api.nuget.org/v3/index.json
 
-nuget NUnit.Console
+    nuget Fsharp.Core ~> 4.7.0.0
 
 group FakeBuild
 
-framework: netstandard2.0
-source https://api.nuget.org/v3/index.json
-storage: none
+    framework: netstandard2.0
+    source https://api.nuget.org/v3/index.json
+    storage: none
 
-nuget Fake.Core.Target
-nuget Fake.Core.ReleaseNotes 
-nuget Fake.DotNet.AssemblyInfoFile
-nuget Fake.DotNet.MsBuild
-nuget Fake.DotNet.Testing.NUnit
-nuget Fake.IO.FileSystem
+    nuget Fake.Core.Target
+    nuget Fake.Core.ReleaseNotes 
+    nuget Fake.DotNet.AssemblyInfoFile
+    nuget Fake.DotNet.MsBuild
+    nuget Fake.DotNet.Testing.NUnit
+    nuget Fake.IO.FileSystem

@@ -1,4 +1,8 @@
+FSharp.Core
+Microsoft.NETCore.Platforms
+NETStandard.Library
 group Tests
 NUnit
 NSubstitute
 NUnit3TestAdapter
+FsUnit
