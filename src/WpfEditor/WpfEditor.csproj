@@ -202,6 +202,11 @@
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
+        <Reference Include="GraphX.Standard.Common">
+          <HintPath>..\..\packages\GraphX\lib\net461\GraphX.Standard.Common.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
         <Reference Include="GraphX.Standard.Logic">
           <HintPath>..\..\packages\GraphX\lib\net461\GraphX.Standard.Logic.dll</HintPath>
           <Private>True</Private>

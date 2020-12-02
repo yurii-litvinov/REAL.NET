@@ -30,7 +30,7 @@ let ``simple arithmetic test``() =
     Evaluator.evaluate initEnv node2 |> should equal (initEnv, value2)
  
 [<Test>]
-let ``node with variablet tests``() =
+let ``node with variable tests``() =
     let node = Multiply(Variable("a"), ConstOfInt(2))
     let var = Variable.createInt "a" 4 (None, None)
     let env = initEnv.AddVariable(var)
