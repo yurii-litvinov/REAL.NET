@@ -15,8 +15,8 @@ namespace WpfControlsLib.ViewModel
         private SolidColorBrush brush = Brushes.Blue;
         private bool isAllowed = true;
 
-        private static readonly SolidColorBrush invalidEdgeBrush = Brushes.Red;
-        private static readonly SolidColorBrush defaultEdgeBrush = Brushes.Blue;
+        private static readonly SolidColorBrush InvalidEdgeBrush = Brushes.Red;
+        private static readonly SolidColorBrush DefaultEdgeBrush = Brushes.Blue;
 
         private string text;
 
@@ -32,7 +32,7 @@ namespace WpfControlsLib.ViewModel
             }
             else
             {
-                this.Color = defaultEdgeBrush;    
+                this.Color = DefaultEdgeBrush;    
             }
             
         }
@@ -69,7 +69,7 @@ namespace WpfControlsLib.ViewModel
             {
                 this.isAllowed = value;
                 // TODO: Color property can be set by an user, and user color will be forgotten after IsAllowed change.
-                this.Color = value ? defaultEdgeBrush : invalidEdgeBrush;
+                this.Color = value ? DefaultEdgeBrush : InvalidEdgeBrush;
             }
         }
 

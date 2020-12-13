@@ -1,5 +1,3 @@
 GraphX
 System.ValueTuple
-
-group Legacy
-    FSharp.Core
+FSharp.Core redirects: on

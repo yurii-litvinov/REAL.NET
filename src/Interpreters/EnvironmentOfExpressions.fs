@@ -1,9 +1,12 @@
 ﻿namespace Interpreters
 
 open Interpreters
+open Interpreters
+open Interpreters
 
 type FunctionCollection = Map<string, (ExpressionType list * ExpressionType * (ExpressionValue list -> IStateConsole -> (ExpressionValue * IStateConsole))) list>
 
+[<CustomEquality>][<NoComparison>]
 type EnvironmentOfExpressions(vars: IVariableSet, functions: FunctionCollection, state: IStateConsole, place: PlaceOfCreation) =
     struct
         new(vars, functions, state) = EnvironmentOfExpressions(vars, functions, state, PlaceOfCreation (None, None)) 
@@ -21,7 +24,15 @@ type EnvironmentOfExpressions(vars: IVariableSet, functions: FunctionCollection,
             EnvironmentOfExpressions(newVars, this.Functions, this.State, this.Place)
             
         static member op_Equality(x: EnvironmentOfExpressions, y: EnvironmentOfExpressions) = (x.Variables = y.Variables) && (x.State = y.State)
-            
+        
+        override this.Equals(wrapped) =
+            match wrapped with
+            | :? EnvironmentOfExpressions as x -> (x.Variables = this.Variables) && (x.State = this.State)
+            | _ -> false
+        
+          override this.GetHashCode() =
+                hash(this.Variables, this.State)
+                    
         member this.ChangeValue var newVal =
             let newVars = vars.ChangeValue var newVal
             EnvironmentOfExpressions(newVars, this.Functions, this.State, this.Place)

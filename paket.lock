@@ -4,7 +4,6 @@ NUGET
     dotnet-fake (5.18.3) - clitool: true
     Expression.Interaction (3.0.40218)
     FSharp.Core (5.0) - redirects: force
-    FsUnit (4.0.2)
     GraphX (3.0)
       QuickGraphCore (>= 1.0)
     log4net (2.0.12)
@@ -13,11 +12,7 @@ NUGET
       Microsoft.Msagl (>= 1.0.2)
     Microsoft.Msagl.GraphViewerGDI (1.0.2)
       Microsoft.Msagl.Drawing (>= 1.0.2)
-    Microsoft.NETCore.Platforms (1.1)
-    NETStandard.Library (2.0.3)
-      Microsoft.NETCore.Platforms (>= 1.1)
     Newtonsoft.Json (12.0.3)
-    NUnit (3.12)
     QuickGraphCore (1.0)
     QuickGraphPCL (3.6.61114.2)
     StyleCop.Analyzers (1.1.118)
@@ -234,12 +229,6 @@ NUGET
     System.Threading.Tasks.Extensions (4.5.4)
       System.Runtime.CompilerServices.Unsafe (>= 4.5.3)
 
-GROUP Legacy
-RESTRICTION: == net461
-NUGET
-  remote: https://api.nuget.org/v3/index.json
-    FSharp.Core (4.7)
-
 GROUP TestRunners
 RESTRICTION: == net461
 NUGET
@@ -263,7 +252,8 @@ RESTRICTION: == net461
 NUGET
   remote: https://api.nuget.org/v3/index.json
     Castle.Core (4.4.1)
-    FsUnit (4.0.2)
+    FSharp.Core (5.0) - redirects: force
+    FsUnit (4.0.2) - redirects: force
     NSubstitute (4.2.2)
       Castle.Core (>= 4.4)
       System.Threading.Tasks.Extensions (>= 4.3)
