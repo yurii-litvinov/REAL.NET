@@ -1,7 +1,0 @@
-dotnet-fake
-System.Windows.Interactivity.WPF
-Expression.Interaction
-log4net
-GraphX
-FSharp.Core
-System.ValueTuple

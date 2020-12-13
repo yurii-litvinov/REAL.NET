@@ -1,7 +1,0 @@
-System.Collections.Immutable
-FSharp.Core
-Microsoft.NETCore.Platforms
-NETStandard.Library
-group Tests
-FsUnit
-NUnit

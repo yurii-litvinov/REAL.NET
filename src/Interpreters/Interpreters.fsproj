@@ -49,7 +49,6 @@
   </Target>
   -->
   <ItemGroup>
-    <Compile Include="AssemblyInfo.fs" />
     <Compile Include="ExpressionType.fs" />
     <Compile Include="RegularType.fs" />
     <Compile Include="ArrType.fs" />
@@ -74,7 +73,7 @@
     <Compile Include="StringExpressionParser.fs" />
     <Compile Include="Parser.fs" />
     <Content Include="app.config" />
-    <None Include="paket.references" />
+    <None Include="packages.config" />
     <Compile Include="InterpreterHelper.fs" />
   </ItemGroup>
   <ItemGroup>

@@ -54,7 +54,6 @@
     <Compile Include="AssemblyInfo.fs" />
     <Content Include="app.config" />
     <Compile Include="Resources\Resources.fs" />
-    <None Include="paket.references" />
     <Compile Include="RobotCommands.fs" />
     <Compile Include="DataLayer\Robot.fs" />
     <Compile Include="DataLayer\RobotParser.fs" />

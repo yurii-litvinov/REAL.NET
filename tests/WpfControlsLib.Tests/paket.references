@@ -1,9 +1,0 @@
-FSharp.Core
-FsUnit
-Microsoft.NETCore.Platforms
-NETStandard.Library
-NUnit
-group Tests
-NUnit
-NSubstitute
-NUnit3TestAdapter
